@@ -11,10 +11,10 @@ import javax.inject.Inject
 class QuickActionsCardBuilder @Inject constructor() {
     fun build(params: QuickActionsCardBuilderParams) = QuickActionsCard(
             title = UiStringRes(R.string.my_site_quick_actions_title),
-            onStatsClick = ListItemInteraction.create { params.onQuickActionStatsClick.invoke() },
-            onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
-            onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
-            onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
+            onStatsClick = ListItemInteraction.create(params.onQuickActionStatsClick),
+            onPagesClick = ListItemInteraction.create(params.onQuickActionPagesClick),
+            onPostsClick = ListItemInteraction.create(params.onQuickActionPostsClick),
+            onMediaClick = ListItemInteraction.create(params.onQuickActionMediaClick),
             showPages = params.siteModel.isSelfHostedAdmin || params.siteModel.hasCapabilityEditPages,
             showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS,
             showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||

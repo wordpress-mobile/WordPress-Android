@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-16 14:33:20+0000
+Translation-Revision-Date: 2021-12-18 21:29:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="about_automattic_version_label">Versión %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Agradecementos</string>
+    <string name="about_automattic_legal_page_title">Legal e outros</string>
+    <string name="about_automattic_main_page_title">Sobre %1$s</string>
+    <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_the_basics">O básico</string>
+    <string name="gutenberg_native_selected_default">Seleccionado: Por defecto</string>
+    <string name="gutenberg_native_more_support_options">Máis opcións de soporte</string>
+    <string name="gutenberg_native_get_support">Obter soporte</string>
+    <string name="gutenberg_native_font_size">Tamaño da fonte</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Toca dúas veces para seleccionar un tamaño de fonte</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Toca dúas veces para seleccionar o tamaño de fonte por defecto</string>
+    <string name="gutenberg_native_contact_support">Contactar co soporte</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="my_site_no_content_post">Sen contido</string>
+    <string name="reader_comments_follow_conversation">Seguir a conversa</string>
+    <string name="reader_comments_be_first_to_comment">Sé o primeiro en comentar</string>
+    <string name="reader_comments_view_all">Ver todos os comentarios</string>
+    <string name="reader_comments_post_fetch_failure">Houbo un erro ao obter os datos da entrada</string>
+    <string name="reader_comments_fetch_failure">Houbo un erro ao obter os comentarios</string>
+    <string name="reader_btn_follow_conversation_settings">Axustes para seguir a conversa</string>
+    <string name="gutenberg_native_from_clipboard">Desde o portapapeis</string>
+    <string name="gutenberg_native_featured_image">Imaxe destacada</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Copiar a URL desde o portapapeis, %s</string>
+    <string name="me_btn_about">Acerca de WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Ir ás entradas programadas</string>
+    <string name="my_site_post_card_link_go_to_drafts">Ir aos borradores</string>
+    <string name="my_site_post_card_link_create_post">Crear unha entrada</string>
+    <string name="my_site_create_next_post_excerpt">Publicar regularmente axuda a crear a túa audiencia!</string>
+    <string name="my_site_create_next_post_title">Crear a túa seguinte entrada</string>
+    <string name="menu_visual_mode_switched_notice">Cambiado a modo visual</string>
+    <string name="menu_html_mode_switched_notice">Cambiado a modo HTML</string>
+    <string name="post_link_copied_to_clipboard">Ligazón copiada ao portapapeis</string>
+    <string name="comment_author_badge">Autor</string>
+    <string name="button_copy_link">Copiar ligazón</string>
     <string name="domains_paid_plan_add_your_domain_caption">Engadir un dominio personalizado fai que sexa máis fácil para os teus visitantes encontrar o teu sitio</string>
     <string name="domains_paid_plan_add_your_domain_title">Engade o teu dominio</string>
     <string name="my_site_create_first_post_excerpt">As entradas aparecen na páxina do teu blog en orde cronoloxicamente inverso. É o momento de compartir as túas ideas co mundo!</string>
@@ -74,7 +109,6 @@ Language: gl_ES
     <string name="recommend_app_generic_get_template_error">Erro descoñecido ao recuperar o modelo recomendado da aplicación</string>
     <string name="recommend_app_bad_format_response">Resposta recibida non válida</string>
     <string name="recommend_app_null_response">Non se recibiu ningunha resposta</string>
-    <string name="recommend_app_subject">Aplicacións WordPress - Aplicacións para calquera pantalla</string>
     <string name="me_btn_share">Comparte WordPress cun amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
@@ -140,7 +174,6 @@ Language: gl_ES
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL non válida. Por favor, introduce unha URL válida.</string>
     <string name="gutenberg_native_embed_caption_s">Lenda incrustada. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Lenda incrustada. Baleira</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">ENGALIR LIGAZÓN</string>
     <string name="activity_log_visit_our_documentation_page">visita a nosa páxina de documentación</string>
     <string name="activity_log_multisite_message">Jetpack Backup para instalacións multisitio proporciona copias de seguridade descargables, non restauracións cun só clic. Para máis información, %1$s.</string>
     <string name="blogging_reminders_tip_message">Publicar regularmente pode axudar a que os teus lectores permanezan implicados, e a atraer novos visitantes ao teu sitio.</string>
@@ -188,7 +221,6 @@ Language: gl_ES
     <string name="gutenberg_native_s_has_no_url_set">%s non ten unha URL configurada</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normais</string>
     <string name="gutenberg_native_s_block">Bloque %s</string>
-    <string name="gutenberg_native_minimum_height">Altura mínima</string>
     <string name="gutenberg_native_media_options">Opcións de medios</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL non válida. Arquivo de audio non encontrado.</string>
     <string name="gutenberg_native_insert_crosspost">Insertar entrada cruzada</string>
@@ -209,7 +241,6 @@ Language: gl_ES
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para corrixir as ameazas.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Introduce as credenciais do teu servidor&lt;/a&gt; para corrixir a ameaza.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Toca dúas veces para engadir un enlace.</string>
-    <string name="gutenberg_native_edit_link">EDITAR LIGAZÓN</string>
     <string name="login_empty_view_try_another_account">Probar con outra conta</string>
     <string name="login_empty_view_see_instructions">Ver as instrucións</string>
     <string name="login_no_jetpack_sites_error_message">Se xa tes un sitio, terás que instalar o plugin gratuíto de Jetpack e conectalo á túa conta de WordPress.</string>
@@ -218,28 +249,21 @@ Language: gl_ES
     <string name="gutenberg_native_move_image_forward">Mover a imaxe cara diante</string>
     <string name="gutenberg_native_move_image_backward">Mover a imaxe cara atrás</string>
     <string name="gutenberg_native_width_settings">Axustes de anchura</string>
-    <string name="gutenberg_native_image_settings">Axustes de imaxe</string>
     <string name="user_profile_untitled_site">(Sen título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de folla inferior do perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Gústame %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Ordenación e filtrado</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_preview_post">Previsualizar a entrada</string>
     <string name="gutenberg_native_preview_page">Previsualizar a páxina</string>
-    <string name="gutenberg_native_post_meta_settings">Axustes meta da entrada</string>
-    <string name="gutenberg_native_post_content_settings">Axustes do contido da entrada</string>
     <string name="gutenberg_native_retry">Reintentar</string>
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_s_link">ligazón %s</string>
     <string name="gutenberg_native_featured">Destacado</string>
-    <string name="gutenberg_native_embed_link">Ligazón incrustado</string>
-    <string name="gutenberg_native_display_post_date">Amosar a data da entrada</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_create_embed">Crear uhna incrustación</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
-    <string name="gutenberg_native_none">Ningunha</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Describe brevemente o enlace para axudar aos usuarios de lectores de pantalla</string>
     <string name="gutenberg_native_add_blocks">Engadir bloques</string>
     <string name="login_no_jetpack_sites">Non se encontraron sitios de Jetpack</string>
@@ -277,7 +301,7 @@ Language: gl_ES
     <string name="get_likes_no_network_error">Non hai ningunha rede dispoñible.</string>
     <string name="comments_empty_list_filtered_unreplied">Non hai ningún comentario sen responder</string>
     <string name="comment_status_unreplied">Sen responder</string>
-    <string name="gutenberg_native_add_link">Engadir ligazón</string>
+    <string name="gutenberg_native_add_link">ENGALIR LIGAZÓN</string>
     <string name="gutenberg_native_search_settings">Axustes de busca</string>
     <string name="jetpack_brute_force_allowlist_title">Direccións IP permitidas sempre</string>
     <string name="site_settings_denylist_title">Comentarios non permitidos</string>
@@ -2738,7 +2762,6 @@ Language: gl_ES
     <string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
     <string name="stats_view_search_terms">Termos de busca</string>
     <string name="stats_view_authors">Autores</string>
-    <string name="comments_fetching">Á procura dos comentarios…</string>
     <string name="pages_fetching">Á procura das páxinas…</string>
     <string name="posts_fetching">Á procura dos artigos…</string>
     <string name="media_fetching">Á procura dos ficheiros…</string>
@@ -2780,7 +2803,6 @@ Language: gl_ES
     <string name="error_publish_empty_post">Non se pode publicar un artigo baleiro</string>
     <string name="error_refresh_unauthorized_posts">Non tes permiso para ver ou editar artigos</string>
     <string name="error_refresh_unauthorized_pages">Non tes permiso para ver ou editar páxinas</string>
-    <string name="error_refresh_unauthorized_comments">Non tes permiso para ver ou editar comentarios</string>
     <string name="more">Máis</string>
     <string name="older_month">Con máis dun mes de antigüidade</string>
     <string name="older_last_week">Con máis dunha semana de antigüidade</string>
@@ -2860,10 +2882,6 @@ Language: gl_ES
     <string name="saving_changes">Gardando os cambios</string>
     <string name="trash">Lixo</string>
     <string name="dlg_confirm_trash_comments">Botar ao lixo?</string>
-    <string name="dlg_trashing_comments">Enviando ao lixo</string>
-    <string name="dlg_spamming_comments">Sinalando como spam</string>
-    <string name="dlg_unapproving_comments">Rexeitando</string>
-    <string name="dlg_approving_comments">Aprobando</string>
     <string name="mnu_comment_trash">Botar ao lixo</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Rexeitar</string>
@@ -2976,7 +2994,6 @@ Language: gl_ES
     <string name="title">Título</string>
     <string name="tags_separate_with_commas">Etiquetas (separadas por comas)</string>
     <string name="categories">Categorías</string>
-    <string name="dlg_deleting_comments">Borrando os comentarios</string>
     <string name="sdcard_title">Tarxeta SD requirida</string>
     <string name="media">Multimedia</string>
     <string name="approve">Aprobar</string>

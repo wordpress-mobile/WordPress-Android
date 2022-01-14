@@ -14,7 +14,6 @@ Language: hu
     <string name="stats_view_authors">Szerzők</string>
     <string name="pages_fetching">Oldalak betöltése…</string>
     <string name="media_fetching">Média betöltése…</string>
-    <string name="comments_fetching">Hozzászólások betöltése…</string>
     <string name="posts_fetching">Bejegyzések betöltése…</string>
     <string name="reader_empty_posts_in_blog">Ez az oldal üres</string>
     <string name="stats_followers_years">%1$d év</string>
@@ -32,7 +31,6 @@ Language: hu
     <string name="reader_empty_comments">Vélemény?</string>
     <string name="error_refresh_unauthorized_posts">A bejegyzés megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
     <string name="error_refresh_unauthorized_pages">Az oldalak megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
-    <string name="error_refresh_unauthorized_comments">A hozzászólások megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
     <string name="older_month">Egy hónapnál régebbi</string>
     <string name="more">Bövebben</string>
     <string name="older_two_days">2 napnál régebbi</string>
@@ -59,7 +57,6 @@ Language: hu
     <string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
     <string name="post_settings">Bejegyzés beálitások</string>
     <string name="edit_comment">Hozzászólás szerkesztése</string>
-    <string name="dlg_trashing_comments">Lomtárba küldés</string>
     <string name="reader_btn_follow">Követés</string>
     <string name="empty_list_default">Ez a lista üres</string>
     <string name="themes">Sablonok</string>

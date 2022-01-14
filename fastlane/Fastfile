@@ -114,6 +114,7 @@ import './ScreenshotFastfile'
 Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO = 'wordpress-mobile/WordPress-Android']
 ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
+ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'develop'
 REPOSITORY_NAME = 'WordPress-Android'
 
 ########################################################################
@@ -741,6 +742,14 @@ REPOSITORY_NAME = 'WordPress-Android'
       import_key: "storiesVersion",
       repository: "Automattic/stories-android",
       strings_file_path: "stories/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
+    },
+    {
+      name: "About Library",
+      import_key: "aboutAutomatticVersion",
+      repository: "Automattic/about-automattic-android",
+      strings_file_path: "library/src/main/res/values/strings.xml",
       github_release_prefix: "",
       exclusions: []
     },

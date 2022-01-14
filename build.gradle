@@ -1,13 +1,51 @@
+ext {
+    coroutinesVersion = '1.5.2'
+    wordPressUtilsVersion = '2.2.0'
+    wordPressLoginVersion = '0.0.8'
+    gutenbergMobileVersion = 'v1.70.0-alpha1'
+    storiesVersion = '1.2.0'
+    aboutAutomatticVersion = '0.0.4'
+
+    minSdkVersion = 24
+    compileSdkVersion = 31
+    targetSdkVersion = 30
+
+    coroutinesVersion = '1.3.9'
+    androidxWorkVersion = "2.4.0"
+
+    daggerVersion = '2.29.1'
+    fluxCVersion = '1.33.0'
+
+    appCompatVersion = '1.0.2'
+    coreVersion = '1.3.2'
+    lifecycleVersion = '2.2.0'
+    constraintLayoutVersion = '1.1.3'
+    materialVersion = '1.2.1'
+    preferenceVersion = '1.1.0'
+    swipeToRefresh = '1.1.0'
+    uCropVersion = '2.2.4'
+    lifecycleVersion = '2.2.0'
+    tracksVersion = '2.1.0'
+    roomVersion = '2.3.0'
+
+    coreLibraryDesugaringVersion = '1.1.5'
+
+    exoPlayerVersion = '2.9.3'
+
+    // testing
+    jUnitVersion = '4.13'
+    androidxTestVersion = '1.1.0'
+    androidxArchCoreVersion = '2.0.0'
+    assertJVersion = '3.11.1'
+    espressoVersion = '3.1.0'
+    mockitoCoreVersion = "3.3.3"
+    nhaarmanMockitoVersion = "2.2.0"
+}
+
 buildscript {
     ext.kotlinVersion = '1.5.32'
-    ext.coroutinesVersion = '1.5.2'
     ext.navComponentVersion = '2.3.5'
-    ext.wordPressUtilsVersion = '2.2.0'
-    ext.wordPressLoginVersion = '0.0.8'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = 'v1.68.0-alpha2'
-    ext.storiesVersion = '1.2.0'
-    ext.aboutAutomatticVersion = 'main-c764a2d66273d4c6aeed66bb7a5c75714d88c554'
 
     repositories {
         maven {
@@ -119,43 +157,6 @@ buildScan {
         // Otherwise CI might shut down before it's uploaded
         uploadInBackground = false
     }
-}
-
-ext {
-    minSdkVersion = 24
-    compileSdkVersion = 31
-    targetSdkVersion = 30
-
-    coroutinesVersion = '1.3.9'
-    androidxWorkVersion = "2.4.0"
-
-    daggerVersion = '2.29.1'
-    fluxCVersion = 'develop-6b043a14779528c6badf0a7e54071c32ec2b48ae'
-
-    appCompatVersion = '1.0.2'
-    coreVersion = '1.3.2'
-    lifecycleVersion = '2.2.0'
-    constraintLayoutVersion = '1.1.3'
-    materialVersion = '1.2.1'
-    preferenceVersion = '1.1.0'
-    swipeToRefresh = '1.1.0'
-    uCropVersion = '2.2.4'
-    lifecycleVersion = '2.2.0'
-    tracksVersion = '2.1.0'
-    roomVersion = '2.3.0'
-
-    coreLibraryDesugaringVersion = '1.1.5'
-
-    exoPlayerVersion = '2.9.3'
-
-    // testing
-    jUnitVersion = '4.13'
-    androidxTestVersion = '1.1.0'
-    androidxArchCoreVersion = '2.0.0'
-    assertJVersion = '3.11.1'
-    espressoVersion = '3.1.0'
-    mockitoCoreVersion = "3.3.3"
-    nhaarmanMockitoVersion = "2.2.0"
 }
 
 // Onboarding and dev env setup tasks

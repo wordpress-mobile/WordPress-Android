@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-24 09:54:06+0000
+Translation-Revision-Date: 2022-01-04 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="about_automattic_version_label">バージョン%1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">謝辞</string>
+    <string name="about_automattic_legal_page_title">法的情報およびその他</string>
+    <string name="about_automattic_main_page_title">%1$s について</string>
+    <string name="about_blog">ブログ</string>
+    <string name="gutenberg_native_the_basics">基本操作</string>
+    <string name="gutenberg_native_selected_default">選択済み: デフォルト</string>
+    <string name="gutenberg_native_more_support_options">その他のサポートオプション</string>
+    <string name="gutenberg_native_get_support">サポートを受ける</string>
+    <string name="gutenberg_native_font_size">フォントサイズ</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">ダブルタップしてフォントサイズを選択</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">ダブルタップしてデフォルトのフォントサイズを選択</string>
+    <string name="gutenberg_native_contact_support">サポートに問い合わせる</string>
+    <string name="my_site_no_content_post">コンテンツがありません</string>
+    <string name="reader_comments_follow_conversation">会話をフォロー</string>
+    <string name="reader_comments_be_first_to_comment">最初のコメントを投稿</string>
+    <string name="reader_comments_view_all">すべてのコメントを表示</string>
+    <string name="reader_comments_post_fetch_failure">投稿データ取得中にエラーが発生しました</string>
+    <string name="reader_comments_fetch_failure">コメント取得中にエラーが発生しました</string>
+    <string name="reader_btn_follow_conversation_settings">会話設定をフォロー</string>
+    <string name="gutenberg_native_from_clipboard">クリップボードから</string>
+    <string name="gutenberg_native_featured_image">アイキャッチ画像</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">クリップボードから URL (%s) をコピーします</string>
+    <string name="me_btn_about">WordPress について</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">予約済みの投稿に移動</string>
+    <string name="my_site_post_card_link_go_to_drafts">下書きに移動</string>
+    <string name="my_site_post_card_link_create_post">投稿を作成</string>
+    <string name="my_site_create_next_post_excerpt">定期的に投稿することで、読者を増やすことができます。</string>
+    <string name="my_site_create_next_post_title">次の投稿を作成</string>
+    <string name="menu_visual_mode_switched_notice">ビジュアルモードに切り替えました</string>
+    <string name="menu_html_mode_switched_notice">HTML モードに切り替えました</string>
+    <string name="post_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
+    <string name="comment_author_badge">投稿者</string>
+    <string name="button_copy_link">リンクをコピー</string>
     <string name="domains_paid_plan_add_your_domain_caption">カスタムドメインを追加すると、訪問者がサイトを見つけやすくなります</string>
     <string name="domains_paid_plan_add_your_domain_title">ドメインを追加</string>
     <string name="my_site_create_first_post_excerpt">投稿はブログページに新しいものから順に表示されます。 あなたのアイデアを世界中のユーザーとシェアしましょう !</string>
@@ -58,6 +92,7 @@ Language: ja_JP
     <string name="comment_edit_comment">コメント</string>
     <string name="comment_edit_user_name">名前</string>
     <string name="comment_edit_menu_done">完了</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">埋め込みブロックのプレビューはまもなく公開予定です</string>
     <string name="weekly_roundup">1週間のまとめ</string>
     <string name="gutenberg_native_embed_options">埋め込みオプション</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">ダブルタップして埋め込みオプションを表示します。</string>
@@ -72,7 +107,6 @@ Language: ja_JP
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
     <string name="recommend_app_bad_format_response">無効な応答を受信しました</string>
     <string name="recommend_app_null_response">応答がありませんでした</string>
-    <string name="recommend_app_subject">WordPress アプリ - さまざまな画面で利用できるアプリ</string>
     <string name="me_btn_share">WordPress を友達と共有する</string>
     <string name="my_site_quick_actions_title">クイックリンク</string>
     <string name="my_site_btn_domains">ドメイン</string>
@@ -138,7 +172,6 @@ Language: ja_JP
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">無効な URL。 正しい URL を入力してください。</string>
     <string name="gutenberg_native_embed_caption_s">埋め込みのキャプション。 %s</string>
     <string name="gutenberg_native_embed_caption_empty">埋め込みのキャプション。 空</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">リンクを追加</string>
     <string name="activity_log_visit_our_documentation_page">ドキュメントページに移動する</string>
     <string name="activity_log_multisite_message">Jetpack Backup (Multisite) のインストールには、ダウンロード可能なバックアップは含まれますが、ワンクリックの復元機能は含まれません。 詳細については、%1$s。</string>
     <string name="blogging_reminders_tip_message">定期的に投稿することで、読者の興味を引きつけ、新たなサイト訪問者を獲得できます。</string>
@@ -186,7 +219,6 @@ Language: ja_JP
     <string name="gutenberg_native_s_has_no_url_set">%s には URL 設定がありません</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s が通常のブロックに変換されました</string>
     <string name="gutenberg_native_s_block">%s ブロック</string>
-    <string name="gutenberg_native_minimum_height">最小高さ</string>
     <string name="gutenberg_native_media_options">メディア設定</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">無効な URL。 音声ファイルが見つかりません。</string>
     <string name="gutenberg_native_insert_crosspost">クロスポストを挿入</string>
@@ -210,10 +242,8 @@ Language: ja_JP
     <string name="login_empty_view_try_another_account">別のアカウントで試行</string>
     <string name="login_empty_view_see_instructions">手順を参照してください</string>
     <string name="login_no_jetpack_sites_error_message">すでにサイトをお持ちの場合は、無料の Jetpack プラグインをインストールし、WordPress.com アカウントに接続する必要があります。</string>
-    <string name="gutenberg_native_edit_link">リンクを編集</string>
     <string name="login_empty_view_avatar_content_description">自分のプロフィール写真</string>
     <string name="login_not_a_jetpack_site">%1$sにこのアプリを使用するには、Jetpack プラグインをインストールし、自身の WordPress アカウントに接続する必要があります。</string>
-    <string name="gutenberg_native_image_settings">画像設定</string>
     <string name="gutenberg_native_move_image_backward">画像を後ろに移動</string>
     <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
     <string name="gutenberg_native_width_settings">幅設定</string>
@@ -221,23 +251,17 @@ Language: ja_JP
     <string name="user_profile_site_section_header">サイト</string>
     <string name="user_profile_untitled_site">(無題)</string>
     <string name="likes_list_screen_title">いいねリスト%s</string>
-    <string name="gutenberg_native_sorting_and_filtering">並べ替えと絞り込み</string>
     <string name="gutenberg_native_s_social_icon">%sソーシャルアイコン</string>
     <string name="gutenberg_native_mention">\@ 返信</string>
-    <string name="gutenberg_native_post_content_settings">投稿コンテンツ設定</string>
-    <string name="gutenberg_native_post_meta_settings">投稿メタ設定</string>
     <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
     <string name="gutenberg_native_preview_page">ページをプレビュー</string>
     <string name="gutenberg_native_retry">リトライ</string>
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_s_link">%s リンク</string>
     <string name="gutenberg_native_featured">おすすめ</string>
-    <string name="gutenberg_native_embed_link">リンクを埋め込む</string>
-    <string name="gutenberg_native_display_post_date">投稿日を表示</string>
     <string name="gutenberg_native_create_embed">埋め込みを作成</string>
     <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
-    <string name="gutenberg_native_none">なし</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
     <string name="gutenberg_native_add_blocks">ブロックを追加</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
@@ -276,7 +300,6 @@ Language: ja_JP
     <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
     <string name="comment_status_unreplied">未返信</string>
     <string name="gutenberg_native_search_settings">検索設定</string>
-    <string name="gutenberg_native_add_link">リンクを追加</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
     <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
@@ -2737,7 +2760,6 @@ Language: ja_JP
     <string name="media_fetching">メディアを取得中…</string>
     <string name="pages_fetching">ページを取得中…</string>
     <string name="stats_view_search_terms">検索キーワード</string>
-    <string name="comments_fetching">コメントを取得中…</string>
     <string name="stats_view_authors">投稿者</string>
     <string name="logs_copied_to_clipboard">アプリケーションログをクリップボードにコピーしました</string>
     <string name="reader_label_new_posts">新規投稿</string>
@@ -2782,7 +2804,6 @@ Language: ja_JP
     <string name="older_month">1ヶ月以上前</string>
     <string name="older_two_days">2日以上前</string>
     <string name="older_last_week">1週間以上前</string>
-    <string name="error_refresh_unauthorized_comments">コメントの表示/編集権限がありません</string>
     <string name="error_refresh_unauthorized_pages">ページの表示/編集権限がありません</string>
     <string name="error_refresh_unauthorized_posts">投稿の表示/編集権限がありません</string>
     <string name="reader_label_comments_closed">コメントは受け付けていません</string>
@@ -2842,11 +2863,7 @@ Language: ja_JP
     <string name="comment_status_unapproved">承認待ち</string>
     <string name="connection_error">接続エラー</string>
     <string name="content_required">コメント欄は必須項目です</string>
-    <string name="dlg_approving_comments">承認中</string>
     <string name="dlg_confirm_trash_comments">ゴミ箱に移動しますか ?</string>
-    <string name="dlg_spamming_comments">スパムとしてマーク中</string>
-    <string name="dlg_trashing_comments">ゴミ箱に移動中</string>
-    <string name="dlg_unapproving_comments">承認解除中</string>
     <string name="edit_comment">コメント編集</string>
     <string name="http_authorization_required">認証が必要です</string>
     <string name="learn_more">さらに詳しく</string>
@@ -2973,7 +2990,6 @@ Language: ja_JP
     <string name="title">タイトル</string>
     <string name="categories">カテゴリー</string>
     <string name="tags_separate_with_commas">タグはコンマで区切ってください</string>
-    <string name="dlg_deleting_comments">コメントを削除中</string>
     <string name="sdcard_title">SD カードが必要です</string>
     <string name="media">メディア</string>
     <string name="delete">削除</string>

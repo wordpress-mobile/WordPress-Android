@@ -13,6 +13,9 @@ public class ReaderConstants {
     // max # top-level comments to request when updating comments
     public static final int READER_MAX_COMMENTS_TO_REQUEST = 20;
 
+    // # top-level comments to request when updating comments snippet in post details
+    public static final int READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET = 1;
+
     public static final int READER_MAX_USERS_TO_DISPLAY = 500; // max # users to show in ReaderUserListActivity
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 10; // 10 minute delay between automatic updates
     public static final int READER_MAX_RECOMMENDED_TO_REQUEST = 20; // max # of recommended blogs to request
@@ -36,12 +39,12 @@ public class ReaderConstants {
     static final String ARG_TAG = "tag";
     static final String ARG_ORIGINAL_TAG = "original_tag";
     public static final String ARG_IS_FEED = "is_feed";
-    public static final String ARG_BLOG_ID = "blog_id";
+    static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_FEED_ID = "feed_id";
-    public static final String ARG_POST_ID = "post_id";
+    static final String ARG_POST_ID = "post_id";
     public static final String ARG_INTERCEPTED_URI = "intercepted_uri";
-    public static final String ARG_COMMENT_ID = "comment_id";
-    public static final String ARG_DIRECT_OPERATION = "direct_operation";
+    static final String ARG_COMMENT_ID = "comment_id";
+    static final String ARG_DIRECT_OPERATION = "direct_operation";
     static final String ARG_IMAGE_URL = "image_url";
     static final String ARG_IS_PRIVATE = "is_private";
     static final String ARG_IS_GALLERY = "is_gallery";
@@ -56,7 +59,7 @@ public class ReaderConstants {
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED = "already_updated";
-    public static final String KEY_RESTORE_POSITION = "restore_position";
+    static final String KEY_RESTORE_POSITION = "restore_position";
     static final String KEY_SITE_SEARCH_RESTORE_POSITION = "site_search_restore_position";
     static final String KEY_WAS_PAUSED = "was_paused";
     static final String KEY_ERROR_MESSAGE = "error_message";

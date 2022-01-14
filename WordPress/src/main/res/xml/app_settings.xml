@@ -68,6 +68,10 @@
         android:title="@string/preference_open_device_settings" />
 
     <Preference
+        android:key="@string/pref_key_whats_new"
+        android:title="@string/whats_new_in_version_title" />
+
+    <Preference
         android:key="@string/pref_key_debug_settings"
         app:isPreferenceVisible="false"
         android:title="@string/preference_open_debug_settings" />
@@ -143,10 +147,5 @@
         <Preference
             android:key="@string/pref_key_oss_licenses"
             android:title="@string/open_source_licenses" />
-
-        <Preference
-            android:key="@string/pref_key_whats_new"
-            android:title="@string/whats_new_in_version_title" />
-
     </PreferenceCategory>
 </PreferenceScreen>

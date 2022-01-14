@@ -1,84 +1,128 @@
 <en-US>
-- We expanded the "Link To" setting for the image block to include "Media File" and "Attachment Page" options alongside the preexisting "Custom URL" option.
-- We solved a problem with content autosaves so they now run more smoothly.
+- Highlight text with any color in Paragraph blocks.
+- Create new Gallery blocks with the new design and auto-convert old galleries to match.
+- Undo and redo changes when formatting link text in blocks.
+- Load faster when reblogging posts and sharing text from other apps.
+- See background colors in pre-formatted blocks on sites with standard themes.
 </en-US>
 <ar>
-18.7:
-- قمنا بتوسيع إعداد "رابط إلى" الخاص بمكوِّن الصورة لتضمين خيارات "ملف الوسائط" و"صفحة المرفق" إلى جانب خيار "عنوان URL مخصص" الموجود سابقًا.
-- قمنا بحل مشكلة بشأن عمليات حفظ المحتوى التلقائية، لذا تعمل الآن بسلاسة أكبر.
+18.9:
+- قم بتمييز النص باستخدام أي لون في مكوِّنات الفقرة.
+- قم بإنشاء مكوِّنات معرض جديدة باستخدام التصميم الجديد وقم بتحويل المعارض القديمة تلقائيًا للمطابقة.
+- تراجع عن التغييرات وقم بإعادتها عند تنسيق نص الرابط في المكوِّنات.
+- قم بالتحميل بشكل أسرع عند إعادة تدوين المقالات ومشاركة نص من تطبيقات أخرى.
 </ar>
 <de-DE>
-18.7:
-- Der Einstellung „Link zu“ im Bildblock wurden neben der vorhandenen Option „Individuelle URL“ die Optionen „Mediendatei“ und „Anhang-Seite“ hinzugefügt.
-- Die automatische Speicherung von Inhalten funktioniert jetzt reibungsloser.
+18.9:
+- Hebe Text in Absätzen mit beliebigen Farben hervor.
+- Erstelle neue Galerieblöcke mit neuem Design und konvertiere alte Galerien automatisch, damit sie dazu passen.
+- Mache Änderungen beim Formatieren von Linktext in Blöcken rückgängig oder stelle sie wieder her.
+- Schnelleres Laden beim Rebloggen von Beiträgen und beim Teilen von Text aus anderen Apps.
+- Hintergrundfarben in vorformatierten Blöcken funktionieren nun auf Websites mit Standardthemen.
 </de-DE>
 <es-ES>
-18.7:
-- Hemos ampliado el ajuste "Enlace a" del bloque Imagen para incluir las opciones "Archivo de medios" y "Página de adjuntos", junto con la opción preexistente "URL personalizada".
-- Hemos resuelto un problema con el guardado automático de contenidos y ahora funciona mucho mejor.
+18.9:
+- Resaltar el texto con cualquier color en los bloques de párrafo.
+- Crear nuevos bloques de Galería con el nuevo diseño y convertir automáticamente las galerías antiguas para que coincidan.
+- Deshacer y rehacer los cambios al formato del texto de los enlaces en los bloques.
+- Carga más rápida al volver a bloguear entradas y compartir texto desde otras aplicaciones.
+- Ver colores de fondo en bloques pre formateados en sitios con temas standard.
 </es-ES>
 <fr-FR>
-18.7 :
-- Nous avons développé le réglage « Lier à » du bloc d’image pour inclure les options « Fichier média » et « Page de fichier joint » à côté de l’option préexistante « Lien personnalisé ».
-- Nous avons résolu un problème avec les sauvegardes automatiques de contenu afin qu’elles s’exécutent désormais plus facilement.
+18.9 :
+- Surlignez du texte dans n’importe quelle couleur dans les blocs Paragraphe.
+- Créez de blocs Galerie avec le nouveau design et convertissez automatiquement vos anciennes galeries.
+- Annulez et rétablissez des modifications lors du formatage de liens dans les blocs.
+- Chargement plus rapide lors du reblogging d’articles et du partage de texte depuis d’autres applications.
+ - Les blocks pré-formattés affichent les couleurs de fond sur les sites utiilisant des themes standards.
 </fr-FR>
 <iw-IL>
-18.7:
-- הרחבנו את ההגדרות של 'קישור אל' בבלוק התמונה והוספנו את האפשרויות 'קובץ מדיה' ו'עמוד עם קובץ מצורף' לצד האפשרות 'כתובת URL מותאמת' שהייתה כבר קיימת.
-- פתרנו בעיה עם השמירה האוטומטית של התוכן כדי שהתהליך יהיה יציב יותר.
+18.9:
+- אפשר להגדיש טקסט בכל צבע שרוצים בבלוקים של פסקה רגילה.
+- אפשר ליצור בלוקים חדשים של גלריה עם העיצוב החדש ולהמיר באופן אוטומטי גלריות ישנות כדי להתאים אותן.
+- אפשר לבטל שינויים או לבצע אותם שוב כאשר מעצבים טקסט של קישור בבלוקים.
+- טעינה מהירה יותר בפרסום מחדש של פוסטים בבלוג ובשיתוף של טקסט מאפליקציות אחרות.
+- אפשר לראות צבעי רקע של בלוקים מעוצבים מראש באתרים עם ערכות עיצוב סטנדרטיות.
 </iw-IL>
 <id>
-18.7:
-- Kami memperluas pengaturan "Tautan Ke" untuk blok gambar agar mencakup pilihan "Berkas Media" dan "Halaman Lampiran" di samping opsi "URL Kustom" yang sudah ada.
-- Kami menyelesaikan masalah pada penyimpanan otomatis konten sehingga dapat berjalan dengan lebih lancar.
+18.9:
+- Sorot teks dengan warna apa pun di blok Paragraf.
+- Buat blok Galeri baru dengan desain baru untuk mengonversikan galeri lama secara otomatis agar sesuai.
+- Urungkan dan ulangi perubahan saat memformat teks tautan di blok.
+- Muat lebih cepat saat melakukan reblog pos dan membagikan teks dari aplikasi lain.
 </id>
 <it-IT>
-18.7:
-- Abbiamo ampliato l'impostazione "Collega a" per il blocco Immagine in modo da includere le opzioni "File multimediale" e "Pagina dell'allegato" accanto all'opzione preesistente "URL personalizzato".
-- Abbiamo risolto un problema con i salvataggi automatici dei contenuti per farli funzionare in modo più fluido.
+18.9:
+- Evidenzia il testo con qualsiasi colore nei blocchi Paragrafo.
+- Crea nuovi blocchi Galleria con il nuovo design e converti automaticamente le vecchie gallerie affinché corrispondano.
+- Annulla e ripeti le modifiche quando formatti il testo dei link nei blocchi.
+- Carica più rapidamente quando ripubblichi articoli e condividi testo da altre app.
 </it-IT>
 <ja-JP>
-18.7:
-- 画像ブロックの「リンク先」設定を拡張し、既存の「カスタム URL」に加えて「メディアファイル」と「添付ファイルページ」のオプションを追加しました。
-- コンテンツの自動保存に関する問題を解決したため、よりスムーズに実行できるようになりました。
+18.9:
+- 段落ブロックで任意の色を使ってテキストを強調表示できます。
+- 新しいデザインのギャラリーブロックを作成したり、それに合わせて古いギャラリーを自動変換したりできます。
+- ブロック内のリンクテキストの書式を設定する際に、変更を元に戻したり、やり直したりできます。
+- 投稿をリブログしたり、他のアプリからテキストを共有したりする際の読み込みが速くなりました。
 </ja-JP>
 <ko-KR>
-18.7:
-- 이미지 블록에 대한 "링크" 설정을 확장하여 이미 있는 "사용자 정의 URL" 옵션과 함께 "미디어 파일" 옵션과 "첨부 페이지" 옵션을 포함했습니다.
-- 콘텐츠 자동저장이 더 원활하게 실행되도록 문제를 해결했습니다.
+18.9:
+- 원하는 색상으로 문단 블록의 텍스트를 강조합니다.
+- 새 디자인으로 새 갤러리 블록을 생성하고 기존 갤러리가 일치하도록 자동 변환합니다.
+- 블록의 링크 텍스트 형식 지정 시 변경사항 실행 취소/재실행이 가능합니다.
+- 글을 블로그에 다시 올리고 다른 앱의 텍스트를 공유할 때 더 빨리 로드합니다.
 </ko-KR>
 <nl-NL>
-18.7:
-- We hebben de instelling 'Link naar' voor het afbeeldingblok uitgebreid. Deze omvat nu naast de reeds bestaande optie 'Aangepaste URL' de opties 'Mediabestand' en 'Bijlagepagina'.
-- We hebben een probleem met automatisch opslaan van content opgelost, zodat dit nu soepeler wordt uitgevoerd.
+18.9:
+- Markeer tekst in iedere kleur in paragraafblokken.
+- Creëer nieuwe galerijblokken met het nieuwe ontwerp, en pas oude galerijen aan zodat ze matchen.
+- Maak veranderingen ongedaan of juist opnieuw tijdens het formatteren van linktekst in blokken.
+- Snellere laadtijden tijdens het rebloggen van berichten en het delen van tekst uit andere apps.
+- Zie de achtergrondkleur in gepreformatteerde blokken op sites met standaardthema’s.
 </nl-NL>
 <pt-BR>
-18.7:
-- Ampliamos a configuração "Link para" de forma que o bloco de imagem inclua as opções "Arquivo de mídia" e "Página de anexo" juntamente com a opção já existente "URL personalizada".
-- Corrigimos um problema no salvamento automático de conteúdo para deixá-lo mais estável.
+18.9:
+- Destaque o texto com qualquer cor nos blocos de parágrafo.
+- Crie novos blocos de galeria com o novo design e converta automaticamente galerias antigas para que combinem.
+- Desfaça e refaça as alterações ao formatar o texto do link em blocos.
+- Carregue mais rápido ao bloquear posts e compartilhar texto de outros aplicativos.
+- Veja cores de fundo em blocos pré-formatados em sites com temas padrão.
 </pt-BR>
 <ru-RU>
-18.7:
-— Теперь, помимо уже имеющейся опции "Пользовательский URL-адрес", параметр "Ссылка на" для блока изображения включает опции "Медиафайл" и "Страница вложения".
-— Мы решили проблему автосохранения содержимого, и теперь операция выполняется более плавно.
+18.9:
+- Выделяйте текст любым цветом в блоках абзаца.
+- Создавайте новые блоки галереи с новым дизайном и автоматически конвертируйте старые галереи.
+- Отмена и повтор изменений при форматировании текста ссылки в блоках.
+- Быстрая загрузка при перепубликации записец и обмене текстом из других приложений.
+- Просматривайте цвета фона в пре-форматированных блоках на сайтах со стандартными темами. 
 </ru-RU>
 <sv-SE>
-18.7:
-Vi har expanderat inställningen "Länka till" för bildblocket så att den inkluderar alternativen "Mediafil" och "Bilagssida" tillsammans med det tidigare alternativet "Anpassad URL".
-- Vi har åtgärdat ett problem med automatiskt sparande av innehåll, så att det nu går smidigare.
+18.9:
+– Framhäv text med valfri färg i styckblock.
+– Skapa nya gallierblock i det nya utförandet och konvertera automatiskt äldre gallerier så att de blir likadana.
+– Ångra och gör om ändringar i formateringen av länkad text i block.
+– Snabbare sidladdning när du rebloggar inlägg eller delar text från andra appar.
 </sv-SE>
 <tr-TR>
-18.7:
-- Görsel bloku için "Bağlantı" ayarını, önceden var olan "Özel URL" seçeneğinin yanı sıra "Ortam Dosyası" ve "Ek Sayfası" seçeneklerini içerecek şekilde genişlettik.
-- İçeriğin otomatik olarak kaydedilmesi işleviyle ilgili bir sorun çözülerek artık daha düzgün çalışması sağlandı.
+18.9:
+- Paragraf bloklarında metni herhangi bir renkle vurgulayın.
+- Yeni tasarımla yeni Galeri blokları oluşturun ve eski galerileri eşleşecek şekilde otomatik olarak dönüştürün.
+- Bloklar halinde bağlantı metnini biçimlendirirken değişiklikleri geri alın ve yineleyin.
+- Gönderileri yeniden bloga eklerken ve diğer uygulamalardan metin paylaşırken daha hızlı yükleyin.
+- Standart temalı sitelerde önceden biçimlenmiş blok tipi için arka plan renklerine göz atın.
 </tr-TR>
 <zh-CN>
-18.7：
-- 我们扩展了图片区块的“链接到”设置，在已有的“自定义 URL”选项旁边添加了“媒体文件”和“附件页面”选项。
-- 我们解决了内容自动发送的问题，使其现在运行得更加顺畅。
+18.9：
+- 在段落区块中，使用任意颜色突出显示文本。
+- 创建采用最新设计的画廊区块，自动转换旧画廊区块，保持风格一致。
+- 在区块中设置链接文本的格式时，撤消和重新更改。
+- 重新发布博文和分享来自其他应用程序的文本时，更快加载。
 </zh-CN>
 <zh-TW>
-18.7：
-- 我們拓展了圖片區塊的「連結至」設定，新增「媒體檔案」和「附件頁面」選項，以及之前就有的「自訂 URL」選項。
-- 我們解決了內容自動儲存功能的問題，現在這些功能可順利執行。
+18.9:
+- 可用任意顏色醒目標示段落區塊中的文字。
+- 加入全新設計的畫廊區塊，並可自動將舊版畫廊轉換至新版區塊。
+- 在變更區塊內鏈結文字時可復原與重做。
+- 從其他應用程式轉發或分享文章時更加快速。
+- 可在使用標準主題的網站上看見預先格式化區塊的背景顏色。
 </zh-TW>

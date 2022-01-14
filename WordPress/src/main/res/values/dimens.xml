@@ -308,7 +308,7 @@
     <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
-    <dimen name="my_site_bottom_spacing">16dp</dimen>
+    <dimen name="my_site_bottom_spacing">64dp</dimen> <!-- added so that the list items are not hidden behind the toast -->
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
     <dimen name="my_site_content_area">500dp</dimen>
@@ -323,6 +323,12 @@
     <dimen name="my_site_post_item_image_size">48dp</dimen>
     <dimen name="my_site_post_item_time_icon_size">12dp</dimen>
     <dimen name="my_site_create_first_image_width">75dp</dimen>
+
+    <!-- my site error card -->
+    <dimen name="my_site_error_card_border_radius">4dp</dimen>
+    <dimen name="my_site_error_card_stroke_width">1dp</dimen>
+    <dimen name="my_site_error_card_dash_gap">5dp</dimen>
+    <dimen name="my_site_error_card_dash_width">10dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostItemBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiHelpers
@@ -35,6 +35,6 @@ class PostItemViewHolder(
         )
         featuredImage.visibility = if (postItem.featuredImageUrl == null) View.INVISIBLE else View.VISIBLE
         iconTime.setVisible(postItem.isTimeIconVisible)
-        itemView.setOnClickListener { postItem.onClick.invoke() }
+        itemView.setOnClickListener { postItem.onClick.click() }
     }
 }
