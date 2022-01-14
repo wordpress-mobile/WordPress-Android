@@ -63,7 +63,7 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
-import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.services.comment.ReaderCommentService;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -100,12 +100,6 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 import kotlin.Unit;
 
-/**
- * @deprecated
- * Threaded Comments are being refactored as part of Comments Unification project. If you are adding any
- * features or modifying this or related classes, please ping klymyam or develric
- */
-@Deprecated
 public class ReaderCommentListActivity extends LocaleAwareActivity implements OnConfirmListener,
         OnCollapseListener {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
