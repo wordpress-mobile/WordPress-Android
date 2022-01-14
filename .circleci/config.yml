@@ -196,7 +196,7 @@ jobs:
           apk-path: WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk
           test-apk-path: WordPress/build/outputs/apk/androidTest/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug-androidTest.apk
           test-targets: notPackage org.wordpress.android.ui.screenshots
-          device: model=Pixel2,version=29,locale=en,orientation=portrait
+          device: model=Pixel2,version=28,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 20m
           num-flaky-test-attempts: 2
