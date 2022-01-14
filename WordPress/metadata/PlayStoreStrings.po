@@ -21,6 +21,16 @@ msgid ""
 "- Block titles are now center-aligned in the inserter menu.\n"
 msgstr ""
 
+#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_190"
+msgid ""
+"19.0:\n"
+"- Card-based dashboard feed, including Posts.\n"
+"- Maximum of 5-minute video uploads on free plans.\n"
+"- More user interface translation, including Jetpack/Layout Grid blocks.\n"
+"- Consistent text formatting after hitting backspace.\n"
+msgstr ""
+
 msgctxt "release_note_189"
 msgid ""
 "18.9:\n"
