@@ -6,22 +6,10 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">确认</string>
-    <string name="about_automattic_source_code">源代码</string>
-    <string name="about_automattic_california_privacy_notice">加州隐私声明</string>
-    <string name="about_automattic_privacy_policy">隐私政策</string>
-    <string name="about_automattic_terms_of_service">服务条款</string>
-    <string name="about_automattic_work_from_anywhere">随时随地工作</string>
-    <string name="about_automattic_work_with_us">与我们合作</string>
-    <string name="about_automattic_family">Automattic 家族</string>
-    <string name="about_automattic_legal_and_more">法律及更多信息</string>
-    <string name="about_automattic_rate_us">给我们评分</string>
-    <string name="about_automattic_share_with_friends">分享给朋友</string>
     <string name="about_automattic_version_label">版本 %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">确认</string>
     <string name="about_automattic_legal_page_title">法律及更多信息</string>
     <string name="about_automattic_main_page_title">关于 %1$s</string>
-    <string name="about_automattic_app_name">关于 Automattic</string>
     <string name="about_blog">博客</string>
     <string name="gutenberg_native_the_basics">基础知识</string>
     <string name="gutenberg_native_selected_default">已选：默认</string>
@@ -120,7 +108,6 @@ Language: zh_CN
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
     <string name="recommend_app_bad_format_response">收到无效响应</string>
     <string name="recommend_app_null_response">未收到任何响应</string>
-    <string name="recommend_app_subject">WordPress App——适用于任何屏幕的App</string>
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="my_site_btn_domains">域名</string>
@@ -2773,7 +2760,6 @@ Language: zh_CN
     <string name="stats_search_terms_unknown_search_terms">未知搜索字词</string>
     <string name="stats_view_search_terms">搜索字词</string>
     <string name="stats_view_authors">作者</string>
-    <string name="comments_fetching">正在提取评论…</string>
     <string name="pages_fetching">正在获取页面…</string>
     <string name="posts_fetching">正在获取文章…</string>
     <string name="media_fetching">正在获取媒体…</string>
@@ -2815,7 +2801,6 @@ Language: zh_CN
     <string name="error_publish_empty_post">发布的文章不能为空</string>
     <string name="error_refresh_unauthorized_posts">您不具备查看或编辑文章的权限</string>
     <string name="error_refresh_unauthorized_pages">您不具备查看或编辑页面的权限</string>
-    <string name="error_refresh_unauthorized_comments">您不具备查看或编辑评论的权限</string>
     <string name="more">更多</string>
     <string name="older_month">超过一个月</string>
     <string name="older_last_week">超过 1 周</string>
@@ -2895,10 +2880,6 @@ Language: zh_CN
     <string name="saving_changes">正在保存更改</string>
     <string name="trash">删除</string>
     <string name="dlg_confirm_trash_comments">确定删除？</string>
-    <string name="dlg_trashing_comments">正在删除</string>
-    <string name="dlg_spamming_comments">正在标记为垃圾评论</string>
-    <string name="dlg_unapproving_comments">不批准</string>
-    <string name="dlg_approving_comments">批准</string>
     <string name="mnu_comment_trash">删除</string>
     <string name="mnu_comment_spam">垃圾</string>
     <string name="mnu_comment_unapprove">不通过</string>
@@ -3011,7 +2992,6 @@ Language: zh_CN
     <string name="title">标题</string>
     <string name="tags_separate_with_commas">用逗号分隔标签</string>
     <string name="categories">分类</string>
-    <string name="dlg_deleting_comments">删除评论</string>
     <string name="sdcard_title">需要 SD 卡</string>
     <string name="media">媒体</string>
     <string name="approve">通过</string>

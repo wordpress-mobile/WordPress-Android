@@ -1,29 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-03 16:38:46+0000
+Translation-Revision-Date: 2022-01-11 05:08:23+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Благодарности</string>
-    <string name="about_automattic_source_code">Исходный код</string>
-    <string name="about_automattic_california_privacy_notice">Заявление о защите конфиденциальности пользователей из Калифорнии</string>
-    <string name="about_automattic_privacy_policy">Политика конфиденциальности</string>
-    <string name="about_automattic_terms_of_service">Условия использования</string>
-    <string name="about_automattic_work_from_anywhere">Работайте откуда угодно</string>
-    <string name="about_automattic_work_with_us">Работа у нас</string>
-    <string name="about_automattic_family">Семейство Automattic</string>
-    <string name="about_automattic_legal_and_more">Юридическая информация и прочее</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_instagram">Instagram</string>
-    <string name="about_automattic_rate_us">Оцените нас</string>
-    <string name="about_automattic_share_with_friends">Поделитесь с друзьями</string>
+    <string name="about_automattic_app_icon_description">Значок приложения</string>
+    <string name="about_automattic_back_icon_description">Значок Назад</string>
+    <string name="about_automattic_logo_description">логотип Automattic</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
+    <string name="about_automattic_source_code_item_title">Исходный код</string>
+    <string name="about_automattic_privacy_policy_item_title">Политика конфиденциальности</string>
+    <string name="about_automattic_terms_of_service_item_title">Условия использования</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Работайте откуда угодно</string>
+    <string name="about_automattic_work_with_us_item_title">Работа у нас</string>
+    <string name="about_automattic_family_item_title">Семейство Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">Юридическая информация и прочее</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_rate_us_item_title">Оцените нас</string>
+    <string name="about_automattic_share_with_friends_item_title">Поделитесь с друзьями</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Вы можете редактировать этот блок используя веб версию редактора.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Открыть настройки безопасности Jetpack</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Заметка: Требуется разрешить вход WordPress.com для редактирования этого блока в мобильном редакторе.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Заметка: макет может меняться в зависимости от темы и размера экрана</string>
+    <string name="gutenberg_native_address_settings">Настройки адреса</string>
+    <string name="gutenberg_native_add_media">ДОБАВИТЬ МЕДИА</string>
+    <string name="my_site_error_card_subtitle">На настоящий момент возникли проблемы с загрузкой данных вашего сайта.</string>
+    <string name="my_site_error_card_title">Некоторые данные не были загружены</string>
+    <string name="my_site_dashboard_stale_message">Консоль не обновлена. Проверьте ваше подключение к сети и потяните для обновления.</string>
+    <string name="my_site_dashboard_update_error">Невозможно обновить консоль.</string>
+    <string name="error_media_video_duration_exceeds_limit">Загрузка видео длительностью более 5 минут требует перехода на платный тариф.</string>
+    <string name="about_automattic_acknowledgements_item_title">Благодарности</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Заявление о защите конфиденциальности пользователей из Калифорнии</string>
     <string name="about_automattic_version_label">Версия %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Благодарности</string>
     <string name="about_automattic_legal_page_title">Юридическая информация и прочее</string>
     <string name="about_automattic_main_page_title">О %1$s</string>
-    <string name="about_automattic_app_name">Об Automattic</string>
     <string name="about_blog">Блог</string>
     <string name="gutenberg_native_the_basics">Основы</string>
     <string name="gutenberg_native_selected_default">Выбор: по умолчанию</string>
@@ -264,6 +284,7 @@ Language: ru
     <string name="gutenberg_native_move_image_forward">Переместить изображение вперёд</string>
     <string name="gutenberg_native_move_image_backward">Переместить изображение назад</string>
     <string name="gutenberg_native_width_settings">Настройки ширины</string>
+    <string name="gutenberg_native_column_settings">Настройки столбцов</string>
     <string name="user_profile_untitled_site">(Без названия)</string>
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
@@ -274,7 +295,9 @@ Language: ru
     <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
     <string name="gutenberg_native_retry">Повторить</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
+    <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_s_link">ссылка на %s</string>
+    <string name="gutenberg_native_padding">Отступ</string>
     <string name="gutenberg_native_featured">Избранное</string>
     <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
@@ -2777,7 +2800,6 @@ Language: ru
     <string name="stats_search_terms_unknown_search_terms">Неизвестные поисковые запросы</string>
     <string name="stats_view_search_terms">Поисковые запросы</string>
     <string name="stats_view_authors">Авторы</string>
-    <string name="comments_fetching">Загрузка комментариев…</string>
     <string name="pages_fetching">Загрузка страниц…</string>
     <string name="posts_fetching">Загрузка записей…</string>
     <string name="media_fetching">Загрузка медиафайлов…</string>
@@ -2819,7 +2841,6 @@ Language: ru
     <string name="error_publish_empty_post">Нельзя опубликовать пустую запись.</string>
     <string name="error_refresh_unauthorized_posts">У вас нет прав на просмотр или редактирование записей.</string>
     <string name="error_refresh_unauthorized_pages">У вас нет прав на просмотр или редактирование страниц.</string>
-    <string name="error_refresh_unauthorized_comments">У вас нет прав на просмотр или редактирование комментариев.</string>
     <string name="more">Больше</string>
     <string name="older_month">Больше месяца назад</string>
     <string name="older_last_week">Больше недели</string>
@@ -2899,10 +2920,6 @@ Language: ru
     <string name="saving_changes">Сохранить изменения</string>
     <string name="trash">Удалённые</string>
     <string name="dlg_confirm_trash_comments">Удалить?</string>
-    <string name="dlg_trashing_comments">Удалить</string>
-    <string name="dlg_spamming_comments">Отметить как спам</string>
-    <string name="dlg_unapproving_comments">Не одобрить</string>
-    <string name="dlg_approving_comments">Одобрить</string>
     <string name="mnu_comment_trash">Удалить</string>
     <string name="mnu_comment_spam">Спам</string>
     <string name="mnu_comment_unapprove">Не одобрить</string>
@@ -3015,7 +3032,6 @@ Language: ru
     <string name="title">Заголовок</string>
     <string name="tags_separate_with_commas">Метки (разделяйте запятыми)</string>
     <string name="categories">Рубрики</string>
-    <string name="dlg_deleting_comments">Удаление комментариев</string>
     <string name="sdcard_title">Требуется SD-карта</string>
     <string name="media">Медиа</string>
     <string name="approve">Одобрить</string>

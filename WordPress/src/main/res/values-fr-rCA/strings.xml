@@ -6,24 +6,10 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Remerciements</string>
-    <string name="about_automattic_source_code">Code source</string>
-    <string name="about_automattic_california_privacy_notice">Avis de confidentialité pour la Californie</string>
-    <string name="about_automattic_privacy_policy">Politique de confidentialité</string>
-    <string name="about_automattic_terms_of_service">Conditions générales d’utilisation</string>
-    <string name="about_automattic_work_from_anywhere">Travaillez de n’importe où</string>
-    <string name="about_automattic_work_with_us">Rejoignez-nous</string>
-    <string name="about_automattic_family">Famille Automattic</string>
-    <string name="about_automattic_legal_and_more">Droit et divers</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_instagram">Instagram</string>
-    <string name="about_automattic_rate_us">Évaluez-nous</string>
-    <string name="about_automattic_share_with_friends">Partager avec des amis</string>
     <string name="about_automattic_version_label">Version : %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Remerciements</string>
     <string name="about_automattic_legal_page_title">Droit et divers</string>
     <string name="about_automattic_main_page_title">À propos de %1$s</string>
-    <string name="about_automattic_app_name">À propos d’Automattic</string>
     <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">Les bases</string>
     <string name="gutenberg_native_selected_default">Sélection : Par défaut</string>
@@ -123,7 +109,6 @@ Language: fr
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>
     <string name="recommend_app_bad_format_response">Réponse reçue non valide</string>
     <string name="recommend_app_null_response">Aucune réponse reçue</string>
-    <string name="recommend_app_subject">Applications WordPress - Des applications pour tous les écrans</string>
     <string name="me_btn_share">Partager WordPress avec un ami</string>
     <string name="my_site_quick_actions_title">Liens rapides</string>
     <string name="my_site_btn_domains">Domaines</string>
@@ -2777,7 +2762,6 @@ Language: fr
     <string name="stats_search_terms_unknown_search_terms">Termes de recherche inconnus</string>
     <string name="stats_view_search_terms">Termes de Recherche</string>
     <string name="stats_view_authors">Auteurs</string>
-    <string name="comments_fetching">Récupération des commentaires…</string>
     <string name="pages_fetching">Récupération des pages…</string>
     <string name="posts_fetching">Récupération des articles…</string>
     <string name="media_fetching">Récupération des médias…</string>
@@ -2819,7 +2803,6 @@ Language: fr
     <string name="error_publish_empty_post">Impossible de publier un article vide</string>
     <string name="error_refresh_unauthorized_posts">Vous n\'avez pas la permission de voir ou éditer les articles</string>
     <string name="error_refresh_unauthorized_pages">Vous n\'avez pas la permission de voir ou éditer les pages</string>
-    <string name="error_refresh_unauthorized_comments">Vous n\'avez pas la permission de voir ou éditer les commentaires</string>
     <string name="more">Plus</string>
     <string name="older_month">Plus d\'un mois</string>
     <string name="older_last_week">Plus d\'une semaine</string>
@@ -2899,10 +2882,6 @@ Language: fr
     <string name="saving_changes">Enregistrement des modifications</string>
     <string name="trash">Corbeille</string>
     <string name="dlg_confirm_trash_comments">Mettre à la corbeille ?</string>
-    <string name="dlg_trashing_comments">Envoie à la corbeille</string>
-    <string name="dlg_spamming_comments">Marquage comme indésirable</string>
-    <string name="dlg_unapproving_comments">Désapprobation</string>
-    <string name="dlg_approving_comments">Approbation</string>
     <string name="mnu_comment_trash">Supprimer</string>
     <string name="mnu_comment_spam">Indésirable</string>
     <string name="mnu_comment_unapprove">Désapprouver</string>
@@ -3015,7 +2994,6 @@ Language: fr
     <string name="title">Titre</string>
     <string name="tags_separate_with_commas">Séparez les étiquettes par des virgules</string>
     <string name="categories">Catégories</string>
-    <string name="dlg_deleting_comments">Effacement de commentaires en cours</string>
     <string name="sdcard_title">Carte SD requise</string>
     <string name="media">Multimedia</string>
     <string name="approve">Approuver</string>

@@ -1323,7 +1323,6 @@ Language: es_CL
     <string name="error_notification_open">No se pudo abrir la notificación</string>
     <string name="stats_view_authors">Autores</string>
     <string name="stats_view_search_terms">Términos de búsqueda</string>
-    <string name="comments_fetching">Recuperando comentarios…</string>
     <string name="pages_fetching">Recuperando páginas…</string>
     <string name="posts_fetching">Recuperando entradas…</string>
     <string name="media_fetching">Recuperando medios…</string>
@@ -1371,7 +1370,6 @@ Language: es_CL
     <string name="signing_out">Cerrar sesión…</string>
     <string name="comment_trashed">Comentario eliminado</string>
     <string name="more">Más</string>
-    <string name="error_refresh_unauthorized_comments">No tienes permiso para ver o editar comentarios</string>
     <string name="error_refresh_unauthorized_pages">No tienes permiso para ver o editar páginas</string>
     <string name="error_refresh_unauthorized_posts">No tienes permiso para ver o editar entradas</string>
     <string name="error_publish_empty_post">No se puede publicar una entrada vacía</string>
@@ -1435,10 +1433,6 @@ Language: es_CL
     <string name="mnu_comment_unapprove">Rechazar</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_trash">Enviar a la papelera</string>
-    <string name="dlg_approving_comments">Aprobando</string>
-    <string name="dlg_unapproving_comments">Rechazando</string>
-    <string name="dlg_spamming_comments">Marcando como spam</string>
-    <string name="dlg_trashing_comments">Enviando a la papelera</string>
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
     <string name="trash">Papelera</string>
     <string name="saving_changes">Guardando cambios</string>
@@ -1552,7 +1546,6 @@ Language: es_CL
     <string name="title">Título</string>
     <string name="categories">Categorías</string>
     <string name="tags_separate_with_commas">Separa las etiquetas con comas</string>
-    <string name="dlg_deleting_comments">Eliminar comentarios</string>
     <string name="sdcard_title">Requiere tarjeta SD</string>
     <string name="media">Multimedia</string>
     <string name="delete">Eliminar</string>

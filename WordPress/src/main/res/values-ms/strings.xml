@@ -683,7 +683,6 @@ Language: ms
     <string name="auth_required">Log masuk semula untuk meneruskan.</string>
     <string name="stats_view_authors">Pengarang</string>
     <string name="error_notification_open">Tidak dapat membuka pemberitahuan</string>
-    <string name="comments_fetching">Mengambil ulasan…</string>
     <string name="media_fetching">Mengambil media…</string>
     <string name="pages_fetching">Mengambil halaman…</string>
     <string name="posts_fetching">Mengambil kiriman…</string>
@@ -735,7 +734,6 @@ Language: ms
     <string name="signing_out">Melog keluar…</string>
     <string name="reader_label_view_original">Lihat artikel asal</string>
     <string name="error_refresh_unauthorized_pages">Anda tidak mempunyai kebenaran melihat atau menyunting halaman</string>
-    <string name="error_refresh_unauthorized_comments">Anda tidak mempunyai kebenaran melihat atau menyunting ulasan</string>
     <string name="older_month">Lebih dari sebulan</string>
     <string name="error_refresh_unauthorized_posts">Anda tidak mempunyai kebenaran melihat atau menyunting kiriman</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
@@ -775,9 +773,6 @@ Language: ms
     <string name="cancel_edit">Batal edit</string>
     <string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
     <string name="mnu_comment_trash">Sampah</string>
-    <string name="dlg_approving_comments">Meluluskan</string>
-    <string name="dlg_unapproving_comments">Tidak meluluskan</string>
-    <string name="dlg_trashing_comments">Hantar ke sampah</string>
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
     <string name="trash">Sampah</string>
     <string name="saving_changes">Simpan perubahan</string>
@@ -811,7 +806,6 @@ Language: ms
     <string name="content_required">Ulasan diwajibkan</string>
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
-    <string name="dlg_spamming_comments">Ditanda sebagai spam</string>
     <string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>
     <string name="notifications_empty_all">Belum ada pemberitahuan.</string>
     <string name="media_error_no_permission">Anda tidak mempunyai kebenaran untuk melihat pustaka media</string>
@@ -898,7 +892,6 @@ Language: ms
     <string name="categories">Kategori</string>
     <string name="title">Tajuk</string>
     <string name="tags_separate_with_commas">Pisahkan tag dengan tanda koma</string>
-    <string name="dlg_deleting_comments">Menghapuskan ulasan</string>
     <string name="sdcard_title">Kad SD Diperlukan</string>
     <string name="media">Media</string>
     <string name="delete">Hapus</string>

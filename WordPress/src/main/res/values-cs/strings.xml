@@ -1,29 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-13 21:20:37+0000
+Translation-Revision-Date: 2022-01-11 07:50:16+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Poděkování</string>
-    <string name="about_automattic_source_code">Zdrojový kód</string>
-    <string name="about_automattic_privacy_policy">Zásady ochrany osobních údajů</string>
-    <string name="about_automattic_california_privacy_notice">Zásady o ochraně osobních údajů v Kalifornii</string>
-    <string name="about_automattic_terms_of_service">Podmínky služby</string>
-    <string name="about_automattic_work_from_anywhere">Pracujte odkudkoli</string>
-    <string name="about_automattic_work_with_us">Pracuj s námi</string>
-    <string name="about_automattic_family">Automatická rodina</string>
-    <string name="about_automattic_legal_and_more">Právní a další</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_instagram">Instagram</string>
-    <string name="about_automattic_rate_us">Ohodnoťte nás</string>
-    <string name="about_automattic_share_with_friends">Sdílet s přáteli</string>
+    <string name="about_automattic_app_icon_description">Ikona aplikace</string>
+    <string name="about_automattic_back_icon_description">Ikona zpět</string>
+    <string name="about_automattic_logo_description">Automattic logo</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Kapesní odlitky</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Jeden den</string>
+    <string name="about_automattic_source_code_item_title">Zdrojový kód</string>
+    <string name="about_automattic_privacy_policy_item_title">Zásady ochrany osobních údajů</string>
+    <string name="about_automattic_terms_of_service_item_title">Podmínky používání služby</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Práce odkudkoli</string>
+    <string name="about_automattic_work_with_us_item_title">Pracuj s námi</string>
+    <string name="about_automattic_family_item_title">Automatická rodina</string>
+    <string name="about_automattic_legal_and_more_item_title">Právní a další</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_rate_us_item_title">Ohodnoťte nás</string>
+    <string name="about_automattic_share_with_friends_item_title">Sdílet s přáteli</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Tento blok můžete upravit pomocí webové verze editoru.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Otevřete nastavení Jetpack zabezpečení</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Poznámka: Chcete-li upravit tento blok v mobilním editoru, musíte povolit přihlášení na WordPress.com.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Poznámka: Rozvržení se může lišit podle šablony a velikostí obrazovky</string>
+    <string name="gutenberg_native_address_settings">Nastavení adresy</string>
+    <string name="gutenberg_native_add_media">Přidat média</string>
+    <string name="my_site_error_card_subtitle">V tuto chvíli máme potíže s načítáním dat vašeho webu.</string>
+    <string name="my_site_error_card_title">Některá data se nenačetla</string>
+    <string name="my_site_dashboard_stale_message">Nástěnka není aktualizován. Zkontrolujte své připojení a poté zatažením obnovte.</string>
+    <string name="my_site_dashboard_update_error">Nástěnku se nepodařilo aktualizovat.</string>
+    <string name="error_media_video_duration_exceeds_limit">Video nebylo nahráno! Nahrávání videí delších než 5 minut vyžaduje placený tarif.</string>
+    <string name="about_automattic_acknowledgements_item_title">Poděkování</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Zásady o ochraně osobních údajů v Kalifornii</string>
     <string name="about_automattic_version_label">Verze %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Poděkování</string>
     <string name="about_automattic_legal_page_title">Právní a další</string>
     <string name="about_automattic_main_page_title">O autorovi %1$s</string>
-    <string name="about_automattic_app_name">O Automattic</string>
     <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">Základy</string>
     <string name="gutenberg_native_selected_default">Vybrat: výchozí</string>
@@ -264,6 +284,7 @@ Language: cs_CZ
     <string name="gutenberg_native_move_image_forward">Posunout obrázek dopředu</string>
     <string name="gutenberg_native_move_image_backward">Přesunout obrázek dozadu</string>
     <string name="gutenberg_native_width_settings">Nastavení šířky</string>
+    <string name="gutenberg_native_column_settings">Nastavení sloupců</string>
     <string name="user_profile_untitled_site">(bez názvu)</string>
     <string name="user_profile_site_section_header">Web</string>
     <string name="user_profile_bottom_sheet_description">Informace spodního listu profilu uživatele</string>
@@ -275,6 +296,8 @@ Language: cs_CZ
     <string name="gutenberg_native_retry">Opakovat</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
     <string name="gutenberg_native_s_link">%s odkaz</string>
+    <string name="gutenberg_native_text_color">Barva textu</string>
+    <string name="gutenberg_native_padding">Odsazení</string>
     <string name="gutenberg_native_featured">Doporučené</string>
     <string name="gutenberg_native_custom_url">Vlastní URL</string>
     <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
@@ -2771,7 +2794,6 @@ Language: cs_CZ
     <string name="verification_code">Ověřovací kód</string>
     <string name="invalid_verification_code">Neplatný ověřovací kód</string>
     <string name="auth_required">Pro pokračování, se přihlaste ještě jednou.</string>
-    <string name="comments_fetching">Načítám komentáře…</string>
     <string name="pages_fetching">Načítám stránky…</string>
     <string name="posts_fetching">Načítám příspěvky…</string>
     <string name="media_fetching">Načítám mediální soubory…</string>
@@ -2816,7 +2838,6 @@ Language: cs_CZ
     <string name="error_publish_empty_post">Nelze publikovat prázdný příspěvek</string>
     <string name="error_refresh_unauthorized_posts">Nemáte oprávnění pro zobrazení, nebo pro úpravy příspěvků</string>
     <string name="error_refresh_unauthorized_pages">Nemáte oprávnění pro zobrazení, nebo pro úpravy stránek</string>
-    <string name="error_refresh_unauthorized_comments">Nemáte oprávnění pro zobrazení, nebo pro úpravy komentářů</string>
     <string name="older_month">Starší než měsíc</string>
     <string name="older_two_days">Starší než 2 dny</string>
     <string name="older_last_week">Starší než týden</string>
@@ -2902,10 +2923,6 @@ Language: cs_CZ
     <string name="comment_status_approved">Schváleno</string>
     <string name="mnu_comment_approve">Schválit</string>
     <string name="mnu_comment_unapprove">Zamítnout</string>
-    <string name="dlg_approving_comments">Schvaluji</string>
-    <string name="dlg_unapproving_comments">Zamítám</string>
-    <string name="dlg_spamming_comments">Označuji jako spam</string>
-    <string name="dlg_trashing_comments">Přesunuji do koše</string>
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
     <string name="sure_to_cancel_edit_comment">Ukončit úpravy tohoto komentáře?</string>
     <string name="image_settings">Vlastnosti obrázku</string>
@@ -3015,7 +3032,6 @@ Language: cs_CZ
     <string name="title">Název</string>
     <string name="categories">Rubriky</string>
     <string name="tags_separate_with_commas">Štítky (oddělte štítky čárkami)</string>
-    <string name="dlg_deleting_comments">Odstraňování komentářů</string>
     <string name="sdcard_title">Vyžadována SD karta</string>
     <string name="media">Média</string>
     <string name="delete">Vymazat</string>

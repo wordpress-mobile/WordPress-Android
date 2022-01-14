@@ -84,7 +84,6 @@ Language: uz
     <string name="title">Sarlavha</string>
     <string name="categories">Bo‘limlar</string>
     <string name="tags_separate_with_commas">Kalit so\'zlarni vergul bilan ajrating</string>
-    <string name="dlg_deleting_comments">Fikrlarni o\'chirish</string>
     <string name="sdcard_title">SD karta kerak</string>
     <string name="media">Media</string>
     <string name="delete">O‘chir</string>

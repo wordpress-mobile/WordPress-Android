@@ -6,24 +6,10 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">בשיתוף</string>
-    <string name="about_automattic_source_code">קוד מקור</string>
-    <string name="about_automattic_california_privacy_notice">הצהרת פרטיות של קליפורניה</string>
-    <string name="about_automattic_privacy_policy">מדיניות פרטיות</string>
-    <string name="about_automattic_terms_of_service">תנאי שימוש</string>
-    <string name="about_automattic_work_from_anywhere">לעבוד מכל מקום</string>
-    <string name="about_automattic_work_with_us">לעבוד איתנו</string>
-    <string name="about_automattic_family">משפחת Automattic</string>
-    <string name="about_automattic_legal_and_more">מידע משפטי ופרטים נוספים</string>
-    <string name="about_automattic_twitter">טוויטר</string>
-    <string name="about_automattic_instagram">אינסטגרם</string>
-    <string name="about_automattic_rate_us">נשמח לקבל ממך דירוג</string>
-    <string name="about_automattic_share_with_friends">לשתף עם חברים</string>
     <string name="about_automattic_version_label">גרסה ⁦%1$s⁩</string>
     <string name="about_automattic_acknowledgements_page_title">בשיתוף</string>
     <string name="about_automattic_legal_page_title">מידע משפטי ופרטים נוספים</string>
     <string name="about_automattic_main_page_title">אודות ⁦%1$s⁩</string>
-    <string name="about_automattic_app_name">אודות Automattic</string>
     <string name="about_blog">בלוג</string>
     <string name="gutenberg_native_the_basics">השלבים הבסיסיים</string>
     <string name="gutenberg_native_selected_default">נבחר: ברירת מחדל</string>
@@ -121,7 +107,6 @@ Language: he_IL
     <string name="recommend_app_generic_get_template_error">שגיאה לא ידועה בהבאת תבנית האפליקציה המומלצת</string>
     <string name="recommend_app_bad_format_response">התקבלה תגובה לא חוקית</string>
     <string name="recommend_app_null_response">לא התקבלו תגובות</string>
-    <string name="recommend_app_subject">האפליקציה של WordPress – אפליקציות לכל סוגי המסכים</string>
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
     <string name="my_site_quick_actions_title">קישורים מהירים</string>
     <string name="my_site_btn_domains">דומיינים</string>
@@ -2772,7 +2757,6 @@ Language: he_IL
     <string name="stats_search_terms_unknown_search_terms">מונחי חיפוש לא ידועים</string>
     <string name="stats_view_authors">מחברים</string>
     <string name="stats_view_search_terms">מונחי חיפוש</string>
-    <string name="comments_fetching">מביא תגובות…</string>
     <string name="pages_fetching">מביא עמודים…</string>
     <string name="posts_fetching">מביא פוסטים…</string>
     <string name="media_fetching">מביא מדיה…</string>
@@ -2818,7 +2802,6 @@ Language: he_IL
     <string name="comment_reply_to_user">להגיב ל-%s</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
     <string name="reader_label_like">לייק</string>
-    <string name="error_refresh_unauthorized_comments">איך לך הרשאה להציג או לערוך תגובות</string>
     <string name="older_month">בן יותר מחודש</string>
     <string name="older_two_days">בן יותר מיומיים</string>
     <string name="older_last_week">בן יותר משבוע</string>
@@ -2888,10 +2871,6 @@ Language: he_IL
     <string name="mnu_comment_unapprove">בטל אישור</string>
     <string name="mnu_comment_spam">תגובות זבל</string>
     <string name="mnu_comment_trash">אשפה</string>
-    <string name="dlg_approving_comments">מאשר</string>
-    <string name="dlg_unapproving_comments">מבטל אישור</string>
-    <string name="dlg_spamming_comments">מסמן כתגובת זבל</string>
-    <string name="dlg_trashing_comments">שולח לאשפה</string>
     <string name="dlg_confirm_trash_comments">לשלוח לאשפה?</string>
     <string name="trash">אשפה</string>
     <string name="saving_changes">שומר שינויים</string>
@@ -3009,7 +2988,6 @@ Language: he_IL
     <string name="title">כותרת</string>
     <string name="categories">קטגוריות</string>
     <string name="tags_separate_with_commas">יש להפריד תגיות בפסיקים</string>
-    <string name="dlg_deleting_comments">מוחק תגובות</string>
     <string name="sdcard_title">דרוש כרטיס SD</string>
     <string name="media">מדיה</string>
     <string name="delete">מחק</string>

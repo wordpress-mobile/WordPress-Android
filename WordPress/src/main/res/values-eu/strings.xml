@@ -275,7 +275,6 @@ Language: eu_ES
     <string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
     <string name="reader_empty_posts_request_failed">Huts egin du bidalketak eskuratzeak</string>
     <string name="stats_view_authors">Egileak</string>
-    <string name="comments_fetching">Iruzkinak eskuratzen…</string>
     <string name="pages_fetching">Orrialdeak eskuratzen…</string>
     <string name="posts_fetching">Bidalketak eskuratzen…</string>
     <string name="media_fetching">Media eskuratzen…</string>
@@ -351,10 +350,6 @@ Language: eu_ES
     <string name="mnu_comment_unapprove">Baztertu</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_trash">Bidali zakarrontzira</string>
-    <string name="dlg_approving_comments">Onartua</string>
-    <string name="dlg_unapproving_comments">Baztertua</string>
-    <string name="dlg_spamming_comments">Spam bezala markatzen</string>
-    <string name="dlg_trashing_comments">Zakarrontzira bidaltzen</string>
     <string name="dlg_confirm_trash_comments">Zakarrontzira bidali?</string>
     <string name="trash">Zakarrontzia</string>
     <string name="add_new_category">Gehitu kategoria berria</string>
@@ -474,7 +469,6 @@ Language: eu_ES
     <string name="title">Izenburua</string>
     <string name="categories">Kategoriak</string>
     <string name="tags_separate_with_commas">Banandu etiketak komak erabiliz</string>
-    <string name="dlg_deleting_comments">Iruzkinak ezabatzen</string>
     <string name="sdcard_title">SD txartela ezinbestekoa</string>
     <string name="media">Media</string>
     <string name="delete">Ezabatu</string>
