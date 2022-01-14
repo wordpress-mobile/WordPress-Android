@@ -177,7 +177,6 @@ Language: th
     <string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
     <string name="stats_view_authors">ผู้เขียน</string>
     <string name="stats_view_search_terms">เงื่อนไขการค้นหา</string>
-    <string name="comments_fetching">กำลังรับข้อมูลความเห็น…</string>
     <string name="pages_fetching">กำลังรับข้อมูลหน้า…</string>
     <string name="posts_fetching">กำลังรับข้อมูลเรื่อง…</string>
     <string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ…</string>
@@ -219,7 +218,6 @@ Language: th
     <string name="error_publish_empty_post">ไม่สามารถเผยแพร่เรื่องที่ไม่มีเนื้อหา</string>
     <string name="error_refresh_unauthorized_posts">คุณไม่มีสิทธิ์ดูหรือแก้ไขเรื่อง</string>
     <string name="error_refresh_unauthorized_pages">คุณไม่มีสิทธิ์ดูหรือแก้ไขหน้า</string>
-    <string name="error_refresh_unauthorized_comments">คุณไม่มีสิทธิ์ดูหรือแก้ไขความเห็น</string>
     <string name="older_month">เก่ากว่าหนึ่งเดือน</string>
     <string name="more">กว่า</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
@@ -280,9 +278,6 @@ Language: th
     <string name="mnu_comment_spam">สแปม</string>
     <string name="mnu_comment_trash">ถังขยะ</string>
     <string name="comment_status_trash">ถังขยะ</string>
-    <string name="dlg_approving_comments">กำลังอนุมัติ</string>
-    <string name="dlg_spamming_comments">กำลังบันทึกเป็นสแปม</string>
-    <string name="dlg_trashing_comments">กำลังส่งไปถังขยะ</string>
     <string name="connection_error">การเชื่อมต่อผิดพลาด</string>
     <string name="cancel_edit">ยกเลิกการแก้ไข</string>
     <string name="post_settings">การตั้งค่าเรื่อง</string>
@@ -295,7 +290,6 @@ Language: th
     <string name="media_error_no_permission">คุณไม่มีสิทธิที่จะดูคลังไฟล์รูป</string>
     <string name="cannot_delete_multi_media_items">ไม่สามารถลบไฟล์สื่อบางไฟล์ในตอนนี้  โปรดลองใหม่ภายหลัง</string>
     <string name="open_source_licenses">ลิขสิทธิ์โอเพ่นซอร์ส</string>
-    <string name="dlg_unapproving_comments">ไม่อนุมัติ</string>
     <string name="file_error_create">ไม่สามารถสร้างไฟล์ชั่วคราวสำหรับการอัปโหลดไฟล์สื่อ โปรดตรวจสอบว่าอุปกรณ์ของคุณมีพื้นที่ว่างเพียงพอสำหรับการอัปโหลด</string>
     <string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
     <string name="media_gallery_type_thumbnail_grid">ตารางรูปขนาดย่อ</string>
@@ -382,7 +376,6 @@ Language: th
     <string name="quickpress_add_error">ชื่อปุ่มลัดไม่สามารถเว้นว่างได้</string>
     <string name="title">หัวข้อ</string>
     <string name="categories">หมวดหมู่</string>
-    <string name="dlg_deleting_comments">กำลังลบความเห็น</string>
     <string name="sdcard_title">ต้องการ SD Card</string>
     <string name="media">ไฟล์สื่อ</string>
     <string name="delete">ลบ</string>

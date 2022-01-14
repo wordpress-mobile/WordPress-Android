@@ -1542,7 +1542,6 @@ Language: en_AU
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
     <string name="stats_view_authors">Authors</string>
     <string name="stats_view_search_terms">Search Terms</string>
-    <string name="comments_fetching">Fetching comments…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="media_fetching">Fetching media…</string>
@@ -1583,7 +1582,6 @@ Language: en_AU
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
-    <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="older_month">Older than a month</string>
     <string name="more">More</string>
     <string name="older_two_days">Older than 2 days</string>
@@ -1654,10 +1652,6 @@ Language: en_AU
     <string name="mnu_comment_unapprove">Unapprove</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_trash">Trash</string>
-    <string name="dlg_approving_comments">Approving</string>
-    <string name="dlg_unapproving_comments">Unapproving</string>
-    <string name="dlg_spamming_comments">Marking as spam</string>
-    <string name="dlg_trashing_comments">Sending to trash</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="trash">Trash</string>
     <string name="saving_changes">Saving changes</string>
@@ -1769,7 +1763,6 @@ Language: en_AU
     <string name="title">Title</string>
     <string name="categories">Categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
-    <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="sdcard_title">SD Card Required</string>
     <string name="media">Media</string>
     <string name="delete">Delete</string>

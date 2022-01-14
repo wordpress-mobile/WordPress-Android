@@ -6,28 +6,14 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
-    <string name="about_automattic_source_code">Quelltext</string>
-    <string name="about_automattic_california_privacy_notice">Datenschutzhinweis für Kalifornien</string>
-    <string name="about_automattic_privacy_policy">Datenschutzerklärung</string>
-    <string name="about_automattic_terms_of_service">Geschäftsbedingungen</string>
-    <string name="about_automattic_work_from_anywhere">Von überall aus arbeiten</string>
-    <string name="about_automattic_work_with_us">Werde Teil unseres Teams</string>
-    <string name="about_automattic_family">Automattic-Familie</string>
-    <string name="about_automattic_legal_and_more">Rechtliches und mehr</string>
-    <string name="about_automattic_acknowledgements">Dank an</string>
-    <string name="about_automattic_rate_us">Bewerte uns</string>
-    <string name="about_automattic_share_with_friends">Mit Freunden teilen</string>
     <string name="about_automattic_legal_page_title">Rechtliches und mehr</string>
     <string name="about_automattic_main_page_title">Über %1$s</string>
-    <string name="about_automattic_app_name">Über Automattic</string>
     <string name="gutenberg_native_the_basics">Die Grundlagen</string>
     <string name="gutenberg_native_selected_default">Ausgewählt: Standard</string>
     <string name="gutenberg_native_more_support_options">Weitere Support-Optionen</string>
     <string name="gutenberg_native_get_support">Unterstützung erhalten</string>
     <string name="gutenberg_native_font_size">Schriftgröße</string>
     <string name="gutenberg_native_double_tap_to_select_font_size">Zum Auswählen der Schriftgröße zweimal tippen</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_instagram">Instagram</string>
     <string name="about_automattic_version_label">Version %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Dank an</string>
     <string name="about_blog">Blog</string>
@@ -123,7 +109,6 @@ Language: de
     <string name="gutenberg_native_line_height">Zeilenhöhe</string>
     <string name="my_site_btn_domains">Domains</string>
     <string name="me_btn_share">Teile WordPress mit einem Freund</string>
-    <string name="recommend_app_subject">WordPress-Apps – Apps für jeden Bildschirm</string>
     <string name="recommend_app_null_response">Keine Antwort erhalten</string>
     <string name="recommend_app_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="my_site_quick_actions_title">Direkte Links</string>
@@ -2777,7 +2762,6 @@ Language: de
     <string name="publisher">Herausgeber:</string>
     <string name="pages_fetching">Seiten werden abgerufen…</string>
     <string name="media_fetching">Medien werden abgerufen…</string>
-    <string name="comments_fetching">Kommentare werden abgerufen…</string>
     <string name="posts_fetching">Beiträge werden abgerufen…</string>
     <string name="reader_empty_posts_request_failed">Beiträge können nicht abgerufen werden</string>
     <string name="error_notification_open">Benachrichtigung konnte nicht geöffnet werden</string>
@@ -2818,7 +2802,6 @@ Language: de
     <string name="error_publish_empty_post">Leerer Beitrag kann nicht veröffentlicht werden</string>
     <string name="error_refresh_unauthorized_posts">Du hast keine Berechtigung Beiträge anzusehen oder zu bearbeiten</string>
     <string name="error_refresh_unauthorized_pages">Du hast keine Berechtigung Seiten anzusehen oder zu bearbeiten</string>
-    <string name="error_refresh_unauthorized_comments">Du hast keine Berechtigung Kommentare anzusehen oder zu bearbeiten</string>
     <string name="older_month">Älter als ein Monat</string>
     <string name="more">Mehr</string>
     <string name="older_two_days">Älter als zwei Tage</string>
@@ -2882,7 +2865,6 @@ Language: de
     <string name="mnu_comment_spam">Spam</string>
     <string name="edit_comment">Kommentar bearbeiten</string>
     <string name="mnu_comment_unapprove">Ablehnen</string>
-    <string name="dlg_unapproving_comments">Lehne ab</string>
     <string name="view_in_browser">Im Browser anschauen</string>
     <string name="add_new_category">Neue Kategorie hinzufügen</string>
     <string name="privacy_policy">Datenschutzbestimmung</string>
@@ -2898,16 +2880,13 @@ Language: de
     <string name="local_changes">Lokale Änderungen</string>
     <string name="comment_status_trash">Gelöscht</string>
     <string name="sure_to_cancel_edit_comment">Bearbeiten des Kommentars abbrechen?</string>
-    <string name="dlg_spamming_comments">Als Spam markieren</string>
     <string name="dlg_confirm_trash_comments">In Papierkorb verschieben?</string>
     <string name="link_enter_url_text">Linktext (optional)</string>
     <string name="saving_changes">Änderungen speichern</string>
     <string name="wordpress_blog">WordPress-Blog</string>
     <string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
-    <string name="dlg_trashing_comments">Verschiebe in Papierkorb</string>
     <string name="category_name">Kategorie-Name</string>
     <string name="mnu_comment_approve">Genehmigen</string>
-    <string name="dlg_approving_comments">Genehmige</string>
     <string name="open_source_licenses">Open-Source-Lizenzen</string>
     <string name="cannot_delete_multi_media_items">Einige Mediendateien konnten nicht gelöscht werden. Versuche es später erneut.</string>
     <string name="media_gallery_type_thumbnail_grid">Vorschaubild-Raster</string>
@@ -3015,7 +2994,6 @@ Language: de
     <string name="title">Titel</string>
     <string name="categories">Kategorien</string>
     <string name="tags_separate_with_commas">Schlagwörter (durch Kommas getrennt)</string>
-    <string name="dlg_deleting_comments">Lösche Kommentare</string>
     <string name="sdcard_title">SD-Karte benötigt</string>
     <string name="media">Medien</string>
     <string name="delete">Löschen</string>

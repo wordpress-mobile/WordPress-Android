@@ -363,7 +363,6 @@ Language: hr
     <string name="auth_required">Ponovno se prijavite za nastavak.</string>
     <string name="publisher">Izdavač:</string>
     <string name="error_notification_open">Ne mogu otvoriti obavjesti</string>
-    <string name="comments_fetching">Dohvaćanje komentara</string>
     <string name="pages_fetching">Dohvaćanje stranica…</string>
     <string name="posts_fetching">Dohvaćanje objava…</string>
     <string name="media_fetching">Dohvaćanje medija</string>
@@ -410,7 +409,6 @@ Language: hr
     <string name="error_publish_empty_post">Nije moguće objaviti praznu objavu</string>
     <string name="error_refresh_unauthorized_posts">Nemate dopuštenje za pregled ili uređivanje objava</string>
     <string name="error_refresh_unauthorized_pages">Nemate dopuštenje za pregled ili uređivanje stranica</string>
-    <string name="error_refresh_unauthorized_comments">Nemate dopuštenje za pregled ili uređivanje komentara</string>
     <string name="older_month">Starije od mjesec dana</string>
     <string name="older_two_days">Starije od 2 dana</string>
     <string name="older_last_week">Starije od tjedan dana</string>
@@ -485,10 +483,6 @@ Language: hr
     <string name="edit_comment">Uredi komentar</string>
     <string name="mnu_comment_approve">Odobri</string>
     <string name="mnu_comment_unapprove">Ne odobri</string>
-    <string name="dlg_approving_comments">Odobravanje</string>
-    <string name="dlg_unapproving_comments">Neodobravanje</string>
-    <string name="dlg_spamming_comments">Označavanje kao spam</string>
-    <string name="dlg_trashing_comments">Slanje u smeće</string>
     <string name="dlg_confirm_trash_comments">Poslati u smeće?</string>
     <string name="saving_changes">Snimanje promjena</string>
     <string name="sure_to_cancel_edit_comment">Otkazati uređivanje komentara?</string>
@@ -596,7 +590,6 @@ Language: hr
     <string name="title">Naslov</string>
     <string name="tags_separate_with_commas">Oznake (razdvoji oznake zarezima)</string>
     <string name="categories">Kategorije</string>
-    <string name="dlg_deleting_comments">Brisanje komentara</string>
     <string name="sdcard_title">Neophodna SD kartica</string>
     <string name="media">Medijski zapisi</string>
     <string name="approve">Odobri</string>

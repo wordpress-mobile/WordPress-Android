@@ -1,29 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-14 06:59:37+0000
+Translation-Revision-Date: 2022-01-11 05:15:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Agradecimientos</string>
-    <string name="about_automattic_source_code">Código fuente</string>
-    <string name="about_automattic_california_privacy_notice">Aviso de privacidad de California</string>
-    <string name="about_automattic_privacy_policy">Política de privacidad</string>
-    <string name="about_automattic_terms_of_service">Términos del servicio</string>
-    <string name="about_automattic_work_from_anywhere">Trabaja desde cualquier parte</string>
-    <string name="about_automattic_work_with_us">Trabaja con nosotros</string>
-    <string name="about_automattic_family">Familia Automattic</string>
-    <string name="about_automattic_legal_and_more">Legal y otros</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_instagram">Instagram</string>
-    <string name="about_automattic_rate_us">Valóranos</string>
-    <string name="about_automattic_share_with_friends">Compartir con amigos</string>
+    <string name="about_automattic_app_icon_description">Icono de la aplicación</string>
+    <string name="about_automattic_back_icon_description">Icono de volver</string>
+    <string name="about_automattic_logo_description">Logotipo de Automattic</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
+    <string name="about_automattic_source_code_item_title">Código fuente</string>
+    <string name="about_automattic_privacy_policy_item_title">Política de privacidad</string>
+    <string name="about_automattic_terms_of_service_item_title">Términos del servicio</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Trabaja desde cualquier lugar</string>
+    <string name="about_automattic_work_with_us_item_title">Trabaja con nosotros</string>
+    <string name="about_automattic_family_item_title">Familia Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">Legal y otros</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_rate_us_item_title">Valóranos</string>
+    <string name="about_automattic_share_with_friends_item_title">Compartir con amigos</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Puedes editar este bloque usando la versión web del editor.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Abrir los ajustes de seguridad de Jetpack</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Nota: Debes permitir el acceso desde WordPress.com para editar este bloque en el editor móvil.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Nota: El diseño puede variar entre temas y tamaños de pantalla</string>
+    <string name="gutenberg_native_address_settings">Ajustes de la dirección</string>
+    <string name="gutenberg_native_add_media">AÑADIR MEDIOS</string>
+    <string name="my_site_error_card_subtitle">Estamos teniendo problemas en este momento para cargar los datos de tu sitio.</string>
+    <string name="my_site_error_card_title">Algunos datos no se han cargado</string>
+    <string name="my_site_dashboard_stale_message">El escritorio no está actualizado. Por favor, comprueba tu conexión y luego pulsa para refrescar.</string>
+    <string name="my_site_dashboard_update_error">No se ha podido actualizar el escritorio.</string>
+    <string name="error_media_video_duration_exceeds_limit">¡Vídeo no subido! Para subir vídeos de más de 5 minutos es necesario un plan de pago.</string>
+    <string name="about_automattic_acknowledgements_item_title">Agradecimientos</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Aviso de privacidad de California</string>
     <string name="about_automattic_version_label">Versión %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Agradecimientos</string>
     <string name="about_automattic_legal_page_title">Legal y otros</string>
     <string name="about_automattic_main_page_title">Sobre %1$s</string>
-    <string name="about_automattic_app_name">Sobre Automattic</string>
     <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">Lo básico</string>
     <string name="gutenberg_native_selected_default">Seleccionado: Por defecto</string>
@@ -123,7 +143,7 @@ Language: es_CO
     <string name="recommend_app_generic_get_template_error">Error desconocido al recuperar la plantilla recomendada de la aplicación</string>
     <string name="recommend_app_bad_format_response">Respuesta recibida no válida</string>
     <string name="recommend_app_null_response">No se ha recibido ninguna respuesta</string>
-    <string name="recommend_app_subject">Aplicaciones WordPress - Aplicaciones para cualquier pantalla</string>
+    <string name="recommend_app_subject">Aplicaciones Automattic - Aplicaciones para cualquier pantalla</string>
     <string name="me_btn_share">Comparte WordPress con un amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
@@ -264,6 +284,7 @@ Language: es_CO
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_width_settings">Ajustes de anchura</string>
+    <string name="gutenberg_native_column_settings">Ajustes de columna</string>
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
@@ -274,7 +295,9 @@ Language: es_CO
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
     <string name="gutenberg_native_retry">Reintentar</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
+    <string name="gutenberg_native_text_color">Color del texto</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
+    <string name="gutenberg_native_padding">Relleno</string>
     <string name="gutenberg_native_featured">Destacado</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_create_embed">Crear una incrustación</string>
@@ -2777,7 +2800,6 @@ Language: es_CO
     <string name="stats_search_terms_unknown_search_terms">Términos de búsqueda desconocidos</string>
     <string name="stats_view_search_terms">Términos de búsqueda</string>
     <string name="stats_view_authors">Autores</string>
-    <string name="comments_fetching">Recuperando comentarios…</string>
     <string name="pages_fetching">Recuperando páginas…</string>
     <string name="posts_fetching">Recuperando entradas…</string>
     <string name="media_fetching">Recuperando medios…</string>
@@ -2819,7 +2841,6 @@ Language: es_CO
     <string name="error_publish_empty_post">No se puede publicar una entrada vacía.</string>
     <string name="error_refresh_unauthorized_posts">No tienes permiso para ver o editar entradas.</string>
     <string name="error_refresh_unauthorized_pages">No tienes permiso para ver o editar páginas.</string>
-    <string name="error_refresh_unauthorized_comments">No tienes permiso para ver o editar comentarios.</string>
     <string name="more">Más</string>
     <string name="older_month">Hace más de 1 mes</string>
     <string name="older_last_week">Hace más de 1 semana</string>
@@ -2899,10 +2920,6 @@ Language: es_CO
     <string name="saving_changes">Guardando cambios</string>
     <string name="trash">Papelera</string>
     <string name="dlg_confirm_trash_comments">¿Enviar a la papelera?</string>
-    <string name="dlg_trashing_comments">Enviando a la papelera</string>
-    <string name="dlg_spamming_comments">Marcando como spam</string>
-    <string name="dlg_unapproving_comments">Rechazando</string>
-    <string name="dlg_approving_comments">Aprobando</string>
     <string name="mnu_comment_trash">Enviar a la papelera</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Rechazar</string>
@@ -3015,7 +3032,6 @@ Language: es_CO
     <string name="title">Título</string>
     <string name="tags_separate_with_commas">Separa las etiquetas con comas</string>
     <string name="categories">Categorías</string>
-    <string name="dlg_deleting_comments">Eliminando comentarios</string>
     <string name="sdcard_title">Se necesita una tarjeta SD</string>
     <string name="media">Multimedia</string>
     <string name="approve">Aprobar</string>

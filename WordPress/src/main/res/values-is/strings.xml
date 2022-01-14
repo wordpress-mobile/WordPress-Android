@@ -429,7 +429,6 @@ Language: is
     <string name="stats_view_authors">Höfundar</string>
     <string name="error_notification_open">Gat ekki opnað tilkynningu</string>
     <string name="stats_view_search_terms">Leitar orð</string>
-    <string name="comments_fetching">Sæki athugasemdir…</string>
     <string name="stats_search_terms_unknown_search_terms">Leitarorð óþekkt</string>
     <string name="media_fetching">Sæki skrá…</string>
     <string name="pages_fetching">Sæki síður…</string>
@@ -471,7 +470,6 @@ Language: is
     <string name="more">Meira</string>
     <string name="comment_reply_to_user">Svara %s</string>
     <string name="reader_label_like">Líka við</string>
-    <string name="error_refresh_unauthorized_comments">Þú hefur ekki heimild til að skoða eða breyta ummælum</string>
     <string name="error_refresh_unauthorized_pages">Þú hefur ekki heimild til að skoða eða breyta síðum</string>
     <string name="error_refresh_unauthorized_posts">Þú hefur ekki heimild til að skoða eða breyta færslum</string>
     <string name="signing_out">Skrái út…</string>
@@ -514,7 +512,6 @@ Language: is
     <string name="post_not_found">Villa kom upp við að hlaða færslur. Endurfrískaðu færsluna og reyndu aftur.</string>
     <string name="comment_status_approved">Samþykkt</string>
     <string name="mnu_comment_approve">Samþykkja</string>
-    <string name="dlg_approving_comments">Samþykki</string>
     <string name="sure_to_cancel_edit_comment">Hætta við breytingar á athugasemd?</string>
     <string name="add_new_category">Bæta við nýjum flokki</string>
     <string name="category_name">Heiti flokks</string>
@@ -537,9 +534,6 @@ Language: is
     <string name="comment_status_trash">Hent í ruslið</string>
     <string name="cannot_delete_multi_media_items">Ekki var hægt að eyða öllum skrám í þetta sinn. Reyndu aftur síðar.</string>
     <string name="dlg_confirm_trash_comments">Henda í ruslatunnu?</string>
-    <string name="dlg_spamming_comments">Merki sem amapóst</string>
-    <string name="dlg_trashing_comments">Hendi í ruslatunnu</string>
-    <string name="dlg_unapproving_comments">Fjarlægi samþykki</string>
     <string name="error_blog_hidden">Þetta blogg er falið og ekki hægt að sækja það. Virkjaðu það aftur í stillingum og reyndu aftur.</string>
     <string name="local_draft">Staðvær drög</string>
     <string name="new_media">Ný skrá</string>
@@ -637,7 +631,6 @@ Language: is
     <string name="quickpress_add_error">Nafn á flýtileið getur ekki verið autt</string>
     <string name="categories">Flokkar</string>
     <string name="title">Titill</string>
-    <string name="dlg_deleting_comments">Eyði athugasemdum</string>
     <string name="sdcard_title">SD minnikorts krafist</string>
     <string name="media">Skrár</string>
     <string name="delete">Eyða</string>
