@@ -34,27 +34,36 @@ public class ReaderTests extends BaseTest {
         new ReaderPage().dismissReaderViewIfNeeded();
     }
 
-    String mPostTitle = "Sit Elit Adipiscing Elit Dolor Lorem";
-    String mPostText = "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
-                      + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
-                      + "Proin dictum non ligula aliquam varius. Nam ornare accumsan ante, "
-                      + "sollicitudin bibendum erat bibendum nec. "
-                      + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis.";
+    String mPostATitle = "Sit Elit Adipiscing Elit Dolor Lorem";
+    String mPostAText = "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
+                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
+                        + "Proin dictum non ligula aliquam varius. Nam ornare accumsan ante, "
+                        + "sollicitudin bibendum erat bibendum nec. "
+                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis.";
+    String mPostBTitle = "Dolor Sit Elit";
+    String mPostBText = "Proin dictum non ligula aliquam varius. "
+                        + "Nam congue efficitur leo eget porta. "
+                        + "Nam congue efficitur leo eget porta. "
+                        + "Nam congue efficitur leo eget porta.";
 
     @Test
-    public void viewPost() {
+    public void navigateThroughPosts() throws UiObjectNotFoundException {
         new ReaderPage()
                 .tapFollowingTab()
-                .openPost(mPostTitle)
-                .verifyPostDisplayed(mPostTitle, mPostText)
+                .openPost(mPostATitle)
+                .verifyPostDisplayed(mPostATitle, mPostAText)
+                .slideToPreviousPost()
+                .verifyPostDisplayed(mPostBTitle, mPostBText)
+                .slideToNextPost()
+                .verifyPostDisplayed(mPostATitle, mPostAText)
                 .goBackToReader();
     }
 
     @Test
-    public void likePost() throws UiObjectNotFoundException {
+    public void likePost() {
         new ReaderPage()
                 .tapFollowingTab()
-                .openPost(mPostTitle)
+                .openPost(mPostATitle)
                 .like()
                 .verifyPostLiked()
                 .unlike()

@@ -1,16 +1,18 @@
 package org.wordpress.android.e2e.pages;
 
+import android.graphics.Rect;
 import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.support.WPSupportUtils.DEFAULT_TIMEOUT;
+import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
 
 public class ReaderViewPage {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -19,6 +21,7 @@ public class ReaderViewPage {
     String mLikeButtonId = "org.wordpress.android.prealpha:id/count_likes";
     String mLikerContainerId = "org.wordpress.android.prealpha:id/liker_faces_container";
     String mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts";
+    String mHeaderId = "org.wordpress.android.prealpha:id/header_view";
 
     UiObject mTextTitleContainer = mDevice.findObject(new UiSelector().resourceId(mTextTitleContainerId));
     UiObject mLikeButton = mDevice.findObject(new UiSelector().resourceId(mLikeButtonId));
@@ -47,22 +50,17 @@ public class ReaderViewPage {
     }
 
     private void tapLikeButton() {
-        try {
-            mSwipeForMore.waitUntilGone(DEFAULT_TIMEOUT);
-            // Even though it was working locally in simulator, tapping the footer buttons like 'mLikeButton.click()'
-            // was not working in CI with same settings Pixel 2 API 28 Android 9.0.
-            // mLikeButton.click();
-            // The current workaround is to use arrows navigation.
-            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN);
-            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
-            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
-            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
-            mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
-            // Click somewhere to remove focus
-            resetFocus();
-        } catch (Exception e) {
-            // Ignore
-        }
+        mSwipeForMore.waitUntilGone(DEFAULT_TIMEOUT);
+        // Even though it was working locally in simulator, tapping the footer buttons,
+        // like 'mLikeButton.click()', was not working in CI.
+        // The current workaround is to use arrows navigation.
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN);
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
+        // Click somewhere to remove focus
+        resetFocus();
     }
 
     private void resetFocus() {
@@ -77,9 +75,25 @@ public class ReaderViewPage {
         return new ReaderPage();
     }
 
+    public ReaderViewPage slideToPreviousPost() throws UiObjectNotFoundException {
+        Rect headerBounds = mDevice.findObject(new UiSelector().resourceId(mHeaderId)).getBounds();
+        mDevice.drag(headerBounds.centerX(), headerBounds.centerY(),
+                    headerBounds.right, headerBounds.centerY(), 10);
+
+        return this;
+    }
+
+    public ReaderViewPage slideToNextPost() throws UiObjectNotFoundException {
+        Rect headerBounds = mDevice.findObject(new UiSelector().resourceId(mHeaderId)).getBounds();
+        mDevice.drag(headerBounds.centerX(), headerBounds.centerY(),
+                headerBounds.left, headerBounds.centerY(), 10);
+
+        return this;
+    }
+
     public ReaderViewPage verifyPostDisplayed(String title, String content) {
-        assertTrue("Post title was not displayed", mDevice.hasObject(By.textContains(title)));
-        assertTrue("Post content was not displayed.", mDevice.hasObject(By.textContains(content)));
+        assertTrue("Post title was not displayed", isTextDisplayed(title));
+        assertTrue("Post content was not displayed.", isTextDisplayed(content));
 
         return this;
     }
