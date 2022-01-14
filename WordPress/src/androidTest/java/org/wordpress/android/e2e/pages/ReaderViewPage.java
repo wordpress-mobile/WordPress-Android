@@ -17,14 +17,9 @@ import static org.wordpress.android.support.WPSupportUtils.swipeToRight;
 public class ReaderViewPage {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-    String mTextTitleContainerId = "org.wordpress.android.prealpha:id/text_title";
-    String mLikeButtonId = "org.wordpress.android.prealpha:id/count_likes";
     String mLikerContainerId = "org.wordpress.android.prealpha:id/liker_faces_container";
     String mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts";
-    String mHeaderId = "org.wordpress.android.prealpha:id/header_view";
 
-    UiObject mTextTitleContainer = mDevice.findObject(new UiSelector().resourceId(mTextTitleContainerId));
-    UiObject mLikeButton = mDevice.findObject(new UiSelector().resourceId(mLikeButtonId));
     UiObject mLikerContainer = mDevice.findObject(new UiSelector().resourceId(mLikerContainerId));
     UiObject mRelatedPostsContainer = mDevice.findObject(new UiSelector().resourceId(mRelatedPostsId));
     UiObject mSwipeForMore = mDevice.findObject(new UiSelector().textContains("Swipe for more"));
@@ -59,7 +54,6 @@ public class ReaderViewPage {
         mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
         mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
         mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
-        // Click somewhere to remove focus
         resetFocus();
     }
 
@@ -88,8 +82,8 @@ public class ReaderViewPage {
     }
 
     public ReaderViewPage verifyPostDisplayed(String title, String content) {
-        assertTrue("Post title was not displayed", isTextDisplayed(title));
-        assertTrue("Post content was not displayed.", isTextDisplayed(content));
+        assertTrue("Post title was not displayed. Target post: " + title, isTextDisplayed(title));
+        assertTrue("Post content was not displayed. Target post:" + title, isTextDisplayed(content));
 
         return this;
     }
