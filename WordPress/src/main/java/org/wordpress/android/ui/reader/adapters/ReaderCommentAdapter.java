@@ -41,7 +41,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.R
 import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem.PrimaryItemMenu;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
-import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
@@ -417,9 +416,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mReplyButtonLabel.setTextColor(mReplyButtonNormalColorColor);
             commentHolder.mReplyButtonIcon.setImageTintList(mReplyButtonNormalColorColor);
         }
-
-        commentHolder.mShareButton.setOnClickListener(
-                v -> mShareCommentListener.onShareButtonTapped(comment.getShortUrl()));
 
         if (!mAccountStore.hasAccessToken()) {
             commentHolder.mReplyView.setVisibility(View.GONE);

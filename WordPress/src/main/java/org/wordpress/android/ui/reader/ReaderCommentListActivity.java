@@ -66,7 +66,8 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType;
-import org.wordpress.android.ui.reader.services.ReaderCommentService;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
+import org.wordpress.android.ui.reader.services.comment.ReaderCommentService;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
@@ -98,6 +99,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
+import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 import kotlin.Unit;
