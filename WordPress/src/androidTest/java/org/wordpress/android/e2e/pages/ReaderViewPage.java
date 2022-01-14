@@ -3,6 +3,7 @@ package org.wordpress.android.e2e.pages;
 import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiSelector;
@@ -77,10 +78,8 @@ public class ReaderViewPage {
     }
 
     public ReaderViewPage verifyPostDisplayed(String title, String content) {
-        assertTrue("Post title was not displayed",
-                mDevice.findObject(new UiSelector().textContains(title)).waitForExists(DEFAULT_TIMEOUT));
-        assertTrue("Post content was not displayed.",
-                mDevice.findObject(new UiSelector().textContains(content)).waitForExists(DEFAULT_TIMEOUT));
+        assertTrue("Post title was not displayed", mDevice.hasObject(By.textContains(title)));
+        assertTrue("Post content was not displayed.", mDevice.hasObject(By.textContains(content)));
 
         return this;
     }
