@@ -785,4 +785,28 @@ public class WPSupportUtils {
 
         return device.wait(Until.hasObject(By.textContains(expectedText)), DEFAULT_TIMEOUT);
     }
+
+    public static void swipeToLeft() {
+        horizontalSwipe("left");
+    }
+
+    public static void swipeToRight() {
+        horizontalSwipe("right");
+    }
+
+    private static void horizontalSwipe(String direction) {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+        int centerY = device.getDisplayHeight() / 2;
+        int width = device.getDisplayWidth();
+        int tenthOfWidth = width / 10;
+        int left = tenthOfWidth;
+        int right = width - tenthOfWidth;
+
+        if (direction == "left") {
+            device.drag(right, centerY, left, centerY, 10);
+        } else if (direction == "right") {
+            device.drag(left, centerY, right, centerY, 10);
+        }
+    }
 }

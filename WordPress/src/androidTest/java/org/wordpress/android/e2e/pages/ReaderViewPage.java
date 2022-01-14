@@ -1,18 +1,18 @@
 package org.wordpress.android.e2e.pages;
 
-import android.graphics.Rect;
 import android.view.KeyEvent;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.wordpress.android.support.WPSupportUtils.DEFAULT_TIMEOUT;
 import static org.wordpress.android.support.WPSupportUtils.isTextDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.swipeToLeft;
+import static org.wordpress.android.support.WPSupportUtils.swipeToRight;
 
 public class ReaderViewPage {
     UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -75,18 +75,14 @@ public class ReaderViewPage {
         return new ReaderPage();
     }
 
-    public ReaderViewPage slideToPreviousPost() throws UiObjectNotFoundException {
-        Rect headerBounds = mDevice.findObject(new UiSelector().resourceId(mHeaderId)).getBounds();
-        mDevice.drag(headerBounds.centerX(), headerBounds.centerY(),
-                    headerBounds.right, headerBounds.centerY(), 10);
+    public ReaderViewPage slideToPreviousPost() {
+        swipeToRight();
 
         return this;
     }
 
-    public ReaderViewPage slideToNextPost() throws UiObjectNotFoundException {
-        Rect headerBounds = mDevice.findObject(new UiSelector().resourceId(mHeaderId)).getBounds();
-        mDevice.drag(headerBounds.centerX(), headerBounds.centerY(),
-                headerBounds.left, headerBounds.centerY(), 10);
+    public ReaderViewPage slideToNextPost() {
+        swipeToLeft();
 
         return this;
     }

@@ -4,7 +4,6 @@ import android.Manifest.permission;
 
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
-import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +46,7 @@ public class ReaderTests extends BaseTest {
                         + "Nam congue efficitur leo eget porta.";
 
     @Test
-    public void navigateThroughPosts() throws UiObjectNotFoundException {
+    public void navigateThroughPosts() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mPostATitle)
