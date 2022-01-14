@@ -114,7 +114,7 @@ import './ScreenshotFastfile'
 Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO = 'wordpress-mobile/WordPress-Android']
 ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
-ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'develop'
+ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 
 ########################################################################
