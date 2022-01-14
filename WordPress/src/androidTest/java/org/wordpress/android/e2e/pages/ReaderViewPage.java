@@ -81,9 +81,8 @@ public class ReaderViewPage {
         return this;
     }
 
-    public ReaderViewPage verifyPostDisplayed(String title, String content) {
+    public ReaderViewPage verifyPostDisplayed(String title) {
         assertTrue("Post title was not displayed. Target post: " + title, isTextDisplayed(title));
-        assertTrue("Post content was not displayed. Target post:" + title, isTextDisplayed(content));
 
         return this;
     }

@@ -34,27 +34,18 @@ public class ReaderTests extends BaseTest {
     }
 
     String mPostATitle = "Sit Elit Adipiscing Elit Dolor Lorem";
-    String mPostAText = "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
-                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis. "
-                        + "Proin dictum non ligula aliquam varius. Nam ornare accumsan ante, "
-                        + "sollicitudin bibendum erat bibendum nec. "
-                        + "Aenean vehicula nunc in sapien rutrum, nec vehicula enim iaculis.";
     String mPostBTitle = "Dolor Sit Elit";
-    String mPostBText = "Proin dictum non ligula aliquam varius. "
-                        + "Nam congue efficitur leo eget porta. "
-                        + "Nam congue efficitur leo eget porta. "
-                        + "Nam congue efficitur leo eget porta.";
 
     @Test
     public void navigateThroughPosts() {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mPostATitle)
-                .verifyPostDisplayed(mPostATitle, mPostAText)
+                .verifyPostDisplayed(mPostATitle)
                 .slideToPreviousPost()
-                .verifyPostDisplayed(mPostBTitle, mPostBText)
+                .verifyPostDisplayed(mPostBTitle)
                 .slideToNextPost()
-                .verifyPostDisplayed(mPostATitle, mPostAText)
+                .verifyPostDisplayed(mPostATitle)
                 .goBackToReader();
     }
 
