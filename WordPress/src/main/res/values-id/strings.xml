@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-08 09:54:08+0000
+Translation-Revision-Date: 2021-12-21 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="about_automattic_acknowledgements">Pernyataan</string>
+    <string name="about_automattic_source_code">Kode sumber</string>
+    <string name="about_automattic_california_privacy_notice">Pemberitahuan privasi untuk California</string>
+    <string name="about_automattic_privacy_policy">Kebijakan privasi</string>
+    <string name="about_automattic_terms_of_service">Ketentuan layanan</string>
+    <string name="about_automattic_work_from_anywhere">Bekerja dari mana saja</string>
+    <string name="about_automattic_work_with_us">Berkarya bersama kami</string>
+    <string name="about_automattic_family">Keluarga Automattic</string>
+    <string name="about_automattic_legal_and_more">Informasi hukum dan lainnya</string>
+    <string name="about_automattic_rate_us">Beri rating</string>
+    <string name="about_automattic_share_with_friends">Bagikan ke teman</string>
+    <string name="about_automattic_version_label">Versi %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Pernyataan</string>
+    <string name="about_automattic_legal_page_title">Informasi Hukum dan Lainnya</string>
+    <string name="about_automattic_main_page_title">Tentang %1$s</string>
+    <string name="about_automattic_app_name">Tentang Automattic</string>
+    <string name="gutenberg_native_the_basics">Dasar-dasar</string>
+    <string name="gutenberg_native_selected_default">Terpilih: Default</string>
+    <string name="gutenberg_native_more_support_options">Pilihan dukungan lainnya</string>
+    <string name="gutenberg_native_get_support">Dapatkan dukungan</string>
+    <string name="gutenberg_native_font_size">Ukuran Font</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Ketuk dua kali untuk memilih ukuran font</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Ketuk dua kali untuk memilih ukuran font default</string>
+    <string name="gutenberg_native_contact_support">Hubungi dukungan</string>
+    <string name="my_site_no_content_post">Tidak Ada Konten</string>
+    <string name="reader_comments_follow_conversation">Ikuti Percakapan</string>
+    <string name="reader_comments_be_first_to_comment">Jadilah yang pertama memberi komentar</string>
+    <string name="reader_comments_view_all">Lihat semua komentar</string>
+    <string name="reader_comments_post_fetch_failure">Terjadi error saat memuat data pos</string>
+    <string name="reader_comments_fetch_failure">Terjadi error saat memuat komentar</string>
+    <string name="reader_btn_follow_conversation_settings">Pengaturan untuk ikuti percakapan</string>
     <string name="gutenberg_native_from_clipboard">Dari papan klip</string>
     <string name="gutenberg_native_featured_image">Gambar Andalan</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Salin URL dari papan klip, %s</string>
@@ -154,7 +185,6 @@ Language: id
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL tidak valid. Silakan masukkan URL yang benar.</string>
     <string name="gutenberg_native_embed_caption_s">Sematkan keterangan. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Sematkan keterangan. Kosong</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">TAMBAHKAN TAUTAN</string>
     <string name="activity_log_visit_our_documentation_page">kunjungi halaman dokumentasi kami</string>
     <string name="activity_log_multisite_message">Pemasangan Jetpack Backup untuk Multisitus memberikan fitur cadangan yang bisa diunduh, tanpa fitur permulihan sekali klik. Untuk informasi lebih lanjut %1$s.</string>
     <string name="blogging_reminders_tip_message">Dengan rutin membuat pos, para pembaca akan tetap tertarik dan pengunjung baru akan mengunjungi situs Anda.</string>
@@ -202,7 +232,6 @@ Language: id
     <string name="gutenberg_native_s_has_no_url_set">URL %s belum ditetapkan</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s diubah ke blok reguler</string>
     <string name="gutenberg_native_s_block">%s blok</string>
-    <string name="gutenberg_native_minimum_height">Tinggi minimum</string>
     <string name="gutenberg_native_media_options">Opsi media</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">URL tidak valid. File audio tidak ditemukan.</string>
     <string name="gutenberg_native_insert_crosspost">Sisipkan lintas pos</string>
@@ -223,7 +252,6 @@ Language: id
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Ketuk dua kali untuk menambahkan tautan.</string>
-    <string name="gutenberg_native_edit_link">EDIT TAUTAN</string>
     <string name="login_empty_view_try_another_account">Coba dengan akun lain</string>
     <string name="login_empty_view_see_instructions">Lihat petunjuk</string>
     <string name="login_no_jetpack_sites_error_message">Jika telah memiliki situs, Anda perlu menginstal plugin Jetpack gratis dan menghubungkannya ke akun WordPress.com Anda.</string>
@@ -232,28 +260,21 @@ Language: id
     <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
     <string name="gutenberg_native_move_image_backward">Pindahkan Gambar ke Belakang</string>
     <string name="gutenberg_native_width_settings">Pengaturan Lebar</string>
-    <string name="gutenberg_native_image_settings">Pengaturan gambar</string>
     <string name="user_profile_untitled_site">(Tanpa judul)</string>
     <string name="user_profile_site_section_header">Situs</string>
     <string name="user_profile_bottom_sheet_description">Informasi lembar bawah profil pengguna</string>
     <string name="likes_list_screen_title">Daftar Suka %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Pengurutan dan penyaringan</string>
     <string name="gutenberg_native_s_social_icon">Ikon media sosial %s</string>
     <string name="gutenberg_native_mention">Sebutan</string>
     <string name="gutenberg_native_preview_post">Pratinjau pos</string>
     <string name="gutenberg_native_preview_page">Pratinjau halaman</string>
-    <string name="gutenberg_native_post_meta_settings">Pengaturan meta artikel</string>
-    <string name="gutenberg_native_post_content_settings">Pengaturan konten artikel</string>
     <string name="gutenberg_native_retry">Coba lagi</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
     <string name="gutenberg_native_s_link">%s tautan</string>
     <string name="gutenberg_native_featured">Andalan</string>
-    <string name="gutenberg_native_embed_link">Sematkan tautan</string>
-    <string name="gutenberg_native_display_post_date">Tampilkan tanggal pos</string>
     <string name="gutenberg_native_custom_url">URL Tersuai</string>
     <string name="gutenberg_native_create_embed">Buat sematan</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
-    <string name="gutenberg_native_none">Tidak ada</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Menjelaskan secara singkat tautan untuk membantu pengguna pembaca layar</string>
     <string name="gutenberg_native_add_blocks">Tambahkan blok</string>
     <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
@@ -291,7 +312,7 @@ Language: id
     <string name="get_likes_no_network_error">Tidak ada jaringan.</string>
     <string name="comments_empty_list_filtered_unreplied">Tidak ada komentar belum dibalas</string>
     <string name="comment_status_unreplied">Belum dibalas</string>
-    <string name="gutenberg_native_add_link">Tambahkan tautan</string>
+    <string name="gutenberg_native_add_link">TAMBAHKAN TAUTAN</string>
     <string name="gutenberg_native_search_settings">Pengaturan pencarian</string>
     <string name="jetpack_brute_force_allowlist_title">Alamat IP yang selalu diizinkan</string>
     <string name="site_settings_denylist_title">Komentar yang tidak diizinkan</string>

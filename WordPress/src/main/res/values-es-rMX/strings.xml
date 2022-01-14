@@ -14,7 +14,6 @@ Language: es_MX
     <string name="gutenberg_native_s_has_url_set">%s tiene una URL ya establecida</string>
     <string name="gutenberg_native_s_has_no_url_set">%s no tiene una URL establecida</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s convertido a bloques normales</string>
-    <string name="gutenberg_native_image_settings">Ajustes de imagen</string>
     <string name="gutenberg_native_width_settings">Ajustes de medios</string>
     <string name="gutenberg_native_move_image_backward">Mover la imagen hacia atrás</string>
     <string name="gutenberg_native_move_image_forward">Mover la imagen hacia delante</string>

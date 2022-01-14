@@ -13,32 +13,40 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REFRESH
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -47,6 +55,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
+import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -68,7 +77,6 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -98,14 +106,16 @@ class MySiteViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
-    private val mySiteSourceManager: MySiteSourceManager
+    private val mySiteSourceManager: MySiteSourceManager,
+    private val cardsTracker: CardsTracker,
+    private val siteItemsTracker: SiteItemsTracker,
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -115,6 +125,10 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
+
+    /* Capture and track the site selected event so we can circumvent refreshing sources on resume
+       as they're already built on site select. */
+    private var isSiteSelected = false
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -138,6 +152,8 @@ class MySiteViewModel @Inject constructor(
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
+                isSiteSelected = true
+                resetShownTrackers()
                 val result = MediatorLiveData<SiteIdToState>()
                 for (newSource in mySiteSourceManager.build(viewModelScope, siteLocalId)) {
                     result.addSource(newSource) { partialState ->
@@ -162,10 +178,11 @@ class MySiteViewModel @Inject constructor(
             quickStartCategories,
             pinnedDynamicCard,
             visibleDynamicCards,
-            cards
+            cardsUpdate
     ) ->
         val state = if (site != null) {
-            buildSiteSelectedStateAndScroll(
+            cardsUpdate?.checkAndShowSnackbarError()
+            val state = buildSiteSelectedStateAndScroll(
                     site,
                     showSiteIconProgressBar,
                     activeTask,
@@ -175,12 +192,21 @@ class MySiteViewModel @Inject constructor(
                     visibleDynamicCards,
                     backupAvailable,
                     scanAvailable,
-                    cards
+                    cardsUpdate
             )
+            trackCardsAndItemsShownIfNeeded(state)
+            state
         } else {
             buildNoSiteState()
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    private fun CardsUpdate.checkAndShowSnackbarError() {
+        if (showSnackbarError) {
+            _onSnackbarMessage
+                    .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
+        }
     }
 
     @Suppress("LongParameterList")
@@ -194,7 +220,7 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cards: CardsResult<List<CardModel>>?
+        cardsUpdate: CardsUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -206,7 +232,7 @@ class MySiteViewModel @Inject constructor(
                 visibleDynamicCards,
                 backupAvailable,
                 scanAvailable,
-                cards
+                cardsUpdate
         )
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
@@ -226,17 +252,22 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cards: CardsResult<List<CardModel>>?
+        cardsUpdate: CardsUpdate?
     ): List<MySiteCardAndItem> {
+        val infoItem = siteItemsBuilder.build(
+                InfoItemBuilderParams(
+                        isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
+                )
+        )
         val cardsResult = cardsBuilder.build(
-                DomainRegistrationCardBuilderParams(
-                        isDomainCreditAvailable = isDomainCreditAvailable,
-                        domainRegistrationClick = this::domainRegistrationClick
-                ),
-                PostCardBuilderParams(
-                        posts = cards?.model?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
-                        onPostItemClick = this::onPostItemClick,
-                        onFooterLinkClick = this::onPostCardFooterLinkClick
+                SiteInfoCardBuilderParams(
+                        site = site,
+                        showSiteIconProgressBar = showSiteIconProgressBar,
+                        titleClick = this::titleClick,
+                        iconClick = this::iconClick,
+                        urlClick = this::urlClick,
+                        switchSiteClick = this::switchSiteClick,
+                        activeTask = activeTask
                 ),
                 QuickActionsCardBuilderParams(
                         siteModel = site,
@@ -246,19 +277,23 @@ class MySiteViewModel @Inject constructor(
                         onQuickActionPostsClick = this::quickActionPostsClick,
                         onQuickActionMediaClick = this::quickActionMediaClick
                 ),
+                DomainRegistrationCardBuilderParams(
+                        isDomainCreditAvailable = isDomainCreditAvailable,
+                        domainRegistrationClick = this::domainRegistrationClick
+                ),
                 QuickStartCardBuilderParams(
                         quickStartCategories = quickStartCategories,
                         onQuickStartBlockRemoveMenuItemClick = this::onQuickStartBlockRemoveMenuItemClick,
                         onQuickStartTaskTypeItemClick = this::onQuickStartTaskTypeItemClick
                 ),
-                SiteInfoCardBuilderParams(
-                        site = site,
-                        showSiteIconProgressBar = showSiteIconProgressBar,
-                        titleClick = this::titleClick,
-                        iconClick = this::iconClick,
-                        urlClick = this::urlClick,
-                        switchSiteClick = this::switchSiteClick,
-                        activeTask = activeTask
+                DashboardCardsBuilderParams(
+                        showErrorCard = cardsUpdate?.showErrorCard == true,
+                        onErrorRetryClick = this::onDashboardErrorRetry,
+                        postCardBuilderParams = PostCardBuilderParams(
+                                posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
+                                onPostItemClick = this::onPostItemClick,
+                                onFooterLinkClick = this::onPostCardFooterLinkClick
+                        )
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -278,7 +313,7 @@ class MySiteViewModel @Inject constructor(
                         onClick = this::onItemClick
                 )
         )
-        return orderForDisplay(cardsResult, dynamicCards, siteItems)
+        return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -288,20 +323,25 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun orderForDisplay(
+        infoItem: InfoItem?,
         cards: List<MySiteCardAndItem>,
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>
     ): List<MySiteCardAndItem> {
-        val indexOfPostsCard = cards.indexOfFirst { it is PostCard }
-        return if (indexOfPostsCard == -1) {
-            cards + dynamicCards + siteItems
-        } else {
-            mutableListOf<MySiteCardAndItem>().apply {
-                addAll(cards)
-                addAll(indexOfPostsCard, dynamicCards)
-                addAll(siteItems)
-            }.toList()
-        }
+        val indexOfSiteInfoCard = cards.indexOfFirst { it is SiteInfoCard }
+        val indexOfCards = indexOfSiteInfoCard + 1
+        val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
+        return mutableListOf<MySiteCardAndItem>().apply {
+            add(cards[indexOfSiteInfoCard])
+            infoItem?.let { add(infoItem) }
+            addAll(cards.subList(indexOfCards, cards.size))
+            if (indexOfDashboardCards == -1) {
+                addAll(dynamicCards)
+            } else {
+                addAll(indexOfDashboardCards, dynamicCards)
+            }
+            addAll(siteItems)
+        }.toList()
     }
 
     private fun scrollToQuickStartTaskIfNecessary(
@@ -318,6 +358,7 @@ class MySiteViewModel @Inject constructor(
     @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            siteItemsTracker.trackSiteItemClicked(action)
             val navigationAction = when (action) {
                 ListItemAction.ACTIVITY_LOG -> SiteNavigationAction.OpenActivityLog(selectedSite)
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
@@ -346,13 +387,7 @@ class MySiteViewModel @Inject constructor(
                     getStatsNavigationActionForSite(selectedSite)
                 }
                 ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
-                ListItemAction.COMMENTS -> {
-                    if (unifiedCommentsListFeatureConfig.isEnabled()) {
-                        SiteNavigationAction.OpenUnifiedComments(selectedSite)
-                    } else {
-                        SiteNavigationAction.OpenComments(selectedSite)
-                    }
-                }
+                ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
                     quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     SiteNavigationAction.OpenSite(selectedSite)
@@ -477,10 +512,14 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
     }
 
-    fun refresh() = mySiteSourceManager.refresh()
+    fun refresh(isPullToRefresh: Boolean = false) {
+        if (isPullToRefresh) analyticsTrackerWrapper.track(MY_SITE_PULL_TO_REFRESH)
+        mySiteSourceManager.refresh()
+    }
 
-    fun onResume(isFirstResume: Boolean) {
-        mySiteSourceManager.onResume(isFirstResume)
+    fun onResume() {
+        mySiteSourceManager.onResume(isSiteSelected)
+        isSiteSelected = false
         checkAndShowQuickStartNotice()
         _onShowSwipeRefreshLayout.postValue(Event(mySiteDashboardPhase2FeatureConfig.isEnabled()))
     }
@@ -719,14 +758,26 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    private fun onPostItemClick(postId: Int) {
+    private fun onPostItemClick(params: PostItemClickParams) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            _onNavigation.value = Event(SiteNavigationAction.EditPost(site, postId))
+            cardsTracker.trackPostItemClicked(params.postCardType)
+            when (params.postCardType) {
+                PostCardType.DRAFT -> _onNavigation.value =
+                        Event(SiteNavigationAction.EditDraftPost(site, params.postId))
+                PostCardType.SCHEDULED -> _onNavigation.value =
+                        Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
+                else -> Unit // Do nothing
+            }
         }
+    }
+
+    private fun onDashboardErrorRetry() {
+        mySiteSourceManager.refresh()
     }
 
     private fun onPostCardFooterLinkClick(postCardType: PostCardType) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
+            cardsTracker.trackPostCardFooterLinkClicked(postCardType)
             _onNavigation.value = when (postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT ->
                     Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
@@ -746,6 +797,17 @@ class MySiteViewModel @Inject constructor(
     fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
         if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         setVisible()
+    }
+
+    private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
+        siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
+                .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
+        siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
+    }
+
+    private fun resetShownTrackers() {
+        domainRegistrationCardShownTracker.resetShown()
+        cardsTracker.resetShown()
     }
 
     data class UiModel(
