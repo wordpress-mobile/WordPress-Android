@@ -12,7 +12,6 @@ import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -65,7 +64,6 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
-import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -87,7 +85,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
     @Inject lateinit var sequencer: SnackbarSequencer
-    @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,6 +133,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewHelpAndSupport(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
 
+        rowAboutTheApp.setOnClickListener {
+            viewModel.showUnifiedAbout()
+        }
+
+        initRecommendUiState()
+
         rowLogout.setOnClickListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
@@ -159,17 +162,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             if (savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR, false)) {
                 showGravatarProgressBar(true)
             }
-        }
-
-        if (unifiedAboutFeatureConfig.isEnabled()) {
-            recommendTheAppContainer.isVisible = false
-            aboutTheAppContainer.isVisible = true
-
-            rowAboutTheApp.setOnClickListener {
-                viewModel.showUnifiedAbout()
-            }
-        } else {
-            initRecommendUiState()
         }
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
