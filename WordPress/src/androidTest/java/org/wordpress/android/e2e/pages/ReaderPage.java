@@ -38,8 +38,10 @@ public class ReaderPage {
     }
 
     private void scrollIntoView(ViewInteraction postContainer) {
-        while (!isElementCompletelyDisplayed(postContainer)) {
+        int swipeCount = 0;
+        while (!isElementCompletelyDisplayed(postContainer) && swipeCount < 10) {
             swipeUpOnView(R.id.reader_recycler_view, (float) 1);
+            swipeCount += 1;
         }
     }
 
