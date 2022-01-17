@@ -354,11 +354,11 @@ workflows:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
           post-to-slack: true
-          # Always run connected tests on develop and release branches
+          # Always run connected tests on trunk and release branches
           filters:
             branches:
               only:
-                - develop
+                - trunk
                 - /^release.*/
                 - /^gutenberg\/integrate_release_.*/
   Optional Tests:
@@ -373,7 +373,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - develop
+                - trunk
                 - /^release.*/
                 - /^gutenberg\/integrate_release_.*/
                 - /pull\/[0-9]+/
