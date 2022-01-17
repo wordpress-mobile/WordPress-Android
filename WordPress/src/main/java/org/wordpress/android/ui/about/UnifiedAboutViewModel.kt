@@ -95,7 +95,7 @@ class UnifiedAboutViewModel @Inject constructor(
         private const val LICENSES_FILE_URL = "file:///android_asset/licenses.html"
 
         private const val WP_SOCIAL_HANDLE = "wordpress"
-        private const val WP_APPS_URL = "https://apps.wordpress.com"
+        private const val WP_APPS_URL = "https://apps.wordpress.com/get?campaign=app_share_link"
         private const val WP_BLOG_URL = "https://blog.wordpress.com"
 
         private const val JP_SOCIAL_HANDLE = "jetpack"
