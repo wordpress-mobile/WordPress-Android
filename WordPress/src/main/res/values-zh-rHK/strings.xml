@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-23 01:36:49+0000
+Translation-Revision-Date: 2022-01-04 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">合作廠商</string>
-    <string name="about_automattic_source_code">原始碼</string>
-    <string name="about_automattic_california_privacy_notice">加州隱私權聲明</string>
-    <string name="about_automattic_privacy_policy">隱私權政策</string>
-    <string name="about_automattic_terms_of_service">服務條款</string>
-    <string name="about_automattic_work_from_anywhere">隨時隨地都能處理工作</string>
-    <string name="about_automattic_work_with_us">與我們合作</string>
-    <string name="about_automattic_family">Automattic 品牌系列</string>
-    <string name="about_automattic_legal_and_more">法律與其他</string>
-    <string name="about_automattic_rate_us">幫我們評分</string>
-    <string name="about_automattic_share_with_friends">與朋友分享</string>
     <string name="about_automattic_version_label">版本 %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">合作廠商</string>
     <string name="about_automattic_legal_page_title">法律與其他</string>
     <string name="about_automattic_main_page_title">關於 %1$s</string>
-    <string name="about_automattic_app_name">關於 Automattic</string>
     <string name="about_blog">網誌</string>
     <string name="gutenberg_native_the_basics">基本功能</string>
     <string name="gutenberg_native_selected_default">已選取：預設</string>
@@ -104,6 +92,7 @@ Language: zh_TW
     <string name="comment_edit_comment">留言</string>
     <string name="comment_edit_user_name">名稱</string>
     <string name="comment_edit_menu_done">搞定</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">嵌入內容區塊預覽功能即將推出</string>
     <string name="weekly_roundup">每週綜合整理</string>
     <string name="gutenberg_native_embed_options">嵌入選項</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">按兩下即可查看嵌入選項。</string>
@@ -118,7 +107,6 @@ Language: zh_TW
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
     <string name="recommend_app_bad_format_response">收到無效回應</string>
     <string name="recommend_app_null_response">未收到回應</string>
-    <string name="recommend_app_subject">WordPress 應用程式 - 適用任何螢幕</string>
     <string name="me_btn_share">向朋友推薦 WordPress</string>
     <string name="my_site_quick_actions_title">快速連結</string>
     <string name="my_site_btn_domains">網域</string>
@@ -894,7 +882,6 @@ Language: zh_TW
     <string name="prepublishing_nudges_toolbar_title_publish">發表日期</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
     <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
-    <string name="post_status_post_published">已發表</string>
     <string name="post_status_post_trashed">已移至垃圾桶</string>
     <string name="post_status_post_scheduled">已排程</string>
     <string name="publish_date">發表日期</string>
@@ -903,6 +890,7 @@ Language: zh_TW
     <string name="reader_btn_done">完成</string>
     <string name="reader_label_choose_your_interests">選擇你的主題</string>
     <string name="reader_choose_interests_content_description">選擇你的主題</string>
+    <string name="post_status_post_published">已發佈</string>
     <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
     <string name="status_and_visibility">狀態及可見度</string>
     <string name="update_now">馬上更新</string>
@@ -2770,7 +2758,6 @@ Language: zh_TW
     <string name="stats_search_terms_unknown_search_terms">不明搜尋字詞</string>
     <string name="stats_view_authors">作者</string>
     <string name="stats_view_search_terms">搜尋字詞</string>
-    <string name="comments_fetching">正在擷取留言…</string>
     <string name="pages_fetching">正在擷取頁面…</string>
     <string name="posts_fetching">正在擷取文章…</string>
     <string name="media_fetching">正在擷取媒體…</string>
@@ -2811,7 +2798,6 @@ Language: zh_TW
     <string name="error_publish_empty_post">無法發表空白的文章</string>
     <string name="error_refresh_unauthorized_posts">你沒有查看或編輯文章的權限</string>
     <string name="error_refresh_unauthorized_pages">你沒有查看或編輯頁面的權限</string>
-    <string name="error_refresh_unauthorized_comments">你沒有查看或編輯留言的權限</string>
     <string name="older_month">超過一個月</string>
     <string name="more">更多</string>
     <string name="older_two_days">超過 2 天</string>
@@ -2886,10 +2872,6 @@ Language: zh_TW
     <string name="mnu_comment_unapprove">駁回</string>
     <string name="mnu_comment_spam">垃圾</string>
     <string name="mnu_comment_trash">垃圾桶</string>
-    <string name="dlg_approving_comments">核准中</string>
-    <string name="dlg_unapproving_comments">駁回中</string>
-    <string name="dlg_spamming_comments">標記為垃圾</string>
-    <string name="dlg_trashing_comments">正在移至垃圾桶</string>
     <string name="dlg_confirm_trash_comments">移至垃圾桶？</string>
     <string name="trash">垃圾桶</string>
     <string name="saving_changes">正在儲存變更</string>
@@ -2977,7 +2959,7 @@ Language: zh_TW
     <string name="new_notifications">%d 個新通知</string>
     <string name="more_notifications">還有 %d 個。</string>
     <string name="follows">關注者</string>
-    <string name="loading">載入中…</string>
+    <string name="loading">正在載入…</string>
     <string name="httppassword">HTTP 密碼</string>
     <string name="httpuser">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>
@@ -3008,7 +2990,6 @@ Language: zh_TW
     <string name="title">標題</string>
     <string name="categories">分類</string>
     <string name="tags_separate_with_commas">以逗號分隔標籤</string>
-    <string name="dlg_deleting_comments">刪除留言</string>
     <string name="sdcard_title">需要 SD 卡</string>
     <string name="media">媒體</string>
     <string name="delete">刪除</string>

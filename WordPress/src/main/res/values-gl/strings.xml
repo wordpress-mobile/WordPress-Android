@@ -6,24 +6,10 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Agradecementos</string>
-    <string name="about_automattic_source_code">Código fonte</string>
-    <string name="about_automattic_california_privacy_notice">Aviso de privacidade de California</string>
-    <string name="about_automattic_privacy_policy">Política de privacidade</string>
-    <string name="about_automattic_terms_of_service">Termos do servizo</string>
-    <string name="about_automattic_work_from_anywhere">Traballa desde calquera parte</string>
-    <string name="about_automattic_work_with_us">Traballa con nós</string>
-    <string name="about_automattic_family">Familia Automattic</string>
-    <string name="about_automattic_legal_and_more">Legal e outros</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_instagram">Instagram</string>
-    <string name="about_automattic_rate_us">Valóranos</string>
-    <string name="about_automattic_share_with_friends">Compartir cos amigos</string>
     <string name="about_automattic_version_label">Versión %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Agradecementos</string>
     <string name="about_automattic_legal_page_title">Legal e outros</string>
     <string name="about_automattic_main_page_title">Sobre %1$s</string>
-    <string name="about_automattic_app_name">Sobre Automattic</string>
     <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">O básico</string>
     <string name="gutenberg_native_selected_default">Seleccionado: Por defecto</string>
@@ -123,7 +109,6 @@ Language: gl_ES
     <string name="recommend_app_generic_get_template_error">Erro descoñecido ao recuperar o modelo recomendado da aplicación</string>
     <string name="recommend_app_bad_format_response">Resposta recibida non válida</string>
     <string name="recommend_app_null_response">Non se recibiu ningunha resposta</string>
-    <string name="recommend_app_subject">Aplicacións WordPress - Aplicacións para calquera pantalla</string>
     <string name="me_btn_share">Comparte WordPress cun amigo</string>
     <string name="my_site_quick_actions_title">Enlaces rápidos</string>
     <string name="my_site_btn_domains">Dominios</string>
@@ -2777,7 +2762,6 @@ Language: gl_ES
     <string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
     <string name="stats_view_search_terms">Termos de busca</string>
     <string name="stats_view_authors">Autores</string>
-    <string name="comments_fetching">Á procura dos comentarios…</string>
     <string name="pages_fetching">Á procura das páxinas…</string>
     <string name="posts_fetching">Á procura dos artigos…</string>
     <string name="media_fetching">Á procura dos ficheiros…</string>
@@ -2819,7 +2803,6 @@ Language: gl_ES
     <string name="error_publish_empty_post">Non se pode publicar un artigo baleiro</string>
     <string name="error_refresh_unauthorized_posts">Non tes permiso para ver ou editar artigos</string>
     <string name="error_refresh_unauthorized_pages">Non tes permiso para ver ou editar páxinas</string>
-    <string name="error_refresh_unauthorized_comments">Non tes permiso para ver ou editar comentarios</string>
     <string name="more">Máis</string>
     <string name="older_month">Con máis dun mes de antigüidade</string>
     <string name="older_last_week">Con máis dunha semana de antigüidade</string>
@@ -2899,10 +2882,6 @@ Language: gl_ES
     <string name="saving_changes">Gardando os cambios</string>
     <string name="trash">Lixo</string>
     <string name="dlg_confirm_trash_comments">Botar ao lixo?</string>
-    <string name="dlg_trashing_comments">Enviando ao lixo</string>
-    <string name="dlg_spamming_comments">Sinalando como spam</string>
-    <string name="dlg_unapproving_comments">Rexeitando</string>
-    <string name="dlg_approving_comments">Aprobando</string>
     <string name="mnu_comment_trash">Botar ao lixo</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Rexeitar</string>
@@ -3015,7 +2994,6 @@ Language: gl_ES
     <string name="title">Título</string>
     <string name="tags_separate_with_commas">Etiquetas (separadas por comas)</string>
     <string name="categories">Categorías</string>
-    <string name="dlg_deleting_comments">Borrando os comentarios</string>
     <string name="sdcard_title">Tarxeta SD requirida</string>
     <string name="media">Multimedia</string>
     <string name="approve">Aprobar</string>

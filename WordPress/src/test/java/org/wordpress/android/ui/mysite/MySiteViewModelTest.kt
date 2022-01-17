@@ -436,25 +436,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* ON RESUME */
     @Test
     fun `given not first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        val firstResume = true
+        viewModel.onResume() // first call
 
-        viewModel.onResume(firstResume)
+        viewModel.onResume() // second call
 
-        verify(mySiteSourceManager).onResume(firstResume)
+        verify(mySiteSourceManager).onResume(false)
     }
 
     @Test
     fun `given first resume, when on resume is triggered, then mySiteSourceManager onResume is invoked`() {
-        val firstResume = false
+        viewModel.onResume()
 
-        viewModel.onResume(firstResume)
-
-        verify(mySiteSourceManager).onResume(firstResume)
+        verify(mySiteSourceManager).onResume(true)
     }
 
     @Test
     fun `when first onResume is triggered, then checkAndShowQuickStartNotice is invoked`() {
-        viewModel.onResume(false)
+        viewModel.onResume()
 
         verify(quickStartRepository).checkAndShowQuickStartNotice()
     }
@@ -1107,6 +1105,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                 assertThat(navigationActions).containsOnly(SiteNavigationAction.EditScheduledPost(site, postId))
             }
 
+    @Test
+    fun `given post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
+    }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test
@@ -1459,8 +1466,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given not first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
         init(enableMySiteDashboardConfig = true)
+        viewModel.onResume() // first call
 
-        viewModel.onResume(false)
+        viewModel.onResume() // second call
 
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
     }
@@ -1469,8 +1477,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given not first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
         init(enableMySiteDashboardConfig = false)
+        viewModel.onResume() // first call
 
-        viewModel.onResume(false)
+        viewModel.onResume() // second call
 
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
     }
@@ -1480,7 +1489,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
         init(enableMySiteDashboardConfig = true)
 
-        viewModel.onResume(true)
+        viewModel.onResume()
 
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
     }
@@ -1490,7 +1499,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
         init(enableMySiteDashboardConfig = false)
 
-        viewModel.onResume(true)
+        viewModel.onResume()
 
         assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
     }

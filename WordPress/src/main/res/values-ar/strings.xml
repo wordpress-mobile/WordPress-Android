@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-20 19:54:10+0000
+Translation-Revision-Date: 2022-01-07 18:05:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
-    <string name="about_automattic_work_with_us">العمل معنا</string>
-    <string name="about_automattic_privacy_policy">سياسة الخصوصية</string>
-    <string name="about_automattic_acknowledgements">شكر وتقدير</string>
-    <string name="about_automattic_source_code">شفرة المصدر</string>
-    <string name="about_automattic_california_privacy_notice">إشعار الخصوصية في كاليفورنيا</string>
-    <string name="about_automattic_work_from_anywhere">العمل من أي مكان</string>
-    <string name="about_automattic_family">عائلة Automattic</string>
-    <string name="about_automattic_legal_and_more">الشؤون القانونية والمزيد</string>
     <string name="about_blog">المدوّنة</string>
-    <string name="about_automattic_rate_us">صنّفنا</string>
     <string name="about_automattic_acknowledgements_page_title">شكر وتقدير</string>
     <string name="about_automattic_legal_page_title">الشؤون القانونية والمزيد</string>
     <string name="about_automattic_main_page_title">نبذة عن ⁦%1$s⁩</string>
-    <string name="about_automattic_app_name">نبذة عن شركة Automattic</string>
     <string name="gutenberg_native_the_basics">الأساسيات</string>
     <string name="gutenberg_native_selected_default">المحدَّد: الإعداد الافتراضي</string>
     <string name="gutenberg_native_more_support_options">خيارات دعم إضافية</string>
@@ -29,6 +19,7 @@ Language: ar
     <string name="reader_comments_be_first_to_comment">كن أول من يعلق</string>
     <string name="reader_comments_view_all">عرض كل التعليقات</string>
     <string name="reader_comments_post_fetch_failure">حدث خطأ في أثناء الحصول على بيانات المقالة</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_fetch_failure">حدث خطأ في أثناء الحصول على التعليقات</string>
     <string name="my_site_post_card_link_go_to_drafts">الانتقال إلى المسودات</string>
     <string name="my_site_post_card_link_go_to_scheduled_posts">الانتقال إلى المقالات المجدولة</string>
@@ -112,7 +103,6 @@ Language: ar
     <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="recommend_app_null_response">لم يتم تلقي أي ردّ</string>
-    <string name="recommend_app_subject">تطبيقات ووردبريس - تطبيقات لأي شاشة</string>
     <string name="me_btn_share">مشاركة ووردبريس مع صديق</string>
     <string name="my_site_quick_actions_title">روابط سريعة</string>
     <string name="my_site_btn_domains">النطاقات</string>
@@ -2765,7 +2755,6 @@ Language: ar
     <string name="error_notification_open">تعذر فتح التنبيه</string>
     <string name="stats_search_terms_unknown_search_terms">مصطلحات بحث غير معروفة</string>
     <string name="stats_view_search_terms">مصطلحات البحث</string>
-    <string name="comments_fetching">جاري جلب التعليقات…</string>
     <string name="pages_fetching">جاري جلب الصفحات…</string>
     <string name="posts_fetching">جاري جلب المقالات…</string>
     <string name="media_fetching">جاري جلب الوسائط…</string>
@@ -2807,7 +2796,6 @@ Language: ar
     <string name="error_publish_empty_post">يتعذر نشر مقالة فارغة</string>
     <string name="error_refresh_unauthorized_posts">ليس لديك الإذن اللازم لعرض المقالات أو تحريرها</string>
     <string name="error_refresh_unauthorized_pages">ليس لديك الإذن اللازم لعرض الصفحات أو تحريرها</string>
-    <string name="error_refresh_unauthorized_comments">ليس لديك الإذن اللازم لعرض التعليقات أو تحريرها</string>
     <string name="older_month">أقدم من شهر</string>
     <string name="more">المزيد</string>
     <string name="older_two_days">أقدم من يومين</string>
@@ -2867,7 +2855,6 @@ Language: ar
     <string name="wordpress_blog">مدونة ووردبريس</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="reader_title_applog">سجل التطبيق</string>
-    <string name="dlg_spamming_comments">تحديد كمزعج</string>
     <string name="select_categories">تحديد التصنيفات</string>
     <string name="post_not_found">حدث خطأ أثناء تحميل المقال . قم بتحديث مقالاتك ثم أعد المحاولة.</string>
     <string name="media_error_no_permission">ليس لديك تصريح لعرض مكتبة الوسائط</string>
@@ -2899,10 +2886,7 @@ Language: ar
     <string name="comment_status_spam">مزعج</string>
     <string name="mnu_comment_spam">مزعج</string>
     <string name="mnu_comment_trash">حذف</string>
-    <string name="dlg_approving_comments">تتم الآن الموافقة</string>
-    <string name="dlg_trashing_comments">إرسال إلى سلة المهملات</string>
     <string name="comment_status_unapproved">معلق</string>
-    <string name="dlg_unapproving_comments">غير مصدق</string>
     <string name="remove_account">إزالة الموقع</string>
     <string name="notifications_empty_all">ليست هناك تنبيهات…حتى الآن.</string>
     <string name="invalid_site_url_message">تحقق من أن عنوان URL الذي تم إدخاله في الموقع صحيح</string>
@@ -3004,7 +2988,6 @@ Language: ar
     <string name="title">العنوان</string>
     <string name="categories">التصنيفات</string>
     <string name="tags_separate_with_commas">الفصل بين الوسوم بفواصل</string>
-    <string name="dlg_deleting_comments">جاري حذف التعليقات</string>
     <string name="sdcard_title">بطاقة الذاكرة مطلوبة</string>
     <string name="media">الوسائط</string>
     <string name="delete">حذف</string>
