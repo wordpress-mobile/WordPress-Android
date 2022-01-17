@@ -31,6 +31,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.StatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import org.wordpress.android.fluxc.test
@@ -40,6 +42,16 @@ import org.wordpress.android.fluxc.test
 private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss"
 
 /* RESPONSE */
+
+private val TODAYS_STATS_RESPONSE = TodaysStatsResponse(
+        views = 100,
+        visitors = 30,
+        likes = 50
+)
+
+private val STATS_RESPONSE = StatsResponse(
+        todaysStatsResponse = TODAYS_STATS_RESPONSE
+)
 
 private val DRAFT_POST_RESPONSE_TWO = PostResponse(
         id = 708,
@@ -77,6 +89,7 @@ private val POSTS_RESPONSE = PostsResponse(
 )
 
 private val CARDS_RESPONSE = CardsResponse(
+        stats = STATS_RESPONSE,
         posts = POSTS_RESPONSE
 )
 
