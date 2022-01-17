@@ -34,26 +34,26 @@ public class ReaderTests extends BaseTest {
         new ReaderViewPage().goBackToReaderIfNecessary();
     }
 
-    String mPostATitle = "Sit Elit Adipiscing Elit Dolor Lorem";
-    String mPostBTitle = "Dolor Sit Elit";
+    String mCoachingPostTitle = "Let's check out the coaching team!";
+    String mCompetitionPostTitle = "Let's focus on the competition.";
 
     @Test
     public void navigateThroughPosts() {
         new ReaderPage()
                 .tapFollowingTab()
-                .openPost(mPostATitle)
-                .verifyPostDisplayed(mPostATitle)
+                .openPost(mCoachingPostTitle)
+                .verifyPostDisplayed(mCoachingPostTitle)
                 .slideToPreviousPost()
-                .verifyPostDisplayed(mPostBTitle)
+                .verifyPostDisplayed(mCompetitionPostTitle)
                 .slideToNextPost()
-                .verifyPostDisplayed(mPostATitle);
+                .verifyPostDisplayed(mCoachingPostTitle);
     }
 
     @Test
     public void likePost() {
         new ReaderPage()
                 .tapFollowingTab()
-                .openPost(mPostATitle)
+                .openPost(mCoachingPostTitle)
                 .likePost()
                 .verifyPostLiked()
                 .unlikePost()
