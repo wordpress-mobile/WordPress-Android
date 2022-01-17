@@ -49,15 +49,16 @@ public class ReaderViewPage {
         // Even though it was working locally in simulator, tapping the footer buttons,
         // like 'mLikeButton.click()', was not working in CI.
         // The current workaround is to use arrows navigation.
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN);
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
-        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
-        resetFocus();
-    }
 
-    private void resetFocus() {
+        // Bring focus to the footer. First button is selected.
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_DOWN);
+        // Navigate to Like button.
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+        // Click the Like button.
+        mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_CENTER);
+        // Navigate back to the first footer button.
         mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT);
         mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT);
         mDevice.pressKeyCode(KeyEvent.KEYCODE_DPAD_LEFT);
