@@ -33,15 +33,15 @@ public class ReaderViewPage {
     }
 
     public ReaderViewPage likePost() {
+        assertFalse("Failed to like post: Post was already liked.", mLikerContainer.exists());
         tapLikeButton();
-        mLikerContainer.waitForExists(DEFAULT_TIMEOUT);
 
         return this;
     }
 
     public ReaderViewPage unlikePost() {
+        assertTrue("Failed to unlike post: Post was not liked.", mLikerContainer.exists());
         tapLikeButton();
-        mLikerContainer.waitUntilGone(DEFAULT_TIMEOUT);
 
         return this;
     }
