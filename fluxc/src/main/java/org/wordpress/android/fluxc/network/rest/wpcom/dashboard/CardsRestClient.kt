@@ -6,8 +6,11 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel.TodaysStatsModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -47,10 +50,32 @@ class CardsRestClient @Inject constructor(
     }
 
     data class CardsResponse(
-        @SerializedName("posts") val posts: PostsResponse
+        @SerializedName("stats") val stats: StatsResponse? = null,
+        @SerializedName("posts") val posts: PostsResponse? = null
     ) {
-        fun toCards() = listOf(
-                posts.toPosts()
+        fun toCards() = arrayListOf<CardModel>().apply {
+            stats?.let { add(it.toStatsCard()) }
+            posts?.let { add(it.toPosts()) }
+        }.toList()
+    }
+
+    data class StatsResponse(
+        @SerializedName("todays_stats") val todaysStatsResponse: TodaysStatsResponse
+    ) {
+        fun toStatsCard() = StatsCardModel(
+                todaysStats = todaysStatsResponse.toTodaysStats()
+        )
+    }
+
+    data class TodaysStatsResponse(
+        @SerializedName("views") val views: Int? = null,
+        @SerializedName("visitors") val visitors: Int? = null,
+        @SerializedName("likes") val likes: Int? = null
+    ) {
+        fun toTodaysStats() = TodaysStatsModel(
+                views = views ?: 0,
+                visitors = visitors ?: 0,
+                likes = likes ?: 0
         )
     }
 
