@@ -19,10 +19,12 @@ public class ReaderViewPage {
 
     String mLikerContainerId = "org.wordpress.android.prealpha:id/liker_faces_container";
     String mRelatedPostsId = "org.wordpress.android.prealpha:id/container_related_posts";
+    String mFooterId = "org.wordpress.android.prealpha:id/layout_post_detail_footer";
 
     UiObject mLikerContainer = mDevice.findObject(new UiSelector().resourceId(mLikerContainerId));
     UiObject mRelatedPostsContainer = mDevice.findObject(new UiSelector().resourceId(mRelatedPostsId));
     UiObject mSwipeForMore = mDevice.findObject(new UiSelector().textContains("Swipe for more"));
+    UiObject mFooter = mDevice.findObject(new UiSelector().resourceId(mFooterId));
 
     public ReaderViewPage waitUntilLoaded() {
         mRelatedPostsContainer.waitForExists(DEFAULT_TIMEOUT);
@@ -30,14 +32,14 @@ public class ReaderViewPage {
         return this;
     }
 
-    public ReaderViewPage like() {
+    public ReaderViewPage likePost() {
         tapLikeButton();
         mLikerContainer.waitForExists(DEFAULT_TIMEOUT);
 
         return this;
     }
 
-    public ReaderViewPage unlike() {
+    public ReaderViewPage unlikePost() {
         tapLikeButton();
         mLikerContainer.waitUntilGone(DEFAULT_TIMEOUT);
 
@@ -66,6 +68,14 @@ public class ReaderViewPage {
 
     public ReaderPage goBackToReader() {
         mDevice.pressBack();
+
+        return new ReaderPage();
+    }
+
+    public ReaderPage goBackToReaderIfNecessary() {
+        if (mFooter.exists()) {
+            goBackToReader();
+        }
 
         return new ReaderPage();
     }

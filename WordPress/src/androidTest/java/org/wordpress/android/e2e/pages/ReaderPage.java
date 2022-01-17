@@ -6,13 +6,10 @@ import androidx.test.espresso.ViewInteraction;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.matcher.ViewMatchers.withChild;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementCompletelyDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
 
 public class ReaderPage {
@@ -42,12 +39,6 @@ public class ReaderPage {
         while (!isElementCompletelyDisplayed(postContainer) && swipeCount < 10) {
             swipeUpOnView(R.id.reader_recycler_view, (float) 1);
             swipeCount += 1;
-        }
-    }
-
-    public void dismissReaderViewIfNecessary() {
-        if (isElementDisplayed(onView(withId(R.id.scroll_view_reader)))) {
-            pressBack();
         }
     }
 }

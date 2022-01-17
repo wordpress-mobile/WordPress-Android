@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.pages.ReaderPage;
+import org.wordpress.android.e2e.pages.ReaderViewPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
@@ -30,7 +31,7 @@ public class ReaderTests extends BaseTest {
 
     @After
     public void tearDown() {
-        new ReaderPage().dismissReaderViewIfNecessary();
+        new ReaderViewPage().goBackToReaderIfNecessary();
     }
 
     String mPostATitle = "Sit Elit Adipiscing Elit Dolor Lorem";
@@ -45,8 +46,7 @@ public class ReaderTests extends BaseTest {
                 .slideToPreviousPost()
                 .verifyPostDisplayed(mPostBTitle)
                 .slideToNextPost()
-                .verifyPostDisplayed(mPostATitle)
-                .goBackToReader();
+                .verifyPostDisplayed(mPostATitle);
     }
 
     @Test
@@ -54,10 +54,9 @@ public class ReaderTests extends BaseTest {
         new ReaderPage()
                 .tapFollowingTab()
                 .openPost(mPostATitle)
-                .like()
+                .likePost()
                 .verifyPostLiked()
-                .unlike()
-                .verifyPostNotLiked()
-                .goBackToReader();
+                .unlikePost()
+                .verifyPostNotLiked();
     }
 }
