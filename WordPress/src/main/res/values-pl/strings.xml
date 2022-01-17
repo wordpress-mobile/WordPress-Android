@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-15 19:43:36+0000
+Translation-Revision-Date: 2022-01-13 06:56:15+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">Ikona aplikacji</string>
+    <string name="about_automattic_back_icon_description">Ikona Cofnij/Wstecz</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Dzień pierwszy</string>
+    <string name="about_automattic_source_code_item_title">Kod źródłowy</string>
+    <string name="about_automattic_privacy_policy_item_title">Polityka prywatności</string>
+    <string name="about_automattic_terms_of_service_item_title">Warunki świadczenia usług</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Pracuj z dowolnego miejsca</string>
+    <string name="about_automattic_work_with_us_item_title">Pracuj dla nas</string>
+    <string name="about_automattic_family_item_title">Rodzina Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">Sprawy prawne i więcej</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_rate_us_item_title">Oceń nas</string>
+    <string name="about_automattic_share_with_friends_item_title">Udostępnij znajomym</string>
+    <string name="gutenberg_native_add_media">DODAJ PLIKI MEDIÓW</string>
+    <string name="about_automattic_version_label">Wersja %1$s</string>
+    <string name="about_automattic_main_page_title">O %1$s</string>
+    <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_the_basics">Podstawy</string>
+    <string name="gutenberg_native_selected_default">Wybrano: Domyślne</string>
     <string name="gutenberg_native_from_clipboard">Że schowka</string>
     <string name="gutenberg_native_featured_image">Obrazek wyróżniający</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Skopiuj adres URL ze schowka, %s</string>
@@ -86,10 +111,10 @@ Language: pl
     <string name="gutenberg_native_line_height">Interlinia</string>
     <string name="recommend_app_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
     <string name="recommend_app_null_response">Nie otrzymano odpowiedzi</string>
-    <string name="recommend_app_subject">Aplikacje WordPress - Aplikacje na wszystkie urządzenia</string>
     <string name="me_btn_share">Udostępnij WordPress znajomemu</string>
     <string name="my_site_quick_actions_title">Szybkie odnośniki</string>
     <string name="my_site_btn_domains">Domeny</string>
+    <string name="recommend_app_subject">Aplikacje Automattic - Aplikacje na wszystkie urządzenia</string>
     <string name="weekly_roundup_notification_text">Twoja witryna ma %1$d wyświetleń, %2$d polubień, %3$d komentarzy.</string>
     <string name="blogging_reminders_notification_time">Czas powiadomienia</string>
     <string name="weekly_roundup_notification_title">W każdym tygodniu: %s</string>
@@ -273,6 +298,7 @@ Language: pl
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s jest %3$s %4$s.</string>
     <string name="gutenberg_native_current_placeholder_text_is">Aktualny tekst zastępczy to</string>
     <string name="gutenberg_native_search_settings">Ustawienia przeszukiwania</string>
+    <string name="gutenberg_native_add_link">DODAJ ODNOŚNIK</string>
     <string name="jetpack_brute_force_allowlist_title">Zawsze dozwolone adresy IP</string>
     <string name="site_settings_denylist_title">Niedozwolone komentarze</string>
     <string name="gutenberg_native_add_button_text">Dodaj tekst przycisku</string>
@@ -916,7 +942,6 @@ Language: pl
     <string name="gutenberg_native_block_settings">Ustawienia bloku</string>
     <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
     <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
-    <string name="weekday_sunday">Niedziela</string>
     <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
     <string name="photo_picker_gif">Wybierz z Tenor</string>
     <string name="weekday_monday">poniedziałek</string>
@@ -925,6 +950,7 @@ Language: pl
     <string name="weekday_friday">piątek</string>
     <string name="weekday_saturday">sobota</string>
     <string name="weekday_wednesday">środa</string>
+    <string name="weekday_sunday">niedziela</string>
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
@@ -2709,7 +2735,6 @@ Language: pl
     <string name="error_notification_open">Nie udało się otworzyć powiadomienia</string>
     <string name="stats_search_terms_unknown_search_terms">Nieznane kryteria wyszukiwania</string>
     <string name="stats_view_authors">Autorzy</string>
-    <string name="comments_fetching">Ładowanie komentarzy…</string>
     <string name="pages_fetching">Ładowanie stron…</string>
     <string name="posts_fetching">Ładowanie wpisów…</string>
     <string name="media_fetching">Ładowanie mediów…</string>
@@ -2753,7 +2778,6 @@ Language: pl
     <string name="older_month">Starsze niż miesiąc</string>
     <string name="error_refresh_unauthorized_posts">Nie masz uprawnień, by oglądać lub edytować wpisy</string>
     <string name="error_refresh_unauthorized_pages">Nie masz uprawnień, by oglądać lub edytować strony</string>
-    <string name="error_refresh_unauthorized_comments">Nie masz uprawnień, by oglądać lub edytować komentarze</string>
     <string name="comment">Komentarz</string>
     <string name="comment_trashed">Komentarz przeniesiono do kosza</string>
     <string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
@@ -2837,14 +2861,10 @@ Language: pl
     <string name="open_source_licenses">Licencje otwartego oprogramowania</string>
     <string name="http_authorization_required">Wymagana autoryzacja</string>
     <string name="reader_title_applog">Dziennik aplikacji</string>
-    <string name="dlg_spamming_comments">Uznane za spam</string>
-    <string name="dlg_approving_comments">Zatwierdzanie</string>
     <string name="sure_to_cancel_edit_comment">Anulować edytowanie tego komentarza?</string>
-    <string name="dlg_trashing_comments">Wysyłanie do kosza</string>
     <string name="mnu_comment_trash">Kosz</string>
     <string name="select_categories">Wybierz kategorie</string>
     <string name="dlg_confirm_trash_comments">Wyrzucić do kosza?</string>
-    <string name="dlg_unapproving_comments">Cofanie zatwierdzenia</string>
     <string name="post_not_found">Wykryto błąd podczas ładowania wpisu. Odśwież listę wpisów i spróbuj ponownie.</string>
     <string name="file_not_found">Nie znaleziono pliku do wysłania. Został usunięty lub przeniesiony?</string>
     <string name="notifications_empty_all">Brak powiadomień… na razie. </string>
@@ -2948,7 +2968,6 @@ Language: pl
     <string name="title">Tytuł</string>
     <string name="categories">Kategorie</string>
     <string name="tags_separate_with_commas">Oddzielaj tagi przecinkami</string>
-    <string name="dlg_deleting_comments">Usuwanie komentarzy</string>
     <string name="sdcard_title">Wymagana karta pamięci SD</string>
     <string name="media">Media</string>
     <string name="delete">Usuń</string>

@@ -2089,7 +2089,6 @@ Language: ku_TR
     <string name="stats_view_authors">Nivîskar</string>
     <string name="error_notification_open">Danezan nehat vekirin</string>
     <string name="publisher">Weşanger:</string>
-    <string name="comments_fetching">Şîrove tên stendin…</string>
     <string name="reader_empty_posts_request_failed">Şandî nayên vegerandin</string>
     <string name="stats_search_terms_unknown_search_terms">Têgihên Lêgerînê yên Nenas</string>
     <string name="stats_view_search_terms">Têgihên Lêgerînê</string>
@@ -2140,7 +2139,6 @@ Language: ku_TR
     <string name="error_publish_empty_post">Şandiya vala nayê weşandin</string>
     <string name="error_refresh_unauthorized_posts">Ji bo dîtin an jî sererastkirina şandiyan destûra te nîn e</string>
     <string name="error_refresh_unauthorized_pages">Ji bo dîtin an jî sererastkirina rûpelan destûra te nîn e</string>
-    <string name="error_refresh_unauthorized_comments">Ji bo dîtin an jî sererastkirina şîroveyan destûra te nîn e</string>
     <string name="more">Zêdetir</string>
     <string name="comment_trashed">Şîrove betal bû</string>
     <string name="comment_reply_to_user">Vêya %s bibersivîne</string>
@@ -2194,9 +2192,7 @@ Language: ku_TR
     <string name="delete_page">Rûpelê jê bibe?</string>
     <string name="comment_status_spam">Nexwestî</string>
     <string name="mnu_comment_approve">Bipejirîne</string>
-    <string name="dlg_approving_comments">Tê pejirandin</string>
     <string name="mnu_comment_unapprove">Red bike</string>
-    <string name="dlg_unapproving_comments">Tê redkirin</string>
     <string name="content_required">Şîrove pêwîst e</string>
     <string name="remove_account">Malperê rake</string>
     <string name="view_in_browser">Di gerokê de bibîne</string>
@@ -2208,7 +2204,6 @@ Language: ku_TR
     <string name="mnu_comment_trash">Jêbirdank</string>
     <string name="trash">Jêbirdank</string>
     <string name="saving_changes">Guhertin tên tomarkirin</string>
-    <string name="dlg_spamming_comments">Wekî spam tê nîşankirin</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="edit_comment">Şîroveyê sererast bike</string>
     <string name="comment_status_unapproved">Hilawestî</string>
@@ -2237,7 +2232,6 @@ Language: ku_TR
     <string name="toast_comment_unedited">Şîrove nehat guhertin</string>
     <string name="sure_to_cancel_edit_comment">Sererastkirina vê şîroveyê betal bike?</string>
     <string name="dlg_confirm_trash_comments">Bişîne jêbirdankê?</string>
-    <string name="dlg_trashing_comments">Dişîne jêbirdankê</string>
     <string name="comment_status_trash">Çû jêbirdankê</string>
     <string name="post_not_found">Di barkirina şandiyê de çewtiyek derket. Şandiyê nû bike û dîsa biceribîne.</string>
     <string name="plugin_not_found">Di gihîna vê pêvekê de çewtiyek derket</string>
@@ -2329,7 +2323,6 @@ Language: ku_TR
     <string name="title">Sernav</string>
     <string name="tags_separate_with_commas">Etîketan bi bêhnokê(,) ji hev veqetîne</string>
     <string name="categories">Kategorî</string>
-    <string name="dlg_deleting_comments">Şîrove tên jêbirin</string>
     <string name="sdcard_title">SD Kart Pêwîst e</string>
     <string name="media">Medya</string>
     <string name="delete">Jê bibe</string>
