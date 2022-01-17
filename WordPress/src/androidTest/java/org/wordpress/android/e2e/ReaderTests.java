@@ -30,7 +30,7 @@ public class ReaderTests extends BaseTest {
 
     @After
     public void tearDown() {
-        new ReaderPage().dismissReaderViewIfNeeded();
+        new ReaderPage().dismissReaderViewIfNecessary();
     }
 
     String mPostATitle = "Sit Elit Adipiscing Elit Dolor Lorem";

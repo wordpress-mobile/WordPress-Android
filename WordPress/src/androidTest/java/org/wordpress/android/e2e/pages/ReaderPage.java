@@ -45,7 +45,7 @@ public class ReaderPage {
         }
     }
 
-    public void dismissReaderViewIfNeeded() {
+    public void dismissReaderViewIfNecessary() {
         if (isElementDisplayed(onView(withId(R.id.scroll_view_reader)))) {
             pressBack();
         }
