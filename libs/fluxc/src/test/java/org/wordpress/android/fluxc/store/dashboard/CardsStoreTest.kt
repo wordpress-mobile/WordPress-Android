@@ -14,10 +14,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel.TodaysStatsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.StatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
@@ -34,6 +38,12 @@ import kotlin.test.assertNull
 
 const val SITE_LOCAL_ID = 1
 
+/* STATS */
+
+const val STATS_VIEWS = 100
+const val STATS_VISITORS = 30
+const val STATS_LIKES = 50
+
 /* POST */
 
 const val POST_ID = 1
@@ -43,6 +53,16 @@ const val POST_FEATURED_IMAGE = "featuredImage"
 const val POST_DATE = "2021-12-27 11:33:55"
 
 /* RESPONSE */
+
+private val TODAYS_STATS_RESPONSE = TodaysStatsResponse(
+        views = STATS_VIEWS,
+        visitors = STATS_VISITORS,
+        likes = STATS_LIKES
+)
+
+private val STATS_RESPONSE = StatsResponse(
+        todaysStatsResponse = TODAYS_STATS_RESPONSE
+)
 
 private val POST_RESPONSE = PostResponse(
         id = POST_ID,
@@ -59,10 +79,18 @@ private val POSTS_RESPONSE = PostsResponse(
 )
 
 private val CARDS_RESPONSE = CardsResponse(
+        stats = STATS_RESPONSE,
         posts = POSTS_RESPONSE
 )
 
 /* MODEL */
+private val STATS_MODEL = StatsCardModel(
+        todaysStats = TodaysStatsModel(
+                views = STATS_VIEWS,
+                visitors = STATS_VISITORS,
+                likes = STATS_LIKES
+        )
+)
 
 private val POST_MODEL = PostCardModel(
         id = POST_ID,
@@ -79,10 +107,17 @@ private val POSTS_MODEL = PostsCardModel(
 )
 
 private val CARDS_MODEL = listOf(
+        STATS_MODEL,
         POSTS_MODEL
 )
 
 /* ENTITY */
+private val STATS_ENTITY = CardEntity(
+        siteLocalId = SITE_LOCAL_ID,
+        type = CardModel.Type.STATS.name,
+        date = CardsUtils.getInsertDate(),
+        json = CardsUtils.GSON.toJson(STATS_MODEL)
+)
 
 private val POSTS_ENTITY = CardEntity(
         siteLocalId = SITE_LOCAL_ID,
@@ -92,6 +127,7 @@ private val POSTS_ENTITY = CardEntity(
 )
 
 private val CARDS_ENTITY = listOf(
+        STATS_ENTITY,
         POSTS_ENTITY
 )
 
