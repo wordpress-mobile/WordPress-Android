@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
@@ -32,6 +33,7 @@ public class ReaderEvents {
         public FollowedTagsChanged(boolean didSucceed) {
             mDidSucceed = didSucceed;
         }
+
         public boolean didSucceed() {
             return mDidSucceed;
         }
@@ -259,10 +261,10 @@ public class ReaderEvents {
         private final boolean mDidSucceed;
 
         public RelatedPostsUpdated(
-            @NonNull ReaderPost sourcePost,
-            @NonNull ReaderSimplePostList localRelatedPosts,
-            @NonNull ReaderSimplePostList globalRelatedPosts,
-            boolean didSucceed
+                @NonNull ReaderPost sourcePost,
+                @NonNull ReaderSimplePostList localRelatedPosts,
+                @NonNull ReaderSimplePostList globalRelatedPosts,
+                boolean didSucceed
         ) {
             mSourcePostId = sourcePost.postId;
             mSourceSiteId = sourcePost.blogId;
@@ -325,5 +327,43 @@ public class ReaderEvents {
     }
 
     public static class DoSignIn {
+    }
+
+    public static class CommentModerated {
+        @NonNull private final ReaderComment mOriginalComment;
+        private int mOriginalCommentPosition = 0;
+        @Nullable private final ReaderComment mNewComment;
+        private final boolean mIsSuccess;
+        private final String mErrorMessage;
+
+        public CommentModerated(ReaderComment originalComment, ReaderComment newComment, boolean isSuccess,
+                                String errorMessage, int originalCommentPosition) {
+            mOriginalComment = originalComment;
+            mNewComment = newComment;
+            mErrorMessage = errorMessage;
+            mIsSuccess = isSuccess;
+            mOriginalCommentPosition = originalCommentPosition;
+        }
+
+
+        public boolean isSuccess() {
+            return mIsSuccess;
+        }
+
+        public String getErrorMessage() {
+            return mErrorMessage;
+        }
+
+        public ReaderComment getOriginalComment() {
+            return mOriginalComment;
+        }
+
+        public ReaderComment getNewComment() {
+            return mNewComment;
+        }
+
+        public int getOriginalCommentPosition() {
+            return mOriginalCommentPosition;
+        }
     }
 }
