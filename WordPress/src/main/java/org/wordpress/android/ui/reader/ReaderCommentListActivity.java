@@ -61,7 +61,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderActions.CommentActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
@@ -539,10 +538,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unarppoved);
                 break;
             case SPAM:
-                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_spammed);
+                moderateComment(comment, CommentStatus.SPAM, R.string.comment_spammed);
                 break;
             case TRASH:
-                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_trashed);
+                moderateComment(comment, CommentStatus.TRASH, R.string.comment_trashed);
                 break;
             case EDIT:
                 break;
@@ -555,10 +554,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage) {
+        int indexOfRemovedComment = getCommentAdapter().indexOfCommentId(comment.commentId);
         getCommentAdapter().removeComment(comment.commentId);
+        checkEmptyView();
         Snackbar snackbar = WPSnackbar.make(findViewById(R.id.coordinator_layout), undoMessage, Snackbar.LENGTH_LONG)
                                       .setAction(R.string.undo, view -> {
-                                          getCommentAdapter().addComment(comment);
+                                          getCommentAdapter().addComment(comment, indexOfRemovedComment);
                                       });
 
         snackbar.addCallback(new BaseCallback<Snackbar>() {
@@ -569,31 +570,34 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                     return;
                 }
 
-                CommentActionListener actionListener = (succeeded, newComment) -> {
-                    if (isFinishing()) {
-                        return;
-                    }
-
-                    if (succeeded) {
-                        getCommentAdapter().removeComment(comment.commentId);
-                    } else {
-                        getCommentAdapter().addComment(comment);
-                        ToastUtils.showToast(
-                                ReaderCommentListActivity.this,
-                                R.string.comment_moderation_error
-                        );
-                    }
-                    checkEmptyView();
-                };
                 ReaderCommentActions.moderateComment(
                         comment,
                         newStatus,
-                        actionListener
+                        indexOfRemovedComment
                 );
             }
         });
 
         snackbar.show();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ReaderEvents.CommentModerated event) {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (event.isSuccess()) {
+            getCommentAdapter().removeComment(event.getNewComment().commentId);
+        } else {
+            getCommentAdapter().addComment(event.getOriginalComment());
+            ToastUtils.showToast(
+                    ReaderCommentListActivity.this,
+                    R.string.comment_moderation_error
+            );
+        }
+        checkEmptyView();
     }
 
 

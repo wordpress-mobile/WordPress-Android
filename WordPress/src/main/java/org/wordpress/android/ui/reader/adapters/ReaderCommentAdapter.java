@@ -587,6 +587,22 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    public void addComment(ReaderComment comment, int position) {
+        if (comment == null) {
+            return;
+        }
+
+        // if the comment doesn't have a parent we can just add it to the list of existing
+        // comments - but if it does have a parent, we need to reload the list so that it
+        // appears under its parent and is correctly indented
+        if (comment.parentId == 0) {
+            mComments.add(position, comment);
+            notifyDataSetChanged();
+        } else {
+            refreshComments();
+        }
+    }
+
     /*
      * called from post detail when submitted a comment fails - this removes the "fake" comment
      * that was inserted while the API call was still being processed
@@ -633,6 +649,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public int positionOfCommentId(long commentId) {
         int index = mComments.indexOfCommentId(commentId);
         return index == -1 ? -1 : index + NUM_HEADERS;
+    }
+
+
+    public int indexOfCommentId(long commentId) {
+        return mComments.indexOfCommentId(commentId);
     }
 
     /*
