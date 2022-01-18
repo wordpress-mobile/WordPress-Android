@@ -27,12 +27,14 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -229,7 +231,11 @@ public class PublicizeListActivity extends LocaleAwareActivity
      */
     @Override
     public void onRequestConnect(PublicizeService service) {
-        showWebViewFragment(service, null);
+        if (isFacebook(service)) {
+            showFacebookWarning();
+        } else {
+            showWebViewFragment(service, null);
+        }
     }
 
     /*
@@ -237,8 +243,12 @@ public class PublicizeListActivity extends LocaleAwareActivity
      */
     @Override
     public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
-        PublicizeActions.reconnect(publicizeConnection);
-        showWebViewFragment(service, null);
+        if (isFacebook(service)) {
+            showFacebookWarning();
+        } else {
+            PublicizeActions.reconnect(publicizeConnection);
+            showWebViewFragment(service, null);
+        }
     }
 
     /*
@@ -247,6 +257,30 @@ public class PublicizeListActivity extends LocaleAwareActivity
     @Override
     public void onRequestDisconnect(PublicizeConnection publicizeConnection) {
         confirmDisconnect(publicizeConnection);
+    }
+
+    private boolean isFacebook(PublicizeService service) {
+        return service.getId().equals(PublicizeConstants.FACEBOOK_ID);
+    }
+
+    private String getConnectionsUrl(SiteModel site) {
+        return "https://wordpress.com/marketing/connections/" + SiteUtils.getHomeURLOrHostName(site);
+    }
+
+    /*
+     * As of Oct 5, 2021 Facebook has deprecated support for authentication on embedded browsers, so Publicize
+     * connections can't be established through web views anymore (ref: pbArwn-3uU-p2).
+     * This method shows a temporary warning message to the user instead.
+     */
+    private void showFacebookWarning() {
+        new MaterialAlertDialogBuilder(this)
+                .setMessage(R.string.sharing_facebook_warning_message)
+                .setPositiveButton(R.string.sharing_facebook_warning_positive_button,
+                        (dialog, id) -> ActivityLauncher.openUrlExternal(this, getConnectionsUrl(mSite)))
+                .setNegativeButton(R.string.cancel, null)
+                .setCancelable(true)
+                .create()
+                .show();
     }
 
     private void confirmDisconnect(final PublicizeConnection publicizeConnection) {
