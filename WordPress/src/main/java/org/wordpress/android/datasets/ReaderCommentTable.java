@@ -137,9 +137,9 @@ public class ReaderCommentTable {
             return new ReaderCommentList();
         }
 
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+        String[] args = {Long.toString(post.blogId), Long.toString(post.postId), "approved"};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(
-                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
+                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? AND status =? ORDER BY timestamp", args);
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {
