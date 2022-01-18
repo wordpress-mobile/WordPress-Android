@@ -6,22 +6,10 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Teşekkürler</string>
-    <string name="about_automattic_source_code">Kaynak kodu</string>
-    <string name="about_automattic_california_privacy_notice">Kaliforniya için gizlilik bildirimi</string>
-    <string name="about_automattic_privacy_policy">Gizlilik politikası</string>
-    <string name="about_automattic_terms_of_service">Hizmet koşulları</string>
-    <string name="about_automattic_work_from_anywhere">İstediğiniz yerden çalışın</string>
-    <string name="about_automattic_work_with_us">Bizimle çalışın</string>
-    <string name="about_automattic_family">Automattic ailesi</string>
-    <string name="about_automattic_legal_and_more">Yasal bilgiler ve daha fazlası</string>
-    <string name="about_automattic_rate_us">Bizi değerlendirin</string>
-    <string name="about_automattic_share_with_friends">Arkadaşlarla paylaş</string>
     <string name="about_automattic_version_label">Sürüm %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Teşekkürler</string>
     <string name="about_automattic_legal_page_title">Yasal Bilgiler ve Daha Fazlası</string>
     <string name="about_automattic_main_page_title">%1$s Hakkında</string>
-    <string name="about_automattic_app_name">Automattic Hakkında</string>
     <string name="gutenberg_native_the_basics">Temel bilgiler</string>
     <string name="gutenberg_native_selected_default">Seçili: Varsayılan</string>
     <string name="gutenberg_native_more_support_options">Daha fazla destek seçeneği</string>
@@ -116,7 +104,6 @@ Language: tr
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="recommend_app_null_response">Yanıt alınamadı</string>
-    <string name="recommend_app_subject">WordPress Uygulamaları - Her ekran için uygulamalar</string>
     <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
     <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
     <string name="my_site_btn_domains">Alan adları</string>
@@ -2769,7 +2756,6 @@ Language: tr
     <string name="stats_search_terms_unknown_search_terms">Bilinmeyen arama terimleri</string>
     <string name="stats_view_search_terms">Arama terimleri</string>
     <string name="stats_view_authors">Yazarlar</string>
-    <string name="comments_fetching">Yorumlar alınıyor…</string>
     <string name="pages_fetching">Sayfalar alınıyor…</string>
     <string name="posts_fetching">Yazılar alınıyor…</string>
     <string name="media_fetching">Medya alınıyor…</string>
@@ -2811,7 +2797,6 @@ Language: tr
     <string name="error_publish_empty_post">Boş bir yazı yayımlanamaz</string>
     <string name="error_refresh_unauthorized_posts">Yazıları görüntüleme veya düzenleme izniniz yok</string>
     <string name="error_refresh_unauthorized_pages">Sayfaları görüntüleme veya düzenleme izniniz yok</string>
-    <string name="error_refresh_unauthorized_comments">Yorumları görüntüleme veya düzenleme izniniz yok</string>
     <string name="more">Daha Fazla</string>
     <string name="older_month">Bir aydan eski</string>
     <string name="older_last_week">1 haftadan eski</string>
@@ -2891,10 +2876,6 @@ Language: tr
     <string name="saving_changes">Değişiklikler kaydediliyor</string>
     <string name="trash">Çöp</string>
     <string name="dlg_confirm_trash_comments">Çöpe gönderilsin mi?</string>
-    <string name="dlg_trashing_comments">Çöpe gönderiliyor</string>
-    <string name="dlg_spamming_comments">Gereksiz olarak işaretleniyor</string>
-    <string name="dlg_unapproving_comments">Reddediliyor</string>
-    <string name="dlg_approving_comments">Onaylanıyor</string>
     <string name="mnu_comment_trash">Çöp</string>
     <string name="mnu_comment_spam">Gereksiz</string>
     <string name="mnu_comment_unapprove">Reddet</string>
@@ -3007,7 +2988,6 @@ Language: tr
     <string name="title">Başlık</string>
     <string name="tags_separate_with_commas">Etiketleri virgül ile ayırın</string>
     <string name="categories">Kategoriler</string>
-    <string name="dlg_deleting_comments">Yorumlar siliniyor</string>
     <string name="sdcard_title">SD kart gerekli</string>
     <string name="media">Ortam</string>
     <string name="approve">Onayla</string>

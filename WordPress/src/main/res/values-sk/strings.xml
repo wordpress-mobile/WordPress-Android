@@ -1261,7 +1261,6 @@ Language: sk
     <string name="stats_view_search_terms">Hľadané výrazy</string>
     <string name="stats_search_terms_unknown_search_terms">Neznáme hľadané výrazy</string>
     <string name="reader_empty_posts_request_failed">Nie je možné obnoviť príspevky</string>
-    <string name="comments_fetching">Načítavajú sa komentáre…</string>
     <string name="posts_fetching">Načítavajú sa príspevky…</string>
     <string name="pages_fetching">Načítavajú sa stránky…</string>
     <string name="publisher">Vydavateľ:</string>
@@ -1308,7 +1307,6 @@ Language: sk
     <string name="error_publish_empty_post">Nie je možné zverejniť prázdny príspevok</string>
     <string name="comment_reply_to_user">Odpovedať užívateľovi %s</string>
     <string name="comment">Komentár</string>
-    <string name="error_refresh_unauthorized_comments">Nemáte oprávnenie prezerať alebo upravovať komentáre</string>
     <string name="error_refresh_unauthorized_pages">Nemáte oprávnenie prezerať alebo upravovať stránky</string>
     <string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
     <string name="reader_label_like">Lajk</string>
@@ -1372,7 +1370,6 @@ Language: sk
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_trash">Kôš</string>
     <string name="comment_status_unapproved">Čakajúci na schválenie</string>
-    <string name="dlg_spamming_comments">Označené ako spam</string>
     <string name="saving_changes">Ukladajú sa zmeny</string>
     <string name="sure_to_cancel_edit_comment">Zrušiť úpravu tohto komentáru?</string>
     <string name="content_required">Vyžaduje sa komentár</string>
@@ -1384,7 +1381,6 @@ Language: sk
     <string name="new_post">Nový príspevok</string>
     <string name="http_authorization_required">Požaduje sa autorizácia</string>
     <string name="image_settings">Nastavenie obrázka</string>
-    <string name="dlg_trashing_comments">Vymazáva sa</string>
     <string name="trash">Kôš</string>
     <string name="open_source_licenses">Open source licencie</string>
     <string name="link_enter_url_text">Text odkazu (voliteľný)</string>
@@ -1393,13 +1389,11 @@ Language: sk
     <string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
     <string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
     <string name="new_media">Nový súbor</string>
-    <string name="dlg_approving_comments">Schvaľovanie</string>
     <string name="post_not_found">Počas načítania príspevku sa vyskytla chyba. Obnovte príspevky a skúste znova.</string>
     <string name="local_draft">Lokálny koncept </string>
     <string name="media_gallery_type_thumbnail_grid">Mriežka s náhľadmi</string>
     <string name="reader_title_applog">Záznamy aplikácie</string>
     <string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
-    <string name="dlg_unapproving_comments">Ruší sa schválenie</string>
     <string name="file_error_create">Nie je možné vytvoriť dočasný súbor. Uistite sa, či máte dostatok miesta vo vašom zariadení.</string>
     <string name="cannot_delete_multi_media_items">Niektoré súbory nie je možné teraz zmazať. skúste neskôr.</string>
     <string name="remove_account">Odstrániť webovú stránku</string>
@@ -1496,7 +1490,6 @@ Language: sk
     <string name="categories">Kategórie</string>
     <string name="title">Názov</string>
     <string name="tags_separate_with_commas">Oddeľujte značky čiarkami</string>
-    <string name="dlg_deleting_comments">Vymazanie komentárov</string>
     <string name="sdcard_title">Vyžadovaná SD karta</string>
     <string name="media">Súbory</string>
     <string name="delete">Zmazať</string>

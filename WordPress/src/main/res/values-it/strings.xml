@@ -6,30 +6,16 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Ringraziamenti</string>
-    <string name="about_automattic_source_code">Codice sorgente</string>
-    <string name="about_automattic_california_privacy_notice">Nota sulla privacy in California</string>
-    <string name="about_automattic_privacy_policy">Politica sulla privacy</string>
-    <string name="about_automattic_terms_of_service">Termini di servizio</string>
-    <string name="about_automattic_work_from_anywhere">Lavora da dove vuoi</string>
-    <string name="about_automattic_work_with_us">Lavora con noi</string>
-    <string name="about_automattic_family">Famiglia Automattic</string>
-    <string name="about_automattic_legal_and_more">Sezione legale e altro</string>
-    <string name="about_automattic_rate_us">Valutaci</string>
-    <string name="about_automattic_share_with_friends">Condividi con gli amici</string>
     <string name="about_automattic_version_label">Versione %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Ringraziamenti</string>
     <string name="about_automattic_legal_page_title">Sezione legale e altro</string>
     <string name="about_automattic_main_page_title">Informazioni su %1$s</string>
-    <string name="about_automattic_app_name">Informazioni su Automattic</string>
     <string name="gutenberg_native_the_basics">Funzionalità di base</string>
     <string name="gutenberg_native_selected_default">Selezionato: impostazione predefinita</string>
     <string name="gutenberg_native_more_support_options">Ulteriori opzioni di supporto</string>
     <string name="gutenberg_native_get_support">Ottieni assistenza</string>
     <string name="gutenberg_native_font_size">Dimensione carattere</string>
     <string name="gutenberg_native_double_tap_to_select_font_size">Tocca due volte per selezionare la dimensione del carattere</string>
-    <string name="about_automattic_twitter">Twitter</string>
-    <string name="about_automattic_instagram">Instagram</string>
     <string name="about_blog">Blog</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Tocca due volte per selezionare la dimensione del carattere predefinito</string>
     <string name="gutenberg_native_contact_support">Contatta il supporto</string>
@@ -123,7 +109,6 @@ Language: it
     <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">Risposta non valida ricevuta</string>
     <string name="recommend_app_null_response">Nessuna risposta ricevuta</string>
-    <string name="recommend_app_subject">App WordPress: app per qualsiasi schermata</string>
     <string name="me_btn_share">Condividi WordPress con un amico</string>
     <string name="my_site_quick_actions_title">Link veloci</string>
     <string name="my_site_btn_domains">Domini</string>
@@ -2777,7 +2762,6 @@ Language: it
     <string name="stats_view_search_terms">Termini di ricerca</string>
     <string name="publisher">Editore:</string>
     <string name="error_notification_open">Impossibile aprire la notifica</string>
-    <string name="comments_fetching">Recupero commenti in corso…</string>
     <string name="pages_fetching">Recupero pagine in corso…</string>
     <string name="posts_fetching">Recupero degli articoli in corso…</string>
     <string name="media_fetching">Recupero file multimediali in corso…</string>
@@ -2818,7 +2802,6 @@ Language: it
     <string name="error_publish_empty_post">Non è possibile pubblicare un articolo vuoto</string>
     <string name="error_refresh_unauthorized_posts">Non disponi del permesso di visualizzare o modificare gli articoli</string>
     <string name="error_refresh_unauthorized_pages">Non disponi del permesso di visualizzare o modificare le pagine</string>
-    <string name="error_refresh_unauthorized_comments">Non disponi del permesso di visualizzare o modificare i commenti</string>
     <string name="older_month">Più vecchio di un mese</string>
     <string name="more">Altro</string>
     <string name="older_two_days">Più vecchio di 2 giorni</string>
@@ -2891,10 +2874,6 @@ Language: it
     <string name="mnu_comment_approve">Approva</string>
     <string name="mnu_comment_unapprove">Rimuovi approvazione</string>
     <string name="mnu_comment_spam">Spam</string>
-    <string name="dlg_approving_comments">Approvazione in corso</string>
-    <string name="dlg_unapproving_comments">Rimozione dell\'approvazione in corso</string>
-    <string name="dlg_spamming_comments">Contrassegno come spam in corso</string>
-    <string name="dlg_trashing_comments">Invio al cestino in corso</string>
     <string name="dlg_confirm_trash_comments">Inviare al cestino?</string>
     <string name="saving_changes">Salvataggio delle modifiche in corso</string>
     <string name="sure_to_cancel_edit_comment">Annullare la modifica a questo commento?</string>
@@ -3015,7 +2994,6 @@ Language: it
     <string name="title">Titolo</string>
     <string name="categories">Categorie</string>
     <string name="tags_separate_with_commas">Separa i tag con delle virgole</string>
-    <string name="dlg_deleting_comments">Eliminazione commenti</string>
     <string name="sdcard_title">Scheda SD necessaria</string>
     <string name="media">Media</string>
     <string name="approve">Approva</string>

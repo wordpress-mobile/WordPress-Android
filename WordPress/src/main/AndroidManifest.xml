@@ -213,11 +213,6 @@
 
         <!-- Comments activities -->
         <activity
-            android:name=".ui.comments.CommentsActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:launchMode="singleTop"
-            android:label="@string/comments"/>
-        <activity
             android:name=".ui.comments.unified.UnifiedCommentsActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:launchMode="singleTop"
@@ -554,11 +549,6 @@
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".ui.reader.comments.ThreadedCommentsActivity"
-            android:label="@string/reader_title_comments"
-            android:theme="@style/WordPress.NoActionBar"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
             android:name=".ui.reader.NoSiteToReblogActivity"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
@@ -804,7 +794,7 @@
             android:label="Reader Search Job Service" />
 
         <service
-            android:name=".ui.reader.services.ReaderCommentService"
+            android:name=".ui.reader.services.comment.ReaderCommentService"
             android:exported="false"
             android:label="Reader Comment Service" />
         <service

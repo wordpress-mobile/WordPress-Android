@@ -133,7 +133,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   # bundle exec fastlane code_freeze update_release_branch_version:false
   # bundle exec fastlane code_freeze skip_confirm:true
   #####################################################################################
-  desc 'Creates a new release branch from the current develop'
+  desc 'Creates a new release branch from the current trunk'
   lane :code_freeze do |options|
     old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 

@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.datasets.ReaderCommentTable
+import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -61,7 +61,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.ReaderCommentService
+import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -119,7 +119,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val contextProvider: ContextProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+    private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
+    private val readerCommentTableWrapper: ReaderCommentTableWrapper,
+    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -300,7 +302,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
             if (!isRepliesDataChanged) return
 
-            ReaderCommentService.startServiceForCommentSnippet(
+            readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
                     contextProvider.getContext(),
                     blogId,
                     postId
@@ -892,7 +894,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             // Check the cache
             val comments: ReaderCommentList? = post?.let {
                 withContext(bgDispatcher) {
-                    ReaderCommentTable.getCommentsForPostSnippet(
+                    readerCommentTableWrapper.getCommentsForPostSnippet(
                             it,
                             READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
                     ) ?: ReaderCommentList()
@@ -900,6 +902,35 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
 
             _commentSnippetState.value = getUpdatedSnippetState(comments, event.result)
+        }
+    }
+
+    fun onUserNavigateFromComments() {
+        // reload post from DB and update UI state
+        val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
+        currentUiState?.let {
+            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+                this.post = post
+                onUpdatePost(post)
+            }
+        }
+
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            // reload comments from DB and update comments snippet if they are not being loaded
+            if (_commentSnippetState.value !is CommentSnippetState.Loading) {
+                launch(mainDispatcher) {
+                    val comments: ReaderCommentList? = post?.let {
+                        withContext(bgDispatcher) {
+                            readerCommentTableWrapper.getCommentsForPostSnippet(
+                                    it,
+                                    READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                            ) ?: ReaderCommentList()
+                        }
+                    }
+
+                    _commentSnippetState.value = getUpdatedSnippetState(comments, CHANGED)
+                }
+            }
         }
     }
 

@@ -3,12 +3,14 @@ package org.wordpress.android.ui.mysite.cards.dashboard.posts
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems.PostItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -82,12 +84,17 @@ class PostCardBuilder @Inject constructor(
 
     private fun PostsCardModel.hasDraftsOrScheduledPosts() = draft.isNotEmpty() || scheduled.isNotEmpty()
 
-    private fun List<PostCardModel>.mapToDraftPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
+    private fun List<PostCardModel>.mapToDraftPostItems(
+        onPostItemClick: (params: PostItemClickParams) -> Unit
+    ) = map { post ->
         PostItem(
                 title = constructPostTitle(post.title),
                 excerpt = constructPostContent(post.content),
                 featuredImageUrl = post.featuredImage,
-                onClick = { onPostItemClick.invoke(post.id) }
+                onClick = ListItemInteraction.create(
+                        PostItemClickParams(PostCardType.DRAFT, post.id),
+                        onPostItemClick
+                )
         )
     }
 
@@ -97,13 +104,18 @@ class PostCardBuilder @Inject constructor(
     private fun constructPostContent(content: String) =
             if (content.isEmpty()) UiStringRes(R.string.my_site_no_content_post) else UiStringText(content)
 
-    private fun List<PostCardModel>.mapToScheduledPostItems(onPostItemClick: (postId: Int) -> Unit) = map { post ->
+    private fun List<PostCardModel>.mapToScheduledPostItems(
+        onPostItemClick: (params: PostItemClickParams) -> Unit
+    ) = map { post ->
         PostItem(
                 title = constructPostTitle(post.title),
                 excerpt = UiStringText(constructPostDate(post.date)),
                 featuredImageUrl = post.featuredImage,
                 isTimeIconVisible = true,
-                onClick = { onPostItemClick.invoke(post.id) }
+                onClick = ListItemInteraction.create(
+                        PostItemClickParams(PostCardType.SCHEDULED, post.id),
+                        onPostItemClick
+                )
         )
     }
 

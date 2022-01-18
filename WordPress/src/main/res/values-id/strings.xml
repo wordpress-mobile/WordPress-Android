@@ -6,22 +6,10 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
-    <string name="about_automattic_acknowledgements">Pernyataan</string>
-    <string name="about_automattic_source_code">Kode sumber</string>
-    <string name="about_automattic_california_privacy_notice">Pemberitahuan privasi untuk California</string>
-    <string name="about_automattic_privacy_policy">Kebijakan privasi</string>
-    <string name="about_automattic_terms_of_service">Ketentuan layanan</string>
-    <string name="about_automattic_work_from_anywhere">Bekerja dari mana saja</string>
-    <string name="about_automattic_work_with_us">Berkarya bersama kami</string>
-    <string name="about_automattic_family">Keluarga Automattic</string>
-    <string name="about_automattic_legal_and_more">Informasi hukum dan lainnya</string>
-    <string name="about_automattic_rate_us">Beri rating</string>
-    <string name="about_automattic_share_with_friends">Bagikan ke teman</string>
     <string name="about_automattic_version_label">Versi %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Pernyataan</string>
     <string name="about_automattic_legal_page_title">Informasi Hukum dan Lainnya</string>
     <string name="about_automattic_main_page_title">Tentang %1$s</string>
-    <string name="about_automattic_app_name">Tentang Automattic</string>
     <string name="gutenberg_native_the_basics">Dasar-dasar</string>
     <string name="gutenberg_native_selected_default">Terpilih: Default</string>
     <string name="gutenberg_native_more_support_options">Pilihan dukungan lainnya</string>
@@ -119,7 +107,6 @@ Language: id
     <string name="recommend_app_generic_get_template_error">Terjadi error yang tidak diketahui saat memuat templat rekomendasikan aplikasi</string>
     <string name="recommend_app_bad_format_response">Respons yang diterima tidak valid</string>
     <string name="recommend_app_null_response">Tidak ada respons yang diterima</string>
-    <string name="recommend_app_subject">Aplikasi WordPress - Aplikasi untuk semua layar</string>
     <string name="me_btn_share">Bagikan WordPress dengan teman</string>
     <string name="my_site_quick_actions_title">Tautan Cepat</string>
     <string name="my_site_btn_domains">Domain</string>
@@ -2773,7 +2760,6 @@ Language: id
     <string name="stats_search_terms_unknown_search_terms">Terma Pencarian Tak Dikenal</string>
     <string name="stats_view_search_terms">Terma-terma Pencarian</string>
     <string name="stats_view_authors">Para Penulis</string>
-    <string name="comments_fetching">Memuat komentar…</string>
     <string name="pages_fetching">Memuat laman…</string>
     <string name="posts_fetching">Memuat pos…</string>
     <string name="media_fetching">Memuat media…</string>
@@ -2815,7 +2801,6 @@ Language: id
     <string name="error_publish_empty_post">Tidak dapat menerbitkan pos kosong</string>
     <string name="error_refresh_unauthorized_posts">Anda tidak memiliki izin untuk melihat atau menyunting pos</string>
     <string name="error_refresh_unauthorized_pages">Anda tidak memiliki izin untuk melihat atau menyunting halaman</string>
-    <string name="error_refresh_unauthorized_comments">Anda tidak memiliki izin untuk melihat atau menyunting komentar</string>
     <string name="more">Lainnya</string>
     <string name="older_month">Lebih dari satu bulan</string>
     <string name="older_last_week">Lebih dari satu minggu</string>
@@ -2895,10 +2880,6 @@ Language: id
     <string name="saving_changes">Menyimpan perubahan</string>
     <string name="trash">Tong Sampah</string>
     <string name="dlg_confirm_trash_comments">Buang ke Tong Sampah?</string>
-    <string name="dlg_trashing_comments">Membuang ke Tong Sampah</string>
-    <string name="dlg_spamming_comments">Menandai sebagai spam</string>
-    <string name="dlg_unapproving_comments">Menolak</string>
-    <string name="dlg_approving_comments">Mengizinkan</string>
     <string name="mnu_comment_trash">Tong Sampah</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Tolak</string>
@@ -3011,7 +2992,6 @@ Language: id
     <string name="title">Judul</string>
     <string name="tags_separate_with_commas">Pisahkan tag dengan koma</string>
     <string name="categories">Kategori</string>
-    <string name="dlg_deleting_comments">Menghapus komentar</string>
     <string name="sdcard_title">Dibutuhkan SD Card</string>
     <string name="media">Media</string>
     <string name="approve">Setujui</string>

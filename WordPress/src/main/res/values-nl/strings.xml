@@ -88,7 +88,6 @@ Language: nl
     <string name="recommend_app_generic_get_template_error">Onbekende fout bij het ophalen van aanbevolen app template</string>
     <string name="recommend_app_bad_format_response">Ongeldige reactie ontvangen</string>
     <string name="recommend_app_null_response">Geen reactie ontvangen</string>
-    <string name="recommend_app_subject">WordPress Apps - Apps voor elk scherm</string>
     <string name="me_btn_share">Deel WordPress met een vriend</string>
     <string name="my_site_quick_actions_title">Snelle links</string>
     <string name="my_site_btn_domains">Domeinen</string>
@@ -2741,7 +2740,6 @@ Language: nl
     <string name="stats_search_terms_unknown_search_terms">Onbekende zoektermen</string>
     <string name="stats_view_search_terms">Zoektermen</string>
     <string name="stats_view_authors">Auteurs</string>
-    <string name="comments_fetching">Reacties ophalen…</string>
     <string name="pages_fetching">Pagina\'s ophalen…</string>
     <string name="posts_fetching">Berichten ophalen…</string>
     <string name="media_fetching">Media ophalen…</string>
@@ -2783,7 +2781,6 @@ Language: nl
     <string name="error_publish_empty_post">Kan een leeg bericht niet publiceren</string>
     <string name="error_refresh_unauthorized_posts">Je hebt geen rechten om berichten te bekijken of te bewerken</string>
     <string name="error_refresh_unauthorized_pages">Je hebt geen rechten om pagina\'s te bekijken of te bewerken</string>
-    <string name="error_refresh_unauthorized_comments">Je hebt geen rechten om reacties te bekijken of te bewerken</string>
     <string name="more">Meer</string>
     <string name="older_month">Ouder dan een maand</string>
     <string name="older_last_week">Ouder dan een week</string>
@@ -2863,10 +2860,6 @@ Language: nl
     <string name="saving_changes">Wijzigingen aan het opslaan</string>
     <string name="trash">Prullenbak</string>
     <string name="dlg_confirm_trash_comments">Verplaatsen naar de prullenbak?</string>
-    <string name="dlg_trashing_comments">Aan het verplaatsen naar de prullenbak</string>
-    <string name="dlg_spamming_comments">Aan het markeren als spam</string>
-    <string name="dlg_unapproving_comments">Aan het afkeuren</string>
-    <string name="dlg_approving_comments">Aan het goedkeuren</string>
     <string name="mnu_comment_trash">Prullenbak</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Afkeuren</string>
@@ -2979,7 +2972,6 @@ Language: nl
     <string name="title">Titel</string>
     <string name="tags_separate_with_commas">Scheid tags met komma\'s</string>
     <string name="categories">Categorieën</string>
-    <string name="dlg_deleting_comments">Reacties verwijderen</string>
     <string name="sdcard_title">SD kaart is vereist</string>
     <string name="media">Media</string>
     <string name="approve">Goedkeuren</string>

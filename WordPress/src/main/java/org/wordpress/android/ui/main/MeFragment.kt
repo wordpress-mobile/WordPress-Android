@@ -161,17 +161,15 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        // Temporarily limiting this feature to the WordPress app
-        if (unifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
-            recommendTheAppContainer.isVisible = false
+        if (unifiedAboutFeatureConfig.isEnabled()) {
             aboutTheAppContainer.isVisible = true
 
             rowAboutTheApp.setOnClickListener {
                 viewModel.showUnifiedAbout()
             }
-        } else {
-            initRecommendUiState()
         }
+
+        initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
             startActivity(Intent(activity, UnifiedAboutActivity::class.java))
