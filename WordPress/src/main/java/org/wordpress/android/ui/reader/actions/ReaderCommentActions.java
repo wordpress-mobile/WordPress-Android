@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
+import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -64,6 +66,7 @@ public class ReaderCommentActions {
         newComment.blogId = post.blogId;
         newComment.parentId = replyToCommentId;
         newComment.pageNumber = pageNumber;
+        newComment.setStatus("approved");
         newComment.setText(commentText);
 
         Date dtPublished = new Date();
@@ -184,9 +187,8 @@ public class ReaderCommentActions {
         return true;
     }
 
-    public static void moderateComment(final ReaderComment comment,
-                                                final CommentStatus newStatus,
-                                                  final ReaderActions.CommentActionListener actionListener) {
+    public static void moderateComment(final ReaderComment comment, final CommentStatus newStatus,
+                                       final int positionOfOriginalComment) {
         if (comment == null) {
             return;
         }
@@ -198,25 +200,21 @@ public class ReaderCommentActions {
 
         final String path = "sites/" + comment.blogId + "/comments/" + comment.commentId;
 
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                ReaderComment newComment = ReaderComment.fromJson(jsonObject, comment.blogId);
-                ReaderCommentTable.addOrUpdateComment(newComment);
-                if (actionListener != null) {
-                    actionListener.onActionResult(true, newComment);
-                }
-            }
+        RestRequest.Listener listener = jsonObject -> {
+            ReaderComment newComment = ReaderComment.fromJson(jsonObject, comment.blogId);
+            ReaderCommentTable.addOrUpdateComment(newComment);
+            EventBus.getDefault().post(new ReaderEvents.CommentModerated(comment, newComment, true, null,
+                    positionOfOriginalComment));
         };
         RestRequest.ErrorListener errorListener = volleyError -> {
-            AppLog.w(T.READER, "comment failed");
+            AppLog.w(T.READER, "comment moderation failed");
             AppLog.e(T.READER, volleyError);
-            if (actionListener != null) {
-                actionListener.onActionResult(false, null);
-            }
+            EventBus.getDefault()
+                    .post(new ReaderEvents.CommentModerated(comment, null, true, volleyError.getMessage(),
+                            positionOfOriginalComment));
         };
 
-        AppLog.i(T.READER, "submitting comment");
+        AppLog.i(T.READER, "moderating comment");
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 }
