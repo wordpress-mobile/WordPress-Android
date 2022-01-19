@@ -48,6 +48,8 @@ public class PublicizeListActivity extends LocaleAwareActivity
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,
         PublicizeListFragment.PublicizeButtonPrefsListener, ScrollableViewInitializedListener {
+    private static final String WPCOM_CONNECTIONS_URL = "https://wordpress.com/marketing/connections/";
+
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
     private AppBarLayout mAppBarLayout;
@@ -264,7 +266,7 @@ public class PublicizeListActivity extends LocaleAwareActivity
     }
 
     private String getConnectionsUrl(SiteModel site) {
-        return "https://wordpress.com/marketing/connections/" + SiteUtils.getHomeURLOrHostName(site);
+        return WPCOM_CONNECTIONS_URL + SiteUtils.getHomeURLOrHostName(site);
     }
 
     /*
