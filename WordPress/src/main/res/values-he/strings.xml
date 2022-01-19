@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-03 14:54:07+0000
+Translation-Revision-Date: 2022-01-15 15:31:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
@@ -1991,7 +1991,7 @@ Language: he_IL
     <string name="site_settings_timezones_error">לא ניתן לטעון את אזורי הזמן</string>
     <string name="site_settings_format_help">מידע נוסף לגבי תבניות זמן ותאריך</string>
     <string name="site_settings_format_hint_custom">תבנית מותאמת אישית</string>
-    <string name="site_settings_format_entry_custom">התאמה אישית</string>
+    <string name="site_settings_format_entry_custom">מותאם</string>
     <string name="site_settings_posts_per_page_title">פוסטים בכל עמוד</string>
     <string name="site_settings_timezone_subtitle">בחירת עיר באזור הזמן שלך</string>
     <string name="site_settings_timezone_title">אזור זמן</string>
