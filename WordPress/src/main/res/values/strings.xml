@@ -2324,7 +2324,7 @@
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
-    <string name="sharing_facebook_warning_message">Connecting a Facebook account via the WordPress app is currently not available, sorry for the inconvenience!\n\nYou can still connect your Facebook account using the web version of WordPress.</string>
+    <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
     <string name="sharing_facebook_warning_positive_button">Go to web</string>
 
     <!--Theme Browser-->
