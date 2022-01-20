@@ -452,8 +452,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private void getMediaFromDeviceAndTrack(Uri videoUri, int requestCode) {
         final String mimeType = getContentResolver().getType(videoUri);
+        final boolean isVideo = mMediaUtilsWrapper.isVideoMimeType(mimeType);
 
-        if (mSite.getHasFreePlan() && mMediaUtilsWrapper.isVideoMimeType(mimeType)) {
+        if (isVideo && mSite.getHasFreePlan()) {
             if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, videoUri)) {
                 fetchMediaAndDoNext(videoUri, requestCode, mimeType);
             } else {

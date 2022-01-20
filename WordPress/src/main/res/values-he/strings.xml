@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-15 15:31:58+0000
+Translation-Revision-Date: 2022-01-19 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
+    <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>
+    <string name="about_automattic_logo_description">הסמל של Automattic</string>
+    <string name="about_automattic_source_code_item_title">קוד מקור</string>
+    <string name="about_automattic_privacy_policy_item_title">מדיניות פרטיות</string>
+    <string name="about_automattic_terms_of_service_item_title">תנאי שימוש</string>
+    <string name="about_automattic_work_with_us_item_subtitle">לעבוד מכל מקום</string>
+    <string name="about_automattic_work_with_us_item_title">הצטרפות לכוח העבודה שלנו</string>
+    <string name="about_automattic_family_item_title">משפחת Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">מידע משפטי ופרטים נוספים</string>
+    <string name="about_automattic_twitter_item_title">טוויטר</string>
+    <string name="about_automattic_instagram_item_title">אינסטגרם</string>
+    <string name="about_automattic_rate_us_item_title">נשמח לקבל ממך דירוג</string>
+    <string name="about_automattic_share_with_friends_item_title">לשתף עם חברים</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">אפשר לערוך את הבלוק באמצעות גרסת האינטרנט של העורך.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">לפתוח את ההגדרות של Jetpack Security</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">לתשומת ליבך: עליך לאפשר התחברות ל-WordPress.com כדי לערוך את הבלוק הזה בעורך במכשיר הנייד.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">לתשומת ליבך: הפריסה עשויה להשתנות בהתאם לערכת העיצוב וגודל המסך</string>
+    <string name="gutenberg_native_address_settings">הגדרות כתובת</string>
+    <string name="gutenberg_native_add_media">הוספת מדיה</string>
+    <string name="my_site_error_card_subtitle">נתקלנו בבעיה זמנית בטעינת הנתונים של האתר שלך.</string>
+    <string name="my_site_error_card_title">חלק מהנתונים לא נטענו</string>
+    <string name="my_site_dashboard_stale_message">לוח הבקרה לא מעודכן. יש לבדוק את החיבור ולמשוך למטה כדי לרענן.</string>
+    <string name="my_site_dashboard_update_error">לא ניתן היה לעדכן את לוח הבקרה.</string>
+    <string name="error_media_video_duration_exceeds_limit">הסרטון לא הועלה! להעלאת סרטון שאורכו מעל חמש דקות נדרשת תוכנית בתשלום.</string>
     <string name="about_automattic_version_label">גרסה ⁦%1$s⁩</string>
     <string name="about_automattic_acknowledgements_page_title">בשיתוף</string>
     <string name="about_automattic_legal_page_title">מידע משפטי ופרטים נוספים</string>
@@ -110,6 +135,7 @@ Language: he_IL
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
     <string name="my_site_quick_actions_title">קישורים מהירים</string>
     <string name="my_site_btn_domains">דומיינים</string>
+    <string name="recommend_app_subject">האפליקציות של Automattic – אפליקציות לכל סוגי המסכים</string>
     <string name="weekly_roundup_notification_text">האתר שלך קיבל ⁦%1$d⁩ צפיות, ⁦%2$d⁩ לייקים, ⁦%3$d⁩ תגובות.</string>
     <string name="weekly_roundup_notification_title">סיכום שבועי: %s</string>
     <string name="blogging_reminders_notification_time">מועד ההודעות</string>
@@ -257,6 +283,8 @@ Language: he_IL
     <string name="gutenberg_native_retry">לנסות שוב</string>
     <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_s_link">%s קישור</string>
+    <string name="gutenberg_native_text_color">צבע טקסט</string>
+    <string name="gutenberg_native_padding">מרווחים</string>
     <string name="gutenberg_native_featured">מרכזיים</string>
     <string name="gutenberg_native_create_embed">ליצור תוכן מוטמע</string>
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
