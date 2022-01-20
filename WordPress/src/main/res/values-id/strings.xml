@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-21 09:54:08+0000
+Translation-Revision-Date: 2022-01-18 13:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">Ikon Aplikasi</string>
+    <string name="about_automattic_back_icon_description">Ikon kembali</string>
+    <string name="about_automattic_logo_description">Logo Automattic</string>
+    <string name="about_automattic_source_code_item_title">Kode Sumber</string>
+    <string name="about_automattic_privacy_policy_item_title">Kebijakan Privasi</string>
+    <string name="about_automattic_terms_of_service_item_title">Syarat Layanan</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Bekerja dari Mana Saja</string>
+    <string name="about_automattic_work_with_us_item_title">Berkarya Bersama Kami</string>
+    <string name="about_automattic_family_item_title">Keluarga Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">Informasi Hukum dan Lainnya</string>
+    <string name="about_automattic_rate_us_item_title">Beri Rating</string>
+    <string name="about_automattic_share_with_friends_item_title">Bagikan dengan Teman</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Anda dapat mengedit blok ini menggunakan editor versi web.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Buka pengaturan Jetpack Security</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Catatan: Anda harus mengizinkan login WordPress.com untuk mengedit blok ini di editor seluler.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Catatan: Tata letak dapat bervariasi antara tema dan ukuran layar</string>
+    <string name="gutenberg_native_address_settings">Pengaturan Alamat</string>
+    <string name="gutenberg_native_add_media">TAMBAHKAN MEDIA</string>
+    <string name="my_site_error_card_subtitle">Saat ini, kami mengalami masalah saat memuat data situs Anda.</string>
+    <string name="my_site_error_card_title">Sejumlah data belum dimuat</string>
+    <string name="my_site_dashboard_stale_message">Dasbor belum diperbarui. Harap periksa koneksi internet Anda lalu tarik layar untuk menyegarkan.</string>
+    <string name="my_site_dashboard_update_error">Tidak dapat memperbarui dasbor.</string>
+    <string name="error_media_video_duration_exceeds_limit">Video tidak terunggah! Diperlukan paket berbayar untuk mengunggah video berdurasi lebih dari 5 menit.</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Pemberitahuan Privasi untuk California</string>
     <string name="about_automattic_version_label">Versi %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Pernyataan</string>
     <string name="about_automattic_legal_page_title">Informasi Hukum dan Lainnya</string>
@@ -107,6 +131,7 @@ Language: id
     <string name="recommend_app_generic_get_template_error">Terjadi error yang tidak diketahui saat memuat templat rekomendasikan aplikasi</string>
     <string name="recommend_app_bad_format_response">Respons yang diterima tidak valid</string>
     <string name="recommend_app_null_response">Tidak ada respons yang diterima</string>
+    <string name="recommend_app_subject">Aplikasi Automattic - Aplikasi untuk segala ukuran layar</string>
     <string name="me_btn_share">Bagikan WordPress dengan teman</string>
     <string name="my_site_quick_actions_title">Tautan Cepat</string>
     <string name="my_site_btn_domains">Domain</string>
@@ -247,6 +272,7 @@ Language: id
     <string name="gutenberg_native_move_image_forward">Pindahkan Gambar ke Depan</string>
     <string name="gutenberg_native_move_image_backward">Pindahkan Gambar ke Belakang</string>
     <string name="gutenberg_native_width_settings">Pengaturan Lebar</string>
+    <string name="gutenberg_native_column_settings">Pengaturan Kolom</string>
     <string name="user_profile_untitled_site">(Tanpa judul)</string>
     <string name="user_profile_site_section_header">Situs</string>
     <string name="user_profile_bottom_sheet_description">Informasi lembar bawah profil pengguna</string>
@@ -257,6 +283,7 @@ Language: id
     <string name="gutenberg_native_preview_page">Pratinjau halaman</string>
     <string name="gutenberg_native_retry">Coba lagi</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
+    <string name="gutenberg_native_text_color">Warna teks</string>
     <string name="gutenberg_native_s_link">%s tautan</string>
     <string name="gutenberg_native_featured">Andalan</string>
     <string name="gutenberg_native_custom_url">URL Tersuai</string>

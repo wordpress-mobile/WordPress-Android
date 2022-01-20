@@ -114,7 +114,7 @@ import './ScreenshotFastfile'
 Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO = 'wordpress-mobile/WordPress-Android']
 ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
-ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'develop'
+ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 
 ########################################################################
@@ -133,7 +133,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   # bundle exec fastlane code_freeze update_release_branch_version:false
   # bundle exec fastlane code_freeze skip_confirm:true
   #####################################################################################
-  desc 'Creates a new release branch from the current develop'
+  desc 'Creates a new release branch from the current trunk'
   lane :code_freeze do |options|
     old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
