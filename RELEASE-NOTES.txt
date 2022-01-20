@@ -2,7 +2,7 @@
 
 19.1
 -----
-
+* [**] Reader: Allow comment moderation from Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/15833]
 
 19.0
 -----
