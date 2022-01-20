@@ -92,6 +92,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.6.2'
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 }
 

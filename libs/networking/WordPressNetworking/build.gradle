@@ -32,6 +32,6 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 }
 

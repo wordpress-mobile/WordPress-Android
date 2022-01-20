@@ -19,7 +19,7 @@ dependencies {
     implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 }
 
 android {
