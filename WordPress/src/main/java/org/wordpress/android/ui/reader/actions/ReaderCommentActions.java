@@ -66,7 +66,7 @@ public class ReaderCommentActions {
         newComment.blogId = post.blogId;
         newComment.parentId = replyToCommentId;
         newComment.pageNumber = pageNumber;
-        newComment.setStatus("approved");
+        newComment.setStatus(CommentStatus.APPROVED.toString());
         newComment.setText(commentText);
 
         Date dtPublished = new Date();
@@ -187,8 +187,7 @@ public class ReaderCommentActions {
         return true;
     }
 
-    public static void moderateComment(final ReaderComment comment, final CommentStatus newStatus,
-                                       final int positionOfOriginalComment) {
+    public static void moderateComment(final ReaderComment comment, final CommentStatus newStatus) {
         if (comment == null) {
             return;
         }
@@ -203,15 +202,14 @@ public class ReaderCommentActions {
         RestRequest.Listener listener = jsonObject -> {
             ReaderComment newComment = ReaderComment.fromJson(jsonObject, comment.blogId);
             ReaderCommentTable.addOrUpdateComment(newComment);
-            EventBus.getDefault().post(new ReaderEvents.CommentModerated(comment, newComment, true, null,
-                    positionOfOriginalComment));
+            EventBus.getDefault().post(new ReaderEvents.CommentModerated(true, comment.commentId));
         };
         RestRequest.ErrorListener errorListener = volleyError -> {
             AppLog.w(T.READER, "comment moderation failed");
             AppLog.e(T.READER, volleyError);
-            EventBus.getDefault()
-                    .post(new ReaderEvents.CommentModerated(comment, null, true, volleyError.getMessage(),
-                            positionOfOriginalComment));
+            // restore original comment
+            ReaderCommentTable.addOrUpdateComment(comment);
+            EventBus.getDefault().post(new ReaderEvents.CommentModerated(false, comment.commentId));
         };
 
         AppLog.i(T.READER, "moderating comment");

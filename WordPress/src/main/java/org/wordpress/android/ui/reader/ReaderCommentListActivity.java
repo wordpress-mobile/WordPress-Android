@@ -554,26 +554,30 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage) {
-        int indexOfRemovedComment = getCommentAdapter().indexOfCommentId(comment.commentId);
+        // save original comment status in case we want to undo
+        // for not it will always be "approved", but we might display other comments in the list later
+        String originalStatus = comment.getStatus();
+
+        // moderate the comment locally and remove it from adapter
+        comment.setStatus(newStatus.toString());
+        ReaderCommentTable.addOrUpdateComment(comment);
         getCommentAdapter().removeComment(comment.commentId);
         checkEmptyView();
+
         Snackbar snackbar = WPSnackbar.make(findViewById(R.id.coordinator_layout), undoMessage, Snackbar.LENGTH_LONG)
                                       .setAction(R.string.undo, view -> {
-                                          getCommentAdapter().addComment(comment, indexOfRemovedComment);
+                                          // revert the comment status and reload local comments
+                                          comment.setStatus(originalStatus);
+                                          ReaderCommentTable.addOrUpdateComment(comment);
+                                          getCommentAdapter().refreshComments();
                                       });
 
         snackbar.addCallback(new BaseCallback<Snackbar>() {
             @Override public void onDismissed(Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
-
-                if (getCommentAdapter().positionOfCommentId(comment.commentId) != -1) {
-                    return;
-                }
-
                 ReaderCommentActions.moderateComment(
                         comment,
-                        newStatus,
-                        indexOfRemovedComment
+                        newStatus
                 );
             }
         });
@@ -588,16 +592,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             return;
         }
 
-        if (event.isSuccess()) {
-            getCommentAdapter().removeComment(event.getNewComment().commentId);
+        if (!event.isSuccess()) {
+            ToastUtils.showToast(ReaderCommentListActivity.this, R.string.comment_moderation_error);
+            getCommentAdapter().refreshComments();
         } else {
-            getCommentAdapter().addComment(event.getOriginalComment());
-            ToastUtils.showToast(
-                    ReaderCommentListActivity.this,
-                    R.string.comment_moderation_error
-            );
+            // we do try to remove the comment in case you did PTR and it appeared in the list again
+            getCommentAdapter().removeComment(event.getCommentId());
         }
-        checkEmptyView();
     }
 
 
