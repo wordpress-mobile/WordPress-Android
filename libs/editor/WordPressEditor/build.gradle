@@ -28,7 +28,6 @@ repositories {
     jcenter {
         content {
             includeVersion "com.android.volley", "volley", "1.1.1"
-            includeVersion "org.wordpress", "utils", "1.25"
         }
     }
     maven { url "https://www.jitpack.io" }
@@ -75,7 +74,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'org.wordpress:utils:1.25'
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api ("$gradle.ext.aztecAndroidAztecPath:$aztecVersion") {
         exclude group: "com.android.volley"
