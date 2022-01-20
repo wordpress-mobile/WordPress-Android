@@ -18,7 +18,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.getColorStateListFromAttribute
 
-
 // Based on Reader card menu
 class ReaderCommentMenuActionAdapter(
     context: Context?,
