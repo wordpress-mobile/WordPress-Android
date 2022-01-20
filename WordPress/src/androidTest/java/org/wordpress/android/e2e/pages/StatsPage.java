@@ -1,6 +1,7 @@
 package org.wordpress.android.e2e.pages;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.ViewActions;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.StatsKeyValueData;
@@ -13,13 +14,28 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.isElementCompletelyDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class StatsPage {
+    public StatsPage openDayStats() {
+        onView(allOf(
+                withText("Days"),
+                isDescendantOfA(withId(R.id.tabLayout))
+        )).perform(ViewActions.click());
+
+        waitForElementToBeDisplayedWithoutFailure(
+                onView(withText("Posts and Pages"))
+        );
+
+        return this;
+    }
+
     public StatsPage scrollToPosts() {
         scrollToCard("Posts and Pages");
         return this;

@@ -36,6 +36,7 @@ public class StatsTests extends BaseTest {
         new MySitesPage()
                 .go()
                 .clickStats()
+                .openDayStats()
                 .assertVisits(todayVisits)
                 .scrollToPosts().assertPosts(postsList)
                 .scrollToReferrers().assertReferrers(referrersList)
