@@ -1064,7 +1064,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private PrimaryEditorAction getPrimaryAction() {
         return mEditorActionsProvider
-                .getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
+                .getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite), mIsLandingEditor);
     }
 
     private String getPrimaryActionText() {
@@ -1631,6 +1631,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case UPDATE:
+            case CONTINUE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
                 checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
@@ -1968,6 +1969,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         i.putExtra(EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_IS_LANDING_EDITOR, mIsLandingEditor);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mEditPostRepository.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
