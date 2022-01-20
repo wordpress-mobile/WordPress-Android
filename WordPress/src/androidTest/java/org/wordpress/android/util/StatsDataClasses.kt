@@ -9,7 +9,7 @@ data class StatsVisitsData(
     val views: String,
     val visitors: String,
     val likes: String,
-    val comments: String,
+    val comments: String
 ) {
 }
 
