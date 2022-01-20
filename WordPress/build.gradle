@@ -67,6 +67,10 @@ repositories {
             includeVersion "org.wordpress", "utils", "1.25"
             includeVersion "org.wordpress", "wellsql-core", "1.6.0"
             includeVersion "org.wordpress", "wellsql", "1.6.0"
+            // Required for detekt
+            includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
+            // Required for lintWordpressVanillaRelease
+            includeVersion "com.jraska", "falcon", "2.1.1"
         }
     }
     maven { url "https://www.jitpack.io" }

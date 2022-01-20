@@ -79,6 +79,11 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        jcenter {
+            content {
+                includeVersion "com.andreapivetta.kolor", "kolor", "0.0.2"
+            }
+        }
 
         flatDir {
             dirs '../aars'
