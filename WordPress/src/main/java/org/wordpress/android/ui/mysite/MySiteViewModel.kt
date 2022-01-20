@@ -736,6 +736,7 @@ class MySiteViewModel @Inject constructor(
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
                     val landOnTheEditorAction = SiteNavigationAction.OpenHomepage(selectedSite, localHomepageId)
                     _onNavigation.postValue(Event(landOnTheEditorAction))
+                    analyticsTrackerWrapper.track(Stat.LANDING_EDITOR_SHOWN)
                 }
             }
         }
