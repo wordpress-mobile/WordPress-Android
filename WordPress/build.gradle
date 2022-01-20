@@ -62,9 +62,6 @@ repositories {
             includeVersion "com.google.android", "flexbox", "2.0.1"
             includeVersion "org.wordpress", "emailchecker2", "1.1.0"
             includeVersion "org.wordpress", "persistentedittext", "1.0.2"
-            includeVersion "org.wordpress", "utils", "1.18.1"
-            includeVersion "org.wordpress", "utils", "1.19.0"
-            includeVersion "org.wordpress", "utils", "1.25"
             includeVersion "org.wordpress", "wellsql-core", "1.6.0"
             includeVersion "org.wordpress", "wellsql", "1.6.0"
             // Required for detekt

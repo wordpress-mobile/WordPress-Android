@@ -9,17 +9,9 @@ repositories {
     }
 }
 
-repositories {
-    jcenter {
-        content {
-            includeVersion "org.wordpress", "utils", "1.19.0"
-        }
-    }
-}
-
 dependencies {
     implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
-    implementation 'org.wordpress:utils:1.19.0'
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
     lintChecks 'org.wordpress:lint:1.0.1'
 }
