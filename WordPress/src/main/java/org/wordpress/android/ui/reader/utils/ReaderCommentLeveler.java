@@ -36,10 +36,14 @@ public class ReaderCommentLeveler {
         }
 
         // check for orphans (child comments whose parents weren't found above) and give them
-        // a non-zero level so they're indented by ReaderCommentAdapter
-        for (ReaderComment comment : result) {
-            if (comment.level == 0 && comment.parentId != 0) {
-                comment.level = 1;
+        // a non-zero level to distinguish them from top level comments
+        ReaderCommentList remainingComments = new ReaderCommentList();
+        remainingComments.addAll(mComments);
+        remainingComments.removeAll(result);
+
+        for (ReaderComment comment : remainingComments) {
+            if (!hasParent(comment)) {
+                comment.level = 0;
                 result.add(comment);
                 AppLog.d(AppLog.T.READER, "Orphan comment encountered");
             }
@@ -92,5 +96,14 @@ public class ReaderCommentLeveler {
         for (ReaderComment comment : comments) {
             comment.level = level;
         }
+    }
+
+    private boolean hasParent(ReaderComment comment) {
+        for (ReaderComment parentComment : mComments) {
+            if (parentComment.commentId == comment.parentId) {
+                return true;
+            }
+        }
+        return false;
     }
 }
