@@ -5,7 +5,7 @@ import org.json.JSONObject
 import java.util.ArrayList
 
 class StatsMocksReader {
-    fun readDayStatsFile(fileName: String, lastObjectName: String, keyName: String, valueName: String):
+    fun readDayStatsGenericFile(fileName: String, lastObjectName: String, keyName: String, valueName: String):
             MutableList<StatsKeyValueData> {
         val fileName = "mocks/mappings/wpcom/stats/$fileName.json"
         val todayMarker = "{{now format='yyyy-MM-dd'}}"
@@ -34,31 +34,31 @@ class StatsMocksReader {
     }
 
     fun readDayTopPostsToList(): MutableList<StatsKeyValueData> {
-        return readDayStatsFile(
+        return readDayStatsGenericFile(
                 "stats_top-posts-day", "postviews", "title", "views"
         )
     }
 
     fun readDayTopReferrersToList(): MutableList<StatsKeyValueData> {
-        return readDayStatsFile(
+        return readDayStatsGenericFile(
                 "stats_referrers-day", "groups", "name", "total"
         )
     }
 
     fun readDayClicksToList(): MutableList<StatsKeyValueData> {
-        return readDayStatsFile(
+        return readDayStatsGenericFile(
                 "stats_clicks-day", "clicks", "name", "views"
         )
     }
 
     fun readDayAuthorsToList(): MutableList<StatsKeyValueData> {
-        return readDayStatsFile(
+        return readDayStatsGenericFile(
                 "stats_top-authors-day", "authors", "name", "views"
         )
     }
 
     fun readDayCountriesToList(): MutableList<StatsKeyValueData> {
-        var countriesList = readDayStatsFile(
+        var countriesList = readDayStatsGenericFile(
                 "stats_country-views-day", "views", "country_code", "views"
         )
 
@@ -72,13 +72,13 @@ class StatsMocksReader {
     }
 
     fun readDayVideoPlaysToList(): MutableList<StatsKeyValueData> {
-        return readDayStatsFile(
+        return readDayStatsGenericFile(
                 "stats_video-plays-day", "plays", "title", "plays"
         )
     }
 
     fun readDayFileDownloadsToList(): MutableList<StatsKeyValueData> {
-        return readDayStatsFile(
+        return readDayStatsGenericFile(
                 "stats_file-downloads-day", "files", "filename", "downloads"
         )
     }

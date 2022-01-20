@@ -4,6 +4,7 @@ import androidx.test.espresso.ViewInteraction;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.StatsKeyValueData;
+import org.wordpress.android.util.StatsVisitsData;
 
 import java.util.List;
 
@@ -52,6 +53,35 @@ public class StatsPage {
     public StatsPage scrollToFileDownloads() {
         scrollToCard("File downloads");
         return this;
+    }
+
+    public StatsPage assertVisits(StatsVisitsData visitsData) {
+            ViewInteraction cardStructure = onView(allOf(
+                    withId(R.id.stats_block_list),
+                    hasDescendant(allOf(
+                            withText("Views"),
+                            hasSibling(withText(visitsData.getViews()))
+                            )
+                    ),
+                    hasDescendant(allOf(
+                            withText("Visitors"),
+                            hasSibling(withText(visitsData.getVisitors()))
+                            )
+                    ),
+                    hasDescendant(allOf(
+                            withText("Likes"),
+                            hasSibling(withText(visitsData.getLikes()))
+                            )
+                    ),
+                    hasDescendant(allOf(
+                            withText("Comments"),
+                            hasSibling(withText(visitsData.getComments()))
+                            )
+                    )
+            ));
+
+            cardStructure.check(matches(isCompletelyDisplayed()));
+            return this;
     }
 
     public void assertKeyValuePairs(String cardHeader, List<StatsKeyValueData> list) {

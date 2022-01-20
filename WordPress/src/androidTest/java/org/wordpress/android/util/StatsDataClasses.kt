@@ -5,6 +5,14 @@ val countriesMap = mapOf(
         "CA" to "Canada"
 )
 
+data class StatsVisitsData(
+    val views: String,
+    val visitors: String,
+    val likes: String,
+    val comments: String,
+) {
+}
+
 data class StatsKeyValueData(
     var key: String,
     val value: String
