@@ -10,11 +10,9 @@ data class StatsVisitsData(
     val visitors: String,
     val likes: String,
     val comments: String
-) {
-}
+)
 
 data class StatsKeyValueData(
     var key: String,
     val value: String
-) {
-}
+)
