@@ -25,11 +25,6 @@ repositories {
     }
     google()
     mavenCentral()
-    jcenter {
-        content {
-            includeVersion "com.android.volley", "volley", "1.1.1"
-        }
-    }
     maven { url "https://www.jitpack.io" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }

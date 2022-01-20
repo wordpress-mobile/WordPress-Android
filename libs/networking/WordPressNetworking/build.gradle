@@ -16,12 +16,6 @@ repositories {
             includeGroup "org.wordpress"
         }
     }
-    jcenter {
-        content {
-            includeVersion "com.android.volley", "volley", "1.1.1"
-            includeVersion "com.automattic", "rest", "1.0.8"
-        }
-    }
 }
 
 dependencies {

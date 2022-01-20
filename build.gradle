@@ -79,9 +79,27 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
-        jcenter {
+        maven {
+            url "https://a8c-libs.s3.amazonaws.com/android/jcenter-mirror"
             content {
-                includeVersion "com.andreapivetta.kolor", "kolor", "0.0.2"
+                includeVersion "com.android.volley", "volley", "1.1.1"
+                includeVersion "com.automattic", "rest", "1.0.8"
+                includeVersion "com.google.android.exoplayer", "exoplayer-core", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-dash", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-hls", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-smoothstreaming", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-ui", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "extension-okhttp", "2.9.3"
+                includeVersion "com.google.android", "flexbox", "2.0.1"
+                includeVersion "org.wordpress", "emailchecker2", "1.1.0"
+                includeVersion "org.wordpress", "persistentedittext", "1.0.2"
+                includeVersion "org.wordpress", "wellsql-core", "1.6.0"
+                includeVersion "org.wordpress", "wellsql", "1.6.0"
+                // Required for detekt
+                includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
+                // Required for lintWordpressVanillaRelease
+                includeVersion "com.jraska", "falcon", "2.1.1"
             }
         }
 
