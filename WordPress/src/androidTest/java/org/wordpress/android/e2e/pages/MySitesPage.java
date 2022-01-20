@@ -15,13 +15,16 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItem;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class MySitesPage {
     private static ViewInteraction chooseSiteLabel =
@@ -80,12 +83,14 @@ public class MySitesPage {
         clickItemWithText(R.string.backup);
     }
 
-    public void clickStats() {
-        if (isElementDisplayed(R.id.recycler_view)) {
-            // If My Site Improvements are enabled, we reach the item in a different way
-            onView(withId(R.id.recycler_view))
-                    .perform(actionOnItem(hasDescendant(withText(R.string.stats)), click()));
-        }
+    public StatsPage clickStats() {
+        clickOn(R.id.quick_action_stats_button);
+        waitForElementToBeDisplayedWithoutFailure(
+                onView(withText("Posts and Pages"))
+        );
+
+        //idleFor(8000);
+        return new StatsPage();
     }
 
     private void clickItemWithText(int stringResId) {
