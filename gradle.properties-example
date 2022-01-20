@@ -14,7 +14,7 @@ android.useAndroidX=true
 android.enableJetifier=true
 
 # For more details on what these properties do visit
-# https://github.com/wordpress-mobile/WordPress-Android/blob/develop/README.md
+# https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/README.md
 
 wp.oauth.app_id = wordpress
 wp.oauth.app_secret = wordpress

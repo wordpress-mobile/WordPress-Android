@@ -6,7 +6,7 @@
 
 19.0
 -----
-* [**] Video uploads: video upload is now limited to 5 minutes per video on free plans.
+* [**] Video uploads: video upload is now limited to 5 minutes per video on free plans. [https://github.com/wordpress-mobile/WordPress-Android/pull/15719]
 * [*] Block editor: Give multi-line block names central alignment in inserter [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4343]
 * [**] Block editor: Fix missing translations by refactoring the editor initialization code [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4332]
 * [**] Block editor: Add Jetpack and Layout Grid translations [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4359]
