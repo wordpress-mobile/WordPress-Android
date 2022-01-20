@@ -18,13 +18,14 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.getColorStateListFromAttribute
 
+
+// Based on Reader card menu
 class ReaderCommentMenuActionAdapter(
     context: Context?,
-    uiHelpers: UiHelpers,
+    val uiHelpers: UiHelpers,
     val menuItems: List<ReaderCommentMenuItem>
 ) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val mUiHelpers: UiHelpers = uiHelpers
 
     override fun getCount(): Int {
         return menuItems.size
@@ -43,7 +44,11 @@ class ReaderCommentMenuActionAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (menuItems[position].type === DIVIDER_NO_ACTION) TYPE_SPACER else TYPE_CONTENT
+        return if (menuItems[position].type === DIVIDER_NO_ACTION) {
+            TYPE_SPACER
+        } else {
+            TYPE_CONTENT
+        }
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -89,7 +94,7 @@ class ReaderCommentMenuActionAdapter(
         } else {
             holder = innerConvertView.tag as ReaderCommentMenuHolder
         }
-        val textRes = mUiHelpers.getTextOfUiString(innerConvertView!!.context, item.labelResId)
+        val textRes = uiHelpers.getTextOfUiString(innerConvertView!!.context, item.labelResId)
         val iconRes = item.iconRes
         holder.text.text = textRes
         holder.icon.setImageDrawable(ContextCompat.getDrawable(holder.icon.context, iconRes))

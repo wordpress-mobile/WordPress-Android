@@ -558,7 +558,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
         Snackbar snackbar = WPSnackbar.make(findViewById(R.id.coordinator_layout), undoMessage, Snackbar.LENGTH_LONG)
                                       .setAction(R.string.undo, view -> {
-                                          ReaderCommentTable.addOrUpdateComment(comment);
                                           getCommentAdapter().refreshComments();
                                       });
 
@@ -570,10 +569,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                     return;
                 }
 
-                ReaderCommentActions.moderateComment(
-                        comment,
-                        newStatus
-                );
+                ReaderCommentActions.moderateComment(comment, newStatus);
             }
         });
 
