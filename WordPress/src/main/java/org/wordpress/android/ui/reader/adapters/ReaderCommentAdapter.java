@@ -349,16 +349,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 actions.add(new Divider());
 
-//                    actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.EDIT,
-//                            new UiStringRes(R.string.reader_comment_menu_edit),
-//                            new UiStringRes(R.string.reader_comment_menu_edit),
-//                            R.drawable.ic_pencil_white_24dp));
-
                 actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SHARE,
                         new UiStringRes(R.string.reader_comment_menu_share),
                         new UiStringRes(R.string.reader_comment_menu_share),
                         R.drawable.ic_share_white_24dp));
-
 
                 menuPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
                 menuPopup.setAdapter(new ReaderCommentMenuActionAdapter(context, mUiHelpers, actions));
@@ -587,22 +581,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public void addComment(ReaderComment comment, int position) {
-        if (comment == null) {
-            return;
-        }
-
-        // if the comment doesn't have a parent we can just add it to the list of existing
-        // comments - but if it does have a parent, we need to reload the list so that it
-        // appears under its parent and is correctly indented
-        if (comment.parentId == 0) {
-            mComments.add(position, comment);
-            notifyDataSetChanged();
-        } else {
-            refreshComments();
-        }
-    }
-
     /*
      * called from post detail when submitted a comment fails - this removes the "fake" comment
      * that was inserted while the API call was still being processed
@@ -649,11 +627,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public int positionOfCommentId(long commentId) {
         int index = mComments.indexOfCommentId(commentId);
         return index == -1 ? -1 : index + NUM_HEADERS;
-    }
-
-
-    public int indexOfCommentId(long commentId) {
-        return mComments.indexOfCommentId(commentId);
     }
 
     /*

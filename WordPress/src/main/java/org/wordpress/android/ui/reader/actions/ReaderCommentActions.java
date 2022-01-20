@@ -207,8 +207,6 @@ public class ReaderCommentActions {
         RestRequest.ErrorListener errorListener = volleyError -> {
             AppLog.w(T.READER, "comment moderation failed");
             AppLog.e(T.READER, volleyError);
-            // restore original comment
-            ReaderCommentTable.addOrUpdateComment(comment);
             EventBus.getDefault().post(new ReaderEvents.CommentModerated(false, comment.commentId));
         };
 

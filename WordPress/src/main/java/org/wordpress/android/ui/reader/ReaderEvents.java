@@ -330,11 +330,6 @@ public class ReaderEvents {
 
     public static class CommentModerated {
         private final boolean mIsSuccess;
-
-        public long getCommentId() {
-            return mCommentId;
-        }
-
         private final long mCommentId;
 
         public CommentModerated(boolean isSuccess, long commentId) {
@@ -342,9 +337,12 @@ public class ReaderEvents {
             mCommentId = commentId;
         }
 
-
         public boolean isSuccess() {
             return mIsSuccess;
+        }
+
+        public long getCommentId() {
+            return mCommentId;
         }
     }
 }

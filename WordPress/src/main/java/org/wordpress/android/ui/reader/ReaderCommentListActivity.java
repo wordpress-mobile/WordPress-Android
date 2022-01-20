@@ -533,7 +533,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private void performCommentAction(ReaderComment comment, ReaderCommentMenuActionType action) {
         switch (action) {
             case APPROVE:
-                break;
+            case EDIT:
+                break; // not implemented yet
             case UNAPROVE:
                 moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unarppoved);
                 break;
@@ -542,8 +543,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 break;
             case TRASH:
                 moderateComment(comment, CommentStatus.TRASH, R.string.comment_trashed);
-                break;
-            case EDIT:
                 break;
             case SHARE:
                 shareComment(comment.getShortUrl());
@@ -554,20 +553,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     }
 
     private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage) {
-        // save original comment status in case we want to undo
-        // for not it will always be "approved", but we might display other comments in the list later
-        String originalStatus = comment.getStatus();
-
-        // moderate the comment locally and remove it from adapter
-        comment.setStatus(newStatus.toString());
-        ReaderCommentTable.addOrUpdateComment(comment);
         getCommentAdapter().removeComment(comment.commentId);
         checkEmptyView();
 
         Snackbar snackbar = WPSnackbar.make(findViewById(R.id.coordinator_layout), undoMessage, Snackbar.LENGTH_LONG)
                                       .setAction(R.string.undo, view -> {
-                                          // revert the comment status and reload local comments
-                                          comment.setStatus(originalStatus);
                                           ReaderCommentTable.addOrUpdateComment(comment);
                                           getCommentAdapter().refreshComments();
                                       });
@@ -575,6 +565,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         snackbar.addCallback(new BaseCallback<Snackbar>() {
             @Override public void onDismissed(Snackbar transientBottomBar, int event) {
                 super.onDismissed(transientBottomBar, event);
+
+                if (event == DISMISS_EVENT_ACTION) {
+                    return;
+                }
+
                 ReaderCommentActions.moderateComment(
                         comment,
                         newStatus
@@ -599,6 +594,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             // we do try to remove the comment in case you did PTR and it appeared in the list again
             getCommentAdapter().removeComment(event.getCommentId());
         }
+        checkEmptyView();
     }
 
 
