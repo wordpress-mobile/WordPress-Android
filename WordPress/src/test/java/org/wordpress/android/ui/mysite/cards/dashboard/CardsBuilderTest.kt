@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.StatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -86,6 +87,7 @@ class CardsBuilderTest : BaseUnitTest() {
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         showErrorCard = showErrorCard,
                         onErrorRetryClick = { },
+                        statsCardBuilderParams = StatsCardBuilderParams(mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )
