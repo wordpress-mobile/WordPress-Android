@@ -70,6 +70,7 @@ repositories {
             // Required for detekt
             includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
             // Required for lintWordpressVanillaRelease
+            includeVersion "org.wordpress", "lint", "1.0.1"
             includeVersion "com.jraska", "falcon", "2.1.1"
         }
     }
