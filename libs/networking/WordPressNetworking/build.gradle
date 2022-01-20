@@ -9,6 +9,16 @@ android {
     }
 }
 
+repositories {
+    jcenter {
+        content {
+            includeVersion "com.android.volley", "volley", "1.1.1"
+            includeVersion "org.wordpress", "utils", "1.18.1"
+            includeVersion "com.automattic", "rest", "1.0.8"
+        }
+    }
+}
+
 dependencies {
     implementation 'com.android.volley:volley:1.1.1'
 
