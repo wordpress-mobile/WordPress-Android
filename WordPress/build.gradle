@@ -47,8 +47,8 @@ repositories {
         }
     }
     google()
-    jcenter()
     mavenCentral()
+    jcenter()
     maven { url "https://www.jitpack.io" }
 }
 

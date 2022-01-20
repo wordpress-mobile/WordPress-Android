@@ -24,6 +24,7 @@ repositories {
         }
     }
     google()
+    mavenCentral()
     jcenter()
     maven { url "https://www.jitpack.io" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
