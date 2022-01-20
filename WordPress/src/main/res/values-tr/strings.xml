@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-21 14:54:09+0000
+Translation-Revision-Date: 2022-01-19 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
+    <string name="about_automattic_back_icon_description">Geri simgesi</string>
+    <string name="about_automattic_logo_description">Automattic logosu</string>
+    <string name="about_automattic_dayone">1. Gün</string>
+    <string name="about_automattic_source_code_item_title">Kaynak kodu</string>
+    <string name="about_automattic_privacy_policy_item_title">Gizlilik politikası</string>
+    <string name="about_automattic_terms_of_service_item_title">Hizmet şartları</string>
+    <string name="about_automattic_work_with_us_item_subtitle">İstediğiniz Yerden Çalışın</string>
+    <string name="about_automattic_work_with_us_item_title">Bizimle Çalışın</string>
+    <string name="about_automattic_family_item_title">Automattic Ailesi</string>
+    <string name="about_automattic_legal_and_more_item_title">Yasal Bilgiler ve Daha Fazlası</string>
+    <string name="about_automattic_rate_us_item_title">Bizi Değerlendirin</string>
+    <string name="about_automattic_share_with_friends_item_title">Arkadaşlarla paylaş</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Düzenleyicinin web sürümünü kullanarak bu bloku düzenleyebilirsiniz.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Jetpack Güvenlik ayarlarını açın</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Not: Mobil düzenleyicide bu bloku düzenlemek için WordPress.com oturumuna izin vermelisiniz.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Not: Düzen, temalara ve ekran boyutlarına göre değişebilir</string>
+    <string name="gutenberg_native_address_settings">Adres Ayarları</string>
+    <string name="gutenberg_native_add_media">ORTAM EKLE</string>
+    <string name="my_site_error_card_subtitle">Şu anda sitenizin verilerinin yüklenmesiyle ilgili bir sorun yaşanıyor.</string>
+    <string name="my_site_error_card_title">Bazı veriler yüklenmedi</string>
+    <string name="my_site_dashboard_stale_message">Pano güncellenmiyor. Lütfen bağlantınızı kontrol edin ve ardından yenilemek için çekin.</string>
+    <string name="my_site_dashboard_update_error">Pano güncellenemedi.</string>
+    <string name="error_media_video_duration_exceeds_limit">Video yüklenmedi. 5 dakikadan uzun video yüklemek için ücretli bir paket gerekir.</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Kaliforniya için Gizlilik Bildirimi</string>
     <string name="about_automattic_version_label">Sürüm %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Teşekkürler</string>
     <string name="about_automattic_legal_page_title">Yasal Bilgiler ve Daha Fazlası</string>
@@ -104,6 +129,7 @@ Language: tr
     <string name="recommend_app_generic_get_template_error">Önerilen uygulama şablonu getirilirken bilinmeyen bir hata oluştu</string>
     <string name="recommend_app_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="recommend_app_null_response">Yanıt alınamadı</string>
+    <string name="recommend_app_subject">Automattic Uygulamaları - Her ekran için uygulamalar</string>
     <string name="me_btn_share">WordPress\'i bir arkadaşınızla paylaşın</string>
     <string name="my_site_quick_actions_title">Hızlı Bağlantılar</string>
     <string name="my_site_btn_domains">Alan adları</string>
@@ -244,6 +270,7 @@ Language: tr
     <string name="gutenberg_native_move_image_forward">Görseli öne taşı</string>
     <string name="gutenberg_native_move_image_backward">Görseli geriye taşı</string>
     <string name="gutenberg_native_width_settings">Genişlik Ayarları</string>
+    <string name="gutenberg_native_column_settings">Sütun Ayarları</string>
     <string name="user_profile_untitled_site">(Başlıksız)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Kullanıcı profili alt sayfa bilgileri</string>
@@ -254,7 +281,9 @@ Language: tr
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
+    <string name="gutenberg_native_text_color">Metin rengi</string>
     <string name="gutenberg_native_s_link">%s bağlantı</string>
+    <string name="gutenberg_native_padding">Dolgu</string>
     <string name="gutenberg_native_featured">Öne çıkan</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
