@@ -8,12 +8,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
+import org.wordpress.android.util.config.MySiteDashboardStatsCardFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -22,9 +26,13 @@ const val REFRESH_DELAY = 500L
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
+    private val statsCardFeatureConfig: MySiteDashboardStatsCardFeatureConfig,
+    mockedDataJsonUtils: MockedDataJsonUtils,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
     override val refresh = MutableLiveData(false)
+    private val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(R.raw.mocked_site_dashboard_cards)
+    private val mockedCardsData = mockedDataJsonUtils.getMockedCardsDatsFromJsonString(jsonString!!)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
         val result = MediatorLiveData<CardsUpdate>()
@@ -41,8 +49,12 @@ class CardsSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
-                cardsStore.getCards(selectedSite).collect { result ->
-                    postValue(CardsUpdate(result.model))
+                if (statsCardFeatureConfig.isEnabled()) {
+                    postValue(CardsUpdate(mockedCardsData))
+                } else {
+                    cardsStore.getCards(selectedSite).collect { result ->
+                        postValue(CardsUpdate(result.model))
+                    }
                 }
             }
         } else {
@@ -79,7 +91,11 @@ class CardsSource @Inject constructor(
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-            val result = cardsStore.fetchCards(selectedSite)
+            val result = if (statsCardFeatureConfig.isEnabled()) {
+                CardsResult(mockedCardsData)
+            } else {
+                cardsStore.fetchCards(selectedSite)
+            }
             val model = result.model
             val error = result.error
             when {

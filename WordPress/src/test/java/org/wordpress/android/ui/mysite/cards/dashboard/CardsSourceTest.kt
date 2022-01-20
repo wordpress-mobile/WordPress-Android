@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -14,6 +15,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel.TodaysStatsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
@@ -23,10 +26,18 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
+import org.wordpress.android.util.config.MySiteDashboardStatsCardFeatureConfig
 
 /* SITE */
 
 const val SITE_LOCAL_ID = 1
+
+/* STATS */
+
+const val STATS_VIEWS = 100
+const val STATS_VISITORS = 30
+const val STATS_LIKES = 50
 
 /* POST */
 
@@ -37,6 +48,16 @@ const val POST_FEATURED_IMAGE = "featuredImage"
 const val POST_DATE = "2021-12-27 11:33:55"
 
 /* MODEL */
+
+private val TODAYS_STATS = TodaysStatsModel(
+        views = STATS_VIEWS,
+        visitors = STATS_VISITORS,
+        likes = STATS_LIKES
+)
+
+private val STATS_CARD_MODEL = StatsCardModel(
+        todaysStats = TODAYS_STATS
+)
 
 private val POST_MODEL = PostCardModel(
         id = POST_ID,
@@ -53,6 +74,7 @@ private val POSTS_MODEL = PostsCardModel(
 )
 
 private val CARDS_MODEL: List<CardModel> = listOf(
+        STATS_CARD_MODEL,
         POSTS_MODEL
 )
 
@@ -61,6 +83,8 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var cardsStore: CardsStore
     @Mock private lateinit var siteModel: SiteModel
+    @Mock private lateinit var statsCardFeatureConfig: MySiteDashboardStatsCardFeatureConfig
+    @Mock private lateinit var mockedDataJsonUtils: MockedDataJsonUtils
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
@@ -74,9 +98,13 @@ class CardsSourceTest : BaseUnitTest() {
     @Before
     fun setUp() {
         setUpMocks()
+        whenever(mockedDataJsonUtils.getJsonStringFromRawResource((any()))).thenReturn("")
+        whenever(mockedDataJsonUtils.getMockedCardsDatsFromJsonString((any()))).thenReturn(CARDS_MODEL)
         cardSource = CardsSource(
                 selectedSiteRepository,
                 cardsStore,
+                statsCardFeatureConfig,
+                mockedDataJsonUtils,
                 TEST_DISPATCHER
         )
     }
