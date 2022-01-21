@@ -668,11 +668,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
         if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled() && mCommentSource == CommentSource.SITE_COMMENTS) {
-            Intent intent = new Intent(getActivity(), UnifiedCommentsEditActivity.class);
-            intent.putExtra(WordPress.SITE, mSite);
-            if (mComment != null) {
-                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID, mComment.getId());
-            }
+            final Intent intent =
+                    UnifiedCommentsEditActivity.createIntent(requireActivity(), mComment.getId(), mCommentSource, mSite);
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         } else {
             Intent intent = new Intent(getActivity(), EditCommentActivity.class);
