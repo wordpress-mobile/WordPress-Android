@@ -72,6 +72,7 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.unified.CommentSource;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
