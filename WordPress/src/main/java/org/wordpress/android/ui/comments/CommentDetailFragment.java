@@ -101,7 +101,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -136,22 +135,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
-
-    enum CommentSource {
-        NOTIFICATION,
-        SITE_COMMENTS;
-
-        AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
-            switch (this) {
-                case NOTIFICATION:
-                    return AnalyticsCommentActionSource.NOTIFICATIONS;
-                case SITE_COMMENTS:
-                    return AnalyticsCommentActionSource.SITE_COMMENTS;
-            }
-            throw new IllegalArgumentException(
-                    this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
-        }
-    }
 
     private CommentModel mComment;
     private SiteModel mSite;
