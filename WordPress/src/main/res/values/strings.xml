@@ -452,7 +452,7 @@
     <string name="reader_comment_menu_unapprove">Unapprove</string>
     <string name="reader_comment_menu_spam">Mark as Spam</string>
     <string name="reader_comment_menu_trash">Move to Trash</string>
-    <string name="reader_comment_menu_share">@string/share_desc</string>
+    <string name="reader_comment_menu_share" translatable="false">@string/share_desc</string>
 
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
