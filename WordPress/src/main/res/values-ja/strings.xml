@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-19 08:54:07+0000
+Translation-Revision-Date: 2022-01-21 12:00:58+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
@@ -9,16 +9,25 @@ Language: ja_JP
     <string name="about_automattic_app_icon_description">アプリアイコン</string>
     <string name="about_automattic_back_icon_description">「戻る」アイコン</string>
     <string name="about_automattic_logo_description">Automattic ロゴ</string>
+    <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_source_code_item_title">ソースコード</string>
     <string name="about_automattic_privacy_policy_item_title">プライバシーポリシー</string>
     <string name="about_automattic_terms_of_service_item_title">利用規約</string>
     <string name="about_automattic_work_with_us_item_subtitle">どこでも作業可能</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
     <string name="about_automattic_work_with_us_item_title">求人情報</string>
     <string name="about_automattic_family_item_title">Automattic ファミリー</string>
     <string name="about_automattic_legal_and_more_item_title">法的情報およびその他</string>
     <string name="about_automattic_rate_us_item_title">評価してください</string>
     <string name="about_automattic_share_with_friends_item_title">友達と共有</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">このブロックは Web バージョンのエディターを使用して編集できます</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
     <string name="gutenberg_native_open_jetpack_security_settings">Jetpack セキュリティの設定を開く</string>
     <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">注: モバイルエディターでこのブロックを編集するには、WordPress.com へのログインを許可する必要があります。</string>
     <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">注: レイアウトはテーマ、画面サイズによって異なります</string>
@@ -26,9 +35,11 @@ Language: ja_JP
     <string name="gutenberg_native_add_media">メディアを追加</string>
     <string name="my_site_error_card_subtitle">現在、サイトのデータの読み込みに問題が発生しています。</string>
     <string name="my_site_error_card_title">一部のデータを読み込めませんでした</string>
-    <string name="my_site_dashboard_stale_message">ダッシュボードが更新されていません。 接続を確認してから、プルして更新してください。</string>
     <string name="my_site_dashboard_update_error">ダッシュボードを更新できませんでした。</string>
     <string name="error_media_video_duration_exceeds_limit">動画がアップロードされていません。 5分以上の動画ファイルのアップロードには、有料プランのご利用が必要です。</string>
+    <string name="my_site_dashboard_stale_message">ダッシュボードが更新されていません。 接続を確認してから取り込み、更新してください。</string>
+    <string name="about_automattic_acknowledgements_item_title">謝辞</string>
+    <string name="about_automattic_california_privacy_notice_item_title">カリフォルニア州プライバシー通知</string>
     <string name="about_automattic_version_label">バージョン%1$s</string>
     <string name="about_automattic_acknowledgements_page_title">謝辞</string>
     <string name="about_automattic_legal_page_title">法的情報およびその他</string>
@@ -47,6 +58,7 @@ Language: ja_JP
     <string name="reader_comments_be_first_to_comment">最初のコメントを投稿</string>
     <string name="reader_comments_view_all">すべてのコメントを表示</string>
     <string name="reader_comments_post_fetch_failure">投稿データ取得中にエラーが発生しました</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_fetch_failure">コメント取得中にエラーが発生しました</string>
     <string name="reader_btn_follow_conversation_settings">会話設定をフォロー</string>
     <string name="gutenberg_native_from_clipboard">クリップボードから</string>
@@ -128,6 +140,7 @@ Language: ja_JP
     <string name="gutenberg_native_line_height">行の高さ</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">無効な応答を受信しました</string>
     <string name="recommend_app_null_response">応答がありませんでした</string>
     <string name="me_btn_share">WordPress を友達と共有する</string>
@@ -271,6 +284,7 @@ Language: ja_JP
     <string name="gutenberg_native_move_image_backward">画像を後ろに移動</string>
     <string name="gutenberg_native_move_image_forward">画像を前に移動</string>
     <string name="gutenberg_native_width_settings">幅設定</string>
+    <string name="gutenberg_native_column_settings">カラム設定</string>
     <string name="user_profile_bottom_sheet_description">ユーザープロフィールボトムシート情報</string>
     <string name="user_profile_site_section_header">サイト</string>
     <string name="user_profile_untitled_site">(無題)</string>
@@ -326,6 +340,7 @@ Language: ja_JP
     <string name="comments_empty_list_filtered_unreplied">未返信のコメント</string>
     <string name="comment_status_unreplied">未返信</string>
     <string name="gutenberg_native_search_settings">検索設定</string>
+    <string name="gutenberg_native_add_link">リンクを追加</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
     <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
@@ -1359,6 +1374,7 @@ Language: ja_JP
     <string name="domain_registration_registering_domain_name_progress_dialog_message">ドメイン名を登録しています…</string>
     <string name="domain_registration_state_picker_dialog_title">都道府県を選択</string>
     <string name="domain_registration_country_picker_dialog_title">国を選択</string>
+    <string name="domain_contact_information_register_domain_button">ドメインを登録</string>
     <string name="domain_contact_information_postal_code_hint">郵便番号</string>
     <string name="domain_contact_information_state_hint">都道府県</string>
     <string name="domain_contact_information_city_hint">市区町村</string>
