@@ -18,8 +18,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.wordpress.android.support.WPSupportUtils.isElementCompletelyDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
+import static org.wordpress.android.support.WPSupportUtils.scrollIntoView;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class StatsPage {
@@ -166,14 +165,6 @@ public class StatsPage {
                 )
         );
 
-        scrollIntoView(card);
-    }
-
-    public static void scrollIntoView(ViewInteraction container) {
-        int swipeCount = 0;
-        while (!isElementCompletelyDisplayed(container) && swipeCount < 20) {
-            swipeUpOnView(R.id.statsPager, (float) 0.5);
-            swipeCount += 1;
-        }
+        scrollIntoView(R.id.statsPager, card, (float) 0.5);
     }
 }
