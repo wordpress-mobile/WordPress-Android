@@ -259,6 +259,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
         is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
         is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+        is SiteNavigationAction.OpenHomepage -> ActivityLauncher.editLandingPageForResult(
+                this,
+                action.site,
+                action.homepageLocalId
+        )
         is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
         is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
         is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
@@ -474,7 +479,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.checkAndStartQuickStart(
+                viewModel.performFirstStepAfterSiteCreation(
                         data.getIntExtra(
                                 SitePickerActivity.KEY_SITE_LOCAL_ID,
                                 SelectedSiteRepository.UNAVAILABLE
@@ -483,13 +488,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.checkAndStartQuickStart(
+                    viewModel.performFirstStepAfterSiteCreation(
                             data.getIntExtra(
                                     SitePickerActivity.KEY_SITE_LOCAL_ID,
                                     SelectedSiteRepository.UNAVAILABLE
                             )
                     )
                 }
+            }
+            RequestCodes.EDIT_LANDING_PAGE -> {
+                viewModel.checkAndStartQuickStart(
+                        data.getIntExtra(
+                                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        )
+                )
             }
         }
     }
