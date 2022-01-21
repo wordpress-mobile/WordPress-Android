@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-31 15:49:31+0000
+Translation-Revision-Date: 2022-01-20 10:59:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_app_icon_description">Icona app</string>
+    <string name="about_automattic_back_icon_description">Icona Indietro</string>
+    <string name="about_automattic_logo_description">Logo Automattic</string>
+    <string name="about_automattic_terms_of_service_item_title">Termini di servizio</string>
+    <string name="about_automattic_source_code_item_title">Codice sorgente</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_dayone">Giorno uno</string>
+    <string name="about_automattic_privacy_policy_item_title">Politica sulla privacy</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Lavora da dove vuoi</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_work_with_us_item_title">Lavora con noi</string>
+    <string name="about_automattic_family_item_title">Famiglia Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">Sezione legale e altro</string>
+    <string name="about_automattic_rate_us_item_title">Valutaci</string>
+    <string name="about_automattic_share_with_friends_item_title">Condividi con gli amici</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Puoi modificare questo blocco usando la versione web dell\'editor.</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Apri le impostazioni di Jetpack Security</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Nota: devi consentire l\'accesso a WordPress.com per modificare questo blocco nell\'editor per dispositivi mobili.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Nota: il layout potrebbe cambiare in base in base al tema e alle dimensioni dello schermo</string>
+    <string name="gutenberg_native_address_settings">Impostazioni dell\'indirizzo</string>
+    <string name="gutenberg_native_add_media">Aggiungi elemento multimediale</string>
+    <string name="my_site_error_card_subtitle">Al momento, stiamo riscontrando problemi durante il caricamento dei dati del tuo sito.</string>
+    <string name="my_site_error_card_title">Alcuni dati non sono stati caricati</string>
+    <string name="my_site_dashboard_stale_message">La bacheca non è aggiornata. Controlla la connessione a Internet e trascina verso il basso per aggiornare.</string>
+    <string name="my_site_dashboard_update_error">Impossibile aggiornare la bacheca.</string>
+    <string name="error_media_video_duration_exceeds_limit">Video non caricato. Per caricare i video più lunghi di 5 minuti è richiesto un piano a pagamento.</string>
+    <string name="about_automattic_acknowledgements_item_title">Ringraziamenti</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Nota sulla privacy in California</string>
     <string name="about_automattic_version_label">Versione %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Ringraziamenti</string>
     <string name="about_automattic_legal_page_title">Sezione legale e altro</string>
@@ -112,6 +146,7 @@ Language: it
     <string name="me_btn_share">Condividi WordPress con un amico</string>
     <string name="my_site_quick_actions_title">Link veloci</string>
     <string name="my_site_btn_domains">Domini</string>
+    <string name="recommend_app_subject">App Automattic - App per qualsiasi schermo</string>
     <string name="weekly_roundup_notification_text">Il tuo sito ha avuto %1$d visualizzazioni, %2$d Mi piace, %3$d commenti.</string>
     <string name="weekly_roundup_notification_title">Resoconto settimanale: %s</string>
     <string name="blogging_reminders_notification_time">Orario di notifica</string>
@@ -248,6 +283,7 @@ Language: it
     <string name="login_not_a_jetpack_site">Per usare quest\'app per %1$s, il plugin Jetpack dovrà essere installato e connesso al tuo account WordPress.com.</string>
     <string name="gutenberg_native_move_image_forward">Sposta l\'immagine avanti</string>
     <string name="gutenberg_native_move_image_backward">Sposta l\'immagine indietro</string>
+    <string name="gutenberg_native_column_settings">Impostazioni della colonna</string>
     <string name="gutenberg_native_width_settings">Impostazioni larghezza</string>
     <string name="user_profile_untitled_site">(Senza titolo)</string>
     <string name="user_profile_site_section_header">Sito</string>
@@ -260,6 +296,8 @@ Language: it
     <string name="gutenberg_native_retry">Riprova</string>
     <string name="gutenberg_native_no_preview_available">Nessuna anteprima disponibile</string>
     <string name="gutenberg_native_s_link">%s link</string>
+    <string name="gutenberg_native_text_color">Colore del testo</string>
+    <string name="gutenberg_native_padding">Spaziatura interna</string>
     <string name="gutenberg_native_featured">In evidenza</string>
     <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
     <string name="gutenberg_native_custom_url">URL personalizzata</string>

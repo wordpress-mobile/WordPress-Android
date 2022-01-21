@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-17 10:42:53+0000
+Translation-Revision-Date: 2022-01-19 11:36:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -2449,7 +2449,7 @@ Language: ro
     <string name="image_width">Lățime</string>
     <string name="image_link_to">Legătură la</string>
     <string name="image_caption">Text asociat</string>
-    <string name="image_settings_save_toast">Modificări salvate</string>
+    <string name="image_settings_save_toast">Am salvat modificările</string>
     <string name="image_settings_dismiss_dialog_title">Renunți la modificările nesalvate?</string>
     <string name="stop_upload_dialog_title">Oprești încărcarea?</string>
     <string name="tap_to_try_again">Atinge pentru a încerca din nou!</string>

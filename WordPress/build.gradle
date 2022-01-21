@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         google()
-        jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
@@ -48,7 +47,6 @@ repositories {
         }
     }
     google()
-    jcenter()
     mavenCentral()
     maven { url "https://www.jitpack.io" }
 }
@@ -450,7 +448,7 @@ dependencies {
 
     implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 
     // Firebase
     implementation 'com.google.firebase:firebase-config:19.1.3'

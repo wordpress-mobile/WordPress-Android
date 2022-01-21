@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-28 13:54:06+0000
+Translation-Revision-Date: 2022-01-19 14:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">Icône de l’application</string>
+    <string name="about_automattic_back_icon_description">Icône Retour</string>
+    <string name="about_automattic_logo_description">Logo Automattic</string>
+    <string name="about_automattic_source_code_item_title">Code source</string>
+    <string name="about_automattic_privacy_policy_item_title">Politique de confidentialité</string>
+    <string name="about_automattic_terms_of_service_item_title">Conditions d’utilisation</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Travaillez de n’importe où</string>
+    <string name="about_automattic_work_with_us_item_title">Rejoignez-nous</string>
+    <string name="about_automattic_family_item_title">Famille Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">Droit et divers</string>
+    <string name="about_automattic_rate_us_item_title">Évaluez-nous</string>
+    <string name="about_automattic_share_with_friends_item_title">Partager avec des amis</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Vous pouvez modifier ce bloc en utilisant la version Web de l’éditeur.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Ouvrir les réglages Jetpack Security</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Remarque : Vous devez autoriser la connexion via WordPress.com pour modifier ce bloc dans l’éditeur mobile.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Remarque : La mise en page peut varier selon les thèmes et tailles d’écran.</string>
+    <string name="gutenberg_native_address_settings">Réglages de l’adresse</string>
+    <string name="gutenberg_native_add_media">AJOUTER UN MÉDIA</string>
+    <string name="my_site_error_card_subtitle">Nous rencontrons des difficultés à charger les données de votre site.</string>
+    <string name="my_site_error_card_title">Certaines données n’ont pas été chargées</string>
+    <string name="my_site_dashboard_stale_message">Le tableau de bord n’a pas été mis à jour. Veuillez vérifier votre connexion puis faites glisser pour actualiser.</string>
+    <string name="my_site_dashboard_update_error">Impossible de mettre à jour le tableau de bord.</string>
+    <string name="error_media_video_duration_exceeds_limit">La vidéo n’a pas été chargée ! La mise en ligne de vidéos de plus de 5 minutes requiert un plan payant.</string>
     <string name="about_automattic_version_label">Version : %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Remerciements</string>
     <string name="about_automattic_legal_page_title">Droit et divers</string>
@@ -109,6 +132,7 @@ Language: fr
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>
     <string name="recommend_app_bad_format_response">Réponse reçue non valide</string>
     <string name="recommend_app_null_response">Aucune réponse reçue</string>
+    <string name="recommend_app_subject">Applications Automattic - Des applications pour tous les écrans</string>
     <string name="me_btn_share">Partager WordPress avec un ami</string>
     <string name="my_site_quick_actions_title">Liens rapides</string>
     <string name="my_site_btn_domains">Domaines</string>
@@ -259,6 +283,7 @@ Language: fr
     <string name="gutenberg_native_preview_page">Prévisualiser la page</string>
     <string name="gutenberg_native_retry">Recommencez</string>
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
+    <string name="gutenberg_native_text_color">Couleur du texte</string>
     <string name="gutenberg_native_s_link">%s lien</string>
     <string name="gutenberg_native_featured">À la Une</string>
     <string name="gutenberg_native_custom_url">URL personnalisée</string>
