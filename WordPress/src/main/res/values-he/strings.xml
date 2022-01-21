@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-19 14:54:07+0000
+Translation-Revision-Date: 2022-01-20 22:14:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
@@ -9,10 +9,17 @@ Language: he_IL
     <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
     <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>
     <string name="about_automattic_logo_description">הסמל של Automattic</string>
+    <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_source_code_item_title">קוד מקור</string>
     <string name="about_automattic_privacy_policy_item_title">מדיניות פרטיות</string>
     <string name="about_automattic_terms_of_service_item_title">תנאי שימוש</string>
     <string name="about_automattic_work_with_us_item_subtitle">לעבוד מכל מקום</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
     <string name="about_automattic_work_with_us_item_title">הצטרפות לכוח העבודה שלנו</string>
     <string name="about_automattic_family_item_title">משפחת Automattic</string>
     <string name="about_automattic_legal_and_more_item_title">מידע משפטי ופרטים נוספים</string>
@@ -31,6 +38,8 @@ Language: he_IL
     <string name="my_site_dashboard_stale_message">לוח הבקרה לא מעודכן. יש לבדוק את החיבור ולמשוך למטה כדי לרענן.</string>
     <string name="my_site_dashboard_update_error">לא ניתן היה לעדכן את לוח הבקרה.</string>
     <string name="error_media_video_duration_exceeds_limit">הסרטון לא הועלה! להעלאת סרטון שאורכו מעל חמש דקות נדרשת תוכנית בתשלום.</string>
+    <string name="about_automattic_acknowledgements_item_title">בשיתוף</string>
+    <string name="about_automattic_california_privacy_notice_item_title">הצהרת פרטיות של קליפורניה</string>
     <string name="about_automattic_version_label">גרסה ⁦%1$s⁩</string>
     <string name="about_automattic_acknowledgements_page_title">בשיתוף</string>
     <string name="about_automattic_legal_page_title">מידע משפטי ופרטים נוספים</string>
@@ -272,6 +281,7 @@ Language: he_IL
     <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
     <string name="gutenberg_native_width_settings">הגדרות רוחב</string>
+    <string name="gutenberg_native_column_settings">הגדרות טור</string>
     <string name="user_profile_site_section_header">אתר</string>
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_bottom_sheet_description">פרטי גיליון תחתון של פרופיל המשתמש</string>

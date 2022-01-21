@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-18 13:54:06+0000
+Translation-Revision-Date: 2022-01-21 14:06:04+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
@@ -9,6 +9,13 @@ Language: id
     <string name="about_automattic_app_icon_description">Ikon Aplikasi</string>
     <string name="about_automattic_back_icon_description">Ikon kembali</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
     <string name="about_automattic_source_code_item_title">Kode Sumber</string>
     <string name="about_automattic_privacy_policy_item_title">Kebijakan Privasi</string>
     <string name="about_automattic_terms_of_service_item_title">Syarat Layanan</string>
@@ -16,6 +23,8 @@ Language: id
     <string name="about_automattic_work_with_us_item_title">Berkarya Bersama Kami</string>
     <string name="about_automattic_family_item_title">Keluarga Automattic</string>
     <string name="about_automattic_legal_and_more_item_title">Informasi Hukum dan Lainnya</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
     <string name="about_automattic_rate_us_item_title">Beri Rating</string>
     <string name="about_automattic_share_with_friends_item_title">Bagikan dengan Teman</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Anda dapat mengedit blok ini menggunakan editor versi web.</string>
@@ -29,11 +38,13 @@ Language: id
     <string name="my_site_dashboard_stale_message">Dasbor belum diperbarui. Harap periksa koneksi internet Anda lalu tarik layar untuk menyegarkan.</string>
     <string name="my_site_dashboard_update_error">Tidak dapat memperbarui dasbor.</string>
     <string name="error_media_video_duration_exceeds_limit">Video tidak terunggah! Diperlukan paket berbayar untuk mengunggah video berdurasi lebih dari 5 menit.</string>
+    <string name="about_automattic_acknowledgements_item_title">Pernyataan</string>
     <string name="about_automattic_california_privacy_notice_item_title">Pemberitahuan Privasi untuk California</string>
     <string name="about_automattic_version_label">Versi %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Pernyataan</string>
     <string name="about_automattic_legal_page_title">Informasi Hukum dan Lainnya</string>
     <string name="about_automattic_main_page_title">Tentang %1$s</string>
+    <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">Dasar-dasar</string>
     <string name="gutenberg_native_selected_default">Terpilih: Default</string>
     <string name="gutenberg_native_more_support_options">Pilihan dukungan lainnya</string>
@@ -42,6 +53,7 @@ Language: id
     <string name="gutenberg_native_double_tap_to_select_font_size">Ketuk dua kali untuk memilih ukuran font</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Ketuk dua kali untuk memilih ukuran font default</string>
     <string name="gutenberg_native_contact_support">Hubungi dukungan</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="my_site_no_content_post">Tidak Ada Konten</string>
     <string name="reader_comments_follow_conversation">Ikuti Percakapan</string>
     <string name="reader_comments_be_first_to_comment">Jadilah yang pertama memberi komentar</string>
@@ -285,6 +297,7 @@ Language: id
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
     <string name="gutenberg_native_text_color">Warna teks</string>
     <string name="gutenberg_native_s_link">%s tautan</string>
+    <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_featured">Andalan</string>
     <string name="gutenberg_native_custom_url">URL Tersuai</string>
     <string name="gutenberg_native_create_embed">Buat sematan</string>

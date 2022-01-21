@@ -1,0 +1,6 @@
+19.0:
+- Gestisci la bacheca con un feed basato su scheda, incluso Articoli.
+- Carica fino a 5 minuti di video con piani gratuiti.
+- Visualizza più testo dell'interfaccia utente nella tua lingua, inclusi i blocchi Jetpack/Griglia di layout.
+- Mantieni la formattazione del testo dopo che hai premuto backspace.
+- I titoli dei blocchi ora sono allineati al centro nel menu dello strumento per l'inserimento.

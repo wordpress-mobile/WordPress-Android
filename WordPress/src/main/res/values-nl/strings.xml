@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-01 19:32:37+0000
+Translation-Revision-Date: 2022-01-20 22:15:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">App-pictogram</string>
+    <string name="about_automattic_back_icon_description">Terug-pictogram</string>
+    <string name="about_automattic_logo_description">Automattic-logo</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
+    <string name="about_automattic_source_code_item_title">Broncode</string>
+    <string name="about_automattic_privacy_policy_item_title">Privacybeleid</string>
+    <string name="about_automattic_terms_of_service_item_title">Servicevoorwaarden</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Werken vanaf elke locatie</string>
+    <string name="about_automattic_work_with_us_item_title">Werk met ons samen</string>
+    <string name="about_automattic_family_item_title">Automattic-familie</string>
+    <string name="about_automattic_legal_and_more_item_title">Juridisch en meer</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_rate_us_item_title">Beoordeel ons</string>
+    <string name="about_automattic_share_with_friends_item_title">Deel met vrienden</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Je kunt dit blok openen met de webversie van de editor.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Open de beveiligingsinstellingen van Jetpack</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Opmerking: Je moet WordPress.com-login toestaan om dit blok te kunnen bewerken in de mobiele editor.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Opmerking: Lay-out kan verschillen tussen thema\'s en schermgrootten</string>
+    <string name="gutenberg_native_address_settings">Adresinstellingen</string>
+    <string name="gutenberg_native_add_media">MEDIA TOEVOEGEN</string>
+    <string name="my_site_error_card_subtitle">We kunnen de gegevens van je site momenteel niet laden.</string>
+    <string name="my_site_error_card_title">Niet alle gegevens zijn geladen</string>
+    <string name="my_site_dashboard_stale_message">Het dashboard is niet bijgewerkt. Controleer je verbinding en veeg omlaag om te vernieuwen.</string>
+    <string name="my_site_dashboard_update_error">Kon dashboard niet bijwerken.</string>
+    <string name="error_media_video_duration_exceeds_limit">Video is niet geüpload! Om video\'s langer van langer dan 5 minuten te uploaden is een betaald abonnement nodig.</string>
     <string name="gutenberg_native_from_clipboard">Van klembord</string>
     <string name="gutenberg_native_featured_image">Uitgelichte afbeelding</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Kopieer URL van het klembord, %s</string>
