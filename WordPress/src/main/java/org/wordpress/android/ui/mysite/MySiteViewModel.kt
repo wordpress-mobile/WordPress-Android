@@ -728,9 +728,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun checkAndStartLandOnTheEditor() {
-        if (landOnTheEditorABExperiment.getVariation() is Control) {
-            return
-        }
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->

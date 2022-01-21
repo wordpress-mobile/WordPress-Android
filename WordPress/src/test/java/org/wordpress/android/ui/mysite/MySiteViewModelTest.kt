@@ -1550,7 +1550,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor experiment is running, then the home page editor is shown`() = test {
         whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Treatment("experiment"))
 
-        viewModel.checkAndStartLandOnTheEditor()
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
 
         verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenHomepage(site, localHomepageId))
@@ -1560,7 +1560,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor experiment is not running, then the home page editor is not shown`() = test {
         whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Control)
 
-        viewModel.checkAndStartLandOnTheEditor()
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
 
         assertThat(navigationActions).isEmpty()
     }
