@@ -809,4 +809,12 @@ public class WPSupportUtils {
             device.drag(left, centerY, right, centerY, 10);
         }
     }
+
+    public static void scrollIntoView(Integer scrollableContainerID, ViewInteraction objectToScrollTo, float yFactor) {
+        int swipeCount = 0;
+        while (!isElementCompletelyDisplayed(objectToScrollTo) && swipeCount < 20) {
+            swipeUpOnView(scrollableContainerID, yFactor);
+            swipeCount += 1;
+        }
+    }
 }
