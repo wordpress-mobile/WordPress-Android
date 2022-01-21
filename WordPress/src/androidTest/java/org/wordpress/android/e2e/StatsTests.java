@@ -1,8 +1,11 @@
 package org.wordpress.android.e2e;
 
+import androidx.test.espresso.Espresso;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.util.StatsKeyValueData;
@@ -10,6 +13,10 @@ import org.wordpress.android.util.StatsMocksReader;
 import org.wordpress.android.util.StatsVisitsData;
 
 import java.util.List;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class StatsTests extends BaseTest {
     @Before
@@ -20,6 +27,11 @@ public class StatsTests extends BaseTest {
 
     @After
     public void tearDown() {
+        // "tabLayout" is a Tab switcher for stats.
+        // We need to leave stats at the end of test.
+        if (isElementDisplayed(onView(withId(R.id.tabLayout)))) {
+            Espresso.pressBack();
+        }
     }
 
     @Test
