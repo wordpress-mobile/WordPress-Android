@@ -14,6 +14,7 @@
 * [*] Block editor: Add missing translations of unsupported block editor modal [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4410]
 * [***] My Site: Introduced cards based dashboard feed with posts card [https://github.com/wordpress-mobile/WordPress-Android/issues/15198]
 * [*] Me: Put back the "Share WordPress with a friend" on the Me screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/15818]
+* [***] Updated icons set to Cool Blue. [https://github.com/wordpress-mobile/WordPress-Android/pull/15842]
 
 18.9
 -----
