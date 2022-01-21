@@ -27,11 +27,7 @@
                         {
                             "country_code": "US",
                             "views": 7
-                        },
-                        {
-                            "country_code": "CA",
-                            "views": 5
-                        }                   
+                        }            
                     ],
                     "other_views": 0,
                     "total_views": 17
@@ -42,12 +38,6 @@
                     "flag_icon": "https://secure.gravatar.com/blavatar/5a83891a81b057fed56930a6aaaf7b3c?s=48",
                     "flat_flag_icon": "https://secure.gravatar.com/blavatar/9f4faa5ad0c723474f7a6d810172447c?s=48",
                     "country_full": "United States",
-                    "map_region": "021"
-                },
-                "CA": {
-                    "flag_icon": "https://secure.gravatar.com/blavatar/7f3085b2665ac78346be5923724ba4c6?s=48",
-                    "flat_flag_icon": "https://secure.gravatar.com/blavatar/685ac009247bf3378158ee41c3f8f250?s=48",
-                    "country_full": "Canada",
                     "map_region": "021"
                 }
             }

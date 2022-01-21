@@ -169,10 +169,10 @@ public class StatsPage {
         scrollIntoView(card);
     }
 
-    public static void scrollIntoView(ViewInteraction postContainer) {
+    public static void scrollIntoView(ViewInteraction container) {
         int swipeCount = 0;
-        while (!isElementCompletelyDisplayed(postContainer) && swipeCount < 15) {
-            swipeUpOnView(R.id.statsPager, (float) 1);
+        while (!isElementCompletelyDisplayed(container) && swipeCount < 20) {
+            swipeUpOnView(R.id.statsPager, (float) 0.5);
             swipeCount += 1;
         }
     }
