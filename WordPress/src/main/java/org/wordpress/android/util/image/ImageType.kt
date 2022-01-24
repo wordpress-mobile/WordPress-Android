@@ -22,7 +22,6 @@ enum class ImageType {
     PLUGIN,
     THEME,
     UNKNOWN,
-    USER,
     VIDEO,
     ICON,
     NO_PLACEHOLDER
