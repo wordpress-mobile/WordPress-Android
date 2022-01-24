@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-17 08:19:37+0000
+Translation-Revision-Date: 2022-01-21 06:35:35+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -9,6 +9,7 @@ Language: pl
     <string name="about_automattic_app_icon_description">Ikona aplikacji</string>
     <string name="about_automattic_back_icon_description">Ikona Cofnij/Wstecz</string>
     <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_logo_description">Logo Automattic</string>
     <string name="about_automattic_woocommerce">WooCommerce</string>
     <string name="about_automattic_tumblr">Tumblr</string>
     <string name="about_automattic_simplenote">Simplenote</string>
@@ -25,12 +26,40 @@ Language: pl
     <string name="about_automattic_instagram_item_title">Instagram</string>
     <string name="about_automattic_rate_us_item_title">Oceń nas</string>
     <string name="about_automattic_share_with_friends_item_title">Udostępnij znajomym</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Możesz edytować ten blok za pomocą przeglądarkowej wersji tego edytora.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Otwórz ustawienia zabezpieczeń Jetpacka</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Uwaga: Aby edytować ten blok w edytorze mobilnym należy zezwolić na logowanie na WordPress.com</string>
     <string name="gutenberg_native_add_media">DODAJ PLIKI MEDIÓW</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Uwaga: Układ może się różnić pomiędzy tematami i rozmiarami ekranów</string>
+    <string name="gutenberg_native_address_settings">Ustawienia adresu</string>
+    <string name="my_site_error_card_subtitle">Mamy problem z załadowaniem danych twojej witryny.</string>
+    <string name="my_site_error_card_title">Niektóre z danych nie zostały zaczytane</string>
+    <string name="my_site_dashboard_stale_message">Kokpit nie został zaktualizowany. Proszę sprawdzić swoje połączenie i wówczas zaktualizować.</string>
+    <string name="my_site_dashboard_update_error">Nie można było zaktualizować kokpitu.</string>
+    <string name="error_media_video_duration_exceeds_limit">Film nie został przesłany! Przesyłanie filmów dłuższych niż 5 minut wymaga przejścia na plan płatny.</string>
+    <string name="about_automattic_acknowledgements_item_title">Podziękowania</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Notka prywatności stanu Kalifornia</string>
     <string name="about_automattic_version_label">Wersja %1$s</string>
     <string name="about_automattic_main_page_title">O %1$s</string>
     <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">Podstawy</string>
     <string name="gutenberg_native_selected_default">Wybrano: Domyślne</string>
+    <string name="about_automattic_acknowledgements_page_title">Podziękowania</string>
+    <string name="about_automattic_legal_page_title">Sprawy prawne i więcej</string>
+    <string name="gutenberg_native_more_support_options">Więcej opcji wsparcia</string>
+    <string name="gutenberg_native_get_support">Uzyskaj wsparcie</string>
+    <string name="gutenberg_native_font_size">Rozmiar czcionki</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Stuknij dwukrotnie aby wybrać rozmiar czcionki</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Stuknij dwukrotnie aby wybrać domyślny rozmiar czcionki</string>
+    <string name="gutenberg_native_contact_support">Skontaktuj się ze wsparciem</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="my_site_no_content_post">Brak treści</string>
+    <string name="reader_comments_follow_conversation">Obserwuj konwersację</string>
+    <string name="reader_comments_be_first_to_comment">Napisz pierwszy komentarz</string>
+    <string name="reader_comments_view_all">Zobacz wszystkie komentarze</string>
+    <string name="reader_comments_post_fetch_failure">Wystąpił błąd podczas pobierania danych wpisu</string>
+    <string name="reader_comments_fetch_failure">Wystąpił błąd podczas pobierania komentarzy</string>
+    <string name="reader_btn_follow_conversation_settings">Obserwuj ustawienia konwersacji</string>
     <string name="gutenberg_native_from_clipboard">Że schowka</string>
     <string name="gutenberg_native_featured_image">Obrazek wyróżniający</string>
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Skopiuj adres URL ze schowka, %s</string>
@@ -50,7 +79,9 @@ Language: pl
     <string name="my_site_create_first_post_title">Stwórz swój pierwszy wpis</string>
     <string name="my_site_post_card_scheduled_title">Nadchodzące zaplanowane wpisy</string>
     <string name="my_site_untitled_post">Nienazwane</string>
+    <string name="my_site_create_first_post_excerpt">Wpisy pojawiają się na stronie twojego blogu w odwrotnym porządku chronologicznym. Czas najwyższy aby podzielić się ze światem twoimi pomysłami!</string>
     <string name="my_site_post_card_draft_title">Pracuj nad wpisem roboczym</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Darmowy w pierwszym roku&lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Twoje domeny przekierują na twoją witrynę pod adresem %s</string>
     <string name="gutenberg_native_create_link">Stwórz odnośnik</string>
     <string name="domain_registration_result_title">Gratulacje z okazji twojego zakupu!</string>
@@ -120,6 +151,7 @@ Language: pl
     <string name="weekly_roundup_notification_title">W każdym tygodniu: %s</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Otrzymasz powiadomienia o blogowaniu &lt;b&gt;każdego dnia&lt;/b&gt; o &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s razy w tygodniu o %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Kontrolki formatowania tekstu znajdują się w ramach paska narzędzi ulokowanego ponad klawiaturą - podczas edycji bloku</string>
     <string name="gutenberg_native_select_a_color_above">Wybierz kolor powyżej</string>
     <string name="gutenberg_native_navigates_to_select_s">Kieruje do wybrania %s</string>
     <string name="gutenberg_native_move_blocks">Przesuń bloki</string>
@@ -246,6 +278,7 @@ Language: pl
     <string name="gutenberg_native_move_image_forward">Przenieś obraz do przodu</string>
     <string name="gutenberg_native_move_image_backward">Przesuń obrazek do tyłu</string>
     <string name="gutenberg_native_width_settings">Ustawienia szerokości</string>
+    <string name="gutenberg_native_column_settings">Ustawienia kolumny</string>
     <string name="user_profile_site_section_header">Witryna</string>
     <string name="user_profile_untitled_site">(Bez nazwy)</string>
     <string name="user_profile_bottom_sheet_description">Informacja o profilu użytkownika na dolnej zakładce</string>
@@ -257,6 +290,8 @@ Language: pl
     <string name="gutenberg_native_retry">Spróbuj ponownie</string>
     <string name="gutenberg_native_no_preview_available">Podgląd nie jest dostępny</string>
     <string name="gutenberg_native_s_link">%s łącze</string>
+    <string name="gutenberg_native_text_color">Kolor tekstu</string>
+    <string name="gutenberg_native_padding">Wypełnienie</string>
     <string name="gutenberg_native_featured">Wyróżnione</string>
     <string name="gutenberg_native_custom_url">Własny adres URL</string>
     <string name="gutenberg_native_column_d">Kolumna %d</string>
@@ -2606,8 +2641,8 @@ Language: pl
     <string name="site_settings_default_format_title">Domyślny format wpisów</string>
     <string name="site_settings_default_category_title">Domyślna kategoria wpisów</string>
     <string name="site_settings_address_title">Adres</string>
-    <string name="site_settings_title_title">Tytuł witryny</string>
     <string name="site_settings_tagline_title">Slogan</string>
+    <string name="site_settings_title_title">Nazwa witryny</string>
     <string name="site_settings_discussion_new_posts_header">Ustawienia domyślne dla nowych wpisów</string>
     <string name="site_settings_account_header">Konto</string>
     <string name="site_settings_writing_header">Pisanie</string>

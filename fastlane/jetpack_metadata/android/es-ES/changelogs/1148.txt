@@ -1,6 +1,0 @@
-18.9:
-- Resaltar el texto con cualquier color en los bloques de párrafo.
-- Crear nuevos bloques de Galería con el nuevo diseño y convertir automáticamente las galerías antiguas para que coincidan.
-- Deshacer y rehacer los cambios al formato del texto de los enlaces en los bloques.
-- Carga más rápida al volver a bloguear entradas y compartir texto desde otras aplicaciones.
-- Ver colores de fondo en bloques pre formateados en sitios con temas standard.

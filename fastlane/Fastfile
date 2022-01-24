@@ -361,24 +361,7 @@ REPOSITORY_NAME = 'WordPress-Android'
     android_finalize_prechecks(skip_confirm: options[:skip_confirm])
     configure_apply(force: is_ci)
 
-    UI.message('Checking app strings translation status...')
-    check_translation_progress(
-      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
-      abort_on_violations: false
-    )
-
-    UI.message('Checking WordPress release notes strings translation status...')
-    check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:gp_url],
-      abort_on_violations: false
-    )
-
-    UI.message('Checking Jetpack release notes strings translation status...')
-    check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:gp_url],
-      abort_on_violations: false
-    )
-
+    check_translations_coverage()
     download_translations()
 
     android_bump_version_final_release()
@@ -393,6 +376,30 @@ REPOSITORY_NAME = 'WordPress-Android'
 
     # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version['name']}")
+  end
+
+  lane :check_translations_coverage do |options|
+    UI.message('Checking app strings translation status...')
+    check_translation_progress(
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
+    UI.message('Checking WordPress release notes strings translation status...')
+    check_translation_progress(
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:gp_url],
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
+    UI.message('Checking Jetpack release notes strings translation status...')
+    check_translation_progress(
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:gp_url],
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
   end
 
   #####################################################################################
