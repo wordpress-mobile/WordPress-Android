@@ -324,6 +324,12 @@
     <dimen name="my_site_post_item_time_icon_size">12dp</dimen>
     <dimen name="my_site_create_first_image_width">75dp</dimen>
 
+    <!-- my site error card -->
+    <dimen name="my_site_error_card_border_radius">4dp</dimen>
+    <dimen name="my_site_error_card_stroke_width">1dp</dimen>
+    <dimen name="my_site_error_card_dash_gap">5dp</dimen>
+    <dimen name="my_site_error_card_dash_width">10dp</dimen>
+
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>

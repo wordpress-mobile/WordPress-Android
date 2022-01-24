@@ -198,7 +198,7 @@ jobs:
           test-targets: notPackage org.wordpress.android.ui.screenshots
           device: model=Pixel2,version=28,locale=en,orientation=portrait
           project: api-project-108380595987
-          timeout: 10m
+          timeout: 20m
           num-flaky-test-attempts: 2
           results-history-name: CircleCI WordPress Connected Tests
       - android/save-gradle-cache
@@ -354,11 +354,11 @@ workflows:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
           post-to-slack: true
-          # Always run connected tests on develop and release branches
+          # Always run connected tests on trunk and release branches
           filters:
             branches:
               only:
-                - develop
+                - trunk
                 - /^release.*/
                 - /^gutenberg\/integrate_release_.*/
   Optional Tests:
@@ -373,7 +373,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - develop
+                - trunk
                 - /^release.*/
                 - /^gutenberg\/integrate_release_.*/
                 - /pull\/[0-9]+/

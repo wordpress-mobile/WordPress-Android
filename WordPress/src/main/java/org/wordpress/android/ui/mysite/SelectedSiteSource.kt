@@ -17,7 +17,7 @@ class SelectedSiteSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val dispatcher: Dispatcher
 ) : MySiteRefreshSource<SelectedSite> {
-    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh = MutableLiveData(selectedSiteRepository.hasSelectedSite())
 
     init {
         dispatcher.register(this)
@@ -32,6 +32,7 @@ class SelectedSiteSource @Inject constructor(
         siteLocalId: Int
     ) = selectedSiteRepository.selectedSiteChange
             .filter { it == null || it.id == siteLocalId }
+            .apply { onRefreshedMainThread() }
             .map { SelectedSite(it) }
 
     override fun refresh() {
@@ -48,6 +49,6 @@ class SelectedSiteSource @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged?) {
         // Handled in WPMainActivity, this observe is only to manage the refresh flag
-        onRefreshed()
+        onRefreshedMainThread()
     }
 }

@@ -1,0 +1,6 @@
+19.0:
+- Gestiona tu escritorio con un feed basado en tarjetas, incluidas las entradas.
+- Sube como máximo videos de 5 minutos en los planes gratuitos.
+- Visualiza más texto de la interfaz de usuario en tu idioma, incluidos los bloques de Jetpack y Cuadrícula de diseño.
+- Mantén el formato del texto después de pulsar la tecla Retroceso.
+- Ahora, los títulos de los bloques se alinean al centro en el menú del insertador.

@@ -39,11 +39,8 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
-import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.CommentsDetailActivity;
-import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListAdapter;
@@ -186,7 +183,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsFragment;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverJobService;
@@ -326,12 +322,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(EditCommentActivity object);
 
-    void inject(CommentAdapter object);
-
-    void inject(CommentsListFragment object);
-
-    void inject(CommentsActivity object);
-
     void inject(CommentsDetailActivity object);
 
     void inject(MeFragment object);
@@ -431,8 +421,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(NotificationsDetailListFragment object);
 
     void inject(ReaderCommentListActivity object);
-
-    void inject(ThreadedCommentsFragment object);
 
     void inject(ReaderSubsActivity object);
 

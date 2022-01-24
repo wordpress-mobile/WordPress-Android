@@ -1,0 +1,6 @@
+19.0:
+– Verwalte dein Dashboard mit einem kartenbasierten Feed, einschließlich Beiträgen.
+– Lade bei Kostenlos-Tarifen Videos mit einer Länge von bis zu fünf Minuten hoch.
+– Zeige mehr Benutzeroberflächentext in deiner Sprache an, einschließlich Jetpack-/Layoutraster-Blöcken.
+– Behalte die Textformatierung nach Drücken auf die Rücktaste bei.
+– Blocktitel werden im Inserter-Menü nun zentriert ausgerichtet.
