@@ -30,7 +30,7 @@ import org.wordpress.android.ui.engagement.UserProfileViewModel.Companion.USER_P
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.services.ReaderCommentService
+import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -160,7 +160,8 @@ class EngagedPeopleListFragment : Fragment() {
                             this,
                             event.siteId,
                             event.commentPostId,
-                            event.postOrCommentId
+                            event.postOrCommentId,
+                            event.source.sourceDescription
                     )
                 }
                 is PreviewPostInReader -> {

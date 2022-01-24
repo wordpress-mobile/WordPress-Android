@@ -1,1 +1,110 @@
-../metadata/JetpackPlayStoreStrings.po
+# Translation of Jetpack - Apps - Android - Release Notes in English (US)
+# This file is distributed under the same license as the Jetpack - Apps - Android - Release Notes package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2018-05-23 11:49:24+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: VsCode\n"
+"Project-Id-Version: Jetpack - Apps - Android - Release Notes\n"
+
+#. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_190"
+msgid ""
+"19.0:\n"
+"- Manage your dashboard with a card-based feed, including Posts.\n"
+"- Upload up to 5-minute videos on free plans.\n"
+"- See more user interface text in your language, including Jetpack/Layout Grid blocks.\n"
+"- Keep text formatting after hitting backspace.\n"
+"- Block titles are now center-aligned in the inserter menu.\n"
+msgstr ""
+
+#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_190"
+msgid ""
+"19.0:\n"
+"- Card-based dashboard feed, including Posts.\n"
+"- Maximum of 5-minute video uploads on free plans.\n"
+"- More user interface translation, including Jetpack/Layout Grid blocks.\n"
+"- Consistent text formatting after hitting backspace.\n"
+msgstr ""
+
+msgctxt "release_note_189"
+msgid ""
+"18.9:\n"
+"- Highlight text with any color in Paragraph blocks.\n"
+"- Create new Gallery blocks with the new design and auto-convert old galleries to match.\n"
+"- Undo and redo changes when formatting link text in blocks.\n"
+"- Load faster when reblogging posts and sharing text from other apps.\n"
+"- See background colors in pre-formatted blocks on sites with standard themes.\n"
+msgstr ""
+
+#. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
+msgctxt "short-description"
+msgid "Get powerful security and performance tools in your pocket."
+msgstr ""
+
+#. translators: Multi-paragraph text used to display in the Play Store.
+msgctxt "app-store-description"
+msgid ""
+"Get powerful security and performance tools in your pocket with Jetpack for Android.\n"
+"\n"
+"Restore your site from anywhere if something goes wrong. Scan for threats and resolve them with a tap. Keep tabs on site activity to see who changed what and when. Check your stats to see what new countries today’s visitors are coming from.\n"
+"\n"
+"The app also supports WordPress features that you expect. Draft a spontaneous haiku from the couch. Snap and post a photo on your lunch break. Respond to your latest comments.\n"
+"\n"
+"Jetpack for Android supports WordPress sites with Jetpack enabled and an account connected to WordPress.com.\n"
+"\n"
+"View the Privacy Notice for California Users at https://automattic.com/privacy/#california-consumer-privacy-act-ccpa.\n"
+msgstr ""
+
+#. App store app name
+msgctxt "app-store-name"
+msgid "Jetpack: WP Security & Speed"
+msgstr ""
+
+#. Description for the first app store image
+msgctxt "screenshot-text-1"
+msgid ""
+"Safer.\n"
+"Faster.\n"
+"More traffic."
+msgstr ""
+
+#. Description for the second app store image
+msgctxt "screenshot-text-2"
+msgid ""
+"Bring your\n"
+"Jetpack with you."
+msgstr ""
+
+#. Description for the third app store image
+msgctxt "screenshot-text-3"
+msgid ""
+"Keep tabs on\n"
+"your site activity."
+msgstr ""
+
+#. Description for the fourth app store image
+msgctxt "screenshot-text-4"
+msgid ""
+"Scan for issues\n"
+"on the go."
+msgstr ""
+
+#. Description for the fifth app store image
+msgctxt "screenshot-text-5"
+msgid ""
+"Back Up your site\n"
+"at any moment."
+msgstr ""
+
+#. Description for the sixth app store image
+msgctxt "screenshot-text-6"
+msgid ""
+"Site stats in your\n"
+"pocket."
+msgstr ""
+

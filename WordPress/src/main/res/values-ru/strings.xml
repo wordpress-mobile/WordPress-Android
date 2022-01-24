@@ -1,15 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-09-07 10:35:56+0000
+Translation-Revision-Date: 2022-01-11 05:08:23+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">Значок приложения</string>
+    <string name="about_automattic_back_icon_description">Значок Назад</string>
+    <string name="about_automattic_logo_description">логотип Automattic</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
+    <string name="about_automattic_source_code_item_title">Исходный код</string>
+    <string name="about_automattic_privacy_policy_item_title">Политика конфиденциальности</string>
+    <string name="about_automattic_terms_of_service_item_title">Условия использования</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Работайте откуда угодно</string>
+    <string name="about_automattic_work_with_us_item_title">Работа у нас</string>
+    <string name="about_automattic_family_item_title">Семейство Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title">Юридическая информация и прочее</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_rate_us_item_title">Оцените нас</string>
+    <string name="about_automattic_share_with_friends_item_title">Поделитесь с друзьями</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Вы можете редактировать этот блок используя веб версию редактора.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">Открыть настройки безопасности Jetpack</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">Заметка: Требуется разрешить вход WordPress.com для редактирования этого блока в мобильном редакторе.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">Заметка: макет может меняться в зависимости от темы и размера экрана</string>
+    <string name="gutenberg_native_address_settings">Настройки адреса</string>
+    <string name="gutenberg_native_add_media">ДОБАВИТЬ МЕДИА</string>
+    <string name="my_site_error_card_subtitle">На настоящий момент возникли проблемы с загрузкой данных вашего сайта.</string>
+    <string name="my_site_error_card_title">Некоторые данные не были загружены</string>
+    <string name="my_site_dashboard_stale_message">Консоль не обновлена. Проверьте ваше подключение к сети и потяните для обновления.</string>
+    <string name="my_site_dashboard_update_error">Невозможно обновить консоль.</string>
+    <string name="error_media_video_duration_exceeds_limit">Загрузка видео длительностью более 5 минут требует перехода на платный тариф.</string>
+    <string name="about_automattic_acknowledgements_item_title">Благодарности</string>
+    <string name="about_automattic_california_privacy_notice_item_title">Заявление о защите конфиденциальности пользователей из Калифорнии</string>
+    <string name="about_automattic_version_label">Версия %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title">Благодарности</string>
+    <string name="about_automattic_legal_page_title">Юридическая информация и прочее</string>
+    <string name="about_automattic_main_page_title">О %1$s</string>
+    <string name="about_blog">Блог</string>
+    <string name="gutenberg_native_the_basics">Основы</string>
+    <string name="gutenberg_native_selected_default">Выбор: по умолчанию</string>
+    <string name="gutenberg_native_more_support_options">Больше возможностей поддержки</string>
+    <string name="gutenberg_native_get_support">Получить поддержку</string>
+    <string name="gutenberg_native_font_size">Размер шрифта</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size">Нажмите дважды для выбора размера шрифта</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size">Нажмите дважды для выбора размера шрифта по умолчанию</string>
+    <string name="gutenberg_native_contact_support">Обратиться в службу поддержки</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="my_site_no_content_post">Нет содержимого</string>
+    <string name="reader_comments_follow_conversation">Подписаться на беседу</string>
+    <string name="reader_comments_be_first_to_comment">Будьте первым, кто оставит комментарий</string>
+    <string name="reader_comments_view_all">Посмотреть все комментарии</string>
+    <string name="reader_comments_post_fetch_failure">При получении данных записи возникла ошибка</string>
+    <string name="reader_comments_fetch_failure">При получении комментариев произошла ошибка</string>
+    <string name="reader_btn_follow_conversation_settings">Настройки подписки на комментарии</string>
+    <string name="gutenberg_native_from_clipboard">Из буфера обмена</string>
+    <string name="gutenberg_native_featured_image">Изображение записи</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s">Скопировать URL из буфера обмена, %s</string>
+    <string name="me_btn_about">О WordPress</string>
+    <string name="my_site_post_card_link_go_to_scheduled_posts">Перейти к запланированным записям</string>
+    <string name="my_site_post_card_link_go_to_drafts">Перейти в черновики</string>
+    <string name="my_site_post_card_link_create_post">Создать запись</string>
+    <string name="my_site_create_next_post_excerpt">Регулярные публикации помогают вам формировать аудиторию!</string>
+    <string name="my_site_create_next_post_title">Создайте вашу следующую запись</string>
+    <string name="menu_visual_mode_switched_notice">Переход в визуальный режим</string>
+    <string name="menu_html_mode_switched_notice">Переход в режим HTML</string>
+    <string name="post_link_copied_to_clipboard">Ссылка скопирована в буфер обмена</string>
+    <string name="comment_author_badge">Автор</string>
+    <string name="button_copy_link">Скопировать ссылку</string>
+    <string name="domains_paid_plan_add_your_domain_caption">Добавление пользовательского домена сделает доступ к вашему сайту проще</string>
+    <string name="domains_paid_plan_add_your_domain_title">Добавление домена</string>
+    <string name="my_site_create_first_post_excerpt">Записи появляются на странице в вашего блога в обратном хронологическом порядке. Самое время поделиться вашими мыслями с миром!</string>
+    <string name="my_site_create_first_post_title">Создайте свою первую запись</string>
+    <string name="my_site_untitled_post">Без названия</string>
+    <string name="my_site_post_card_scheduled_title">Запланированные к публикации записи</string>
+    <string name="my_site_post_card_draft_title">Работа над черновой записью</string>
+    <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Первый год - бесплатно &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s в год&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domains_redirected_domains_blurb">Ваши домены направят на ваш сайт по адресу %s</string>
+    <string name="gutenberg_native_create_link">Создать ссылку</string>
+    <string name="domain_registration_result_description">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается, это может занять до 30 минут пока он станет доступен.</string>
+    <string name="domain_registration_result_title">Поздравляем с приобретением!</string>
+    <string name="domains_suggestions_select_domain">Выберите домен</string>
+    <string name="domains_title">Домены</string>
+    <string name="post_status_sticky">Прилеплена</string>
+    <string name="post_settings_post_sticky">Закрепить запись на главной странице</string>
+    <string name="post_settings_mark_as_sticky_options_header">Прикрепить</string>
+    <string name="reader_follow_comments_unfollow_conversation">Отписаться от беседы</string>
+    <string name="reader_follow_comments_enable_push_notifications">Включить уведомления в приложении</string>
+    <string name="reader_follow_comments_message">Вы подписались на эту беседу. Вы получите уведомление по электронной почте при появлении новых комментариев.</string>
+    <string name="reader_follow_comments_bottom_sheet_description">Управление опциями подписки на беседу, всплывающее окно</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_from_push_error">Не удается отключить уведомления в приложении</string>
+    <string name="reader_follow_comments_could_not_subscribe_to_push_error">Не удается включить уведомления в приложении</string>
+    <string name="reader_follow_comments_unsubscribe_from_push_success">Уведомления в приложении отключены</string>
+    <string name="reader_follow_comments_subscribe_to_push_success">Уведомления в приложении включены</string>
+    <string name="reader_follow_comments_unsubscribe_from_all_success">Вы отписались от этой беседы</string>
+    <string name="reader_follow_comments_subscribe_success_enable_push">Подписаны на эту беседу\nВключить уведомления в приложении?</string>
+    <string name="domains_search_for_a_domain_button">Поиск домена</string>
+    <string name="domains_free_plan_get_your_domain_caption">Домены, купленные для этого сайта, направят пользователей на &lt;b&gt;%s&lt;/b&gt;</string>
+    <string name="domains_paid_plan_claim_your_domain_caption">На вашем тарифе возможно зарегистрировать бесплатно домен сроком на 1 год</string>
+    <string name="domains_paid_plan_claim_your_domain_title">Получите бесплатный домен</string>
+    <string name="domains_manage_domains">Управление доменами</string>
+    <string name="domains_add_a_domain">Добавить домен</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Истекает %s&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Истекает %s</string>
+    <string name="domains_site_domains">Домены вашего сайта</string>
+    <string name="domains_primary_site_address_chip">Основной адрес сайта</string>
+    <string name="domains_primary_site_more_menu_change_site_address">Изменить адрес сайта</string>
+    <string name="domains_primary_site_caption">Адрес вашего сайта (бесплатный) на WordPress.com -</string>
+    <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s за первый год &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s в год&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /в год&lt;/span&gt;</string>
+    <string name="comment_edit_cancel_dialog_message">Хотите отменить их?</string>
+    <string name="comment_edit_cancel_dialog_title">Имеются несохраненные изменения</string>
+    <string name="comment_edit_comment_error">Комментарий не может быть пустым</string>
+    <string name="comment_edit_user_email_error">Email пользователя неверен</string>
+    <string name="comment_edit_web_address_error">Адрес сайта неверен</string>
+    <string name="comment_edit_user_name_error">Имя пользователя не может быть пустым</string>
+    <string name="comment_edit_email_address">Адрес Email</string>
+    <string name="comment_edit_web_address">Адрес сайта</string>
+    <string name="comment_edit_comment">Коментарий</string>
+    <string name="comment_edit_user_name">Имя</string>
+    <string name="comment_edit_menu_done">Готово</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon">Просмотр блоков встроенных объектов пока не доступен</string>
+    <string name="weekly_roundup">За неделю</string>
+    <string name="gutenberg_native_embed_options">Параметры встраивания</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Нажмите дважды, чтобы просмотреть возможности встраивания.</string>
+    <string name="quick_start_list_create_site_message">Сайт создан! Выполните ещё задачу.</string>
+    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блоггерам&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;Одному блоггеру&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вам и еще %1$s блоггерам&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вам и еще одному блоггеру&lt;/a&gt; это нравится.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вам&lt;/a&gt; это нравится.</string>
     <string name="gutenberg_native_line_height">Высота строки</string>
     <string name="domains_free_plan_get_your_domain_title">Получите собственный домен</string>
-    <string name="domains_primary_domain_address">%s</string>
-    <string name="domains_primary_domain">ОСНОВНОЙ АДРЕС САЙТА</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_generic_get_template_error">Возникла неизвестная ошибка получания шаблона приложения рекомендаций</string>
     <string name="recommend_app_bad_format_response">Получен неверный ответ</string>
     <string name="recommend_app_null_response">Ответ не получен</string>
@@ -17,14 +147,6 @@ Language: ru
     <string name="me_btn_share">Поделитесь WordPress с друзьями</string>
     <string name="my_site_quick_actions_title">Быстрые ссылки</string>
     <string name="my_site_btn_domains">Домены</string>
-    <string name="like_faces_more_bloggers_text">%1$s блоггерам %2$s.</string>
-    <string name="like_faces_one_blogger_text">Одному блоггеру %1$s.</string>
-    <string name="like_faces_plural_with_you_text">Вам и %1$s блоггерам %2$s.</string>
-    <string name="like_faces_you_plus_one_text">Вам и 1 блоггеру %1$s.</string>
-    <string name="like_faces_you_text">Вам %1$s.</string>
-    <string name="likes_this">нравится это</string>
-    <string name="like_this">нравится это</string>
-    <string name="site_settings_site_domains_title">Домены сайта</string>
     <string name="weekly_roundup_notification_text">Ваш сайт просмотрен %1$d раз, %2$d отметок \"понравилось\" и %3$d комментариев.</string>
     <string name="weekly_roundup_notification_title">За неделю: %s</string>
     <string name="blogging_reminders_notification_time">Время уведомления</string>
@@ -55,7 +177,7 @@ Language: ru
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Блоки - это части содержимого, которые можно вставлять, переставлять и стилизовать, без необходимости использования кода. Блоки - это простой и современный способ создавать красивые макеты.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Блоки позволяют вам сосредоточиться на написании, знайте о том, что все инструменты форматирования доступны здесь, чтобы оформить ваше сообщение.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Оформите содержимое в столбцы, добавьте кнопки призыва к действию и изображения с наложением текста.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Добавьте новый блок в любое время, нажав на значок + на панели инструментов  внизу слева.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Добавьте новый блок в любое время, нажав на значок + на панели инструментов внизу слева. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s из %2$s завершено</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Изучите основы с помощью быстрого пошагового руководства.</string>
     <string name="comment_batch_moderation_error">Неудалось отмодерировать один или несколько комментариев</string>
@@ -71,9 +193,9 @@ Language: ru
     <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti">Мы усердно работаем над добавлением поддержки для просмотра объектов %s. А пока вы можете предварительно просмотреть встроенное содержимое на странице.</string>
     <string name="gutenberg_native_unable_to_embed_media">Невозможно встроить медиасодержимое</string>
     <string name="gutenberg_native_try_another_search_term">Попробуйте другие условия поиска</string>
-    <string name="gutenberg_native_no_blocks_found">Блоков не найдено.</string>
+    <string name="gutenberg_native_no_blocks_found">Блоков не найдено</string>
     <string name="gutenberg_native_s_previews_not_yet_available">Просмотр объектов типа %s пока не доступен</string>
-    <string name="gutenberg_native_s_block_previews_are_coming_soon">Просмотр блоков объектов типа %s пока не доступен</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon">Просмотр блоков объектов типа %s пока не доступен</string>
     <string name="gutenberg_native_double_tap_to_preview_post">Нажмите дважды для предварительного просмотра записи.</string>
     <string name="gutenberg_native_double_tap_to_preview_page">Нажмите дважды для предварительного просмотра страницы.</string>
     <string name="quick_start_list_upload_icon_subtitle">Показывается посетителям на вкладках браузера и некоторых других местах онлайн.</string>
@@ -87,7 +209,6 @@ Language: ru
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Неверный URL, укажите корректный URL.</string>
     <string name="gutenberg_native_embed_caption_s">Подпись встроенного объекта. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Подпись встроенного объекта. Пустая</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">ДОБАВИТЬ ССЫЛКУ</string>
     <string name="activity_log_visit_our_documentation_page">посетите нашу страницу документации</string>
     <string name="activity_log_multisite_message">Резервные копии Jetpack для мультисайт установок предоставляют скачиваемые резервные копии, но не восстановление в одно нажатие. Для подробностей %1$s.</string>
     <string name="blogging_reminders_tip_message">Регулярное пополнение блога займёт ваших подписчиков и привлечет новых посетителей на сайт.</string>
@@ -119,9 +240,6 @@ Language: ru
     <string name="fab_add_category_desc">Создать рубрику</string>
     <string name="support_ticket_subject">Поддержка WordPress для Android</string>
     <string name="site_settings_categories_hint">Управлять рубриками сайта</string>
-    <string name="site_settings_categories_empty_title">Нет рубрик</string>
-    <string name="site_settings_categories_empty_subtitle">Добавьте сюда часто используемые рубрики, чтобы быстро выбирать их для записей</string>
-    <string name="site_settings_categories_empty_button">Создать рубрику</string>
     <string name="site_settings_categories_title">Рубрики</string>
     <string name="site_settings_blogging_reminders_title">Напоминания блоггинга</string>
     <string name="page_is_posts_page_warning">Содержимое страницы последних записей формируется автоматически, его нельзя изменить.</string>
@@ -133,13 +251,11 @@ Language: ru
     <string name="gutenberg_native_y_axis_position">Позиция по оси Y</string>
     <string name="gutenberg_native_x_axis_position">Позиция по оси X</string>
     <string name="gutenberg_native_type_a_url">Введите URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Нажмите для добавления содержимого</string>
     <string name="gutenberg_native_slash_inserter_results">Результат вставки по слешу</string>
     <string name="gutenberg_native_s_has_url_set">Для %s установлен URL</string>
     <string name="gutenberg_native_s_has_no_url_set">URL для %s не установлен</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s сконвертирован в обычные блоки</string>
     <string name="gutenberg_native_s_block">Блок %s</string>
-    <string name="gutenberg_native_minimum_height">Минимальная высота</string>
     <string name="gutenberg_native_media_options">Параметры медиафайлов</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Неверный URL. Аудиофайл не найден.</string>
     <string name="gutenberg_native_insert_crosspost">Вставить кросспост</string>
@@ -160,7 +276,6 @@ Language: ru
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозы.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Введите данные для доступа к серверу&lt;/a&gt;, чтобы исправить угрозу.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Нажмите дважды для добавления ссылки.</string>
-    <string name="gutenberg_native_edit_link">ИЗМЕНИТЬ ССЫЛКУ</string>
     <string name="login_empty_view_try_another_account">Использовать другую учётную запись</string>
     <string name="login_empty_view_see_instructions">См. инструкции</string>
     <string name="login_no_jetpack_sites_error_message">Если у вас уже есть сайт, вам необходимо установить бесплатный плагин Jetpack и подключить его к вашей учетной записи WordPress.com.</string>
@@ -169,21 +284,24 @@ Language: ru
     <string name="gutenberg_native_move_image_forward">Переместить изображение вперёд</string>
     <string name="gutenberg_native_move_image_backward">Переместить изображение назад</string>
     <string name="gutenberg_native_width_settings">Настройки ширины</string>
-    <string name="gutenberg_native_image_settings">Настройки изображения</string>
+    <string name="gutenberg_native_column_settings">Настройки столбцов</string>
     <string name="user_profile_untitled_site">(Без названия)</string>
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Сортировка и фильтрация</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
     <string name="gutenberg_native_preview_post">Предварительный просмотр записи</string>
     <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
-    <string name="gutenberg_native_post_meta_settings">Настройки метаданных записи</string>
-    <string name="gutenberg_native_post_content_settings">Настройки содержимого записи</string>
+    <string name="gutenberg_native_retry">Повторить</string>
+    <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
+    <string name="gutenberg_native_text_color">Цвет текста</string>
+    <string name="gutenberg_native_s_link">ссылка на %s</string>
+    <string name="gutenberg_native_padding">Отступ</string>
     <string name="gutenberg_native_featured">Избранное</string>
-    <string name="gutenberg_native_embed_link">Встроить ссылку</string>
-    <string name="gutenberg_native_display_post_date">Отображать дату публикации</string>
+    <string name="gutenberg_native_custom_url">Произвольный URL</string>
+    <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
+    <string name="gutenberg_native_column_d">Столбец %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Кратко опишите ссылку, чтобы помочь пользователям с программой чтения с экрана</string>
     <string name="gutenberg_native_add_blocks">Добавить блоки</string>
     <string name="login_no_jetpack_sites">Нет сайтов с Jetpack</string>
@@ -221,7 +339,7 @@ Language: ru
     <string name="get_likes_no_network_error">Сеть недоступна.</string>
     <string name="comments_empty_list_filtered_unreplied">Нет комментариев без ответа</string>
     <string name="comment_status_unreplied">Без ответов</string>
-    <string name="gutenberg_native_add_link">Добавить ссылку</string>
+    <string name="gutenberg_native_add_link">ДОБАВИТЬ ССЫЛКУ</string>
     <string name="gutenberg_native_search_settings">Настройки поиска</string>
     <string name="jetpack_brute_force_allowlist_title">Белый список IP</string>
     <string name="site_settings_denylist_title">Запрещённые комментарии</string>
@@ -425,7 +543,6 @@ Language: ru
     <string name="backup_download_generic_failure">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
     <string name="backup_download_details_action_button_content_description">Кнопка создания скачиваемой резервной копии</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s - выбранная точка создания резервной копии для скачивания.</string>
-    <string name="gutenberg_native_image_link_url">Ссылка изображения</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -523,8 +640,6 @@ Language: ru
     <string name="reader_follow_comments_could_not_unsubscribe_error">Невозможно отписаться от комментариев для этой записи</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Невозможно подписаться на комментарии для этой записи</string>
     <string name="reader_follow_comments_get_status_error">Ошибка получения статуса подписки для записи</string>
-    <string name="reader_follow_comments_unsubscribe_success">Вы отписались от комментариев</string>
-    <string name="reader_follow_comments_subscribe_success">Вы подписались на комментарии</string>
     <string name="reader_follow_comments_bad_format_response">Получен неверный ответ</string>
     <string name="reader_follow_comments_null_response">Ответ не получен</string>
     <string name="activity_log_activity_type_filter_clear">Очистить</string>
@@ -734,6 +849,7 @@ Language: ru
     <string name="pick_file">Добавить файл</string>
     <string name="gutenberg_native_replace_video">Заменить видео</string>
     <string name="gutenberg_native_replace_image_or_video">Заменить изображение или видео</string>
+    <string name="gutenberg_native_convert_to_link">Преобразовать в ссылку</string>
     <string name="gutenberg_native_choose_video">Выбор видео</string>
     <string name="gutenberg_native_choose_image_or_video">Выбор изображения или видео</string>
     <string name="gutenberg_native_choose_image">Выбор изображения</string>
@@ -764,6 +880,7 @@ Language: ru
     <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt; для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="gutenberg_native_s_block_options">настройки блока %s</string>
+    <string name="gutenberg_native_remove_block">Удалить блок</string>
     <string name="gutenberg_native_duplicate_block">Дублировать блок</string>
     <string name="gutenberg_native_copy_block">Копировать блок</string>
     <string name="gutenberg_native_copied_block">Скопированный блок</string>
@@ -1257,9 +1374,6 @@ Language: ru
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Регистрация доменного имени…</string>
     <string name="domain_registration_state_picker_dialog_title">Выберите округ/область</string>
     <string name="domain_registration_country_picker_dialog_title">Выберите страну</string>
-    <string name="domain_registration_result_continue_button">продолжить</string>
-    <string name="domain_registration_result_description">Ваш новый домен &lt;b&gt;%s&lt;/b&gt; настраивается\n   Ваш сайт замер в нетерпении!</string>
-    <string name="domain_registration_result_title">Поздравляем!</string>
     <string name="domain_contact_information_register_domain_button">Зарегистрировать домен</string>
     <string name="domain_contact_information_postal_code_hint">Почтовый индекс</string>
     <string name="domain_contact_information_state_hint">Округ/Область</string>
@@ -1277,7 +1391,6 @@ Language: ru
     <string name="domain_registration_privacy_protection_description">Владельцы доменов должны делиться контактной информацией для публичной базы данных по всем доменам. С защитой персональных данных мы публикуем нашу информацию вместо вашей и перенаправляем вам все сообщения приватным образом.</string>
     <string name="domain_registration_privacy_protection_title">Защита персональных данных</string>
     <string name="domain_registration_contact_form_input_error">Введите правильный %s</string>
-    <string name="domains_suggestions_choose_domain">Выберите домен</string>
     <string name="stats_management_new">Новый</string>
     <string name="stats_management_dismiss_insights_news_card">Закрыть</string>
     <string name="stats_management_try_it_now">Попробуйте прямо сейчас!</string>
@@ -1382,7 +1495,6 @@ Language: ru
     <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Нажмите %1$s Значок вашего сайта %2$s для загрузки нового</string>
     <string name="quick_start_dialog_publish_post_message">Создайте черновик и опубликуйте свою первую запись.</string>
-    <string name="quick_start_dialog_need_help_message">Мы проведем вас по основам создания и роста вашего сайта.</string>
     <string name="quick_start_dialog_explore_plans_title">Посмотреть тарифы</string>
     <string name="quick_start_dialog_explore_plans_message">Узнайте больше о маркетинге и SEO инструментах на наших платных тарифах.</string>
     <string name="quick_start_dialog_enable_sharing_title">Включить возможность делиться записями</string>
@@ -1565,9 +1677,6 @@ Language: ru
     <string name="quick_start_dialog_share_site_message">Подключите ваши учетные записи в соцсетях и ваш сайт автоматически будет делиться новыми записями.</string>
     <string name="quick_start_dialog_publish_post_title">Опубликовать запись</string>
     <string name="quick_start_dialog_publish_post_message_short">Нажмите %1$s Создать запись %2$s для создания новой записи</string>
-    <string name="quick_start_dialog_need_help_title">Нужна помощь с тем, как начать?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Принять</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Никогда</string>
     <string name="quick_start_dialog_need_help_button_negative">Нет, спасибо</string>
     <string name="quick_start_dialog_follow_sites_title">Подписка на другие сайты</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Нажмите %1$s Поиск %2$s, чтобы найти сайты с похожими интересами</string>
@@ -1762,10 +1871,7 @@ Language: ru
     <string name="signup_with_google_progress">Регистрация через Google…</string>
     <string name="jetpack_connection_failed_with_reason">Подключение к Jetpack не удалось: %s</string>
     <string name="jetpack_already_connected_toast">Вы уже подключили Jetpack</string>
-    <string name="menu_undo_snackbar_action">ОТМЕНИТЬ</string>
-    <string name="menu_visual_mode_done_snackbar">Переход в визуальный режим.</string>
     <string name="menu_visual_mode">Визуальный режим</string>
-    <string name="menu_html_mode_done_snackbar">Переход в режим HTML</string>
     <string name="menu_html_mode">Режим HTML</string>
     <string name="menu_preview">Предпросмотр</string>
     <string name="menu_save_as_draft">Сохранить как черновик</string>
@@ -1914,7 +2020,7 @@ Language: ru
     <string name="plugin_byline">от автора %s</string>
     <string name="change_photo">Изменить фото</string>
     <string name="plugin_fetch_error">Невозможно загрузить  плагины</string>
-    <string name="my_site_btn_site_pages">Страницы сайта</string>
+    <string name="my_site_btn_site_pages">Страницы</string>
     <string name="site_settings_tags_hint">Управлять метками сайта</string>
     <string name="dlg_saving_tag">Сохранение</string>
     <string name="dlg_deleting_tag">Удаление</string>
@@ -2675,7 +2781,7 @@ Language: ru
     <string name="my_site_btn_view_admin">Перейти в консоль сайта</string>
     <string name="my_site_btn_switch_site">Сменить сайт</string>
     <string name="my_site_btn_site_settings">Настройки сайта</string>
-    <string name="my_site_btn_blog_posts">Записи в блоге</string>
+    <string name="my_site_btn_blog_posts">Записи</string>
     <string name="my_site_header_publish">Публикация</string>
     <string name="my_site_header_look_and_feel">Внешний вид</string>
     <string name="my_site_header_configuration">Конфигурация</string>
@@ -2694,7 +2800,6 @@ Language: ru
     <string name="stats_search_terms_unknown_search_terms">Неизвестные поисковые запросы</string>
     <string name="stats_view_search_terms">Поисковые запросы</string>
     <string name="stats_view_authors">Авторы</string>
-    <string name="comments_fetching">Загрузка комментариев…</string>
     <string name="pages_fetching">Загрузка страниц…</string>
     <string name="posts_fetching">Загрузка записей…</string>
     <string name="media_fetching">Загрузка медиафайлов…</string>
@@ -2736,11 +2841,11 @@ Language: ru
     <string name="error_publish_empty_post">Нельзя опубликовать пустую запись.</string>
     <string name="error_refresh_unauthorized_posts">У вас нет прав на просмотр или редактирование записей.</string>
     <string name="error_refresh_unauthorized_pages">У вас нет прав на просмотр или редактирование страниц.</string>
-    <string name="error_refresh_unauthorized_comments">У вас нет прав на просмотр или редактирование комментариев.</string>
     <string name="more">Больше</string>
     <string name="older_month">Больше месяца назад</string>
     <string name="older_last_week">Больше недели</string>
     <string name="older_two_days">Больше двух дней назад</string>
+    <string name="help_and_support">Помощь и техническая поддержка</string>
     <string name="mnu_comment_liked">Понравилось</string>
     <string name="comment">Комментировать</string>
     <string name="comment_trashed">Комментарий перемещен в корзину</string>
@@ -2815,10 +2920,6 @@ Language: ru
     <string name="saving_changes">Сохранить изменения</string>
     <string name="trash">Удалённые</string>
     <string name="dlg_confirm_trash_comments">Удалить?</string>
-    <string name="dlg_trashing_comments">Удалить</string>
-    <string name="dlg_spamming_comments">Отметить как спам</string>
-    <string name="dlg_unapproving_comments">Не одобрить</string>
-    <string name="dlg_approving_comments">Одобрить</string>
     <string name="mnu_comment_trash">Удалить</string>
     <string name="mnu_comment_spam">Спам</string>
     <string name="mnu_comment_unapprove">Не одобрить</string>
@@ -2848,7 +2949,6 @@ Language: ru
     <string name="reader_empty_posts_in_tag_updating">Ищем записи…</string>
     <string name="reader_likes_you_and_multi">Вам и %,d другим понравилось это.</string>
     <string name="reader_likes_multi">Понравилось %,d людям</string>
-    <string name="reader_label_reply">Ответ</string>
     <string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
     <string name="comment_spammed">Комментарий помечен как спам.</string>
     <string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>
@@ -2870,7 +2970,7 @@ Language: ru
     <string name="reader_btn_unfollow">Отписаться</string>
     <string name="reader_btn_follow">Подписаться</string>
     <string name="reader_btn_share">Поделиться</string>
-    <string name="reader_view_reblog">Реблог</string>
+    <string name="reader_view_reblog">Перепубликация</string>
     <string name="reader_untitled_post">(Без названия)</string>
     <string name="comments_empty_list">Комментариев ещё нет</string>
     <string name="empty_list_default">Этот список пуст</string>
@@ -2932,7 +3032,6 @@ Language: ru
     <string name="title">Заголовок</string>
     <string name="tags_separate_with_commas">Метки (разделяйте запятыми)</string>
     <string name="categories">Рубрики</string>
-    <string name="dlg_deleting_comments">Удаление комментариев</string>
     <string name="sdcard_title">Требуется SD-карта</string>
     <string name="media">Медиа</string>
     <string name="approve">Одобрить</string>

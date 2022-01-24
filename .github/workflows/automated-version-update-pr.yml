@@ -1,0 +1,72 @@
+on:
+  workflow_dispatch:
+    inputs:
+      gutenbergMobileVersion:
+        required: true
+      title:
+        required: false
+      prURL:
+        required: false
+      body:
+        required: false
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    env:
+      GUTENBERG_MOBILE_VERSION: ${{ github.event.inputs.gutenbergMobileVersion }}
+      PR_TITLE: ${{ github.event.inputs.title || format('Automated gutenberg-mobile version update for {0} !', github.event.inputs.gutenbergMobileVersion ) }}
+      PR_BODY: ${{ github.event.inputs.body || format('This PR incorporates changes from {0}.', github.event.inputs.prURL ) }}
+      GUTENBERG_MOBILE_PR_URL: ${{ github.event.inputs.prURL }}
+    steps:
+      - name: Create PR Description
+        run: |
+          PR_DESCRIPTION=$(cat << EOF
+          ## Description
+          
+          $PR_BODY
+
+          Related Gutenberg Mobile Pr: $GUTENBERG_MOBILE_PR_URL
+
+          EOF
+          )
+          PR_DESCRIPTION="${PR_DESCRIPTION//'%'/'%25'}"
+          PR_DESCRIPTION="${PR_DESCRIPTION//$'\n'/'%0A'}"
+          PR_DESCRIPTION="${PR_DESCRIPTION//$'\r'/'%0D'}"
+          echo "::set-output name=description::$PR_DESCRIPTION"
+        id: pr_description
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Update Gutenberg Mobile Version
+        run: |
+          sed -i "s/gutenbergMobileVersion = '.*'/gutenbergMobileVersion = '$GUTENBERG_MOBILE_VERSION'/g" build.gradle
+      - name: Compute vars
+        id: vars
+        run: |
+          # Check if the version contains a "-" character
+          if [[ $GUTENBERG_MOBILE_VERSION == *"-"* ]]; then
+            # Get the substring up to "-" which should be either "trunk" or the PR number
+            VERSION_PREFIX=$(echo $GUTENBERG_MOBILE_VERSION | cut -d'-' -f1)
+
+            if [[ "$VERSION_PREFIX" == "trunk" ]]; then
+              echo ::set-output name=branch_name::update-gb-mobile-version/for-trunk-update
+            else
+              echo ::set-output name=branch_name::update-gb-mobile-version/for-pr-$VERSION_PREFIX
+            fi
+          else
+            # If the version doesn't contain a "-", it should be a tag
+            echo ::set-output name=branch_name::update-gb-mobile-version/for-tag-$GUTENBERG_MOBILE_VERSION
+          fi
+          echo ::set-output name=title::"$PR_TITLE"
+          echo ::set-output name=commit_message::"Update gutenbergMobileVersion to $GUTENBERG_MOBILE_VERSION"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: ${{ steps.vars.outputs.commit_message }}
+          title: ${{ steps.vars.outputs.title }}
+          branch: ${{ steps.vars.outputs.branch_name }}
+          labels: gutenberg-mobile
+          body: ${{ steps.pr_description.outputs.description }}
+          delete-branch: true

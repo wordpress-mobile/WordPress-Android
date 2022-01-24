@@ -1,11 +1,13 @@
 buildscript {
-    ext.aztecVersion = 'v1.3.45'
+    ext.aztecVersion = 'v1.5.3'
 }
 
 repositories {
     maven {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
+            includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
         }
     }
@@ -22,9 +24,8 @@ repositories {
         }
     }
     google()
-    jcenter()
+    mavenCentral()
     maven { url "https://www.jitpack.io" }
-    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
 
@@ -68,13 +69,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'org.wordpress:utils:1.25'
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
+    api ("$gradle.ext.aztecAndroidAztecPath:$aztecVersion") {
         exclude group: "com.android.volley"
     }
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
-    api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion")
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion")
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
@@ -86,6 +87,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.6.2'
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 }
 

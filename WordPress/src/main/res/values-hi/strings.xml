@@ -160,7 +160,6 @@ Language: hi_IN
     <string name="my_site_btn_view_site">साईट पर जाये</string>
     <string name="my_site_btn_switch_site">साइट स्विच करे</string>
     <string name="my_site_header_publish">प्रकाशित</string>
-    <string name="my_site_btn_blog_posts">ब्लॉग पोस्ट्स</string>
     <string name="show">दिखाएँ</string>
     <string name="hide">छुपाएँ</string>
     <string name="select_all">सभी चुनें</string>
@@ -227,7 +226,6 @@ Language: hi_IN
     <string name="image_settings">छवि सेटिंग्स</string>
     <string name="learn_more">और जानें</string>
     <string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
-    <string name="dlg_spamming_comments">स्पैम के रूप में चिन्हित</string>
     <string name="new_media">नया मीडिया</string>
     <string name="new_post">नया पोस्ट</string>
     <string name="open_source_licenses">मुक्त स्रोत लाइसेंस</string>
@@ -243,17 +241,14 @@ Language: hi_IN
     <string name="trash">कचरा पेटी</string>
     <string name="comment_status_trash">कचरा पेटी में डाला गया</string>
     <string name="mnu_comment_unapprove">अस्वीकृत</string>
-    <string name="dlg_unapproving_comments">अस्वीकृत किया जा रहा</string>
     <string name="mnu_comment_approve">स्वीकृत करे</string>
     <string name="comment_status_approved">स्वीकृत किया गया</string>
-    <string name="dlg_approving_comments">स्वीकृत किया जा रहा</string>
     <string name="connection_error">कनेक्शन त्रुटि</string>
     <string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
     <string name="select_categories">श्रेणियों को चुने</string>
     <string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
     <string name="toast_comment_unedited">टिप्पणी नहीं बदला है</string>
     <string name="dlg_confirm_trash_comments">कचरा पेटी में भेजें?</string>
-    <string name="dlg_trashing_comments">कचरा पेटी में भेजा जा रहा</string>
     <string name="sure_to_cancel_edit_comment">इस टिप्पणी का संपादन रद्द करें?</string>
     <string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
     <string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
@@ -268,7 +263,6 @@ Language: hi_IN
     <string name="remove_account">ब्लॉग हटाये</string>
     <string name="share_link">कड़ी साझा करे</string>
     <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
-    <string name="reader_label_reply">जवाब दें</string>
     <string name="reader_likes_multi">%,d लोगों ने पसंद किया</string>
     <string name="reader_likes_you_and_multi">आपने और %,d लोगो ने इसे पसंद किया है</string>
     <string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>
@@ -345,7 +339,6 @@ Language: hi_IN
     <string name="categories">श्रेणिया</string>
     <string name="title">शीर्षक</string>
     <string name="tags_separate_with_commas">टैग को अल्पविराम से अलग करे \n</string>
-    <string name="dlg_deleting_comments">टिप्पणियों को हटाना</string>
     <string name="sdcard_title">एसडी कार्ड आवश्यक है</string>
     <string name="media">मीडिया</string>
     <string name="delete">हटाये</string>

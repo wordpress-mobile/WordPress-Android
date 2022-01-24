@@ -13,10 +13,13 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel;
 import org.wordpress.android.ui.debug.DebugSettingsViewModel;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesViewModel;
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel;
+import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.engagement.UserProfileViewModel;
@@ -50,6 +53,7 @@ import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
@@ -81,8 +85,6 @@ import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
-import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
-import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -570,6 +572,16 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(UnifiedCommentsEditViewModel.class)
+    abstract ViewModel unifiedCommentsEditViewModel(UnifiedCommentsEditViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(DebugCookiesViewModel.class)
     abstract ViewModel debugCookiesViewModel(DebugCookiesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ConversationNotificationsViewModel.class)
+    abstract ViewModel conversationNotificationsViewModel(ConversationNotificationsViewModel viewModel);
 }

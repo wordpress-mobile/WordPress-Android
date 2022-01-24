@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         google()
-        jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
@@ -17,8 +16,11 @@ repositories {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
             includeGroup "org.wordpress"
+            includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.stories"
         }
     }
     maven {
@@ -45,7 +47,6 @@ repositories {
         }
     }
     google()
-    jcenter()
     mavenCentral()
     maven { url "https://www.jitpack.io" }
 }
@@ -100,15 +101,19 @@ android {
         buildConfigField "boolean", "IS_JETPACK_APP", "false"
         buildConfigField "String", "TRACKS_EVENT_PREFIX", '"wpandroid_"'
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
-        buildConfigField "boolean", "UNIFIED_COMMENTS_LIST", "false"
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "BLOGGING_REMINDERS", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
         buildConfigField "boolean", "GLOBAL_STYLE_SUPPORT", "true"
-        buildConfigField "boolean", "ONBOARDING_IMPROVEMENTS", "false"
         buildConfigField "boolean", "QUICK_START_DYNAMIC_CARDS", "false"
         buildConfigField "boolean", "SITE_DOMAINS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
+        buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
+        buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
+        buildConfigField "boolean", "MY_SITE_DASHBOARD_STATS_CARD", "false"
+        buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
+        buildConfigField "boolean", "UNIFIED_ABOUT", "false"
+        buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -272,9 +277,10 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation project(path: ':mp4compose')
-    implementation project(path:':libs:stories-android:stories')
-    testImplementation project(path:':photoeditor')
+    implementation "$gradle.ext.aboutAutomatticBinaryPath:$aboutAutomatticVersion"
+    implementation "$gradle.ext.storiesAndroidPath:$storiesVersion"
+    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
+    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
@@ -325,7 +331,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
     implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
@@ -442,7 +448,7 @@ dependencies {
 
     implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 
     // Firebase
     implementation 'com.google.firebase:firebase-config:19.1.3'

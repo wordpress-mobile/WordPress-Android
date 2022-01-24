@@ -13,12 +13,12 @@ class DebugCookiesViewModel @Inject constructor(
     private val _uiState = MutableLiveData(UiState(getUpdatedItems()))
     val uiState: LiveData<UiState> = _uiState
 
-    fun setCookie(domain: String?, name: String?, value: String?) {
-        if (!domain.isNullOrBlank() && !name.isNullOrBlank()) {
-            debugCookieManager.add(DebugCookie(domain, name, value))
+    fun setCookie(host: String?, name: String?, value: String?) {
+        if (!host.isNullOrBlank() && !name.isNullOrBlank()) {
+            debugCookieManager.add(DebugCookie(host, name, value))
             _uiState.value = UiState(
                     items = getUpdatedItems(),
-                    domainInputText = domain,
+                    hostInputText = host,
                     nameInputText = name,
                     valueInputText = value
             )
@@ -27,7 +27,7 @@ class DebugCookiesViewModel @Inject constructor(
 
     private fun onItemClick(debugCookie: DebugCookie) {
         _uiState.value = _uiState.value?.copy(
-                domainInputText = debugCookie.domain,
+                hostInputText = debugCookie.host,
                 nameInputText = debugCookie.name,
                 valueInputText = debugCookie.value
         )
@@ -43,7 +43,7 @@ class DebugCookiesViewModel @Inject constructor(
     private fun getUpdatedItems() = debugCookieManager.getAll().sortedBy { it.key }.map {
         DebugCookieItem(
                 it.key,
-                it.domain,
+                it.host,
                 it.name,
                 it.value,
                 ListItemInteraction.create(it, ::onItemClick),
@@ -53,7 +53,7 @@ class DebugCookiesViewModel @Inject constructor(
 
     data class UiState(
         val items: List<DebugCookieItem>,
-        val domainInputText: String? = null,
+        val hostInputText: String? = null,
         val nameInputText: String? = null,
         val valueInputText: String? = null
     )

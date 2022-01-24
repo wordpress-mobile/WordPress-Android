@@ -62,7 +62,6 @@ Language: bg
     <string name="quick_start_focus_point_description">докоснете тук</string>
     <string name="quick_start_list_create_site_title">Създайте своя сайт</string>
     <string name="quick_start_dialog_share_site_title">Споделете сайта си</string>
-    <string name="quick_start_dialog_need_help_title">Искате ли малко помощ, за да започнете?</string>
     <string name="login_error_suffix">\nЗащо не пробвате с друг профил?</string>
     <string name="login_error_generic">Възникна проблем при опит за връзка с Google профила.</string>
     <string name="login_error_button">Затваряне</string>
@@ -611,7 +610,6 @@ Language: bg
     <string name="my_site_btn_switch_site">Превключване на сайта</string>
     <string name="my_site_header_look_and_feel">Изглед</string>
     <string name="my_site_header_publish">Публикуване</string>
-    <string name="my_site_btn_blog_posts">Публикации</string>
     <string name="my_site_header_configuration">Настройки</string>
     <string name="reader_label_new_posts_subtitle">Натиснете за да ги прегледате</string>
     <string name="hide">Скриване</string>
@@ -626,7 +624,6 @@ Language: bg
     <string name="publisher">Издател:</string>
     <string name="media_fetching">Извличане на файлове…</string>
     <string name="pages_fetching">Извличане на страници…</string>
-    <string name="comments_fetching">Извличане на коментари…</string>
     <string name="reader_empty_posts_request_failed">Възникна грешка при извличане на публикациите</string>
     <string name="posts_fetching">Извличане на публикации…</string>
     <string name="stats_search_terms_unknown_search_terms">Непознати термини за търсене</string>
@@ -668,7 +665,6 @@ Language: bg
     <string name="reader_label_comments_closed">Коментарите са изключени</string>
     <string name="reader_title_photo_viewer">%1$d от %2$d</string>
     <string name="comment">Коментар</string>
-    <string name="error_refresh_unauthorized_comments">Нямате нужните права за преглеждане или редактиране на коментари</string>
     <string name="mnu_comment_liked">Харесано</string>
     <string name="error_refresh_unauthorized_pages">Нямате нужните права за да преглеждате или редактирате страници</string>
     <string name="browse_our_faq_button">Преглед на секцията за ЧЗВ</string>
@@ -712,14 +708,12 @@ Language: bg
     <string name="comment_status_trash">Изхвърлено</string>
     <string name="mnu_comment_trash">Боклук</string>
     <string name="mnu_comment_spam">Спам</string>
-    <string name="dlg_trashing_comments">Изпрати в боклук</string>
     <string name="select_categories">Избери категории</string>
     <string name="comment_status_approved">Одобрено</string>
     <string name="saving_changes">Промените се запазват</string>
     <string name="new_post">Нова публикация</string>
     <string name="category_name">Име на категорията</string>
     <string name="image_settings">Настройки на изображението</string>
-    <string name="dlg_approving_comments">Одобряване</string>
     <string name="connection_error">Грешка при свързване</string>
     <string name="error_blog_hidden">Този блог е скрит и не може да бъде зареден. Пуснете го отново от настройките и опитайте отново.</string>
     <string name="post_settings">Настройки на публикацията</string>
@@ -742,8 +736,6 @@ Language: bg
     <string name="edit_comment">Редактиране на коментар</string>
     <string name="mnu_comment_approve">Одобряване</string>
     <string name="mnu_comment_unapprove">Неодобряване</string>
-    <string name="dlg_unapproving_comments">Неодобряване</string>
-    <string name="dlg_spamming_comments">Отбелязване като спам</string>
     <string name="dlg_confirm_trash_comments">Изпращане в кошчето</string>
     <string name="remove_account">Премахване на сайта</string>
     <string name="content_required">Коментарът е задължителен</string>
@@ -761,7 +753,6 @@ Language: bg
     <string name="reader_empty_posts_in_tag_updating">Извличане на публикации…</string>
     <string name="reader_likes_you_and_multi">Вие и %,d още харесахте това</string>
     <string name="reader_likes_multi">%,d човека харесаха това</string>
-    <string name="reader_label_reply">Отговор</string>
     <string name="comment_spammed">Коментарът е отбелязан като спам</string>
     <string name="cant_share_no_visible_blog">Не можете да споделяте към WordPress без видим блог</string>
     <string name="reader_likes_you_and_one">Вие и още някой харесвате това.</string>
@@ -839,7 +830,6 @@ Language: bg
     <string name="title">Заглавие</string>
     <string name="categories">Категории</string>
     <string name="tags_separate_with_commas">Етикети (разделени със запетаи)</string>
-    <string name="dlg_deleting_comments">Изтриване на коментарите</string>
     <string name="sdcard_title">Необходима е SD карта</string>
     <string name="media">Медия</string>
     <string name="approve">Одобрен</string>

@@ -7,6 +7,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -59,9 +61,26 @@ class SiteInfoCardBuilderTest {
     private fun buildSiteInfoCard(
         showUpdateSiteTitleFocusPoint: Boolean = false,
         showUploadSiteIconFocusPoint: Boolean = false
-    ) = siteInfoCardBuilder.buildSiteInfoCard(site,
-            showUploadSiteIconFocusPoint, {}, {}, {}, {},
-            showUpdateSiteTitleFocusPoint = showUpdateSiteTitleFocusPoint,
-            showUploadSiteIconFocusPoint = showUploadSiteIconFocusPoint
+    ) = siteInfoCardBuilder.buildSiteInfoCard(
+            SiteInfoCardBuilderParams(
+                    site = site,
+                    showSiteIconProgressBar = showUploadSiteIconFocusPoint,
+                    titleClick = {},
+                    iconClick = {},
+                    urlClick = {},
+                    switchSiteClick = {},
+                    setActiveTask(showUpdateSiteTitleFocusPoint, showUploadSiteIconFocusPoint)
+            )
     )
+
+    private fun setActiveTask(
+        showUpdateSiteTitleFocusPoint: Boolean,
+        showUploadSiteIconFocusPoint: Boolean
+    ): QuickStartTask? {
+        return when {
+            showUpdateSiteTitleFocusPoint -> QuickStartTask.UPDATE_SITE_TITLE
+            showUploadSiteIconFocusPoint -> QuickStartTask.UPLOAD_SITE_ICON
+            else -> null
+        }
+    }
 }

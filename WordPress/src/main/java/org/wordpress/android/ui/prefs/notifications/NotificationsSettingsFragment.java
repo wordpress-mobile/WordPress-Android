@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +25,10 @@ import android.widget.ListView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.ViewCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -56,10 +59,15 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel.ClickHandler;
+import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsDialogPreference.BloggingRemindersProvider;
+import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
@@ -68,12 +76,15 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -119,6 +130,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject UiHelpers mUiHelpers;
+
+    private BloggingRemindersViewModel mBloggingRemindersViewModel;
+    private final Map<Long, UiString> mBloggingRemindersSummariesBySiteId = new HashMap<>();
+
+    private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "blogging-reminders-dialog-tag";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,6 +203,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (lv != null) {
             ViewCompat.setNestedScrollingEnabled(lv, true);
         }
+        initBloggingReminders();
     }
 
 
@@ -738,7 +758,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         if (!TextUtils.isEmpty(deviceID)) {
             NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                     context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings,
-                    mOnSettingsChangedListener
+                    mOnSettingsChangedListener, mBloggingRemindersProvider
             );
             setPreferenceIcon(devicePreference, R.drawable.ic_phone_white_24dp);
             devicePreference.setTitle(R.string.app_notifications);
@@ -892,6 +912,51 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     ToastUtils.showToast(context, R.string.notification_sound_has_invalid_path, Duration.LONG);
                 }
             }
+        }
+    }
+
+    @Nullable
+    private AppCompatActivity getAppCompatActivity() {
+        final Activity activity = getActivity();
+        if (activity instanceof AppCompatActivity) {
+            return (AppCompatActivity) activity;
+        }
+        return null;
+    }
+
+    private final BloggingRemindersProvider mBloggingRemindersProvider = new BloggingRemindersProvider() {
+        @Override public boolean isEnabled() {
+            return mBloggingRemindersFeatureConfig.isEnabled();
+        }
+
+        @Override public String getSummary(long blogId) {
+            UiString uiString = mBloggingRemindersSummariesBySiteId.get(blogId);
+            return uiString != null ? mUiHelpers.getTextOfUiString(getContext(), uiString).toString() : null;
+        }
+
+        @Override public void onClick(long blogId) {
+            mBloggingRemindersViewModel.onNotificationSettingsItemClicked(blogId);
+        }
+    };
+
+    private void initBloggingReminders() {
+        if (!isAdded()) {
+            return;
+        }
+
+        final AppCompatActivity appCompatActivity = getAppCompatActivity();
+        if (appCompatActivity != null) {
+            mBloggingRemindersViewModel = new ViewModelProvider(appCompatActivity, mViewModelFactory)
+                    .get(BloggingRemindersViewModel.class);
+            BloggingReminderUtils.observeBottomSheet(
+                    mBloggingRemindersViewModel.isBottomSheetShowing(),
+                    appCompatActivity,
+                    BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
+                    appCompatActivity::getSupportFragmentManager
+            );
+
+            mBloggingRemindersViewModel.getNotificationsSettingsUiState()
+                                       .observe(appCompatActivity, mBloggingRemindersSummariesBySiteId::putAll);
         }
     }
 }

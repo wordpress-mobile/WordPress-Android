@@ -1,108 +1,152 @@
 <ar>
-18.1:
--موجز أسبوعي: ملخص للنشاط (المشاهدات والإعجابات والتعليقات) على مواقعك الأكثر استخدامًا يتم إرساله إليك كل يوم اثنين.
--زر تبديل موجود في مكوِّن التضمين لتغيير حجم المحتوى المُضمَّن والإعجاب بمقاطع والفيديو وغيره من الوسائط على الأجهزة الأصغر.
-- ميزة تحديد الوقت التي تتيح لك اختيار وقت معين لتلقي تذكير التدوين.
+19.0:
+- قم بإدارة لوحة التحكم الخاصة بك باستخدام موجز يستند إلى بطاقة، بما في ذلك المقالات.
+- ارفع مقاطع فيديو تصل إلى 5 دقائق في الخطط المجانية.
+- اطلع على مزيد من نص واجهة المستخدم بلغتك، بما في ذلك مكوِّنات Jetpack/شبكة التخطيط.
+- احتفظ بتنسيق النص بعد الضغط على زر الرجوع.
+- تمت محاذاة عناوين المكوِّن الآن إلى الوسط في قائمة أداة الإدراج.
 </ar>
 <de-DE>
-18.1:
-- Eine wöchentliche Zusammenfassung: eine Übersicht der Aktivitäten (Aufrufe, Likes, Kommentare) auf deinen meist-genutzten Websites, die dir jeden Montag geschickt wird. 
-- Eine Umschaltfunktion im Embed-Block zum Ändern der Inhalte wie Videos und anderen Medien auf kleineren Geräten.
-- Ein Zeitauswahlfunktion, mit der du ein bestimmtes Datum und ein Uhrzeit für eine Erinnerung zum Bloggen auswählen kannst.
+19.0:
+– Verwalte dein Dashboard mit einem kartenbasierten Feed, einschließlich Beiträgen.
+– Lade bei Kostenlos-Tarifen Videos mit einer Länge von bis zu fünf Minuten hoch.
+– Zeige mehr Benutzeroberflächentext in deiner Sprache an, einschließlich Jetpack-/Layoutraster-Blöcken.
+– Behalte die Textformatierung nach Drücken auf die Rücktaste bei.
+– Blocktitel werden im Inserter-Menü nun zentriert ausgerichtet.
 </de-DE>
 <en-US>
-18.1:
--A Weekly Roundup: a summary of activity (views, likes, comments) on your most-used sites, sent to you each Monday.
--A toggle option in the Embed block to resize embedded content, like videos and other media, on smaller devices.
--A time selection feature that lets you choose a specific time to receive a Blogging Reminder.
+19.0:
+- Manage your dashboard with a card-based feed, including Posts.
+- Upload up to 5-minute videos on free plans.
+- See more user interface text in your language, including Jetpack/Layout Grid blocks.
+- Keep text formatting after hitting backspace.
+- Block titles are now center-aligned in the inserter menu.
 </en-US>
 <es-ES>
-18.1:
--Un resumen semanal: un resumen de la actividad (vistas, me gusta, comentarios) en tus sitios más usados, que se te envía cada lunes.
--Una opción en el bloque de incrustación para cambiar el tamaño del contenido incrustado, como vídeos y otros medios, en dispositivos más pequeños.
--Una característica de selección de hora que te permite elegir una hora específica para recibir un recordatorio de blogueo.
+19.0:
+- Gestionar tu escritorio con un feed basado en tarjetas, incluyendo entradas.
+- Subir vídeos de hasta 5 minutos en los planes gratuitos.
+- Ver más texto en tu idioma en la interfaz de usuario, incluyendo los bloques de Jetpack/Diseño en cuadrícula.
+- Mantener el formato del texto después de pulsar la tecla de retroceso.
+- Ahora, los títulos de los bloques están alineados al centro en el menú del insertador.
 </es-ES>
 <fr-CA>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+19.0:
+- Gérez votre tableau de bord avec un flux lié à une carte, y compris les articles.
+- Chargez des vidéos de max. 5 minutes avec les plans gratuits.
+- Accédez à plus de texte d’interface utilisateur dans votre langue, dont Jetpack/blocs de grille de mise en page.
+- Conservez le formatage de texte après avoir appuyé sur la touche Retour arrière.
+- Les titres de blocs sont désormais alignés au centre dans le menu d’insertion.
 </fr-CA>
 <fr-FR>
-18.1 :
-- Un résumé hebdomadaire : un récapitulatif des activités (vues, mentions J’aime, commentaires) sur vos sites les plus utilisés vous est envoyé tous les lundis.
-- Une option de bascule dans le bloc de contenu embarqué pour redimensionner le contenu embarqué, comme les vidéos et autres médias, pour les petits appareils.
-- Une fonctionnalité de sélection de l’heure qui vous permet de choisir une heure précise pour recevoir un rappel de blog.
+19.0:
+- Gérez votre tableau de bord avec un flux lié à une carte, y compris les articles.
+- Chargez des vidéos de max. 5 minutes avec les plans gratuits.
+- Accédez à plus de texte d’interface utilisateur dans votre langue, dont Jetpack/blocs de grille de mise en page.
+- Conservez le formatage de texte après avoir appuyé sur la touche Retour arrière.
+- Les titres de blocs sont désormais alignés au centre dans le menu d’insertion.
 </fr-FR>
 <iw-IL>
-18.1:
-- סיכום שבועי: סיכום של כל הפעילות (צפיות, לייקים, תגובות) באתרים המובילים שלך אשר נשלח בכל יום שני.
-- אפשרות לשינוי בבלוק ההטמעה כדי לשנות את גודלו של התוכן המוטמע, כגון סרטונים ופריטי מדיה אחרים, במכשירים קטנים יותר.
-- אפשרות לבחירת מועד שמאפשרת לך לבחור מועד ספציפי שבו יישלחו אליך תזכורות לכתיבה בבלוג.
+19.0:
+- לנהל את לוח הבקרה שלך באמצעות פיד שמציג כרטיסים, כולל פוסטים.
+- להעלות סרטונים בני עד חמש דקות בתוכניות החינמיות.
+- להציג עוד טקסט בממשק המשתמש בשפה שלך, כולל בלוקים של Jetpack / רשת פריסות.
+- לשמור על עיצוב עקבי לטקסט לאחר הקשה על מקש המחיקה.
+- כותרות הבלוקים כעת מיושרות למרכז בתפריט של מוסיף הבלוקים.
 </iw-IL>
 <id>
-18.1:
-- Ringkasan Mingguan: ringkasan aktivitas (tontonan, suka, komentar) di situs Anda yang paling sering digunakan, dikirimkan kepada Anda setiap Senin.
-- Pilihan toggle di blok Sematan untuk mengubah ukuran konten yang disematkan, seperti video dan media lain, pada perangkat yang lebih kecil.
-- Fitur pemilihan waktu yang mengizinkan Anda memilih waktu tertentu untuk menerima Pengingat Blogging.
+19.0:
+- Kelola dasbor Anda dengan feed berbasis kartu, termasuk Pos.
+- Unggah video berdurasi maksimal 5 menit pada paket gratis.
+- Lihat lebih banyak teks antarmuka dalam bahasa Anda, termasuk blok Jetpack/Petak Tata Letak.
+- Pertahankan pemformatan teks setelah menekan backspace.
+- Sekarang judul blok pada menu penyisip rata tengah.
 </id>
 <it-IT>
-18.1:
--Un resoconto settimanale: un riepilogo dell'attività (visualizzazioni, Mi piace, commenti) sui tuoi siti più usati, inviato a te ogni lunedì. 
--Un'opzione di attivazione per il blocco Incorporamenti per ridimensionare i contenuti incorporati, come video e altri file multimediali, su dispositivi più piccoli.
--Una funzionalità di selezione dell'orario che ti permette di scegliere un orario specifico per ricevere un Promemoria relativo al blog.
+19.0:
+- Gestisci la bacheca con un feed basato su scheda, incluso Articoli.
+- Carica fino a 5 minuti di video con piani gratuiti.
+- Visualizza più testo dell'interfaccia utente nella tua lingua, inclusi i blocchi Jetpack/Griglia di layout.
+- Mantieni la formattazione del testo dopo che hai premuto backspace.
+- I titoli dei blocchi ora sono allineati al centro nel menu dello strumento per l'inserimento.
 </it-IT>
 <ja-JP>
-18.1:
--1週間のまとめ: よく使われているサイトのアクティビティ (表示、いいね、コメント) の要約が毎週月曜日に送信されます。
--埋め込みブロックの切り替えオプション: 小さいデバイスで動画やその他のメディアなどの埋め込みコンテンツをリサイズできます。
--時間選択機能: 特定の時間を選択してブログ投稿のリマインダーを受け取ることができます。
+19.0:
+- ブログ投稿を含むカードベースのフィードを使用してダッシュボードを管理します。
+- 無料プランでは最大5分間の動画をアップロードできます。
+- Jetpack/Layout Grid ブロックなど、ご使用の言語で表示されるユーザーインターフェイスのテキストが増えました。
+- バックスペースを押した後もテキストの書式が維持されます。
+- ブロックタイトルは、挿入メニューで中央揃えになりました。
 </ja-JP>
 <ko-KR>
-18.1:
-- 주간 총정리: 매주 월요일에 보내드리는 가장 많이 이용한 사이트에 대한 활동(조회수, 좋아요 수, 댓글 수) 요약입니다.
-- 비디오 및 기타 미디어 등 소형 기기에 임베드된 콘텐츠의 크기를 조정하는 임베드 블록의 토글 옵션입니다.
-- 블로깅 알림을 받을 특정 시간을 선택할 수 있는 시간 선택 기능입니다.
+19.0:
+- 카드 기반 피드로 알림판을 관리하세요(글 포함).
+- 무료 요금제에서 최대 5분 비디오를 업로드하세요.
+- 원하는 언어로 추가 사용자 인터페이스 텍스트를 표시하세요(젯팩/레이아웃 그리드 블록 포함).
+- 백스페이스 키를 누른 후 텍스트 형식 지정을 유지하세요.
+- 블록 제목이 이제는 삽입기 메뉴의 가운데에 정렬됩니다.
 </ko-KR>
 <nl-NL>
-18.1:
--Een wekelijkse roundup: een overzicht van activiteit (weergaven, likes, reacties) op je meest gebruikte sites, die elke maandag naar je wordt verzonden.
--Een toggle in het blok Insluiten om het formaat van ingesloten inhoud, zoals video's en andere media, op kleinere apparaten te wijzigen.
--Een tijd selectiefunctie waarmee je een specifiek tijdstip kunt kiezen om een blog herinnering te ontvangen.
+19.0:
+- Je dashboard beheren met een kaartgebaseerde feed, waaronder posts.
+- Upload video's van maximaal 5 minuten met gratis abonnementen.
+- Zie meer gebruikersinterface in je taal, waaronder Jetpack/indelingsrasterblokken.
+- Behoud tekstopmaak na het gebruik van backspace.
+- Bloktitels zijn nu in het midden uitgelijnd in het invoegermenu.
 </nl-NL>
 <pt-BR>
-18,1:
-- Giro Semanal: toda segunda-feira você recebe um resumo da sua atividade (visualizações, curtidas e comentários) nos sites mais visitados.
-- Uma opção nos blocos de mídia incorporada para redimensionar o conteúdo do site para dispositivos menores.
-- Uma funcionalidade que deixa você escolher quando quer receber uma notificação do Blogging Reminder.
+19.0:
+- Gerencie o seu painel com um feed baseado em cartões, incluindo os posts.
+- Faça upload de vídeos de até 5 minutos nos planos gratuitos.
+- Veja mais textos da interface do usuário no seu idioma, incluindo os blocos Jetpack/Grade de layout.
+- Mantenha a formatação do texto mesmo após usar a tecla Backspace.
+- Aproveite que os títulos dos blocos agora são centralizados no menu de inserção.
 </pt-BR>
 <ru-RU>
-18.1:
--Еженедельный обзор: сводка активности (просмотры, отметки "нравится", комментарии) на ваших наиболее часто используемых сайтах, отправляемая вам каждый понедельник.
--Опция переключения в блоке встраивания для изменения размера встроенного содержимого, такого как видео и другие мультимедиа, на небольших устройствах.
--Функция выбора времени, которая позволяет вам выбрать конкретное время для получения напоминания о ведении блога.
+19.0:
+- Управляйте своей консолью с помощью ленты на основе карточек, включая записи.
+- Загружайте видео (до 5 минут) на бесплатных тарифах.
+- Теперь больше перевода пользовательского интерфейса на вашем языке, включая блоки Jetpack/сетка макета.
+- Сохраняйте форматирование текста после нажатия клавиши backspace.
+- Заголовки блоков теперь выравниваются по центру в меню вставки.
 </ru-RU>
 <sv-SE>
-18.1:
--Veckosammanfattning: statistik över aktiviteten (visningar, gillamarkeringar, kommentarer) på dina mest använda webbplatser varje måndag.
--Ett reglage i inbäddningsblocket för att ange om innehållet ska storleksanpassas för mindre skärmar.
--En funktion som låter dig välja vid vilken tid på dagen du vill ha dina bloggningspåminnelser.
+19.0:
+– Hantera kontrollpanelen i ett kortbaserat flöde, med inlägg.
+– Ladda upp högst 5 minuter långa videoklipp med gratispaket.
+– Mer text i gränssnittet på ditt språk, bl.a. block för Jetpack/rutnätslayout.
+– Textformatering ändras inte av bakåtstegstangenten.
+– Nu rubrikerna för block centrerade i menyn ”infoga”.
 </sv-SE>
 <tr-TR>
-18.1:
--Haftalık Özet: Her Pazartesi en çok kullandığınız sitelerdeki etkinliklerin (görüntülemeler, beğeniler, yorumlar) özeti.
--Daha küçük cihazlarda videolar ve diğer medyalar gibi gömülü içeriği yeniden boyutlandırmak için Gömme blokunda bir geçiş seçeneği.
--Blog Hatırlatıcısı almak için belirli bir zaman seçmenizi sağlayan bir zaman seçme özelliği.
+19.0:
+- Gönderiler de dahil olmak üzere kart tabanlı bir şeritle panonuzu yönetin.
+- Ücretsiz paketlerle 5 dakikaya kadar uzunlukta video yükleyin.
+- Jetpack/Düzen Izgarası blokları da dahil olmak üzere kendi dilinizde daha fazla kullanıcı arayüzü metni görün.
+- Geri al tuşuna bastıktan sonra metin biçimlendirmesini koruyun.
+- Blok başlıkları artık ekleyici menüsünde ortaya hizalanmıştır.
 </tr-TR>
+<vi>
+19.0:
+- Quản lý trang chính bằng thẻ, bao gồm Bài Viết.
+- Tải lên video thời lượng 5 phút với gói free
+- Bổ sung văn bản, bao gồm khối Jetpack/Layout Grid.
+- Tiếp tục định dạng sau khi nhấn backspace
+- Tựa đề khối được canh giữa
+</vi>
 <zh-CN>
-18.1:
--每周综述：关于你最常用网站的活动（观点、喜好、评论）的总结，每周一发给你。
--“嵌入”区块中的切换选项，用于在较小的设备上调整嵌入内容（如视频和其他媒体）的大小。
--时间选择功能，允许您选择特定的时间来接收博客提醒。
+19.0：
+- 使用基于卡片的 feed 管理仪表盘，包括文章。
+- 免费套餐最多可上传 5 分钟的视频。
+- 您可以使用自己的语言查看更多用户界面文本，包括 Jetpack/Layout Grid 区块。
+- 按退格键可使文本格式保持一致。
+- 区块标题现在在插入器菜单中居中对齐。
 </zh-CN>
 <zh-TW>
-18.1：
--每週綜合整理：你會在每週一收到最常用網站的活動摘要 (檢視次數、按讚數、留言)。
--嵌入區塊現在可切換調整嵌入內容大小，讓你為較小的裝置調整嵌入影片和其他媒體的大小。
--時間選取功能可讓你指定接收網誌提醒的時間。
+19.0：
+- 使用包含文章的卡片式摘要，來管理你的儀表板。
+- 使用免費方案，上傳每部最長 5 分鐘的影片。
+- 用你自己的語言查看更多使用者介面，包含 Jetpack/格狀版面區塊。
+- 按下倒退鍵後，保持文字格式不變。
+- 目前在插入工具選單中，區塊標題會置中對齊。
 </zh-TW>

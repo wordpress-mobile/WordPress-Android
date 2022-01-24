@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -19,25 +19,29 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarItem.Info
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
-import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Inject lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
-    private var snackbar: WPDialogSnackbar? = null
     private var binding: PagesListFragmentBinding? = null
 
     private val listStateKey = "list_state"
@@ -105,11 +109,11 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
     }
 
     private fun PagesListFragmentBinding.setupObservers() {
-        viewModel.pages.observe(viewLifecycleOwner, Observer { data ->
+        viewModel.pages.observe(viewLifecycleOwner, { data ->
             data?.let { setPages(data.first, data.second, data.third) }
         })
 
-        viewModel.scrollToPosition.observe(viewLifecycleOwner, Observer { position ->
+        viewModel.scrollToPosition.observe(viewLifecycleOwner, { position ->
             position?.let {
                 val smoothScroller = object : LinearSmoothScroller(context) {
                     override fun getVerticalSnapPreference(): Int {
@@ -120,13 +124,8 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
             }
         })
 
-        viewModel.quickStartEvent.observe(viewLifecycleOwner, Observer { event ->
-            if (event == null) {
-                snackbar?.dismiss()
-                snackbar = null
-            } else {
-                showSnackbar()
-            }
+        viewModel.quickStartEvent.observe(viewLifecycleOwner, { event ->
+            if (event == null) snackbarSequencer.dismissLastSnackbar() else showSnackbar()
         })
     }
 
@@ -178,19 +177,14 @@ class PageListFragment : ViewPagerFragment(R.layout.pages_list_fragment) {
         viewModel.onQuickStartEvent(event)
     }
 
-    fun showSnackbar() {
+    fun PagesListFragmentBinding.showSnackbar() {
         view?.post {
             val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
                     requireContext(),
                     R.string.quick_start_dialog_edit_homepage_message_pages_short,
                     R.drawable.ic_homepage_16dp
             )
-
-            snackbar = WPDialogSnackbar.make(
-                    requireView().findViewById(R.id.page_list_layout), title,
-                    resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-            )
-            snackbar?.show()
+            snackbarSequencer.enqueue(SnackbarItem(Info(recyclerView, UiStringText(title), Snackbar.LENGTH_LONG)))
         }
     }
 }

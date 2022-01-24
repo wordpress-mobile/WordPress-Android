@@ -23,6 +23,7 @@ import com.wordpress.stories.compose.PermanentPermissionDenialDialogProvider
 import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
+import com.wordpress.stories.compose.frame.StoryLoadEvents.StoryLoadEnd
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
@@ -33,7 +34,10 @@ import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
 import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
@@ -75,6 +79,7 @@ import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -223,6 +228,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (filteredList.isNotEmpty()) {
                 addFramesToStoryFromMediaUriList(filteredList)
                 setDefaultSelectionAndUpdateBackgroundSurfaceUI(filteredList)
+                // generally speaking, adding media will happen at the beginning of loading the StoryComposer, so once
+                // it's done adding media the StoryComposer will be ready to render the newly loaded / created Story.
+                // Hence, it makes sense to start the editor session tracking at this point - note subsequent calls
+                // will have no effect, given PostEditorAnalyticsSession has a flag so it can only be started once.
+                viewModel.onStoryComposerStartAnalyticsSession()
             }
 
             // finally if any of the files was a gif, warn the user
@@ -286,7 +296,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.writeToBundle(outState)
     }
 
+    @Suppress("NestedBlockDepth")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        viewModel.onStoryComposerAnalyticsSessionStartTimeReset()
         super.onActivityResult(requestCode, resultCode, data)
         data?.let {
             when (requestCode) {
@@ -294,14 +306,23 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER, RequestCodes.STORIES_PHOTO_PICKER -> {
-                    if (it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-                        val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                                it.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-                        )
-                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
-                    } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-                        handleMediaPickerIntentData(it)
+                    when {
+                        it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
+                            data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)?.let {
+                                val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
+                                storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                            }
+                        }
+                        it.hasExtra(MediaBrowserActivity.RESULT_IDS) -> {
+                            handleMediaPickerIntentData(it)
+                        }
+                        else -> {
+                            // handleMediaPickerIntentData(it)?
+                        }
                     }
+                }
+                else -> {
+                    // handleMediaPickerIntentData(it)?
                 }
             }
         }
@@ -360,23 +381,31 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             return
         }
 
-        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
-            val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-            )
-            if (uriList.isNotEmpty()) {
-                storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+        when {
+            data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
+                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)?.let {
+                    val uriList: List<Uri> = convertStringArrayIntoUrisList(it)
+
+                    if (uriList.isNotEmpty()) {
+                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                    }
+                }
             }
-        } else if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-            val ids = ListUtils.fromLongArray(
-                    data.getLongArrayExtra(
-                            MediaBrowserActivity.RESULT_IDS
-                    )
-            )
-            if (ids == null || ids.size == 0) {
-                return
+            data.hasExtra(MediaBrowserActivity.RESULT_IDS) -> {
+                val ids = ListUtils.fromLongArray(
+                        data.getLongArrayExtra(
+                                MediaBrowserActivity.RESULT_IDS
+                        )
+                )
+                if (ids == null || ids.size == 0) {
+                    return
+                }
+                storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
             }
-            storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
+            data.hasExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED) -> {
+                // when coming from this entry point, we can start the analytics session
+                viewModel.onStoryComposerStartAnalyticsSession()
+            }
         }
     }
 
@@ -430,6 +459,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
         // no op - we're not doing any special handling while composing, only when saving in the UploadBridge
+    }
+
+    override fun showVideoDurationLimitWarning(fileName: String) {
+        ToastUtils.showToast(this, string.error_media_video_duration_exceeds_limit, LONG)
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
@@ -647,5 +680,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 ).show(supportFragmentManager, FRAGMENT_ANNOUNCEMENT_DIALOG)
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onStoryLoadEnd(event: StoryLoadEnd) {
+        // once the Story has been loaded by the Composer, we should mark the composing session start as the
+        // UI is ready to receive user's input
+        viewModel.onStoryComposerStartAnalyticsSession()
     }
 }

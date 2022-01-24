@@ -1,0 +1,6 @@
+19.0:
+- Hantera din adminpanel med ett kortbaserat flöde, inklusive inlägg.
+- Ladda upp videoklipp som är upp till 5 minuter långa med gratispaket.
+- Se mer användargränssnittstext på ditt språk, inklusive Jetpack-/layoutrutnätsblock.
+- Behåll textformatering efter att ha tryckt på backsteg.
+Blockrubriker är nu centrerade i infogarmenyn.

@@ -21,7 +21,6 @@ Language: sk
     <string name="reader_filter_empty_tags_action">Pridať tému</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
-    <string name="new_site_creation_preview_subtitle">Vzhľad svojej stránky si budeš vedieť prispôsobiť neskôr.</string>
     <string name="scheduled_for">Naplánované na: %s</string>
     <string name="stats_detail_average_views_per_day">Priemerný počet zobrazení za deň</string>
     <string name="stats_months_and_years_views_label">Zobrazení</string>
@@ -168,11 +167,8 @@ Language: sk
     <string name="quick_start_dialog_share_site_message">Pripojte sa na účty sociálnych médii - vaša webová stránka automaticky zdieľa nové články.</string>
     <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
     <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
-    <string name="quick_start_dialog_need_help_title">Chcete pomôcť na začiatku?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Akceptovať</string>
     <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>
@@ -358,10 +354,7 @@ Language: sk
     <string name="open_external_link_desc">Otvoriť externý odkaz</string>
     <string name="jetpack_connection_failed_with_reason">Pripojenie na Jetpack zlyhalo: %s</string>
     <string name="jetpack_already_connected_toast">Už ste pripojený na Jetpack</string>
-    <string name="menu_undo_snackbar_action">VRÁTIŤ SPÄŤ</string>
-    <string name="menu_visual_mode_done_snackbar">Prepnuté do vizuálneho módu</string>
     <string name="menu_visual_mode">Vizuálny mód</string>
-    <string name="menu_html_mode_done_snackbar">Prepnuté do HTML módu</string>
     <string name="menu_html_mode">HTML mód</string>
     <string name="menu_preview">Ukážka</string>
     <string name="menu_save_as_draft">Uložiť ako koncept</string>
@@ -510,7 +503,6 @@ Language: sk
     <string name="plugin_byline">od %s</string>
     <string name="change_photo">Zmeňte fotku</string>
     <string name="plugin_fetch_error">Nepodarilo sa načítať pluginy</string>
-    <string name="my_site_btn_site_pages">Stránky webovej stránky</string>
     <string name="site_settings_tags_hint">Spravujte značky vašej webovej stránky</string>
     <string name="dlg_saving_tag">Ukladanie</string>
     <string name="dlg_deleting_tag">Mazanie</string>
@@ -1253,7 +1245,6 @@ Language: sk
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
     <string name="my_site_btn_view_admin">Zobraziť administráciu</string>
     <string name="my_site_header_publish">Zverejniť</string>
-    <string name="my_site_btn_blog_posts">Články blogu</string>
     <string name="my_site_header_look_and_feel">Vzhľad</string>
     <string name="my_site_header_configuration">Kanfigurácia</string>
     <string name="reader_label_new_posts_subtitle">Ťuknite k ich zobrazeniu</string>
@@ -1270,7 +1261,6 @@ Language: sk
     <string name="stats_view_search_terms">Hľadané výrazy</string>
     <string name="stats_search_terms_unknown_search_terms">Neznáme hľadané výrazy</string>
     <string name="reader_empty_posts_request_failed">Nie je možné obnoviť príspevky</string>
-    <string name="comments_fetching">Načítavajú sa komentáre…</string>
     <string name="posts_fetching">Načítavajú sa príspevky…</string>
     <string name="pages_fetching">Načítavajú sa stránky…</string>
     <string name="publisher">Vydavateľ:</string>
@@ -1317,7 +1307,6 @@ Language: sk
     <string name="error_publish_empty_post">Nie je možné zverejniť prázdny príspevok</string>
     <string name="comment_reply_to_user">Odpovedať užívateľovi %s</string>
     <string name="comment">Komentár</string>
-    <string name="error_refresh_unauthorized_comments">Nemáte oprávnenie prezerať alebo upravovať komentáre</string>
     <string name="error_refresh_unauthorized_pages">Nemáte oprávnenie prezerať alebo upravovať stránky</string>
     <string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
     <string name="reader_label_like">Lajk</string>
@@ -1381,7 +1370,6 @@ Language: sk
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_trash">Kôš</string>
     <string name="comment_status_unapproved">Čakajúci na schválenie</string>
-    <string name="dlg_spamming_comments">Označené ako spam</string>
     <string name="saving_changes">Ukladajú sa zmeny</string>
     <string name="sure_to_cancel_edit_comment">Zrušiť úpravu tohto komentáru?</string>
     <string name="content_required">Vyžaduje sa komentár</string>
@@ -1393,7 +1381,6 @@ Language: sk
     <string name="new_post">Nový príspevok</string>
     <string name="http_authorization_required">Požaduje sa autorizácia</string>
     <string name="image_settings">Nastavenie obrázka</string>
-    <string name="dlg_trashing_comments">Vymazáva sa</string>
     <string name="trash">Kôš</string>
     <string name="open_source_licenses">Open source licencie</string>
     <string name="link_enter_url_text">Text odkazu (voliteľný)</string>
@@ -1402,13 +1389,11 @@ Language: sk
     <string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
     <string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
     <string name="new_media">Nový súbor</string>
-    <string name="dlg_approving_comments">Schvaľovanie</string>
     <string name="post_not_found">Počas načítania príspevku sa vyskytla chyba. Obnovte príspevky a skúste znova.</string>
     <string name="local_draft">Lokálny koncept </string>
     <string name="media_gallery_type_thumbnail_grid">Mriežka s náhľadmi</string>
     <string name="reader_title_applog">Záznamy aplikácie</string>
     <string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
-    <string name="dlg_unapproving_comments">Ruší sa schválenie</string>
     <string name="file_error_create">Nie je možné vytvoriť dočasný súbor. Uistite sa, či máte dostatok miesta vo vašom zariadení.</string>
     <string name="cannot_delete_multi_media_items">Niektoré súbory nie je možné teraz zmazať. skúste neskôr.</string>
     <string name="remove_account">Odstrániť webovú stránku</string>
@@ -1424,7 +1409,6 @@ Language: sk
     <string name="share_link">Zdieľať odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
-    <string name="reader_label_reply">Odpovedať</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
     <string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
     <string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>
@@ -1506,7 +1490,6 @@ Language: sk
     <string name="categories">Kategórie</string>
     <string name="title">Názov</string>
     <string name="tags_separate_with_commas">Oddeľujte značky čiarkami</string>
-    <string name="dlg_deleting_comments">Vymazanie komentárov</string>
     <string name="sdcard_title">Vyžadovaná SD karta</string>
     <string name="media">Súbory</string>
     <string name="delete">Zmazať</string>

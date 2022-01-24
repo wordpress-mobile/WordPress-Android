@@ -38,7 +38,6 @@ Language: mk
     <string name="reader_label_like">Сака</string>
     <string name="reader_label_comments_closed">Коментари затворени</string>
     <string name="error_refresh_unauthorized_pages">Немате дозвола за гледање или уредување на страници</string>
-    <string name="error_refresh_unauthorized_comments">Немате дозвола за гледање или уредување на коментари</string>
     <string name="error_refresh_unauthorized_posts">Немате дозвола за гледање или уредување на написи</string>
     <string name="error_publish_empty_post">Неможе да се објави празен напис</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
@@ -102,9 +101,6 @@ Language: mk
     <string name="edit_comment">Измени коментар</string>
     <string name="mnu_comment_approve">Одобри</string>
     <string name="mnu_comment_trash">Отпадок</string>
-    <string name="dlg_approving_comments">Одобрување</string>
-    <string name="dlg_spamming_comments">Обележување како спам</string>
-    <string name="dlg_trashing_comments">Испраќање во отпадок</string>
     <string name="trash">Отпадок</string>
     <string name="view_in_browser">Види во прелистувач</string>
     <string name="local_changes">Локални промени</string>
@@ -120,7 +116,6 @@ Language: mk
     <string name="local_draft">Локални нацрти</string>
     <string name="link_enter_url_text">Сврзи текст (опционален)</string>
     <string name="mnu_comment_unapprove">Не одобрувај</string>
-    <string name="dlg_unapproving_comments">Не се одобрува</string>
     <string name="open_source_licenses">Отворен код лиценци</string>
     <string name="file_error_create">Неможе да се созададе темп архива за медиа испраќање. Ве волиме да обезбедите доволоно простор на вашиот уред</string>
     <string name="new_post">Нов напис</string>
@@ -129,7 +124,6 @@ Language: mk
     <string name="cant_share_no_visible_blog">Неможе да споделите WordPress блог без да е видлив</string>
     <string name="reader_likes_you_and_multi">На тебе и на уште %,d други им се допаѓа ова</string>
     <string name="reader_likes_multi">На %,d луѓе им се допаѓа ова</string>
-    <string name="reader_label_reply">Одговори</string>
     <string name="comment_spammed">Коментарот е означен како спам</string>
     <string name="pick_photo">Избери фотографија</string>
     <string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>

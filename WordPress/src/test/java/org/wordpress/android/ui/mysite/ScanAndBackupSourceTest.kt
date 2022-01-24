@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.mysite
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -16,6 +19,7 @@ import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 
+@InternalCoroutinesApi
 class ScanAndBackupSourceTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
@@ -23,26 +27,22 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     private lateinit var scanAndBackupSource: ScanAndBackupSource
     private val siteLocalId = 1
     private val siteRemoteId = 2L
+    private lateinit var isRefreshing: MutableList<Boolean>
 
-    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        scanAndBackupSource = ScanAndBackupSource(
-                TEST_DISPATCHER,
-                selectedSiteRepository,
-                jetpackCapabilitiesUseCase
-        )
         whenever(site.id).thenReturn(siteLocalId)
         whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(false)
+        isRefreshing = mutableListOf()
     }
 
     @Test
     fun `jetpack capabilities disabled when site not present`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        initScanAndBackupSource(hasSelectedSite = false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -50,14 +50,10 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
     @Test
     fun `jetpack capabilities reloads both scan and backup as true`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(site.siteId).thenReturn(siteRemoteId)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
-        )
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isTrue
         assertThat(result!!.scanAvailable).isTrue
@@ -65,14 +61,10 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
     @Test
     fun `jetpack capabilities reloads both scan and backup as false`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(site.siteId).thenReturn(siteRemoteId)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                flow { emit(JetpackPurchasedProducts(scan = false, backup = false)) }
-        )
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = false, backupPurchased = false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -80,47 +72,98 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
     @Test
     fun `Scan not visible on wpcom sites even when Scan product is available`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(site.siteId).thenReturn(siteRemoteId)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
-        )
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = false)
         whenever(site.isWPCom).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
     fun `Scan not visible on atomic sites even when Scan product is available`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(site.siteId).thenReturn(siteRemoteId)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
-        )
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = false)
         whenever(site.isWPComAtomic).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
     fun `Scan visible on non-wpcom sites when Scan product is available and feature flag enabled`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(site.siteId).thenReturn(siteRemoteId)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
-        )
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = false)
         whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(testScope(), siteLocalId).observeForever { result = it }
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isTrue
+    }
+
+    @Test
+    fun `when refresh is invoked, then data is refreshed`() = test {
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
+
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        verify(jetpackCapabilitiesUseCase, times(2)).getJetpackPurchasedProducts(any())
+    }
+
+    @Test
+    fun `when build is invoked, then refresh is true`() = test {
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.build(testScope(), siteLocalId)
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when refresh is invoked, then refresh is true`() = test {
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        assertThat(isRefreshing.last()).isTrue
+    }
+
+    @Test
+    fun `when data has been refreshed, then refresh is set to false`() = test {
+        initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = false)
+
+        scanAndBackupSource.build(testScope(), siteLocalId).observeForever { }
+        scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
+
+        scanAndBackupSource.refresh()
+
+        assertThat(isRefreshing.last()).isFalse
+    }
+
+    private suspend fun initScanAndBackupSource(
+        hasSelectedSite: Boolean = true,
+        scanPurchased: Boolean = false,
+        backupPurchased: Boolean = false
+    ) {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(if (hasSelectedSite) site else null)
+        if (hasSelectedSite) {
+            whenever(site.siteId).thenReturn(siteRemoteId)
+            whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                    flow { emit(JetpackPurchasedProducts(scan = scanPurchased, backup = backupPurchased)) }
+            )
+        }
+        scanAndBackupSource = ScanAndBackupSource(
+                TEST_DISPATCHER,
+                selectedSiteRepository,
+                jetpackCapabilitiesUseCase
+        )
     }
 }

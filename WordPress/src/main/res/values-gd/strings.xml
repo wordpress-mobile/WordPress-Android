@@ -50,7 +50,6 @@ Language: gd_GB
     <string name="site_picker_title">Tagh làrach</string>
     <string name="my_site_btn_switch_site">Leum gu làrach eile</string>
     <string name="my_site_btn_view_admin">Seall an rianachd</string>
-    <string name="my_site_btn_blog_posts">Puist bloga</string>
     <string name="my_site_header_look_and_feel">Coltas</string>
     <string name="my_site_header_publish">Foillsich</string>
     <string name="my_site_header_configuration">Rèiteachadh</string>
@@ -68,7 +67,6 @@ Language: gd_GB
     <string name="stats_search_terms_unknown_search_terms">Faclan-luirg nach aithnichear</string>
     <string name="stats_view_authors">Ùghdaran</string>
     <string name="stats_view_search_terms">Faclan-luirg</string>
-    <string name="comments_fetching">A’ faighinn nam beachdan…</string>
     <string name="pages_fetching">A’ faighinn nan duilleagan…</string>
     <string name="posts_fetching">A’ faighinn nam post…</string>
     <string name="media_fetching">A’ faighinn nam meadhanan…</string>
@@ -107,7 +105,6 @@ Language: gd_GB
     <string name="error_publish_empty_post">Cha ghabh post bàn fhoillseachadh</string>
     <string name="error_refresh_unauthorized_posts">Chan eil cead agad coimhead puist fhaicinn no a dheasachadh</string>
     <string name="error_refresh_unauthorized_pages">Chan eil cead agad coimhead duilleagan fhaicinn no a dheasachadh</string>
-    <string name="error_refresh_unauthorized_comments">Chan eil cead agad coimhead beachdan fhaicinn no a dheasachadh</string>
     <string name="older_month">Nas sine na mìos</string>
     <string name="older_two_days">Nas sine na dà latha</string>
     <string name="older_last_week">Nas sine na seachdain</string>
@@ -166,10 +163,6 @@ Language: gd_GB
     <string name="mnu_comment_unapprove">Thoir air falbh an t-aonta</string>
     <string name="mnu_comment_spam">Spama</string>
     <string name="mnu_comment_trash">Sgudal</string>
-    <string name="dlg_approving_comments">’Ga aontachadh</string>
-    <string name="dlg_unapproving_comments">A’ toirt air falbh an t-aonta</string>
-    <string name="dlg_spamming_comments">A’ cur comharra gur e spama a tha ann</string>
-    <string name="dlg_trashing_comments">’Ga chur dhan sgudal</string>
     <string name="dlg_confirm_trash_comments">Cuir dhan sgudal?</string>
     <string name="trash">An sgudal</string>
     <string name="saving_changes">A’ sàbhaladh nan atharrachadh</string>
@@ -198,7 +191,6 @@ Language: gd_GB
     <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post…</string>
     <string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
     <string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
-    <string name="reader_label_reply">Freagair</string>
     <string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
     <string name="cant_share_no_visible_blog">Chan urrainn dhut co-roinneadh gu WordPress as aonais bloga a tha ri fhaicinn</string>
     <string name="reader_likes_you_and_one">Thuirt thusa agus aonan eile gur toigh leibh seo</string>
@@ -273,7 +265,6 @@ Language: gd_GB
     <string name="quickpress_add_error">Chan fhaod ainm na h-ath-ghoirid a bhith bàn</string>
     <string name="title">Tiotal</string>
     <string name="categories">Roinnean-seòrsa</string>
-    <string name="dlg_deleting_comments">A’ sguabadh às nam beachdan</string>
     <string name="sdcard_title">Tha feum air cairt SD</string>
     <string name="media">Meadhan</string>
     <string name="delete">Sguab às</string>

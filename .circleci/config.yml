@@ -28,11 +28,6 @@ commands:
         - run:
             name: Update memory setting
             command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-<< parameters.jvmargs >> -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
-  checkout-submodules:
-    steps:
-      - run:
-          name: Checkout submodules
-          command: git submodule update --init --recursive --depth 1
 
 version: 2.1
 jobs:
@@ -41,9 +36,7 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build-v4
       - run:
@@ -96,12 +89,11 @@ jobs:
       - run:
           name: Init messages
           command: |
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android failed!'" >> $BASH_ENV
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+            SLACKMSG_APP_NAME=$(echo "<< parameters.app >>" | sed s/wordpress/WordPress/i | sed s/jetpack/Jetpack/i)
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for ${SLACKMSG_APP_NAME} Android failed!'" >> $BASH_ENV
+      - git/shallow-checkout
       - bundle-install/bundle-install:
-          cache_key_prefix: release-build-v2
+          cache_key_prefix: &release-build-cache-key release-build-v2
       - run:
           name: Copy Secrets
           command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane run configure_apply
@@ -111,9 +103,11 @@ jobs:
           name: Prepare build
           command: |
             APP_VERSION=$(./gradlew -q printVersionName | tail -1)
+            SLACKMSG_APP_NAME=$(echo "<< parameters.app >>" | sed s/wordpress/WordPress/i | sed s/jetpack/Jetpack/i)
+            SLACKMSG_APP_VERSION=<<# parameters.alpha >>$(./gradlew -q printVersionName -Palpha | tail -1)<</ parameters.alpha >><<^ parameters.alpha >>$APP_VERSION<</ parameters.alpha >>
             echo "export APP_VERSION=${APP_VERSION}" >> $BASH_ENV
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for << parameters.app >> Android $APP_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: << parameters.app >> Android $APP_VERSION has been deployed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for ${SLACKMSG_APP_NAME} Android ${SLACKMSG_APP_VERSION} failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: ${SLACKMSG_APP_NAME} Android ${SLACKMSG_APP_VERSION} has been deployed!'" >> $BASH_ENV
             # Prevent fastlane from checking for updates, also removing the verbose fastlane changelog at the end of each invocation.
             echo "export FASTLANE_SKIP_UPDATE_CHECK=1" >> $BASH_ENV
             bundle check
@@ -124,7 +118,10 @@ jobs:
                 name: Build << parameters.app >> Zalpha
                 command: |
                   if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-                    bundle exec fastlane build_alpha app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                    bundle exec fastlane build_alpha app:<< parameters.app >> skip_confirm:true skip_prechecks:true upload_to_play_store:true
+                  else
+                    echo "Skipping and halting this job because we only build Zalpha variants for rc versions, but current version is ${APP_VERSION}"
+                    circleci-agent step halt
                   fi
                 no_output_timeout: 15m
       - unless:
@@ -134,15 +131,18 @@ jobs:
                 name: Build << parameters.app >> Vanilla
                 command: |
                   if [[ ${APP_VERSION} == *"-rc-"* ]]; then
-                    bundle exec fastlane build_beta app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                    bundle exec fastlane build_beta app:<< parameters.app >> skip_confirm:true skip_prechecks:true upload_to_play_store:true
                   else
-                    bundle exec fastlane build_and_upload_release app:<< parameters.app >> skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+                    bundle exec fastlane build_and_upload_release app:<< parameters.app >> skip_confirm:true skip_prechecks:true upload_to_play_store:true
                   fi
                 no_output_timeout: 15m
       - android/save-gradle-cache
       - store_artifacts:
           path: build
           destination: Artifacts
+      - persist_to_workspace:
+          root: build
+          paths: ['*.aab'] # So they are made available for the "Create GitHub Release" job
       - slack/status:
           include_job_number_field: false
           include_project_field: false
@@ -150,6 +150,21 @@ jobs:
           webhook: '${SLACK_BUILD_WEBHOOK}'
           failure_message: '${SLACK_FAILURE_MESSAGE}'
           success_message: '${SLACK_SUCCESS_MESSAGE}'
+  Create GitHub Release:
+    executor:
+      name: android/default
+      api-version: "29"
+    steps:
+      - git/shallow-checkout
+      - bundle-install/bundle-install:
+          cache_key_prefix: *release-build-cache-key
+      - attach_workspace:
+          at: build # Restore *.aab files built from "Release Build" jobs so we can attach them to the GitHub release
+      - run:
+          name: Create GitHub Release
+          command: |
+            bundle exec fastlane create_gh_release
+
 
   Connected Tests:
     parameters:
@@ -161,9 +176,7 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - update-gradle-memory:
@@ -185,7 +198,7 @@ jobs:
           test-targets: notPackage org.wordpress.android.ui.screenshots
           device: model=Pixel2,version=28,locale=en,orientation=portrait
           project: api-project-108380595987
-          timeout: 10m
+          timeout: 20m
           num-flaky-test-attempts: 2
           results-history-name: CircleCI WordPress Connected Tests
       - android/save-gradle-cache
@@ -203,9 +216,7 @@ jobs:
       api-version: "29"
     working_directory: /tmp/workspace
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - bundle-install/bundle-install:
           cache_key_prefix: raw-screenshots-v2
       - android/restore-gradle-cache
@@ -309,9 +320,7 @@ jobs:
       name: android/default
       api-version: "29"
     steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
+      - git/shallow-checkout
       - android/restore-gradle-cache
       - copy-gradle-properties
       - update-gradle-memory
@@ -331,21 +340,6 @@ jobs:
           timeout: 10m
           results-history-name: CircleCI WPUtils Connected Tests
       - android/save-gradle-cache
-  submodules-strings-check:
-    docker:
-      - image: circleci/ruby:2.6.4
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - run:
-          name: Install bundler
-          command: gem install bundler --version 2.0.2
-      - bundle-install/bundle-install:
-          cache_key_prefix: strings-check-v2
-      - run:
-          name: Validate login strings
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane validate_submodules_strings pr_url:$CIRCLE_PULL_REQUEST
 
 workflows:
   wordpress_android:
@@ -354,19 +348,19 @@ workflows:
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     jobs:
-      - submodules-strings-check
       - Installable Build:
           filters:
             branches:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
           post-to-slack: true
-          # Always run connected tests on develop and release branches
+          # Always run connected tests on trunk and release branches
           filters:
             branches:
               only:
-                - develop
+                - trunk
                 - /^release.*/
+                - /^gutenberg\/integrate_release_.*/
   Optional Tests:
     unless:
       or:
@@ -379,8 +373,9 @@ workflows:
           filters:
             branches:
               ignore:
-                - develop
+                - trunk
                 - /^release.*/
+                - /^gutenberg\/integrate_release_.*/
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
@@ -405,3 +400,5 @@ workflows:
           name: "Release: JP Beta"
           app: jetpack
           alpha: false
+      - Create GitHub Release:
+          requires: ["Release: WP Alpha", "Release: WP Beta", "Release: JP Beta"]

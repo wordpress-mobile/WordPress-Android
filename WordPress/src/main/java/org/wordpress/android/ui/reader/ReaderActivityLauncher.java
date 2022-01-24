@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
@@ -191,16 +192,33 @@ public class ReaderActivityLauncher {
     /*
      * show comments for the passed Ids
      */
-    public static void showReaderComments(Context context, long blogId, long postId) {
-        showReaderComments(context, blogId, postId, null, 0, null);
+    public static void showReaderComments(Context context,
+                                          long blogId,
+                                          long postId,
+                                          String source) {
+        showReaderComments(context, blogId, postId, null, 0, null, source);
     }
 
 
     /*
      * show specific comment for the passed Ids
      */
-    public static void showReaderComments(Context context, long blogId, long postId, long commentId) {
-        showReaderComments(context, blogId, postId, DirectOperation.COMMENT_JUMP, commentId, null);
+    public static void showReaderComments(
+        Context context,
+        long blogId,
+        long postId,
+        long commentId,
+        String source
+    ) {
+        showReaderComments(
+                context,
+                blogId,
+                postId,
+                DirectOperation.COMMENT_JUMP,
+                commentId,
+                null,
+                source
+        );
     }
 
     /**
@@ -214,14 +232,56 @@ public class ReaderActivityLauncher {
      * @param interceptedUri  URI to fall back into (i.e. to be able to open in external browser)
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
-            directOperation, long commentId, String interceptedUri) {
-        Intent intent = new Intent(context, ReaderCommentListActivity.class);
+            directOperation, long commentId, String interceptedUri, String source) {
+        Intent intent = buildShowReaderCommentsIntent(
+                context,
+                blogId,
+                postId,
+                directOperation,
+                commentId,
+                interceptedUri,
+                source
+        );
+        context.startActivity(intent);
+    }
+
+    public static void showReaderCommentsForResult(
+            Fragment fragment,
+            long blogId,
+            long postId,
+            String source
+    ) {
+        showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, source);
+    }
+
+    public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, DirectOperation
+            directOperation, long commentId, String interceptedUri, String source) {
+        Intent intent = buildShowReaderCommentsIntent(
+                fragment.getContext(),
+                blogId,
+                postId,
+                directOperation,
+                commentId,
+                interceptedUri,
+                source
+        );
+        fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION);
+    }
+
+    private static Intent buildShowReaderCommentsIntent(Context context, long blogId, long postId, DirectOperation
+            directOperation, long commentId, String interceptedUri, String source) {
+        Intent intent = new Intent(
+                context,
+                ReaderCommentListActivity.class
+        );
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
-        context.startActivity(intent);
+        intent.putExtra(ReaderConstants.ARG_SOURCE, source);
+
+        return intent;
     }
 
     /*

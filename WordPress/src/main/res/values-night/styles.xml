@@ -25,6 +25,7 @@
         <item name="wpColorNavBar">@color/nav_bar</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
+        <item name="wpColorOnSurfaceHigh">@color/material_on_surface_emphasis_high_type</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
         <item name="wpColorLoginPrologueBg">?attr/colorSurface</item>
@@ -121,19 +122,10 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
-        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
-        <item name="android:statusBarColor">@color/primary_dark</item>
-        <item name="titleTextColor">?attr/colorOnSurface</item>
-        <item name="toolbarNavigationButtonStyle">
-            @style/Widget.AppCompat.Toolbar.Button.Navigation
-        </item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
-    </style>
-
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">?attr/colorSecondaryVariant</item>
     </style>
 
+    <!-- Domains -->
+    <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated" />
 </resources>

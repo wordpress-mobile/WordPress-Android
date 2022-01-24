@@ -47,7 +47,6 @@ Language: en_CA
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Invalid URL. Please enter a valid URL.</string>
     <string name="gutenberg_native_embed_caption_s">Embed caption. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Embed caption. Empty</string>
-    <string name="gutenberg_native_add_link_0fcaed3b">ADD LINK</string>
     <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
     <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
@@ -78,9 +77,6 @@ Language: en_CA
     <string name="fab_add_category_desc">Create category</string>
     <string name="support_ticket_subject">WordPress for Android support</string>
     <string name="site_settings_categories_hint">Manage your site\'s categories</string>
-    <string name="site_settings_categories_empty_title">You don\'t have any categories</string>
-    <string name="site_settings_categories_empty_subtitle">Add your frequently used categories here so they can be quickly selected when categorizing your posts</string>
-    <string name="site_settings_categories_empty_button">Create a category</string>
     <string name="site_settings_categories_title">Categories</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
     <string name="page_is_posts_page_warning">The content of your latest posts page is automatically generated and cannot be edited.</string>
@@ -92,13 +88,11 @@ Language: en_CA
     <string name="gutenberg_native_y_axis_position">Y–Axis Position</string>
     <string name="gutenberg_native_x_axis_position">X–Axis Position</string>
     <string name="gutenberg_native_type_a_url">Type a URL</string>
-    <string name="gutenberg_native_tap_to_add_content">Tap to add content</string>
     <string name="gutenberg_native_slash_inserter_results">Slash inserter results</string>
     <string name="gutenberg_native_s_has_url_set">%s has URL set</string>
     <string name="gutenberg_native_s_has_no_url_set">%s has no URL set</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s converted to regular blocks</string>
     <string name="gutenberg_native_s_block">%s block</string>
-    <string name="gutenberg_native_minimum_height">Minimum height</string>
     <string name="gutenberg_native_media_options">Media options</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found">Invalid URL. Audio file not found.</string>
     <string name="gutenberg_native_insert_crosspost">Insert crosspost</string>
@@ -119,7 +113,6 @@ Language: en_CA
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threats.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to fix threat.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link">Double tap to add a link.</string>
-    <string name="gutenberg_native_edit_link">EDIT LINK</string>
     <string name="login_empty_view_try_another_account">Try with another account</string>
     <string name="login_empty_view_see_instructions">See instructions</string>
     <string name="login_no_jetpack_sites_error_message">If you already have a site, you\'ll need to install the free Jetpack plugin and connect it to your WordPress.com account.</string>
@@ -128,21 +121,15 @@ Language: en_CA
     <string name="gutenberg_native_move_image_forward">Move Image Forward</string>
     <string name="gutenberg_native_move_image_backward">Move Image Backward</string>
     <string name="gutenberg_native_width_settings">Width settings</string>
-    <string name="gutenberg_native_image_settings">Image settings</string>
     <string name="user_profile_untitled_site">(Untitled)</string>
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">User profile bottom sheet information</string>
     <string name="likes_list_screen_title">Likes list %s</string>
-    <string name="gutenberg_native_sorting_and_filtering">Sorting and filtering</string>
     <string name="gutenberg_native_s_social_icon">%s social icon</string>
     <string name="gutenberg_native_mention">Mention</string>
     <string name="gutenberg_native_preview_post">Preview post</string>
     <string name="gutenberg_native_preview_page">Preview page</string>
-    <string name="gutenberg_native_post_meta_settings">Post meta settings</string>
-    <string name="gutenberg_native_post_content_settings">Post content settings</string>
     <string name="gutenberg_native_featured">Featured</string>
-    <string name="gutenberg_native_embed_link">Embed link</string>
-    <string name="gutenberg_native_display_post_date">Display post date</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Briefly describe the link to help screen reader user</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="gutenberg_native_what_is_alt_text">What is alt text?</string>
@@ -179,7 +166,6 @@ Language: en_CA
     <string name="get_likes_no_network_error">No network available.</string>
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comment_status_unreplied">Unreplied</string>
-    <string name="gutenberg_native_add_link">Add link</string>
     <string name="gutenberg_native_search_settings">Search settings</string>
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>
@@ -383,7 +369,6 @@ Language: en_CA
     <string name="backup_download_generic_failure">There was a problem handling the request. Please try again later.</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is the selected point to create a downloadable backup.</string>
-    <string name="gutenberg_native_image_link_url">Image Link URL</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -481,8 +466,6 @@ Language: en_CA
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
-    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
-    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
@@ -1215,10 +1198,6 @@ Language: en_CA
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registering domain name…</string>
     <string name="domain_registration_state_picker_dialog_title">Select Province</string>
     <string name="domain_registration_country_picker_dialog_title">Select Country</string>
-    <string name="domain_registration_result_continue_button">continue</string>
-    <string name="domain_registration_result_description">your new domain &lt;b&gt;%s&lt;/b&gt; is being set up. Your site is\n        doing somersaults in excitement!</string>
-    <string name="domain_registration_result_title">Congratulations</string>
-    <string name="domain_contact_information_register_domain_button">Register Domain</string>
     <string name="domain_contact_information_postal_code_hint">Postal code</string>
     <string name="domain_contact_information_state_hint">Province</string>
     <string name="domain_contact_information_city_hint">City</string>
@@ -1235,7 +1214,6 @@ Language: en_CA
     <string name="domain_registration_privacy_protection_description">Domain owners have to share contact information in a public database of all domains.\n        With Privacy Protection, we publish our own information instead of yours and privately forward any communication to you.</string>
     <string name="domain_registration_privacy_protection_title">Privacy Protection</string>
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
-    <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="stats_management_new">New</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_try_it_now">Try it now</string>
@@ -1291,7 +1269,6 @@ Language: en_CA
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Register domain</string>
     <string name="plugin_install_custom_domain_required_dialog_message">To install plugins, you need to have a custom domain associated with your site.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Install plugin</string>
-    <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="publish_on">Publish on: %s</string>
     <string name="schedule_for">Schedule for: %s</string>
     <string name="published_on">Published on: %s</string>
@@ -1340,7 +1317,6 @@ Language: en_CA
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
-    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
@@ -1523,9 +1499,6 @@ Language: en_CA
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
-    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
     <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
@@ -1720,10 +1693,7 @@ Language: en_CA
     <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
     <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
-    <string name="menu_undo_snackbar_action">UNDO</string>
-    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
-    <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_save_as_draft">Save as Draft</string>
@@ -1872,7 +1842,6 @@ Language: en_CA
     <string name="plugin_byline">by %s</string>
     <string name="change_photo">Change photo</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
-    <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="dlg_saving_tag">Saving</string>
     <string name="dlg_deleting_tag">Deleting</string>
@@ -2632,7 +2601,6 @@ Language: en_CA
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
-    <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_configuration">Configuration</string>
@@ -2651,7 +2619,6 @@ Language: en_CA
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_authors">Authors</string>
-    <string name="comments_fetching">Fetching comments…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="media_fetching">Fetching media…</string>
@@ -2693,7 +2660,6 @@ Language: en_CA
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
-    <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="more">More</string>
     <string name="older_month">Older than a month</string>
     <string name="older_last_week">Older than a week</string>
@@ -2772,10 +2738,6 @@ Language: en_CA
     <string name="saving_changes">Saving changes</string>
     <string name="trash">Trash</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
-    <string name="dlg_trashing_comments">Sending to trash</string>
-    <string name="dlg_spamming_comments">Marking as spam</string>
-    <string name="dlg_unapproving_comments">Unapproving</string>
-    <string name="dlg_approving_comments">Approving</string>
     <string name="mnu_comment_trash">Trash</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Unapprove</string>
@@ -2805,7 +2767,6 @@ Language: en_CA
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
     <string name="reader_likes_multi">%,d people like this</string>
-    <string name="reader_label_reply">Reply</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
@@ -2889,7 +2850,6 @@ Language: en_CA
     <string name="title">Title</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
     <string name="categories">Categories</string>
-    <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="sdcard_title">SD Card Required</string>
     <string name="media">Media</string>
     <string name="approve">Approve</string>

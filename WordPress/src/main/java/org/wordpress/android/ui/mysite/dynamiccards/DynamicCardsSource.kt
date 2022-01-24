@@ -7,38 +7,40 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.DynamicCardStore
-import org.wordpress.android.ui.mysite.MySiteSource
+import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class DynamicCardsSource
 @Inject constructor(
     private val dynamicCardStore: DynamicCardStore,
     private val selectedSiteRepository: SelectedSiteRepository
-) : MySiteSource<DynamicCardsUpdate> {
-    private val refresh = MutableLiveData<Boolean>()
+) : MySiteRefreshSource<DynamicCardsUpdate> {
+    override val refresh = MutableLiveData(false)
 
-    override fun buildSource(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DynamicCardsUpdate> {
-        val data = MediatorLiveData<DynamicCardsUpdate>()
-        data.refreshData(coroutineScope, siteLocalId)
-        data.addSource(refresh) {
-            data.refreshData(coroutineScope, siteLocalId)
+    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DynamicCardsUpdate> {
+        val result = MediatorLiveData<DynamicCardsUpdate>()
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
+        refresh()
+        return result
+    }
+
+    private fun MediatorLiveData<DynamicCardsUpdate>.refreshData(
+        coroutineScope: CoroutineScope,
+        siteId: Int,
+        isRefresh: Boolean? = null
+    ) {
+        when (isRefresh) {
+            null, true -> refreshData(coroutineScope, siteId)
+            false -> Unit // Do nothing
         }
-        return data
     }
 
     private fun MediatorLiveData<DynamicCardsUpdate>.refreshData(coroutineScope: CoroutineScope, siteId: Int) {
         coroutineScope.launch {
             val cards = dynamicCardStore.getCards(siteId)
-            this@refreshData.postValue(
-                    DynamicCardsUpdate(
-                            pinnedDynamicCard = cards.pinnedItem,
-                            cards = cards.dynamicCardTypes
-                    )
-            )
+            postState(DynamicCardsUpdate(pinnedDynamicCard = cards.pinnedItem, cards = cards.dynamicCardTypes))
         }
     }
 
@@ -61,7 +63,7 @@ class DynamicCardsSource
     private suspend fun callWithSite(function: suspend (Int) -> Unit) {
         selectedSiteRepository.getSelectedSite()?.id?.let { selectedSiteLocalId ->
             function(selectedSiteLocalId)
-            refresh.postValue(true)
+            refresh()
         }
     }
 }

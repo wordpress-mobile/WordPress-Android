@@ -55,7 +55,8 @@ import org.wordpress.android.ui.notifications.blocks.UserNoteBlock.OnGravatarCli
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.services.ReaderCommentService
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.COMMENT_NOTIFICATION
+import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
@@ -239,7 +240,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             requireNotNull(notification).let { note ->
                 ReaderActivityLauncher.showReaderComments(
                         activity, note.siteId.toLong(), note.postId.toLong(),
-                        note.commentId
+                        note.commentId,
+                        COMMENT_NOTIFICATION.sourceDescription
                 )
             }
         }

@@ -1,7 +1,7 @@
 docker-container: &docker-container
   plugins:
     - docker#v3.8.0:
-        image: "public.ecr.aws/automattic/android-build-image:311ab824e9fd33ebb71de83c3fd1c328ea84443b"
+        image: "public.ecr.aws/automattic/android-build-image:v1.1.0"
         environment:
           - "CI=true"
 
@@ -11,21 +11,29 @@ steps:
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew checkstyle
+    artifact_paths:
+      - "**/build/reports/checkstyle/checkstyle.*"
   - label: "ktlint"
     <<: *docker-container
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew ciktlint
+    artifact_paths:
+      - "**/build/ktlint.xml"
   - label: "detekt"
     <<: *docker-container
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew WordPress:detekt
+    artifact_paths:
+      - "**/build/reports/detekt/detekt.html"
   - label: "lint"
     <<: *docker-container
     command: |
       cp gradle.properties-example gradle.properties
       ./gradlew lintWordpressVanillaRelease
+    artifact_paths:
+      - "**/build/reports/lint-results*.*"
   - label: "Test WordPress"
     <<: *docker-container
     command: |

@@ -73,6 +73,7 @@ import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -101,7 +102,7 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
-import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig;
+import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -189,9 +190,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ImageManager mImageManager;
-    @Inject UnifiedCommentsListFeatureConfig mUnifiedCommentsListFeatureConfig;
     @Inject CommentsStore mCommentsStore;
     @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
+    @Inject UnifiedCommentsCommentEditFeatureConfig mUnifiedCommentsCommentEditFeatureConfig;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -678,16 +679,26 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
         AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITOR_OPENED,
                 mCommentSource.toAnalyticsCommentActionSource(), mSite);
+
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
-        Intent intent = new Intent(getActivity(), EditCommentActivity.class);
-        intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(EditCommentActivity.KEY_COMMENT, mComment);
-        if (mNote != null && mComment == null) {
-            intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
+        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled() && mCommentSource == CommentSource.SITE_COMMENTS) {
+            Intent intent = new Intent(getActivity(), UnifiedCommentsEditActivity.class);
+            intent.putExtra(WordPress.SITE, mSite);
+            if (mComment != null) {
+                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID, mComment.getId());
+            }
+            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+        } else {
+            Intent intent = new Intent(getActivity(), EditCommentActivity.class);
+            intent.putExtra(WordPress.SITE, mSite);
+            intent.putExtra(EditCommentActivity.KEY_COMMENT, mComment);
+            if (mNote != null && mComment == null) {
+                intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
+            }
+            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         }
-        startActivityForResult(intent, INTENT_COMMENT_EDITOR);
     }
 
     /*

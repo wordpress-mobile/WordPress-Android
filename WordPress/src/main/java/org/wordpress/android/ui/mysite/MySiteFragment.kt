@@ -6,9 +6,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,48 +28,16 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
-import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaIds
-import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaUris
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomains
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenQuickStartFullScreenDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenUnifiedComments
-import org.wordpress.android.ui.mysite.SiteNavigationAction.ShowQuickStartDialog
-import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -76,6 +46,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
+import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -86,13 +57,16 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
@@ -117,11 +91,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
+    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var binding: MySiteFragmentBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // The following prevents the soft keyboard from leaving a white space when dismissed.
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
@@ -136,6 +113,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
+            swipeToRefreshHelper.isRefreshing = true
         }
     }
 
@@ -180,6 +158,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.layoutManager = layoutManager
+        recyclerView.addItemDecoration(
+                MySiteCardAndItemDecoration(
+                        horizontalMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large),
+                        verticalMargin = resources.getDimensionPixelSize(R.dimen.margin_medium)
+                )
+        )
 
         val adapter = MySiteAdapter(imageManager, uiHelpers)
 
@@ -188,11 +172,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
 
         recyclerView.adapter = adapter
+
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+            if (NetworkUtils.checkConnection(requireActivity())) {
+                viewModel.refresh(isPullToRefresh = true)
+            } else {
+                swipeToRefreshHelper.isRefreshing = false
+            }
+        }
     }
 
+    @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
+            hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state.cardAndItems)
                 is State.NoSites -> loadEmptyView(state.shouldShowImage)
@@ -235,7 +229,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { showSnackbar(it) })
         viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner, { activeTutorialPrompt ->
-            val message = quickStartUtils.stylizeThemedQuickStartPrompt(
+            val message = quickStartUtils.stylizeQuickStartPrompt(
                     requireContext(),
                     activeTutorialPrompt.shortMessagePrompt,
                     activeTutorialPrompt.iconId
@@ -248,70 +242,95 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             viewModel.onQuickStartMenuInteraction(interaction)
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
+        viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongMethod")
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
-        is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-        is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
-        is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
-        is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this@MySiteFragment, action.site)
-        is OpenCropActivity -> startCropActivity(action.imageUri)
-        is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
-        is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
-        is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
-        is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
-        is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
-        is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
-        is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
-        is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
-        is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
-        is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
-        is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
-        is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
-        is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-        is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
-        is OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
-        is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
-        is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-        is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
-        is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
-        is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-        is AddNewStory -> ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
-        is AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
+        is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+        is SiteNavigationAction.OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
+        is SiteNavigationAction.OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
+        is SiteNavigationAction.OpenMediaPicker ->
+            mediaPickerLauncher.showSiteIconPicker(this@MySiteFragment, action.site)
+        is SiteNavigationAction.OpenCropActivity -> startCropActivity(action.imageUri)
+        is SiteNavigationAction.OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
+        is SiteNavigationAction.OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
+        is SiteNavigationAction.OpenScan -> ActivityLauncher.viewScan(activity, action.site)
+        is SiteNavigationAction.OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
+        is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
+        is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+        is SiteNavigationAction.OpenHomepage -> ActivityLauncher.editLandingPageForResult(
+                this,
+                action.site,
+                action.homepageLocalId
+        )
+        is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+        is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
+        is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
+        is SiteNavigationAction.OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
+        is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
+        is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
+        is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
+        is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
+        is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+        is SiteNavigationAction.ConnectJetpackForStats ->
+            ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
+        is SiteNavigationAction.StartWPComLoginForJetpackStats ->
+            ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
+        is SiteNavigationAction.OpenJetpackSettings ->
+            ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
+        is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
+        is SiteNavigationAction.AddNewStory ->
+            ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
+        is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
                 activity,
                 action.site,
                 action.source,
                 action.mediaIds.toLongArray()
         )
-        is AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
+        is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
                 activity,
                 action.site,
                 action.source,
                 action.mediaUris.toTypedArray()
         )
-        is OpenDomains -> ActivityLauncher.viewDomainsDashboardActivityForResult(
+        is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 activity,
-                action.site,
-                CTA_DOMAIN_CREDIT_REDEMPTION // TODO: replace with correct CTA
+                action.site
         )
-        is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+        is SiteNavigationAction.OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity,
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
-        is ShowQuickStartDialog -> showQuickStartDialog(
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+        is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
                 action.title,
                 action.message,
                 action.positiveButtonLabel,
-                action.negativeButtonLabel,
-                action.neutralButtonLabel
+                action.negativeButtonLabel
         )
-        is OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
+        is SiteNavigationAction.OpenQuickStartFullScreenDialog -> openQuickStartFullScreenDialog(action)
+        is SiteNavigationAction.OpenDraftsPosts ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
+        is SiteNavigationAction.OpenScheduledPosts ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
+        is SiteNavigationAction.OpenEditorToCreateNewPost ->
+            ActivityLauncher.addNewPostForResult(
+                    requireActivity(),
+                    action.site,
+                    false,
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE
+            )
+        // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
+        // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
+        is SiteNavigationAction.EditDraftPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
+        is SiteNavigationAction.EditScheduledPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
     }
 
-    private fun openQuickStartFullScreenDialog(action: OpenQuickStartFullScreenDialog) {
+    private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
                 .setTitle(action.title)
@@ -363,8 +382,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh()
-        viewModel.checkAndShowQuickStartNotice()
+        viewModel.onResume()
     }
 
     override fun onPause() {
@@ -461,7 +479,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.checkAndStartQuickStart(
+                viewModel.performFirstStepAfterSiteCreation(
                         data.getIntExtra(
                                 SitePickerActivity.KEY_SITE_LOCAL_ID,
                                 SelectedSiteRepository.UNAVAILABLE
@@ -470,13 +488,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.checkAndStartQuickStart(
+                    viewModel.performFirstStepAfterSiteCreation(
                             data.getIntExtra(
                                     SitePickerActivity.KEY_SITE_LOCAL_ID,
                                     SelectedSiteRepository.UNAVAILABLE
                             )
                     )
                 }
+            }
+            RequestCodes.EDIT_LANDING_PAGE -> {
+                viewModel.checkAndStartQuickStart(
+                        data.getIntExtra(
+                                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        )
+                )
             }
         }
     }
@@ -485,8 +511,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         @StringRes title: Int,
         @StringRes message: Int,
         @StringRes positiveButtonLabel: Int,
-        @StringRes negativeButtonLabel: Int,
-        @StringRes neutralButtonLabel: Int? = null
+        @StringRes negativeButtonLabel: Int
     ) {
         val tag = TAG_QUICK_START_DIALOG
         val quickStartPromptDialogFragment = QuickStartPromptDialogFragment()
@@ -496,8 +521,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 getString(message),
                 getString(positiveButtonLabel),
                 R.drawable.img_illustration_site_about_280dp,
-                getString(negativeButtonLabel),
-                neutralButtonLabel?.let { getString(it) } ?: ""
+                getString(negativeButtonLabel)
         )
         quickStartPromptDialogFragment.show(parentFragmentManager, tag)
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
@@ -506,12 +530,18 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
+        viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(false)
+        }
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
         recyclerView.setVisible(false)
-        actionableEmptyView.setVisible(true)
+        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(true)
+            actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
+        }
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
 
@@ -537,6 +567,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
+    private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
+        swipeToRefreshHelper.setEnabled(isEnabled)
+    }
+
+    private fun hideRefreshIndicatorIfNeeded() {
+        swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+    }
+
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
@@ -560,10 +598,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onNegativeClicked(instanceTag: String) {
         viewModel.ignoreQuickStart()
-    }
-
-    override fun onNeutralClicked(instanceTag: String) {
-        viewModel.disableQuickStart()
     }
 
     override fun onConfirm(result: Bundle?) {

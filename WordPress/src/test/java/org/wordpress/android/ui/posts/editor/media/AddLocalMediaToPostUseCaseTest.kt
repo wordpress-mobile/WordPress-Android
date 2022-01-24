@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.editor.media
 
+import android.content.Context
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -21,6 +22,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase.CopyMediaResult
 import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase.CreateMediaModelsResult
 import org.wordpress.android.ui.posts.editor.media.OptimizeMediaUseCase.OptimizeMediaResult
+import org.wordpress.android.util.MediaUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 @UseExperimental(InternalCoroutinesApi::class)
@@ -271,7 +273,9 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
             getMediaModelUseCase: GetMediaModelUseCase = createGetMediaModelUseCase(),
             updateMediaModelUseCase: UpdateMediaModelUseCase = mock(),
             appendMediaToEditorUseCase: AppendMediaToEditorUseCase = mock(),
-            uploadMediaUseCase: UploadMediaUseCase = mock()
+            uploadMediaUseCase: UploadMediaUseCase = mock(),
+            mediaUtilsWrapper: MediaUtilsWrapper = mock(),
+            context: Context = mock()
         ): AddLocalMediaToPostUseCase {
             return AddLocalMediaToPostUseCase(
                     copyMediaToAppStorageUseCase = copyMediaToAppStorageUseCase,
@@ -279,7 +283,9 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
                     getMediaModelUseCase = getMediaModelUseCase,
                     updateMediaModelUseCase = updateMediaModelUseCase,
                     appendMediaToEditorUseCase = appendMediaToEditorUseCase,
-                    uploadMediaUseCase = uploadMediaUseCase
+                    uploadMediaUseCase = uploadMediaUseCase,
+                    mediaUtilsWrapper = mediaUtilsWrapper,
+                    context = context
             )
         }
 

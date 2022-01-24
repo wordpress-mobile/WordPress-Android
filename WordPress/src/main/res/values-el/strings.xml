@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-06-01 07:46:28+0000
+Translation-Revision-Date: 2021-11-08 12:47:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
@@ -8,7 +8,6 @@ Language: el_GR
 <resources>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
-    <string name="gutenberg_native_image_settings">Ρυθμίσεις εικόνας</string>
     <string name="gutenberg_native_width_settings">Ρυθμίσεις πλάτους</string>
     <string name="user_profile_untitled_site">(Χωρίς τίτλο)</string>
     <string name="user_profile_site_section_header">Ιστότοπος</string>
@@ -167,8 +166,6 @@ Language: el_GR
     <string name="quick_start_list_create_site_title">Δημιουργήστε τον ιστότοπο σας</string>
     <string name="quick_start_dialog_view_site_title">Προβολή ιστοτόπου</string>
     <string name="quick_start_dialog_publish_post_title">Δημοσίευστε ένα άρθρο</string>
-    <string name="quick_start_dialog_need_help_button_positive">Αποδοχή</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Ποτέ</string>
     <string name="quick_start_dialog_follow_sites_title">Ακολουθήστε άλλους ιστότοπους</string>
     <string name="quick_start_dialog_follow_sites_message">Βρείτε ιστοτόπους που σας ενδιαφέρουν και ακολουθήστε τους ώστε να λαμβάνετε ενημερώσεις όταν δημοσιεύουν.</string>
     <string name="quick_start_button_negative_short">Άκυρο</string>
@@ -347,7 +344,7 @@ Language: el_GR
     <string name="change_photo">Αλλαγή φωτογραφίας</string>
     <string name="dlg_saving_tag">Αποθήκευση</string>
     <string name="dlg_deleting_tag">Διαγραφή</string>
-    <string name="my_site_btn_site_pages">Σελίδες του ιστότοπου</string>
+    <string name="my_site_btn_site_pages">Σελίδες</string>
     <string name="tag_description_hint">Περιγραφή</string>
     <string name="tag_name_hint">Ετικέτα</string>
     <string name="add_new_tag">Προσθήκη Νέας Ετικέτας</string>
@@ -982,7 +979,8 @@ Language: el_GR
     <string name="site_picker_title">Επιλογή ιστότοπου</string>
     <string name="my_site_header_look_and_feel">Κοίτα και Νιώσε</string>
     <string name="my_site_header_publish">Δημοσιεύω</string>
-    <string name="my_site_btn_blog_posts">Άρθρο ιστολογίου</string>
+    <string name="my_site_btn_blog_posts">Άρθρα</string>
+    <string name="my_site_btn_site_settings">Ρυθμίσεις ιστότοπου</string>
     <string name="my_site_header_configuration">Ρυθμίσεις</string>
     <string name="reader_label_new_posts_subtitle">Πατήστε για να τα δείτε</string>
     <string name="deselect_all">Αποεπιλογή όλων</string>
@@ -999,7 +997,6 @@ Language: el_GR
     <string name="stats_search_terms_unknown_search_terms">Άγνωστοι όροι αναζήτησης</string>
     <string name="stats_view_authors">Συγγραφείς</string>
     <string name="stats_view_search_terms">Όροι αναζήτησης</string>
-    <string name="comments_fetching">Ανάκτηση σχολίων…</string>
     <string name="pages_fetching">Ανάκτηση σελίδων…</string>
     <string name="posts_fetching">Λήψη άρθρων…</string>
     <string name="media_fetching">Λήψη πολυμέσων…</string>
@@ -1035,11 +1032,11 @@ Language: el_GR
     <string name="more">Περισσότερα</string>
     <string name="older_two_days">Παλιότερο από 2 μέρες</string>
     <string name="older_last_week">Παλιότερο από 1 βδομάδα</string>
+    <string name="help_and_support">Βοήθεια και υποστήριξη</string>
     <string name="comment">Σχόλιο</string>
     <string name="reader_label_like">Like</string>
     <string name="mnu_comment_liked">Liked</string>
     <string name="reader_label_comments_closed">Τα σχόλια είναι κλειστά</string>
-    <string name="error_refresh_unauthorized_comments">Δεν έχετε άδεια για να δείτε ή να επεξεργαστείτε τα σχόλια</string>
     <string name="error_refresh_unauthorized_pages">Δεν έχετε άδεια για να δείτε ή να επεξεργαστείτε τις σελίδες</string>
     <string name="error_refresh_unauthorized_posts">Δεν έχετε άδεια για να δείτε ή να επεξεργαστείτε τα άρθρα</string>
     <string name="error_publish_empty_post">Δεν μπορείτε να δημοσιεύσετε ένα κενό άρθρο</string>
@@ -1122,10 +1119,6 @@ Language: el_GR
     <string name="mnu_comment_approve">Έγκριση</string>
     <string name="mnu_comment_unapprove">Αποέγκριση</string>
     <string name="mnu_comment_spam">Spam</string>
-    <string name="dlg_approving_comments">Έγκριση</string>
-    <string name="dlg_unapproving_comments">Αποέγκριση</string>
-    <string name="dlg_spamming_comments">Σήμανση ως spam</string>
-    <string name="dlg_trashing_comments">Αποστολή στα διαγραμμένα</string>
     <string name="trash">Διαγραφή</string>
     <string name="sure_to_cancel_edit_comment">Ακύρωση επεξεργασίας αυτού του σχολίου;</string>
     <string name="content_required">Απαιτείται σχόλιο</string>
@@ -1149,7 +1142,6 @@ Language: el_GR
     <string name="delete_post">Διαγραφή ανάρτησης;</string>
     <string name="share_link">Κοινοποίηση συνδέσμου</string>
     <string name="reader_empty_posts_in_tag_updating">Γίνεται λήψη άρθρων…</string>
-    <string name="reader_label_reply">Απάντηση</string>
     <string name="reader_likes_you_and_multi">Αυτό αρέσει σε εσάς και σε άλλους %,d</string>
     <string name="reader_likes_multi">Αυτό αρέσει σε %,d ανθρώπους</string>
     <string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
@@ -1234,7 +1226,6 @@ Language: el_GR
     <string name="title">Τίτλος</string>
     <string name="categories">Κατηγορίες</string>
     <string name="tags_separate_with_commas">Διαχωρίστε τις ετικέτες με κόμματα</string>
-    <string name="dlg_deleting_comments">Διαγραφή σχολίων</string>
     <string name="sdcard_title">Κάρτα SD Είναι Απαραίτητη</string>
     <string name="media">Πολυμέσα</string>
     <string name="approve">Έγκριση</string>
