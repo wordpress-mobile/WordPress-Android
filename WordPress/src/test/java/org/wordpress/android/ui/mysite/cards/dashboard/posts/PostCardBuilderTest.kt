@@ -269,7 +269,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         val postsCard = buildPostsCard(posts).filterDraftPostCard()?.postItems?.first()
 
-        assertThat(postsCard?.excerpt).isEqualTo(UiStringRes(R.string.my_site_no_content_post))
+        assertThat(postsCard?.excerpt).isNull()
     }
 
     @Test
