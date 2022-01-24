@@ -667,7 +667,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
-        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled() && mCommentSource == CommentSource.SITE_COMMENTS) {
+        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled()) {
             final Intent intent =
                     UnifiedCommentsEditActivity.createIntent(requireActivity(), mComment.getId(), mCommentSource, mSite);
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
