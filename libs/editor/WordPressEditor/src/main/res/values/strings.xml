@@ -130,8 +130,8 @@
     <!-- Featured image replacement -->
     <string name="featured_image_replace_dialog_title">Replace current featured image?</string>
     <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it with the new image?</string>
-    <string name="featured_image_replace_dialog_confirm">Replace with new image</string>
-    <string name="featured_image_replace_dialog_cancel">Keep current featured image</string>
+    <string name="featured_image_replace_dialog_confirm">Replace featured image</string>
+    <string name="featured_image_replace_dialog_cancel">Keep current</string>
 
     <string name="featured_image_confirmation_notice">Set as featured image</string>
     <string name="featured_image_removed_notice">Removed as featured image</string>
