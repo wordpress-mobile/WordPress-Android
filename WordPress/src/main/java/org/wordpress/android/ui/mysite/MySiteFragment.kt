@@ -608,6 +608,4 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     override fun onDismiss() {
         viewModel.onQuickStartFullScreenDialogDismiss()
     }
-
-
 }
