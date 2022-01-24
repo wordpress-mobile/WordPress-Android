@@ -68,7 +68,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.USER
+import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
@@ -417,7 +417,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                         meGravatarLoader.constructGravatarUrl(avatarUrl),
                         null,
                         it,
-                        USER,
+                        AVATAR_WITH_BACKGROUND,
                         null
                 )
             }
