@@ -2,7 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -47,12 +47,12 @@ sealed class MySiteCardAndItemBuilderParams {
     data class DashboardCardsBuilderParams(
         val showErrorCard: Boolean = false,
         val onErrorRetryClick: () -> Unit,
-        val statsCardBuilderParams: StatsCardBuilderParams,
+        val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
         val postCardBuilderParams: PostCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
-    data class StatsCardBuilderParams(
-        val statsCard: StatsCardModel?
+    data class TodaysStatsCardBuilderParams(
+        val todaysStatsCard: TodaysStatsCardModel?
     ) : MySiteCardAndItemBuilderParams()
 
     data class PostCardBuilderParams(

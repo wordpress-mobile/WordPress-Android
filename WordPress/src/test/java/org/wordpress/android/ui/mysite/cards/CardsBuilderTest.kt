@@ -28,7 +28,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.StatsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -206,7 +206,7 @@ class CardsBuilderTest {
                 ),
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         onErrorRetryClick = mock(),
-                        statsCardBuilderParams = StatsCardBuilderParams(mock()),
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )

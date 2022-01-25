@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -38,7 +38,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.StatsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
@@ -291,8 +291,9 @@ class MySiteViewModel @Inject constructor(
                 DashboardCardsBuilderParams(
                         showErrorCard = cardsUpdate?.showErrorCard == true,
                         onErrorRetryClick = this::onDashboardErrorRetry,
-                        statsCardBuilderParams = StatsCardBuilderParams(
-                                statsCard = cardsUpdate?.cards?.firstOrNull { it is StatsCardModel } as? StatsCardModel
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
+                                todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
+                                        as? TodaysStatsCardModel
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
