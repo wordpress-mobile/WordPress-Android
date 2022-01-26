@@ -8,19 +8,16 @@ sealed class CardModel(
     enum class Type(
         val classOf: Class<*>
     ) {
-        STATS(StatsCardModel::class.java),
+        TODAYS_STATS(TodaysStatsCardModel::class.java),
         POSTS(PostsCardModel::class.java)
     }
 
-    data class StatsCardModel(
-        val todaysStats: TodaysStatsModel
-    ) : CardModel(Type.STATS) {
-        data class TodaysStatsModel(
-            val views: Int,
-            val visitors: Int,
-            val likes: Int
-        )
-    }
+    data class TodaysStatsCardModel(
+        val views: Int,
+        val visitors: Int,
+        val likes: Int,
+        val comments: Int
+    ) : CardModel(Type.TODAYS_STATS)
 
     data class PostsCardModel(
         val hasPublished: Boolean,
