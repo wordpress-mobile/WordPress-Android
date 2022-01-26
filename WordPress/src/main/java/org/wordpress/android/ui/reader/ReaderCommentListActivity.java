@@ -46,7 +46,9 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.UserSuggestion;
@@ -58,6 +60,8 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListen
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -140,6 +144,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderTracker mReaderTracker;
+    @Inject SiteStore mSiteStore;
 
     private ReaderCommentListViewModel mViewModel;
     private ConversationNotificationsViewModel mConversationViewModel;
@@ -533,8 +538,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private void performCommentAction(ReaderComment comment, ReaderCommentMenuActionType action) {
         switch (action) {
             case APPROVE:
+                break;
             case EDIT:
-                break; // not implemented yet
+                openCommentEditor(comment);
+                break;
             case UNAPROVE:
                 moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unarppoved);
                 break;
@@ -550,6 +557,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             case DIVIDER_NO_ACTION:
                 break;
         }
+    }
+
+    private void openCommentEditor(ReaderComment comment) {
+        SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
+        Intent intent = new Intent(this, UnifiedCommentsEditActivity.class);
+        intent.putExtra(WordPress.SITE, postSite);
+        intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID,
+                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId));
+        startActivityForResult(intent, 3819283);
     }
 
     private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage) {

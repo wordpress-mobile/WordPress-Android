@@ -349,6 +349,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 actions.add(new Divider());
 
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.EDIT,
+                        new UiStringRes(R.string.reader_comment_menu_edit),
+                        new UiStringRes(R.string.reader_comment_menu_edit),
+                        R.drawable.ic_pencil_white_24dp));
+
                 actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SHARE,
                         new UiStringRes(R.string.reader_comment_menu_share),
                         new UiStringRes(R.string.reader_comment_menu_share),
