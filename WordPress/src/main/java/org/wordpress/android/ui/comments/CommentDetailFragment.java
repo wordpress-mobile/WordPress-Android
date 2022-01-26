@@ -72,6 +72,7 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -687,7 +688,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Intent intent = new Intent(getActivity(), UnifiedCommentsEditActivity.class);
             intent.putExtra(WordPress.SITE, mSite);
             if (mComment != null) {
-                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID, mComment.getId());
+                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID, new SiteCommentIdentifier(mComment.getId()));
             }
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         } else {
