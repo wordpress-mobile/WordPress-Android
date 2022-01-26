@@ -1,10 +1,9 @@
 {
-  "stats": {
-    "todays_stats": {
+  "todays_stats": {
       "views": 100,
       "visitors": 30,
-      "likes": 50
-    }
+      "likes": 50,
+      "comments": 10
   },
   "posts": {
     "has_published": true,
