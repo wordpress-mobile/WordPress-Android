@@ -15,8 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.StatsCardModel.TodaysStatsModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
@@ -38,6 +37,7 @@ const val SITE_LOCAL_ID = 1
 const val STATS_VIEWS = 100
 const val STATS_VISITORS = 30
 const val STATS_LIKES = 50
+const val STATS_COMMENTS = 10
 
 /* POST */
 
@@ -49,14 +49,11 @@ const val POST_DATE = "2021-12-27 11:33:55"
 
 /* MODEL */
 
-private val TODAYS_STATS = TodaysStatsModel(
+private val TODAYS_STATS_CARDS_MODEL = TodaysStatsCardModel(
         views = STATS_VIEWS,
         visitors = STATS_VISITORS,
-        likes = STATS_LIKES
-)
-
-private val STATS_CARD_MODEL = StatsCardModel(
-        todaysStats = TODAYS_STATS
+        likes = STATS_LIKES,
+        comments = STATS_COMMENTS
 )
 
 private val POST_MODEL = PostCardModel(
@@ -74,7 +71,7 @@ private val POSTS_MODEL = PostsCardModel(
 )
 
 private val CARDS_MODEL: List<CardModel> = listOf(
-        STATS_CARD_MODEL,
+        TODAYS_STATS_CARDS_MODEL,
         POSTS_MODEL
 )
 
