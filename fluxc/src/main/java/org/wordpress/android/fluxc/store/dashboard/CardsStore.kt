@@ -85,6 +85,26 @@ class CardsStore @Inject constructor(
 
     /* ERRORS */
 
+    enum class TodaysStatsCardErrorType {
+        JETPACK_DISCONNECTED,
+        JETPACK_DISABLED,
+        UNAUTHORIZED,
+        GENERIC_ERROR
+    }
+
+    class TodaysStatsCardError(
+        val type: TodaysStatsCardErrorType
+    ) : OnChangedError
+
+    enum class PostCardErrorType {
+        UNAUTHORIZED,
+        GENERIC_ERROR
+    }
+
+    class PostCardError(
+        val type: PostCardErrorType
+    ) : OnChangedError
+
     enum class CardsErrorType {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
