@@ -72,6 +72,9 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentSource;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
@@ -668,8 +671,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
         if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled()) {
+            final CommentIdentifier commentIdentifier = mapCommentIdentifier();
             final Intent intent =
-                    UnifiedCommentsEditActivity.createIntent(requireActivity(), mComment.getId(), mCommentSource, mSite);
+                    UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         } else {
             Intent intent = new Intent(getActivity(), EditCommentActivity.class);
@@ -679,6 +683,19 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
             }
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+        }
+    }
+
+    // TODO [RenanLukas] handle Reader CommentSource when it's ready
+    @Nullable
+    private CommentIdentifier mapCommentIdentifier() {
+        switch (mCommentSource) {
+            case SITE_COMMENTS:
+                return new SiteCommentIdentifier(mComment.getId());
+            case NOTIFICATION:
+                return new NotificationCommentIdentifier(mComment.getRemoteCommentId());
+            default:
+                return null;
         }
     }
 

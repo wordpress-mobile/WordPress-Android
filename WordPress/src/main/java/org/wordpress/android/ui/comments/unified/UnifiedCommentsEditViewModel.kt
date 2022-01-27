@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
@@ -119,7 +120,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         CANCEL_EDIT_CONFIRM
     }
 
-    fun start(site: SiteModel, commentId: Int) {
+    fun start(site: SiteModel, commentIdentifier: CommentIdentifier) {
         if (isStarted) {
             // If we are here, the fragment view was recreated (like in a configuration change)
             // so we reattach the watchers.
@@ -130,7 +131,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
         this.site = site
 
-        initViews(commentId)
+        initViews(commentIdentifier)
     }
 
     private suspend fun setLoadingState(state: ProgressState) {
@@ -203,12 +204,17 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         _uiActionEvent.value = Event(CLOSE)
     }
 
-    private fun initViews(commentId: Int) {
+    private fun initViews(commentIdentifier: CommentIdentifier) {
         launch {
             setLoadingState(LOADING)
 
             val commentList = withContext(bgDispatcher) {
-                commentsStore.getCommentByLocalId(commentId.toLong())
+                when (commentIdentifier) {
+                    is SiteCommentIdentifier ->
+                        commentsStore.getCommentByLocalId(commentIdentifier.localCommentId.toLong())
+                    //TODO [RenanLukas] Implement NotificationCommentIdentifier case
+                    else -> emptyList()
+                }
             }
 
             if (commentList.isEmpty()) {
