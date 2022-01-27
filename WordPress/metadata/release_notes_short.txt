@@ -1,0 +1,6 @@
+- Button justification in the Buttons block.
+- Block names in Hebrew and Indonesian.
+- Translated featured image and Cover block color settings.
+- No help button in the unsupported block editor.
+- Text/background color contrast notifications.
+- Fewer issues changing non-selected text color.

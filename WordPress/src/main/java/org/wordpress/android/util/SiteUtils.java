@@ -350,6 +350,10 @@ public class SiteUtils {
         return site != null && (site.isWPCom() || site.isWPComAtomic());
     }
 
+    public static boolean supportsTiledGalleryFeature(SiteModel site) {
+        return site != null && site.isWPCom();
+    }
+
     public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, minimalJetpackVersion));
     }

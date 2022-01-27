@@ -113,6 +113,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             setupToolbar()
             setupContentViews(savedInstanceState)
             setupObservers()
+            swipeToRefreshHelper.isRefreshing = true
         }
     }
 
@@ -174,7 +175,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             if (NetworkUtils.checkConnection(requireActivity())) {
-                viewModel.onPullToRefresh()
+                viewModel.refresh(isPullToRefresh = true)
             } else {
                 swipeToRefreshHelper.isRefreshing = false
             }
@@ -185,6 +186,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
+            hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state.cardAndItems)
                 is State.NoSites -> loadEmptyView(state.shouldShowImage)
@@ -227,7 +229,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner, { showSnackbar(it) })
         viewModel.onQuickStartMySitePrompts.observeEvent(viewLifecycleOwner, { activeTutorialPrompt ->
-            val message = quickStartUtils.stylizeThemedQuickStartPrompt(
+            val message = quickStartUtils.stylizeQuickStartPrompt(
                     requireContext(),
                     activeTutorialPrompt.shortMessagePrompt,
                     activeTutorialPrompt.iconId
@@ -257,6 +259,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
         is SiteNavigationAction.OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
         is SiteNavigationAction.OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+        is SiteNavigationAction.OpenHomepage -> ActivityLauncher.editLandingPageForResult(
+                this,
+                action.site,
+                action.homepageLocalId
+        )
         is SiteNavigationAction.OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
         is SiteNavigationAction.OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
         is SiteNavigationAction.OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
@@ -264,7 +271,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
         is SiteNavigationAction.OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
         is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-        is SiteNavigationAction.OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
         is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
         is SiteNavigationAction.ConnectJetpackForStats ->
@@ -316,8 +322,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     false,
                     PagePostCreationSourcesDetail.POST_FROM_MY_SITE
             )
-        // TODO: ashiagr this is unhandled right now as mocked post is being used which cannot be opened in the editor
-        is SiteNavigationAction.EditPost -> Unit
+        // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
+        // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
+        is SiteNavigationAction.EditDraftPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
+        is SiteNavigationAction.EditScheduledPost ->
+            ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
@@ -372,8 +382,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh()
-        viewModel.checkAndShowQuickStartNotice()
+        viewModel.onResume()
     }
 
     override fun onPause() {
@@ -470,7 +479,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
-                viewModel.checkAndStartQuickStart(
+                viewModel.performFirstStepAfterSiteCreation(
                         data.getIntExtra(
                                 SitePickerActivity.KEY_SITE_LOCAL_ID,
                                 SelectedSiteRepository.UNAVAILABLE
@@ -479,13 +488,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.checkAndStartQuickStart(
+                    viewModel.performFirstStepAfterSiteCreation(
                             data.getIntExtra(
                                     SitePickerActivity.KEY_SITE_LOCAL_ID,
                                     SelectedSiteRepository.UNAVAILABLE
                             )
                     )
                 }
+            }
+            RequestCodes.EDIT_LANDING_PAGE -> {
+                viewModel.checkAndStartQuickStart(
+                        data.getIntExtra(
+                                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                                SelectedSiteRepository.UNAVAILABLE
+                        )
+                )
             }
         }
     }
@@ -512,10 +529,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
         recyclerView.setVisible(true)
+        actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        swipeToRefreshHelper.isRefreshing = false
         (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
@@ -525,7 +542,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
         }
-        swipeToRefreshHelper.isRefreshing = false
         actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
     }
 
@@ -553,6 +569,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
         swipeToRefreshHelper.setEnabled(isEnabled)
+    }
+
+    private fun hideRefreshIndicatorIfNeeded() {
+        swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
     }
 
     companion object {

@@ -1,0 +1,6 @@
+19.0:
+– Hantera kontrollpanelen i ett kortbaserat flöde, med inlägg.
+– Ladda upp högst 5 minuter långa videoklipp med gratispaket.
+– Mer text i gränssnittet på ditt språk, bl.a. block för Jetpack/rutnätslayout.
+– Textformatering ändras inte av bakåtstegstangenten.
+– Nu rubrikerna för block centrerade i menyn ”infoga”.

@@ -55,12 +55,12 @@ import org.wordpress.android.ui.notifications.blocks.UserNoteBlock.OnGravatarCli
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.services.ReaderCommentService
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.COMMENT_NOTIFICATION
+import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig
 import org.wordpress.android.util.getRangeIdOrZero
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
@@ -88,7 +88,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
     @Inject lateinit var listScenarioUtils: ListScenarioUtils
-    @Inject lateinit var mUnifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -242,7 +241,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 ReaderActivityLauncher.showReaderComments(
                         activity, note.siteId.toLong(), note.postId.toLong(),
                         note.commentId,
-                        mUnifiedThreadedCommentsFeatureConfig.isEnabled()
+                        COMMENT_NOTIFICATION.sourceDescription
                 )
             }
         }

@@ -12,29 +12,12 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class SelectedSiteSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val dispatcher: Dispatcher
 ) : MySiteRefreshSource<SelectedSite> {
-    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
-
-    override fun build(
-        coroutineScope: CoroutineScope,
-        siteLocalId: Int
-    ) = selectedSiteRepository.selectedSiteChange
-            .filter { it == null || it.id == siteLocalId }
-            .map { SelectedSite(it) }
-
-    override fun refresh() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        selectedSiteRepository.getSelectedSite()?.let {
-            super.refresh()
-            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
-        }
-    }
+    override val refresh = MutableLiveData(selectedSiteRepository.hasSelectedSite())
 
     init {
         dispatcher.register(this)
@@ -44,10 +27,28 @@ class SelectedSiteSource @Inject constructor(
         dispatcher.unregister(this)
     }
 
+    override fun build(
+        coroutineScope: CoroutineScope,
+        siteLocalId: Int
+    ) = selectedSiteRepository.selectedSiteChange
+            .filter { it == null || it.id == siteLocalId }
+            .apply { onRefreshedMainThread() }
+            .map { SelectedSite(it) }
+
+    override fun refresh() {
+        updateSiteSettingsIfNecessary()
+        selectedSiteRepository.getSelectedSite()?.let {
+            super.refresh()
+            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
+        }
+    }
+
+    fun updateSiteSettingsIfNecessary() = selectedSiteRepository.updateSiteSettingsIfNecessary()
+
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteChanged(event: OnSiteChanged?) {
         // Handled in WPMainActivity, this observe is only to manage the refresh flag
-        onRefreshed()
+        onRefreshedMainThread()
     }
 }

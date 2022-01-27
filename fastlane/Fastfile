@@ -114,6 +114,7 @@ import './ScreenshotFastfile'
 Dotenv.load(USER_ENV_FILE_PATH)
 ENV[GHHELPER_REPO = 'wordpress-mobile/WordPress-Android']
 ENV['PROJECT_ROOT_FOLDER'] = File.dirname(File.expand_path(__dir__)) + '/'
+ENV['FL_RELEASE_TOOLKIT_DEFAULT_BRANCH'] = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 
 ########################################################################
@@ -132,7 +133,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   # bundle exec fastlane code_freeze update_release_branch_version:false
   # bundle exec fastlane code_freeze skip_confirm:true
   #####################################################################################
-  desc 'Creates a new release branch from the current develop'
+  desc 'Creates a new release branch from the current trunk'
   lane :code_freeze do |options|
     old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
@@ -360,24 +361,7 @@ REPOSITORY_NAME = 'WordPress-Android'
     android_finalize_prechecks(skip_confirm: options[:skip_confirm])
     configure_apply(force: is_ci)
 
-    UI.message('Checking app strings translation status...')
-    check_translation_progress(
-      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
-      abort_on_violations: false
-    )
-
-    UI.message('Checking WordPress release notes strings translation status...')
-    check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:gp_url],
-      abort_on_violations: false
-    )
-
-    UI.message('Checking Jetpack release notes strings translation status...')
-    check_translation_progress(
-      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:gp_url],
-      abort_on_violations: false
-    )
-
+    check_translations_coverage()
     download_translations()
 
     android_bump_version_final_release()
@@ -392,6 +376,30 @@ REPOSITORY_NAME = 'WordPress-Android'
 
     # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version['name']}")
+  end
+
+  lane :check_translations_coverage do |options|
+    UI.message('Checking app strings translation status...')
+    check_translation_progress(
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
+    UI.message('Checking WordPress release notes strings translation status...')
+    check_translation_progress(
+      glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:gp_url],
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
+    UI.message('Checking Jetpack release notes strings translation status...')
+    check_translation_progress(
+      glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:gp_url],
+      abort_on_violations: false,
+      skip_confirm: options[:skip_confirm] || false
+    )
+
   end
 
   #####################################################################################
@@ -741,6 +749,14 @@ REPOSITORY_NAME = 'WordPress-Android'
       import_key: "storiesVersion",
       repository: "Automattic/stories-android",
       strings_file_path: "stories/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
+    },
+    {
+      name: "About Library",
+      import_key: "aboutAutomatticVersion",
+      repository: "Automattic/about-automattic-android",
+      strings_file_path: "library/src/main/res/values/strings.xml",
       github_release_prefix: "",
       exclusions: []
     },

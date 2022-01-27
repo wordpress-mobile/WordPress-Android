@@ -136,7 +136,6 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
-import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.workers.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
@@ -189,7 +188,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private static boolean mFirstResume = true;
 
     private WPMainNavigationView mBottomNav;
-    private WPDialogSnackbar mQuickStartSnackbar;
 
     private TextView mConnectionBar;
     private JetpackConnectionSource mJetpackConnectSource;
@@ -1032,6 +1030,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
+            case RequestCodes.EDIT_LANDING_PAGE:
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
                     return;
                 }
@@ -1562,26 +1561,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    // because of the bottom nav implementation (we only get callback after active fragment is changed) we need
-    // to manage SnackBar in Activity, instead of Fragment
-    public void showQuickStartSnackBar(WPDialogSnackbar snackbar) {
-        hideQuickStartSnackBar();
-        mQuickStartSnackbar = snackbar;
-        mQuickStartSnackbar.show();
-    }
-
-    private void hideQuickStartSnackBar() {
-        if (mQuickStartSnackbar != null && mQuickStartSnackbar.isShowing()) {
-            mQuickStartSnackbar.dismiss();
-            mQuickStartSnackbar = null;
-        }
-    }
-
     // We dismiss the QuickStart SnackBar every time activity is paused because
     // SnackBar sometimes do not appear when another SnackBar is still visible, even in other activities (weird)
     @Override protected void onPause() {
         super.onPause();
-        hideQuickStartSnackBar();
 
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
     }

@@ -11,23 +11,19 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class DynamicCardsSource
 @Inject constructor(
     private val dynamicCardStore: DynamicCardStore,
     private val selectedSiteRepository: SelectedSiteRepository
 ) : MySiteRefreshSource<DynamicCardsUpdate> {
-    override val refresh: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    override val refresh = MutableLiveData(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DynamicCardsUpdate> {
-        val data = MediatorLiveData<DynamicCardsUpdate>()
-        data.refreshData(coroutineScope, siteLocalId)
-        data.addSource(refresh) {
-            data.refreshData(coroutineScope, siteLocalId, refresh.value)
-        }
-        return data
+        val result = MediatorLiveData<DynamicCardsUpdate>()
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
+        refresh()
+        return result
     }
 
     private fun MediatorLiveData<DynamicCardsUpdate>.refreshData(
@@ -67,7 +63,7 @@ class DynamicCardsSource
     private suspend fun callWithSite(function: suspend (Int) -> Unit) {
         selectedSiteRepository.getSelectedSite()?.id?.let { selectedSiteLocalId ->
             function(selectedSiteLocalId)
-            refresh.postValue(true)
+            refresh()
         }
     }
 }

@@ -1,6 +1,6 @@
-- Get link suggestions instead of auto-populated clipboard links for Button and Image blocks.
-- Click "Copy Link" to share published post links.
-- Inserter menu tabs match your device's language.
-- Device media options open when creating a Gallery block.
-- Font size bug and RTL visual issues are resolved.
-- Edit Embed block link in Block Settings.
+- Justify buttons properly in the Buttons block.
+- See block names in Hebrew and Indonesian.
+- See translated featured image and Cover block color settings.
+- No longer see the help button in the unsupported block editor.
+- Be notified if text/background color combos are hard to read.
+- Run into fewer issues when changing the color of non-selected text.
