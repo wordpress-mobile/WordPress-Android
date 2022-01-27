@@ -119,7 +119,7 @@ private val CARDS_MODEL = listOf(
 )
 
 /* ENTITY */
-private val STATS_ENTITY = CardEntity(
+private val TODAYS_STATS_ENTITY = CardEntity(
         siteLocalId = SITE_LOCAL_ID,
         type = CardModel.Type.TODAYS_STATS.name,
         date = CardsUtils.getInsertDate(),
@@ -148,7 +148,7 @@ private val POSTS_WITH_ERROR_ENTITY = CardEntity(
 )
 
 private val CARDS_ENTITY = listOf(
-        STATS_ENTITY,
+        TODAYS_STATS_ENTITY,
         POSTS_ENTITY
 )
 
