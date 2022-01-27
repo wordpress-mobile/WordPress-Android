@@ -20,6 +20,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
@@ -34,11 +36,19 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import org.wordpress.android.fluxc.test
 
 /* DATE */
 
 private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss"
+
+/* ERRORS */
+private const val JETPACK_DISABLED = "jetpack_disabled"
+private const val UNAUTHORIZED = "unauthorized"
 
 /* RESPONSE */
 
@@ -181,6 +191,62 @@ class CardsRestClientTest {
         assertError(CardsErrorType.GENERIC_ERROR, result)
     }
 
+    /* TODAY'S STATS CARD ERRORS */
+    @Test
+    fun `given jetpack disconn, when fetch cards triggered, then returns todays stats jetpack disconn card error`() =
+            test {
+                val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
+                initFetchCards(data = getCardsResponseFromJsonString(json))
+
+                val result = restClient.fetchCards(site)
+
+                assertSuccessWithTodaysStatsError(TodaysStatsCardErrorType.JETPACK_DISCONNECTED, result)
+            }
+
+    @Test
+    fun `given jetpack disabled, when fetch cards triggered, then returns todays stats jetpack disabled card error`() =
+            test {
+                val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
+                val data = getCardsResponseFromJsonString(json)
+                        .copy(todaysStats = TodaysStatsResponse(error = JETPACK_DISABLED))
+                initFetchCards(data = data)
+
+                val result = restClient.fetchCards(site)
+
+                assertSuccessWithTodaysStatsError(TodaysStatsCardErrorType.JETPACK_DISABLED, result)
+            }
+
+    @Test
+    fun `given stats unauthorized, when fetch cards triggered, then returns todays stats unauthorized card error`() =
+            test {
+                val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
+                val data = getCardsResponseFromJsonString(json)
+                        .copy(todaysStats = TodaysStatsResponse(error = UNAUTHORIZED))
+                initFetchCards(data = data)
+
+                val result = restClient.fetchCards(site)
+
+                assertSuccessWithTodaysStatsError(TodaysStatsCardErrorType.UNAUTHORIZED, result)
+            }
+
+    /* POST CARD ERROR */
+    @Test
+    fun `given posts unauthorized error, when fetch cards triggered, then returns post card card error`() =
+            test {
+                val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
+                initFetchCards(data = getCardsResponseFromJsonString(json))
+
+                val result = restClient.fetchCards(site)
+
+                assertSuccessWithPostCardError(result)
+            }
+
+    private fun CardsPayload<CardsResponse>.findTodaysStatsCardError(): TodaysStatsCardError? =
+            this.response?.toCards()?.filterIsInstance(TodaysStatsCardModel::class.java)?.firstOrNull()?.error
+
+    private fun CardsPayload<CardsResponse>.findPostCardError(): PostCardError? =
+            this.response?.toCards()?.filterIsInstance(PostsCardModel::class.java)?.firstOrNull()?.error
+
     private fun getCardsResponseFromJsonString(json: String): CardsResponse {
         val responseType = object : TypeToken<CardsResponse>() {}.type
         return GsonBuilder().setDateFormat(DATE_FORMAT_PATTERN)
@@ -232,11 +298,33 @@ class CardsRestClientTest {
         }
     }
 
+    private fun assertSuccessWithTodaysStatsError(
+        expected: TodaysStatsCardErrorType,
+        actual: CardsPayload<CardsResponse>
+    ) {
+        with(actual) {
+            assertEquals(site, this@CardsRestClientTest.site)
+            assertFalse(isError)
+            assertEquals(expected, findTodaysStatsCardError()?.type)
+        }
+    }
+
+    private fun assertSuccessWithPostCardError(
+        actual: CardsPayload<CardsResponse>
+    ) {
+        with(actual) {
+            assertEquals(site, this@CardsRestClientTest.site)
+            assertFalse(isError)
+            assertEquals(PostCardErrorType.UNAUTHORIZED, findPostCardError()?.type)
+        }
+    }
+
     companion object {
         private const val API_BASE_PATH = "https://public-api.wordpress.com/wpcom/v2"
         private const val API_SITE_PATH = "$API_BASE_PATH/sites"
         private const val API_DASHBOARD_CARDS_PATH = "dashboard/cards/"
 
         private const val DASHBOARD_CARDS_JSON = "wp/dashboard/cards.json"
+        private const val DASHBOARD_CARDS_WITH_ERRORS_JSON = "wp/dashboard/cards_with_errors.json"
     }
 }
