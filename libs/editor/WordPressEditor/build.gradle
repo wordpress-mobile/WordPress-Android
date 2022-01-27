@@ -1,5 +1,5 @@
 buildscript {
-    ext.aztecVersion = 'develop-b77a91ad4a2b02ebb15e2e8588b4e707ed66845e'
+    ext.aztecVersion = 'v1.5.3'
 }
 
 repositories {
@@ -24,7 +24,7 @@ repositories {
         }
     }
     google()
-    jcenter()
+    mavenCentral()
     maven { url "https://www.jitpack.io" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
@@ -69,7 +69,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'org.wordpress:utils:trunk-1ed207c03d2242b6fc3d74f9e388e9163cbc82a6'
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     api ("$gradle.ext.aztecAndroidAztecPath") {
         exclude group: "com.android.volley"
@@ -105,6 +105,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.6.2'
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 }
 

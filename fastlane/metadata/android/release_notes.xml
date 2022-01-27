@@ -1,126 +1,152 @@
 <ar>
-18.8:
-- احصل على اقتراحات الرابط بدلاً من روابط الحافظة المملوءة تلقائيًا الخاصة بمكوِّنات الزر والصورة.
-- انقر على "نسخ الرابط" لمشاركة روابط المقالة المنشورة.
-- تطابق علامات تبويب قائمة أداة الإدراج لغة جهازك.
-- يتم فتح خيارات وسائط الجهاز عند إنشاء مكوِّن المعرض.
-- تم حل خطأ حجم الخط والمشكلات المرئية من اليمين إلى اليسار.
-- قم بتحرير رابط مكوِّن التضمين في إعدادات المكوِّن.
+19.0:
+- قم بإدارة لوحة التحكم الخاصة بك باستخدام موجز يستند إلى بطاقة، بما في ذلك المقالات.
+- ارفع مقاطع فيديو تصل إلى 5 دقائق في الخطط المجانية.
+- اطلع على مزيد من نص واجهة المستخدم بلغتك، بما في ذلك مكوِّنات Jetpack/شبكة التخطيط.
+- احتفظ بتنسيق النص بعد الضغط على زر الرجوع.
+- تمت محاذاة عناوين المكوِّن الآن إلى الوسط في قائمة أداة الإدراج.
 </ar>
 <de-DE>
-18.8:
-- Erhalte Linkvorschläge anstelle von automatisch ausgefüllten Links aus der Zwischenablage für Buttons und Bildblöcke.
-- Klicke auf „Link kopieren“, um Links zu veröffentlichten Beiträgen zu teilen.
-- Tabs des Inserter-Menüs stimmen mit der Sprache deines Geräts überein.
-- Beim Erstellen eines Galerieblocks werden die Medienoptionen des Geräts geöffnet.
-- Problem mit der Schriftgröße und visuelle RTL-Probleme wurden behoben.
-- Bearbeite Embed-Block-Links in den Blockeinstellungen.
+19.0:
+– Verwalte dein Dashboard mit einem kartenbasierten Feed, einschließlich Beiträgen.
+– Lade bei Kostenlos-Tarifen Videos mit einer Länge von bis zu fünf Minuten hoch.
+– Zeige mehr Benutzeroberflächentext in deiner Sprache an, einschließlich Jetpack-/Layoutraster-Blöcken.
+– Behalte die Textformatierung nach Drücken auf die Rücktaste bei.
+– Blocktitel werden im Inserter-Menü nun zentriert ausgerichtet.
 </de-DE>
 <en-US>
-18.8:
-- Get link suggestions instead of auto-populated clipboard links for Button and Image blocks.
-- Click "Copy Link" to share published post links.
-- Inserter menu tabs match your device's language.
-- Device media options open when creating a Gallery block.
-- Font size bug and RTL visual issues are resolved.
-- Edit Embed block link in Block Settings.
+19.0:
+- Manage your dashboard with a card-based feed, including Posts.
+- Upload up to 5-minute videos on free plans.
+- See more user interface text in your language, including Jetpack/Layout Grid blocks.
+- Keep text formatting after hitting backspace.
+- Block titles are now center-aligned in the inserter menu.
 </en-US>
+<es-ES>
+19.0:
+- Gestionar tu escritorio con un feed basado en tarjetas, incluyendo entradas.
+- Subir vídeos de hasta 5 minutos en los planes gratuitos.
+- Ver más texto en tu idioma en la interfaz de usuario, incluyendo los bloques de Jetpack/Diseño en cuadrícula.
+- Mantener el formato del texto después de pulsar la tecla de retroceso.
+- Ahora, los títulos de los bloques están alineados al centro en el menú del insertador.
+</es-ES>
 <fr-CA>
-18.8 :
-- Recevez des suggestions de liens au lieu des liens du presse-papier remplis autotmatiquement pour les blocs de boutons et d’images.
-- Cliquez sur « Copier le lien » pour partager le lien d’articles publiés.
-- Inserter menu tabs match your device's language.
-- Device media options open when creating a Gallery block.
-- Font size bug and RTL visual issues are resolved.
-- Edit Embed block link in Block Settings.
+19.0:
+- Gérez votre tableau de bord avec un flux lié à une carte, y compris les articles.
+- Chargez des vidéos de max. 5 minutes avec les plans gratuits.
+- Accédez à plus de texte d’interface utilisateur dans votre langue, dont Jetpack/blocs de grille de mise en page.
+- Conservez le formatage de texte après avoir appuyé sur la touche Retour arrière.
+- Les titres de blocs sont désormais alignés au centre dans le menu d’insertion.
 </fr-CA>
 <fr-FR>
-18.8 :
-- Recevez des suggestions de liens au lieu des liens du presse-papier remplis autotmatiquement pour les blocs de boutons et d’images.
-- Cliquez sur « Copier le lien » pour partager le lien d’articles publiés.
-- Inserter menu tabs match your device's language.
-- Device media options open when creating a Gallery block.
-- Font size bug and RTL visual issues are resolved.
-- Edit Embed block link in Block Settings.
+19.0:
+- Gérez votre tableau de bord avec un flux lié à une carte, y compris les articles.
+- Chargez des vidéos de max. 5 minutes avec les plans gratuits.
+- Accédez à plus de texte d’interface utilisateur dans votre langue, dont Jetpack/blocs de grille de mise en page.
+- Conservez le formatage de texte après avoir appuyé sur la touche Retour arrière.
+- Les titres de blocs sont désormais alignés au centre dans le menu d’insertion.
 </fr-FR>
 <iw-IL>
-18.8:
-- לקבל הצעות לקישורים במקום קישורים של הלוח שהוזנו באופן אוטומטי לבלוק כפתור ולבלוק תמונה.
-- ללחוץ על 'להעתיק את הקישור' כדי לשתף קישורים לפוסטים שפורסמו.
--הלשוניות בתפריט המוסיף תואמות לשפה במכשיר שלך.
-- אפשרויות המדיה במכשיר נפתחות כאשר יוצרים בלוק גלריה.
-- תיקנו באג שגרם לבעיות בגודל הגופן ובעיות בכיווניות מימין לשמאל.
-- לערוך קישור בבלוק ההטמעה דרך הגדרות הבלוק.
+19.0:
+- לנהל את לוח הבקרה שלך באמצעות פיד שמציג כרטיסים, כולל פוסטים.
+- להעלות סרטונים בני עד חמש דקות בתוכניות החינמיות.
+- להציג עוד טקסט בממשק המשתמש בשפה שלך, כולל בלוקים של Jetpack / רשת פריסות.
+- לשמור על עיצוב עקבי לטקסט לאחר הקשה על מקש המחיקה.
+- כותרות הבלוקים כעת מיושרות למרכז בתפריט של מוסיף הבלוקים.
 </iw-IL>
 <id>
-18.8:
-- Dapatkan saran tautan alih-alih tautan papan klip yang terisi otomatis untuk blok Tombol dan Gambar.
-- Klik "Salin Tautan" untuk membagikan tautan pos yang telah diposkan.
-- Tab menu penyisip sesuai dengan bahasa perangkat Anda.
-- Pilihan media perangkat terbuka saat membuat blok Galeri.
-- Masalah bug ukuran font dan tampilan RTL telah diperbaiki.
-- Mengedit tautan blok Sematan di Pengaturan Blok.
+19.0:
+- Kelola dasbor Anda dengan feed berbasis kartu, termasuk Pos.
+- Unggah video berdurasi maksimal 5 menit pada paket gratis.
+- Lihat lebih banyak teks antarmuka dalam bahasa Anda, termasuk blok Jetpack/Petak Tata Letak.
+- Pertahankan pemformatan teks setelah menekan backspace.
+- Sekarang judul blok pada menu penyisip rata tengah.
 </id>
+<it-IT>
+19.0:
+- Gestisci la bacheca con un feed basato su scheda, incluso Articoli.
+- Carica fino a 5 minuti di video con piani gratuiti.
+- Visualizza più testo dell'interfaccia utente nella tua lingua, inclusi i blocchi Jetpack/Griglia di layout.
+- Mantieni la formattazione del testo dopo che hai premuto backspace.
+- I titoli dei blocchi ora sono allineati al centro nel menu dello strumento per l'inserimento.
+</it-IT>
 <ja-JP>
-18.8:
-- ボタンブロックと画像ブロックのクリップボードリンクが自動入力される代わりに、リンク候補が表示されます。
-- 「リンクをコピー」をクリックすると、公開した投稿のリンクが共有されます。
-- 挿入メニューのタブは端末の言語と一致します。
-- ギャラリーブロックの作成時に端末のメディア設定が開きます。
-- フォントサイズのバグと RTL の視覚的な問題が解決されました。
-- ブロック設定で埋め込みブロックのリンクを編集します。
+19.0:
+- ブログ投稿を含むカードベースのフィードを使用してダッシュボードを管理します。
+- 無料プランでは最大5分間の動画をアップロードできます。
+- Jetpack/Layout Grid ブロックなど、ご使用の言語で表示されるユーザーインターフェイスのテキストが増えました。
+- バックスペースを押した後もテキストの書式が維持されます。
+- ブロックタイトルは、挿入メニューで中央揃えになりました。
 </ja-JP>
 <ko-KR>
-18.8:
-- 버튼 및 이미지 블록의 자동으로 채워지는 클립보드 링크 대신에 링크 제안을 이용하세요.
-- 발행한 글 링크를 공유하려면 "링크 복사"를 클릭하세요.
-- 삽입기 메뉴 탭이 기기의 언어와 일치합니다.
-- 갤러리 블록을 만들 때 기기 미디어 옵션이 열립니다.
-- 글꼴 크기 버그와 RTL 비주얼 문제가 해결되었습니다.
-- 블록 설정에서 임베드 블록을 편집하세요.
+19.0:
+- 카드 기반 피드로 알림판을 관리하세요(글 포함).
+- 무료 요금제에서 최대 5분 비디오를 업로드하세요.
+- 원하는 언어로 추가 사용자 인터페이스 텍스트를 표시하세요(젯팩/레이아웃 그리드 블록 포함).
+- 백스페이스 키를 누른 후 텍스트 형식 지정을 유지하세요.
+- 블록 제목이 이제는 삽입기 메뉴의 가운데에 정렬됩니다.
 </ko-KR>
 <nl-NL>
-18.8:
-- Ontvang link suggesties in plaats van automatisch ingevulde klembord links voor knop- en afbeeldingsblokken.
-- Klik op "Link kopiëren" om gepubliceerde bericht links te delen.
-- Inserter menu tabs komen overeen met de taal van je apparaat.
-- Apparaat media-opties worden geopend bij het maken van een galerijblok.
-- Lettertypegrootte bug en RTL visuele problemen zijn opgelost.
-- Bewerk de insluitblok link in Blok instellingen.
+19.0:
+- Je dashboard beheren met een kaartgebaseerde feed, waaronder posts.
+- Upload video's van maximaal 5 minuten met gratis abonnementen.
+- Zie meer gebruikersinterface in je taal, waaronder Jetpack/indelingsrasterblokken.
+- Behoud tekstopmaak na het gebruik van backspace.
+- Bloktitels zijn nu in het midden uitgelijnd in het invoegermenu.
 </nl-NL>
+<pt-BR>
+19.0:
+- Gerencie o seu painel com um feed baseado em cartões, incluindo os posts.
+- Faça upload de vídeos de até 5 minutos nos planos gratuitos.
+- Veja mais textos da interface do usuário no seu idioma, incluindo os blocos Jetpack/Grade de layout.
+- Mantenha a formatação do texto mesmo após usar a tecla Backspace.
+- Aproveite que os títulos dos blocos agora são centralizados no menu de inserção.
+</pt-BR>
 <ru-RU>
-18.8:
-- Вместо автоматического заполнения из буфера, вы получите предложения для ссылок в блоках "Кнопка" и "Изображение"
-- Нажмите «Копировать ссылку», чтобы делиться ссылками на опубликованные записи.
-- Вкладки меню вставки теперь соответствуют языку вашего устройства.
-- Параметры мультимедиа для устройства открываются при создании блока галереи.
-- Исправлена ​​ошибка размера шрифта и визуальные проблемы RTL.
-- Редактирование ссылки в блоке вставки перенесено в настройки блока.
+19.0:
+- Управляйте своей консолью с помощью ленты на основе карточек, включая записи.
+- Загружайте видео (до 5 минут) на бесплатных тарифах.
+- Теперь больше перевода пользовательского интерфейса на вашем языке, включая блоки Jetpack/сетка макета.
+- Сохраняйте форматирование текста после нажатия клавиши backspace.
+- Заголовки блоков теперь выравниваются по центру в меню вставки.
 </ru-RU>
 <sv-SE>
-18.8:
-- Få länkförslag istället för automatiskt ifyllda urklippslänkar för knapp- och bildblock.
-- Klicka på "Kopiera länk" för att dela publicerade inläggslänkar.
-- Infogarmenyns flikar matchar din enhets språk.
-- Enhetens mediaalternativ öppnas när du skapar ett galleriblock.
-- Textstorleksfel och visuella RTL-fel har åtgärdats.
-- Redigera länk för inbäddningsblock i blockinställningarna.
+19.0:
+– Hantera kontrollpanelen i ett kortbaserat flöde, med inlägg.
+– Ladda upp högst 5 minuter långa videoklipp med gratispaket.
+– Mer text i gränssnittet på ditt språk, bl.a. block för Jetpack/rutnätslayout.
+– Textformatering ändras inte av bakåtstegstangenten.
+– Nu rubrikerna för block centrerade i menyn ”infoga”.
 </sv-SE>
 <tr-TR>
-18.8:
-- Düğme ve Görüntü blokları için otomatik olarak doldurulan pano bağlantıları yerine bağlantı önerileri alın. 
-- Yayınlanan gönderi bağlantılarını paylaşmak için "Bağlantıyı Kopyala"ya tıklayın.
-- Ekleyici menü sekmeleri cihazınızın diliyle eşleşir.
-- Bir Galeri bloku oluştururken cihaz medya seçenekleri açılır.
-- Yazı tipi boyutu hatası ve Görsel RTL sorunları çözüldü.
-- Blok Ayarları'ndan Gömülü blok bağlantısını düzenleyin.
+19.0:
+- Gönderiler de dahil olmak üzere kart tabanlı bir şeritle panonuzu yönetin.
+- Ücretsiz paketlerle 5 dakikaya kadar uzunlukta video yükleyin.
+- Jetpack/Düzen Izgarası blokları da dahil olmak üzere kendi dilinizde daha fazla kullanıcı arayüzü metni görün.
+- Geri al tuşuna bastıktan sonra metin biçimlendirmesini koruyun.
+- Blok başlıkları artık ekleyici menüsünde ortaya hizalanmıştır.
 </tr-TR>
+<vi>
+19.0:
+- Quản lý trang chính bằng thẻ, bao gồm Bài Viết.
+- Tải lên video thời lượng 5 phút với gói free
+- Bổ sung văn bản, bao gồm khối Jetpack/Layout Grid.
+- Tiếp tục định dạng sau khi nhấn backspace
+- Tựa đề khối được canh giữa
+</vi>
 <zh-CN>
-18.8：
-- 获取按钮和图像区块的链接建议，而不是自动填充的剪贴板链接。
-- 点击“复制链接”，分享已发布文章的链接。
-- 插入器菜单选项卡与您的设备语言相对应。
-- 设备媒体选项在创建图库区块时打开。
-- 字体大小错误和 RTL 视觉问题已解决。
-- 在”区块设置“中编辑嵌入区块链接。
+19.0：
+- 使用基于卡片的 feed 管理仪表盘，包括文章。
+- 免费套餐最多可上传 5 分钟的视频。
+- 您可以使用自己的语言查看更多用户界面文本，包括 Jetpack/Layout Grid 区块。
+- 按退格键可使文本格式保持一致。
+- 区块标题现在在插入器菜单中居中对齐。
 </zh-CN>
+<zh-TW>
+19.0：
+- 使用包含文章的卡片式摘要，來管理你的儀表板。
+- 使用免費方案，上傳每部最長 5 分鐘的影片。
+- 用你自己的語言查看更多使用者介面，包含 Jetpack/格狀版面區塊。
+- 按下倒退鍵後，保持文字格式不變。
+- 目前在插入工具選單中，區塊標題會置中對齊。
+</zh-TW>

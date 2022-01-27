@@ -124,7 +124,6 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
-import org.wordpress.android.util.config.UnifiedThreadedCommentsFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -218,7 +217,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var readerTracker: ReaderTracker
     @Inject lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
     @Inject lateinit var contextProvider: ContextProvider
-    @Inject lateinit var mUnifiedThreadedCommentsFeatureConfig: UnifiedThreadedCommentsFeatureConfig
     @Inject lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
 
     private val mSignInClickListener = View.OnClickListener {
@@ -760,7 +758,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     this@ReaderPostDetailFragment,
                     blogId,
                     postId,
-                    mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
                     this.source.sourceDescription
             )
 
@@ -1253,6 +1250,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         conversationViewModel.onUserNavigateFromComments(it)
                     }
                 }
+                viewModel.onUserNavigateFromComments()
             }
         }
     }
@@ -1416,7 +1414,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         ReaderActivityLauncher.showReaderComments(
                                 activity, it.blogId, it.postId,
                                 directOperation, commentId.toLong(), viewModel.interceptedUri,
-                                mUnifiedThreadedCommentsFeatureConfig.isEnabled(),
                                 DIRECT_OPERATION.sourceDescription
                         )
                     }

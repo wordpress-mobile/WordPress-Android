@@ -17,9 +17,9 @@ repositories {
 
 dependencies {
     implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
-    implementation 'org.wordpress:utils:trunk-1ed207c03d2242b6fc3d74f9e388e9163cbc82a6'
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 }
 
 android {

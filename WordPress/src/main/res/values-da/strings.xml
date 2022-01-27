@@ -109,7 +109,6 @@ Language: da_DK
     <string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
     <string name="stats_view_authors">Forfattere</string>
     <string name="stats_view_search_terms">Søgeord</string>
-    <string name="comments_fetching">Henter kommentarer…</string>
     <string name="pages_fetching">Henter sider…</string>
     <string name="error_notification_open">Kunne ikke åbne notifikation</string>
     <string name="posts_fetching">Henter indlæg…</string>
@@ -152,7 +151,6 @@ Language: da_DK
     <string name="error_publish_empty_post">Kan ikke udgive omt indlæg</string>
     <string name="error_refresh_unauthorized_posts">Du har ikke tilladelse til at vise eller redigere indlæg</string>
     <string name="error_refresh_unauthorized_pages">Du har ikke tilladelse til at vise eller redigere sider</string>
-    <string name="error_refresh_unauthorized_comments">Du har ikke tilladelse til at vise eller redigere kommentarer</string>
     <string name="older_last_week">Ældre end en uge</string>
     <string name="comment">Kommentar</string>
     <string name="comment_trashed">Kommentar slettet</string>
@@ -218,10 +216,6 @@ Language: da_DK
     <string name="trash">Papirkurv</string>
     <string name="saving_changes">Gemmer ændringer</string>
     <string name="dlg_confirm_trash_comments">Smid i papirkurven?</string>
-    <string name="dlg_approving_comments">Godkender</string>
-    <string name="dlg_unapproving_comments">Fjerner godkendelse</string>
-    <string name="dlg_spamming_comments">Markerer som spam</string>
-    <string name="dlg_trashing_comments">Smider i papirkurven</string>
     <string name="view_in_browser">Vis i browser</string>
     <string name="add_new_category">Tilføj ny kategori</string>
     <string name="category_name">Kategorinavn</string>
@@ -327,7 +321,6 @@ Language: da_DK
     <string name="title">Titel</string>
     <string name="categories">Kategorier</string>
     <string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
-    <string name="dlg_deleting_comments">Sletter kommentarer</string>
     <string name="sdcard_title">SD-kort påkrævet</string>
     <string name="media">Medier</string>
     <string name="delete">Slet</string>

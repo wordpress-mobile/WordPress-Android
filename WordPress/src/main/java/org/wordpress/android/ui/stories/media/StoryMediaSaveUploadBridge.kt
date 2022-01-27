@@ -15,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
@@ -36,6 +37,8 @@ import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 import javax.inject.Named
@@ -182,6 +185,14 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                             }
                         }
                     }
+                }
+
+                override fun showVideoDurationLimitWarning(fileName: String) {
+                    ToastUtils.showToast(
+                            appContext,
+                            string.error_media_video_duration_exceeds_limit,
+                            LONG
+                    )
                 }
             }
 

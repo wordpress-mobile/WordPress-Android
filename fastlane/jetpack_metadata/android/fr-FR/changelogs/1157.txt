@@ -1,0 +1,6 @@
+19.0:
+- Gérez votre tableau de bord avec un flux lié à une carte, y compris les articles.
+- Chargez des vidéos de max. 5 minutes avec les plans gratuits.
+- Accédez à plus de texte d’interface utilisateur dans votre langue, dont Jetpack/blocs de grille de mise en page.
+- Conservez le formatage de texte après avoir appuyé sur la touche Retour arrière.
+- Les titres de blocs sont désormais alignés au centre dans le menu d’insertion.

@@ -139,6 +139,12 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     }
 
     @Override
+    protected String getOnGutenbergReadyExternalStyles() {
+        String injectExternalCssScript = getFileContentFromAssets("external-style-overrides.css");
+        return injectExternalCssScript;
+    }
+
+    @Override
     protected List<String> getOnGutenbergReadyExternalSources() {
         String file = getFileContentFromAssets("remove-nux.js");
         return Arrays.asList(file);

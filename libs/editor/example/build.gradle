@@ -8,7 +8,6 @@ repositories {
         }
     }
     google()
-    jcenter()
     maven { url "https://www.jitpack.io" }
 }
 
@@ -35,7 +34,6 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation project(":WordPressEditor")
-    implementation ('org.wordpress:utils:trunk-1ed207c03d2242b6fc3d74f9e388e9163cbc82a6')
     implementation 'com.android.volley:volley:1.1.1'
 
     // Test libraries

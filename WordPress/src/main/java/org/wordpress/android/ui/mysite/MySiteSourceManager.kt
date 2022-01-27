@@ -77,7 +77,12 @@ class MySiteSourceManager @Inject constructor(
 
     fun isRefreshing(): Boolean {
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            val source = if (selectedSiteRepository.hasSelectedSite()) {
+                allSupportedMySiteSources
+            } else {
+                siteIndependentSources
+            }
+            source.filterIsInstance(MySiteRefreshSource::class.java).forEach {
                 if (it.isRefreshing() == true) {
                     return true
                 }
@@ -94,8 +99,8 @@ class MySiteSourceManager @Inject constructor(
         }
     }
 
-    fun onResume(isFirstResume: Boolean) {
-        when (isFirstResume) {
+    fun onResume(isSiteSelected: Boolean) {
+        when (isSiteSelected) {
             true -> refreshSubsetOfAllSources()
             false -> refresh()
         }
@@ -108,13 +113,15 @@ class MySiteSourceManager @Inject constructor(
     }
 
     private fun refreshAllSources() {
-        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach { it.refresh() }
+        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            if (it is SiteIndependentSource || selectedSiteRepository.hasSelectedSite()) it.refresh()
+        }
     }
 
     private fun refreshSubsetOfAllSources() {
         selectedSiteSource.updateSiteSettingsIfNecessary()
         currentAvatarSource.refresh()
-        quickStartCardSource.refresh()
+        if (selectedSiteRepository.hasSelectedSite()) quickStartCardSource.refresh()
     }
 
     /* QUICK START */
