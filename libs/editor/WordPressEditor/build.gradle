@@ -1,5 +1,5 @@
 buildscript {
-    ext.aztecVersion = 'v1.5.3'
+    ext.aztecVersion = '952-52a7e6bfccea37fcdfc1652918bb94163db87723'
 }
 
 repositories {
