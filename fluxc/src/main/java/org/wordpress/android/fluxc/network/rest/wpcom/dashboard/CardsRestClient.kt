@@ -62,7 +62,8 @@ class CardsRestClient @Inject constructor(
         @SerializedName("views") val views: Int? = null,
         @SerializedName("visitors") val visitors: Int? = null,
         @SerializedName("likes") val likes: Int? = null,
-        @SerializedName("comments") val comments: Int? = null
+        @SerializedName("comments") val comments: Int? = null,
+        @SerializedName("error") val error: String? = null
     ) {
         fun toTodaysStatsCard() = TodaysStatsCardModel(
                 views = views ?: 0,
@@ -73,14 +74,15 @@ class CardsRestClient @Inject constructor(
     }
 
     data class PostsResponse(
-        @SerializedName("has_published") val hasPublished: Boolean,
-        @SerializedName("draft") val draft: List<PostResponse>,
-        @SerializedName("scheduled") val scheduled: List<PostResponse>
+        @SerializedName("has_published") val hasPublished: Boolean? = null,
+        @SerializedName("draft") val draft: List<PostResponse>? = null,
+        @SerializedName("scheduled") val scheduled: List<PostResponse>? = null,
+        @SerializedName("error") val error: String? = null
     ) {
         fun toPosts() = PostsCardModel(
-                hasPublished = hasPublished,
-                draft = draft.map { it.toPost() },
-                scheduled = scheduled.map { it.toPost() }
+                hasPublished = hasPublished ?: false,
+                draft = draft?.map { it.toPost() } ?: emptyList(),
+                scheduled = scheduled?.map { it.toPost() } ?: emptyList()
         )
     }
 
