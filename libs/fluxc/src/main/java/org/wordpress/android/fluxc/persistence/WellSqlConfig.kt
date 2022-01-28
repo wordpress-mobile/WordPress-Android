@@ -1833,8 +1833,8 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("DROP TABLE IF EXISTS WCOrderModel")
                 }
                 168 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                db.execSQL("ALTER TABLE WCProductModel ADD PURCHASABLE INTEGER")
-            }
+                    db.execSQL("ALTER TABLE WCProductModel ADD PURCHASABLE INTEGER")
+                }
             }
         }
         db.setTransactionSuccessful()
