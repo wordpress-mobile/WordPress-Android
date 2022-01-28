@@ -55,47 +55,26 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         doUploadAfterAdding: Boolean = true,
         trackEvent: Boolean = true
     ): Boolean {
-        var result = false
-
-        if (site.hasFreePlan) {
-            uriList.map {
-                val isVideo = mediaUtilsWrapper.isVideoFile(it)
-
-                if (isVideo) {
-                    val videoDurationAllowed = mediaUtilsWrapper.isAllowedVideoDurationForFreeSites(context, it)
-                    if (videoDurationAllowed) {
-                        result = processMediaUri(
-                                uriList,
-                                site,
-                                freshlyTaken,
-                                editorMediaListener,
-                                doUploadAfterAdding,
-                                trackEvent
-                        )
-                    } else {
-                        editorMediaListener.showVideoDurationLimitWarning(it.path.toString())
-                    }
-                } else {
-                    result = processMediaUri(
-                            uriList,
-                            site,
-                            freshlyTaken,
-                            editorMediaListener,
-                            doUploadAfterAdding,
-                            trackEvent)
-                }
+        val allowedUris = uriList.filter {
+            // filter out long video files on free sites
+            if (site.hasFreePlan &&
+                    mediaUtilsWrapper.isVideoFile(it) &&
+                    !mediaUtilsWrapper.isAllowedVideoDurationForFreeSites(context, it)) {
+                // put out a notice to the user that the particular video file was rejected
+                editorMediaListener.showVideoDurationLimitWarning(it.path.toString())
+                return@filter false
             }
-        } else {
-            result = processMediaUri(
-                    uriList,
-                    site,
-                    freshlyTaken,
-                    editorMediaListener,
-                    doUploadAfterAdding,
-                    trackEvent)
+
+            return@filter true
         }
 
-        return result
+        return processMediaUri(
+                allowedUris,
+                site,
+                freshlyTaken,
+                editorMediaListener,
+                doUploadAfterAdding,
+                trackEvent)
     }
 
     private suspend fun processMediaUri(
