@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -544,11 +543,7 @@ public class GCMMessageHandler {
         }
 
         private PendingIntent getCommentActionPendingIntent(Context context, Intent intent) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionPendingIntentForService(context, intent);
-            } else {
-                return getCommentActionPendingIntentForActivity(context, intent);
-            }
+            return getCommentActionPendingIntentForService(context, intent);
         }
 
         private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent) {
@@ -560,11 +555,7 @@ public class GCMMessageHandler {
         }
 
         private Intent getCommentActionReplyIntent(Context context, String noteId) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionIntentForService(context);
-            } else {
-                return getCommentActionIntentForActivity(context, noteId);
-            }
+            return getCommentActionIntentForService(context);
         }
 
         private Intent getCommentActionIntent(Context context) {
