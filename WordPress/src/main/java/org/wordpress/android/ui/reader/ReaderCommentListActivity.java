@@ -535,8 +535,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             case APPROVE:
             case EDIT:
                 break; // not implemented yet
-            case UNAPROVE:
-                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unarppoved);
+            case UNAPPROVE:
+                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unapproved);
                 break;
             case SPAM:
                 moderateComment(comment, CommentStatus.SPAM, R.string.comment_spammed);
@@ -725,7 +725,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(commentId -> setReplyToCommentId(commentId, true));
             // adapter calls this when user taps share icon
-            mCommentAdapter.setCommentShareListener(this::performCommentAction);
+            mCommentAdapter.setCommentMenuActionListener(this::performCommentAction);
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {

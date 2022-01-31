@@ -208,7 +208,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mReplyListener = replyListener;
     }
 
-    public void setCommentShareListener(CommentMenuActionListener commentMenuActionListener) {
+    public void setCommentMenuActionListener(CommentMenuActionListener commentMenuActionListener) {
         mCommentMenuActionListener = commentMenuActionListener;
     }
 
@@ -332,7 +332,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ListPopupWindow menuPopup = new ListPopupWindow(context);
 
                 ArrayList<ReaderCommentMenuItem> actions = new ArrayList<>();
-                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.UNAPROVE,
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.UNAPPROVE,
                         new UiStringRes(R.string.reader_comment_menu_unapprove),
                         new UiStringRes(R.string.reader_comment_menu_unapprove),
                         R.drawable.ic_cross_in_circle_white_24dp));
