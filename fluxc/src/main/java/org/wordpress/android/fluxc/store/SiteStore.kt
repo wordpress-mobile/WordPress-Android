@@ -1273,8 +1273,10 @@ open class SiteStore
     }
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
-        val result = siteRestClient.fetchSites(payload.filters)
-        return handleFetchedSitesWPComRest(result)
+        return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
+            val result = siteRestClient.fetchSites(payload.filters)
+            handleFetchedSitesWPComRest(result)
+        }
     }
 
     suspend fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
