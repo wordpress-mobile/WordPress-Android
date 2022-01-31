@@ -14,6 +14,8 @@ class TodaysStatsCardViewHolder(
         parent.viewBinding(MySiteTodaysStatsCardBinding::inflate)
 ) {
     fun bind(card: TodaysStatsCard) = with(binding) {
-       // TODO@ajesh implement view logic
+        uiHelpers.setTextOrHide(viewsCount, card.views)
+        uiHelpers.setTextOrHide(visitorsCount, card.visitors)
+        uiHelpers.setTextOrHide(likesCount, card.likes)
     }
 }
