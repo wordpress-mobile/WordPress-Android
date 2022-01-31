@@ -184,7 +184,6 @@
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
-    <dimen name="avatar_sz_login">40dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
@@ -667,7 +666,7 @@
     <dimen name="edit_with_chips_hint_label_default_alpha" format="float" type="dimen">0.6</dimen>
 
     <!-- Hack to make snackbar padding smaller -->
-    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
+    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="UnusedResources,MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
 
