@@ -18,5 +18,5 @@ class TodaysStatsCardBuilder @Inject constructor(
         )
     }
 
-    private fun statToUIString(stat:Int) = UiStringText(statsUtils.toFormattedString(stat))
+    private fun statToUIString(stat: Int) = UiStringText(statsUtils.toFormattedString(stat))
 }
