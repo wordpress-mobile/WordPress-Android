@@ -13,6 +13,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.datasets.NotificationsTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
 import org.wordpress.android.test
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.CommentEssentials
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent
@@ -39,6 +41,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var commentsStore: CommentsStore
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock lateinit var notificationsTableWrapper: NotificationsTableWrapper
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
@@ -48,6 +51,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     private val site = SiteModel()
     private val commentId = 1000
+    private val commentIdentifier = SiteCommentIdentifier(commentId)
 
     @Before
     fun setup() = test {
@@ -59,7 +63,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 bgDispatcher = TEST_DISPATCHER,
                 commentsStore = commentsStore,
                 resourceProvider = resourceProvider,
-                networkUtilsWrapper = networkUtilsWrapper
+                networkUtilsWrapper = networkUtilsWrapper,
+                notificationsTableWrapper = notificationsTableWrapper
         )
 
         setupObservers()
@@ -67,9 +72,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `watchers are init on view recreation`() {
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
 
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
 
         assertThat(uiState.first().shouldInitWatchers).isFalse
         assertThat(uiState.last().shouldInitWatchers).isTrue
@@ -78,13 +83,13 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `snackbar notification is triggered on comment get error`() = test {
         whenever(commentsStore.getCommentByLocalId(commentId.toLong())).thenReturn(listOf())
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
         assertThat(onSnackbarMessage.firstOrNull()).isNotNull
     }
 
     @Test
     fun `view is init`() = test {
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
 
         verify(commentsStore, times(1)).getCommentByLocalId(commentId.toLong())
 
@@ -105,7 +110,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
                 CommentsActionPayload(CommentError(GENERIC_ERROR, "error"))
         )
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
         viewModel.onActionMenuClicked()
         assertThat(onSnackbarMessage.firstOrNull()).isNotNull
     }
@@ -116,14 +121,14 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 comments = listOf(),
                 rowsAffected = 0
         )))
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
         viewModel.onActionMenuClicked()
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
     }
 
     @Test
     fun `onBackPressed triggers CLOSE when no edits`() {
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
         viewModel.onBackPressed()
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(CLOSE)
     }
@@ -134,7 +139,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(emailFieldType.matches(USER_EMAIL)).thenReturn(true)
         whenever(emailFieldType.isValid).thenReturn { _ -> true }
 
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
         viewModel.onValidateField("edited user email", emailFieldType)
         viewModel.onBackPressed()
 

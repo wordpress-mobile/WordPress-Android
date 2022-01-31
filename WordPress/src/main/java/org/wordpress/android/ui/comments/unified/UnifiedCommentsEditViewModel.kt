@@ -214,47 +214,50 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         launch {
             setLoadingState(LOADING)
 
-            withContext(bgDispatcher) {
-                val commentEssentials = mapCommentEssentials(commentIdentifier)
-                if (commentEssentials.isValid()) {
-                    _uiState.postValue(
-                            EditCommentUiState(
-                                    canSaveChanges = false,
-                                    shouldInitComment = true,
-                                    shouldInitWatchers = true,
-                                    showProgress = LOADING.show,
-                                    progressText = LOADING.progressText,
-                                    originalComment = commentEssentials,
-                                    editedComment = commentEssentials,
-                                    editErrorStrings = EditErrorStrings()
-                            )
-                    )
-                } else {
-                    _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(
-                            message = UiStringRes(R.string.error_load_comment),
-                            onDismissAction = { _ ->
-                                _uiActionEvent.value = Event(CLOSE)
-                            }
-                    )))
-                }
-                delay(LOADING_DELAY_MS)
-                setLoadingState(NOT_VISIBLE)
+            val commentEssentials = withContext(bgDispatcher) {
+                getCommentEssentials(commentIdentifier)
             }
+            if (commentEssentials.isValid()) {
+                _uiState.value =
+                        EditCommentUiState(
+                                canSaveChanges = false,
+                                shouldInitComment = true,
+                                shouldInitWatchers = true,
+                                showProgress = LOADING.show,
+                                progressText = LOADING.progressText,
+                                originalComment = commentEssentials,
+                                editedComment = commentEssentials,
+                                editErrorStrings = EditErrorStrings()
+                        )
+            } else {
+                _onSnackbarMessage.value = Event(SnackbarMessageHolder(
+                        message = UiStringRes(R.string.error_load_comment),
+                        onDismissAction = { _ ->
+                            _uiActionEvent.value = Event(CLOSE)
+                        }
+                ))
+            }
+            delay(LOADING_DELAY_MS)
+            setLoadingState(NOT_VISIBLE)
         }
     }
 
-    private suspend fun mapCommentEssentials(commentIdentifier: CommentIdentifier): CommentEssentials =
+    private suspend fun getCommentEssentials(commentIdentifier: CommentIdentifier): CommentEssentials =
             when (commentIdentifier) {
                 is SiteCommentIdentifier -> {
                     val commentList = commentsStore.getCommentByLocalId(commentIdentifier.localCommentId.toLong())
-                    val comment = commentList.first()
-                    CommentEssentials(
-                            commentId = comment.remoteCommentId,
-                            userName = comment.authorName ?: "",
-                            commentText = comment.content ?: "",
-                            userUrl = comment.authorUrl ?: "",
-                            userEmail = comment.authorEmail ?: ""
-                    )
+                    if (commentList.isEmpty()) {
+                        CommentEssentials()
+                    } else {
+                        val comment = commentList.first()
+                        CommentEssentials(
+                                commentId = comment.id,
+                                userName = comment.authorName ?: "",
+                                commentText = comment.content ?: "",
+                                userUrl = comment.authorUrl ?: "",
+                                userEmail = comment.authorEmail ?: ""
+                        )
+                    }
                 }
                 is NotificationCommentIdentifier -> {
                     val comment =
