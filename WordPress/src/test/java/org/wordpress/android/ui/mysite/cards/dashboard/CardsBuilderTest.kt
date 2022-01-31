@@ -21,16 +21,18 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
+import org.wordpress.android.ui.mysite.cards.dashboard.todaystat.TodaysStatsCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest : BaseUnitTest() {
+    @Mock lateinit var todaysStatCardBuilder: TodaysStatsCardBuilder
     @Mock lateinit var postCardBuilder: PostCardBuilder
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
     fun setUp() {
-        cardsBuilder = CardsBuilder(postCardBuilder)
+        cardsBuilder = CardsBuilder(todaysStatCardBuilder, postCardBuilder)
     }
 
     /* POST CARD */
