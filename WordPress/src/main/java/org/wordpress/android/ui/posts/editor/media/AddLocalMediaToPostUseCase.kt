@@ -68,7 +68,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
             return@filter true
         }
 
-        return processMediaUri(
+        return processMediaUris(
                 allowedUris,
                 site,
                 freshlyTaken,
@@ -77,7 +77,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
                 trackEvent)
     }
 
-    private suspend fun processMediaUri(
+    private suspend fun processMediaUris(
         uriList: List<Uri>,
         site: SiteModel,
         freshlyTaken: Boolean,
