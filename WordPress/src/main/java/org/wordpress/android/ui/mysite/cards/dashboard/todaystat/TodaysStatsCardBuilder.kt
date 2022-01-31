@@ -12,9 +12,11 @@ class TodaysStatsCardBuilder @Inject constructor(
 ) {
     fun build(params: TodaysStatsCardBuilderParams) = params.todaysStatsCard?.let {
         TodaysStatsCard(
-                views = UiStringText(statsUtils.toFormattedString(it.views)),
-                visitors = UiStringText(statsUtils.toFormattedString(it.visitors)),
-                likes = UiStringText(statsUtils.toFormattedString(it.likes))
+                views = statToUIString(it.views),
+                visitors = statToUIString(it.visitors),
+                likes = statToUIString(it.likes)
         )
     }
+
+    private fun statToUIString(stat:Int) = UiStringText(statsUtils.toFormattedString(stat))
 }
