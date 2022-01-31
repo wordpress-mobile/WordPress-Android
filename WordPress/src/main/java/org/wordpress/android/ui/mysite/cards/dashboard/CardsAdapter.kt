@@ -10,9 +10,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.todaystat.TodaysStatsCardViewHolder
 
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -25,6 +27,7 @@ class CardsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<*> {
         return when (viewType) {
             DashboardCardType.ERROR_CARD.ordinal -> ErrorCardViewHolder(parent)
+            DashboardCardType.TODAYS_STATS_CARD.ordinal -> TodaysStatsCardViewHolder(parent, uiHelpers)
             DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
             DashboardCardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
@@ -38,6 +41,7 @@ class CardsAdapter(
     override fun onBindViewHolder(holder: CardViewHolder<*>, position: Int) {
         when (holder) {
             is ErrorCardViewHolder -> holder.bind(items[position] as ErrorCard)
+            is TodaysStatsCardViewHolder -> holder.bind(items[position] as TodaysStatsCard)
             is PostCardViewHolder<*> -> holder.bind(items[position] as PostCard)
         }
     }
