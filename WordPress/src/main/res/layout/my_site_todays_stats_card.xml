@@ -13,6 +13,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
+            style="@style/MySiteTodaysStatsCardTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_site_todays_stat_card_title"
@@ -23,6 +24,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/views_title"
+            style="@style/MySiteTodaysStatsCardStatTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -32,6 +34,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/visitors_title"
+            style="@style/MySiteTodaysStatsCardStatTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_site_todays_stat_card_visitors"
@@ -40,6 +43,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/likes_title"
+            style="@style/MySiteTodaysStatsCardStatTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_site_todays_stat_card_likes"
@@ -48,6 +52,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/views_count"
+            style="@style/MySiteTodaysStatsCardStatCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,6 +62,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/visitors_count"
+            style="@style/MySiteTodaysStatsCardStatCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/views_count"
@@ -65,6 +71,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/likes_count"
+            style="@style/MySiteTodaysStatsCardStatCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/visitors_count"
