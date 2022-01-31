@@ -2,7 +2,7 @@
 
 19.2
 -----
-
+* [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
 
 19.1
 -----
