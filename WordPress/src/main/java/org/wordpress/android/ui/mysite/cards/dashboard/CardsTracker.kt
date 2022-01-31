@@ -15,6 +15,7 @@ class CardsTracker @Inject constructor(
 ) {
     enum class Type(val label: String) {
         ERROR("error"),
+        TODAYS_STATS("todays_stats"),
         POST("post")
     }
 
@@ -70,6 +71,7 @@ class CardsTracker @Inject constructor(
 fun DashboardCardType.toTypeValue(): Type {
     return when (this) {
         DashboardCardType.ERROR_CARD -> Type.ERROR
+        DashboardCardType.TODAYS_STATS_CARD -> Type.TODAYS_STATS
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
     }
