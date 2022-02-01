@@ -207,7 +207,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             setLoadingState(LOADING)
 
             val commentEssentials = withContext(bgDispatcher) {
-                getCommentEssentials(commentIdentifier)
+                mapCommentEssentials(commentIdentifier)
             }
             if (commentEssentials.isValid()) {
                 _uiState.value =
@@ -234,32 +234,34 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCommentEssentials(commentIdentifier: CommentIdentifier): CommentEssentials =
+    /**
+     * Fetch and map the comment entity to CommentEssentials based on the CommentIdentifier.
+     */
+    private suspend fun mapCommentEssentials(commentIdentifier: CommentIdentifier): CommentEssentials =
             when (commentIdentifier) {
                 is SiteCommentIdentifier -> {
-                    val commentList = commentsStore.getCommentByLocalId(commentIdentifier.localCommentId.toLong())
-                    if (commentList.isEmpty()) {
+                    val commentEntityList = commentsStore.getCommentByLocalId(commentIdentifier.localCommentId.toLong())
+                    if (commentEntityList.isEmpty()) {
                         CommentEssentials()
                     } else {
-                        val comment = commentList.first()
+                        val commentEntity = commentEntityList.first()
                         CommentEssentials(
-                                commentId = comment.id,
-                                userName = comment.authorName ?: "",
-                                commentText = comment.content ?: "",
-                                userUrl = comment.authorUrl ?: "",
-                                userEmail = comment.authorEmail ?: ""
+                                commentId = commentEntity.id,
+                                userName = commentEntity.authorName ?: "",
+                                commentText = commentEntity.content ?: "",
+                                userUrl = commentEntity.authorUrl ?: "",
+                                userEmail = commentEntity.authorEmail ?: ""
                         )
                     }
                 }
                 is NotificationCommentIdentifier -> {
-                    val comment =
-                            notificationsTableWrapper.getNotificationById(commentIdentifier.noteID)?.buildComment()
+                    val commentModel = notificationsTableWrapper.getNotificationById(commentIdentifier.noteID)
                     CommentEssentials(
-                            commentId = comment?.remoteCommentId ?: 0L,
-                            userName = comment?.authorName ?: "",
-                            commentText = comment?.content ?: "",
-                            userUrl = comment?.authorUrl ?: "",
-                            userEmail = comment?.authorEmail ?: ""
+                            commentId = commentModel?.remoteCommentId ?: 0L,
+                            userName = commentModel?.authorName ?: "",
+                            commentText = commentModel?.content ?: "",
+                            userUrl = commentModel?.authorUrl ?: "",
+                            userEmail = commentModel?.authorEmail ?: ""
                     )
                 }
                 else -> CommentEssentials()
