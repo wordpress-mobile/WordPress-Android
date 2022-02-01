@@ -25,7 +25,7 @@ import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.CommentEssentials
+import org.wordpress.android.ui.comments.unified.CommentEssentials
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
@@ -141,7 +141,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     fun `onBackPressed triggers CANCEL_EDIT_CONFIRM when edits are present`() {
         val emailFieldType: FieldType = mock()
         whenever(emailFieldType.matches(USER_EMAIL)).thenReturn(true)
-        whenever(emailFieldType.isValid).thenReturn { _ -> true }
+        whenever(emailFieldType.isValid).thenReturn { true }
 
         viewModel.start(site, commentIdentifier)
         viewModel.onValidateField("edited user email", emailFieldType)

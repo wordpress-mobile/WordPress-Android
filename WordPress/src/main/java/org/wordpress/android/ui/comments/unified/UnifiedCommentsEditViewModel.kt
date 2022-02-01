@@ -64,17 +64,6 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val userEmailError: String? = null
     )
 
-    data class CommentEssentials(
-        val commentId: Long = 0,
-        val userName: String = "",
-        val commentText: String = "",
-        val userUrl: String = "",
-        val userEmail: String = ""
-    ) {
-
-        fun isValid(): Boolean = commentId > 0L
-    }
-
     data class EditCommentUiState(
         val canSaveChanges: Boolean,
         val shouldInitComment: Boolean,
