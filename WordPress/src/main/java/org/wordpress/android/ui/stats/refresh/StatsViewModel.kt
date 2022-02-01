@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
@@ -236,6 +237,7 @@ class StatsViewModel
     }
 
     fun onAddNewStatsButtonClicked() {
+        analyticsTracker.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED)
         mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
 
