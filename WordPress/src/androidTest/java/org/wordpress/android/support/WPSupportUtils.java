@@ -23,10 +23,13 @@ import androidx.test.espresso.action.Press;
 import androidx.test.espresso.action.Swipe;
 import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
+import androidx.test.uiautomator.Until;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -69,6 +72,7 @@ import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 
 public class WPSupportUtils {
     // HIGH-LEVEL METHODS
+    public static final int DEFAULT_TIMEOUT = 10000;
 
     public static boolean isElementDisplayed(Integer elementID) {
         return isElementDisplayed(onView(withId(elementID)));
@@ -774,5 +778,43 @@ public class WPSupportUtils {
                 action.perform(uiController, view);
             }
         };
+    }
+
+    public static boolean isTextDisplayed(String expectedText) {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+        return device.wait(Until.hasObject(By.textContains(expectedText)), DEFAULT_TIMEOUT);
+    }
+
+    public static void swipeToLeft() {
+        horizontalSwipe("left");
+    }
+
+    public static void swipeToRight() {
+        horizontalSwipe("right");
+    }
+
+    private static void horizontalSwipe(String direction) {
+        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+        int centerY = device.getDisplayHeight() / 2;
+        int width = device.getDisplayWidth();
+        int tenthOfWidth = width / 10;
+        int left = tenthOfWidth;
+        int right = width - tenthOfWidth;
+
+        if (direction == "left") {
+            device.drag(right, centerY, left, centerY, 10);
+        } else if (direction == "right") {
+            device.drag(left, centerY, right, centerY, 10);
+        }
+    }
+
+    public static void scrollIntoView(Integer scrollableContainerID, ViewInteraction objectToScrollTo, float yFactor) {
+        int swipeCount = 0;
+        while (!isElementCompletelyDisplayed(objectToScrollTo) && swipeCount < 20) {
+            swipeUpOnView(scrollableContainerID, yFactor);
+            swipeCount += 1;
+        }
     }
 }

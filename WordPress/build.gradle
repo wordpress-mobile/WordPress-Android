@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         google()
-        jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
@@ -48,7 +47,6 @@ repositories {
         }
     }
     google()
-    jcenter()
     mavenCentral()
     maven { url "https://www.jitpack.io" }
 }
@@ -112,6 +110,7 @@ android {
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
+        buildConfigField "boolean", "MY_SITE_DASHBOARD_STATS_CARD", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
@@ -449,7 +448,7 @@ dependencies {
 
     implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.1.0'
 
     // Firebase
     implementation 'com.google.firebase:firebase-config:19.1.3'
