@@ -16,7 +16,6 @@ package org.wordpress.android.util;
  * limitations under the License.
  */
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -35,9 +34,6 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 
-import org.ccil.cowan.tagsoup.HTMLSchema;
-import org.ccil.cowan.tagsoup.Parser;
-import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -83,57 +79,6 @@ public class WPHtml {
     }
 
     private WPHtml() {
-    }
-
-    /**
-     * Returns displayable styled text from the provided HTML string. Any
-     * &lt;img&gt; tags in the HTML will display as a generic replacement image
-     * which your program can then go through and replace with real images.
-     * <p>
-     * <p>
-     * This uses TagSoup to handle real HTML, including all of the brokenness
-     * found in the wild.
-     */
-    public static Spanned fromHtml(String source, Context ctx, PostImmutableModel post, int maxImageWidth) {
-        return fromHtml(source, null, null, ctx, post, maxImageWidth);
-    }
-
-    /**
-     * Lazy initialization holder for HTML parser. This class will a) be
-     * preloaded by the zygote, or b) not loaded until absolutely necessary.
-     */
-    private static class HtmlParser {
-        private static final HTMLSchema HTML_SCHEMA = new HTMLSchema();
-    }
-
-    /**
-     * Returns displayable styled text from the provided HTML string. Any
-     * &lt;img&gt; tags in the HTML will use the specified ImageGetter to
-     * request a representation of the image (use null if you don't want this)
-     * and the specified TagHandler to handle unknown tags (specify null if you
-     * don't want this).
-     * <p>
-     * <p>
-     * This uses TagSoup to handle real HTML, including all of the brokenness
-     * found in the wild.
-     */
-    public static Spanned fromHtml(String source, ImageGetter imageGetter,
-                                   TagHandler tagHandler, Context ctx, PostImmutableModel post, int maxImageWidth) {
-        Parser parser = new Parser();
-        try {
-            parser.setProperty(Parser.schemaProperty, HtmlParser.HTML_SCHEMA);
-        } catch (org.xml.sax.SAXNotRecognizedException e) {
-            // Should not happen.
-            throw new RuntimeException(e);
-        } catch (org.xml.sax.SAXNotSupportedException e) {
-            // Should not happen.
-            throw new RuntimeException(e);
-        }
-
-        HtmlToSpannedConverter converter = new HtmlToSpannedConverter(source,
-                                                                      imageGetter, tagHandler, parser, ctx, post,
-                                                                      maxImageWidth);
-        return converter.convert();
     }
 
     /**
