@@ -2211,7 +2211,6 @@
     <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
     <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
     <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
-    <string name="my_site_todays_stat_card_comments" translatable="false" >@string/stats_comments</string>
 
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
