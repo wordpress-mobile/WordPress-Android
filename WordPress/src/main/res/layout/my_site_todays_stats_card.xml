@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/views_count"
             app:layout_constraintTop_toBottomOf="@+id/visitors_title"
-            tools:text="1,743" />
+            tools:text="1,543" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/likes_count"
