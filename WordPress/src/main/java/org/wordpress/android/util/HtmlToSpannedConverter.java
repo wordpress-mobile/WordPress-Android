@@ -28,6 +28,8 @@ import android.text.style.TextAppearanceSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 
+import androidx.core.content.ContextCompat;
+
 import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -241,7 +243,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
                 end(mSpannableStringBuilder, Small.class, new RelativeSizeSpan(
                         0.8f));
             } else if (tag.equalsIgnoreCase("font")) {
-                endFont(mSpannableStringBuilder);
+                endFont(mContext, mSpannableStringBuilder);
             } else if (tag.equalsIgnoreCase("blockquote")) {
                 handleP(mSpannableStringBuilder);
                 end(mSpannableStringBuilder, Blockquote.class, new QuoteSpan());
@@ -433,7 +435,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
         text.setSpan(new Font(color, face), len, len, Spannable.SPAN_MARK_MARK);
     }
 
-    private static void endFont(SpannableStringBuilder text) {
+    private static void endFont(Context context, SpannableStringBuilder text) {
         int len = text.length();
         Object obj = getLast(text, Font.class);
         int where = text.getSpanStart(obj);
@@ -449,7 +451,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
                     String name = f.mColor.substring(1);
                     int colorRes = res.getIdentifier(name, "color", "android");
                     if (colorRes != 0) {
-                        ColorStateList colors = res.getColorStateList(colorRes);
+                        ColorStateList colors = ContextCompat.getColorStateList(context, colorRes);
                         text.setSpan(new TextAppearanceSpan(null, 0, 0, colors,
                                                             null), where, len,
                                      Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
