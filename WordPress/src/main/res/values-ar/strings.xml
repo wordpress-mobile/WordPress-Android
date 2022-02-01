@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-20 22:10:06+0000
+Translation-Revision-Date: 2022-01-30 00:35:33+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -41,6 +41,8 @@ Language: ar
     <string name="about_automattic_acknowledgements_item_title">شكر وتقدير</string>
     <string name="about_automattic_california_privacy_notice_item_title">إشعار الخصوصية في كاليفورنيا</string>
     <string name="about_blog">المدوّنة</string>
+    <string name="gutenberg_native_get_support">الحصول على الدعم</string>
+    <string name="gutenberg_native_font_size">حجم الخط</string>
     <string name="about_automattic_acknowledgements_page_title">شكر وتقدير</string>
     <string name="about_automattic_legal_page_title">الشؤون القانونية والمزيد</string>
     <string name="about_automattic_main_page_title">نبذة عن ⁦%1$s⁩</string>
@@ -48,13 +50,17 @@ Language: ar
     <string name="gutenberg_native_selected_default">المحدَّد: الإعداد الافتراضي</string>
     <string name="gutenberg_native_more_support_options">خيارات دعم إضافية</string>
     <string name="gutenberg_native_double_tap_to_select_font_size">الضغط المزدوج لتحديد حجم الخط</string>
+    <string name="about_automattic_version_label">النسخة %1$s</string>
     <string name="gutenberg_native_contact_support">الاتصال بالدعم</string>
+    <string name="my_site_no_content_post">لا يوجد محتوى</string>
+    <string name="reader_comments_follow_conversation">متابعة المحادثة</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">الضغط المزدوج لتحديد حجم الخط الافتراضي</string>
     <string name="reader_comments_be_first_to_comment">كن أول من يعلق</string>
     <string name="reader_comments_view_all">عرض كل التعليقات</string>
     <string name="reader_comments_post_fetch_failure">حدث خطأ في أثناء الحصول على بيانات المقالة</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_fetch_failure">حدث خطأ في أثناء الحصول على التعليقات</string>
+    <string name="reader_btn_follow_conversation_settings">إعدادات متابعة المحادثة</string>
     <string name="my_site_post_card_link_go_to_drafts">الانتقال إلى المسودات</string>
     <string name="my_site_post_card_link_go_to_scheduled_posts">الانتقال إلى المقالات المجدولة</string>
     <string name="me_btn_about">نبذة عن ووردبريس</string>
@@ -229,10 +235,10 @@ Language: ar
     <string name="blogging_reminders_done">تمّ</string>
     <string name="blogging_reminders_notify_me">إشعاري بذلك</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد الخادم الخاص بك&lt;/a&gt; لتمكين استعادة الموقع بنقرة واحدة من النُسخ الاحتياطية.</string>
-    <string name="gutenberg_native_remove_as_featured_image">إزالة الصورة البارزة </string>
     <string name="fab_add_category_desc">إنشاء تصنيف</string>
-    <string name="gutenberg_native_set_as_featured_image">تعيين كصورة بارزة </string>
     <string name="support_ticket_subject">دعم ووردبريس لـ Android</string>
+    <string name="gutenberg_native_set_as_featured_image">تعيين كصورة بارزة </string>
+    <string name="gutenberg_native_remove_as_featured_image">إزالة كصورة بارزة</string>
     <string name="site_settings_categories_hint">إدارة تصنيفات موقعك</string>
     <string name="site_settings_categories_title">التصنيفات</string>
     <string name="page_is_posts_page_warning">تم إنشاء محتوى صفحة أحدث المقالات تلقائيًّا ولا يمكن تحريره.</string>
@@ -283,16 +289,19 @@ Language: ar
     <string name="user_profile_untitled_site">(بدون عنوان)</string>
     <string name="user_profile_bottom_sheet_description">معلومات الورقة السفلية لملف المستخدم الشخصي</string>
     <string name="likes_list_screen_title">قائمة الإعجابات %s</string>
+    <string name="gutenberg_native_two">اثنان</string>
+    <string name="gutenberg_native_three">ثلاثة</string>
     <string name="gutenberg_native_s_social_icon">أيقونة %s الاجتماعية</string>
     <string name="gutenberg_native_mention">الإشارة</string>
     <string name="gutenberg_native_preview_page">معاينة الصفحة</string>
     <string name="gutenberg_native_preview_post">معاينة المقالة</string>
     <string name="gutenberg_native_retry">أعد المحاولة</string>
+    <string name="gutenberg_native_one">واحد</string>
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_s_link">%s رابط</string>
     <string name="gutenberg_native_text_color">لون النص</string>
     <string name="gutenberg_native_padding">الهوامش الداخلية</string>
-    <string name="gutenberg_native_featured">مميز</string>
+    <string name="gutenberg_native_four">أربعة</string>
     <string name="gutenberg_native_create_embed">إنشاء تضمين</string>
     <string name="gutenberg_native_custom_url">رابط (URL) مخصّص</string>
     <string name="gutenberg_native_column_d">عمود %d</string>

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 05:08:23+0000
+Translation-Revision-Date: 2022-01-25 03:17:29+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Настройки плиточной галереи</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Навигация к экрану выбора макета</string>
+    <string name="gutenberg_native_gallery_style">Стиль галереи</string>
+    <string name="sharing_facebook_warning_positive_button">Переход на веб-сайт</string>
+    <string name="sharing_facebook_warning_message">Вы можете подключить свою учётную запись Facebook на сайте WordPress.com. После этого вернитесь в приложение WordPress, чтобы изменить настройки возможностей поделиться.</string>
     <string name="about_automattic_app_icon_description">Значок приложения</string>
     <string name="about_automattic_back_icon_description">Значок Назад</string>
     <string name="about_automattic_logo_description">логотип Automattic</string>
@@ -289,16 +294,19 @@ Language: ru
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
+    <string name="gutenberg_native_two">Два</string>
+    <string name="gutenberg_native_three">Три</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
     <string name="gutenberg_native_preview_post">Предварительный просмотр записи</string>
     <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
     <string name="gutenberg_native_retry">Повторить</string>
+    <string name="gutenberg_native_one">Один</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_s_link">ссылка на %s</string>
     <string name="gutenberg_native_padding">Отступ</string>
-    <string name="gutenberg_native_featured">Избранное</string>
+    <string name="gutenberg_native_four">Четыре</string>
     <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>

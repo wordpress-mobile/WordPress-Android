@@ -200,8 +200,6 @@ Language: pt_BR
     <string name="blogging_reminders_done">Concluído</string>
     <string name="blogging_reminders_notify_me">Avise-me!</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Insira suas credenciais do servidor&lt;/a&gt; para ativar a restauração de site pelos backups em um clique.</string>
-    <string name="gutenberg_native_set_as_featured_image">Definir como imagem de destaque</string>
-    <string name="gutenberg_native_remove_as_featured_image">Remover de imagem de destaque</string>
     <string name="fab_add_category_desc">Criar categoria</string>
     <string name="support_ticket_subject">Suporte do WordPress para Android</string>
     <string name="site_settings_categories_hint">Gerenciar as categorias de seu site</string>
@@ -260,7 +258,6 @@ Language: pt_BR
     <string name="gutenberg_native_retry">Tentar novamente</string>
     <string name="gutenberg_native_no_preview_available">Nenhuma visualização disponível</string>
     <string name="gutenberg_native_s_link">%s link</string>
-    <string name="gutenberg_native_featured">Em destaque</string>
     <string name="gutenberg_native_custom_url">URL personalizado</string>
     <string name="gutenberg_native_create_embed">Criar mídia incorporada</string>
     <string name="gutenberg_native_column_d">Coluna %d</string>
