@@ -130,10 +130,12 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map CommentIdentifier to default CommentEssentials if SiteCommentIdentifier comment not found`() = test{
-        whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf())
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
+    fun `Should map CommentIdentifier to default CommentEssentials if SiteCommentIdentifier comment not found`() {
+        test {
+            whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf())
+            viewModel.start(site, siteCommentIdentifier)
+            assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
+        }
     }
 
     @Test

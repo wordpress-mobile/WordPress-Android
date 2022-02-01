@@ -34,12 +34,11 @@ class UnifiedCommentsEditActivity : LocaleAwareActivity() {
     }
 
     companion object {
-
         @JvmStatic
         fun createIntent(
             context: Context,
             commentIdentifier: CommentIdentifier,
-            siteModel: SiteModel,
+            siteModel: SiteModel
         ): Intent =
                 Intent(context, UnifiedCommentsEditActivity::class.java).apply {
                     putExtra(KEY_COMMENT_IDENTIFIER, commentIdentifier)

@@ -7,7 +7,6 @@ data class CommentEssentials(
     val userUrl: String = "",
     val userEmail: String = ""
 ) {
-
     /**
      * Checks if this instance of CommentEssentials is valid. An invalid instance should not be used to display data.
      * @return true if the instance is valid or false if it's not
@@ -15,7 +14,6 @@ data class CommentEssentials(
     fun isValid(): Boolean = commentId > DEFAULT_COMMENT_ID
 
     companion object {
-
         private const val DEFAULT_COMMENT_ID = 0L
     }
 }

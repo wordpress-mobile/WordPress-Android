@@ -5,7 +5,6 @@ import org.junit.Test
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 
 class CommentSourceTest {
-
     @Test
     fun `Should return the correct analytics comment action source for NOTIFICATION`() {
         val expected = "notifications"

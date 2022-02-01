@@ -6,7 +6,6 @@ import javax.inject.Inject
 
 @Reusable
 class NotificationsTableWrapper @Inject constructor() {
-
     fun getNotificationById(noteID: String): CommentModel? =
             NotificationsTable.getNoteById(noteID)?.buildComment()
 }

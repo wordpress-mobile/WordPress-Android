@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CommentEssentialsTest {
-
     @Test
     fun `Should return isValid TRUE if commentId is GREATER than 0`() {
         val expected = true

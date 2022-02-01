@@ -93,7 +93,10 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         ActivityUtils.hideKeyboardForced(view)
     }
 
-    private fun UnifiedCommentsEditFragmentBinding.setupObservers(site: SiteModel, commentIdentifier: CommentIdentifier) {
+    private fun UnifiedCommentsEditFragmentBinding.setupObservers(
+        site: SiteModel,
+        commentIdentifier: CommentIdentifier
+    ) {
         viewModel.uiActionEvent.observeEvent(viewLifecycleOwner, {
             when (it) {
                 CLOSE -> {
