@@ -1,6 +1,0 @@
-18.9:
-- Hebe Text in Absätzen mit beliebigen Farben hervor.
-- Erstelle neue Galerieblöcke mit neuem Design und konvertiere alte Galerien automatisch, damit sie dazu passen.
-- Mache Änderungen beim Formatieren von Linktext in Blöcken rückgängig oder stelle sie wieder her.
-- Schnelleres Laden beim Rebloggen von Beiträgen und beim Teilen von Text aus anderen Apps.
-- Hintergrundfarben in vorformatierten Blöcken funktionieren nun auf Websites mit Standardthemen.

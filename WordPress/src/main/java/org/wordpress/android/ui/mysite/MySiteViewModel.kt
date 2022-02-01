@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REF
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -79,6 +80,7 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -108,11 +110,13 @@ class MySiteViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardBuilder: QuickStartCardBuilder,
+    private val homePageDataLoader: HomePageDataLoader,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
+    private val landOnTheEditorABExperiment: LandOnTheEditorABExperiment,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
@@ -718,6 +722,26 @@ class MySiteViewModel @Inject constructor(
     fun handleStoriesPhotoPickerResult(data: Intent) {
         selectedSiteRepository.getSelectedSite()?.let {
             siteStoriesHandler.handleStoriesResult(it, data, STORY_FROM_MY_SITE)
+        }
+    }
+
+    fun performFirstStepAfterSiteCreation(siteLocalId: Int) {
+        if (landOnTheEditorABExperiment.getVariation() is Control) {
+            checkAndStartQuickStart(siteLocalId)
+        } else {
+            checkAndStartLandOnTheEditor()
+        }
+    }
+
+    fun checkAndStartLandOnTheEditor() {
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            launch(bgDispatcher) {
+                homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
+                    val landOnTheEditorAction = SiteNavigationAction.OpenHomepage(selectedSite, localHomepageId)
+                    _onNavigation.postValue(Event(landOnTheEditorAction))
+                    analyticsTrackerWrapper.track(Stat.LANDING_EDITOR_SHOWN)
+                }
+            }
         }
     }
 

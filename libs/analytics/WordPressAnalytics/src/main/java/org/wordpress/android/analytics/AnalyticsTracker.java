@@ -234,6 +234,7 @@ public final class AnalyticsTracker {
         EDITOR_GUTENBERG_DISABLED, // Gutenberg editor only
         EDITOR_HELP_SHOWN,
         EDITOR_SETTINGS_FETCHED,
+        LANDING_EDITOR_SHOWN,
         REVISIONS_LIST_VIEWED,
         REVISIONS_DETAIL_VIEWED_FROM_LIST,
         REVISIONS_DETAIL_VIEWED_FROM_SWIPE,

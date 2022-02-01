@@ -31,7 +31,12 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
+import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -106,6 +111,7 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.viewmodel.ContextProvider
 import java.util.Date
 
@@ -129,12 +135,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
+    @Mock lateinit var homePageDataLoader: HomePageDataLoader
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    @Mock lateinit var landOnTheEditorABExperiment: LandOnTheEditorABExperiment
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
@@ -154,8 +162,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteName = "Site"
     private val emailAddress = "test@email.com"
     private val postId = 100
+    private val localHomepageId = 1
     private lateinit var site: SiteModel
     private lateinit var siteInfoCard: SiteInfoCard
+    private lateinit var homepage: PageModel
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
@@ -272,11 +282,13 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartCardBuilder,
+                homePageDataLoader,
                 quickStartDynamicCardsFeatureConfig,
                 quickStartUtilsWrapper,
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
+                landOnTheEditorABExperiment,
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
                 cardsTracker,
@@ -332,9 +344,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.iconUrl = siteIcon
         site.siteId = siteLocalId.toLong()
 
+        homepage = PageModel(PostModel(), site, localHomepageId, "home", PUBLISHED, Date(), false, 0L, null, 0L)
+
         setUpCardsBuilder()
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(homePageDataLoader.loadHomepage(site)).thenReturn(homepage)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -1528,6 +1543,26 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.invokeOnCleared()
 
         verify(mySiteSourceManager).clear()
+    }
+
+    /* LAND ON THE EDITOR A/B EXPERIMENT */
+    @Test
+    fun `given the land on the editor experiment is running, then the home page editor is shown`() = test {
+        whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Treatment("experiment"))
+
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
+
+        verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
+        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenHomepage(site, localHomepageId))
+    }
+
+    @Test
+    fun `given the land on the editor experiment is not running, then the home page editor is not shown`() = test {
+        whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Control)
+
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
+
+        assertThat(navigationActions).isEmpty()
     }
 
     /* ORDERED LIST */

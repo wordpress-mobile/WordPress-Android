@@ -1,0 +1,6 @@
+19.0:
+- Kelola dasbor Anda dengan feed berbasis kartu, termasuk Pos.
+- Unggah video berdurasi maksimal 5 menit pada paket gratis.
+- Lihat lebih banyak teks antarmuka dalam bahasa Anda, termasuk blok Jetpack/Petak Tata Letak.
+- Pertahankan pemformatan teks setelah menekan backspace.
+- Sekarang, judul blok pada menu penyisip rata tengah.
