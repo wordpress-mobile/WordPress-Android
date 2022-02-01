@@ -18,6 +18,7 @@ repositories {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
+            includeGroup "org.wordpress.wellsql"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
