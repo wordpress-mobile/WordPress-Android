@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
-import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
@@ -91,17 +90,17 @@ class CardsSource @Inject constructor(
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-            val result = if (statsCardFeatureConfig.isEnabled()) {
-                CardsResult(mockedCardsData)
+            if (statsCardFeatureConfig.isEnabled()) {
+                postState(CardsUpdate(mockedCardsData))
             } else {
-                cardsStore.fetchCards(selectedSite)
-            }
-            val model = result.model
-            val error = result.error
-            when {
-                error != null -> postErrorState()
-                model != null -> onRefreshedBackgroundThread()
-                else -> onRefreshedBackgroundThread()
+                val result = cardsStore.fetchCards(selectedSite)
+                val model = result.model
+                val error = result.error
+                when {
+                    error != null -> postErrorState()
+                    model != null -> onRefreshedBackgroundThread()
+                    else -> onRefreshedBackgroundThread()
+                }
             }
         }
     }
