@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-21 11:54:08+0000
+Translation-Revision-Date: 2022-01-20 22:13:35+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="about_automattic_app_icon_description">应用程序图标</string>
+    <string name="about_automattic_back_icon_description">返回图标</string>
+    <string name="about_automattic_logo_description">Automattic 徽标</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
+    <string name="about_automattic_source_code_item_title">源代码</string>
+    <string name="about_automattic_privacy_policy_item_title">隐私政策</string>
+    <string name="about_automattic_terms_of_service_item_title">服务条款</string>
+    <string name="about_automattic_work_with_us_item_subtitle">随时随地工作</string>
+    <string name="about_automattic_work_with_us_item_title">加入我们</string>
+    <string name="about_automattic_family_item_title">Automattic 家族</string>
+    <string name="about_automattic_legal_and_more_item_title">法律及更多信息</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_rate_us_item_title">给我们评分</string>
+    <string name="about_automattic_share_with_friends_item_title">分享给朋友</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">您可以使用编辑器的 Web 版本编辑此区块。</string>
+    <string name="gutenberg_native_open_jetpack_security_settings">打开 Jetpack Security 设置</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">注意：您必须允许 WordPress.com 登录，才能在移动设备编辑器中编辑此区块。</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">注意：主题和屏幕尺寸之间的布局可能会有所不同</string>
+    <string name="gutenberg_native_address_settings">地址设置</string>
+    <string name="gutenberg_native_add_media">添加媒体</string>
+    <string name="my_site_error_card_subtitle">目前加载您站点的数据时出现问题。</string>
+    <string name="my_site_error_card_title">某些数据无法加载</string>
+    <string name="my_site_dashboard_stale_message">仪表盘未更新。 请检查连接是否正常然后刷新。</string>
+    <string name="my_site_dashboard_update_error">无法更新仪表盘。</string>
+    <string name="error_media_video_duration_exceeds_limit">视频无法上传！ 上传超过 5 分钟的视频需要使用付费套餐。</string>
+    <string name="about_automattic_acknowledgements_item_title">确认</string>
+    <string name="about_automattic_california_privacy_notice_item_title">加州隐私声明</string>
     <string name="about_automattic_version_label">版本 %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">确认</string>
     <string name="about_automattic_legal_page_title">法律及更多信息</string>
@@ -108,6 +142,7 @@ Language: zh_CN
     <string name="recommend_app_generic_get_template_error">当获取推荐应用的模板时发生未知错误</string>
     <string name="recommend_app_bad_format_response">收到无效响应</string>
     <string name="recommend_app_null_response">未收到任何响应</string>
+    <string name="recommend_app_subject">Automattic 应用程序 - 适合各种设备的应用程序</string>
     <string name="me_btn_share">将 WordPress 与您的朋友分享</string>
     <string name="my_site_quick_actions_title">快速链接</string>
     <string name="my_site_btn_domains">域名</string>
@@ -248,6 +283,7 @@ Language: zh_CN
     <string name="gutenberg_native_move_image_forward">前移图像</string>
     <string name="gutenberg_native_move_image_backward">后移图像</string>
     <string name="gutenberg_native_width_settings">宽度设置</string>
+    <string name="gutenberg_native_column_settings">列设置</string>
     <string name="user_profile_untitled_site">（无标题）</string>
     <string name="user_profile_site_section_header">站点</string>
     <string name="user_profile_bottom_sheet_description">用户个人资料底部信息</string>
@@ -258,7 +294,9 @@ Language: zh_CN
     <string name="gutenberg_native_preview_page">预览页面</string>
     <string name="gutenberg_native_retry">重试</string>
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
+    <string name="gutenberg_native_text_color">文字颜色</string>
     <string name="gutenberg_native_s_link">%s 链接</string>
+    <string name="gutenberg_native_padding">内边距</string>
     <string name="gutenberg_native_featured">文章特色图片</string>
     <string name="gutenberg_native_custom_url">自定义 URL</string>
     <string name="gutenberg_native_create_embed">创建嵌入</string>

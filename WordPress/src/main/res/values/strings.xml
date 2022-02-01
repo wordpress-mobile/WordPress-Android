@@ -2210,7 +2210,6 @@
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
     <string name="my_site_untitled_post">Untitled</string>
-    <string name="my_site_no_content_post">No Content</string>
     <string name="my_site_create_first_post_title">Create your first post</string>
     <string name="my_site_create_first_post_excerpt">Posts appear on your blog page in reverse chronological order. It\'s time to share your ideas with the world!</string>
     <string name="my_site_create_next_post_title">Create your next post</string>
@@ -2324,6 +2323,8 @@
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
+    <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
+    <string name="sharing_facebook_warning_positive_button">Go to web</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -3496,14 +3497,15 @@
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to save files.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to upload files.\nPlease tap for options.</string>
-    <string name="gutenberg_native_featured" tools:ignore="UnusedResources">Featured</string>
     <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Featured Image</string>
     <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">File block settings</string>
     <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">File name</string>
     <string name="gutenberg_native_font_size" tools:ignore="UnusedResources">Font Size</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources">Four</string>
     <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources">From clipboard</string>
     <!-- translators: accessibility text. %s: gallery caption. -->
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">Gallery style</string>
     <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">Get support</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Give it a try by adding a few blocks to your post or page!</string>
     <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Go back</string>
@@ -3552,6 +3554,7 @@
     <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Navigate Up</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Navigates to custom color picker</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources">Navigates to layout selection screen</string>
     <!-- translators: %s: Select control button label e.g. Small
 translators: %s: Select control button label e.g. "Button width" -->
     <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources">Navigates to select %s</string>
@@ -3566,6 +3569,7 @@ translators: %s: Select control button label e.g. "Button width" -->
     <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources">Note: You must allow WordPress.com login to edit this block in the mobile editor.</string>
     <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
     <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources">Once you become familiar with the names of different blocks, you can add a block by typing a forward slash followed by the block name — for example, /image or /heading.</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources">One</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
     <string name="gutenberg_native_open" tools:ignore="UnusedResources">OPEN</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
@@ -3591,7 +3595,7 @@ translators: %s: Select control button label e.g. "Button width" -->
     <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Problem displaying block</string>
     <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem opening the audio</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
-    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Remove as Featured Image </string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources">Remove as Featured Image</string>
     <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Remove block</string>
     <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Replace audio</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
@@ -3642,7 +3646,7 @@ translators: Block name. %s: The localized block name -->
     <!-- translators: %s: Select font size option value e.g: "Selected: Large".
 translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources">Selected: %s</string>
-    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Set as Featured Image </string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources">Set as Featured Image</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
     <!-- translators: Slash inserter autocomplete results -->
     <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources">Slash inserter results</string>
@@ -3656,11 +3660,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Text color</string>
     <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Text formatting controls are located within the toolbar positioned above the keyboard while editing a text block</string>
     <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">The basics</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources">Three</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">Tiled gallery settings</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">To remove a block, select the block and click the three dots in the bottom right of the block to view the settings. From there, choose the option to remove the block.</string>
     <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources">Transform block…</string>
     <!-- translators: %s: block title e.g: "Paragraph". -->
     <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources">Transform %s to</string>
     <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources">Try another search term</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources">Two</string>
     <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources">Type a URL</string>
     <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources">Unable to embed media</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>

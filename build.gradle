@@ -1,9 +1,9 @@
 ext {
     coroutinesVersion = '1.5.2'
-    wordPressUtilsVersion = '2.2.0'
+    wordPressUtilsVersion = '2.3.0'
     wordPressLoginVersion = '0.0.8'
-    gutenbergMobileVersion = 'v1.70.0-alpha1'
-    storiesVersion = '1.2.0'
+    gutenbergMobileVersion = 'v1.71.0-alpha1'
+    storiesVersion = '1.2.1'
     aboutAutomatticVersion = '0.0.4'
 
     minSdkVersion = 24
@@ -14,7 +14,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.33.0'
+    fluxCVersion = '1.34.0'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
@@ -54,8 +54,8 @@ buildscript {
                 includeGroup "com.automattic.android"
             }
         }
+        maven { url "https://plugins.gradle.org/m2/" }
         google()
-        jcenter()
     }
 
     dependencies {
@@ -77,8 +77,33 @@ allprojects {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
+        maven {
+            url "https://a8c-libs.s3.amazonaws.com/android/jcenter-mirror"
+            content {
+                includeVersion "com.android.volley", "volley", "1.1.1"
+                includeVersion "com.automattic", "rest", "1.0.8"
+                includeVersion "com.google.android.exoplayer", "exoplayer-core", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-dash", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-hls", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-smoothstreaming", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-ui", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "extension-okhttp", "2.9.3"
+                includeVersion "com.google.android", "flexbox", "2.0.1"
+                includeVersion "org.wordpress", "emailchecker2", "1.1.0"
+                includeVersion "org.wordpress", "persistentedittext", "1.0.2"
+                includeVersion "org.wordpress", "wellsql-core", "1.6.0"
+                includeVersion "org.wordpress", "wellsql", "1.6.0"
+                // Required for detekt
+                includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
+                // Required for lintWordpressVanillaRelease
+                includeVersion "com.jraska", "falcon", "2.1.1"
+                // Required for ktlint
+                includeVersion "com.andreapivetta.kolor", "kolor", "0.0.2"
+            }
+        }
 
         flatDir {
             dirs '../aars'

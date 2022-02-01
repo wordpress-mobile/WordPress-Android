@@ -10,6 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentsStore
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
@@ -40,9 +41,10 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
-    private val notificationsTableWrapper: NotificationsTableWrapper,
     private val resourceProvider: ResourceProvider,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
+    private val notificationsTableWrapper: NotificationsTableWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -190,6 +192,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                         )
                     } else {
                         _uiActionEvent.postValue(Event(DONE))
+                        localCommentCacheUpdateHandler.requestCommentsUpdate()
                     }
                 }
             }
