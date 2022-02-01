@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-21 13:01:51+0000
+Translation-Revision-Date: 2022-01-25 03:33:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
+    <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
+    <string name="sharing_facebook_warning_positive_button">Webe git</string>
+    <string name="sharing_facebook_warning_message">Facebook hesabınızı WordPress.com web sitesine bağlayabilirsiniz. Tamamladığınızda WordPress uygulamasına dönüp paylaşım ayarlarını değiştirin.</string>
     <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
     <string name="about_automattic_back_icon_description">Geri simgesi</string>
     <string name="about_automattic_logo_description">Automattic logosu</string>
@@ -235,8 +240,8 @@ Language: tr
     <string name="blogging_reminders_done">Tamamlandı</string>
     <string name="blogging_reminders_notify_me">Bana bildir</string>
     <string name="restore_details_enter_server_creds_msg">Yedeklemelerinizden tek tıkla geri yüklemeyi etkinleştirmek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
-    <string name="gutenberg_native_set_as_featured_image">Öne Çıkarılan Görsel olarak ayarla </string>
-    <string name="gutenberg_native_remove_as_featured_image">Öne Çıkan Görsel kategorisinden kaldır </string>
+    <string name="gutenberg_native_set_as_featured_image">Öne çıkarılan görsel olarak ayarla </string>
+    <string name="gutenberg_native_remove_as_featured_image">Öne çıkan görseli kaldır </string>
     <string name="fab_add_category_desc">Kategori oluştur</string>
     <string name="support_ticket_subject">Android için WordPress Desteği</string>
     <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
@@ -289,16 +294,19 @@ Language: tr
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Kullanıcı profili alt sayfa bilgileri</string>
     <string name="likes_list_screen_title">Beğeniler listesi %s</string>
+    <string name="gutenberg_native_two">İki</string>
+    <string name="gutenberg_native_three">Üç</string>
     <string name="gutenberg_native_s_social_icon">%s sosyal simge</string>
     <string name="gutenberg_native_mention">Bahsetme</string>
     <string name="gutenberg_native_preview_post">Yazıyı önizle</string>
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
+    <string name="gutenberg_native_one">Bir</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
     <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>
-    <string name="gutenberg_native_featured">Öne çıkan</string>
+    <string name="gutenberg_native_four">Dört</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>

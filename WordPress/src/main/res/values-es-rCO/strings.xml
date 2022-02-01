@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 05:15:20+0000
+Translation-Revision-Date: 2022-01-24 16:16:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Ajustes de la galería de mosaico</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega a la pantalla de selección del diseño</string>
+    <string name="gutenberg_native_gallery_style">Estilo de la galería</string>
+    <string name="sharing_facebook_warning_positive_button">Ir a la web</string>
+    <string name="sharing_facebook_warning_message">Puedes conectar tu cuenta de Facebook en la web de WordPress.com. Cuando lo hayas hecho, vuelve a la aplicación de WordPress para cambiar tus ajustes para compartir.</string>
     <string name="about_automattic_app_icon_description">Icono de la aplicación</string>
     <string name="about_automattic_back_icon_description">Icono de volver</string>
     <string name="about_automattic_logo_description">Logotipo de Automattic</string>
@@ -289,16 +294,19 @@ Language: es_CO
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
+    <string name="gutenberg_native_two">Dos</string>
+    <string name="gutenberg_native_three">Tres</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_preview_post">Previsualizar la entrada</string>
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
     <string name="gutenberg_native_retry">Reintentar</string>
+    <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>
-    <string name="gutenberg_native_featured">Destacado</string>
+    <string name="gutenberg_native_four">Cuatro</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_create_embed">Crear una incrustación</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
