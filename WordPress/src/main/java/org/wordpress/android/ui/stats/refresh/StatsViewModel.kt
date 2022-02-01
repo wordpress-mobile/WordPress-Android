@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.RemoteRequestFailure
@@ -70,6 +71,9 @@ class StatsViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
+
+    private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
+    val navigationTarget: LiveData<Event<NavigationTarget>> = mutableNavigationTarget
 
     private var isInitialized = false
 
@@ -229,6 +233,10 @@ class StatsViewModel
             ANNUAL_STATS, DETAIL -> {
             }
         }
+    }
+
+    fun onAddNewStatsButtonClicked() {
+        mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
 
     override fun onCleared() {
