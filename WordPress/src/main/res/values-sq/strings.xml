@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 11:10:52+0000
+Translation-Revision-Date: 2022-01-28 10:44:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Rregullime galerie mozaik</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Kalohet te skena e përzgjedhjes së skemës</string>
+    <string name="gutenberg_native_gallery_style">Stil galerie</string>
+    <string name="sharing_facebook_warning_message">Mund ta lidhni llogarinë tuaj Facebook në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni WordPress, që të ndryshoni rregullimet tuaja për Ndarje Me të Tjerë.</string>
     <string name="about_automattic_app_icon_description">Ikonë aplikacioni</string>
     <string name="about_automattic_logo_description">Stemë e Automattic-ut</string>
     <string name="about_automattic_wordpress">WordPress</string>
@@ -285,15 +289,18 @@ Language: sq_AL
     <string name="user_profile_site_section_header">Sajt</string>
     <string name="user_profile_bottom_sheet_description">Hollësi profili përdoruesi në fund të fletës</string>
     <string name="likes_list_screen_title">Listë %s Pëlqimesh</string>
+    <string name="gutenberg_native_two">Dy</string>
+    <string name="gutenberg_native_three">Tre</string>
     <string name="gutenberg_native_s_social_icon">Ikonë shoqërorësh %s</string>
     <string name="gutenberg_native_mention">Përmendje</string>
     <string name="gutenberg_native_preview_post">Parashiheni postimin</string>
     <string name="gutenberg_native_preview_page">Parashiheni faqen</string>
     <string name="gutenberg_native_retry">Riprovoni</string>
+    <string name="gutenberg_native_one">Një</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_s_link">Lidhje %s</string>
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
-    <string name="gutenberg_native_featured">Të zgjedhura</string>
+    <string name="gutenberg_native_four">Katër</string>
     <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
     <string name="gutenberg_native_custom_url">URL Vetjake</string>
     <string name="gutenberg_native_column_d">Shtylla %d</string>

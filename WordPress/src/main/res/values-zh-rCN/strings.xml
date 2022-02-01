@@ -234,8 +234,6 @@ Language: zh_CN
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以启用从备份中一键恢复站点的功能。</string>
-    <string name="gutenberg_native_set_as_featured_image">设为特色图片</string>
-    <string name="gutenberg_native_remove_as_featured_image">移除特色图片</string>
     <string name="fab_add_category_desc">创建分类</string>
     <string name="support_ticket_subject">Android 版 WordPress 支持</string>
     <string name="site_settings_categories_hint">管理您的站点分类</string>
@@ -297,7 +295,6 @@ Language: zh_CN
     <string name="gutenberg_native_text_color">文字颜色</string>
     <string name="gutenberg_native_s_link">%s 链接</string>
     <string name="gutenberg_native_padding">内边距</string>
-    <string name="gutenberg_native_featured">文章特色图片</string>
     <string name="gutenberg_native_custom_url">自定义 URL</string>
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
