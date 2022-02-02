@@ -1,5 +1,10 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.2
+-----
+* [*] Block editor: Replacing the media for an image set as featured prompts to update the featured image [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3930]
+* [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
+
 19.1
 -----
 * [**] Block editor: Fix content justification attribute in Buttons block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4451]
@@ -22,6 +27,7 @@
 * [*] Block editor: Add missing translations of unsupported block editor modal [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4410]
 * [***] My Site: Introduced cards based dashboard feed with posts card [https://github.com/wordpress-mobile/WordPress-Android/issues/15198]
 * [*] Me: Put back the "Share WordPress with a friend" on the Me screen. [https://github.com/wordpress-mobile/WordPress-Android/pull/15818]
+* [***] Updated icons set to Cool Blue. [https://github.com/wordpress-mobile/WordPress-Android/pull/15842]
 
 18.9
 -----

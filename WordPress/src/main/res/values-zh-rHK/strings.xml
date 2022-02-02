@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-19 08:54:09+0000
+Translation-Revision-Date: 2022-01-20 22:12:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
@@ -38,6 +38,8 @@ Language: zh_TW
     <string name="my_site_dashboard_stale_message">儀表板未更新。 請檢查你的連線，然後下拉以便重新整理。</string>
     <string name="my_site_dashboard_update_error">無法更新儀表板。</string>
     <string name="error_media_video_duration_exceeds_limit">影片未上傳！ 須購買付費方案才能上傳長度超過 5 分鐘的影片。</string>
+    <string name="about_automattic_acknowledgements_item_title">合作廠商</string>
+    <string name="about_automattic_california_privacy_notice_item_title">加州隱私權聲明</string>
     <string name="about_automattic_version_label">版本 %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">合作廠商</string>
     <string name="about_automattic_legal_page_title">法律與其他</string>
@@ -231,8 +233,6 @@ Language: zh_TW
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;輸入你的伺服器憑證&lt;/a&gt;，以啟用從備份一鍵還原網站的功能。</string>
-    <string name="gutenberg_native_set_as_featured_image">設為特色圖片 </string>
-    <string name="gutenberg_native_remove_as_featured_image">移除特色圖片 </string>
     <string name="fab_add_category_desc">建立分類</string>
     <string name="support_ticket_subject">Android 版 WordPress 支援</string>
     <string name="site_settings_categories_hint">管理你的網站分類</string>
@@ -294,7 +294,6 @@ Language: zh_TW
     <string name="gutenberg_native_s_link">%s 連結</string>
     <string name="gutenberg_native_text_color">文字顏色</string>
     <string name="gutenberg_native_padding">邊框間距</string>
-    <string name="gutenberg_native_featured">精選內容</string>
     <string name="gutenberg_native_create_embed">建立嵌入內容</string>
     <string name="gutenberg_native_custom_url">自訂 URL</string>
     <string name="gutenberg_native_column_d">欄 %d</string>

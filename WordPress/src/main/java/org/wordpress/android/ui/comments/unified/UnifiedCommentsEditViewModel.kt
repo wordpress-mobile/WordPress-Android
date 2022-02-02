@@ -11,6 +11,7 @@ import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.ReaderComment
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
@@ -47,7 +48,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val readerCommentActionsWrapper: ReaderCommentActionsWrapper
+    private val readerCommentActionsWrapper: ReaderCommentActionsWrapper,
+    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -129,7 +131,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         CANCEL_EDIT_CONFIRM
     }
 
-    fun start(site: SiteModel, commentIdentifier: CommentIdentifier) {
+    fun start(site: SiteModel, commentId: Int) {
         if (isStarted) {
             // If we are here, the fragment view was recreated (like in a configuration change)
             // so we reattach the watchers.
@@ -139,9 +141,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         isStarted = true
 
         this.site = site
-        this.commentIdentifier = commentIdentifier
 
-        initViews()
+        initViews(commentId)
     }
 
     private suspend fun setLoadingState(state: ProgressState) {
@@ -195,6 +196,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                             )
                         } else {
                             _uiActionEvent.postValue(Event(DONE))
+                            localCommentCacheUpdateHandler.requestCommentsUpdate()
                         }
                     }
                 } else if (commentIdentifier is ReaderCommentIdentifier) {
@@ -325,6 +327,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                     )
                 }
             }
+
             delay(LOADING_DELAY_MS)
             setLoadingState(NOT_VISIBLE)
         }

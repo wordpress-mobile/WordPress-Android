@@ -20,10 +20,22 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "2020-01-01",
+            "date": "{{now format='yyyy-MM-dd'}}",
             "days": {
-                "2020-01-01": {
-                    "groups": [],
+                "{{now format='yyyy-MM-dd'}}": {
+                    "groups": [
+                        {
+                            "group": "WordPress.com Reader",
+                            "name": "WordPress.com Reader",
+                            "url": "https://wordpress.com/read/",
+                            "icon": "https://secure.gravatar.com/blavatar/236c008da9dc0edb4b3464ecebb3fc1d?s=48",
+                            "total": 231,
+                            "follow_data": null,
+                            "results": {
+                                "views": 231
+                            }
+                        }
+                    ],
                     "other_views": 0,
                     "total_views": 0
                 }

@@ -1030,6 +1030,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
+            case RequestCodes.EDIT_LANDING_PAGE:
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
                     return;
                 }

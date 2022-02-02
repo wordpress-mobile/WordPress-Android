@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-19 14:54:07+0000
+Translation-Revision-Date: 2022-01-25 03:33:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
+    <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
+    <string name="sharing_facebook_warning_positive_button">Webe git</string>
+    <string name="sharing_facebook_warning_message">Facebook hesabınızı WordPress.com web sitesine bağlayabilirsiniz. Tamamladığınızda WordPress uygulamasına dönüp paylaşım ayarlarını değiştirin.</string>
     <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
     <string name="about_automattic_back_icon_description">Geri simgesi</string>
     <string name="about_automattic_logo_description">Automattic logosu</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
     <string name="about_automattic_dayone">1. Gün</string>
     <string name="about_automattic_source_code_item_title">Kaynak kodu</string>
     <string name="about_automattic_privacy_policy_item_title">Gizlilik politikası</string>
@@ -17,6 +28,8 @@ Language: tr
     <string name="about_automattic_work_with_us_item_title">Bizimle Çalışın</string>
     <string name="about_automattic_family_item_title">Automattic Ailesi</string>
     <string name="about_automattic_legal_and_more_item_title">Yasal Bilgiler ve Daha Fazlası</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
     <string name="about_automattic_rate_us_item_title">Bizi Değerlendirin</string>
     <string name="about_automattic_share_with_friends_item_title">Arkadaşlarla paylaş</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">Düzenleyicinin web sürümünü kullanarak bu bloku düzenleyebilirsiniz.</string>
@@ -30,11 +43,13 @@ Language: tr
     <string name="my_site_dashboard_stale_message">Pano güncellenmiyor. Lütfen bağlantınızı kontrol edin ve ardından yenilemek için çekin.</string>
     <string name="my_site_dashboard_update_error">Pano güncellenemedi.</string>
     <string name="error_media_video_duration_exceeds_limit">Video yüklenmedi. 5 dakikadan uzun video yüklemek için ücretli bir paket gerekir.</string>
+    <string name="about_automattic_acknowledgements_item_title">Teşekkürler</string>
     <string name="about_automattic_california_privacy_notice_item_title">Kaliforniya için Gizlilik Bildirimi</string>
     <string name="about_automattic_version_label">Sürüm %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">Teşekkürler</string>
     <string name="about_automattic_legal_page_title">Yasal Bilgiler ve Daha Fazlası</string>
     <string name="about_automattic_main_page_title">%1$s Hakkında</string>
+    <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">Temel bilgiler</string>
     <string name="gutenberg_native_selected_default">Seçili: Varsayılan</string>
     <string name="gutenberg_native_more_support_options">Daha fazla destek seçeneği</string>
@@ -43,6 +58,7 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_select_font_size">Yazı tipi boyutunu seçmek için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Varsayılan yazı tipi boyutunu seçmek için iki kez dokunun</string>
     <string name="gutenberg_native_contact_support">Destek ile iletişim kur</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="my_site_no_content_post">İçerik Yok</string>
     <string name="reader_comments_follow_conversation">Sohbeti Takip Et</string>
     <string name="reader_comments_be_first_to_comment">İlk yorumu siz yapın</string>
@@ -67,7 +83,10 @@ Language: tr
     <string name="domains_paid_plan_add_your_domain_caption">Özel bir alan adı eklemek ziyaretçilerin sitenizi bulmasını kolaylaştırır</string>
     <string name="domains_paid_plan_add_your_domain_title">Aalan adınızı ekleyin</string>
     <string name="my_site_create_first_post_excerpt">Gönderiler blog sayfanızda ters kronolojik sırada görünür. Fikirlerinizi dünyayla paylaşmanın zamanı geldi!</string>
+    <string name="my_site_create_first_post_title">İlk yazınızı oluşturun</string>
+    <string name="my_site_untitled_post">Başlıksız</string>
     <string name="my_site_post_card_scheduled_title">Yaklaşan zamanlanmış gönderiler</string>
+    <string name="my_site_post_card_draft_title">Bir taslak yazı üzerinde çalışın</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;İlk yıl ücretsiz, &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /yıl&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Alan adlarınız %s adresindeki sitenize yönlendirilecektir.</string>
     <string name="gutenberg_native_create_link">Bağlantı oluştur</string>
@@ -221,8 +240,8 @@ Language: tr
     <string name="blogging_reminders_done">Tamamlandı</string>
     <string name="blogging_reminders_notify_me">Bana bildir</string>
     <string name="restore_details_enter_server_creds_msg">Yedeklemelerinizden tek tıkla geri yüklemeyi etkinleştirmek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
-    <string name="gutenberg_native_set_as_featured_image">Öne Çıkarılan Görsel olarak ayarla </string>
-    <string name="gutenberg_native_remove_as_featured_image">Öne Çıkan Görsel kategorisinden kaldır </string>
+    <string name="gutenberg_native_set_as_featured_image">Öne çıkarılan görsel olarak ayarla </string>
+    <string name="gutenberg_native_remove_as_featured_image">Öne çıkan görseli kaldır </string>
     <string name="fab_add_category_desc">Kategori oluştur</string>
     <string name="support_ticket_subject">Android için WordPress Desteği</string>
     <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
@@ -275,16 +294,19 @@ Language: tr
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Kullanıcı profili alt sayfa bilgileri</string>
     <string name="likes_list_screen_title">Beğeniler listesi %s</string>
+    <string name="gutenberg_native_two">İki</string>
+    <string name="gutenberg_native_three">Üç</string>
     <string name="gutenberg_native_s_social_icon">%s sosyal simge</string>
     <string name="gutenberg_native_mention">Bahsetme</string>
     <string name="gutenberg_native_preview_post">Yazıyı önizle</string>
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
+    <string name="gutenberg_native_one">Bir</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
     <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>
-    <string name="gutenberg_native_featured">Öne çıkan</string>
+    <string name="gutenberg_native_four">Dört</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
@@ -866,6 +888,7 @@ Language: tr
     <string name="quick_start_dialog_update_site_title_message_short">Yeni bir başlık belirlemek için &lt;b&gt;%1$s&lt;/b&gt; dokunun</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Bu yazının çöpe taşınması, yerel değişiklikleri yok sayar. Devam etmek istediğinizden emin misiniz?</string>
     <string name="gutenberg_native_s_block_options">%s blok seçenekleri</string>
+    <string name="gutenberg_native_remove_block">Bloğu kaldır</string>
     <string name="gutenberg_native_duplicate_block">Bloğu çoğalt</string>
     <string name="gutenberg_native_copy_block">Bloğu kopyala</string>
     <string name="gutenberg_native_copied_block">Kopyalanan blok</string>

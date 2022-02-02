@@ -9,8 +9,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
-import static org.wordpress.android.support.WPSupportUtils.isElementCompletelyDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
+import static org.wordpress.android.support.WPSupportUtils.scrollIntoView;
 
 public class ReaderPage {
     public ReaderPage go() {
@@ -28,17 +27,9 @@ public class ReaderPage {
     public ReaderViewPage openPost(String postTitle) {
         ViewInteraction post = onView(withChild(withText(postTitle)));
 
-        scrollIntoView(post);
+        scrollIntoView(R.id.reader_recycler_view, post, (float) 1);
         clickOn(postTitle);
 
         return new ReaderViewPage().waitUntilLoaded();
-    }
-
-    private void scrollIntoView(ViewInteraction postContainer) {
-        int swipeCount = 0;
-        while (!isElementCompletelyDisplayed(postContainer) && swipeCount < 10) {
-            swipeUpOnView(R.id.reader_recycler_view, (float) 1);
-            swipeCount += 1;
-        }
     }
 }
