@@ -255,7 +255,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                                 true
                         )
                     }
-                    if (commentsSnippetFeatureConfig.isEnabled() && !post.isExternal) {
+                    if (commentsSnippetFeatureConfig.isEnabled()) {
                         onRefreshCommentsData(post.blogId, post.postId)
                     }
                     updatePostActions(post)

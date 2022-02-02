@@ -1482,7 +1482,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
                         viewModel.onRefreshLikersData(it)
                     }
-                    if (commentsSnippetFeatureConfig.isEnabled() && !it.isExternal) {
+                    if (commentsSnippetFeatureConfig.isEnabled()) {
                         viewModel.onRefreshCommentsData(it.blogId, it.postId)
                     }
                     viewModel.onRelatedPostsRequested(it)

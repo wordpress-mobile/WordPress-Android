@@ -172,8 +172,10 @@ class ConversationNotificationsViewModel @Inject constructor(
                     true
             )
 
-            if (post != null && !post.isExternal) {
-                followCommentsHandler.handleFollowCommentsStatusRequest(blogId, postId, isInit)
+            post?.let {
+                if (!post.isExternal) {
+                    followCommentsHandler.handleFollowCommentsStatusRequest(blogId, postId, isInit)
+                }
             }
         }
     }
