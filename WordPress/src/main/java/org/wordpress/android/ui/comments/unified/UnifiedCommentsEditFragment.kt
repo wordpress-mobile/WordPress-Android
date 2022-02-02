@@ -212,7 +212,7 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
     companion object {
         private const val KEY_COMMENT_IDENTIFIER = "key_comment_identifier"
 
-        fun newInstance(site: SiteModel, commentIdentifier: CommentIdentifier): UnifiedCommentsEditFragment {
+        fun newInstance(site: SiteModel, commentIdentifier: CommentIdentifier?): UnifiedCommentsEditFragment {
             val args = Bundle()
 
             args.putSerializable(WordPress.SITE, site)

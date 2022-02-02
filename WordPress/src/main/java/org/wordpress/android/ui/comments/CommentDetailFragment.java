@@ -688,7 +688,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Intent intent = new Intent(getActivity(), UnifiedCommentsEditActivity.class);
             intent.putExtra(WordPress.SITE, mSite);
             if (mComment != null) {
-                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID, new SiteCommentIdentifier(mComment.getId()));
+                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_IDENTIFIER, new SiteCommentIdentifier(mComment.getId()));
             }
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         } else {

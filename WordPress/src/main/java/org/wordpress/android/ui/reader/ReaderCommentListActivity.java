@@ -563,7 +563,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
         Intent intent = new Intent(this, UnifiedCommentsEditActivity.class);
         intent.putExtra(WordPress.SITE, postSite);
-        intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID,
+        intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_IDENTIFIER,
                 new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId));
         startActivityForResult(intent, 3819283);
     }
