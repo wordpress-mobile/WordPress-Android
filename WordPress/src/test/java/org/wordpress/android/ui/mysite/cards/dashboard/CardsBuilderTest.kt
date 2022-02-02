@@ -22,18 +22,18 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
-import org.wordpress.android.ui.mysite.cards.dashboard.todaystat.TodaysStatsCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest : BaseUnitTest() {
-    @Mock lateinit var todaysStatCardBuilder: TodaysStatsCardBuilder
+    @Mock lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
     @Mock lateinit var postCardBuilder: PostCardBuilder
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
     fun setUp() {
-        cardsBuilder = CardsBuilder(todaysStatCardBuilder, postCardBuilder)
+        cardsBuilder = CardsBuilder(todaysStatsCardBuilder, postCardBuilder)
     }
 
     @Test
@@ -88,7 +88,7 @@ class CardsBuilderTest : BaseUnitTest() {
 
     private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
 
-    private val todayStatCard = mock<TodaysStatsCard>()
+    private val todaysStatsCard = mock<TodaysStatsCard>()
 
     private fun createPostCards() = listOf(
             PostCardWithPostItems(
@@ -104,7 +104,7 @@ class CardsBuilderTest : BaseUnitTest() {
         hasPosts: Boolean = false,
         showErrorCard: Boolean = false
     ): DashboardCards {
-        doAnswer { if (hasTodaysStats) todayStatCard else null }.whenever(todaysStatCardBuilder).build(any())
+        doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPosts) createPostCards() else emptyList() }.whenever(postCardBuilder).build(any())
         return cardsBuilder.build(
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(

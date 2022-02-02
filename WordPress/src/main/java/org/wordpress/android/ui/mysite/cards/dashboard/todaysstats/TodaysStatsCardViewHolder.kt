@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.todaystat
+package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
 import android.view.ViewGroup
 import org.wordpress.android.databinding.MySiteTodaysStatsCardBinding

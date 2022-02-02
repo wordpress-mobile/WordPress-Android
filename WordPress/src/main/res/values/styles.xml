@@ -785,7 +785,7 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <!--My Site Card - Todays stat Item-->
+    <!--My Site Card - Today's Stats Item-->
     <style name="MySiteTodaysStatsCardTitle">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.dashboard.todaystat
+package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -14,14 +14,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStat
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-private const val STAT_VIEWS = 10000
-private const val STAT_VISITORS = 1000
-private const val STAT_LIKES = 100
-private const val STAT_COMMENTS = 1000
+private const val TODAYS_STATS_VIEWS = 10000
+private const val TODAYS_STATS_VISITORS = 1000
+private const val TODAYS_STATS_LIKES = 100
+private const val TODAYS_STATS_COMMENTS = 1000
 
-private const val STAT_VIEWS_FORMATTED_STRING = "10,000"
-private const val STAT_VISITORS_FORMATTED_STRING = "1,000"
-private const val STAT_LIKES_FORMATTED_STRING = "100"
+private const val TODAYS_STATS_VIEWS_FORMATTED_STRING = "10,000"
+private const val TODAYS_STATS_VISITORS_FORMATTED_STRING = "1,000"
+private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
 
 @RunWith(MockitoJUnitRunner::class)
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
@@ -29,10 +29,10 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
 
     private lateinit var builder: TodaysStatsCardBuilder
     private val todaysStatsCardModel = TodaysStatsCardModel(
-            views = STAT_VIEWS,
-            visitors = STAT_VISITORS,
-            likes = STAT_LIKES,
-            comments = STAT_COMMENTS
+            views = TODAYS_STATS_VIEWS,
+            visitors = TODAYS_STATS_VISITORS,
+            likes = TODAYS_STATS_LIKES,
+            comments = TODAYS_STATS_COMMENTS
     )
 
     @Before
@@ -42,9 +42,9 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     }
 
     private fun setUpMocks() {
-        whenever(statsUtils.toFormattedString(STAT_VIEWS)).thenReturn(STAT_VIEWS_FORMATTED_STRING)
-        whenever(statsUtils.toFormattedString(STAT_VISITORS)).thenReturn(STAT_VISITORS_FORMATTED_STRING)
-        whenever(statsUtils.toFormattedString(STAT_LIKES)).thenReturn(STAT_LIKES_FORMATTED_STRING)
+        whenever(statsUtils.toFormattedString(TODAYS_STATS_VIEWS)).thenReturn(TODAYS_STATS_VIEWS_FORMATTED_STRING)
+        whenever(statsUtils.toFormattedString(TODAYS_STATS_VISITORS)).thenReturn(TODAYS_STATS_VISITORS_FORMATTED_STRING)
+        whenever(statsUtils.toFormattedString(TODAYS_STATS_LIKES)).thenReturn(TODAYS_STATS_LIKES_FORMATTED_STRING)
     }
 
     @Test
@@ -65,16 +65,16 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     fun `given todays stats, when card is built, then stat count exists`() {
         val statCard = buildTodaysStatsCard(todaysStatsCardModel)
 
-        assertThat(statCard).isEqualTo(todayStatCard)
+        assertThat(statCard).isEqualTo(todaysStatsCard)
     }
 
     private fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?) = builder.build(
             TodaysStatsCardBuilderParams(todaysStatsCardModel)
     )
 
-    private val todayStatCard = TodaysStatsCard(
-            UiStringText(STAT_VIEWS_FORMATTED_STRING),
-            UiStringText(STAT_VISITORS_FORMATTED_STRING),
-            UiStringText(STAT_LIKES_FORMATTED_STRING)
+    private val todaysStatsCard = TodaysStatsCard(
+            UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
+            UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
+            UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING)
     )
 }
