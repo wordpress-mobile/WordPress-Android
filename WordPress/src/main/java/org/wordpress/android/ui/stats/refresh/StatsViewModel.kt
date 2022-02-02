@@ -66,7 +66,7 @@ class StatsViewModel
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
-    newsCardHandler: NewsCardHandler,
+    private val newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker
 ) : ScopedViewModel(mainDispatcher) {
@@ -237,6 +237,7 @@ class StatsViewModel
     }
 
     fun onAddNewStatsButtonClicked() {
+        newsCardHandler.dismiss()
         analyticsTracker.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED)
         mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
