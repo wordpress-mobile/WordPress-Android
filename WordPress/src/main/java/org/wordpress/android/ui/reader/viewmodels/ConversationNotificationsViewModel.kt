@@ -5,14 +5,15 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.FollowConversationUiState
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.DISABLED
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.GONE
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.LOADING
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.VISIBLE_WITH_STATE
 import org.wordpress.android.ui.reader.FollowConversationStatusFlags
+import org.wordpress.android.ui.reader.FollowConversationUiState
 import org.wordpress.android.ui.reader.ReaderFollowCommentsHandler
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.UNKNOWN
@@ -32,6 +33,7 @@ import javax.inject.Named
 @Suppress("TooManyFunctions")
 class ConversationNotificationsViewModel @Inject constructor(
     private val followCommentsHandler: ReaderFollowCommentsHandler,
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
@@ -164,7 +166,15 @@ class ConversationNotificationsViewModel @Inject constructor(
     private fun getFollowConversationStatus(isInit: Boolean) {
         followStatusGetJob?.cancel()
         followStatusGetJob = launch(bgDispatcher) {
-            followCommentsHandler.handleFollowCommentsStatusRequest(blogId, postId, isInit)
+            val post = readerPostTableWrapper.getBlogPost(
+                    blogId,
+                    postId,
+                    true
+            )
+
+            if (post != null && !post.isExternal) {
+                followCommentsHandler.handleFollowCommentsStatusRequest(blogId, postId, isInit)
+            }
         }
     }
 
