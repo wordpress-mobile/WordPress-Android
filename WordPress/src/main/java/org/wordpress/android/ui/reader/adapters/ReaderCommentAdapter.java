@@ -326,8 +326,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mAuthorBadge.setVisibility(View.GONE);
         }
 
-        if (readerCommentsModerationFeatureConfig.isEnabled() &&
-            (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts())) {
+        if (readerCommentsModerationFeatureConfig.isEnabled()
+            && (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts())) {
             commentHolder.mActionButton.setImageResource(R.drawable.ic_more_vert_white_24dp);
 
             commentHolder.mActionButtonContainer.setOnClickListener(v -> {
