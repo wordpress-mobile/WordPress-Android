@@ -3,6 +3,7 @@
 19.2
 -----
 * [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
+* [**] Stats revamp: Removes the "+ Add new stats card" row from the bottom of the Insights tab on Stats screen and instead adds a settings icon (⚙️) to the the top app bar [https://github.com/wordpress-mobile/WordPress-Android/pull/15891]
 
 19.1
 -----
