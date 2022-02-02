@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-21 14:06:04+0000
+Translation-Revision-Date: 2022-01-30 02:49:50+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Pengaturan galeri tampilan kotak</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Buka layar pemilihan tata letak</string>
+    <string name="gutenberg_native_gallery_style">Gaya galeri</string>
+    <string name="sharing_facebook_warning_positive_button">Kunjungi situs</string>
+    <string name="sharing_facebook_warning_message">Anda dapat menghubungkan akun Facebook Anda di situs WordPress.com. Setelah selesai, kembali ke aplikasi WordPress untuk mengubah pengaturan fitur Berbagikan.</string>
     <string name="about_automattic_app_icon_description">Ikon Aplikasi</string>
     <string name="about_automattic_back_icon_description">Ikon kembali</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -235,8 +240,8 @@ Language: id
     <string name="blogging_reminders_done">Selesai</string>
     <string name="blogging_reminders_notify_me">Beri tahu saya</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk mengaktifkan pemulihan situs sekali klik dari pencadangan.</string>
-    <string name="gutenberg_native_set_as_featured_image">Atur sebagai Gambar Andalan </string>
-    <string name="gutenberg_native_remove_as_featured_image">Hapus dari Gambar Andalan </string>
+    <string name="gutenberg_native_set_as_featured_image">Jadikan Gambar Unggulan</string>
+    <string name="gutenberg_native_remove_as_featured_image">Hapus Gambar Unggulan</string>
     <string name="fab_add_category_desc">Buat Kategori</string>
     <string name="support_ticket_subject">WordPress untuk Dukungan Android</string>
     <string name="site_settings_categories_hint">Kelola kategori situs Anda</string>
@@ -289,16 +294,19 @@ Language: id
     <string name="user_profile_site_section_header">Situs</string>
     <string name="user_profile_bottom_sheet_description">Informasi lembar bawah profil pengguna</string>
     <string name="likes_list_screen_title">Daftar Suka %s</string>
+    <string name="gutenberg_native_two">Dua.</string>
+    <string name="gutenberg_native_three">Tiga.</string>
     <string name="gutenberg_native_s_social_icon">Ikon media sosial %s</string>
     <string name="gutenberg_native_mention">Sebutan</string>
     <string name="gutenberg_native_preview_post">Pratinjau pos</string>
     <string name="gutenberg_native_preview_page">Pratinjau halaman</string>
     <string name="gutenberg_native_retry">Coba lagi</string>
+    <string name="gutenberg_native_one">Satu.</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
     <string name="gutenberg_native_text_color">Warna teks</string>
     <string name="gutenberg_native_s_link">%s tautan</string>
     <string name="gutenberg_native_padding">Padding</string>
-    <string name="gutenberg_native_featured">Andalan</string>
+    <string name="gutenberg_native_four">Empat.</string>
     <string name="gutenberg_native_custom_url">URL Tersuai</string>
     <string name="gutenberg_native_create_embed">Buat sematan</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>

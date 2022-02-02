@@ -235,8 +235,6 @@ Language: ja_JP
     <string name="blogging_reminders_notify_me">通知する</string>
     <string name="blogging_reminders_done">完了</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;サーバーのログイン情報&lt;/a&gt;を入力すると、1クリックでバックアップからサイトを復元できるようになります。</string>
-    <string name="gutenberg_native_set_as_featured_image">アイキャッチ画像として設定 </string>
-    <string name="gutenberg_native_remove_as_featured_image">アイキャッチ画像を削除 </string>
     <string name="fab_add_category_desc">カテゴリーを作成</string>
     <string name="support_ticket_subject">WordPress for Android サポート</string>
     <string name="site_settings_categories_hint">サイトのカテゴリーを管理</string>
@@ -298,7 +296,6 @@ Language: ja_JP
     <string name="gutenberg_native_s_link">%s リンク</string>
     <string name="gutenberg_native_text_color">テキスト色</string>
     <string name="gutenberg_native_padding">パディング</string>
-    <string name="gutenberg_native_featured">おすすめ</string>
     <string name="gutenberg_native_create_embed">埋め込みを作成</string>
     <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_column_d">カラム %d</string>

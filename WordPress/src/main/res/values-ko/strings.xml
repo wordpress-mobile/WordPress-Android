@@ -232,8 +232,6 @@ Language: ko_KR
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
-    <string name="gutenberg_native_set_as_featured_image">특성 이미지로 설정 </string>
-    <string name="gutenberg_native_remove_as_featured_image">특성 이미지 제거 </string>
     <string name="fab_add_category_desc">카테고리 생성</string>
     <string name="support_ticket_subject">Android용 WordPress 지원</string>
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
@@ -295,7 +293,6 @@ Language: ko_KR
     <string name="gutenberg_native_text_color">텍스트 색상</string>
     <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
-    <string name="gutenberg_native_featured">추천</string>
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>

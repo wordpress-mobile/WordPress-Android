@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-21 06:35:35+0000
+Translation-Revision-Date: 2022-02-01 07:01:35+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_gallery_style">Styl galerii</string>
+    <string name="sharing_facebook_warning_positive_button">Idź do sieci</string>
     <string name="about_automattic_app_icon_description">Ikona aplikacji</string>
     <string name="about_automattic_back_icon_description">Ikona Cofnij/Wstecz</string>
     <string name="about_automattic_wordpress">WordPress</string>
@@ -283,17 +285,21 @@ Language: pl
     <string name="user_profile_untitled_site">(Bez nazwy)</string>
     <string name="user_profile_bottom_sheet_description">Informacja o profilu użytkownika na dolnej zakładce</string>
     <string name="likes_list_screen_title">Lista polubień %s</string>
+    <string name="gutenberg_native_two">Dwa</string>
+    <string name="gutenberg_native_three">Trzy</string>
     <string name="gutenberg_native_s_social_icon">Ikona społecznościowa %s</string>
     <string name="gutenberg_native_mention">Wzmianka</string>
     <string name="gutenberg_native_preview_post">Podgląd wpisu</string>
     <string name="gutenberg_native_preview_page">Podgląd strony</string>
     <string name="gutenberg_native_retry">Spróbuj ponownie</string>
+    <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Podgląd nie jest dostępny</string>
     <string name="gutenberg_native_s_link">%s łącze</string>
     <string name="gutenberg_native_text_color">Kolor tekstu</string>
     <string name="gutenberg_native_padding">Wypełnienie</string>
-    <string name="gutenberg_native_featured">Wyróżnione</string>
+    <string name="gutenberg_native_four">Cztery</string>
     <string name="gutenberg_native_custom_url">Własny adres URL</string>
+    <string name="gutenberg_native_create_embed">Utwórz osadzoną treść</string>
     <string name="gutenberg_native_column_d">Kolumna %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Krótko opisz odnośnik, aby pomóc użytkownikom korzystającym z czytnika.</string>
     <string name="gutenberg_native_add_blocks">Dodaj bloki</string>
@@ -654,7 +660,6 @@ Language: pl
     <string name="gutenberg_native_scrollable_block_menu_closed">Zamknięto przewijalne menu blokowe. </string>
     <string name="hpp_subtitle">Wybierz swój ulubiony szablon dla strony głównej. Możesz go edytować i dostosować w późniejszym czasie.</string>
     <string name="hpp_title">Wybierz wzór</string>
-    <string name="prepublishing_nudges_add_category_button">Dodaj kategorię</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
     <string name="prepublishing_nudges_home_categories_not_set">Nie ustawiono</string>
     <string name="prepublishing_nudges_categories_action">Kategorie</string>
@@ -663,6 +668,7 @@ Language: pl
     <string name="mlp_network_error_title">Szablony nie są dostępne w trybie offline</string>
     <string name="mlp_network_error_subtitle">Stuknij ponów kiedy będziesz spowrotem online lub stwórz pustą stronę używając poniższego przycisku.</string>
     <string name="mlp_error_subtitle">Stuknij ponów lub stwórz pustą stronę używając poniższego przycisku.</string>
+    <string name="prepublishing_nudges_add_category_button">Utwórz kategorię</string>
     <string name="login_prologue_fifth_tag_six">Polityka</string>
     <string name="login_prologue_fifth_tag_five">Muzyka</string>
     <string name="login_prologue_fifth_tag_four">Ogrodnictwo</string>
@@ -718,14 +724,14 @@ Language: pl
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
     <string name="typeface_label_pacifico">Zabawna</string>
-    <string name="typeface_label_libre_baskerville">Klasyczna</string>
     <string name="typeface_label_nunito">Codzienna</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">wybrano %s</string>
     <string name="toast_capture_operation_permission_needed">Aby nagrywać filmy, musisz nadać aplikacji uprawnienia do nagrywania dźwięku</string>
-    <string name="typeface_label_shrikhand">Pogrubienie</string>
     <string name="typeface_label_oswald">Silne</string>
     <string name="typeface_label_space_mono">Nowoczesny</string>
+    <string name="typeface_label_shrikhand">Półgruby</string>
+    <string name="typeface_label_libre_baskerville">Klasyczny</string>
     <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
@@ -1034,11 +1040,11 @@ Language: pl
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_border_radius">Zaokrąglenia obramowania</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
-    <string name="post_list_tab_scheduled_posts">Zaplanowany</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
     <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie może odnaleźć żadnych Stron. Publicize nie może połączyć się z profilami Facebooka, tylko z publikowanymi Stronami.</string>
     <string name="post_list_tab_trashed_posts">W koszu</string>
+    <string name="post_list_tab_scheduled_posts">Zaplanowano</string>
     <string name="notifications_tab_title_likes">Polubienia</string>
     <string name="notifications_tab_title_follows">Obserwuje</string>
     <string name="notifications_tab_title_comments">Komentarze</string>
@@ -2038,7 +2044,7 @@ Language: pl
     <string name="media_edit_link_hint">Otwórz odnośnik w nowym oknie lub karcie</string>
     <string name="plugin_active">Włączono</string>
     <string name="media_edit_link_text">Odnośnik do</string>
-    <string name="notification_login_failed">Wystąpił błąd</string>
+    <string name="notification_login_failed">Wystąpił błąd.</string>
     <string name="notification_2fa_needed">Proszę wprowadzić kod autoryzacji aby kontynuować. </string>
     <string name="notification_error_wrong_password">Proszę sprawdzić swoje hasło aby kontynuować. </string>
     <string name="notification_login_title_stopped">Logowanie zatrzymane. </string>

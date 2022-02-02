@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 07:50:16+0000
+Translation-Revision-Date: 2022-01-25 09:45:40+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Nastavení dlaždicové galerie</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Přejde na obrazovku výběru rozvržení</string>
+    <string name="gutenberg_native_gallery_style">Styl galerie</string>
+    <string name="sharing_facebook_warning_positive_button">Zpět na web</string>
+    <string name="sharing_facebook_warning_message">Svůj účet na Facebooku si můžete propojit na webu WordPress.com. Až budete hotovi, vraťte se do aplikace WordPress a změňte nastavení sdílení.</string>
     <string name="about_automattic_app_icon_description">Ikona aplikace</string>
     <string name="about_automattic_back_icon_description">Ikona zpět</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -289,16 +294,19 @@ Language: cs_CZ
     <string name="user_profile_site_section_header">Web</string>
     <string name="user_profile_bottom_sheet_description">Informace spodního listu profilu uživatele</string>
     <string name="likes_list_screen_title">Seznam to se mi líbí %s</string>
+    <string name="gutenberg_native_two">Dva</string>
+    <string name="gutenberg_native_three">Tři</string>
     <string name="gutenberg_native_s_social_icon">%s ikona sociální sítě</string>
     <string name="gutenberg_native_mention">Zmínit</string>
     <string name="gutenberg_native_preview_page">Náhled stránky</string>
     <string name="gutenberg_native_preview_post">Náhled příspěvku</string>
     <string name="gutenberg_native_retry">Opakovat</string>
+    <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
     <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_text_color">Barva textu</string>
     <string name="gutenberg_native_padding">Odsazení</string>
-    <string name="gutenberg_native_featured">Doporučené</string>
+    <string name="gutenberg_native_four">Čtyři</string>
     <string name="gutenberg_native_custom_url">Vlastní URL</string>
     <string name="gutenberg_native_create_embed">Vytvořit vložení</string>
     <string name="gutenberg_native_column_d">Sloupec %d</string>
