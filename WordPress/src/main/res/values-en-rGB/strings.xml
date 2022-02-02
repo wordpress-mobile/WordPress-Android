@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 08:59:59+0000
+Translation-Revision-Date: 2022-01-24 16:03:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Tiled gallery settings</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigates to layout selection screen</string>
+    <string name="gutenberg_native_gallery_style">Gallery style</string>
+    <string name="sharing_facebook_warning_positive_button">Go to web</string>
+    <string name="sharing_facebook_warning_message">You can connect your Facebook account on the WordPress.com website. When you\'re done, return to the WordPress app to change your Sharing settings.</string>
     <string name="about_automattic_app_icon_description">App icon</string>
     <string name="about_automattic_back_icon_description">Back icon</string>
     <string name="about_automattic_logo_description">Automattic logo</string>
@@ -235,8 +240,8 @@ Language: en_GB
     <string name="blogging_reminders_done">Done</string>
     <string name="blogging_reminders_notify_me">Notify me</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Enter your server credentials&lt;/a&gt; to enable one-click site restores from backups.</string>
-    <string name="gutenberg_native_set_as_featured_image">Set as featured image</string>
-    <string name="gutenberg_native_remove_as_featured_image">Remove as featured image</string>
+    <string name="gutenberg_native_set_as_featured_image">Set as Featured Image</string>
+    <string name="gutenberg_native_remove_as_featured_image">Remove as Featured Image</string>
     <string name="fab_add_category_desc">Create category</string>
     <string name="support_ticket_subject">WordPress for Android support</string>
     <string name="site_settings_categories_hint">Manage your site\'s categories</string>
@@ -289,16 +294,19 @@ Language: en_GB
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">User profile bottom sheet information</string>
     <string name="likes_list_screen_title">Likes list %s</string>
+    <string name="gutenberg_native_two">Two</string>
+    <string name="gutenberg_native_three">Three</string>
     <string name="gutenberg_native_s_social_icon">%s social icon</string>
     <string name="gutenberg_native_mention">Mention</string>
     <string name="gutenberg_native_preview_post">Preview post</string>
     <string name="gutenberg_native_preview_page">Preview page</string>
     <string name="gutenberg_native_retry">Retry</string>
+    <string name="gutenberg_native_one">One</string>
     <string name="gutenberg_native_no_preview_available">No preview available</string>
     <string name="gutenberg_native_text_color">Text colour</string>
     <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Padding</string>
-    <string name="gutenberg_native_featured">Featured</string>
+    <string name="gutenberg_native_four">Four</string>
     <string name="gutenberg_native_custom_url">Custom URL</string>
     <string name="gutenberg_native_create_embed">Create embed</string>
     <string name="gutenberg_native_column_d">Column %d</string>
