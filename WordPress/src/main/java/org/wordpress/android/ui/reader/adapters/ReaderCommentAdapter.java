@@ -56,6 +56,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.config.ReaderCommentsModerationFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -100,6 +101,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject ThreadedCommentsUtils mThreadedCommentsUtils;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject UiHelpers mUiHelpers;
+    @Inject ReaderCommentsModerationFeatureConfig readerCommentsModerationFeatureConfig;
+
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -323,7 +326,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mAuthorBadge.setVisibility(View.GONE);
         }
 
-        if (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts()) {
+        if (readerCommentsModerationFeatureConfig.isEnabled() &&
+            (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts())) {
             commentHolder.mActionButton.setImageResource(R.drawable.ic_more_vert_white_24dp);
 
             commentHolder.mActionButtonContainer.setOnClickListener(v -> {
