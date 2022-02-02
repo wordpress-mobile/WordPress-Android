@@ -131,7 +131,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         CANCEL_EDIT_CONFIRM
     }
 
-    fun start(site: SiteModel, commentId: Int) {
+    fun start(site: SiteModel, commentIdentifier: CommentIdentifier) {
         if (isStarted) {
             // If we are here, the fragment view was recreated (like in a configuration change)
             // so we reattach the watchers.
@@ -141,8 +141,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         isStarted = true
 
         this.site = site
+        this.commentIdentifier = commentIdentifier
 
-        initViews(commentId)
+        initViews()
     }
 
     private suspend fun setLoadingState(state: ProgressState) {
