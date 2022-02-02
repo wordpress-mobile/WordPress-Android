@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCatego
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DB
 import org.wordpress.android.util.UrlUtils
-import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -480,7 +479,7 @@ class SiteSqlUtils
 
     private fun toSiteModel(cursor: Cursor): SiteModel {
         val siteModel = SiteModel()
-        siteModel.id = cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID))
+        siteModel.id = cursor.getInt(cursor.getColumnIndexOrThrow(SiteModelTable.ID))
         return siteModel
     }
 
@@ -510,9 +509,9 @@ class SiteSqlUtils
                 .endGroup().endWhere()
                 .getAsModel { cursor ->
                     val siteModel = SiteModel()
-                    siteModel.siteId = cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)).toLong()
+                    siteModel.siteId = cursor.getInt(cursor.getColumnIndexOrThrow(SiteModelTable.SITE_ID)).toLong()
                     siteModel.selfHostedSiteId = cursor.getLong(
-                            cursor.getColumnIndex(SiteModelTable.SELF_HOSTED_SITE_ID)
+                            cursor.getColumnIndexOrThrow(SiteModelTable.SELF_HOSTED_SITE_ID)
                     )
                     siteModel
                 }
