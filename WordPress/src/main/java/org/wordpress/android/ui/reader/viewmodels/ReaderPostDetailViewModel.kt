@@ -255,7 +255,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                                 true
                         )
                     }
-                    if (commentsSnippetFeatureConfig.isEnabled()) {
+                    if (commentsSnippetFeatureConfig.isEnabled() && !post.isExternal) {
                         onRefreshCommentsData(post.blogId, post.postId)
                     }
                     updatePostActions(post)
@@ -292,8 +292,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         if (!commentsSnippetFeatureConfig.isEnabled()) return
 
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
-
         post?.let {
+            if(post.isExternal) return
             val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
                     it.blogId,
                     it.postId,
