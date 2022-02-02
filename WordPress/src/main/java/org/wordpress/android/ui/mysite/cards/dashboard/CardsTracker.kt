@@ -72,6 +72,7 @@ fun DashboardCardType.toTypeValue(): Type {
     return when (this) {
         DashboardCardType.ERROR_CARD -> Type.ERROR
         DashboardCardType.TODAYS_STATS_CARD -> Type.TODAYS_STATS
+        DashboardCardType.POST_CARD_ERROR -> Type.POST
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
     }

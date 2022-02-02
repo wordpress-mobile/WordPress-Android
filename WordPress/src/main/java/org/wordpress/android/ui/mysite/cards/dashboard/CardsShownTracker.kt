@@ -52,6 +52,7 @@ class CardsShownTracker @Inject constructor(
                         card.postCardType.toSubtypeValue().label
                 )
         )
+        else -> Unit // TODO: ashiagr add tracking for post card error
     }
 
     private fun trackCardShown(pair: Pair<String, String>) {
