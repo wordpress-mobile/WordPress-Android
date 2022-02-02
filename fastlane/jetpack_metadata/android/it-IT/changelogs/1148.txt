@@ -1,5 +1,0 @@
-18.9:
-- Evidenzia il testo con qualsiasi colore nei blocchi Paragrafo.
-- Crea nuovi blocchi Galleria con il nuovo design e converti automaticamente le vecchie gallerie affinché corrispondano.
-- Annulla e ripeti le modifiche quando formatti il testo dei link nei blocchi.
-- Carica più rapidamente quando ripubblichi articoli e condividi testo da altre app.

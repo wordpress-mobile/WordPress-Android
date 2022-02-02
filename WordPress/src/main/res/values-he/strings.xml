@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-19 14:54:07+0000
+Translation-Revision-Date: 2022-01-25 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
@@ -9,10 +9,17 @@ Language: he_IL
     <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
     <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>
     <string name="about_automattic_logo_description">הסמל של Automattic</string>
+    <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_source_code_item_title">קוד מקור</string>
     <string name="about_automattic_privacy_policy_item_title">מדיניות פרטיות</string>
     <string name="about_automattic_terms_of_service_item_title">תנאי שימוש</string>
     <string name="about_automattic_work_with_us_item_subtitle">לעבוד מכל מקום</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_dayone">Day One</string>
     <string name="about_automattic_work_with_us_item_title">הצטרפות לכוח העבודה שלנו</string>
     <string name="about_automattic_family_item_title">משפחת Automattic</string>
     <string name="about_automattic_legal_and_more_item_title">מידע משפטי ופרטים נוספים</string>
@@ -31,6 +38,8 @@ Language: he_IL
     <string name="my_site_dashboard_stale_message">לוח הבקרה לא מעודכן. יש לבדוק את החיבור ולמשוך למטה כדי לרענן.</string>
     <string name="my_site_dashboard_update_error">לא ניתן היה לעדכן את לוח הבקרה.</string>
     <string name="error_media_video_duration_exceeds_limit">הסרטון לא הועלה! להעלאת סרטון שאורכו מעל חמש דקות נדרשת תוכנית בתשלום.</string>
+    <string name="about_automattic_acknowledgements_item_title">בשיתוף</string>
+    <string name="about_automattic_california_privacy_notice_item_title">הצהרת פרטיות של קליפורניה</string>
     <string name="about_automattic_version_label">גרסה ⁦%1$s⁩</string>
     <string name="about_automattic_acknowledgements_page_title">בשיתוף</string>
     <string name="about_automattic_legal_page_title">מידע משפטי ופרטים נוספים</string>
@@ -161,6 +170,7 @@ Language: he_IL
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">כדאי להבליט את התוכן על ידי הוספה של תמונות, הנפשות GIF, סרטונים ומדיה מוטמעת בעמודים שלך.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">אפשר לנסות את האפשרויות על ידי הוספה של כמה בלוקים לפוסט או לעמוד שלך!</string>
     <string name="gutenberg_native_embed_media">להטמיע מדיה</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">לכל בלוק יש הגדרות משלו. כדי למצוא אותן, יש להקיש על הבלוק. ההגדרות שלו יופיעו בסרגל הכלים שנמצא בתחתית המסך.</string>
     <string name="gutenberg_native_build_layouts">לבנות פריסות</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">הבלוקים הם חלקים של תוכן שאפשר להוסיף, לארגן ולעצב ללא צורך בניסיון עם כתיבת קודים. בלוקים הם אפשרות פשוטה ומודרנית ליצור פריסות יפות.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">הבלוקים מאפשרים לך להתמקד בכתיבת התוכן ולדעת שכל כלי העיצוב שנדרשים לך נמצאים בהישג יד כדי לעזור לך להעביר את המסר.</string>
@@ -223,8 +233,6 @@ Language: he_IL
     <string name="blogging_reminders_done">סיימתי</string>
     <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
-    <string name="gutenberg_native_set_as_featured_image">להגדיר כתמונה מרכזית </string>
-    <string name="gutenberg_native_remove_as_featured_image">להסיר מהתמונה המרכזית </string>
     <string name="fab_add_category_desc">ליצור קטגוריה</string>
     <string name="support_ticket_subject">תמיכה ב-WordPress ל-Android</string>
     <string name="site_settings_categories_hint">לנהל את הקטגוריות באתר שלך</string>
@@ -272,6 +280,7 @@ Language: he_IL
     <string name="gutenberg_native_move_image_backward">להעביר את התמונה אחורה</string>
     <string name="gutenberg_native_move_image_forward">להעביר את התמונה קדימה</string>
     <string name="gutenberg_native_width_settings">הגדרות רוחב</string>
+    <string name="gutenberg_native_column_settings">הגדרות טור</string>
     <string name="user_profile_site_section_header">אתר</string>
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_bottom_sheet_description">פרטי גיליון תחתון של פרופיל המשתמש</string>
@@ -285,7 +294,6 @@ Language: he_IL
     <string name="gutenberg_native_s_link">%s קישור</string>
     <string name="gutenberg_native_text_color">צבע טקסט</string>
     <string name="gutenberg_native_padding">מרווחים</string>
-    <string name="gutenberg_native_featured">מרכזיים</string>
     <string name="gutenberg_native_create_embed">ליצור תוכן מוטמע</string>
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_column_d">טור %d</string>

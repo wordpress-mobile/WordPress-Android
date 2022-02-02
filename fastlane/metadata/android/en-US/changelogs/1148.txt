@@ -1,6 +1,0 @@
-18.9:
-- Highlight text with any color in Paragraph blocks.
-- See and respond to comments after your post content in the Reader.
-- Create new Gallery blocks with the new design and auto-convert old galleries to match.
-- Undo and redo changes when formatting link text in blocks.
-- Load faster when reblogging posts and sharing text from other apps.

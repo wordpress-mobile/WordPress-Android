@@ -1,0 +1,6 @@
+19.0:
+- Quản lý trang chính bằng thẻ, bao gồm Bài Viết.
+- Tải lên video thời lượng 5 phút với gói free
+- Bổ sung văn bản, bao gồm khối Jetpack/Layout Grid.
+- Tiếp tục định dạng sau khi nhấn backspace
+- Tựa đề khối được canh giữa

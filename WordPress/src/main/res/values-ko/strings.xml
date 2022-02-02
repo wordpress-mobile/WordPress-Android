@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-19 16:54:06+0000
+Translation-Revision-Date: 2022-01-20 22:12:35+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
@@ -10,7 +10,12 @@ Language: ko_KR
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>
     <string name="about_automattic_logo_description">Automattic 로고</string>
     <string name="about_automattic_wordpress">워드프레스</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_simplenote">Simplenote</string>
+    <string name="about_automattic_pocketcasts">Pocket Casts</string>
     <string name="about_automattic_jetpack">젯팩</string>
+    <string name="about_automattic_dayone">Day One</string>
     <string name="about_automattic_source_code_item_title">소스 코드</string>
     <string name="about_automattic_privacy_policy_item_title">개인정보 취급방침</string>
     <string name="about_automattic_terms_of_service_item_title">서비스 약관</string>
@@ -18,6 +23,7 @@ Language: ko_KR
     <string name="about_automattic_work_with_us_item_title">워드프레스닷컴 사용</string>
     <string name="about_automattic_family_item_title">Automattic 회원</string>
     <string name="about_automattic_legal_and_more_item_title">법적 고지 사항 및 기타</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
     <string name="about_automattic_instagram_item_title">인스타그램</string>
     <string name="about_automattic_rate_us_item_title">평가하기</string>
     <string name="about_automattic_share_with_friends_item_title">친구와 공유</string>
@@ -32,6 +38,7 @@ Language: ko_KR
     <string name="my_site_dashboard_stale_message">알림판이 업데이트되지 않았습니다. 새로 고치려면 연결을 확인하고 끌어오세요.</string>
     <string name="my_site_dashboard_update_error">알림판을 업데이트할 수 없습니다.</string>
     <string name="error_media_video_duration_exceeds_limit">비디오가 업로드되지 않았습니다! 5분을 초과하는 비디오를 업로드하려면 유료 요금제가 필요합니다.</string>
+    <string name="about_automattic_acknowledgements_item_title">승인</string>
     <string name="about_automattic_california_privacy_notice_item_title">캘리포니아주 개인정보 공지</string>
     <string name="about_automattic_version_label">버전 %1$s</string>
     <string name="about_automattic_acknowledgements_page_title">승인</string>
@@ -225,8 +232,6 @@ Language: ko_KR
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
-    <string name="gutenberg_native_set_as_featured_image">특성 이미지로 설정 </string>
-    <string name="gutenberg_native_remove_as_featured_image">특성 이미지 제거 </string>
     <string name="fab_add_category_desc">카테고리 생성</string>
     <string name="support_ticket_subject">Android용 WordPress 지원</string>
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
@@ -274,6 +279,7 @@ Language: ko_KR
     <string name="gutenberg_native_move_image_forward">이미지를 앞으로 이동</string>
     <string name="gutenberg_native_move_image_backward">이미지를 뒤로 이동</string>
     <string name="gutenberg_native_width_settings">폭 설정</string>
+    <string name="gutenberg_native_column_settings">열 설정</string>
     <string name="user_profile_untitled_site">(제목이 없습니다)</string>
     <string name="user_profile_site_section_header">사이트</string>
     <string name="user_profile_bottom_sheet_description">사용자 프로필 하단 시트 정보</string>
@@ -287,7 +293,6 @@ Language: ko_KR
     <string name="gutenberg_native_text_color">텍스트 색상</string>
     <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
-    <string name="gutenberg_native_featured">추천</string>
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>

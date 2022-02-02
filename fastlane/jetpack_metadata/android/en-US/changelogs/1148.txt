@@ -1,5 +1,0 @@
-- Highlight text with any color in Paragraph blocks.
-- Create new Gallery blocks with the new design and auto-convert old galleries to match.
-- Undo and redo changes when formatting link text in blocks.
-- Load faster when reblogging posts and sharing text from other apps.
-- See background colors in pre-formatted blocks on sites with standard themes.

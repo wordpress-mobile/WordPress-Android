@@ -1,6 +1,0 @@
-18.9 :
-- Surlignez du texte dans n’importe quelle couleur dans les blocs Paragraphe.
-- Affichez et répondez aux commentaires après le contenu de votre article dans le Lecteur.
-- Créez de blocs Galerie avec le nouveau design et convertissez automatiquement vos anciennes galeries.
-- Annulez et rétablissez des modifications lors du formatage de liens dans les blocs.
-- Chargement plus rapide lors du reblogging d’articles et du partage de texte depuis d’autres applications.
