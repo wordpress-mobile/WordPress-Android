@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-20 22:13:15+0000
+Translation-Revision-Date: 2022-01-25 09:46:53+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Réglages de la mosaïque d’images</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Ouvrir l’écran de sélection de la mise en page</string>
+    <string name="gutenberg_native_gallery_style">Style de la galerie</string>
+    <string name="sharing_facebook_warning_positive_button">Aller sur le web</string>
+    <string name="sharing_facebook_warning_message">Vous pouvez connecter votre compte Facebook sur le site Web de WordPress.com. Lorsque vous avez terminé, revenez à l’application WordPress pour modifier vos paramètres de partage.</string>
     <string name="about_automattic_app_icon_description">Icône de l’application</string>
     <string name="about_automattic_back_icon_description">Icône Retour</string>
     <string name="about_automattic_logo_description">Logo Automattic</string>
@@ -289,16 +294,19 @@ Language: fr
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Profil utilisateur : information sur la feuille du bas</string>
     <string name="likes_list_screen_title">Liste des mentions J’aime %s</string>
+    <string name="gutenberg_native_two">Deux</string>
+    <string name="gutenberg_native_three">Trois</string>
     <string name="gutenberg_native_s_social_icon">Icône de réseau social %s</string>
     <string name="gutenberg_native_mention">Mention</string>
     <string name="gutenberg_native_preview_post">Prévisualiser l&amp;rsquo;article</string>
     <string name="gutenberg_native_preview_page">Prévisualiser la page</string>
     <string name="gutenberg_native_retry">Recommencez</string>
+    <string name="gutenberg_native_one">Un</string>
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
     <string name="gutenberg_native_text_color">Couleur du texte</string>
     <string name="gutenberg_native_s_link">%s lien</string>
     <string name="gutenberg_native_padding">Padding</string>
-    <string name="gutenberg_native_featured">À la Une</string>
+    <string name="gutenberg_native_four">Quatre</string>
     <string name="gutenberg_native_custom_url">URL personnalisée</string>
     <string name="gutenberg_native_create_embed">Embarquer un contenu</string>
     <string name="gutenberg_native_column_d">Colonne %d</string>
