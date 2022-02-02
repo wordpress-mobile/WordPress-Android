@@ -65,6 +65,7 @@ class CardsAdapter(
 
             return oldItem.dashboardCardType == newItem.dashboardCardType && when {
                 oldItem is ErrorCard && newItem is ErrorCard -> true
+                oldItem is TodaysStatsCard && newItem is TodaysStatsCard -> true
                 oldItem is PostCardWithPostItems && newItem is PostCardWithPostItems -> true
                 oldItem is PostCardWithoutPostItems && newItem is PostCardWithoutPostItems -> true
                 else -> throw NotImplementedException("Diff not implemented yet")
