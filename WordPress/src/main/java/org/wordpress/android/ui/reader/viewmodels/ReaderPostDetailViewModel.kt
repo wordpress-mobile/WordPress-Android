@@ -293,7 +293,8 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
         post?.let {
-            if(post.isExternal) return
+            if (post.isExternal) return
+
             val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
                     it.blogId,
                     it.postId,

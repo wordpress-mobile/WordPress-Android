@@ -988,9 +988,13 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 )
         ).thenReturn(externalPost)
 
-        viewModel.onRefreshCommentsData(1,1)
+        viewModel.onRefreshCommentsData(1, 1)
 
-        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(anyOrNull(), anyOrNull(), anyOrNull())
+        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+        )
     }
 
     private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {
