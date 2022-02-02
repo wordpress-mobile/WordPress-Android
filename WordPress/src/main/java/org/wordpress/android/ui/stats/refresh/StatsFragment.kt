@@ -43,7 +43,7 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
-
+@Suppress("TooManyFunctions")
 class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
