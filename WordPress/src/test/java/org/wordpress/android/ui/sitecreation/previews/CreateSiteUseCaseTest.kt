@@ -107,4 +107,16 @@ class CreateSiteUseCaseTest {
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.language).isEqualTo(LANGUAGE_ID)
     }
+
+    @Test
+    fun verifyPropagatesTimeZoneId() = test {
+        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
+        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
+
+        val captor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(captor.capture())
+
+        val payload = captor.value.payload as NewSitePayload
+        assertThat(payload.timeZoneId).isEqualTo(TIMEZONE_ID)
+    }
 }
