@@ -169,6 +169,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         viewModel.selectedSection.observe(viewLifecycleOwner, { selectedSection ->
             selectedSection?.let {
                 handleSelectedSection(selectedSection)
+                toolbar.menu.findItem(R.id.add_new_stats_card)?.isVisible = it == INSIGHTS
             }
         })
 
