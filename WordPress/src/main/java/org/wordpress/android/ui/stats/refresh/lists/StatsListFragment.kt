@@ -189,6 +189,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
         })
+
+        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner, { statsType ->
+            (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
+                recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
+            }
+        })
     }
 
     private fun StatsListFragmentBinding.showUiModel(

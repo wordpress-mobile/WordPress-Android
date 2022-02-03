@@ -77,6 +77,9 @@ class BaseListUseCase(
     private val mutableListSelected = SingleLiveEvent<Unit>()
     val listSelected: LiveData<Unit> = mutableListSelected
 
+    private val mutableScrollTo = MutableLiveData<Event<StatsType>>()
+    val scrollTo: LiveData<Event<StatsType>> = mutableScrollTo
+
     suspend fun loadData() {
         loadData(refresh = false, forced = false)
     }
@@ -121,6 +124,7 @@ class BaseListUseCase(
                                 }
                             }
                 }
+                mutableScrollTo.postValue(Event(visibleTypes.last()))
             }
         } else {
             mutableSnackbarMessage.postValue(R.string.stats_site_not_loaded_yet)

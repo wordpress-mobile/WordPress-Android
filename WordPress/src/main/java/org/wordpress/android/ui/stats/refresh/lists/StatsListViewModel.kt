@@ -82,6 +82,8 @@ abstract class StatsListViewModel(
 
     val scrollTo = newsCardHandler?.scrollTo
 
+    val scrollToNewCard = statsUseCase.scrollTo
+
     override fun onCleared() {
         statsUseCase.onCleared()
         super.onCleared()
