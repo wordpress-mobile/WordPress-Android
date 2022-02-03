@@ -15,7 +15,6 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.datasets.NotificationsTableWrapper
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
@@ -49,7 +48,6 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
-    @Mock lateinit var notificationsTableWrapper: NotificationsTableWrapper
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
@@ -64,15 +62,11 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     private val siteCommentId = 1000
     private val siteCommentIdentifier = SiteCommentIdentifier(siteCommentId)
 
-    private val notificationCommentId = "12345"
-    private val notificationCommentIdentifier = NotificationCommentIdentifier(notificationCommentId)
+    private val notificationCommentIdentifier = NotificationCommentIdentifier(NOTIFICATION_COMMENT_RAW.remoteCommentId)
 
     @Before
     fun setup() = test {
         whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf(COMMENT_ENTITY))
-        whenever(notificationsTableWrapper.getNotificationCommentModelById(notificationCommentId)).thenReturn(
-                NOTIFICATION_COMMENT_RAW
-        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = UnifiedCommentsEditViewModel(
@@ -81,8 +75,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 commentsStore = commentsStore,
                 resourceProvider = resourceProvider,
                 networkUtilsWrapper = networkUtilsWrapper,
-                localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
-                notificationsTableWrapper = notificationsTableWrapper
+                localCommentCacheUpdateHandler = localCommentCacheUpdateHandler
         )
 
         setupObservers()
@@ -125,7 +118,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `Should map CommentIdentifier to CommentEssentials for SiteCommentIdentifier`() = test {
         viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState[1].editedComment).isEqualTo(SITE_COMMENT_ESSENTIALS)
+        assertThat(uiState[1].editedComment).isEqualTo(COMMENT_ESSENTIALS)
     }
 
     @Test
@@ -144,9 +137,12 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map CommentIdentifier to CommentEssentials for NotificationCommentIdentifier`() {
+    fun `Should map CommentIdentifier to CommentEssentials for NotificationCommentIdentifier`() = test {
+        whenever(
+                commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, NOTIFICATION_COMMENT_RAW.remoteCommentId)
+        ).thenReturn(listOf(COMMENT_ENTITY))
         viewModel.start(site, notificationCommentIdentifier)
-        assertThat(uiState[1].editedComment).isEqualTo(NOTIFICATION_COMMENT_ESSENTIALS)
+        assertThat(uiState[1].editedComment).isEqualTo(COMMENT_ESSENTIALS)
     }
 
     @Test
@@ -176,10 +172,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `onActionMenuClicked triggers snackbar if comment update error for notification comment type`() = test {
         whenever(
-                commentsStore.getCommentByLocalSiteAndRemoteId(
-                        LOCAL_SITE_ID,
-                        NOTIFICATION_COMMENT_RAW.remoteCommentId
-                )
+                commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, NOTIFICATION_COMMENT_RAW.remoteCommentId)
         ).thenReturn(listOf(COMMENT_ENTITY))
         whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
                 CommentsActionPayload(CommentError(GENERIC_ERROR, "error"))
@@ -302,7 +295,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 iLike = false
         )
 
-        private val SITE_COMMENT_ESSENTIALS = CommentEssentials(
+        private val COMMENT_ESSENTIALS = CommentEssentials(
                 commentId = COMMENT_ENTITY.id,
                 userName = COMMENT_ENTITY.authorName!!,
                 commentText = COMMENT_ENTITY.content!!,
@@ -312,7 +305,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
         private val NOTIFICATION_COMMENT_RAW = CommentModel().apply {
             id = 1001
-            remoteCommentId = 1
+            remoteCommentId = 12345L
             remotePostId = 1
             remoteParentCommentId = 1
             localSiteId = LOCAL_SITE_ID
@@ -331,13 +324,5 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             parentId = 0
             iLike = false
         }
-
-        private val NOTIFICATION_COMMENT_ESSENTIALS = CommentEssentials(
-                commentId = NOTIFICATION_COMMENT_RAW.remoteCommentId,
-                userName = NOTIFICATION_COMMENT_RAW.authorName!!,
-                commentText = NOTIFICATION_COMMENT_RAW.content!!,
-                userUrl = NOTIFICATION_COMMENT_RAW.authorUrl!!,
-                userEmail = NOTIFICATION_COMMENT_RAW.authorEmail!!
-        )
     }
 }
