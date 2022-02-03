@@ -146,6 +146,7 @@ open class SiteStore
     data class NewSitePayload(
         @JvmField val siteName: String,
         @JvmField val language: String,
+        @JvmField val timeZoneId: String?,
         @JvmField val visibility: SiteVisibility,
         @JvmField val segmentId: Long? = null,
         @JvmField val siteDesign: String? = null,
@@ -154,6 +155,7 @@ open class SiteStore
         constructor(siteName: String, language: String, visibility: SiteVisibility, dryRun: Boolean) : this(
                 siteName,
                 language,
+                null,
                 visibility,
                 null,
                 null,
@@ -166,7 +168,15 @@ open class SiteStore
             visibility: SiteVisibility,
             segmentId: Long?,
             dryRun: Boolean
-        ) : this(siteName, language, visibility, segmentId, null, dryRun)
+        ) : this(siteName, language, null, visibility, segmentId, null, dryRun)
+
+        constructor(
+            siteName: String,
+            language: String,
+            timeZoneId: String,
+            visibility: SiteVisibility,
+            dryRun: Boolean
+        ) : this(siteName, language, timeZoneId, visibility, null, null, dryRun)
     }
 
     data class FetchedPostFormatsPayload(
@@ -1442,8 +1452,13 @@ open class SiteStore
 
     suspend fun createNewSite(payload: NewSitePayload): OnNewSiteCreated {
         val result = siteRestClient.newSite(
-                payload.siteName, payload.language, payload.visibility,
-                payload.segmentId, payload.siteDesign, payload.dryRun
+                payload.siteName,
+                payload.language,
+                payload.timeZoneId,
+                payload.visibility,
+                payload.segmentId,
+                payload.siteDesign,
+                payload.dryRun
         )
         return handleCreateNewSiteCompleted(
                 payload = result

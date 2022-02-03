@@ -179,6 +179,7 @@ class SiteRestClient @Inject constructor(
     suspend fun newSite(
         siteName: String,
         language: String,
+        timeZoneId: String?,
         visibility: SiteVisibility,
         segmentId: Long?,
         siteDesign: String?,
@@ -201,6 +202,10 @@ class SiteRestClient @Inject constructor(
         if (siteDesign != null) {
             options["template"] = siteDesign
         }
+        if (timeZoneId != null) {
+            options["timezone_string"] = timeZoneId
+        }
+
         if (options.isNotEmpty()) {
             body["options"] = options
         }
