@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import org.wordpress.android.R
@@ -190,9 +191,13 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         })
 
-        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner, { statsType ->
+        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner, {
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
-                recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
+                adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        layoutManager?.smoothScrollToPosition(recyclerView, null, adapter.itemCount)
+                    }
+                })
             }
         })
     }
