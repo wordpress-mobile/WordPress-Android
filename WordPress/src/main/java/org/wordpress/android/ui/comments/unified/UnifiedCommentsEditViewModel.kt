@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
@@ -56,6 +57,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     private var isStarted = false
     private lateinit var site: SiteModel
+
+    private lateinit var commentIdentifier: CommentIdentifier
 
     data class EditErrorStrings(
         val userNameError: String? = null,
@@ -127,8 +130,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         isStarted = true
 
         this.site = site
+        this.commentIdentifier = commentIdentifier
 
-        initViews(commentIdentifier)
+        initViews()
     }
 
     private suspend fun setLoadingState(state: ProgressState) {
@@ -158,32 +162,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
 
         _uiState.value?.let { uiState ->
-            val editedContent = uiState.editedComment
+            val editedCommentEssentials = uiState.editedComment
 
             launch(bgDispatcher) {
                 setLoadingState(SAVING)
-
-                val comment = commentsStore.getCommentByLocalId(editedContent.commentId).firstOrNull()
-
-                comment?.let {
-                    val updatedComment = comment.copy(
-                            authorUrl = editedContent.userUrl,
-                            authorName = editedContent.userName,
-                            authorEmail = editedContent.userEmail,
-                            content = editedContent.commentText
-                    )
-                    val result = commentsStore.updateEditComment(site, updatedComment)
-
-                    if (result.isError) {
-                        setLoadingState(NOT_VISIBLE)
-                        _onSnackbarMessage.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_comment)))
-                        )
-                    } else {
-                        _uiActionEvent.postValue(Event(DONE))
-                        localCommentCacheUpdateHandler.requestCommentsUpdate()
-                    }
-                }
+                updateComment(editedCommentEssentials)
             }
         }
     }
@@ -202,12 +185,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         _uiActionEvent.value = Event(CLOSE)
     }
 
-    private fun initViews(commentIdentifier: CommentIdentifier) {
+    private fun initViews() {
         launch {
             setLoadingState(LOADING)
 
             val commentEssentials = withContext(bgDispatcher) {
-                mapCommentEssentials(commentIdentifier)
+                mapCommentEssentials()
             }
             if (commentEssentials.isValid()) {
                 _uiState.value =
@@ -237,35 +220,97 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     /**
      * Fetch and map the comment entity to CommentEssentials based on the CommentIdentifier.
      */
-    private suspend fun mapCommentEssentials(commentIdentifier: CommentIdentifier): CommentEssentials =
+    private suspend fun mapCommentEssentials(): CommentEssentials =
             when (commentIdentifier) {
-                is SiteCommentIdentifier -> {
-                    val commentEntityList = commentsStore.getCommentByLocalId(commentIdentifier.localCommentId.toLong())
-                    if (commentEntityList.isEmpty()) {
-                        CommentEssentials()
-                    } else {
-                        val commentEntity = commentEntityList.first()
-                        CommentEssentials(
-                                commentId = commentEntity.id,
-                                userName = commentEntity.authorName ?: "",
-                                commentText = commentEntity.content ?: "",
-                                userUrl = commentEntity.authorUrl ?: "",
-                                userEmail = commentEntity.authorEmail ?: ""
-                        )
-                    }
-                }
-                is NotificationCommentIdentifier -> {
-                    val commentModel = notificationsTableWrapper.getNotificationById(commentIdentifier.noteID)
-                    CommentEssentials(
-                            commentId = commentModel?.remoteCommentId ?: 0L,
-                            userName = commentModel?.authorName ?: "",
-                            commentText = commentModel?.content ?: "",
-                            userUrl = commentModel?.authorUrl ?: "",
-                            userEmail = commentModel?.authorEmail ?: ""
-                    )
-                }
+                is SiteCommentIdentifier -> mapSiteCommentEssentials()
+                is NotificationCommentIdentifier -> mapNotificationCommentEssentials()
                 else -> CommentEssentials()
             }
+
+    private suspend fun mapSiteCommentEssentials(): CommentEssentials {
+        val siteCommentIdentifier = commentIdentifier as SiteCommentIdentifier
+        val commentEntityList = commentsStore.getCommentByLocalId(siteCommentIdentifier.localCommentId.toLong())
+        return if (commentEntityList.isNotEmpty()) {
+            val commentEntity = commentEntityList.first()
+            CommentEssentials(
+                    commentId = commentEntity.id,
+                    userName = commentEntity.authorName ?: "",
+                    commentText = commentEntity.content ?: "",
+                    userUrl = commentEntity.authorUrl ?: "",
+                    userEmail = commentEntity.authorEmail ?: ""
+            )
+        } else {
+            CommentEssentials()
+        }
+    }
+
+    private fun mapNotificationCommentEssentials(): CommentEssentials {
+        val notificationCommentIdentifier = commentIdentifier as NotificationCommentIdentifier
+        val commentModel = notificationsTableWrapper.getNotificationById(
+                notificationCommentIdentifier.noteID
+        )
+        return CommentEssentials(
+                commentId = commentModel?.remoteCommentId ?: 0L,
+                userName = commentModel?.authorName ?: "",
+                commentText = commentModel?.content ?: "",
+                userUrl = commentModel?.authorUrl ?: "",
+                userEmail = commentModel?.authorEmail ?: ""
+        )
+    }
+
+    private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
+        when (commentIdentifier) {
+            is SiteCommentIdentifier -> {
+                val comment = commentsStore.getCommentByLocalId(editedCommentEssentials.commentId).firstOrNull()
+                comment?.let {
+                    updateCommentEntityLocalDatabase(comment, editedCommentEssentials)
+                } ?: showUpdateCommentError()
+            }
+            is NotificationCommentIdentifier -> {
+                val notificationCommentIdentifier = commentIdentifier as NotificationCommentIdentifier
+                val commentModel = notificationsTableWrapper.getNotificationById(
+                        notificationCommentIdentifier.noteID
+                )
+                val remoteCommentId = commentModel?.remoteCommentId
+                if (remoteCommentId != null) {
+                    commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()?.run {
+                        updateCommentEntityLocalDatabase(this, editedCommentEssentials)
+                    } ?: showUpdateCommentError()
+                } else {
+                    showUpdateCommentError()
+                }
+            }
+            else -> {
+                showUpdateCommentError()
+            }
+        }
+    }
+
+    private suspend fun updateCommentEntityLocalDatabase(
+        comment: CommentEntity,
+        editedCommentEssentials: CommentEssentials
+    ) {
+        val updatedComment = comment.copy(
+                authorUrl = editedCommentEssentials.userUrl,
+                authorName = editedCommentEssentials.userName,
+                authorEmail = editedCommentEssentials.userEmail,
+                content = editedCommentEssentials.commentText
+        )
+        val result = commentsStore.updateEditComment(site, updatedComment)
+        if (result.isError) {
+            showUpdateCommentError()
+        } else {
+            _uiActionEvent.postValue(Event(DONE))
+            localCommentCacheUpdateHandler.requestCommentsUpdate()
+        }
+    }
+
+    private suspend fun showUpdateCommentError() {
+        setLoadingState(NOT_VISIBLE)
+        _onSnackbarMessage.postValue(
+                Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_comment)))
+        )
+    }
 
     fun onValidateField(field: String, fieldType: FieldType) {
         _uiState.value?.let {
