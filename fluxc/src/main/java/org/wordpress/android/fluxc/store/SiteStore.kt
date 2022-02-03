@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
+import androidx.annotation.VisibleForTesting
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
@@ -1450,6 +1451,7 @@ open class SiteStore
         return rowsAffected
     }
 
+    @VisibleForTesting
     suspend fun createNewSite(payload: NewSitePayload): OnNewSiteCreated {
         val result = siteRestClient.newSite(
                 payload.siteName,
