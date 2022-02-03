@@ -153,15 +153,12 @@ open class SiteStore
         @JvmField val siteDesign: String? = null,
         @JvmField val dryRun: Boolean
     ) : Payload<BaseNetworkError>() {
-        constructor(siteName: String, language: String, visibility: SiteVisibility, dryRun: Boolean) : this(
-                siteName,
-                language,
-                null,
-                visibility,
-                null,
-                null,
-                dryRun
-        )
+        constructor(
+            siteName: String,
+            language: String,
+            visibility: SiteVisibility,
+            dryRun: Boolean
+        ) : this(siteName, language, null, visibility, null, null, dryRun)
 
         constructor(
             siteName: String,
