@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-20 22:12:35+0000
+Translation-Revision-Date: 2022-02-02 13:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">바둑판식 갤러리 설정</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">레이아웃 선택 화면으로 이동</string>
+    <string name="gutenberg_native_gallery_style">갤러리 스타일</string>
+    <string name="sharing_facebook_warning_positive_button">웹으로 이동</string>
+    <string name="sharing_facebook_warning_message">워드프레스닷컴 웹사이트에서 페이스북 계정을 연결할 수 있습니다. 완료하면 워드프레스 앱으로 돌아가서 공유 설정을 변경하세요.</string>
     <string name="about_automattic_app_icon_description">앱 아이콘</string>
     <string name="about_automattic_back_icon_description">뒤로 아이콘</string>
     <string name="about_automattic_logo_description">Automattic 로고</string>
@@ -232,6 +237,8 @@ Language: ko_KR
     <string name="blogging_reminders_done">완료</string>
     <string name="blogging_reminders_notify_me">알림 받기</string>
     <string name="restore_details_enter_server_creds_msg">클릭 한 번으로 백업에서 사이트를 복원할 수 있도록 &lt;a href=\"%1$s\"&gt;서버 자격 증명을 입력하세요&lt;/a&gt;.</string>
+    <string name="gutenberg_native_set_as_featured_image">특성 이미지로 설정</string>
+    <string name="gutenberg_native_remove_as_featured_image">특성 이미지 제거</string>
     <string name="fab_add_category_desc">카테고리 생성</string>
     <string name="support_ticket_subject">Android용 WordPress 지원</string>
     <string name="site_settings_categories_hint">사이트의 카테고리 관리</string>
@@ -284,15 +291,18 @@ Language: ko_KR
     <string name="user_profile_site_section_header">사이트</string>
     <string name="user_profile_bottom_sheet_description">사용자 프로필 하단 시트 정보</string>
     <string name="likes_list_screen_title">좋아요 목록 %s</string>
+    <string name="gutenberg_native_two">2</string>
     <string name="gutenberg_native_s_social_icon">%s 소셜 아이콘</string>
     <string name="gutenberg_native_mention">멘션</string>
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
     <string name="gutenberg_native_preview_page">페이지 미리 보기</string>
     <string name="gutenberg_native_retry">재시도</string>
+    <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_text_color">텍스트 색상</string>
     <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
+    <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
