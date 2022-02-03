@@ -101,7 +101,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Inject ThreadedCommentsUtils mThreadedCommentsUtils;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject UiHelpers mUiHelpers;
-    @Inject ReaderCommentsModerationFeatureConfig readerCommentsModerationFeatureConfig;
+    @Inject ReaderCommentsModerationFeatureConfig mReaderCommentsModerationFeatureConfig;
 
 
     public interface RequestReplyListener {
@@ -326,7 +326,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mAuthorBadge.setVisibility(View.GONE);
         }
 
-        if (readerCommentsModerationFeatureConfig.isEnabled()
+        if (mReaderCommentsModerationFeatureConfig.isEnabled()
             && (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts())) {
             commentHolder.mActionButton.setImageResource(R.drawable.ic_more_vert_white_24dp);
 
