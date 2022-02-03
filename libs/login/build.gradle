@@ -17,6 +17,7 @@ repositories {
         content {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.fluxc"
+            includeGroup "org.wordpress.wellsql"
         }
     }
     mavenCentral()
