@@ -224,7 +224,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             when (commentIdentifier) {
                 is SiteCommentIdentifier -> {
                     val siteCommentIdentifier = commentIdentifier as SiteCommentIdentifier
-                    val commentEntityList = commentsStore.getCommentByLocalId(siteCommentIdentifier.localCommentId.toLong())
+                    val commentEntityList = commentsStore.getCommentByLocalId(
+                            localId = siteCommentIdentifier.localCommentId.toLong()
+                    )
                     mapCommentEssentials(commentEntityList)
                 }
                 is NotificationCommentIdentifier -> {
