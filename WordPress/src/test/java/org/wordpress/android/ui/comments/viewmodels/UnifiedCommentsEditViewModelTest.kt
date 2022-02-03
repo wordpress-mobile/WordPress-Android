@@ -70,7 +70,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Before
     fun setup() = test {
         whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf(COMMENT_ENTITY))
-        whenever(notificationsTableWrapper.getNotificationCommentModelById(notificationCommentId)).thenReturn(
+        whenever(notificationsTableWrapper.getNotificationById(notificationCommentId)).thenReturn(
                 NOTIFICATION_COMMENT_RAW
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
