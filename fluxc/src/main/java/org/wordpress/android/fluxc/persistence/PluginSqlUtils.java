@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.persistence;
 
-import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
-
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -23,6 +21,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
 
 public class PluginSqlUtils {
     public static @NonNull List<SitePluginModel> getSitePlugins(@NonNull SiteModel site) {
