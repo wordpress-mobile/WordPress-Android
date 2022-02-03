@@ -693,7 +693,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             case SITE_COMMENTS:
                 return new SiteCommentIdentifier(mComment.getId());
             case NOTIFICATION:
-                return new NotificationCommentIdentifier(mNote.getId());
+                return new NotificationCommentIdentifier(mNote.getCommentId());
             default:
                 return null;
         }

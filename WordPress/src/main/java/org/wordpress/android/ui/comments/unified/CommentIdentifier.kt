@@ -18,6 +18,6 @@ sealed class CommentIdentifier : Parcelable {
 
     @Parcelize
     data class NotificationCommentIdentifier(
-        val noteID: String
+        val remoteCommentId: Long
     ) : CommentIdentifier()
 }
