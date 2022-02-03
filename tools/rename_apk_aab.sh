@@ -31,8 +31,8 @@ fi
 ##################################
 ### Path to Android tools used ###
 ##################################
-AAPT2=$(ls -1t $ANDROID_SDK_ROOT/build-tools/*/aapt2 | head -n1)
-APKSIGNER=$(ls -1t $ANDROID_SDK_ROOT/build-tools/*/apksigner | head -n1)
+AAPT2=$(ls -1t ${ANDROID_SDK_ROOT:-$ANDROID_HOME}/build-tools/*/aapt2 | head -n1)
+APKSIGNER=$(ls -1t ${ANDROID_SDK_ROOT:-$ANDROID_HOME}/build-tools/*/apksigner | head -n1)
 BUNDLETOOL="/usr/local/bin/bundletool"
 
 ######################
@@ -63,7 +63,7 @@ info_for_file() {
   unset VNAME
   unset VCODE
   unset SIGNED_SUFFIX
-  
+
   ext="${1##*.}"
   case $ext in
     apk)
@@ -82,7 +82,7 @@ info_for_file() {
 auto_rename_file() {
   ext="${1##*.}"
   info_for_file "$1"
-  
+
   case $PKG in
     org.wordpress.android)
       BASENAME=wpandroid-$VNAME
