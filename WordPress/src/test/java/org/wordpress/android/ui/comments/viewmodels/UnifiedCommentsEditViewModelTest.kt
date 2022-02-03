@@ -57,17 +57,22 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     private var uiActionEvent: MutableList<EditCommentActionEvent> = mutableListOf()
     private var onSnackbarMessage: MutableList<SnackbarMessageHolder> = mutableListOf()
 
-    private val site = SiteModel()
+    private val site = SiteModel().apply {
+        id = LOCAL_SITE_ID
+    }
+
     private val siteCommentId = 1000
     private val siteCommentIdentifier = SiteCommentIdentifier(siteCommentId)
 
-    private val notificationId = "12345"
-    private val notificationCommentIdentifier = NotificationCommentIdentifier(notificationId)
+    private val notificationCommentId = "12345"
+    private val notificationCommentIdentifier = NotificationCommentIdentifier(notificationCommentId)
 
     @Before
     fun setup() = test {
-        whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf(SITE_COMMENT_RAW))
-        whenever(notificationsTableWrapper.getNotificationById(notificationId)).thenReturn(NOTIFICATION_COMMENT_RAW)
+        whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf(COMMENT_ENTITY))
+        whenever(notificationsTableWrapper.getNotificationCommentModelById(notificationCommentId)).thenReturn(
+                NOTIFICATION_COMMENT_RAW
+        )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = UnifiedCommentsEditViewModel(
@@ -159,7 +164,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onActionMenuClicked triggers snackbar if comment update error`() = test {
+    fun `onActionMenuClicked triggers snackbar if comment update error for site comment type`() = test {
         whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
                 CommentsActionPayload(CommentError(GENERIC_ERROR, "error"))
         )
@@ -169,15 +174,59 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onActionMenuClicked triggers DONE action if comment update successfully`() = test {
-        whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(CommentsActionPayload(CommentsActionData(
-                comments = listOf(),
-                rowsAffected = 0
-        )))
+    fun `onActionMenuClicked triggers snackbar if comment update error for notification comment type`() = test {
+        whenever(
+                commentsStore.getCommentByLocalSiteAndRemoteId(
+                        LOCAL_SITE_ID,
+                        NOTIFICATION_COMMENT_RAW.remoteCommentId
+                )
+        ).thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
+                CommentsActionPayload(CommentError(GENERIC_ERROR, "error"))
+        )
+        viewModel.start(site, notificationCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        assertThat(onSnackbarMessage.firstOrNull()).isNotNull
+    }
+
+    @Test
+    fun `onActionMenuClicked triggers DONE action if comment update successfully for site comment type`() = test {
+        whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
+                CommentsActionPayload(
+                        CommentsActionData(
+                                comments = listOf(),
+                                rowsAffected = 0
+                        )
+                )
+        )
         viewModel.start(site, siteCommentIdentifier)
         viewModel.onActionMenuClicked()
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
         verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
+    }
+
+    @Test
+    fun `onActionMenuClicked triggers DONE action if comment update successfully for notification comment type`() {
+        test {
+            whenever(
+                    commentsStore.getCommentByLocalSiteAndRemoteId(
+                            LOCAL_SITE_ID,
+                            NOTIFICATION_COMMENT_RAW.remoteCommentId
+                    )
+            ).thenReturn(listOf(COMMENT_ENTITY))
+            whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
+                    CommentsActionPayload(
+                            CommentsActionData(
+                                    comments = listOf(),
+                                    rowsAffected = 0
+                            )
+                    )
+            )
+            viewModel.start(site, notificationCommentIdentifier)
+            viewModel.onActionMenuClicked()
+            assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+            verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
+        }
     }
 
     @Test
@@ -229,12 +278,14 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     companion object {
-        private val SITE_COMMENT_RAW = CommentEntity(
+        private const val LOCAL_SITE_ID = 123
+
+        private val COMMENT_ENTITY = CommentEntity(
                 id = 1000,
                 remoteCommentId = 0,
                 remotePostId = 0,
                 remoteParentCommentId = 0,
-                localSiteId = 0,
+                localSiteId = LOCAL_SITE_ID,
                 remoteSiteId = 0,
                 authorUrl = "authorUrl",
                 authorName = "authorName",
@@ -252,11 +303,11 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         )
 
         private val SITE_COMMENT_ESSENTIALS = CommentEssentials(
-                commentId = SITE_COMMENT_RAW.id,
-                userName = SITE_COMMENT_RAW.authorName!!,
-                commentText = SITE_COMMENT_RAW.content!!,
-                userUrl = SITE_COMMENT_RAW.authorUrl!!,
-                userEmail = SITE_COMMENT_RAW.authorEmail!!
+                commentId = COMMENT_ENTITY.id,
+                userName = COMMENT_ENTITY.authorName!!,
+                commentText = COMMENT_ENTITY.content!!,
+                userUrl = COMMENT_ENTITY.authorUrl!!,
+                userEmail = COMMENT_ENTITY.authorEmail!!
         )
 
         private val NOTIFICATION_COMMENT_RAW = CommentModel().apply {
@@ -264,7 +315,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             remoteCommentId = 1
             remotePostId = 1
             remoteParentCommentId = 1
-            localSiteId = 1
+            localSiteId = LOCAL_SITE_ID
             remoteSiteId = 1
             authorUrl = "notificationAuthorUrl"
             authorName = "notificationAuthorName"
