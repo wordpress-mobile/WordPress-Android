@@ -452,11 +452,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void newPostFromShareAction() {
         Intent intent = getIntent();
-        final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
-        final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text));
-
-        newPostSetup(title, content);
+        if (isMediaTypeIntent(intent)) {
+            newPostSetup();
+            setPostMediaFromShareAction();
+        } else {
+            final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+            final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+            String content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text));
+            newPostSetup(title, content);
+        }
     }
 
     private void newReblogPostSetup() {
@@ -2471,18 +2475,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return null;
             });
         }
+        setPostMediaFromShareAction();
+    }
+
+    private void setPostMediaFromShareAction() {
+        Intent intent = getIntent();
 
         // Check for shared media
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             String action = intent.getAction();
-            String type = intent.getType();
             ArrayList<Uri> sharedUris;
 
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 sharedUris = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
             } else {
                 // For a single media share, we only allow images and video types
-                if (type != null && (type.startsWith("image") || type.startsWith("video"))) {
+                if (isMediaTypeIntent(intent)) {
                     sharedUris = new ArrayList<>();
                     sharedUris.add(intent.getParcelableExtra(Intent.EXTRA_STREAM));
                 } else {
@@ -2496,6 +2504,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorMedia.addNewMediaItemsToEditorAsync(sharedUris, false);
             }
         }
+    }
+
+    private boolean isMediaTypeIntent(Intent intent) {
+        String type = intent.getType();
+        return type != null && (type.startsWith("image") || type.startsWith("video"));
     }
 
     private void setFeaturedImageId(final long mediaId, final boolean imagePicked, final boolean isGutenbergEditor) {

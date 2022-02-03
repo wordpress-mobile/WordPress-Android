@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_E
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.CommentEssentials
@@ -39,6 +40,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var commentsStore: CommentsStore
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
@@ -59,7 +61,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 bgDispatcher = TEST_DISPATCHER,
                 commentsStore = commentsStore,
                 resourceProvider = resourceProvider,
-                networkUtilsWrapper = networkUtilsWrapper
+                networkUtilsWrapper = networkUtilsWrapper,
+                localCommentCacheUpdateHandler = localCommentCacheUpdateHandler
         )
 
         setupObservers()
@@ -119,6 +122,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         viewModel.start(site, commentId)
         viewModel.onActionMenuClicked()
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+        verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
     }
 
     @Test
