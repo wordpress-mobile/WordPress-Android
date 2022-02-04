@@ -691,7 +691,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private CommentIdentifier mapCommentIdentifier() {
         switch (mCommentSource) {
             case SITE_COMMENTS:
-                return new SiteCommentIdentifier(mComment.getId());
+                return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
             case NOTIFICATION:
                 return new NotificationCommentIdentifier(mNote.getCommentId());
             default:

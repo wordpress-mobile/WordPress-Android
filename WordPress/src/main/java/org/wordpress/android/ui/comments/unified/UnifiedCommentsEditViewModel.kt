@@ -8,14 +8,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.comments.CommentEntityList
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
-import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
@@ -160,10 +157,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             return
         }
-
         _uiState.value?.let { uiState ->
             val editedCommentEssentials = uiState.editedComment
-
             launch(bgDispatcher) {
                 setLoadingState(SAVING)
                 updateComment(editedCommentEssentials)
@@ -207,9 +202,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
                         message = UiStringRes(R.string.error_load_comment),
-                        onDismissAction = { _ ->
-                            _uiActionEvent.value = Event(CLOSE)
-                        }
+                        onDismissAction = { _uiActionEvent.value = Event(CLOSE) }
                 ))
             }
             delay(LOADING_DELAY_MS)
@@ -217,71 +210,27 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Fetch and map the comment entity to CommentEssentials based on the CommentIdentifier.
-     */
-    private suspend fun mapCommentEssentials(): CommentEssentials =
-            when (commentIdentifier) {
-                is SiteCommentIdentifier -> {
-                    val siteCommentIdentifier = commentIdentifier as SiteCommentIdentifier
-                    val commentEntityList = commentsStore.getCommentByLocalId(
-                            localId = siteCommentIdentifier.localCommentId.toLong()
-                    )
-                    mapCommentEssentials(commentEntityList)
-                }
-                is NotificationCommentIdentifier -> {
-                    val notificationCommentIdentifier = commentIdentifier as NotificationCommentIdentifier
-                    val localCommentEntityList = commentsStore.getCommentByLocalSiteAndRemoteId(
-                            localSiteId = site.id,
-                            remoteCommentId = notificationCommentIdentifier.remoteCommentId
-                    )
-                    if (localCommentEntityList.isNullOrEmpty()) {
-                        val remoteCommentEntityList = commentsStore
-                                .fetchComment(site, notificationCommentIdentifier.remoteCommentId, null)
-                                .data?.comments ?: emptyList()
-                        mapCommentEssentials(remoteCommentEntityList)
-                    } else {
-                        mapCommentEssentials(localCommentEntityList)
-                    }
-                }
-                else -> CommentEssentials()
-            }
-
-    private fun mapCommentEssentials(commentEntityList: CommentEntityList): CommentEssentials =
-            if (commentEntityList.isNotEmpty()) {
-                val commentEntity = commentEntityList.first()
-                CommentEssentials(
-                        commentId = commentEntity.id,
-                        userName = commentEntity.authorName ?: "",
-                        commentText = commentEntity.content ?: "",
-                        userUrl = commentEntity.authorUrl ?: "",
-                        userEmail = commentEntity.authorEmail ?: ""
-                )
-            } else {
-                CommentEssentials()
-            }
+    private suspend fun mapCommentEssentials(): CommentEssentials {
+        val commentEntity = getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)
+        return if (commentEntity != null) {
+            CommentEssentials(
+                    commentId = commentEntity.id,
+                    userName = commentEntity.authorName ?: "",
+                    commentText = commentEntity.content ?: "",
+                    userUrl = commentEntity.authorUrl ?: "",
+                    userEmail = commentEntity.authorEmail ?: ""
+            )
+        } else {
+            CommentEssentials()
+        }
+    }
 
     private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
-        when (commentIdentifier) {
-            is SiteCommentIdentifier -> {
-                val comment = commentsStore.getCommentByLocalId(editedCommentEssentials.commentId).firstOrNull()
-                comment?.let {
-                    updateCommentEntityLocalDatabase(comment, editedCommentEssentials)
-                } ?: showUpdateCommentError()
-            }
-            is NotificationCommentIdentifier -> {
-                val notificationCommentIdentifier = commentIdentifier as NotificationCommentIdentifier
-                commentsStore.getCommentByLocalSiteAndRemoteId(
-                        localSiteId = site.id,
-                        remoteCommentId = notificationCommentIdentifier.remoteCommentId
-                ).firstOrNull()?.run {
-                    updateCommentEntityLocalDatabase(this, editedCommentEssentials)
-                } ?: showUpdateCommentError()
-            }
-            else -> {
-                showUpdateCommentError()
-            }
-        }
+        val commentEntity =
+                commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
+        commentEntity?.run {
+            updateCommentEntityLocalDatabase(this, editedCommentEssentials)
+        } ?: showUpdateCommentError()
     }
 
     private suspend fun updateCommentEntityLocalDatabase(
