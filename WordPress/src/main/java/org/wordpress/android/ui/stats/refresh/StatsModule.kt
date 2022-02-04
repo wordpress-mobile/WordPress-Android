@@ -73,7 +73,6 @@ class StatsModule {
      * Provides a list of use cases for the Insights screen in Stats. Modify this method when you want to add more
      * blocks to the Insights screen.
      */
-    @Suppress("LongParameterList")
     @Provides
     @Singleton
     @Named(BLOCK_INSIGHTS_USE_CASES)
