@@ -23,6 +23,8 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Fi
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.ProgressState.LOADING
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.ProgressState.NOT_VISIBLE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.ProgressState.SAVING
+import org.wordpress.android.ui.comments.unified.extension.isNotEqualTo
+import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -42,7 +44,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val commentsStore: CommentsStore,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
+    private val getCommentUseCase: GetCommentUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -271,34 +274,27 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             val previousErrors = it.editErrorStrings
 
             val editedComment = previousComment.copy(
-                userName = if (fieldType.matches(USER_NAME)) field else previousComment.userName,
-                commentText = if (fieldType.matches(COMMENT)) field else previousComment.commentText,
-                userUrl = if (fieldType.matches(WEB_ADDRESS)) field else previousComment.userUrl,
-                userEmail = if (fieldType.matches(USER_EMAIL)) field else previousComment.userEmail
+                    userName = if (fieldType.matches(USER_NAME)) field else previousComment.userName,
+                    commentText = if (fieldType.matches(COMMENT)) field else previousComment.commentText,
+                    userUrl = if (fieldType.matches(WEB_ADDRESS)) field else previousComment.userUrl,
+                    userEmail = if (fieldType.matches(USER_EMAIL)) field else previousComment.userEmail
             )
 
             val errors = previousErrors.copy(
-                userNameError = if (fieldType.matches(USER_NAME)) fieldError else previousErrors.userNameError,
-                commentTextError = if (fieldType.matches(COMMENT)) fieldError else previousErrors.commentTextError,
-                userUrlError = if (fieldType.matches(WEB_ADDRESS)) fieldError else previousErrors.userUrlError,
-                userEmailError = if (fieldType.matches(USER_EMAIL)) fieldError else previousErrors.userEmailError
+                    userNameError = if (fieldType.matches(USER_NAME)) fieldError else previousErrors.userNameError,
+                    commentTextError = if (fieldType.matches(COMMENT)) fieldError else previousErrors.commentTextError,
+                    userUrlError = if (fieldType.matches(WEB_ADDRESS)) fieldError else previousErrors.userUrlError,
+                    userEmailError = if (fieldType.matches(USER_EMAIL)) fieldError else previousErrors.userEmailError
             )
 
             _uiState.value = it.copy(
-                canSaveChanges = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
-                shouldInitComment = false,
-                shouldInitWatchers = false,
-                editedComment = editedComment,
-                editErrorStrings = errors
+                    canSaveChanges = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
+                    shouldInitComment = false,
+                    shouldInitWatchers = false,
+                    editedComment = editedComment,
+                    editErrorStrings = errors
             )
         }
-    }
-
-    private fun CommentEssentials.isNotEqualTo(other: CommentEssentials): Boolean {
-        return !(this.commentText == other.commentText &&
-                this.userEmail == other.userEmail &&
-                this.userName == other.userName &&
-                this.userUrl == other.userUrl)
     }
 
     private fun EditErrorStrings.hasError(): Boolean {

@@ -37,6 +37,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Ed
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentUiState
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.USER_EMAIL
+import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -47,6 +48,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var commentsStore: CommentsStore
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+    @Mock lateinit var getCommentUseCase: GetCommentUseCase
     @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
@@ -60,7 +62,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     private val siteLocalCommentId = 1000
-    private val siteCommentIdentifier = SiteCommentIdentifier(siteLocalCommentId)
+    private val siteRemoteCommentId = 4321L
+    private val siteCommentIdentifier = SiteCommentIdentifier(siteLocalCommentId, siteRemoteCommentId)
 
     private val notificationCommentIdentifier = NotificationCommentIdentifier(NOTIFICATION_COMMENT_RAW.remoteCommentId)
 
@@ -75,7 +78,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 commentsStore = commentsStore,
                 resourceProvider = resourceProvider,
                 networkUtilsWrapper = networkUtilsWrapper,
-                localCommentCacheUpdateHandler = localCommentCacheUpdateHandler
+                localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
+                getCommentUseCase = getCommentUseCase
         )
 
         setupObservers()
