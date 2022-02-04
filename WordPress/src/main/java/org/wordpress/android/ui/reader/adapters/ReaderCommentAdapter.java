@@ -597,6 +597,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int index = mComments.indexOfCommentId(commentId);
         if (index > -1) {
             mComments.remove(index);
+            // re-level comments
+            mComments = new ReaderCommentLeveler(mComments).createLevelList();
             notifyDataSetChanged();
         }
     }
