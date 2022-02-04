@@ -19,8 +19,6 @@ Language: nb_NO
     <string name="blogging_reminders_update">Oppdater</string>
     <string name="blogging_reminders_n_a_week">%s i uka</string>
     <string name="blogging_reminders_done">Utført</string>
-    <string name="gutenberg_native_set_as_featured_image">Sett som fremhevet bilde</string>
-    <string name="gutenberg_native_remove_as_featured_image">Fjern som fremhevet bilde</string>
     <string name="fab_add_category_desc">Opprett kategori</string>
     <string name="support_ticket_subject">WordPress for Android-kundestøtte</string>
     <string name="site_settings_categories_hint">Behandle nettstedets stikkord</string>
