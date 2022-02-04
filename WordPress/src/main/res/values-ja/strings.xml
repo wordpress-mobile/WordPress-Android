@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-02 09:54:07+0000
+Translation-Revision-Date: 2022-02-03 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
@@ -10,7 +10,7 @@ Language: ja_JP
     <string name="gutenberg_native_navigates_to_layout_selection_screen">レイアウト選択画面に移動します</string>
     <string name="gutenberg_native_gallery_style">ギャラリースタイル</string>
     <string name="sharing_facebook_warning_positive_button">ウェブに移動</string>
-    <string name="sharing_facebook_warning_message">WordPress.com ウェブサイトでお使いの Facebook アカウントを接続できます。 完了したら WordPress.com アプリに戻り、「共有」設定を変更します。</string>
+    <string name="sharing_facebook_warning_message">WordPress.com サイトでお使いの Facebook アカウントを接続できます。 完了したら WordPress.com アプリに戻り「共有」設定を変更します。</string>
     <string name="about_automattic_app_icon_description">アプリアイコン</string>
     <string name="about_automattic_back_icon_description">「戻る」アイコン</string>
     <string name="about_automattic_logo_description">Automattic ロゴ</string>
