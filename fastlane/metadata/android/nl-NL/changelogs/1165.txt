@@ -1,0 +1,7 @@
+19.1:
+- Knoppen correct uitlijnen in het knoppen blok.
+- Zie bloknamen in het Hebreeuws en Indonesisch.
+- Zie de vertaalde uitgelichte afbeelding en de kleurinstellingen van het omslagafbeelding blok.
+- Zie de help-knop niet meer in de niet-ondersteunde blok-editor.
+- Ontvang een melding als combinaties van tekst-/achtergrondkleur moeilijk te lezen zijn.
+- Loop tegen minder problemen aan bij het wijzigen van de kleur van niet-geselecteerde tekst.

@@ -1,0 +1,7 @@
+19.1:
+- Düğmeler blokundaki düğmeleri düzgün şekilde hizalayın.
+- İbranice ve Endonezyaca blok adlarına bakın.
+- Çevrilmiş öne çıkan görsel ve Kapak bloku renk ayarlarını görün.
+- Desteklenmeyen blok düzenleyicide artık yardım düğmesini göremezsiniz.
+- Metin/arka plan rengi kombinasyonlarının okunması zor olduğunda bildirim alın.
+- Seçilmeyen metnin rengini değiştirirken daha az sorunla karşılaşın.

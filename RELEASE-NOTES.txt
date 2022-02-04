@@ -4,6 +4,8 @@
 -----
 * [*] Block editor: Replacing the media for an image set as featured prompts to update the featured image [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3930]
 * [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
+* [**] Stats revamp: Removes the "+ Add new stats card" row from the bottom of the Insights tab on Stats screen and instead adds a settings icon (⚙️) to the the top app bar [https://github.com/wordpress-mobile/WordPress-Android/pull/15891]
+* [***] Block editor: Font size and line-height support for text-based blocks used in block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4519]
 
 19.1
 -----
