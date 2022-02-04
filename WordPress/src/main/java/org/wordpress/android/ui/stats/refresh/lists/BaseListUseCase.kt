@@ -124,7 +124,9 @@ class BaseListUseCase(
                                 }
                             }
                 }
-                mutableScrollTo.postValue(Event(visibleTypes.last()))
+                if (!refresh) {
+                    mutableScrollTo.postValue(Event(visibleTypes.last()))
+                }
             }
         } else {
             mutableSnackbarMessage.postValue(R.string.stats_site_not_loaded_yet)
