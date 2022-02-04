@@ -8,7 +8,7 @@ import javax.inject.Inject
 /**
  * Configuration of the reader comments moderation
  */
-@Feature(READER_COMMENTS_MODERATION_REMOTE_FIELD, false)
+@Feature(READER_COMMENTS_MODERATION_REMOTE_FIELD, true)
 class ReaderCommentsModerationFeatureConfig
 @Inject constructor(
     appConfig: AppConfig
