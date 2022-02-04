@@ -8,9 +8,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -40,6 +40,7 @@ import javax.inject.Named
 
 const val SCROLL_EVENT_DELAY = 2000L
 
+@Suppress("TooManyFunctions")
 abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
@@ -127,6 +128,12 @@ abstract class StatsListViewModel(
     }
 
     fun onEmptyInsightsButtonClicked() {
+        mutableNavigationTarget.value = Event(ViewInsightsManagement)
+    }
+
+    fun onAddNewStatsButtonClicked() {
+        newsCardHandler?.dismiss()
+        analyticsTracker.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED, mapOf("source" to "button"))
         mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
 
