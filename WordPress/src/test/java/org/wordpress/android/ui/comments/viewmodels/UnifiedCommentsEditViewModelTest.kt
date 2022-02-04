@@ -59,14 +59,14 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         id = LOCAL_SITE_ID
     }
 
-    private val siteCommentId = 1000
-    private val siteCommentIdentifier = SiteCommentIdentifier(siteCommentId)
+    private val siteLocalCommentId = 1000
+    private val siteCommentIdentifier = SiteCommentIdentifier(siteLocalCommentId)
 
     private val notificationCommentIdentifier = NotificationCommentIdentifier(NOTIFICATION_COMMENT_RAW.remoteCommentId)
 
     @Before
     fun setup() = test {
-        whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.getCommentByLocalId(siteLocalCommentId.toLong())).thenReturn(listOf(COMMENT_ENTITY))
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         viewModel = UnifiedCommentsEditViewModel(
@@ -93,14 +93,14 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should display error SnackBar if mapped CommentEssentials is NOT VALID`() = test {
-        whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf())
+        whenever(commentsStore.getCommentByLocalId(siteLocalCommentId.toLong())).thenReturn(emptyList())
         viewModel.start(site, siteCommentIdentifier)
         assertThat(onSnackbarMessage.firstOrNull()).isNotNull
     }
 
     @Test
     fun `Should display correct SnackBar error message if mapped CommentEssentials is NOT VALID`() = test {
-        whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf())
+        whenever(commentsStore.getCommentByLocalId(siteLocalCommentId.toLong())).thenReturn(emptyList())
         viewModel.start(site, siteCommentIdentifier)
         val expected = UiStringRes(R.string.error_load_comment)
         val actual = onSnackbarMessage.first().message
@@ -122,15 +122,58 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should get site comment from CommentsStore when start is called with SiteCommentIdenfitier`() = test {
+    fun `Should get site comment from local DB when start is called with SiteCommentIdentifier`() = test {
         viewModel.start(site, siteCommentIdentifier)
-        verify(commentsStore, times(1)).getCommentByLocalId(siteCommentId.toLong())
+        verify(commentsStore, times(1)).getCommentByLocalId(siteLocalCommentId.toLong())
+    }
+
+    @Test
+    fun `Should get notification comment from local DB when start is called with NotificationCommentIdentifier`() {
+        test {
+            whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, NOTIFICATION_COMMENT_RAW.remoteCommentId))
+                    .thenReturn(listOf(COMMENT_ENTITY))
+            viewModel.start(site, notificationCommentIdentifier)
+            verify(commentsStore, times(1))
+                    .getCommentByLocalSiteAndRemoteId(site.id, NOTIFICATION_COMMENT_RAW.remoteCommentId)
+        }
+    }
+
+    @Test
+    fun `Should get notification comment from remote when start is called and comment is not found in local DB`() {
+        test {
+            whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, NOTIFICATION_COMMENT_RAW.remoteCommentId))
+                    .thenReturn(emptyList())
+            whenever(commentsStore.fetchComment(site, NOTIFICATION_COMMENT_RAW.remoteCommentId, null))
+                    .thenReturn(CommentsActionPayload(CommentsActionData(listOf(COMMENT_ENTITY), 0)))
+            viewModel.start(site, notificationCommentIdentifier)
+            verify(commentsStore, times(1)).fetchComment(site, NOTIFICATION_COMMENT_RAW.remoteCommentId, null)
+        }
+    }
+
+    @Test
+    fun `Should return default CommentEssentials if remote notification comment response data is null`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, NOTIFICATION_COMMENT_RAW.remoteCommentId))
+                .thenReturn(emptyList())
+        whenever(commentsStore.fetchComment(site, NOTIFICATION_COMMENT_RAW.remoteCommentId, null))
+                .thenReturn(CommentsActionPayload(null))
+        viewModel.start(site, notificationCommentIdentifier)
+        assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
+    }
+
+    @Test
+    fun `Should return default CommentEssentials if notification comment not found in local DB and in remote`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, NOTIFICATION_COMMENT_RAW.remoteCommentId))
+                .thenReturn(emptyList())
+        whenever(commentsStore.fetchComment(site, NOTIFICATION_COMMENT_RAW.remoteCommentId, null))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, notificationCommentIdentifier)
+        assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
     }
 
     @Test
     fun `Should map CommentIdentifier to default CommentEssentials if SiteCommentIdentifier comment not found`() {
         test {
-            whenever(commentsStore.getCommentByLocalId(siteCommentId.toLong())).thenReturn(listOf())
+            whenever(commentsStore.getCommentByLocalId(siteLocalCommentId.toLong())).thenReturn(emptyList())
             viewModel.start(site, siteCommentIdentifier)
             assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
         }
@@ -139,7 +182,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `Should map CommentIdentifier to CommentEssentials for NotificationCommentIdentifier`() = test {
         whenever(
-                commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, NOTIFICATION_COMMENT_RAW.remoteCommentId)
+                commentsStore.getCommentByLocalSiteAndRemoteId(site.id, NOTIFICATION_COMMENT_RAW.remoteCommentId)
         ).thenReturn(listOf(COMMENT_ENTITY))
         viewModel.start(site, notificationCommentIdentifier)
         assertThat(uiState[1].editedComment).isEqualTo(COMMENT_ESSENTIALS)
@@ -172,7 +215,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `onActionMenuClicked triggers snackbar if comment update error for notification comment type`() = test {
         whenever(
-                commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, NOTIFICATION_COMMENT_RAW.remoteCommentId)
+                commentsStore.getCommentByLocalSiteAndRemoteId(site.id, NOTIFICATION_COMMENT_RAW.remoteCommentId)
         ).thenReturn(listOf(COMMENT_ENTITY))
         whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
                 CommentsActionPayload(CommentError(GENERIC_ERROR, "error"))
@@ -187,7 +230,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
                 CommentsActionPayload(
                         CommentsActionData(
-                                comments = listOf(),
+                                comments = emptyList(),
                                 rowsAffected = 0
                         )
                 )
@@ -203,14 +246,14 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         test {
             whenever(
                     commentsStore.getCommentByLocalSiteAndRemoteId(
-                            LOCAL_SITE_ID,
+                            site.id,
                             NOTIFICATION_COMMENT_RAW.remoteCommentId
                     )
             ).thenReturn(listOf(COMMENT_ENTITY))
             whenever(commentsStore.updateEditComment(eq(site), any())).thenReturn(
                     CommentsActionPayload(
                             CommentsActionData(
-                                    comments = listOf(),
+                                    comments = emptyList(),
                                     rowsAffected = 0
                             )
                     )

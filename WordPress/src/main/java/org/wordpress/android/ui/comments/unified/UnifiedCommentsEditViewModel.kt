@@ -231,11 +231,18 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 }
                 is NotificationCommentIdentifier -> {
                     val notificationCommentIdentifier = commentIdentifier as NotificationCommentIdentifier
-                    val commentEntityList = commentsStore.getCommentByLocalSiteAndRemoteId(
+                    val localCommentEntityList = commentsStore.getCommentByLocalSiteAndRemoteId(
                             localSiteId = site.id,
                             remoteCommentId = notificationCommentIdentifier.remoteCommentId
                     )
-                    mapCommentEssentials(commentEntityList)
+                    if (localCommentEntityList.isNullOrEmpty()) {
+                        val remoteCommentEntityList = commentsStore
+                                .fetchComment(site, notificationCommentIdentifier.remoteCommentId, null)
+                                .data?.comments ?: emptyList()
+                        mapCommentEssentials(remoteCommentEntityList)
+                    } else {
+                        mapCommentEssentials(localCommentEntityList)
+                    }
                 }
                 else -> CommentEssentials()
             }
