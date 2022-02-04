@@ -137,7 +137,7 @@ class SiteStoreTest {
         val siteA = SiteModel()
         val siteB = SiteModel()
         sitesModel.sites = listOf(siteA, siteB)
-        whenever(siteRestClient.fetchSites(payload.filters)).thenReturn(sitesModel)
+        whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
         whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
         whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
 
@@ -156,7 +156,7 @@ class SiteStoreTest {
         val payload = FetchSitesPayload(listOf(WPCOM))
         val sitesModel = SitesModel()
         sitesModel.error = BaseNetworkError(PARSE_ERROR)
-        whenever(siteRestClient.fetchSites(payload.filters)).thenReturn(sitesModel)
+        whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
 
         val onSiteChanged = siteStore.fetchSites(payload)
 
