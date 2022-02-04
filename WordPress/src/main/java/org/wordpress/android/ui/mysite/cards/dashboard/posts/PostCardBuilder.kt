@@ -102,7 +102,7 @@ class PostCardBuilder @Inject constructor(
             if (title.isEmpty()) UiStringRes(R.string.my_site_untitled_post) else UiStringText(title)
 
     private fun constructPostContent(content: String) =
-            if (content.isEmpty()) UiStringRes(R.string.my_site_no_content_post) else UiStringText(content)
+            content.takeIf { it.isNotEmpty() }?.let { UiStringText(content) }
 
     private fun List<PostCardModel>.mapToScheduledPostItems(
         onPostItemClick: (params: PostItemClickParams) -> Unit
