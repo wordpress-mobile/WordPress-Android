@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
@@ -26,7 +25,6 @@ import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.RemoteRequestFailure
@@ -66,15 +64,12 @@ class StatsViewModel
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSiteProvider: StatsSiteProvider,
-    private val newsCardHandler: NewsCardHandler,
+    newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
     private val notificationsTracker: SystemNotificationsTracker
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
-
-    private val mutableNavigationTarget = MutableLiveData<Event<NavigationTarget>>()
-    val navigationTarget: LiveData<Event<NavigationTarget>> = mutableNavigationTarget
 
     private var isInitialized = false
 
@@ -234,12 +229,6 @@ class StatsViewModel
             ANNUAL_STATS, DETAIL -> {
             }
         }
-    }
-
-    fun onAddNewStatsButtonClicked() {
-        newsCardHandler.dismiss()
-        analyticsTracker.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED)
-        mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
 
     override fun onCleared() {

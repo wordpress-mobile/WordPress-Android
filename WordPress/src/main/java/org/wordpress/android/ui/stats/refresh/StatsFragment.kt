@@ -3,9 +3,6 @@ package org.wordpress.android.ui.stats.refresh
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +30,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -43,11 +39,10 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
-@Suppress("TooManyFunctions")
+
 class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private val selectedTabListener: SelectedTabListener
@@ -61,7 +56,6 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
@@ -75,21 +69,6 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
             }
             initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
             initializeViews(nonNullActivity)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.stats_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.add_new_stats_card -> {
-                viewModel.onAddNewStatsButtonClicked()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -169,16 +148,11 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         viewModel.selectedSection.observe(viewLifecycleOwner, { selectedSection ->
             selectedSection?.let {
                 handleSelectedSection(selectedSection)
-                toolbar.menu.findItem(R.id.add_new_stats_card)?.isVisible = it == INSIGHTS
             }
         })
 
         viewModel.statsModuleUiModel.observeEvent(viewLifecycleOwner, { event ->
             updateUi(event)
-        })
-
-        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
-            navigator.navigate(activity, target)
         })
     }
 
