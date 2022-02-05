@@ -5,7 +5,6 @@ import org.junit.Test
 import org.wordpress.android.ui.comments.unified.CommentEssentials
 
 class CommentEssentialsExtensionKtTest {
-
     private val commentEssentials = CommentEssentials(
             userName = "name",
             commentText = "text",
