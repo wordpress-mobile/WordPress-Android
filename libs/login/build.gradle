@@ -55,7 +55,7 @@ dependencies {
 
     api 'com.google.android.gms:play-services-auth:18.1.0'
 
-    implementation("org.wordpress:fluxc:1.23.0") {
+    implementation("org.wordpress:fluxc:trunk-9f5f5ea43dd60152677092b499980898f9521f6c") {
         exclude group: "com.android.support"
         exclude group: "org.wordpress", module: "utils"
     }
