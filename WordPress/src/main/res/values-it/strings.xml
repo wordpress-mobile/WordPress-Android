@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-28 19:01:19+0000
+Translation-Revision-Date: 2022-02-03 18:08:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Impostazioni galleria affiancata</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Naviga fino alla schermata di selezione del layout</string>
+    <string name="gutenberg_native_gallery_style">Stile della galleria</string>
+    <string name="sharing_facebook_warning_positive_button">Vai al web</string>
+    <string name="sharing_facebook_warning_message">Puoi connettere il tuo account Facebook al sito web WordPress.com. Una volta terminato, torna all\'app di WordPress per modificare le impostazioni di Condivisione.</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_app_icon_description">Icona app</string>
     <string name="about_automattic_back_icon_description">Icona Indietro</string>
@@ -300,7 +305,7 @@ Language: it
     <string name="gutenberg_native_no_preview_available">Nessuna anteprima disponibile</string>
     <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_text_color">Colore del testo</string>
-    <string name="gutenberg_native_padding">Spaziatura interna</string>
+    <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Quattro</string>
     <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
     <string name="gutenberg_native_custom_url">URL personalizzata</string>

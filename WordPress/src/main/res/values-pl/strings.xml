@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-01 07:01:35+0000
+Translation-Revision-Date: 2022-02-04 12:04:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -953,7 +953,7 @@ Language: pl
     <string name="site_picker_ask_site_select">Nie udało się wybrać witryny. Proszę spróbować ponownie.</string>
     <string name="error_failed_to_load_into_file">Nie udało się wczytać z pliku, proszę spróbować później.</string>
     <string name="preview_image_thumbnail_description">Pogląd miniatury obrazka</string>
-    <string name="photo_picker_use_media">Użyj tych mediów</string>
+    <string name="photo_picker_use_media">Użyj tego pliku</string>
     <string name="button_insert">Wstaw</string>
     <string name="copy_text">Kopiuj</string>
     <string name="comment_share_link_via">Udostępnij przez</string>
@@ -1959,7 +1959,6 @@ Language: pl
     <string name="plugin_caption_search">Szukaj wtyczek</string>
     <string name="plugin_caption_new">Nowe</string>
     <string name="plugin_caption_popular">Popularne</string>
-    <string name="plugin_see_all">Zobacz wszystkie</string>
     <string name="plugin_manage">Zarządzaj</string>
     <string name="plugin_search_error">Nie można było wyszukać wtyczek</string>
     <string name="plugin_installed_failed">Błąd instalacji %s</string>
@@ -1969,6 +1968,7 @@ Language: pl
     <string name="my_site_create_new_site">Stwórz nową witrynę dla swojej firmy, magazynu czy własnego bloga; lub połącz istniejącą instalację WordPressa.</string>
     <string name="plugins_empty_search_list">Brak wyników</string>
     <string name="site_settings_like_header">Lubię</string>
+    <string name="plugin_see_all">Zobaczy wszystko</string>
     <string name="notifications_jetpack_connection_setup_info">Aby uzyskać pomocne powiadomienia na swoim urządzeniu ze swojej WordPressowej witryny, będziesz musiał zainstalować wtyczkę Jetpack. Czy chciałbyś skonfigurować Jetpacka?</string>
     <string name="site_settings_lazy_load_images">Lazy load - wczytuj tylko widoczne na stronie obrazki</string>
     <string name="stats_jetpack_connection_setup">Zainstaluj Jetpacka</string>
@@ -2021,7 +2021,7 @@ Language: pl
     <string name="site_settings_tags_title">Tagi</string>
     <string name="site_settings_traffic_header">Ruch</string>
     <string name="delete_yes">Usuń</string>
-    <string name="plugin_external_link_icon_content_description">Zewnętrzny odnośnik</string>
+    <string name="plugin_external_link_icon_content_description">Odnośnik zewnętrzny</string>
     <string name="plugin_icon_content_description">Ikona wtyczki</string>
     <string name="plugin_home_page">Strona domowa wtyczki</string>
     <string name="wordpress_dot_org_plugin_page">Strona wtyczki na WordPress.org</string>

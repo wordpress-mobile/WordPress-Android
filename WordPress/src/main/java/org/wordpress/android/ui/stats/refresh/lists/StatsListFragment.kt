@@ -2,11 +2,15 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import org.wordpress.android.R
@@ -27,12 +31,14 @@ import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
     @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsListViewModel
+    private lateinit var statsSection: StatsSection
 
     private var layoutManager: LayoutManager? = null
     private var binding: StatsListFragmentBinding? = null
@@ -53,6 +59,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
+                ?: activity?.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
+                ?: StatsSection.INSIGHTS
+
+        setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
         (requireActivity().application as WordPress).component().inject(this)
     }
 
@@ -64,6 +76,21 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             outState.putSerializable(LIST_TYPE, sectionFromIntent)
         }
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.stats_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_new_stats_card -> {
+                viewModel.onAddNewStatsButtonClicked()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun StatsListFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
@@ -136,10 +163,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
-        val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
-                ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
-                ?: StatsSection.INSIGHTS
-
         val viewModelClass = when (statsSection) {
             StatsSection.DETAIL -> DetailListViewModel::class.java
             StatsSection.ANNUAL_STATS,
@@ -187,6 +210,16 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         viewModel.scrollTo?.observeEvent(viewLifecycleOwner, { statsType ->
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
+            }
+        })
+
+        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner, {
+            (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
+                adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        layoutManager?.smoothScrollToPosition(recyclerView, null, adapter.itemCount)
+                    }
+                })
             }
         })
     }
