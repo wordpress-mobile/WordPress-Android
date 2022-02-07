@@ -10,11 +10,14 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_ERROR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -54,6 +57,26 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     private fun setUpMocks() {
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+    }
+
+    /* POST CARD ERROR */
+
+    @Test
+    fun `given post unauth error, when card is built, then posts card not exist`() {
+        val posts = PostsCardModel(error = PostCardError(PostCardErrorType.UNAUTHORIZED))
+
+        val postsCard = buildPostsCard(posts)
+
+        assertThat(postsCard).isEmpty()
+    }
+
+    @Test
+    fun `given post generic error, when card is built, then error card exists`() {
+        val posts = PostsCardModel(error = PostCardError(PostCardErrorType.GENERIC_ERROR))
+
+        val postsCard = buildPostsCard(posts)
+
+        assertThat(postsCard.filterPostErrorCard()).isInstanceOf(PostCard.Error::class.java)
     }
 
     /* CREATE FIRST POST CARD */
@@ -320,6 +343,8 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         assertThat((postsCard.filterScheduledPostCard())?.postItems?.first()?.isTimeIconVisible).isTrue
     }
+
+    private fun List<PostCard>.filterPostErrorCard() = firstOrNull { it.dashboardCardType == POST_CARD_ERROR }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterCreateFirstPostCard() = (

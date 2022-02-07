@@ -9,6 +9,9 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
@@ -45,6 +48,52 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         whenever(statsUtils.toFormattedString(TODAYS_STATS_VIEWS)).thenReturn(TODAYS_STATS_VIEWS_FORMATTED_STRING)
         whenever(statsUtils.toFormattedString(TODAYS_STATS_VISITORS)).thenReturn(TODAYS_STATS_VISITORS_FORMATTED_STRING)
         whenever(statsUtils.toFormattedString(TODAYS_STATS_LIKES)).thenReturn(TODAYS_STATS_LIKES_FORMATTED_STRING)
+    }
+
+    /* TODAY'S STATS CARD ERROR */
+
+    @Test
+    fun `given jetpack disconnected error, when card is built, then card not exists`() {
+        val todaysStatsCardModel = TodaysStatsCardModel(
+                error = TodaysStatsCardError(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)
+        )
+
+        val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
+
+        assertThat(todaysStatsCard).isNull()
+    }
+
+    @Test
+    fun `given jetpack disabled error, when card is built, then card not exists`() {
+        val todaysStatsCardModel = TodaysStatsCardModel(
+                error = TodaysStatsCardError(TodaysStatsCardErrorType.JETPACK_DISABLED)
+        )
+
+        val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
+
+        assertThat(todaysStatsCard).isNull()
+    }
+
+    @Test
+    fun `given today's stats unauth error, when card is built, then card not exists`() {
+        val todaysStatsCardModel = TodaysStatsCardModel(
+                error = TodaysStatsCardError(TodaysStatsCardErrorType.UNAUTHORIZED)
+        )
+
+        val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
+
+        assertThat(todaysStatsCard).isNull()
+    }
+
+    @Test
+    fun `given today's stats generic error, when card is built, then error card exists`() {
+        val todaysStatsCardModel = TodaysStatsCardModel(
+                error = TodaysStatsCardError(TodaysStatsCardErrorType.GENERIC_ERROR)
+        )
+
+        val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
+
+        assertThat(todaysStatsCard).isInstanceOf(TodaysStatsCard.Error::class.java)
     }
 
     @Test
