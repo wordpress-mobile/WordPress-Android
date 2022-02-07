@@ -1,0 +1,7 @@
+19.1:
+- Tombol di blok Tombol kini dijajarkan dengan tepat.
+- Nama blok kini tersedia dalam bahasa Ibrani dan bahasa Indonesia.
+- Terjemahan untuk pengaturan warna blok gambar sorotan dan Sampul kini tersedia.
+- Tombol bantuan kini dihapus dari editor blok yang tidak didukung.
+- Dapatkan pemberitahuan jika kombinasi warna teks/latar belakang sulit dibaca.
+- Sebagian masalah saat mengganti warna dari teks yang tidak dipilih telah teratasi.

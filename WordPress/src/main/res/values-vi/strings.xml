@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-12 03:28:12+0000
+Translation-Revision-Date: 2022-01-26 04:28:33+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Cài đặt bộ sưu tập dạng ô</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Chuyển đến chọn màn hình bố cục</string>
+    <string name="gutenberg_native_gallery_style">Dạng bộ sưu tập</string>
+    <string name="sharing_facebook_warning_positive_button">Đến trang web</string>
+    <string name="sharing_facebook_warning_message">Bạn có thể kết nối tài khoản Facebook với WordPress.com. Khi đã kết nối, quay lại app WordPress để thay đổi thiết lập Chia Sẻ.</string>
     <string name="about_automattic_app_icon_description">Biểu tượng app</string>
     <string name="about_automattic_back_icon_description">Biểu tượng trở về</string>
     <string name="about_automattic_logo_description">Biểu tượng Automattic</string>
@@ -289,16 +294,19 @@ Language: vi_VN
     <string name="user_profile_site_section_header">Trang</string>
     <string name="user_profile_bottom_sheet_description">Thông tin menu dưới của hồ sơ người dùng</string>
     <string name="likes_list_screen_title">Những người thích %s</string>
+    <string name="gutenberg_native_two">Hai</string>
+    <string name="gutenberg_native_three">Ba</string>
     <string name="gutenberg_native_s_social_icon">%s biểu tượng mạng xã hội</string>
     <string name="gutenberg_native_mention">Nhắc đến</string>
     <string name="gutenberg_native_preview_post">Xem trước bài viết</string>
     <string name="gutenberg_native_preview_page">Xem trước trang con</string>
     <string name="gutenberg_native_retry">Thử lại</string>
+    <string name="gutenberg_native_one">Một</string>
     <string name="gutenberg_native_no_preview_available">Không có bản xem trước</string>
     <string name="gutenberg_native_text_color">Màu chữ</string>
     <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Khoảng giãn cách</string>
-    <string name="gutenberg_native_featured">Nổi Bật</string>
+    <string name="gutenberg_native_four">Bốn</string>
     <string name="gutenberg_native_custom_url">URL tùy chỉnh</string>
     <string name="gutenberg_native_create_embed">Chèn mã nhúng</string>
     <string name="gutenberg_native_column_d">Cột %d</string>

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 08:51:13+0000
+Translation-Revision-Date: 2022-01-24 18:34:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Mosaikinställningar för galleri</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Går till skärmen för val av layout</string>
+    <string name="gutenberg_native_gallery_style">Galleristil</string>
+    <string name="sharing_facebook_warning_positive_button">Gå till webben</string>
+    <string name="sharing_facebook_warning_message">Du kan ansluta ditt Facebook-konto på WordPress.com-webbplatsen. När du är klar, gå tillbaka till WordPress-appen för att ändra dina delningsinställningar.</string>
     <string name="about_automattic_app_icon_description">App-ikon</string>
     <string name="about_automattic_back_icon_description">Ikon för tillbaka</string>
     <string name="about_automattic_logo_description">Logga för Automattic</string>
@@ -235,8 +240,8 @@ Language: sv_SE
     <string name="blogging_reminders_done">Klart</string>
     <string name="blogging_reminders_notify_me">Påminn mig</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Ange inloggningsuppgifterna till din server&lt;/a&gt; för att möjliggöra återställning av webbplatsen från säkerhetskopior med ett klick.</string>
-    <string name="gutenberg_native_set_as_featured_image">Ställ in som utvald bild </string>
-    <string name="gutenberg_native_remove_as_featured_image">Ta bort som utvald bild </string>
+    <string name="gutenberg_native_set_as_featured_image">Ställ in som utvald bild</string>
+    <string name="gutenberg_native_remove_as_featured_image">Ta bort som utvald bild</string>
     <string name="fab_add_category_desc">Skapa kategori</string>
     <string name="support_ticket_subject">Support för WordPress för Android</string>
     <string name="site_settings_categories_hint">Hantera kategorierna för din webbplats</string>
@@ -289,16 +294,19 @@ Language: sv_SE
     <string name="user_profile_site_section_header">Webbplats</string>
     <string name="user_profile_bottom_sheet_description">Användarprofil, information på nedre blad</string>
     <string name="likes_list_screen_title">Lista över gilla-markeringar %s</string>
+    <string name="gutenberg_native_two">Två</string>
+    <string name="gutenberg_native_three">Tre</string>
     <string name="gutenberg_native_s_social_icon">Social ikon för %s</string>
     <string name="gutenberg_native_mention">Omnämnande</string>
     <string name="gutenberg_native_preview_post">Förhandsgranska inlägg</string>
     <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
     <string name="gutenberg_native_retry">Försök igen</string>
+    <string name="gutenberg_native_one">Ett</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
     <string name="gutenberg_native_s_link">Länk för %s</string>
     <string name="gutenberg_native_padding">Padding</string>
-    <string name="gutenberg_native_featured">Utvalda</string>
+    <string name="gutenberg_native_four">Fyra</string>
     <string name="gutenberg_native_custom_url">Anpassad URL</string>
     <string name="gutenberg_native_create_embed">Skapa inbäddning</string>
     <string name="gutenberg_native_column_d">Kolumn %d</string>

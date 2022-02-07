@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-21 12:00:58+0000
+Translation-Revision-Date: 2022-02-03 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">タイルギャラリー設定</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">レイアウト選択画面に移動します</string>
+    <string name="gutenberg_native_gallery_style">ギャラリースタイル</string>
+    <string name="sharing_facebook_warning_positive_button">ウェブに移動</string>
+    <string name="sharing_facebook_warning_message">WordPress.com サイトでお使いの Facebook アカウントを接続できます。 完了したら WordPress.com アプリに戻り「共有」設定を変更します。</string>
     <string name="about_automattic_app_icon_description">アプリアイコン</string>
     <string name="about_automattic_back_icon_description">「戻る」アイコン</string>
     <string name="about_automattic_logo_description">Automattic ロゴ</string>
@@ -235,10 +240,10 @@ Language: ja_JP
     <string name="blogging_reminders_notify_me">通知する</string>
     <string name="blogging_reminders_done">完了</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;サーバーのログイン情報&lt;/a&gt;を入力すると、1クリックでバックアップからサイトを復元できるようになります。</string>
-    <string name="gutenberg_native_set_as_featured_image">アイキャッチ画像として設定 </string>
-    <string name="gutenberg_native_remove_as_featured_image">アイキャッチ画像を削除 </string>
     <string name="fab_add_category_desc">カテゴリーを作成</string>
     <string name="support_ticket_subject">WordPress for Android サポート</string>
+    <string name="gutenberg_native_set_as_featured_image">アイキャッチ画像として設定</string>
+    <string name="gutenberg_native_remove_as_featured_image">アイキャッチ画像を削除</string>
     <string name="site_settings_categories_hint">サイトのカテゴリーを管理</string>
     <string name="site_settings_categories_title">カテゴリー</string>
     <string name="page_is_posts_page_warning">最新の投稿ページのコンテンツは自動的に生成され、編集することはできません。</string>
@@ -289,16 +294,19 @@ Language: ja_JP
     <string name="user_profile_site_section_header">サイト</string>
     <string name="user_profile_untitled_site">(無題)</string>
     <string name="likes_list_screen_title">いいねリスト%s</string>
+    <string name="gutenberg_native_two">2</string>
+    <string name="gutenberg_native_three">3</string>
     <string name="gutenberg_native_s_social_icon">%sソーシャルアイコン</string>
     <string name="gutenberg_native_mention">\@ 返信</string>
     <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
     <string name="gutenberg_native_preview_page">ページをプレビュー</string>
     <string name="gutenberg_native_retry">リトライ</string>
+    <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_s_link">%s リンク</string>
     <string name="gutenberg_native_text_color">テキスト色</string>
     <string name="gutenberg_native_padding">パディング</string>
-    <string name="gutenberg_native_featured">おすすめ</string>
+    <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_create_embed">埋め込みを作成</string>
     <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_column_d">カラム %d</string>

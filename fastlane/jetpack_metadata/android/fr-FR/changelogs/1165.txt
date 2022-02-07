@@ -1,0 +1,7 @@
+19.1 :
+- Justification de boutons correcte dans le bloc de boutons.
+- Affichage de noms de blocs en hébreu et indonésien.
+- Traduction des réglages de couleurs du bloc d'arrière-plan et de l'image mise en avant.
+- Disparition du bouton « aide » dans l’éditeur de blocs non pris en charge.
+- Notification en cas de mauvaise lisibilité de la combinaison de couleurs texte/arrière-plan choisie.
+- Moins de problèmes lors du changement de couleur d’un texte non sélectionné.
