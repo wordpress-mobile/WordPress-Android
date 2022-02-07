@@ -22,23 +22,28 @@ import javax.inject.Inject
 class PostCardBuilder @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
-    fun build(params: PostCardBuilderParams) = mutableListOf<PostCard>().apply {
-        val posts = params.posts
-        if (posts?.error != null) {
-            add(createPostErrorCard())
-        } else {
-            posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
-                    ?.let { hasPublished ->
-                        if (hasPublished) {
-                            add(createNextPostCard(params.onFooterLinkClick))
-                        } else {
-                            add(createFirstPostCard(params.onFooterLinkClick))
+    fun build(params: PostCardBuilderParams) = if (params.posts?.error != null) {
+        buildPostCardWithError()
+    } else {
+        buildPostCardsWithData(params)
+    }
+
+    private fun buildPostCardWithError() = listOf(createPostErrorCard())
+
+    private fun buildPostCardsWithData(params: PostCardBuilderParams) =
+            mutableListOf<PostCard>().apply {
+                val posts = params.posts
+                posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
+                        ?.let { hasPublished ->
+                            if (hasPublished) {
+                                add(createNextPostCard(params.onFooterLinkClick))
+                            } else {
+                                add(createFirstPostCard(params.onFooterLinkClick))
+                            }
                         }
-                    }
-            posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
-            posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
-        }
-    }.toList()
+                posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
+                posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
+            }.toList()
 
     private fun createPostErrorCard() = PostCard.Error(
             title = UiStringRes(R.string.posts)
