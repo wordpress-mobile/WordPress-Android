@@ -232,11 +232,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val commentEntity =
                 commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
         commentEntity?.run {
-            updateCommentEntityLocalDatabase(this, editedCommentEssentials)
+            updateCommentEntity(this, editedCommentEssentials)
         } ?: showUpdateCommentError()
     }
 
-    private suspend fun updateCommentEntityLocalDatabase(
+    private suspend fun updateCommentEntity(
         comment: CommentEntity,
         editedCommentEssentials: CommentEssentials
     ) {
