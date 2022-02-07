@@ -33,6 +33,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
     enum class DashboardCardType {
         ERROR_CARD,
+        TODAYS_STATS_ERROR,
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
         POST_CARD_WITHOUT_POST_ITEMS,
@@ -108,6 +109,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 sealed class TodaysStatsCard(
                     override val dashboardCardType: DashboardCardType
                 ) : DashboardCard(dashboardCardType) {
+                    data class Error(
+                        override val title: UiString
+                    ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_ERROR), ErrorWithinCard
+
                     data class TodaysStatsCardWithData(
                         val views: UiString,
                         val visitors: UiString,
