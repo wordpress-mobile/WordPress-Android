@@ -1,0 +1,7 @@
+19.1:
+- Buttons im Button-Block richtig ausrichten
+- Blocknamen auf Hebräisch und Indonesisch anzeigen
+- Übersetzte Farbeinstellungen für Beitragsbild und Cover-Block anzeigen
+- Hilfe-Button im nicht unterstützen Block-Editor nicht mehr sichtbar
+- Benachrichtigen lassen, wenn Kombinationen aus Text-/Hintergrundfarbe schwer lesbar sind
+- Probleme beim Wechseln der Farbe von nicht ausgewähltem Text reduziert

@@ -1,0 +1,7 @@
+19.1:
+- Justificar correctamente los botones en el bloque de botones.
+- Ver los nombres de los bloques en hebreo e indonesio.
+- Ver traducidos los ajustes de la imagen destacada y del color del bloque de cubierta.
+- Ya no se ve el botón de ayuda en el editor de bloques no compatible.
+- Recibir un aviso si las combinaciones de color del texto/fondo son difíciles de leer.
+- Reducir los problemas al cambiar el color del texto no seleccionado.

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteStatement;
 
 import androidx.annotation.Nullable;
 
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -137,9 +138,9 @@ public class ReaderCommentTable {
             return new ReaderCommentList();
         }
 
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+        String[] args = {Long.toString(post.blogId), Long.toString(post.postId), CommentStatus.APPROVED.toString()};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(
-                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
+                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? AND status =? ORDER BY timestamp", args);
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {

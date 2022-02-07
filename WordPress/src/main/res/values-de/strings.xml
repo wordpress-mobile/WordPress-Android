@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-01 13:54:07+0000
+Translation-Revision-Date: 2022-02-03 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
     <string name="gutenberg_native_tiled_gallery_settings">Einstellungen für gekachelte Galerien</string>
-    <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigiert zur Layout-Auswahlbildschirm</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigiert zum Layout-Auswahlbildschirm</string>
     <string name="gutenberg_native_gallery_style">Galerie-Stil</string>
     <string name="sharing_facebook_warning_positive_button">Internet öffnen</string>
     <string name="sharing_facebook_warning_message">Du kannst dein Facebook-Konto auf der WordPress.com-Website verbinden. Wenn du fertig bist, kehre zur WordPress-App zurück, um deine Teilen-Einstellungen zu ändern.</string>
