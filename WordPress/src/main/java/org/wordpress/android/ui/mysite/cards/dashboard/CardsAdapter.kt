@@ -29,8 +29,9 @@ class CardsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<*> {
         return when (viewType) {
             DashboardCardType.ERROR_CARD.ordinal -> ErrorCardViewHolder(parent)
-            DashboardCardType.TODAYS_STATS_CARD.ordinal -> TodaysStatsCardViewHolder(parent, uiHelpers)
+            DashboardCardType.TODAYS_STATS_ERROR.ordinal,
             DashboardCardType.POST_CARD_ERROR.ordinal -> ErrorWithinCardViewHolder(parent, uiHelpers)
+            DashboardCardType.TODAYS_STATS_CARD.ordinal -> TodaysStatsCardViewHolder(parent, uiHelpers)
             DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
             DashboardCardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
