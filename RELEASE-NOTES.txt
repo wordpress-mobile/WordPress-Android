@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.3
+-----
+* [*] Comment editor: Notification comments support in the new editor [https://github.com/wordpress-mobile/WordPress-Android/pull/15884]
+
 19.2
 -----
 * [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
