@@ -3,6 +3,8 @@ package org.wordpress.android.ui.mysite.cards.dashboard.posts
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -22,13 +24,17 @@ import javax.inject.Inject
 class PostCardBuilder @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
-    fun build(params: PostCardBuilderParams) = if (params.posts?.error != null) {
-        buildPostCardWithError()
-    } else {
-        buildPostCardsWithData(params)
+    fun build(params: PostCardBuilderParams): List<PostCard> {
+        val error = params.posts?.error
+        return if (error != null) {
+            buildPostCardWithError(error)
+        } else {
+            buildPostCardsWithData(params)
+        }
     }
 
-    private fun buildPostCardWithError() = listOf(createPostErrorCard())
+    private fun buildPostCardWithError(error: PostCardError) =
+            if (shouldShowError(error)) listOf(createPostErrorCard()) else emptyList()
 
     private fun buildPostCardsWithData(params: PostCardBuilderParams) =
             mutableListOf<PostCard>().apply {
@@ -134,6 +140,8 @@ class PostCardBuilder @Inject constructor(
 
     private fun constructPostDate(date: Date) =
             SimpleDateFormat(MONTH_DAY_FORMAT, localeManagerWrapper.getLocale()).format(date)
+
+    private fun shouldShowError(error: PostCardError) = error.type == PostCardErrorType.GENERIC_ERROR
 
     companion object {
         private const val MONTH_DAY_FORMAT = "MMM d"
