@@ -14,6 +14,6 @@ data class CommentEssentials(
     fun isValid(): Boolean = commentId > DEFAULT_COMMENT_ID
 
     companion object {
-        private const val DEFAULT_COMMENT_ID = 0L
+        private const val DEFAULT_COMMENT_ID = -1L
     }
 }
