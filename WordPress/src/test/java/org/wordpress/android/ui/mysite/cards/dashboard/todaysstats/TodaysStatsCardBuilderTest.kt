@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -72,7 +72,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
             TodaysStatsCardBuilderParams(todaysStatsCardModel)
     )
 
-    private val todaysStatsCard = TodaysStatsCard(
+    private val todaysStatsCard = TodaysStatsCardWithData(
             UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
             UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
             UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING)

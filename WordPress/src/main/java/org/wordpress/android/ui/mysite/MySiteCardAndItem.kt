@@ -105,11 +105,15 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     val title: UiString
                 }
 
-                data class TodaysStatsCard(
-                    val views: UiString,
-                    val visitors: UiString,
-                    val likes: UiString
-                ) : DashboardCard(DashboardCardType.TODAYS_STATS_CARD)
+                sealed class TodaysStatsCard(
+                    override val dashboardCardType: DashboardCardType
+                ) : DashboardCard(dashboardCardType) {
+                    data class TodaysStatsCardWithData(
+                        val views: UiString,
+                        val visitors: UiString,
+                        val likes: UiString
+                    ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
+                }
 
                 sealed class PostCard(
                     override val dashboardCardType: DashboardCardType,

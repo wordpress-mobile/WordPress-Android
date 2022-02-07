@@ -11,7 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorWithinCardViewHolder
@@ -45,7 +45,7 @@ class CardsAdapter(
         when (holder) {
             is ErrorCardViewHolder -> holder.bind(items[position] as ErrorCard)
             is ErrorWithinCardViewHolder -> holder.bind(items[position] as ErrorWithinCard)
-            is TodaysStatsCardViewHolder -> holder.bind(items[position] as TodaysStatsCard)
+            is TodaysStatsCardViewHolder -> holder.bind(items[position] as TodaysStatsCardWithData)
             is PostCardViewHolder<*> -> holder.bind(items[position] as PostCard)
         }
     }
@@ -70,7 +70,7 @@ class CardsAdapter(
             return oldItem.dashboardCardType == newItem.dashboardCardType && when {
                 oldItem is ErrorCard && newItem is ErrorCard -> true
                 oldItem is ErrorWithinCard && newItem is ErrorWithinCard -> true
-                oldItem is TodaysStatsCard && newItem is TodaysStatsCard -> true
+                oldItem is TodaysStatsCardWithData && newItem is TodaysStatsCardWithData -> true
                 oldItem is PostCardWithPostItems && newItem is PostCardWithPostItems -> true
                 oldItem is PostCardWithoutPostItems && newItem is PostCardWithoutPostItems -> true
                 else -> throw NotImplementedException("Diff not implemented yet")
