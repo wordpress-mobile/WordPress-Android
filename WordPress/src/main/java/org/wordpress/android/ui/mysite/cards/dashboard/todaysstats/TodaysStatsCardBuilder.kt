@@ -20,7 +20,7 @@ class TodaysStatsCardBuilder @Inject constructor(
         if (error != null) {
             createTodaysStatsCardWithError(error)
         } else {
-            createTodaysStatsCardWithData(it,params.onCardClick)
+            createTodaysStatsCardWithData(it, params.onCardClick)
         }
     }
 
@@ -32,13 +32,14 @@ class TodaysStatsCardBuilder @Inject constructor(
         null
     }
 
-    private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel,onCardClick:()->Unit) = TodaysStatsCardWithData(
-            views = statToUiString(model.views),
-            visitors = statToUiString(model.visitors),
-            likes = statToUiString(model.likes),
-            onCardClick = onCardClick
+    private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel, onCardClick: () -> Unit) =
+            TodaysStatsCardWithData(
+                    views = statToUiString(model.views),
+                    visitors = statToUiString(model.visitors),
+                    likes = statToUiString(model.likes),
+                    onCardClick = onCardClick
 
-    )
+            )
 
     private fun shouldShowError(error: TodaysStatsCardError) = error.type == TodaysStatsCardErrorType.GENERIC_ERROR
 
