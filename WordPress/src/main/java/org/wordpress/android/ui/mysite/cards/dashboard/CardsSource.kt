@@ -30,8 +30,7 @@ class CardsSource @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
     override val refresh = MutableLiveData(false)
-    private val jsonString = mockedDataJsonUtils
-            .getJsonStringFromRawResource(R.raw.mocked_site_dashboard_cards_with_errors)
+    private val jsonString = mockedDataJsonUtils.getJsonStringFromRawResource(R.raw.mocked_site_dashboard_cards)
     private val mockedCardsData = mockedDataJsonUtils.getMockedCardsDatsFromJsonString(jsonString!!)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
