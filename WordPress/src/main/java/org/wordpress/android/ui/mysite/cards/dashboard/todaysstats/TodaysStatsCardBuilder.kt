@@ -20,23 +20,24 @@ class TodaysStatsCardBuilder @Inject constructor(
         if (error != null) {
             createTodaysStatsCardWithError(error)
         } else {
-            createTodaysStatsCardWithData(it)
+            createTodaysStatsCardWithData(it,params.onCardClick)
         }
     }
 
     private fun createTodaysStatsCardWithError(error: TodaysStatsCardError) = if (shouldShowError(error)) {
         TodaysStatsCard.Error(
                 title = UiStringRes(R.string.my_site_todays_stat_card_title),
-                onCardClick = params.onCardClick
         )
     } else {
         null
     }
 
-    private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel) = TodaysStatsCardWithData(
+    private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel,onCardClick:()->Unit) = TodaysStatsCardWithData(
             views = statToUiString(model.views),
             visitors = statToUiString(model.visitors),
-            likes = statToUiString(model.likes)
+            likes = statToUiString(model.likes),
+            onCardClick = onCardClick
+
     )
 
     private fun shouldShowError(error: TodaysStatsCardError) = error.type == TodaysStatsCardErrorType.GENERIC_ERROR
