@@ -7,9 +7,9 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/my_site_todays_stat_card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_extra_large">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
@@ -55,7 +55,6 @@
             style="@style/MySiteTodaysStatsCardStatCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/views_title"
             tools:text="1,987" />
@@ -77,6 +76,15 @@
             app:layout_constraintStart_toEndOf="@+id/visitors_count"
             app:layout_constraintTop_toBottomOf="@+id/likes_title"
             tools:text="1,123" />
+
+        <include
+            android:id="@+id/footer_link"
+            layout="@layout/my_site_card_footer_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/views_count" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
