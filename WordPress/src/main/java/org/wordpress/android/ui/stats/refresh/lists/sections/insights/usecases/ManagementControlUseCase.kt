@@ -49,7 +49,7 @@ class ManagementControlUseCase
 
     private fun onClick() {
         newsCardHandler.dismiss()
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED)
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED, mapOf("source" to "insightsCard"))
         navigateTo(ViewInsightsManagement)
     }
 }
