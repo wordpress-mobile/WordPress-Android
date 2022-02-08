@@ -156,6 +156,21 @@ open class SiteStore
         constructor(
             siteName: String,
             language: String,
+            visibility: SiteVisibility,
+            dryRun: Boolean
+        ) : this(siteName, language, null, visibility, null, null, dryRun)
+
+        constructor(
+            siteName: String,
+            language: String,
+            visibility: SiteVisibility,
+            segmentId: Long?,
+            dryRun: Boolean
+        ) : this(siteName, language, null, visibility, segmentId, null, dryRun)
+
+        constructor(
+            siteName: String,
+            language: String,
             timeZoneId: String,
             visibility: SiteVisibility,
             dryRun: Boolean
