@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderCommentTable
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRangeType.COMMENT
@@ -575,6 +576,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 }
             }
         }
+    }
+
+    fun refreshBlocksForEditedComment(commentModel: CommentModel) {
+        onCommentStatusChangeListener?.onCommentEdited(commentModel)
     }
 
     // Requests Reader content for certain notification types

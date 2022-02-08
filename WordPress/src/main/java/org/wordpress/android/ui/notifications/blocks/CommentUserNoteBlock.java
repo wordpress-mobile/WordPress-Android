@@ -10,9 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
@@ -37,6 +39,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     public interface OnCommentStatusChangeListener {
         void onCommentStatusChanged(CommentStatus newStatus);
+
+        void onCommentEdited(@NonNull final CommentModel commentModel);
     }
 
     public CommentUserNoteBlock(Context context, FormattableContent noteObject,
@@ -250,6 +254,12 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         public void onCommentStatusChanged(CommentStatus newStatus) {
             mCommentStatus = newStatus;
             mStatusChanged = true;
+        }
+
+        @Override public void onCommentEdited(@NonNull final CommentModel commentModel) {
+            // TODO [RenanLukas]
+//            final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
+
         }
     };
 

@@ -29,6 +29,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
+import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -552,6 +553,16 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    @Override
+    public void onEditCommentForNote(@NonNull final Note note, @NonNull final CommentModel commentModel) {
+        // TODO [RenanLukas]
+//        final Fragment fragment = mAdapter.getItem(mViewPager.getCurrentItem());
+        final Fragment fragment = mAdapter.getItem(1);
+        if (fragment instanceof NotificationsDetailListFragment) {
+            ((NotificationsDetailListFragment) fragment).refreshBlocksForEditedComment(commentModel);
+        }
     }
 
     @SuppressWarnings("unused")
