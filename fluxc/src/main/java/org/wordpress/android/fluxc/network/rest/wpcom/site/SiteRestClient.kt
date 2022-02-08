@@ -126,7 +126,7 @@ class SiteRestClient @Inject constructor(
         val site: SiteModel? = null
     ) : Payload<SiteError>()
 
-    suspend fun fetchSites(filters: List<SiteFilter?>): SitesModel {
+    suspend fun fetchSites(filters: List<SiteFilter?>, filterJetpackConnectedPackageSite: Boolean): SitesModel {
         val params = getFetchSitesParams(filters)
         val url = WPCOMREST.me.sites.urlV1_2
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, SitesResponse::class.java)
@@ -134,7 +134,10 @@ class SiteRestClient @Inject constructor(
             is Success -> {
                 val siteArray = mutableListOf<SiteModel>()
                 for (siteResponse in response.data.sites) {
-                    siteArray.add(siteResponseToSiteModel(siteResponse))
+                    val siteModel = siteResponseToSiteModel(siteResponse)
+                    // see https://github.com/wordpress-mobile/WordPress-Android/issues/15540#issuecomment-993752880
+                    if (filterJetpackConnectedPackageSite && siteModel.isJetpackCPConnected) continue
+                    siteArray.add(siteModel)
                 }
                 SitesModel(siteArray)
             }

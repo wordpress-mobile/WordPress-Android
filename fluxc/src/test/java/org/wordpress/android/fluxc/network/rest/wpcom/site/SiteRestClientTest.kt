@@ -122,7 +122,7 @@ class SiteRestClientTest {
 
         initSitesResponse(data = sitesResponse)
 
-        val responseModel = restClient.fetchSites(listOf(WPCOM))
+        val responseModel = restClient.fetchSites(listOf(WPCOM), false)
         assertThat(responseModel.sites).hasSize(1)
         assertThat(responseModel.sites[0].name).isEqualTo(name)
         assertThat(responseModel.sites[0].siteId).isEqualTo(siteId)
@@ -140,6 +140,26 @@ class SiteRestClientTest {
     }
 
     @Test
+    fun `fetched sites can filter JP connected package sites`() = test {
+        val response = SiteWPComRestResponse()
+        response.ID = siteId
+        val name = "Updated name"
+        response.name = name
+        response.URL = "site.com"
+        response.jetpack = false
+        response.jetpack_connection = true
+
+        val sitesResponse = SitesResponse()
+        sitesResponse.sites = listOf(response)
+
+        initSitesResponse(data = sitesResponse)
+
+        val responseModel = restClient.fetchSites(listOf(WPCOM), true)
+
+        assertThat(responseModel.sites).hasSize(0)
+    }
+
+    @Test
     fun `fetchSites returns error when API call fails`() = test {
         val errorMessage = "message"
         initSitesResponse(
@@ -151,7 +171,7 @@ class SiteRestClientTest {
                         )
                 )
         )
-        val errorResponse = restClient.fetchSites(listOf())
+        val errorResponse = restClient.fetchSites(listOf(), false)
 
         assertThat(errorResponse.error).isNotNull()
         assertThat(errorResponse.error.type).isEqualTo(GenericErrorType.NETWORK_ERROR)
