@@ -26,7 +26,8 @@ class TodaysStatsCardBuilder @Inject constructor(
 
     private fun createTodaysStatsCardWithError(error: TodaysStatsCardError) = if (shouldShowError(error)) {
         TodaysStatsCard.Error(
-                title = UiStringRes(R.string.my_site_todays_stat_card_title)
+                title = UiStringRes(R.string.my_site_todays_stat_card_title),
+                onCardClick = params.onCardClick
         )
     } else {
         null

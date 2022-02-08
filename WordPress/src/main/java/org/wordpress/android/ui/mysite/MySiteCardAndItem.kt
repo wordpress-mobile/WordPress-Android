@@ -116,7 +116,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class TodaysStatsCardWithData(
                         val views: UiString,
                         val visitors: UiString,
-                        val likes: UiString
+                        val likes: UiString,
+                        val onCardClick: () -> Unit,
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
                 }
 
