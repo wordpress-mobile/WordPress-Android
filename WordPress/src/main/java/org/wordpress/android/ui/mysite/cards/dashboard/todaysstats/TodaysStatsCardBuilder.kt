@@ -13,7 +13,8 @@ class TodaysStatsCardBuilder @Inject constructor(
         TodaysStatsCard(
                 views = statToUiString(it.views),
                 visitors = statToUiString(it.visitors),
-                likes = statToUiString(it.likes)
+                likes = statToUiString(it.likes),
+                onCardClick = params.onCardClick
         )
     }
 

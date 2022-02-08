@@ -297,7 +297,8 @@ class MySiteViewModel @Inject constructor(
                         onErrorRetryClick = this::onDashboardErrorRetry,
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
                                 todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
-                                        as? TodaysStatsCardModel
+                                        as? TodaysStatsCardModel,
+                                onCardClick = this::onTodaysStatsCardClick
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
@@ -324,6 +325,10 @@ class MySiteViewModel @Inject constructor(
                 )
         )
         return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
+    }
+
+    private fun onTodaysStatsCardClick() {
+        TODO("Not yet implemented")
     }
 
     private fun buildNoSiteState(): NoSites {
