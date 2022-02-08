@@ -9,6 +9,8 @@ import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.util.UriWrapper;
+import org.wordpress.android.util.config.MySiteDashboardStatsCardFeatureConfig;
 
 import javax.inject.Inject;
 
@@ -25,6 +27,7 @@ public class LoginMagicLinkInterceptActivity extends LocaleAwareActivity {
     private Uri mUri;
 
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
+    @Inject protected MySiteDashboardStatsCardFeatureConfig mMySiteDashboardStatsCardFeatureConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,10 @@ public class LoginMagicLinkInterceptActivity extends LocaleAwareActivity {
         Intent intent = new Intent(this, WPMainActivity.class);
         intent.setAction(mAction);
         intent.setData(mUri);
+
+        if (mUri != null) {
+            mMySiteDashboardStatsCardFeatureConfig.initFromUri(new UriWrapper(mUri));
+        }
 
         if (hasMagicLinkLoginIntent()) {
             intent.putExtra(WPMainActivity.ARG_IS_MAGIC_LINK_LOGIN, true);
