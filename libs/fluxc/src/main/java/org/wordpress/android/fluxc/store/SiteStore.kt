@@ -142,7 +142,10 @@ open class SiteStore
         @JvmField var url: String = ""
     ) : Payload<BaseNetworkError>()
 
-    data class FetchSitesPayload(@JvmField val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
+    data class FetchSitesPayload @JvmOverloads constructor(
+        @JvmField val filters: List<SiteFilter> = ArrayList(),
+        @JvmField val filterJetpackConnectedPackageSite: Boolean = false
+    ) : Payload<BaseNetworkError>()
 
     data class NewSitePayload(
         @JvmField val siteName: String,
@@ -1282,7 +1285,7 @@ open class SiteStore
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
-            val result = siteRestClient.fetchSites(payload.filters)
+            val result = siteRestClient.fetchSites(payload.filters, payload.filterJetpackConnectedPackageSite)
             handleFetchedSitesWPComRest(result)
         }
     }
