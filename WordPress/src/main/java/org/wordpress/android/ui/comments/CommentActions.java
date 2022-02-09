@@ -36,7 +36,5 @@ public class CommentActions {
 
     public interface OnNoteCommentActionListener {
         void onModerateCommentForNote(final Note note, final CommentStatus newStatus);
-
-        void onEditCommentForNote(@NonNull final Note note, @NonNull final CommentModel commentModel);
     }
 }

@@ -31,10 +31,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
     private int mIndentedLeftPadding;
-
+    private final Context mContext;
     private boolean mStatusChanged;
 
-    private final FormattableContent mCommentData;
+    private FormattableContent mCommentData;
     private final long mTimestamp;
 
     private CommentUserNoteBlockHolder mNoteBlockHolder;
@@ -52,7 +52,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                                 ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
         super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
                 notificationsUtilsWrapper);
-
+        mContext = context;
         mCommentData = commentTextBlock;
         mTimestamp = timestamp;
 
@@ -79,8 +79,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         setUserName();
         setUserCommentAgo();
         setUserCommentSite();
-        setUserAvatar(view);
-        setUserComment(view);
+        setUserAvatar();
+        setUserComment();
         setCommentStatus(view);
 
         return view;
@@ -113,13 +113,13 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         mNoteBlockHolder.mSiteTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
 
-    private void setUserAvatar(@NonNull final View view) {
+    private void setUserAvatar() {
         String imageUrl = "";
         if (hasImageMediaItem()) {
             imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
             mNoteBlockHolder.mAvatarImageView.setContentDescription(
-                    view.getContext()
-                        .getString(R.string.profile_picture, getNoteText().toString()));
+                    mContext.getString(R.string.profile_picture, getNoteText().toString())
+            );
             if (!TextUtils.isEmpty(getUserUrl())) {
                 mNoteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -144,11 +144,11 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         mImageManager.loadIntoCircle(mNoteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
     }
 
-    private void setUserComment(@NonNull final View view) {
+    private void setUserComment() {
         Spannable spannable = getCommentTextOfNotification(mNoteBlockHolder);
         NoteBlockClickableSpan[] spans = spannable.getSpans(0, spannable.length(), NoteBlockClickableSpan.class);
         for (NoteBlockClickableSpan span : spans) {
-            span.enableColors(view.getContext());
+            span.enableColors(mContext);
         }
 
         mNoteBlockHolder.mCommentTextView.setText(spannable);
@@ -279,9 +279,17 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
 
         @Override public void onCommentEdited(@NonNull final CommentModel commentModel) {
-            // TODO [RenanLukas]
-//            final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
-
+            final String updatedContentText = commentModel.getContent();
+            mCommentData = new FormattableContent(
+                    mCommentData.getActions(),
+                    mCommentData.getMedia(),
+                    mCommentData.getMeta(),
+                    updatedContentText,
+                    mCommentData.getType(),
+                    mCommentData.getNestLevel(),
+                    mCommentData.getRanges()
+            );
+            setUserComment();
         }
     };
 
