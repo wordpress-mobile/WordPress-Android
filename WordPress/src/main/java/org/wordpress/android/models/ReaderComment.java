@@ -35,6 +35,10 @@ public class ReaderComment {
     // not stored in db - denotes the indentation level when displaying this comment
     public transient int level = 0;
 
+    // not stored in db - denotes the missing parent of the comment
+    public transient boolean isOrphan = false;
+    public transient boolean isNestedOrphan = false;
+
     public static ReaderComment fromJson(JSONObject json, long blogId) {
         if (json == null) {
             throw new IllegalArgumentException("null json comment");
