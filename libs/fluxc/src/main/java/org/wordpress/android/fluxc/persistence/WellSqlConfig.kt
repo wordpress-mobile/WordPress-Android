@@ -1836,10 +1836,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD PURCHASABLE INTEGER")
                 }
                 169 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("DROP TABLE IF EXISTS WCOrderSummaryModel")
-                    db.execSQL("DROP TABLE IF EXISTS WCOrderNoteModel")
-                    db.execSQL("DROP TABLE IF EXISTS WCOrderShipmentTrackingModel")
-                    db.execSQL("DROP TABLE IF EXISTS WCOrderSummaryModel")
+                    db.execSQL("DELETE FROM WCOrderSummaryModel")
+                    db.execSQL("DELETE FROM WCOrderNoteModel")
+                    db.execSQL("DELETE FROM WCOrderShipmentTrackingModel")
                 }
             }
         }
