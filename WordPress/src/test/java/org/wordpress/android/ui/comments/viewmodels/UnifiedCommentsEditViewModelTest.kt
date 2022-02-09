@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActi
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentEssentials
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel
@@ -209,6 +210,61 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     fun `onConfirmEditingDiscard triggers CLOSE`() {
         viewModel.onConfirmEditingDiscard()
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(CLOSE)
+    }
+
+    //    private fun mapInputSettings() = InputSettings(
+//            enableEditName = commentIdentifier !is NotificationCommentIdentifier,
+//            enableEditUrl = commentIdentifier !is NotificationCommentIdentifier,
+//            enableEditEmail = commentIdentifier !is NotificationCommentIdentifier,
+//            enableEditComment = true
+//    )
+
+    @Test
+    fun `Should ENABLE edit name for SiteCommentIdentifier`() {
+        viewModel.start(site, SiteCommentIdentifier(0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditName).isTrue
+    }
+
+    @Test
+    fun `Should DISABLE edit name for NotificationCommentIdentifier`() {
+        viewModel.start(site, NotificationCommentIdentifier(0L))
+        assertThat(uiState.first().inputSettings.enableEditName).isFalse
+    }
+
+    @Test
+    fun `Should ENABLE edit URL for SiteCommentIdentifier`() {
+        viewModel.start(site, SiteCommentIdentifier(0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
+    }
+
+    @Test
+    fun `Should DISABLE edit URL for NotificationCommentIdentifier`() {
+        viewModel.start(site, NotificationCommentIdentifier(0L))
+        assertThat(uiState.first().inputSettings.enableEditUrl).isFalse
+    }
+
+    @Test
+    fun `Should ENABLE edit email for SiteCommentIdentifier`() {
+        viewModel.start(site, SiteCommentIdentifier(0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditEmail).isTrue
+    }
+
+    @Test
+    fun `Should DISABLE edit email for NotificationCommentIdentifier`() {
+        viewModel.start(site, NotificationCommentIdentifier(0L))
+        assertThat(uiState.first().inputSettings.enableEditEmail).isFalse
+    }
+
+    @Test
+    fun `Should ENABLE edit comment content for SiteCommentIdentifier`() {
+        viewModel.start(site, SiteCommentIdentifier(0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
+    }
+
+    @Test
+    fun `Should ENABLE edit comment content for NotificationCommentIdentifier`() {
+        viewModel.start(site, NotificationCommentIdentifier(0L))
+        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
     }
 
     private fun setupObservers() {
