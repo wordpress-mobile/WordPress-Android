@@ -432,6 +432,7 @@
     <string name="comment_share_link_via">Share via</string>
     <string name="comment_unable_to_show_error">Unable to show this comment</string>
     <string name="comment_author_badge">Author</string>
+    <string name="comment_removed_placeholder">This comment was removed</string>
     <string name="comment_tracker_label_all" translatable="false">All</string>
     <string name="comment_tracker_label_pending" translatable="false">Pending</string>
     <string name="comment_tracker_label_unreplied" translatable="false">Unreplied</string>

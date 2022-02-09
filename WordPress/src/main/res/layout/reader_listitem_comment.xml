@@ -18,11 +18,22 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/missing_parent_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:padding="16dp"
+        android:text="@string/comment_removed_placeholder"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
+        android:textStyle="italic" />
+
     <View
+        android:layout_alignParentTop="true"
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_medium"
@@ -36,7 +47,7 @@
         android:paddingTop="@dimen/margin_medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider">
+        android:layout_below="@+id/missing_parent_message">
 
         <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
         <View
