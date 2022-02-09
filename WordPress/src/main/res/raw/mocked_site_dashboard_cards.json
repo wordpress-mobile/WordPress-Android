@@ -1,8 +1,36 @@
 {
 	"todays_stats": {
-		"error": "jetpack_disconnected"
+		"views": 100,
+		"visitors": 30,
+		"likes": 50,
+		"comments": 10
 	},
 	"posts": {
-		"error": "unauthorized"
+		"has_published": true,
+		"draft": [
+			{
+				"id": 3172,
+				"title": "Vegetable salad",
+				"content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+				"featured_image": "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?h=150",
+				"date": "2022-01-10 06:42:25"
+			},
+			{
+				"id": 3173,
+				"title": "Baking cheese cooking crust",
+				"content": "In ante metus dictum at tempor commodo ullamcorper a lacus.",
+				"featured_image": "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?h=150",
+				"date": "2022-01-09 19:13:52"
+			}
+		],
+		"scheduled": [
+			{
+				"id": 3174,
+				"title": "Noodles with vegetables",
+				"content": "Egestas dui id ornare arcu. Faucibus scelerisque eleifend donec pretium vulputate sapien.",
+				"featured_image": null,
+				"date": "2022-01-13 10:30:12"
+			}
+		]
 	}
 }
