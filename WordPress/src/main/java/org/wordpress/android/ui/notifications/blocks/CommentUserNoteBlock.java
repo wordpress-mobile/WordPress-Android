@@ -37,6 +37,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private final FormattableContent mCommentData;
     private final long mTimestamp;
 
+    private CommentUserNoteBlockHolder mNoteBlockHolder;
+
     public interface OnCommentStatusChangeListener {
         void onCommentStatusChanged(CommentStatus newStatus);
 
@@ -72,64 +74,87 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     @SuppressLint("ClickableViewAccessibility") // fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
-        final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
+        mNoteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
 
-        noteBlockHolder.mNameTextView
-                .setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
-        noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
-                noteBlockHolder.mAgoTextView.getContext()));
+        setUserName();
+        setUserCommentAgo();
+        setUserCommentSite();
+        setUserAvatar(view);
+        setUserComment(view);
+        setCommentStatus(view);
+
+        return view;
+    }
+
+    private void setUserName() {
+        mNoteBlockHolder.mNameTextView.setText(
+                Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>")
+        );
+    }
+
+    private void setUserCommentAgo() {
+        mNoteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
+                mNoteBlockHolder.mAgoTextView.getContext()));
+    }
+
+    private void setUserCommentSite() {
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
-            noteBlockHolder.mBulletTextView.setVisibility(View.VISIBLE);
-            noteBlockHolder.mSiteTextView.setVisibility(View.VISIBLE);
+            mNoteBlockHolder.mBulletTextView.setVisibility(View.VISIBLE);
+            mNoteBlockHolder.mSiteTextView.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(getMetaHomeTitle())) {
-                noteBlockHolder.mSiteTextView.setText(getMetaHomeTitle());
+                mNoteBlockHolder.mSiteTextView.setText(getMetaHomeTitle());
             } else {
-                noteBlockHolder.mSiteTextView.setText(getMetaSiteUrl().replace("http://", "").replace("https://", ""));
+                mNoteBlockHolder.mSiteTextView.setText(getMetaSiteUrl().replace("http://", "").replace("https://", ""));
             }
         } else {
-            noteBlockHolder.mBulletTextView.setVisibility(View.GONE);
-            noteBlockHolder.mSiteTextView.setVisibility(View.GONE);
+            mNoteBlockHolder.mBulletTextView.setVisibility(View.GONE);
+            mNoteBlockHolder.mSiteTextView.setVisibility(View.GONE);
         }
+        mNoteBlockHolder.mSiteTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+    }
 
-        noteBlockHolder.mSiteTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-
+    private void setUserAvatar(@NonNull final View view) {
         String imageUrl = "";
         if (hasImageMediaItem()) {
             imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
-            noteBlockHolder.mAvatarImageView.setContentDescription(
+            mNoteBlockHolder.mAvatarImageView.setContentDescription(
                     view.getContext()
                         .getString(R.string.profile_picture, getNoteText().toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
-                noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
+                mNoteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showBlogPreview();
                     }
                 });
                 //noinspection AndroidLintClickableViewAccessibility
-                noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+                mNoteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {
-                noteBlockHolder.mAvatarImageView.setOnClickListener(null);
+                mNoteBlockHolder.mAvatarImageView.setOnClickListener(null);
                 //noinspection AndroidLintClickableViewAccessibility
-                noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
-                noteBlockHolder.mAvatarImageView.setContentDescription(null);
+                mNoteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+                mNoteBlockHolder.mAvatarImageView.setContentDescription(null);
             }
         } else {
-            noteBlockHolder.mAvatarImageView.setOnClickListener(null);
+            mNoteBlockHolder.mAvatarImageView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
-            noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
-            noteBlockHolder.mAvatarImageView.setContentDescription(null);
+            mNoteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+            mNoteBlockHolder.mAvatarImageView.setContentDescription(null);
         }
-        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
+        mImageManager.loadIntoCircle(mNoteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
+    }
 
-        Spannable spannable = getCommentTextOfNotification(noteBlockHolder);
+    private void setUserComment(@NonNull final View view) {
+        Spannable spannable = getCommentTextOfNotification(mNoteBlockHolder);
         NoteBlockClickableSpan[] spans = spannable.getSpans(0, spannable.length(), NoteBlockClickableSpan.class);
         for (NoteBlockClickableSpan span : spans) {
             span.enableColors(view.getContext());
         }
 
-        noteBlockHolder.mCommentTextView.setText(spannable);
+        mNoteBlockHolder.mCommentTextView.setText(spannable);
+    }
 
+    private void setCommentStatus(@NonNull final View view) {
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
         // 2. Unapproved comments have different background and text color
@@ -145,27 +170,24 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 view.setBackgroundResource(R.drawable.bg_rectangle_warning_surface);
             }
 
-            noteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);
+            mNoteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);
         } else {
             if (hasCommentNestingLevel()) {
                 paddingStart = mIndentedLeftPadding;
                 view.setBackgroundResource(R.drawable.comment_reply_background);
-                noteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);
+                mNoteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);
             } else {
                 view.setBackgroundColor(mNormalBackgroundColor);
-                noteBlockHolder.mDividerView.setVisibility(View.VISIBLE);
+                mNoteBlockHolder.mDividerView.setVisibility(View.VISIBLE);
             }
         }
         ViewCompat.setPaddingRelative(view, paddingStart, paddingTop, paddingEnd, paddingBottom);
-
         // If status was changed, fade in the view
         if (mStatusChanged) {
             mStatusChanged = false;
             view.setAlpha(0.4f);
             view.animate().alpha(1.0f).start();
         }
-
-        return view;
     }
 
     private Spannable getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
