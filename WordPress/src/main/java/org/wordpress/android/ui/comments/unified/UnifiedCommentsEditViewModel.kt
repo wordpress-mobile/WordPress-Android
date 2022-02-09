@@ -312,7 +312,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             enableEditName = commentIdentifier !is NotificationCommentIdentifier,
             enableEditUrl = commentIdentifier !is NotificationCommentIdentifier,
             enableEditEmail = commentIdentifier !is NotificationCommentIdentifier,
-            enableEditComment = commentIdentifier !is NotificationCommentIdentifier
+            enableEditComment = true
     )
 
     private fun EditErrorStrings.hasError(): Boolean {
