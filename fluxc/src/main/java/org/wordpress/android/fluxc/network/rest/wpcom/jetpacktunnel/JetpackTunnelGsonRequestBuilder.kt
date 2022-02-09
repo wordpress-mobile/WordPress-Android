@@ -162,9 +162,10 @@ class JetpackTunnelGsonRequestBuilder @Inject constructor() {
         restClient: BaseWPComRestClient,
         site: SiteModel,
         url: String,
-        clazz: Class<T>
+        clazz: Class<T>,
+        params: Map<String, String> = emptyMap()
     ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
-        val request = JetpackTunnelGsonRequest.buildDeleteRequest<T>(url, site.siteId, mapOf(), clazz, {
+        val request = JetpackTunnelGsonRequest.buildDeleteRequest<T>(url, site.siteId, params, clazz, {
             cont.resume(JetpackSuccess(it))
         }, {
             cont.resume(JetpackError(it))
