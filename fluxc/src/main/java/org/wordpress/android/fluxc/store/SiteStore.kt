@@ -399,7 +399,7 @@ open class SiteStore
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
         @JvmField val message: String? = null,
-        @JvmField val selfHostedErrorType: SelfHostedErrorType = NOT_SET,
+        @JvmField val selfHostedErrorType: SelfHostedErrorType = NOT_SET
     ) : OnChangedError
 
     data class SiteEditorsError internal constructor(
