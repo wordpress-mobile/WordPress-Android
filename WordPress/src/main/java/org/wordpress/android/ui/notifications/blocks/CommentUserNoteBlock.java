@@ -42,7 +42,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     public interface OnCommentStatusChangeListener {
         void onCommentStatusChanged(CommentStatus newStatus);
 
-        void onCommentEdited(@NonNull final CommentModel commentModel);
+        void onCommentEdited(@NonNull CommentModel commentModel);
     }
 
     public CommentUserNoteBlock(Context context, FormattableContent noteObject,
@@ -278,7 +278,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             mStatusChanged = true;
         }
 
-        @Override public void onCommentEdited(@NonNull final CommentModel commentModel) {
+        @Override public void onCommentEdited(@NonNull CommentModel commentModel) {
             final String updatedContentText = commentModel.getContent();
             mCommentData = new FormattableContent(
                     mCommentData.getActions(),
