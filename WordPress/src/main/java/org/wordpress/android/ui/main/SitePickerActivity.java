@@ -241,7 +241,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
-            mMenuAdd.setVisible(!BuildConfig.IS_JETPACK_APP);
+            mMenuAdd.setVisible(true);
         }
 
         // no point showing search if there aren't multiple blogs
