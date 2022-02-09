@@ -139,6 +139,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final ImageView mReplyButtonIcon;
         private final TextView mReplyButtonLabel;
         private final ReaderIconCountView mCountLikes;
+        private final View mMissingParentMessage;
 
         CommentHolder(View view) {
             super(view);
@@ -167,6 +168,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mCountLikes = view.findViewById(R.id.count_likes);
 
             mThreadedCommentsUtils.setLinksClickable(mTxtText, mIsPrivatePost);
+
+            mMissingParentMessage = view.findViewById(R.id.missing_parent_message);
         }
     }
 
@@ -377,19 +380,27 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                             .onCommentMenuItemTapped(comment, ReaderCommentMenuActionType.SHARE));
         }
 
-        // show indentation spacer for comments with parents and indent it based on comment level
+        // show indentation spacer for comments with parents and orphaned comments
         int indentWidth;
-        if (comment.parentId != 0 && comment.level > 0) {
+        if (comment.level > 0 ) {
             indentWidth = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
             RelativeLayout.LayoutParams params =
                     (RelativeLayout.LayoutParams) commentHolder.mSpacerIndent.getLayoutParams();
             params.width = indentWidth;
             commentHolder.mSpacerIndent.setVisibility(View.VISIBLE);
-            commentHolder.mTopCommentDivider.setVisibility(View.GONE);
+
+            if (comment.isOrphan && !comment.isNestedOrphan) {
+                commentHolder.mTopCommentDivider.setVisibility(View.VISIBLE);
+                commentHolder.mMissingParentMessage.setVisibility(View.VISIBLE);
+            } else {
+                commentHolder.mMissingParentMessage.setVisibility(View.GONE);
+                commentHolder.mTopCommentDivider.setVisibility(View.GONE);
+            }
         } else {
             indentWidth = 0;
             commentHolder.mSpacerIndent.setVisibility(View.GONE);
             commentHolder.mTopCommentDivider.setVisibility(View.VISIBLE);
+            commentHolder.mMissingParentMessage.setVisibility(View.GONE);
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
