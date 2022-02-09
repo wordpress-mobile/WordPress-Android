@@ -2,7 +2,7 @@
 
 19.3
 -----
-
+- [**] Login: improved error messages for login with self-hosted sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/15919]
 
 19.2
 -----
