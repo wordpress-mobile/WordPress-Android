@@ -99,6 +99,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType.I
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.NOT_AVAILABLE
+import org.wordpress.android.fluxc.store.SiteStore.SelfHostedErrorType.NOT_SET
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.DUPLICATE_SITE
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNAUTHORIZED
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.UNKNOWN_SITE
@@ -397,7 +398,8 @@ open class SiteStore
 
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
-        @JvmField val message: String? = null
+        @JvmField val message: String? = null,
+        @JvmField val selfHostedErrorType: SelfHostedErrorType = NOT_SET,
     ) : OnChangedError
 
     data class SiteEditorsError internal constructor(
@@ -800,6 +802,12 @@ open class SiteStore
 
     enum class JetpackCapabilitiesErrorType {
         GENERIC_ERROR
+    }
+
+    enum class SelfHostedErrorType {
+        NOT_SET,
+        XML_RPC_SERVICES_DISABLED,
+        UNABLE_TO_READ_SITE
     }
 
     enum class DeleteSiteErrorType {
