@@ -753,16 +753,25 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    public static void addSite(Activity activity, boolean isSignedInWpCom) {
-        // if user is signed into wp.com use the dialog to enable choosing whether to
-        // create a new wp.com blog or add a self-hosted one
-        if (isSignedInWpCom) {
-            DialogFragment dialog = new AddSiteDialog();
-            dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
+    public static void addSite(Activity activity, boolean hasAccessToken) {
+        if (hasAccessToken) {
+            if (BuildConfig.IS_JETPACK_APP) {
+                // user is signed into jetpack app, so restrict showing option to add self-hosted site
+                ActivityLauncher.newBlogForResult(activity);
+            } else {
+                // user is signed into wordpress app, so use the dialog to enable choosing whether to
+                // create a new wp.com blog or add a self-hosted one
+                showAddSiteDialog(activity);
+            }
         } else {
-            // user isn't signed into wp.com, so simply enable adding self-hosted
+            // user doesn't have an access token, so simply enable adding self-hosted
             ActivityLauncher.addSelfHostedSiteForResult(activity);
         }
+    }
+
+    private static void showAddSiteDialog(Activity activity) {
+        DialogFragment dialog = new AddSiteDialog();
+        dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
     }
 
     /*
