@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
@@ -75,7 +76,15 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val progressText: UiString? = null,
         val originalComment: CommentEssentials,
         val editedComment: CommentEssentials,
-        val editErrorStrings: EditErrorStrings
+        val editErrorStrings: EditErrorStrings,
+        val inputSettings: InputSettings
+    )
+
+    data class InputSettings(
+        val enableEditName: Boolean,
+        val enableEditUrl: Boolean,
+        val enableEditEmail: Boolean,
+        val enableEditComment: Boolean
     )
 
     enum class ProgressState(val show: Boolean, val progressText: UiString?) {
@@ -144,7 +153,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 progressText = LOADING.progressText,
                 originalComment = CommentEssentials(),
                 editedComment = CommentEssentials(),
-                editErrorStrings = EditErrorStrings()
+                editErrorStrings = EditErrorStrings(),
+                inputSettings = mapInputSettings()
         )
 
         withContext(mainDispatcher) {
@@ -200,7 +210,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                                 progressText = LOADING.progressText,
                                 originalComment = commentEssentials,
                                 editedComment = commentEssentials,
-                                editErrorStrings = EditErrorStrings()
+                                editErrorStrings = EditErrorStrings(),
+                                inputSettings = mapInputSettings()
                         )
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
@@ -296,6 +307,13 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             )
         }
     }
+
+    private fun mapInputSettings() = InputSettings(
+            enableEditName = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditUrl = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditEmail = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditComment = commentIdentifier !is NotificationCommentIdentifier
+    )
 
     private fun EditErrorStrings.hasError(): Boolean {
         return listOf(
