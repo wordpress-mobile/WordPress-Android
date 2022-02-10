@@ -757,8 +757,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     public static void addSite(Activity activity, boolean hasAccessToken) {
         if (hasAccessToken) {
-            if (BuildConfig.IS_JETPACK_APP) {
-                // user is signed into jetpack app, so restrict showing option to add self-hosted site
+            if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
                 ActivityLauncher.newBlogForResult(activity);
             } else {
                 // user is signed into wordpress app, so use the dialog to enable choosing whether to
