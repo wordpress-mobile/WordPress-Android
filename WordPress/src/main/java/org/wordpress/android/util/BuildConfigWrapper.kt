@@ -25,4 +25,6 @@ class BuildConfigWrapper @Inject constructor() {
     val isSignupEnabled = BuildConfig.ENABLE_SIGNUP
 
     val isCreateFabEnabled = BuildConfig.ENABLE_CREATE_FAB
+
+    val isQuickActionEnabled = BuildConfig.ENABLE_QUICK_ACTION
 }
