@@ -120,6 +120,7 @@ android {
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
         buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
+        buildConfigField "boolean", "ENABLE_SIGNUP", "true"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -157,6 +158,7 @@ android {
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
             buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
             buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "false"
+            buildConfigField "boolean", "ENABLE_SIGNUP", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
 
