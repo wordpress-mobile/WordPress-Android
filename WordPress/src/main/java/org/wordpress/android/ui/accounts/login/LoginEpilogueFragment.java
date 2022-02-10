@@ -117,7 +117,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return !mBuildConfigWrapper.isJetpackApp()
+        return mBuildConfigWrapper.isSiteCreationEnabled()
                && !mShowAndReturn;
     }
 

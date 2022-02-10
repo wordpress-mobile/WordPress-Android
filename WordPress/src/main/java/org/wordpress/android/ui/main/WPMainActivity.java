@@ -378,7 +378,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     this,
                     getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                     getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                    mBuildConfigWrapper.isJetpackApp()
+                    mBuildConfigWrapper.isSiteCreationEnabled()
             );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
@@ -1272,7 +1272,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 this,
                                 true,
                                 getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                                mBuildConfigWrapper.isJetpackApp()
+                                mBuildConfigWrapper.isSiteCreationEnabled()
                         );
                     }
                 }
