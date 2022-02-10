@@ -1,0 +1,4 @@
+- Text block size changes with font size/line height.
+- New stat cards in Stats screen’s Settings menu.
+- Prompt when changing Image/Featured Image media.
+- Share media to app using Share action.
