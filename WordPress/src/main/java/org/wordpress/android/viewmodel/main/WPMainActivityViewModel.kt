@@ -204,7 +204,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onPageChanged(isOnMySitePageWithValidSite: Boolean, site: SiteModel?) {
-        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
+        val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
         setMainFabUiState(showFab, site)
     }
 
@@ -224,7 +224,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
-        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
+        val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
         setMainFabUiState(showFab, site)
 
         checkAndShowFeatureAnnouncementForWordPressApp()

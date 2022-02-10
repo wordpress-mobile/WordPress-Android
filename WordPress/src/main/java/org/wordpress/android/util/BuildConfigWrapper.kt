@@ -23,4 +23,6 @@ class BuildConfigWrapper @Inject constructor() {
     val isSiteCreationEnabled = BuildConfig.ENABLE_SITE_CREATION
 
     val isSignupEnabled = BuildConfig.ENABLE_SIGNUP
+
+    val isCreateFabEnabled = BuildConfig.ENABLE_CREATE_FAB
 }

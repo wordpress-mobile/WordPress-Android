@@ -111,7 +111,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     /* FAB VISIBILITY */
 
     @Test
-    fun `given wordpress app, when page changed to my site, then fab is visible`() {
+    fun `given fab enabled, when page changed to my site, then fab is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -120,7 +120,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when page changed away from my site, then fab is hidden`() {
+    fun `given fab enabled, when page changed away from my site, then fab is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -129,7 +129,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when my site page is resumed, then fab is visible`() {
+    fun `given fab enabled, when my site page is resumed, then fab is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -138,7 +138,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when non my site page is resumed, then fab is hidden`() {
+    fun `given fab enabled, when non my site page is resumed, then fab is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -147,8 +147,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed to my site, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed to my site, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -156,8 +156,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed away from my site, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed away from my site, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -165,8 +165,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when my site page is resumed, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when my site page is resumed, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -174,8 +174,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when non my site page is resumed, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when non my site page is resumed, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -185,7 +185,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     /* FAB TOOLTIP VISIBILITY */
 
     @Test
-    fun `given wordpress app, when page changed to my site, then fab tooltip is visible`() {
+    fun `given fab enabled, when page changed to my site, then fab tooltip is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -194,7 +194,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when page changed away from my site, then fab tooltip is hidden`() {
+    fun `given fab enabled, when page changed away from my site, then fab tooltip is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -203,7 +203,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when my site page is resumed, then fab tooltip is visible`() {
+    fun `given fab enabled, when my site page is resumed, then fab tooltip is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -212,7 +212,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when non my site page is resumed, then fab tooltip is hidden`() {
+    fun `given fab enabled, when non my site page is resumed, then fab tooltip is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -221,8 +221,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed to my site, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed to my site, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -230,8 +230,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed away from my site, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed away from my site, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -239,8 +239,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when my site page is resumed, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -248,8 +248,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when non my site page is resumed, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when non my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -655,8 +655,12 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
     }
 
-    private fun startViewModelWithDefaultParameters(isJetpackApp: Boolean = false) {
+    private fun startViewModelWithDefaultParameters(
+        isJetpackApp: Boolean = false,
+        isCreateFabEnabled: Boolean = true
+    ) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
+        whenever(buildConfigWrapper.isCreateFabEnabled).thenReturn(isCreateFabEnabled)
         viewModel.start(site = initSite(hasFullAccessToContent = true, supportsStories = true))
     }
 
