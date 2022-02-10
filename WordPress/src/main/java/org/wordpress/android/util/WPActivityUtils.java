@@ -141,7 +141,7 @@ public class WPActivityUtils {
 
         Intent intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
         PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL);
 
         return !emailApps.isEmpty();
     }
