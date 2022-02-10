@@ -330,16 +330,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun onTodaysStatsCardFooterLinkClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        // todo@ajeshrpai add analytics here
-        quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
-        _onNavigation.value = Event(getStatsNavigationActionForSiteForTodaysStats(selectedSite))
+        // Todo: @ajeshrpai add analytics here
+        _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
     }
 
     private fun onTodaysStatsCardClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        // todo@ajeshrpai add analytics here
-        quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
-        _onNavigation.value = Event(getStatsNavigationActionForSiteForTodaysStats(selectedSite))
+        // Todo@ajeshrpai add analytics here
+        _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
     }
 
     private fun buildNoSiteState(): NoSites {
@@ -713,17 +711,6 @@ class MySiteViewModel @Inject constructor(
 
         // If it's a WordPress.com or Jetpack site, show the Stats screen.
         site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> SiteNavigationAction.OpenStats(site)
-
-        // If it's a self-hosted site, ask to connect to Jetpack.
-        else -> SiteNavigationAction.ConnectJetpackForStats(site)
-    }
-
-    private fun getStatsNavigationActionForSiteForTodaysStats(site: SiteModel) = when {
-        // If the user is not logged in and the site is already connected to Jetpack, ask to login.
-        !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
-
-        // If it's a WordPress.com or Jetpack site, show the Stats screen.
-        site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> SiteNavigationAction.OpenTodaysStats(site)
 
         // If it's a self-hosted site, ask to connect to Jetpack.
         else -> SiteNavigationAction.ConnectJetpackForStats(site)
