@@ -19,4 +19,6 @@ class BuildConfigWrapper @Inject constructor() {
     fun isDebugSettingsEnabled(): Boolean = BuildConfig.ENABLE_DEBUG_SETTINGS
 
     val isJetpackApp = BuildConfig.IS_JETPACK_APP
+
+    val isSiteCreationEnabled = BuildConfig.ENABLE_SITE_CREATION
 }

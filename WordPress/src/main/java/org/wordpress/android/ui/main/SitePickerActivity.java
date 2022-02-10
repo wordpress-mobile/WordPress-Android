@@ -50,6 +50,7 @@ import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -116,6 +117,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
     @Inject StatsStore mStatsStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -241,7 +243,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
-            mMenuAdd.setVisible(true);
+            mMenuAdd.setVisible(mBuildConfigWrapper.isSiteCreationEnabled());
         }
 
         // no point showing search if there aren't multiple blogs

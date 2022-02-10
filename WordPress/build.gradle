@@ -117,6 +117,9 @@ android {
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
 
+        // Override these constants in jetpack product flavor to enable/ disable features
+        buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
+
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
 
@@ -151,6 +154,7 @@ android {
 
             applicationId "com.jetpack.android"
             buildConfigField "boolean", "IS_JETPACK_APP", "true"
+            buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
 
