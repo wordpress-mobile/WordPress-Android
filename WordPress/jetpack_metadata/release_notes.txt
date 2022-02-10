@@ -1,4 +1,4 @@
-- See text blocks in the block editor adjust with changing font size and line height.
+- Font size and line height support for block themes.
 - Add new stat cards in the Settings menu on the Stats screen.
 - When changing the media in an Image block that’s also a post’s Featured Image, get a prompt to replace the Featured Image.
 - Share text, images, and video in the app using your device’s Share action.

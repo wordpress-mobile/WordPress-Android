@@ -1,4 +1,4 @@
-- Text blocks adjust with changing font size and line height.
+- Font size and line height support for block themes.
 - Admins and Editors can moderate Reader post comments.
 - Add new stat cards in the Settings menu on the Stats screen.
 - Changing media in an Image block that’s also a Featured Image prompts a Featured Image update.
