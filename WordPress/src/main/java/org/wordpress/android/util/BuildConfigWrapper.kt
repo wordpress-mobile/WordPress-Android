@@ -27,4 +27,6 @@ class BuildConfigWrapper @Inject constructor() {
     val isCreateFabEnabled = BuildConfig.ENABLE_CREATE_FAB
 
     val isQuickActionEnabled = BuildConfig.ENABLE_QUICK_ACTION
+
+    val isFollowedSitesSettingsEnabled = BuildConfig.ENABLE_FOLLOWED_SITES_SETTINGS
 }
