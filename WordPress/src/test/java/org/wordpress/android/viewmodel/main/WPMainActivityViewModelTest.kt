@@ -584,22 +584,22 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when app is launched, then feature announcement is shown`() = test {
+    fun `given whats new feature enabled, when app is launched, then feature announcement is shown`() = test {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
                 featureAnnouncement
         )
 
-        startViewModelWithDefaultParameters(false)
+        startViewModelWithDefaultParameters(true)
         resumeViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
     }
 
     @Test
-    fun `given jetpack app, when app is launched, then feature announcement is not shown`() = test {
-        startViewModelWithDefaultParameters(true)
+    fun `given whats new feature disabled, when app is launched, then feature announcement is not shown`() = test {
+        startViewModelWithDefaultParameters(isWhatsNewFeatureEnabled = false)
         resumeViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
@@ -656,10 +656,10 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     private fun startViewModelWithDefaultParameters(
-        isJetpackApp: Boolean = false,
+        isWhatsNewFeatureEnabled: Boolean = true,
         isCreateFabEnabled: Boolean = true
     ) {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
+        whenever(buildConfigWrapper.isWhatsNewFeatureEnabled).thenReturn(isWhatsNewFeatureEnabled)
         whenever(buildConfigWrapper.isCreateFabEnabled).thenReturn(isCreateFabEnabled)
         viewModel.start(site = initSite(hasFullAccessToContent = true, supportsStories = true))
     }
