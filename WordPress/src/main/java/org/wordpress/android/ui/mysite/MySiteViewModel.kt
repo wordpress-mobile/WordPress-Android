@@ -299,7 +299,7 @@ class MySiteViewModel @Inject constructor(
                                 todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
                                         as? TodaysStatsCardModel,
                                 onTodaysStatsCardClick = this::onTodaysStatsCardClick,
-                                onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick,
+                                onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
