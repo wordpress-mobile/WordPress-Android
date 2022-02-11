@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-26 04:28:33+0000
+Translation-Revision-Date: 2022-02-10 04:15:19+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
+    <string name="comment_moderation_error">Không thể kiểm duyệt bình luận</string>
+    <string name="reader_comment_menu_trash">Chuyển vào thùng rác</string>
+    <string name="reader_comment_menu_spam">Đánh dấu là spam</string>
+    <string name="reader_comment_menu_unapprove">Không duyệt</string>
     <string name="gutenberg_native_tiled_gallery_settings">Cài đặt bộ sưu tập dạng ô</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Chuyển đến chọn màn hình bố cục</string>
     <string name="gutenberg_native_gallery_style">Dạng bộ sưu tập</string>
@@ -59,7 +63,6 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Nhấn hai lần để chọn cỡ chữ mặc định</string>
     <string name="gutenberg_native_contact_support">Hỗ trợ</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Chưa có nội dung</string>
     <string name="reader_comments_follow_conversation">Theo dõi thảo luận</string>
     <string name="reader_comments_be_first_to_comment">Trở thành người phản hồi đầu tiên</string>
     <string name="reader_comments_view_all">Xem tất cả bình luận</string>
@@ -318,7 +321,7 @@ Language: vi_VN
     <string name="gutenberg_native_transform_block">Chuyển khối…</string>
     <string name="gutenberg_native_failed_to_insert_media">Không thể chèn media.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Không thể chèn tập tin âm thanh.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Mô tả về hình ảnh. Để trống nếu hình chỉ dùng như trang trí.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Mô tả về hình ảnh. Để trống nếu chỉ dùng hình để trang trí.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s đã chuyển thành %2$s</string>
     <string name="like_faces_error_loading_message">Lỗi khi tải dữ liệu. %s.</string>
     <string name="like_title_plural">%d người thích bài này</string>
@@ -720,7 +723,7 @@ Language: vi_VN
     <string name="media_loading_failed">Tải media thất bại</string>
     <string name="reader_discover_recommended_blogs_header">Trang đề xuất</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Chúng tôi đang cố gắng thêm nhiều khối trong các bản cập nhật.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' chưa hoàn toàn hỗ trợ</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' chưa được hỗ trợ</string>
     <string name="gutenberg_native_help_button">Nút trợ giúp</string>
     <string name="gutenberg_native_edit_using_web_editor">Sửa bằng trình chỉnh sửa web</string>
     <string name="gutenberg_native_choose_images">Chọn ảnh</string>
@@ -2959,6 +2962,7 @@ Language: vi_VN
     <string name="reader_likes_multi">%,d người thích</string>
     <string name="cant_share_no_visible_blog">Bạn không thể chia sẻ cho WordPress mà không có một blog</string>
     <string name="comment_spammed">Bình luận bị đánh dấu spam</string>
+    <string name="comment_unapproved">Bình luận không được duyệt</string>
     <string name="reader_toast_err_get_post">Không thể tải bài viết này</string>
     <string name="reader_likes_you_and_one">Bạn và 1 người khác thích bài viết này</string>
     <string name="pick_video">Chọn video</string>

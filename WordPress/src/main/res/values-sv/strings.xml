@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-24 18:34:37+0000
+Translation-Revision-Date: 2022-02-07 19:03:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="comment_moderation_error">Det gick inte att granska kommentarer</string>
+    <string name="reader_comment_menu_trash">Lägg i papperskorgen</string>
+    <string name="reader_comment_menu_spam">Markera som skräppost</string>
+    <string name="reader_comment_menu_unapprove">Godkänn ej</string>
     <string name="gutenberg_native_tiled_gallery_settings">Mosaikinställningar för galleri</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Går till skärmen för val av layout</string>
     <string name="gutenberg_native_gallery_style">Galleristil</string>
@@ -59,7 +63,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Dubbeltryck för att välja standardtextstorlek</string>
     <string name="gutenberg_native_contact_support">Kontakta supporten</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Inget innehåll</string>
     <string name="reader_comments_follow_conversation">Följ konversation</string>
     <string name="reader_comments_be_first_to_comment">Bli först att kommentera</string>
     <string name="reader_comments_view_all">Visa alla kommentarer</string>
@@ -2959,6 +2962,7 @@ Language: sv_SE
     <string name="reader_likes_multi">%,d gillar detta</string>
     <string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
     <string name="comment_spammed">Kommentar markerad som skräppost</string>
+    <string name="comment_unapproved">Kommentar förkastad</string>
     <string name="reader_toast_err_get_post">Kunde inte hämta detta inlägg</string>
     <string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
     <string name="pick_video">Välj video</string>

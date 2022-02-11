@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-25 09:45:40+0000
+Translation-Revision-Date: 2022-02-08 09:29:50+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="comment_moderation_error">Komentáře se nepodařilo moderovat</string>
+    <string name="reader_comment_menu_trash">Přesunout do koše</string>
+    <string name="reader_comment_menu_spam">Označit jako spam</string>
+    <string name="reader_comment_menu_unapprove">Neschválit</string>
     <string name="gutenberg_native_tiled_gallery_settings">Nastavení dlaždicové galerie</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Přejde na obrazovku výběru rozvržení</string>
     <string name="gutenberg_native_gallery_style">Styl galerie</string>
@@ -59,7 +63,6 @@ Language: cs_CZ
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Dvojitým klepnutím vyberte výchozí velikost písma</string>
     <string name="gutenberg_native_contact_support">Kontaktovat podporu</string>
-    <string name="my_site_no_content_post">Žádný obsah</string>
     <string name="reader_comments_follow_conversation">Sledovat konverzaci</string>
     <string name="reader_comments_be_first_to_comment">Buďte první! Přidejte komentář</string>
     <string name="reader_comments_view_all">Zobrazit všechny komentáře</string>
@@ -2959,6 +2962,7 @@ Language: cs_CZ
     <string name="reader_likes_you_and_multi">To se líbí vám a dalším %,d</string>
     <string name="reader_likes_multi">To se mi líbí (%,d)</string>
     <string name="cant_share_no_visible_blog">Nemůžete sdílet s WordPressem bez viditelného webu</string>
+    <string name="comment_unapproved">Komentář nebyl schválen</string>
     <string name="pick_photo">Vyberte fotku</string>
     <string name="pick_video">Vyberte video</string>
     <string name="reader_toast_err_get_post">Tento příspěvek se nedá načíst</string>
