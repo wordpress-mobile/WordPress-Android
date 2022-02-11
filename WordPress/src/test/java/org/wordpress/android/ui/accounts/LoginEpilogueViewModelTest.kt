@@ -79,7 +79,40 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         ).isEmpty()
     }
 
-    /* WordPress app - Eplilogue Screen Close */
+    /* WordPress app - No Sites - Epilogue Screen OnResume Next Time */
+    @Test
+    fun `given wp app with no sites + login update not requested, when screen shown again, then screen is closed`() {
+        init(isJetpackApp = false, hasSite = false, postSignupInterstitialShownEarlier = true)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onLoginEpilogueResume(doLoginUpdate = false)
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
+    }
+
+    @Test
+    fun `given wp app with no sites + login update requested, when screen shown again, then screen is not closed`() {
+        init(isJetpackApp = false, hasSite = false, postSignupInterstitialShownEarlier = true)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onLoginEpilogueResume(doLoginUpdate = true)
+
+        assertThat(
+                navigationEvents.filterIsInstance(LoginNavigationEvents.CloseWithResultOk::class.java)
+        ).isEmpty()
+    }
+
+    @Test
+    fun `given wp app with no site + login update requested, when login finishes, then screen is closed`() {
+        init(isJetpackApp = false, hasSite = false, postSignupInterstitialShownEarlier = true)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onLoginFinished(doLoginUpdate = true)
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
+    }
+
+    /* WordPress app - Epilogue Screen Close On Continue */
     @Test
     fun `given wp app with no sites, when continued from epilogue, then epilogue closes with ok result`() {
         init(isJetpackApp = false, hasSite = false)
@@ -112,7 +145,39 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
         assertThat(navigationEvents.last()).isInstanceOf(LoginNavigationEvents.ShowNoJetpackSites::class.java)
     }
 
-    /* Jetpack app - Eplilogue Screen Close */
+    @Test
+    fun `given jp app with no sites + login update not requested, when screen shown, then no jp sites shown`() {
+        init(isJetpackApp = true, hasSite = false)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onLoginEpilogueResume(doLoginUpdate = false)
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.ShowNoJetpackSites::class.java)
+    }
+
+    @Test
+    fun `given jp app with no sites + login update requested, when screen shown, then no jp sites not shown`() {
+        init(isJetpackApp = true, hasSite = false)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onLoginEpilogueResume(doLoginUpdate = true)
+
+        assertThat(
+                navigationEvents.filterIsInstance(LoginNavigationEvents.ShowNoJetpackSites::class.java)
+        ).isEmpty()
+    }
+
+    @Test
+    fun `given jp app with no site + login update requested, when login finishes, then no jp sites shown`() {
+        init(isJetpackApp = true, hasSite = false)
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onLoginFinished(doLoginUpdate = true)
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.ShowNoJetpackSites::class.java)
+    }
+
+    /* Jetpack app - Epilogue Screen Close On Continue */
     @Test
     fun `given jetpack app with sites, when continued from epilogue, then screen closes with ok result`() {
         init(isJetpackApp = true, hasSite = true)
