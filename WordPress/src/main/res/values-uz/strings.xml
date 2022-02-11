@@ -7,6 +7,7 @@ Language: uz
 -->
 <resources>
     <string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda…</string>
+    <string name="comment_unapproved">Mulohaza inkor qilindi</string>
     <string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
     <string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
     <string name="comment_spammed">Mulohaza spam sifatida belgilandi</string>

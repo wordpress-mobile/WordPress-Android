@@ -57,7 +57,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_select_font_size">الضغط المزدوج لتحديد حجم الخط</string>
     <string name="about_automattic_version_label">النسخة %1$s</string>
     <string name="gutenberg_native_contact_support">الاتصال بالدعم</string>
-    <string name="my_site_no_content_post">لا يوجد محتوى</string>
     <string name="reader_comments_follow_conversation">متابعة المحادثة</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">الضغط المزدوج لتحديد حجم الخط الافتراضي</string>
     <string name="reader_comments_be_first_to_comment">كن أول من يعلق</string>
@@ -182,7 +181,6 @@ Language: ar
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">المكوِّنات عبارة عن أجزاء من المحتوى التي يمكنك إدراجها وإعادة ترتيبها وتصميمها من دون الحاجة إلى معرفة كيفية ترميزها. المكوِّنات عبارة عن طريقة سهلة وعصرية لك لإنشاء تخطيطات جميلة.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">تسمح لك المكوِّنات بالتركيز على كتابة محتواك، مع العلم بأن جميع أدوات التنسيق التي تحتاج إليها متوافرة هناك لمساعدتك على توصيل رسالتك.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">قم بترتيب محتواك إلى أعمدة، وإضافة أزرار الدعوة إلى اتخاذ إجراء، وتراكب الصور باستخدام النص.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">أضف مكوِّنًا جديدًا في أي وقت عن طريق النقر على أيقونة + الموجودة في شريط الأدوات في أسفل اليسار. </string>
     <string name="quick_start_sites_type_tasks_completed">⁦%1$s⁩ من ⁦%2$s⁩ مكتمل</string>
     <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
     <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات من خلال جولة سريعة.</string>
@@ -253,8 +251,6 @@ Language: ar
     <string name="storage_utils_dialog_ok_button">عرض مساحة التخزين</string>
     <string name="storage_utils_dialog_message">يتعين علينا حفظ محتواك على جهازك قبل التمكن من نشره. راجع إعدادات التخزين الخاصة بك، وأزل الملفات لتوفير مساحة.</string>
     <string name="storage_utils_dialog_title">مساحة التخزين على الجهاز غير كافية</string>
-    <string name="gutenberg_native_y_axis_position">موضع المحور الصادي</string>
-    <string name="gutenberg_native_x_axis_position">موضع المحور السيني</string>
     <string name="gutenberg_native_type_a_url">كتابة عنوان URL</string>
     <string name="gutenberg_native_slash_inserter_results">نتائج أداة إدراج الشرطة المائلة</string>
     <string name="gutenberg_native_s_has_url_set">لدى %s عنوان URL معين</string>
@@ -321,7 +317,6 @@ Language: ar
     <string name="gutenberg_native_failed_to_insert_audio_file">فشل في إدراج ملف صوتي.</string>
     <string name="like_faces_error_loading_message">خطأ أثناء تحميل بيانات \"الإعجابات\". %s</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">تم تحويل %1$s إلى %2$s</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">وصف الغرض من الصورة. اتركه فارغًا إذا كانت الصورة زخرفية أو عنصر تزيين بشكل عام. </string>
     <string name="suggestion">اقتراح:</string>
     <string name="like_title_singular">إعجاب واحد</string>
     <string name="gutenberg_native_use_icon_button">استخدام زر الأيقونة</string>
@@ -331,7 +326,6 @@ Language: ar
     <string name="gutenberg_native_search_block_label_current_text_is">تسمية مكون البحث. النص الحالي هو</string>
     <string name="gutenberg_native_no_custom_placeholder_set">لم يتم تعيين عنصر نائب مخصص</string>
     <string name="gutenberg_native_hide_search_heading">إخفاء عنوان البحث</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">أنقر نقرًا مزدوجًا لتغيير الوحدة</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">أنقر نقرًا مزدوجًا لتحرير نص التسمية</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">أنقر نقرًا مزدوجًا لتحرير نص العنصر النائب</string>
     <string name="gutenberg_native_inside">داخلي</string>
@@ -720,7 +714,6 @@ Language: ar
     <string name="reader_discover_recommended_blogs_header">مواقع لمتابعتها</string>
     <string name="media_loading_failed">فشل تحميل الوسائط</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">لم يتم دعم \"%s\" بالكامل</string>
     <string name="gutenberg_native_help_button">زر المساعدة</string>
     <string name="gutenberg_native_edit_using_web_editor">تحرير باستخدام محرر الويب</string>
     <string name="gutenberg_native_choose_images">اختيار الصور</string>

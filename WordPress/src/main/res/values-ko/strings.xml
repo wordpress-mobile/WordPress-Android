@@ -59,7 +59,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_select_default_font_size">두 번 눌러 기본 글꼴 크기 선택</string>
     <string name="gutenberg_native_contact_support">지원팀에 문의</string>
     <string name="gutenberg_native_1_s_2_s">%1$s(%2$s)</string>
-    <string name="my_site_no_content_post">콘텐츠 없음</string>
     <string name="reader_comments_follow_conversation">대화 팔로우</string>
     <string name="reader_comments_be_first_to_comment">첫 번째 댓글 달기</string>
     <string name="reader_comments_view_all">모든 댓글 보기</string>
@@ -180,7 +179,6 @@ Language: ko_KR
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">블록은 코드를 작성하는 방법을 몰라도 삽입, 재정렬 및 스타일 지정이 가능한 콘텐츠 조각입니다. 블록은 아름다운 레이아웃을 생성할 수 있는 쉽고 현대적인 방법입니다.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">블록을 사용하면 메시지를 전달하는 데 도움이 되도록 필요한 모든 형식 지정 도구가 준비되어 있으므로 콘텐츠 작성에 집중할 수 있습니다.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">콘텐츠를 열로 정렬하고, 행동 유도 버튼을 추가하고, 이미지에 텍스트를 입히세요.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">왼쪽 하단의 도구 모음에서 + 아이콘을 눌러 언제든지 새 블록을 추가하세요. </string>
     <string name="quick_start_dialog_need_help_manage_site_message">간단한 연습을 통해 기본 사항을 알아보세요.</string>
     <string name="comment_batch_moderation_error">하나 이상의 댓글 검토 실패</string>
     <string name="create_site_notification_create_site_action">사이트 생성하기</string>
@@ -250,8 +248,6 @@ Language: ko_KR
     <string name="storage_utils_dialog_ok_button">저장 공간 보기</string>
     <string name="storage_utils_dialog_message">콘텐츠를 기기에 저장해야 발행할 수 있습니다. 저장 공간 설정을 검토하고 파일을 제거하여 공간을 확보하세요.</string>
     <string name="storage_utils_dialog_title">부족한 기기 저장 공간</string>
-    <string name="gutenberg_native_y_axis_position">Y–축 위치</string>
-    <string name="gutenberg_native_x_axis_position">X–축 위치</string>
     <string name="gutenberg_native_type_a_url">URL 입력</string>
     <string name="gutenberg_native_slash_inserter_results">슬래시 삽입기 결과</string>
     <string name="gutenberg_native_s_has_url_set">%s에 설정된 URL 있음</string>
@@ -314,7 +310,6 @@ Language: ko_KR
     <string name="gutenberg_native_transform_block">블록 변형…</string>
     <string name="gutenberg_native_failed_to_insert_media">미디어를 삽입하는 데 실패했습니다.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">오디오 파일 삽입에 실패했습니다.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">이미지의 용도를 설명합니다. 이미지가 장식용이면 비워 둡니다. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%2$s(으)로 변형된 %1$s</string>
     <string name="like_faces_error_loading_message">좋아요 데이터 로드 중 오류가 발생했습니다. %s.</string>
     <string name="like_title_plural">%d 좋아요</string>
@@ -331,7 +326,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">두 번 눌러 플레이스홀더 텍스트 편집하기</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">두 번 눌러 레이블 텍스트 편집하기</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">두 번 눌러 버튼 텍스트 편집하기</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">두 번 눌러 단위 변경하기</string>
     <string name="gutenberg_native_outside">외부</string>
     <string name="gutenberg_native_current_placeholder_text_is">현재 플레이스홀더 텍스트는</string>
     <string name="gutenberg_native_clear_search">검색 지우기</string>
@@ -715,7 +709,6 @@ Language: ko_KR
     <string name="reader_discover_recommended_blogs_header">팔로우한 사이트</string>
     <string name="media_loading_failed">미디어 로딩을 실패했습니다</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">매 릴리즈마다 더 많은 블록을 추가하려고 열심히 일하고 있습니다.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">‘%s’을(를) 완전히 지원하지 않습니다</string>
     <string name="stories_intro_description_second">사이트에 새 블로그 글로 발행되기에 독자들이 하나도 놓치지 않습니다.</string>
     <string name="stories_intro_create_story_post_label">스토리 글 만들기</string>
     <string name="gutenberg_native_choose_images">이미지 고르기</string>
@@ -2949,6 +2942,7 @@ Language: ko_KR
     <string name="reader_toast_err_remove_tag">이 토픽을 삭제할 수 없습니다</string>
     <string name="share_link">링크 공유</string>
     <string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 …</string>
+    <string name="comment_unapproved">댓글이 불승인 됐습니다</string>
     <string name="comment_spammed">댓글이 스팸으로 처리됨</string>
     <string name="cant_share_no_visible_blog">공개 블로그가 없기 때문에 WordPress에 공유 할 수 없습니다</string>
     <string name="reader_likes_you_and_multi">당신에게 %d명이 \"좋아요\"를 하고 있습니다.</string>

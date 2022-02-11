@@ -189,6 +189,7 @@ Language: gd_GB
     <string name="notifications_empty_all">Chan eil brath ann… fhathast.</string>
     <string name="share_link">Co-roinn an ceangal</string>
     <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post…</string>
+    <string name="comment_unapproved">Chaidh an t-aonta a thoirt far a\' bheachd</string>
     <string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
     <string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
     <string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
