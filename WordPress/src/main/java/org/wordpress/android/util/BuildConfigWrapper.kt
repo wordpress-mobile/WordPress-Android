@@ -21,4 +21,6 @@ class BuildConfigWrapper @Inject constructor() {
     val isJetpackApp = BuildConfig.IS_JETPACK_APP
 
     val isSiteCreationEnabled = BuildConfig.ENABLE_SITE_CREATION
+
+    val isSignupEnabled = BuildConfig.ENABLE_SIGNUP
 }

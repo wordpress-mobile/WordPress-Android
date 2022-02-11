@@ -70,6 +70,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -132,6 +133,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +160,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     break;
                 case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
-                    mIsSignupFromLoginEnabled = false;
+                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
