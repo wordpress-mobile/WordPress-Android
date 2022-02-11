@@ -24,6 +24,9 @@
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+    <!-- Allows querying packages in api level 30 and above (e.g. to check for installed email apps)
+      https://developer.android.com/reference/android/Manifest.permission#QUERY_ALL_PACKAGES -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
 
     <uses-feature
         android:name="android.hardware.camera"
