@@ -128,7 +128,6 @@ Language: sr_RS
     <string name="login_prologue_title_fifth">Пратите своје омиљене локације и откривајте нове блогове.</string>
     <string name="media_loading_failed">Учитавање садржаја није успело</string>
     <string name="reader_discover_recommended_blogs_header">Веб места за праћење</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' није у потпуности подржан</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Дајемо све од себе да додамо нове блокове са сваком објавом.</string>
     <string name="gutenberg_native_help_button">Дугме помоћи</string>
     <string name="gutenberg_native_edit_using_web_editor">Уреди помоћу веб уређивача</string>

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-20 22:11:29+0000
+Translation-Revision-Date: 2022-02-03 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">Einstellungen für gekachelte Galerien</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigiert zum Layout-Auswahlbildschirm</string>
+    <string name="gutenberg_native_gallery_style">Galerie-Stil</string>
+    <string name="sharing_facebook_warning_positive_button">Internet öffnen</string>
+    <string name="sharing_facebook_warning_message">Du kannst dein Facebook-Konto auf der WordPress.com-Website verbinden. Wenn du fertig bist, kehre zur WordPress-App zurück, um deine Teilen-Einstellungen zu ändern.</string>
     <string name="about_automattic_app_icon_description">App-Icon</string>
     <string name="about_automattic_back_icon_description">Zurück-Icon</string>
     <string name="about_automattic_logo_description">Automattic-Logo</string>
@@ -54,7 +59,6 @@ Language: de
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Zum Auswählen der Standardschriftgröße zweimal tippen</string>
     <string name="gutenberg_native_contact_support">Support kontaktieren</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Kein Inhalt</string>
     <string name="reader_comments_follow_conversation">Unterhaltung folgen</string>
     <string name="reader_comments_be_first_to_comment">Als Erster kommentieren</string>
     <string name="reader_comments_view_all">Alle Kommentare anzeigen</string>
@@ -177,7 +181,6 @@ Language: de
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocks sind Teile deines Inhalts, die du ganz ohne Coding-Kenntnisse einfügen, neu anordnen und gestalten kannst. Blocks sind eine einfache und moderne Art und Weise, wunderschöne Layouts zu erstellen.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks geben dir die Möglichkeit, dich voll und ganz auf das Verfassen deiner Inhalte zu konzentrieren. Alle Tools zur Formatierung sind vorhanden, damit du deine Ideen und Meinungen ganz nach deinen Wünschen präsentieren kannst.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordne deinen Inhalt in Spalten an und füge Buttons mit Handlungsaufrufen sowie überlagerte Texte auf Bildern hinzu.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Du kannst jederzeit einen neuen Block hinzufügen, indem du auf das Icon „+“ in der Werkzeugleiste unten links klickst. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s von %2$s abgeschlossen</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Lerne die Grundlagen mit einer kurzen Erklärung.</string>
     <string name="comment_batch_moderation_error">Moderation von einem oder mehreren Kommentaren fehlgeschlagen</string>
@@ -248,8 +251,6 @@ Language: de
     <string name="storage_utils_dialog_ok_button">Speicher anzeigen</string>
     <string name="storage_utils_dialog_message">Zum Veröffentlichen müssen die Inhalte auf deinem Gerät gespeichert werden. Überprüfe deine Speichereinstellungen und entferne Dateien, um Platz zu schaffen.</string>
     <string name="storage_utils_dialog_title">Unzureichender Gerätespeicher</string>
-    <string name="gutenberg_native_y_axis_position">Position auf der y-Achse</string>
-    <string name="gutenberg_native_x_axis_position">Position auf der x-Achse</string>
     <string name="gutenberg_native_type_a_url">URL eingeben</string>
     <string name="gutenberg_native_slash_inserter_results">Ergebnisse der Schrägstrich-Eingabe</string>
     <string name="gutenberg_native_s_has_url_set">Für %s wurde eine URL festgelegt</string>
@@ -289,16 +290,19 @@ Language: de
     <string name="user_profile_site_section_header">Website</string>
     <string name="user_profile_bottom_sheet_description">Benutzerprofil Bottom Sheet-Informationen</string>
     <string name="likes_list_screen_title">Liste der Likes %s</string>
+    <string name="gutenberg_native_two">Zwei</string>
+    <string name="gutenberg_native_three">Drei</string>
     <string name="gutenberg_native_s_social_icon">Social-Media-Symbol für %s</string>
     <string name="gutenberg_native_mention">Erwähnung</string>
     <string name="gutenberg_native_preview_post">Beitragsvorschau</string>
     <string name="gutenberg_native_preview_page">Seitenvorschau</string>
     <string name="gutenberg_native_retry">Erneut versuchen</string>
+    <string name="gutenberg_native_one">Eins</string>
     <string name="gutenberg_native_no_preview_available">Keine Vorschau verfügbar</string>
     <string name="gutenberg_native_text_color">Textfarbe</string>
     <string name="gutenberg_native_s_link">%s Link</string>
     <string name="gutenberg_native_padding">Innenabstand</string>
-    <string name="gutenberg_native_featured">Beitragsbild</string>
+    <string name="gutenberg_native_four">Vier</string>
     <string name="gutenberg_native_custom_url">Individuelle URL</string>
     <string name="gutenberg_native_create_embed">Einbettung erstellen</string>
     <string name="gutenberg_native_column_d">Spalte %d</string>
@@ -310,7 +314,6 @@ Language: de
     <string name="gutenberg_native_transform_block">Block umwandeln …</string>
     <string name="gutenberg_native_failed_to_insert_media">Das Medium konnte nicht eingefügt werden.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Audiodatei kann nicht eingefügt werden.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschreibe den Zweck des Bildes. Lass dieses Feld frei, falls das Bild rein dekorativ ist. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s umgewandelt in %2$s</string>
     <string name="like_faces_error_loading_message">Fehler beim Laden der „Like“-Daten. %s.</string>
     <string name="like_title_plural">%d Gefällt mir</string>
@@ -328,7 +331,6 @@ Language: de
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Zum Bearbeiten des Platzhaltertexts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Zum Bearbeiten des Label-Texts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Zum Bearbeiten des Button-Texts zweimal tippen</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">Zum Wechseln der Einheit zweimal tippen</string>
     <string name="gutenberg_native_current_placeholder_text_is">Aktueller Platzhaltertext ist</string>
     <string name="gutenberg_native_clear_search">Suche löschen</string>
     <string name="gutenberg_native_cancel_search">Suche abbrechen</string>
@@ -712,7 +714,6 @@ Language: de
     <string name="media_loading_failed">Laden der Medien fehlgeschlagen</string>
     <string name="reader_discover_recommended_blogs_header">Websites, denen du folgen möchtest</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Wir arbeiten hart daran, mit jeder Veröffentlichung weitere Blöcke hinzuzufügen.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">„%s“ wird nicht vollständig unterstützt</string>
     <string name="gutenberg_native_help_button">Hilfe-Button</string>
     <string name="gutenberg_native_edit_using_web_editor">Mit dem Webeditor bearbeiten</string>
     <string name="gutenberg_native_choose_images">Bilder auswählen</string>
@@ -2236,7 +2237,7 @@ Language: de
     <string name="post_settings_post_format">Beitragsformat</string>
     <string name="post_settings_tags">Schlagwörter</string>
     <string name="post_settings_slug">Titelform</string>
-    <string name="post_settings_excerpt">Auszug</string>
+    <string name="post_settings_excerpt">Textauszug</string>
     <string name="post_settings_not_set">Nicht eingestellt</string>
     <string name="post_settings_more_options">Weitere Optionen</string>
     <string name="post_settings_categories_and_tags">Kategorien &amp; Schlagwörter</string>
@@ -2951,6 +2952,7 @@ Language: de
     <string name="reader_likes_multi">%d Leuten gefällt dies</string>
     <string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
     <string name="comment_spammed">Kommentar als Spam markiert</string>
+    <string name="comment_unapproved">Kommentar nicht mehr genehmigt</string>
     <string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
     <string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
     <string name="pick_video">Video auswählen</string>

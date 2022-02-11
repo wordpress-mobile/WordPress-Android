@@ -23,7 +23,6 @@ class CommentViewHolder(
     override fun onBind(itemUiState: CommentSnippetItemState) = with(binding) {
         val state = itemUiState as CommentState
 
-        shareCommentButton.visibility = View.GONE
         actionsContainer.visibility = View.GONE
         divider.visibility = View.GONE
 
