@@ -653,10 +653,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
         CommentModel updatedComment = mCommentsStoreAdapter.getCommentByLocalId(mComment.getId());
         if (updatedComment != null) {
-            if (mNotificationsDetailListFragment != null) {
-                mNotificationsDetailListFragment.refreshBlocksForEditedComment(updatedComment);
-            }
             setComment(updatedComment, mSite);
+        }
+        if (mNotificationsDetailListFragment != null) {
+            mNotificationsDetailListFragment.refreshBlocksForEditedComment(mNote.getId());
         }
     }
 

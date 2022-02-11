@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
@@ -41,8 +40,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     public interface OnCommentStatusChangeListener {
         void onCommentStatusChanged(CommentStatus newStatus);
-
-        void onCommentEdited(@NonNull CommentModel commentModel);
     }
 
     public CommentUserNoteBlock(Context context, FormattableContent noteObject,
@@ -276,20 +273,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         public void onCommentStatusChanged(CommentStatus newStatus) {
             mCommentStatus = newStatus;
             mStatusChanged = true;
-        }
-
-        @Override public void onCommentEdited(@NonNull CommentModel commentModel) {
-            final String updatedContentText = commentModel.getContent();
-            mCommentData = new FormattableContent(
-                    mCommentData.getActions(),
-                    mCommentData.getMedia(),
-                    mCommentData.getMeta(),
-                    updatedContentText,
-                    mCommentData.getType(),
-                    mCommentData.getNestLevel(),
-                    mCommentData.getRanges()
-            );
-            setUserComment();
         }
     };
 
