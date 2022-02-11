@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.notifications.utils;
 
-import androidx.annotation.NonNull;
-
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -17,8 +15,6 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 public class NotificationsActions {
     // Get the latest note from the local DB and send its timestamp to the server.
@@ -84,9 +80,9 @@ public class NotificationsActions {
         }
     }
 
-    public static void downloadNoteAndUpdateDB(@NonNull final String noteID,
-                                               @Nullable final RestRequest.Listener requestListener,
-                                               @Nullable final RestRequest.ErrorListener errorListener) {
+    public static void downloadNoteAndUpdateDB(final String noteID,
+                                               final RestRequest.Listener requestListener,
+                                               final RestRequest.ErrorListener errorListener) {
         WordPress.getRestClientUtilsV1_1().getNotification(
                 noteID,
                 new RestRequest.Listener() {
