@@ -296,7 +296,7 @@ public class AppSettingsFragment extends PreferenceFragment
         WhatsNewAnnouncementModel latestAnnouncement = event.getWhatsNewItems().get(0);
         mWhatsNew.setSummary(getString(R.string.version_with_name_param, latestAnnouncement.getAppVersionName()));
         mWhatsNew.setOnPreferenceClickListener(this);
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (mBuildConfigWrapper.isWhatsNewFeatureEnabled()) {
             addWhatsNewPreference();
         }
     }

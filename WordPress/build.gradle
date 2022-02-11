@@ -121,6 +121,11 @@ android {
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
         buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "true"
         buildConfigField "boolean", "ENABLE_SIGNUP", "true"
+        buildConfigField "boolean", "ENABLE_READER", "true"
+        buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
+        buildConfigField "boolean", "ENABLE_QUICK_ACTION", "true"
+        buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
+        buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -159,6 +164,11 @@ android {
             buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
             buildConfigField "boolean", "ENABLE_ADD_SELF_HOSTED_SITE", "false"
             buildConfigField "boolean", "ENABLE_SIGNUP", "true"
+            buildConfigField "boolean", "ENABLE_READER", "true"
+            buildConfigField "boolean", "ENABLE_CREATE_FAB", "true"
+            buildConfigField "boolean", "ENABLE_QUICK_ACTION", "true"
+            buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
+            buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
 
