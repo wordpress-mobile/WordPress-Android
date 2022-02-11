@@ -328,15 +328,12 @@ class MySiteViewModel @Inject constructor(
         return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
     }
 
-    private fun onTodaysStatsCardFooterLinkClick() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        // Todo: @ajeshrpai add analytics here
-        _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
-    }
+    private fun onTodaysStatsCardFooterLinkClick() = navigateToTodaysStats()
 
-    private fun onTodaysStatsCardClick() {
+    private fun onTodaysStatsCardClick() = navigateToTodaysStats()
+
+    private fun navigateToTodaysStats() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        // Todo@ajeshrpai add analytics here
         _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
     }
 
