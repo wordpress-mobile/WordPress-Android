@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-24 16:16:57+0000
+Translation-Revision-Date: 2022-02-08 05:03:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
+    <string name="comment_moderation_error">Fallo al moderar los comentarios</string>
+    <string name="reader_comment_menu_trash">Mover a la papelera</string>
+    <string name="reader_comment_menu_spam">Marcar como spam</string>
+    <string name="reader_comment_menu_unapprove">Rechazar</string>
     <string name="gutenberg_native_tiled_gallery_settings">Ajustes de la galería de mosaico</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega a la pantalla de selección del diseño</string>
     <string name="gutenberg_native_gallery_style">Estilo de la galería</string>
@@ -59,7 +63,6 @@ Language: es_CO
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Toca dos veces para seleccionar el tamaño de fuente por defecto</string>
     <string name="gutenberg_native_contact_support">Contactar con el soporte</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Sin contenido</string>
     <string name="reader_comments_follow_conversation">Seguir la conversación</string>
     <string name="reader_comments_be_first_to_comment">Sé el primero en comentar</string>
     <string name="reader_comments_view_all">Ver todos los comentarios</string>
@@ -182,7 +185,7 @@ Language: es_CO
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Los bloques son piezas de contenido que puedes insertar, reorganizar y dar estilo sin necesidad de saber programar. Los bloques son una forma fácil y moderna para que crees bonitos diseños.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Los bloques te permiten centrarte en la escritura de tu contenido, sabiendo que todas las herramientas de formato que necesitas están ahí para ayudarte a transmitir tu mensaje.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organiza tu contenido en columnas, añade botones de llamada a la acción y superpón imágenes con texto.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Añade un nuevo bloque en cualquier momento tocando el icono «+» en la barra de herramientas de la parte inferior izquierda. </string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Añade un nuevo bloque en cualquier momento tocando el icono «+» en la barra de herramientas en la parte inferior izquierda. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s de %2$s completado</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Aprende lo básico con un rápido recorrido.</string>
     <string name="comment_batch_moderation_error">Ha fallado la moderación de uno o más comentarios</string>
@@ -336,7 +339,7 @@ Language: es_CO
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Doble toque para editar el texto del marcador de posición</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Doble toque para editar el texto de la etiqueta</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Doble toque para editar el texto del botón</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">doble-toque para cambiar la unidad</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">doble toque para cambiar la unidad</string>
     <string name="gutenberg_native_current_placeholder_text_is">El texto de marcador de posición actual es</string>
     <string name="gutenberg_native_clear_search">Vaciar la búsqueda</string>
     <string name="gutenberg_native_cancel_search">Cancelar la búsqueda</string>
@@ -2959,6 +2962,7 @@ Language: es_CO
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
     <string name="cant_share_no_visible_blog">No se puede compartir en WordPress si no tienes un blog visible</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
+    <string name="comment_unapproved">Comentario no aprobado</string>
     <string name="reader_toast_err_get_post">No fue posible recuperar esta entrada</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto</string>
     <string name="pick_video">Elige un vídeo</string>
