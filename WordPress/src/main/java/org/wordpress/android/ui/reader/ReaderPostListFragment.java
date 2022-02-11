@@ -912,7 +912,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 R.drawable.ic_search_white_24dp
         );
         mSnackbarSequencer.enqueue(
-                new SnackbarItem(new SnackbarItem.Info(mRecyclerView, new UiStringText(title), Snackbar.LENGTH_LONG))
+                new SnackbarItem(
+                        new SnackbarItem.Info(getSnackbarParent(), new UiStringText(title), Snackbar.LENGTH_LONG)
+                )
         );
     }
 

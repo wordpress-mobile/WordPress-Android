@@ -18,6 +18,7 @@ repositories {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
+            includeGroup "org.wordpress.wellsql"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
@@ -114,6 +115,7 @@ android {
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
+        buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }

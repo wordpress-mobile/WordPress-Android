@@ -1,8 +1,16 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-19.2
+19.3
 -----
 
+
+19.2
+-----
+* [*] Block editor: Replacing the media for an image set as featured prompts to update the featured image [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3930]
+* [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
+* [**] Stats revamp: Adding a new settings button to the top app bar to manage Stats Insights Cards [https://github.com/wordpress-mobile/WordPress-Android/pull/15891]
+* [***] Block editor: Font size and line-height support for text-based blocks used in block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4519]
+* [**] Reader: Allow comment moderation from Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/15833]
 
 19.1
 -----
