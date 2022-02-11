@@ -81,9 +81,9 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
         val adapter = StatsPagerAdapter(activity)
         statsPager.adapter = adapter
-         statsPager.setPageTransformer(
-                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
-         )
+        statsPager.setPageTransformer(
+                MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+        )
         TabLayoutMediator(tabLayout, statsPager) { tab, position ->
             tab.text = adapter.getTabTitle(position)
         }.attach()
