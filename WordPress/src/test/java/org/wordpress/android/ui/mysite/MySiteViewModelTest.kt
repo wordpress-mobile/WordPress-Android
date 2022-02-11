@@ -1043,7 +1043,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             test {
                 initSelectedSite()
 
-                requireNotNull(onTodaysStatsCardClick).invoke()
+                onTodaysStatsCardClick.invoke()
 
                 assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
             }
@@ -1053,7 +1053,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             test {
                 initSelectedSite()
 
-                requireNotNull(onTodaysStatsCardFooterLinkClick).invoke()
+                onTodaysStatsCardFooterLinkClick.invoke()
 
                 assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
             }
