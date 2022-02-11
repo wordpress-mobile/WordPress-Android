@@ -2,6 +2,7 @@
 
 19.3
 -----
+* [*] Comment editor: Notification comments support in the new editor [https://github.com/wordpress-mobile/WordPress-Android/pull/15884]
 * [*] Site creation: Fixed bug where sites created within the app were not given the correct time zone, leading to post scheduling issues. [https://github.com/wordpress-mobile/WordPress-Android/pull/15904]
 
 19.2
