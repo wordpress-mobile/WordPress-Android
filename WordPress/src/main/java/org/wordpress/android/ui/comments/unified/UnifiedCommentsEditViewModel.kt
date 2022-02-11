@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Pr
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.ProgressState.SAVING
 import org.wordpress.android.ui.comments.unified.extension.isNotEqualTo
 import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
+import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -45,7 +47,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
-    private val getCommentUseCase: GetCommentUseCase
+    private val getCommentUseCase: GetCommentUseCase,
+    private val notificationActionsWrapper: NotificationsActionsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -75,7 +78,15 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val progressText: UiString? = null,
         val originalComment: CommentEssentials,
         val editedComment: CommentEssentials,
-        val editErrorStrings: EditErrorStrings
+        val editErrorStrings: EditErrorStrings,
+        val inputSettings: InputSettings
+    )
+
+    data class InputSettings(
+        val enableEditName: Boolean,
+        val enableEditUrl: Boolean,
+        val enableEditEmail: Boolean,
+        val enableEditComment: Boolean
     )
 
     enum class ProgressState(val show: Boolean, val progressText: UiString?) {
@@ -144,7 +155,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 progressText = LOADING.progressText,
                 originalComment = CommentEssentials(),
                 editedComment = CommentEssentials(),
-                editErrorStrings = EditErrorStrings()
+                editErrorStrings = EditErrorStrings(),
+                inputSettings = mapInputSettings()
         )
 
         withContext(mainDispatcher) {
@@ -200,7 +212,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                                 progressText = LOADING.progressText,
                                 originalComment = commentEssentials,
                                 editedComment = commentEssentials,
-                                editErrorStrings = EditErrorStrings()
+                                editErrorStrings = EditErrorStrings(),
+                                inputSettings = mapInputSettings()
                         )
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
@@ -232,14 +245,24 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val commentEntity =
                 commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
         commentEntity?.run {
-            updateCommentEntity(this, editedCommentEssentials)
+            val isCommentEntityUpdated = updateCommentEntity(this, editedCommentEssentials)
+            if (isCommentEntityUpdated) {
+                if (commentIdentifier is NotificationCommentIdentifier) {
+                    updateNotificationEntity()
+                } else {
+                    _uiActionEvent.postValue(Event(DONE))
+                    localCommentCacheUpdateHandler.requestCommentsUpdate()
+                }
+            } else {
+                showUpdateCommentError()
+            }
         } ?: showUpdateCommentError()
     }
 
     private suspend fun updateCommentEntity(
         comment: CommentEntity,
         editedCommentEssentials: CommentEssentials
-    ) {
+    ): Boolean {
         val updatedComment = comment.copy(
                 authorUrl = editedCommentEssentials.userUrl,
                 authorName = editedCommentEssentials.userName,
@@ -247,11 +270,18 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 content = editedCommentEssentials.commentText
         )
         val result = commentsStore.updateEditComment(site, updatedComment)
-        if (result.isError) {
-            showUpdateCommentError()
-        } else {
-            _uiActionEvent.postValue(Event(DONE))
-            localCommentCacheUpdateHandler.requestCommentsUpdate()
+        return !result.isError
+    }
+
+    private suspend fun updateNotificationEntity() {
+        with(commentIdentifier as NotificationCommentIdentifier) {
+            val isNotificationEntityUpdated = notificationActionsWrapper.downloadNoteAndUpdateDB(noteId)
+            if (isNotificationEntityUpdated) {
+                _uiActionEvent.postValue(Event(DONE))
+                localCommentCacheUpdateHandler.requestCommentsUpdate()
+            } else {
+                showUpdateNotificationError()
+            }
         }
     }
 
@@ -259,6 +289,13 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         setLoadingState(NOT_VISIBLE)
         _onSnackbarMessage.postValue(
                 Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_comment)))
+        )
+    }
+
+    private suspend fun showUpdateNotificationError() {
+        setLoadingState(NOT_VISIBLE)
+        _onSnackbarMessage.postValue(
+                Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_notification)))
         )
     }
 
@@ -296,6 +333,13 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             )
         }
     }
+
+    private fun mapInputSettings() = InputSettings(
+            enableEditName = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditUrl = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditEmail = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditComment = true
+    )
 
     private fun EditErrorStrings.hasError(): Boolean {
         return listOf(

@@ -80,7 +80,8 @@ public class NotificationsActions {
         }
     }
 
-    public static void downloadNoteAndUpdateDB(final String noteID, final RestRequest.Listener requestListener,
+    public static void downloadNoteAndUpdateDB(final String noteID,
+                                               final RestRequest.Listener requestListener,
                                                final RestRequest.ErrorListener errorListener) {
         WordPress.getRestClientUtilsV1_1().getNotification(
                 noteID,

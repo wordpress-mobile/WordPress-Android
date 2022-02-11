@@ -149,6 +149,13 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
                 commentEditEmailAddress.error = errors.userEmailError
                 commentEditComment.error = errors.commentTextError
             }
+
+            with(uiState.inputSettings) {
+                commentEditComment.isEnabled = enableEditComment
+                commentEditWebAddress.isEnabled = enableEditUrl
+                commentEditEmailAddress.isEnabled = enableEditEmail
+                userName.isEnabled = enableEditName
+            }
         })
 
         viewModel.start(site, commentIdentifier)

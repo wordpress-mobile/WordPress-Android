@@ -1841,6 +1841,7 @@
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
+    <string name="error_edit_notification">An error occurred while updating the notification content</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
     <string name="error_save_empty_draft">Can\'t save an empty draft</string>
