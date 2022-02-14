@@ -1,9 +1,19 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.3
+-----
+* [*] Comment editor: Notification comments support in the new editor [https://github.com/wordpress-mobile/WordPress-Android/pull/15884]
+* [*] Site creation: Fixed bug where sites created within the app were not given the correct time zone, leading to post scheduling issues. [https://github.com/wordpress-mobile/WordPress-Android/pull/15904]
+* [*] Login Epilogue: Fixed bug where if no sites available, then new login epilogue screen without clickable sites and with "create new site" is shown instead of no sites empty "My Site" view. [https://github.com/wordpress-mobile/WordPress-Android/pull/15944]
+* [*] Fixes flickering when changing the preview mode in Page or Site design picker [https://github.com/wordpress-mobile/WordPress-Android/pull/15943]
+
 19.2
 -----
 * [*] Block editor: Replacing the media for an image set as featured prompts to update the featured image [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3930]
 * [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
+* [**] Stats revamp: Adding a new settings button to the top app bar to manage Stats Insights Cards [https://github.com/wordpress-mobile/WordPress-Android/pull/15891]
+* [***] Block editor: Font size and line-height support for text-based blocks used in block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4519]
+* [**] Reader: Allow comment moderation from Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/15833]
 
 19.1
 -----
@@ -15,7 +25,6 @@
 * [*] Block editor: Fix cut-off setting labels by properly wrapping the text [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4475]
 * [*] Block editor: Highlight text: fix applying formatting for non-selected text [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4471]
 * [**] Block editor: Fix Android handling of Hebrew and Indonesian translations [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4397]
-* [**] Reader: Allow comment moderation from Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/15833]
 
 19.0
 -----

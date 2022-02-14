@@ -88,6 +88,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -546,10 +547,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unarppoved);
                 break;
             case SPAM:
-                moderateComment(comment, CommentStatus.SPAM, R.string.comment_spammed);
+                moderateComment(comment, CommentStatus.SPAM, R.string.comment_spammed, Stat.COMMENT_SPAMMED);
                 break;
             case TRASH:
-                moderateComment(comment, CommentStatus.TRASH, R.string.comment_trashed);
+                moderateComment(comment, CommentStatus.TRASH, R.string.comment_trashed, Stat.COMMENT_TRASHED);
                 break;
             case SHARE:
                 shareComment(comment.getShortUrl());
@@ -582,9 +583,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 super.onDismissed(transientBottomBar, event);
 
                 if (event == DISMISS_EVENT_ACTION) {
+                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_MODERATION_UNDO,
+                            AnalyticsCommentActionSource.READER, mPost);
                     return;
                 }
 
+                AnalyticsUtils.trackCommentActionWithReaderPostDetails(tracker,
+                        AnalyticsCommentActionSource.READER, mPost);
                 ReaderCommentActions.moderateComment(comment, newStatus);
             }
         });

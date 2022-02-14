@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-26 04:28:33+0000
+Translation-Revision-Date: 2022-02-12 12:05:28+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
+    <string name="comment_moderation_error">Không thể kiểm duyệt bình luận</string>
+    <string name="reader_comment_menu_trash">Chuyển vào thùng rác</string>
+    <string name="reader_comment_menu_spam">Đánh dấu là spam</string>
+    <string name="reader_comment_menu_unapprove">Không duyệt</string>
     <string name="gutenberg_native_tiled_gallery_settings">Cài đặt bộ sưu tập dạng ô</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Chuyển đến chọn màn hình bố cục</string>
     <string name="gutenberg_native_gallery_style">Dạng bộ sưu tập</string>
@@ -59,7 +63,6 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Nhấn hai lần để chọn cỡ chữ mặc định</string>
     <string name="gutenberg_native_contact_support">Hỗ trợ</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Chưa có nội dung</string>
     <string name="reader_comments_follow_conversation">Theo dõi thảo luận</string>
     <string name="reader_comments_be_first_to_comment">Trở thành người phản hồi đầu tiên</string>
     <string name="reader_comments_view_all">Xem tất cả bình luận</string>
@@ -159,7 +162,7 @@ Language: vi_VN
     <string name="blogging_reminders_site_settings_label">%1$s mỗi tuần vào lúc %2$s</string>
     <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione">Khi chỉnh sửa khối văn bản, các nút định dạng văn bản nằm ở thanh công cụ đặt phía trên bàn phím</string>
     <string name="gutenberg_native_selected_s">Đã chọn: %s</string>
-    <string name="gutenberg_native_select_a_color_above">Chọn một màu bên dưới</string>
+    <string name="gutenberg_native_select_a_color_above">Chọn một màu ở trên</string>
     <string name="gutenberg_native_navigates_to_select_s">Chọn điều hướng %s</string>
     <string name="gutenberg_native_move_blocks">Di chuyển khối</string>
     <string name="gutenberg_native_how_to_edit_your_post">Cách chỉnh sửa bài viết</string>
@@ -315,10 +318,10 @@ Language: vi_VN
     <string name="login_no_jetpack_sites">Không tìm thấy trang có Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Alt text là gì?</string>
     <string name="gutenberg_native_transform_s_to">Chuyển %s thành</string>
-    <string name="gutenberg_native_transform_block">Chuyển khối…</string>
+    <string name="gutenberg_native_transform_block">Biến đổi khối</string>
     <string name="gutenberg_native_failed_to_insert_media">Không thể chèn media.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Không thể chèn tập tin âm thanh.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Mô tả về hình ảnh. Để trống nếu hình chỉ dùng như trang trí.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Mô tả về hình ảnh. Để trống nếu chỉ dùng hình để trang trí.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s đã chuyển thành %2$s</string>
     <string name="like_faces_error_loading_message">Lỗi khi tải dữ liệu. %s.</string>
     <string name="like_title_plural">%d người thích bài này</string>
@@ -327,7 +330,7 @@ Language: vi_VN
     <string name="gutenberg_native_use_icon_button">Dùng nút biểu tượng</string>
     <string name="gutenberg_native_search_input_field">Chữ ở thanh tìm kiếm.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Nút tìm kiếm. Chữ hiện tại là</string>
-    <string name="gutenberg_native_search_blocks">Khối tìm kiếm</string>
+    <string name="gutenberg_native_search_blocks">Tìm kiếm khối</string>
     <string name="gutenberg_native_search_block_label_current_text_is">Nhãn khối tìm kiếm. Chữ hiện tại là</string>
     <string name="gutenberg_native_outside">Bên ngoài</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Không cài chữ xem trước</string>
@@ -720,7 +723,7 @@ Language: vi_VN
     <string name="media_loading_failed">Tải media thất bại</string>
     <string name="reader_discover_recommended_blogs_header">Trang đề xuất</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Chúng tôi đang cố gắng thêm nhiều khối trong các bản cập nhật.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' chưa hoàn toàn hỗ trợ</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' chưa được hỗ trợ</string>
     <string name="gutenberg_native_help_button">Nút trợ giúp</string>
     <string name="gutenberg_native_edit_using_web_editor">Sửa bằng trình chỉnh sửa web</string>
     <string name="gutenberg_native_choose_images">Chọn ảnh</string>
@@ -2959,6 +2962,7 @@ Language: vi_VN
     <string name="reader_likes_multi">%,d người thích</string>
     <string name="cant_share_no_visible_blog">Bạn không thể chia sẻ cho WordPress mà không có một blog</string>
     <string name="comment_spammed">Bình luận bị đánh dấu spam</string>
+    <string name="comment_unapproved">Bình luận không được duyệt</string>
     <string name="reader_toast_err_get_post">Không thể tải bài viết này</string>
     <string name="reader_likes_you_and_one">Bạn và 1 người khác thích bài viết này</string>
     <string name="pick_video">Chọn video</string>

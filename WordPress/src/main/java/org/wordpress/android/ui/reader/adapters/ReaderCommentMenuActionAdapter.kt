@@ -126,7 +126,7 @@ class ReaderCommentMenuActionAdapter(
     }
 
     enum class ReaderCommentMenuActionType {
-        APPROVE, UNAPROVE, SPAM, TRASH, EDIT, SHARE, DIVIDER_NO_ACTION
+        APPROVE, UNAPPROVE, SPAM, TRASH, EDIT, SHARE, DIVIDER_NO_ACTION
     }
 
     companion object {

@@ -72,6 +72,8 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
@@ -137,22 +139,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
-
-    enum CommentSource {
-        NOTIFICATION,
-        SITE_COMMENTS;
-
-        AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
-            switch (this) {
-                case NOTIFICATION:
-                    return AnalyticsCommentActionSource.NOTIFICATIONS;
-                case SITE_COMMENTS:
-                    return AnalyticsCommentActionSource.SITE_COMMENTS;
-            }
-            throw new IllegalArgumentException(
-                    this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
-        }
-    }
 
     private CommentModel mComment;
     private SiteModel mSite;
@@ -684,12 +670,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
-        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled() && mCommentSource == CommentSource.SITE_COMMENTS) {
-            Intent intent = new Intent(getActivity(), UnifiedCommentsEditActivity.class);
-            intent.putExtra(WordPress.SITE, mSite);
-            if (mComment != null) {
-                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_IDENTIFIER, new SiteCommentIdentifier(mComment.getId()));
-            }
+        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled()) {
+            final CommentIdentifier commentIdentifier = mapCommentIdentifier();
+            final Intent intent =
+                    UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         } else {
             Intent intent = new Intent(getActivity(), EditCommentActivity.class);
@@ -699,6 +683,19 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
             }
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+        }
+    }
+
+    // TODO [RenanLukas] handle Reader CommentSource when it's ready
+    @Nullable
+    private CommentIdentifier mapCommentIdentifier() {
+        switch (mCommentSource) {
+            case SITE_COMMENTS:
+                return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
+            case NOTIFICATION:
+                return new NotificationCommentIdentifier(mNote.getId(), mNote.getCommentId());
+            default:
+                return null;
         }
     }
 

@@ -7,14 +7,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
-import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
@@ -25,6 +24,9 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Fi
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.ProgressState.LOADING
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.ProgressState.NOT_VISIBLE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.ProgressState.SAVING
+import org.wordpress.android.ui.comments.unified.extension.isNotEqualTo
+import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
+import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.actions.ReaderCommentActionsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -40,15 +42,16 @@ import javax.inject.Named
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("TooManyFunctions")
 class UnifiedCommentsEditViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val readerCommentActionsWrapper: ReaderCommentActionsWrapper,
-    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
+    private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
+    private val getCommentUseCase: GetCommentUseCase,
+    private val notificationActionsWrapper: NotificationsActionsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -60,6 +63,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     private var isStarted = false
     private lateinit var site: SiteModel
+
     private lateinit var commentIdentifier: CommentIdentifier
 
     data class EditErrorStrings(
@@ -67,14 +71,6 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val commentTextError: String? = null,
         val userUrlError: String? = null,
         val userEmailError: String? = null
-    )
-
-    data class CommentEssentials(
-        val commentId: Long = 0,
-        val userName: String = "",
-        val commentText: String = "",
-        val userUrl: String = "",
-        val userEmail: String = ""
     )
 
     data class EditCommentUiState(
@@ -85,7 +81,15 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val progressText: UiString? = null,
         val originalComment: CommentEssentials,
         val editedComment: CommentEssentials,
-        val editErrorStrings: EditErrorStrings
+        val editErrorStrings: EditErrorStrings,
+        val inputSettings: InputSettings
+    )
+
+    data class InputSettings(
+        val enableEditName: Boolean,
+        val enableEditUrl: Boolean,
+        val enableEditEmail: Boolean,
+        val enableEditComment: Boolean
     )
 
     enum class ProgressState(val show: Boolean, val progressText: UiString?) {
@@ -154,7 +158,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 progressText = LOADING.progressText,
                 originalComment = CommentEssentials(),
                 editedComment = CommentEssentials(),
-                editErrorStrings = EditErrorStrings()
+                editErrorStrings = EditErrorStrings(),
+                inputSettings = mapInputSettings()
         )
 
         withContext(mainDispatcher) {
@@ -170,69 +175,13 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             return
         }
-
         _uiState.value?.let { uiState ->
-            val editedContent = uiState.editedComment
-
+            val editedCommentEssentials = uiState.editedComment
             launch(bgDispatcher) {
                 setLoadingState(SAVING)
-
-                val commentUpdateResult = updatedComment(editedContent)
-
-                if (!commentUpdateResult) {
-                    setLoadingState(NOT_VISIBLE)
-                    _onSnackbarMessage.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_comment)))
-                    )
-                } else {
-                    _uiActionEvent.postValue(Event(DONE))
-                    localCommentCacheUpdateHandler.requestCommentsUpdate()
-                }
+                updateComment(editedCommentEssentials)
             }
         }
-    }
-
-    suspend fun updatedComment(editedContent: CommentEssentials): Boolean {
-        when (commentIdentifier) {
-            is SiteCommentIdentifier -> {
-                val comment = commentsStore.getCommentByLocalId(editedContent.commentId).firstOrNull() ?: return false
-
-                val updatedComment = comment.copy(
-                        authorUrl = editedContent.userUrl,
-                        authorName = editedContent.userName,
-                        authorEmail = editedContent.userEmail,
-                        content = editedContent.commentText
-                )
-                val result = commentsStore.updateEditComment(site, updatedComment)
-                return !result.isError
-            }
-            is ReaderCommentIdentifier -> {
-                val readerCommentIdentifier = commentIdentifier as ReaderCommentIdentifier
-                val comment = readerCommentTableWrapper.getComment(
-                        readerCommentIdentifier.blogId,
-                        readerCommentIdentifier.postId,
-                        readerCommentIdentifier.remoteCommentId
-                ) ?: return false
-
-                comment.let {
-                    comment.authorUrl = editedContent.userUrl
-                    comment.authorName = editedContent.userName
-                    comment.authorEmail = editedContent.userEmail
-                    comment.text = editedContent.commentText
-                }
-
-
-                return suspendCoroutine { continuation ->
-                    readerCommentActionsWrapper.updateComment(
-                            comment,
-                            listener = { succeeded, newComment ->
-                                continuation.resume(succeeded)
-                            })
-                }
-            }
-        }
-
-
     }
 
     fun onBackPressed() {
@@ -249,80 +198,117 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         _uiActionEvent.value = Event(CLOSE)
     }
 
-    private suspend fun mapIdentifierToEssentials(): CommentEssentials? {
-        when (commentIdentifier) {
-            is SiteCommentIdentifier -> {
-                val siteCommentIdentifier = commentIdentifier as SiteCommentIdentifier
-                val commentList = withContext(bgDispatcher) {
-                    commentsStore.getCommentByLocalId(siteCommentIdentifier.localCommentId.toLong())
-                }
-
-                return if (commentList.isEmpty()) {
-                    null
-                } else {
-                    val comment = commentList.first()
-                    CommentEssentials(
-                            commentId = comment.id,
-                            userName = comment.authorName ?: "",
-                            commentText = comment.content ?: "",
-                            userUrl = comment.authorUrl ?: "",
-                            userEmail = comment.authorEmail ?: ""
-                    )
-                }
-
-            }
-            is ReaderCommentIdentifier -> {
-                val readerCommentIdentifier = commentIdentifier as ReaderCommentIdentifier
-                val comment = readerCommentTableWrapper.getComment(
-                        readerCommentIdentifier.blogId,
-                        readerCommentIdentifier.postId,
-                        readerCommentIdentifier.remoteCommentId
-                )
-                return if (comment == null) {
-                    null
-                } else {
-                    CommentEssentials(
-                            commentId = comment.commentId,
-                            userName = comment.authorName ?: "",
-                            commentText = comment.text ?: "",
-                            userUrl = comment.authorUrl ?: "",
-                            userEmail = comment.authorEmail ?: ""
-                    )
-                }
-            }
-        }
-    }
-
     private fun initViews() {
         launch {
             setLoadingState(LOADING)
 
-            val commentEssentials = mapIdentifierToEssentials()
-
-            if (commentEssentials == null) {
+            val commentEssentials = withContext(bgDispatcher) {
+                mapCommentEssentials()
+            }
+            if (commentEssentials.isValid()) {
+                _uiState.value =
+                        EditCommentUiState(
+                                canSaveChanges = false,
+                                shouldInitComment = true,
+                                shouldInitWatchers = true,
+                                showProgress = LOADING.show,
+                                progressText = LOADING.progressText,
+                                originalComment = commentEssentials,
+                                editedComment = commentEssentials,
+                                editErrorStrings = EditErrorStrings(),
+                                inputSettings = mapInputSettings()
+                        )
+            } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
                         message = UiStringRes(R.string.error_load_comment),
-                        onDismissAction = { _ ->
-                            _uiActionEvent.value = Event(CLOSE)
-                        }
+                        onDismissAction = { _uiActionEvent.value = Event(CLOSE) }
                 ))
-                return@launch
             }
-
-            _uiState.value = EditCommentUiState(
-                    canSaveChanges = false,
-                    shouldInitComment = true,
-                    shouldInitWatchers = true,
-                    showProgress = LOADING.show,
-                    progressText = LOADING.progressText,
-                    originalComment = commentEssentials,
-                    editedComment = commentEssentials,
-                    editErrorStrings = EditErrorStrings()
-            )
-
             delay(LOADING_DELAY_MS)
             setLoadingState(NOT_VISIBLE)
         }
+    }
+
+    private suspend fun mapCommentEssentials(): CommentEssentials {
+        val commentEntity = getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)
+        return if (commentEntity != null) {
+            CommentEssentials(
+                    commentId = commentEntity.id,
+                    userName = commentEntity.authorName ?: "",
+                    commentText = commentEntity.content ?: "",
+                    userUrl = commentEntity.authorUrl ?: "",
+                    userEmail = commentEntity.authorEmail ?: ""
+            )
+        } else {
+            CommentEssentials()
+        }
+    }
+
+    private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
+        val commentEntity =
+                commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
+        commentEntity?.run {
+            val isCommentEntityUpdated = updateCommentEntity(this, editedCommentEssentials)
+            if (isCommentEntityUpdated) {
+                if (commentIdentifier is NotificationCommentIdentifier) {
+                    updateNotificationEntity()
+                } else {
+                    _uiActionEvent.postValue(Event(DONE))
+                    localCommentCacheUpdateHandler.requestCommentsUpdate()
+                }
+            } else {
+                showUpdateCommentError()
+            }
+        } ?: showUpdateCommentError()
+    }
+
+    private suspend fun updateCommentEntity(
+        comment: CommentEntity,
+        editedCommentEssentials: CommentEssentials
+    ): Boolean {
+        val updatedComment = comment.copy(
+                authorUrl = editedCommentEssentials.userUrl,
+                authorName = editedCommentEssentials.userName,
+                authorEmail = editedCommentEssentials.userEmail,
+                content = editedCommentEssentials.commentText
+        )
+
+//        return suspendCoroutine { continuation ->
+//            readerCommentActionsWrapper.updateComment(
+//                    comment,
+//                    listener = { succeeded, newComment ->
+//                        continuation.resume(succeeded)
+//                    })
+//        }
+
+        val result = commentsStore.updateEditComment(site, updatedComment)
+        return !result.isError
+    }
+
+    private suspend fun updateNotificationEntity() {
+        with(commentIdentifier as NotificationCommentIdentifier) {
+            val isNotificationEntityUpdated = notificationActionsWrapper.downloadNoteAndUpdateDB(noteId)
+            if (isNotificationEntityUpdated) {
+                _uiActionEvent.postValue(Event(DONE))
+                localCommentCacheUpdateHandler.requestCommentsUpdate()
+            } else {
+                showUpdateNotificationError()
+            }
+        }
+    }
+
+    private suspend fun showUpdateCommentError() {
+        setLoadingState(NOT_VISIBLE)
+        _onSnackbarMessage.postValue(
+                Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_comment)))
+        )
+    }
+
+    private suspend fun showUpdateNotificationError() {
+        setLoadingState(NOT_VISIBLE)
+        _onSnackbarMessage.postValue(
+                Event(SnackbarMessageHolder(UiStringRes(R.string.error_edit_notification)))
+        )
     }
 
     fun onValidateField(field: String, fieldType: FieldType) {
@@ -360,12 +346,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
-    private fun CommentEssentials.isNotEqualTo(other: CommentEssentials): Boolean {
-        return !(this.commentText == other.commentText &&
-                this.userEmail == other.userEmail &&
-                this.userName == other.userName &&
-                this.userUrl == other.userUrl)
-    }
+    private fun mapInputSettings() = InputSettings(
+            enableEditName = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditUrl = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditEmail = commentIdentifier !is NotificationCommentIdentifier,
+            enableEditComment = true
+    )
 
     private fun EditErrorStrings.hasError(): Boolean {
         return listOf(
