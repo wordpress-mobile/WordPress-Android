@@ -543,8 +543,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             case EDIT:
                 openCommentEditor(comment);
                 break;
-            case UNAPROVE:
-                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unarppoved);
+            case UNAPPROVE:
+                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unapproved,
+                        Stat.COMMENT_UNAPPROVED);
                 break;
             case SPAM:
                 moderateComment(comment, CommentStatus.SPAM, R.string.comment_spammed, Stat.COMMENT_SPAMMED);
@@ -562,14 +563,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private void openCommentEditor(ReaderComment comment) {
         SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
-        Intent intent = new Intent(this, UnifiedCommentsEditActivity.class);
-        intent.putExtra(WordPress.SITE, postSite);
-        intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_IDENTIFIER,
-                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId));
+        final Intent intent = UnifiedCommentsEditActivity
+                .createIntent(this, new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId),
+                        postSite);
         startActivityForResult(intent, 3819283);
     }
 
-    private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage) {
+    private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage, Stat tracker) {
         getCommentAdapter().removeComment(comment.commentId);
         checkEmptyView();
 
@@ -746,7 +746,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(commentId -> setReplyToCommentId(commentId, true));
             // adapter calls this when user taps share icon
-            mCommentAdapter.setCommentShareListener(this::performCommentAction);
+            mCommentAdapter.setCommentMenuActionListener(this::performCommentAction);
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {

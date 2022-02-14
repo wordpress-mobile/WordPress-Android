@@ -75,6 +75,7 @@ import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListe
 import org.wordpress.android.ui.comments.unified.CommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentSource;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -104,7 +105,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
