@@ -353,7 +353,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should trigger DONE action on save if ReaderCommentIdentifier and reader entity update`() {
+    fun `Should trigger DONE action on save if ReaderCommentIdentifier and reader entity updated`() {
         test {
             whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
                     .thenReturn(listOf(COMMENT_ENTITY))
