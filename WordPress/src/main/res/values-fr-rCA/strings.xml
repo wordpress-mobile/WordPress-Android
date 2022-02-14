@@ -59,7 +59,6 @@ Language: fr
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Appuyez deux fois pour sélectionner la taille de police par défaut</string>
     <string name="gutenberg_native_contact_support">Contacter le service support</string>
     <string name="gutenberg_native_1_s_2_s"> %1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Aucun contenu</string>
     <string name="reader_comments_follow_conversation">S’abonner à la conversation</string>
     <string name="reader_comments_be_first_to_comment">Écrivez le premier commentaire</string>
     <string name="reader_comments_view_all">Voir tous les commentaires</string>
@@ -182,7 +181,6 @@ Language: fr
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Les blocs sont des éléments de contenu que vous pouvez insérer, réorganiser et styliser sans avoir besoin de savoir coder. Les blocs sont un moyen simple et moderne de créer de belles mises en page.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Les blocs vous permettent de vous concentrer sur la rédaction de votre contenu, en sachant que tous les outils de mise en forme dont vous avez besoin sont là pour vous aider à faire passer votre message.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organisez votre contenu en colonnes, ajoutez des boutons d’appel à l’action et superposez des images avec du texte.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Ajoutez un nouveau bloc à tout moment en appuyant sur l’icône + dans la barre d’outils en bas à gauche. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s sur %2$s terminés</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Apprenez les bases avec une procédure pas à pas rapide.</string>
     <string name="comment_batch_moderation_error">Échec de la modération d’un ou de plusieurs commentaires</string>
@@ -253,8 +251,6 @@ Language: fr
     <string name="storage_utils_dialog_ok_button">Afficher le stockage</string>
     <string name="storage_utils_dialog_message">Nous devons enregistrer votre contenu sur l’appareil avant de pouvoir le publier. Vérifiez les réglages de votre stockage et supprimez des fichiers pour libérer de l’espace.</string>
     <string name="storage_utils_dialog_title">Stockage de l’appareil insuffisant</string>
-    <string name="gutenberg_native_y_axis_position">Position de l’axe Y</string>
-    <string name="gutenberg_native_x_axis_position">Position de l’axe X</string>
     <string name="gutenberg_native_type_a_url">Saisir une URL</string>
     <string name="gutenberg_native_slash_inserter_results">Résultats de l’outil d’insertion de barre oblique</string>
     <string name="gutenberg_native_s_has_url_set">%s a une URL définie</string>
@@ -318,7 +314,6 @@ Language: fr
     <string name="gutenberg_native_transform_block">Transformer le bloc…</string>
     <string name="gutenberg_native_failed_to_insert_media">Échec d’insertion du média.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Échec d’insertion du fichier audio</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Décrivez le rôle de cette image. Ne rien remplir si l’image est purement décorative. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s a été transformé en %2$s</string>
     <string name="like_faces_error_loading_message">Erreur lors du chargement des données. %s.</string>
     <string name="like_title_plural">%d mentions J\'aime</string>
@@ -336,7 +331,6 @@ Language: fr
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Appuyer deux fois pour modifier le texte indicatif</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Appuyer deux fois pour modifier le texte de l’étiquette</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Appuyer deux fois pour modifier le texte du bouton</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">Appuyer deux fois pour modifier l’unité</string>
     <string name="gutenberg_native_current_placeholder_text_is">Le texte indicatif actuel est</string>
     <string name="gutenberg_native_clear_search">Supprimer la recherche</string>
     <string name="gutenberg_native_cancel_search">Annuler la recherche</string>
@@ -720,7 +714,6 @@ Language: fr
     <string name="media_loading_failed">Échec du chargement du média</string>
     <string name="reader_discover_recommended_blogs_header">Sites à suivre</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Nous travaillons dur pour ajouter plus de blocs à chaque version.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">« %s » n’est pas entièrement pris en charge</string>
     <string name="gutenberg_native_help_button">Bouton d’aide</string>
     <string name="gutenberg_native_edit_using_web_editor">Modifier avec l’éditeur web</string>
     <string name="gutenberg_native_choose_images">Choisir des images</string>
@@ -2959,6 +2952,7 @@ Language: fr
     <string name="reader_likes_multi">%,d personnes aiment ça</string>
     <string name="cant_share_no_visible_blog">Vous ne pouvez pas partager vers WordPress sans avoir publié au moins un blog.</string>
     <string name="comment_spammed">Commentaire marqué comme indésirable</string>
+    <string name="comment_unapproved">Commentaire désapprouvé</string>
     <string name="reader_toast_err_get_post">Impossible de récupérer cet article</string>
     <string name="reader_likes_you_and_one">Vous et un autre avez aimé ceci</string>
     <string name="pick_video">Sélectionner une vidéo</string>

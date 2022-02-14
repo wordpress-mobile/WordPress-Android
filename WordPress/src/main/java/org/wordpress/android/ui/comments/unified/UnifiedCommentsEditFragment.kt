@@ -55,11 +55,15 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         super.onViewCreated(view, savedInstanceState)
 
         val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        val commentId = requireArguments().getInt(KEY_COMMENT_ID)
+        val commentIdentifier = requireNotNull(
+                requireArguments().getParcelable<CommentIdentifier>(
+                        KEY_COMMENT_IDENTIFIER
+                )
+        )
 
         UnifiedCommentsEditFragmentBinding.bind(view).apply {
             setupToolbar()
-            setupObservers(site, commentId)
+            setupObservers(site, commentIdentifier)
         }
     }
 
@@ -89,7 +93,10 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
         ActivityUtils.hideKeyboardForced(view)
     }
 
-    private fun UnifiedCommentsEditFragmentBinding.setupObservers(site: SiteModel, commentId: Int) {
+    private fun UnifiedCommentsEditFragmentBinding.setupObservers(
+        site: SiteModel,
+        commentIdentifier: CommentIdentifier
+    ) {
         viewModel.uiActionEvent.observeEvent(viewLifecycleOwner, {
             when (it) {
                 CLOSE -> {
@@ -142,9 +149,16 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
                 commentEditEmailAddress.error = errors.userEmailError
                 commentEditComment.error = errors.commentTextError
             }
+
+            with(uiState.inputSettings) {
+                commentEditComment.isEnabled = enableEditComment
+                commentEditWebAddress.isEnabled = enableEditUrl
+                commentEditEmailAddress.isEnabled = enableEditEmail
+                userName.isEnabled = enableEditName
+            }
         })
 
-        viewModel.start(site, commentId)
+        viewModel.start(site, commentIdentifier)
     }
 
     private fun UnifiedCommentsEditFragmentBinding.showSnackbar(holder: SnackbarMessageHolder) {
@@ -210,13 +224,13 @@ class UnifiedCommentsEditFragment : Fragment(R.layout.unified_comments_edit_frag
     }
 
     companion object {
-        private const val KEY_COMMENT_ID = "key_comment_id"
+        private const val KEY_COMMENT_IDENTIFIER = "key_comment_identifier"
 
-        fun newInstance(site: SiteModel, commentId: Int): UnifiedCommentsEditFragment {
+        fun newInstance(site: SiteModel, commentIdentifier: CommentIdentifier): UnifiedCommentsEditFragment {
             val args = Bundle()
 
             args.putSerializable(WordPress.SITE, site)
-            args.putInt(KEY_COMMENT_ID, commentId)
+            args.putParcelable(KEY_COMMENT_IDENTIFIER, commentIdentifier)
 
             val fragment = UnifiedCommentsEditFragment()
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Gravity.CENTER_HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ import javax.inject.Inject
 
 private const val INITIAL_SCALE = 90
 private const val JS_EVALUATION_DELAY = 250L
+private const val JS_READY_CALLBACK_ID = 926L
 
 abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     @Inject lateinit var displayUtilsWrapper: DisplayUtilsWrapper
@@ -127,8 +129,16 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
                 setWebViewWidth(view, width)
                 val widthScript = context?.getString(R.string.web_preview_width_script, width)
                 if (widthScript != null) {
-                    Handler().postDelayed({
-                        view.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded() }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        view.evaluateJavascript(widthScript) {
+                            view.postVisualStateCallback(JS_READY_CALLBACK_ID, object : WebView.VisualStateCallback() {
+                                override fun onComplete(requestId: Long) {
+                                    if (JS_READY_CALLBACK_ID == requestId) {
+                                        viewModel.onPreviewLoaded()
+                                    }
+                                }
+                            })
+                        }
                     }, JS_EVALUATION_DELAY)
                 }
             }

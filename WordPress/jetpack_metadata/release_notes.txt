@@ -1,5 +1,4 @@
-* [*] Block editor: Replacing the media for an image set as featured prompts to update the featured image [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3930]
-* [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
-* [**] Stats revamp: Adding a new settings button to the top app bar to manage Stats Insights Cards [https://github.com/wordpress-mobile/WordPress-Android/pull/15891]
-* [***] Block editor: Font size and line-height support for text-based blocks used in block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4519]
-
+- Font size and line height are now supported for block themes.
+- Add new stat cards in the Settings menu on the Stats screen.
+- When changing the media in an Image block that’s also a post’s Featured Image, get a prompt to replace the Featured Image.
+- Share text, images, and video in the app using your device’s Share action.
