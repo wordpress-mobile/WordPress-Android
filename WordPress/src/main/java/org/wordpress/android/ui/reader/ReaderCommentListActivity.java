@@ -563,10 +563,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
 
     private void openCommentEditor(ReaderComment comment) {
         SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
-        final Intent intent = UnifiedCommentsEditActivity
-                .createIntent(this, new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId),
-                        postSite);
-        startActivityForResult(intent, 3819283);
+        final Intent intent = UnifiedCommentsEditActivity.createIntent(this,
+                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId), postSite);
+        startActivity(intent);
     }
 
     private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage, Stat tracker) {

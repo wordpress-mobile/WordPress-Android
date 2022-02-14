@@ -313,7 +313,6 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
         _uiActionEvent.postValue(Event(DONE))
         localCommentCacheUpdateHandler.requestCommentsUpdate()
-
     }
 
     private suspend fun showUpdateCommentError() {

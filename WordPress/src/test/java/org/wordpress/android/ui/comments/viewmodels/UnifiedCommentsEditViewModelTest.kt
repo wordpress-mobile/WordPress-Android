@@ -229,7 +229,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should ENABLE edit name for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0,0, 0L))
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
         assertThat(uiState.first().inputSettings.enableEditName).isTrue
     }
 
@@ -247,7 +247,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should ENABLE edit URL for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0,0, 0L))
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
         assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
     }
 
@@ -265,7 +265,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should ENABLE edit email for ReaderCommentIdentifier`() {
-        viewModel.start(site,  ReaderCommentIdentifier(0,0, 0L))
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
         assertThat(uiState.first().inputSettings.enableEditEmail).isTrue
     }
 
@@ -283,7 +283,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should ENABLE edit comment content for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0,0, 0L))
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
         assertThat(uiState.first().inputSettings.enableEditComment).isTrue
     }
 
@@ -325,7 +325,6 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         viewModel.onActionMenuClicked()
         verify(notificationActionsWrapper, times(0)).downloadNoteAndUpdateDB(noteId)
     }
-
 
     @Test
     fun `Should update local reader entity on save if ReaderCommentIdentifier`() = test {
