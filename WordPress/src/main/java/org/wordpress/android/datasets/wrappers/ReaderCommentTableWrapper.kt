@@ -21,4 +21,6 @@ class ReaderCommentTableWrapper @Inject constructor() {
                     postId,
                     commentId
             )
+
+    fun addOrUpdateComment(readerComment: ReaderComment) = ReaderCommentTable.addOrUpdateComment(readerComment)
 }
