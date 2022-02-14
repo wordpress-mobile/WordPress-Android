@@ -31,7 +31,7 @@ class LoginEpilogueViewModel @Inject constructor(
     }
 
     private fun handleNoSitesFound() {
-        if (buildConfigWrapper.isJetpackApp) {
+        if (buildConfigWrapper.isJetpackApp && !buildConfigWrapper.isSiteCreationEnabled) {
             _navigationEvents.postValue(Event(LoginNavigationEvents.ShowNoJetpackSites))
         } else {
             if (appPrefsWrapper.shouldShowPostSignupInterstitial) {

@@ -307,7 +307,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case JETPACK_LOGIN_ONLY:
-                if (!mSiteStore.hasSite()) {
+                if (!mSiteStore.hasSite() && !mBuildConfigWrapper.isSiteCreationEnabled()) {
                     handleNoJetpackSites();
                 } else {
                     ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
