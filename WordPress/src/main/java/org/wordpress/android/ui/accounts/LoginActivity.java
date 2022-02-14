@@ -310,7 +310,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 if (!mSiteStore.hasSite() && !mBuildConfigWrapper.isSiteCreationEnabled()) {
                     handleNoJetpackSites();
                 } else {
-                    ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                    if (!mSiteStore.hasSite()
+                        && AppPrefs.shouldShowPostSignupInterstitial()
+                        && !doLoginUpdate
+                        && mBuildConfigWrapper.isSiteCreationEnabled()
+                        && mBuildConfigWrapper.isSignupEnabled()
+                    ) {
+                        ActivityLauncher.showPostSignupInterstitial(this);
+                    } else {
+                        ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                    }
                     setResult(Activity.RESULT_OK);
                     finish();
                 }

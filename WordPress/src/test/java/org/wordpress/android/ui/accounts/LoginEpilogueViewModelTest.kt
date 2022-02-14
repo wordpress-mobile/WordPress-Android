@@ -179,6 +179,54 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
 
     /* Jetpack app - Epilogue Screen On Continue */
     @Test
+    fun `given jp app no site + signup disabled, when continued, then screen closes with ok result`() {
+        init(
+                isJetpackApp = true,
+                hasSite = false,
+                isSiteCreationEnabled = true,
+                isSignupEnabled = false
+        )
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onContinue()
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
+    }
+
+    @Test
+    fun `given jp app no site + signup enabled, when continued 1st time, then signup interstitial shown`() {
+        init(
+                isJetpackApp = true,
+                hasSite = false,
+                isSiteCreationEnabled = true,
+                isSignupEnabled = true,
+                postSignupInterstitialShownEarlier = false
+        )
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onContinue()
+
+        assertThat(navigationEvents.first())
+                .isInstanceOf(LoginNavigationEvents.ShowPostSignupInterstitialScreen::class.java)
+    }
+
+    @Test
+    fun `given jp app no site + signup enabled, when continued next time, then screen closes with ok result`() {
+        init(
+                isJetpackApp = true,
+                hasSite = false,
+                isSiteCreationEnabled = true,
+                isSignupEnabled = true,
+                postSignupInterstitialShownEarlier = true
+        )
+        val navigationEvents = initObservers().navigationEvents
+
+        viewModel.onContinue()
+
+        assertThat(navigationEvents.first()).isInstanceOf(LoginNavigationEvents.CloseWithResultOk::class.java)
+    }
+
+    @Test
     fun `given jp app with sites, when continued, then screen closes with ok result`() {
         init(isJetpackApp = true, hasSite = true, isSiteCreationEnabled = false)
         val navigationEvents = initObservers().navigationEvents
@@ -220,11 +268,13 @@ class LoginEpilogueViewModelTest : BaseUnitTest() {
     fun init(
         isJetpackApp: Boolean,
         isSiteCreationEnabled: Boolean = true,
+        isSignupEnabled: Boolean = true,
         hasSite: Boolean = false,
         postSignupInterstitialShownEarlier: Boolean = false
     ) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
         whenever(buildConfigWrapper.isSiteCreationEnabled).thenReturn(isSiteCreationEnabled)
+        whenever(buildConfigWrapper.isSignupEnabled).thenReturn(isSignupEnabled)
         whenever(siteStore.hasSite()).thenReturn(hasSite)
         whenever(appPrefsWrapper.shouldShowPostSignupInterstitial).thenReturn(!postSignupInterstitialShownEarlier)
     }

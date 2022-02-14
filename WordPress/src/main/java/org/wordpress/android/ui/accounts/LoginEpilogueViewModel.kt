@@ -34,7 +34,7 @@ class LoginEpilogueViewModel @Inject constructor(
         if (buildConfigWrapper.isJetpackApp && !buildConfigWrapper.isSiteCreationEnabled) {
             _navigationEvents.postValue(Event(LoginNavigationEvents.ShowNoJetpackSites))
         } else {
-            if (appPrefsWrapper.shouldShowPostSignupInterstitial) {
+            if (appPrefsWrapper.shouldShowPostSignupInterstitial && buildConfigWrapper.isSignupEnabled) {
                 _navigationEvents.postValue(Event(LoginNavigationEvents.ShowPostSignupInterstitialScreen))
             }
             _navigationEvents.postValue(Event(LoginNavigationEvents.CloseWithResultOk))
