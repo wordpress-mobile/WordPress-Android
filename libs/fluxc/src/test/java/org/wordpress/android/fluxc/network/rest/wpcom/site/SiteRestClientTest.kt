@@ -197,8 +197,9 @@ class SiteRestClientTest {
         val visibility = PUBLIC
         val segmentId = 123L
         val siteDesign = "design"
+        val timeZoneId = "Europe/London"
 
-        val result = restClient.newSite(siteName, language, visibility, segmentId, siteDesign, dryRun)
+        val result = restClient.newSite(siteName, language, timeZoneId, visibility, segmentId, siteDesign, dryRun)
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
         assertThat(result.dryRun).isEqualTo(dryRun)
@@ -213,7 +214,11 @@ class SiteRestClientTest {
                         "validate" to "0",
                         "client_id" to appId,
                         "client_secret" to appSecret,
-                        "options" to mapOf<String, Any>("site_segment" to segmentId, "template" to siteDesign)
+                        "options" to mapOf<String, Any>(
+                                "site_segment" to segmentId,
+                                "template" to siteDesign,
+                                "timezone_string" to timeZoneId
+                        )
                 )
         )
     }
@@ -235,8 +240,9 @@ class SiteRestClientTest {
         val siteName = "Site name"
         val language = "CZ"
         val visibility = SiteVisibility.PRIVATE
+        val timeZoneId = "Europe/London"
 
-        val result = restClient.newSite(siteName, language, visibility, null, null, dryRun)
+        val result = restClient.newSite(siteName, language, timeZoneId, visibility, null, null, dryRun)
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
         assertThat(result.dryRun).isEqualTo(dryRun)
@@ -250,7 +256,8 @@ class SiteRestClientTest {
                         "public" to "-1",
                         "validate" to "1",
                         "client_id" to appId,
-                        "client_secret" to appSecret
+                        "client_secret" to appSecret,
+                        "options" to mapOf<String, Any>("timezone_string" to timeZoneId)
                 )
         )
     }
