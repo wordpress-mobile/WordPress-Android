@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-30 02:49:50+0000
+Translation-Revision-Date: 2022-02-08 12:39:01+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="comment_moderation_error">Gagal memoderasi komentar</string>
+    <string name="reader_comment_menu_trash">Pindahkan ke Tong Sampah</string>
+    <string name="reader_comment_menu_spam">Tandai sebagai Spam</string>
+    <string name="reader_comment_menu_unapprove">Tolak</string>
     <string name="gutenberg_native_tiled_gallery_settings">Pengaturan galeri tampilan kotak</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Buka layar pemilihan tata letak</string>
     <string name="gutenberg_native_gallery_style">Gaya galeri</string>
@@ -59,7 +63,6 @@ Language: id
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Ketuk dua kali untuk memilih ukuran font default</string>
     <string name="gutenberg_native_contact_support">Hubungi dukungan</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Tidak Ada Konten</string>
     <string name="reader_comments_follow_conversation">Ikuti Percakapan</string>
     <string name="reader_comments_be_first_to_comment">Jadilah yang pertama memberi komentar</string>
     <string name="reader_comments_view_all">Lihat semua komentar</string>
@@ -182,7 +185,7 @@ Language: id
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blok adalah bagian-bagian konten yang dapat Anda masukkan, atur ulang, dan tata gayanya tanpa perlu menulis kode. Blok adalah cara yang mudah dan modern untuk membuat tata letak yang indah.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Dengan blok, Anda dapat fokus menulis konten, karena semua alat pemformatan yang dibutuhkan tersedia untuk membantu Anda menyampaikan pesan.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Atur konten ke dalam kolom-kolom, tambahkan tombol Ajakan Bertindak, dan lengkapi gambar dengan teks.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Tambahkan blok baru kapan saja dengan mengetuk ikon + pada bilah peralatan di kiri bawah. </string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Tambahkan blok baru kapan saja dengan mengetuk ikon + pada toolbar di kiri bawah.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s dari %2$s selesai</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Pelajari dasar-dasarnya dengan panduan cepat.</string>
     <string name="comment_batch_moderation_error">Gagal memoderasi satu atau lebih komentar</string>
@@ -2959,6 +2962,7 @@ Language: id
     <string name="reader_likes_multi">%,d orang menyukai ini</string>
     <string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
     <string name="comment_spammed">Komentar ditandai sebagai spam</string>
+    <string name="comment_unapproved">Komentar tidak disetujui</string>
     <string name="reader_toast_err_get_post">Gagal membuka pos ini</string>
     <string name="reader_likes_you_and_one">Anda dan satu orang lainnya menyukai ini</string>
     <string name="pick_video">Pilih video</string>

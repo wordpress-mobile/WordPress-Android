@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-25 13:12:02+0000
+Translation-Revision-Date: 2022-02-07 18:52:11+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="comment_moderation_error">Moderarea comentariilor a eșuat</string>
+    <string name="reader_comment_menu_trash">Aruncă la gunoi</string>
+    <string name="reader_comment_menu_spam">Marchează ca spam</string>
+    <string name="reader_comment_menu_unapprove">Dezaprobă</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navighează la ecranul de selectare a aranjamentului</string>
     <string name="gutenberg_native_tiled_gallery_settings">Setări galerii placate</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
@@ -60,7 +64,6 @@ Language: ro
     <string name="reader_comments_view_all">Vezi toate comentariile</string>
     <string name="reader_comments_be_first_to_comment">Fii primul care comentează</string>
     <string name="reader_comments_follow_conversation">Urmărește conversația</string>
-    <string name="my_site_no_content_post">Fără conținut</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="gutenberg_native_contact_support">Contactează suportul</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Atinge de două ori pentru a selecta dimensiunea implicită pentru font</string>
@@ -182,8 +185,8 @@ Language: ro
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blocurile sunt părți de conținut pe care le poți insera, rearanja și folosi în forma lor fără să scrii sau să modifici vreun cod. Blocurile sunt o modalitate ușoară și modernă de a crea aranjamente frumoase.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocurile îți permit să te concentrezi pe scrierea conținutului, știind că toate instrumentele de formatare de care ai nevoie sunt acolo ca să te ajute să transmiți mesajul.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Îți aranjezi conținutul pe coloane, adaugi butoane pentru Apeluri la acțiune și suprapui text peste imagini.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Poți să adaugi un bloc oricând prin atingerea iconului + din bara de unelte, în stânga jos.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s din %2$s sunt finalizate</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Poți să adaugi oricând un bloc prin atingerea iconului + din bara de unelte, în stânga jos.</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Învață elementele de bază printr-un tur ghidat rapid.</string>
     <string name="comment_batch_moderation_error">Moderarea unuia sau a mai multor comentarii a eșuat</string>
     <string name="create_site_notification_create_site_action">Creează un site</string>
@@ -253,8 +256,8 @@ Language: ro
     <string name="storage_utils_dialog_message">Înainte de a putea fi publicat, trebuie să salvăm conținutul pe dispozitivul tău. Examinează setările pentru spațiul de stocare și înlătură câteva fișiere pentru a elibera spațiu.</string>
     <string name="storage_utils_dialog_dont_show_button">Nu arăta din nou</string>
     <string name="storage_utils_dialog_title">Spațiu de stocare insuficient pe dispozitiv</string>
-    <string name="gutenberg_native_y_axis_position">Poziția axei Y</string>
-    <string name="gutenberg_native_x_axis_position">Poziția axei X</string>
+    <string name="gutenberg_native_y_axis_position">Poziție pe axa Y</string>
+    <string name="gutenberg_native_x_axis_position">Poziție pe axa X</string>
     <string name="gutenberg_native_type_a_url">Introdu un URL</string>
     <string name="gutenberg_native_s_has_url_set">%s are setat un URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s nu are setat un URL</string>
@@ -2461,9 +2464,9 @@ Language: ro
     <string name="image_settings_dismiss_dialog_title">Renunți la modificările nesalvate?</string>
     <string name="stop_upload_dialog_title">Oprești încărcarea?</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
-    <string name="invite_sent">Invitație trimisă cu succes</string>
     <string name="tap_to_try_again">Atinge pentru a încerca din nou!</string>
     <string name="invite_error_some_failed">Invitația a fost trimisă, dar a apărut cel puțin o eroare!</string>
+    <string name="invite_sent">Am trimis cu succes invitația</string>
     <string name="invite_error_sending">A apărut o eroare în timpul încercării de trimitere a invitației!</string>
     <string name="invite_error_invalid_usernames_multiple">Nu pot trimite: există nume de utilizator sau emailuri invalide</string>
     <string name="invite_error_invalid_usernames_one">Nu pot trimite: un nume utilizator sau un email este invalid</string>
@@ -2959,6 +2962,7 @@ Language: ro
     <string name="reader_likes_you_and_multi">Tu și alții %,d apreciați asta</string>
     <string name="reader_likes_multi">%,d persoane apreciază asta</string>
     <string name="comment_spammed">Comentariul a fost marcat ca spam</string>
+    <string name="comment_unapproved">Comentariu neaprobat</string>
     <string name="reader_likes_you_and_one">Tu și încă unul apreciați asta</string>
     <string name="pick_photo">Selectare fotografie</string>
     <string name="reader_toast_err_get_post">Nu pot aduce acest articol</string>

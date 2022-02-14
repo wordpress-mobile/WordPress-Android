@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-25 03:33:52+0000
+Translation-Revision-Date: 2022-02-09 09:58:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="comment_moderation_error">Yorumlar kontrol edilemedi</string>
+    <string name="reader_comment_menu_trash">Çöpe taşı</string>
+    <string name="reader_comment_menu_spam">İstenmeyen olarak işaretle</string>
+    <string name="reader_comment_menu_unapprove">Onayı kaldır</string>
     <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
     <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
@@ -59,7 +63,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Varsayılan yazı tipi boyutunu seçmek için iki kez dokunun</string>
     <string name="gutenberg_native_contact_support">Destek ile iletişim kur</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">İçerik Yok</string>
     <string name="reader_comments_follow_conversation">Sohbeti Takip Et</string>
     <string name="reader_comments_be_first_to_comment">İlk yorumu siz yapın</string>
     <string name="reader_comments_view_all">Tüm yorumları görüntüle</string>
@@ -720,7 +723,7 @@ Language: tr
     <string name="media_loading_failed">Medya yükleme başarısız oldu</string>
     <string name="reader_discover_recommended_blogs_header">Takip edilecek siteler</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" tamamen desteklenmiyor</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' tamamen desteklenmiyor</string>
     <string name="gutenberg_native_help_button">Yardım düğmesi</string>
     <string name="gutenberg_native_edit_using_web_editor">Web düzenleyicisini kullanarak düzenle</string>
     <string name="gutenberg_native_choose_images">Görsel seç</string>
@@ -2959,6 +2962,7 @@ Language: tr
     <string name="reader_likes_multi">%,d kişi bunu beğendi</string>
     <string name="cant_share_no_visible_blog">Görünür bir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
+    <string name="comment_unapproved">Yorumun onayı kaldırıldı</string>
     <string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>
     <string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
     <string name="pick_video">Video seçin</string>
