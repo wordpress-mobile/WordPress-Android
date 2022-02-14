@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-12-20 22:02:12+0000
+Translation-Revision-Date: 2022-02-14 03:28:36+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
 -->
 <resources>
+    <string name="reader_comment_menu_trash">Пребаци у Отпад</string>
+    <string name="reader_comment_menu_spam">Означи као Непожељно</string>
+    <string name="reader_comment_menu_unapprove">Поништи одобрење</string>
+    <string name="about_automattic_app_icon_description">Иконица апликације</string>
+    <string name="about_automattic_back_icon_description">Иконица за повратак</string>
+    <string name="about_automattic_logo_description">Лого Automattic-а</string>
+    <string name="about_automattic_wordpress">Вордпрес</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_source_code_item_title">Изворни код</string>
+    <string name="about_automattic_privacy_policy_item_title">Политика приватности</string>
+    <string name="about_automattic_terms_of_service_item_title">Услови коришћења</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Ради од било где</string>
+    <string name="about_automattic_work_with_us_item_title">Ради с нама</string>
+    <string name="about_automattic_family_item_title">Automattic породица</string>
+    <string name="about_automattic_twitter_item_title">Твитер</string>
+    <string name="about_automattic_instagram_item_title">Инстаграм</string>
+    <string name="about_automattic_share_with_friends_item_title">Подели с пријатељима</string>
+    <string name="gutenberg_native_add_media">Додај саржај</string>
+    <string name="gutenberg_native_address_settings">Подешавања адресе</string>
+    <string name="about_automattic_version_label">Верзија %1$s</string>
+    <string name="about_blog">Блог</string>
+    <string name="about_automattic_main_page_title">О %1$s</string>
+    <string name="gutenberg_native_the_basics">Основе</string>
+    <string name="gutenberg_native_selected_default">Одабрано: Уобичајено</string>
+    <string name="gutenberg_native_get_support">Тражи подршку</string>
+    <string name="gutenberg_native_font_size">Величина слова</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_contact_support">Контактирајте подршку</string>
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
