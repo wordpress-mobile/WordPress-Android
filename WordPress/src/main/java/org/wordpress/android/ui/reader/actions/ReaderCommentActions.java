@@ -213,39 +213,4 @@ public class ReaderCommentActions {
         AppLog.i(T.READER, "moderating comment");
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
-
-    public static void updateComment(final ReaderComment comment,
-                                     final ReaderActions.CommentActionListener actionListener) {
-        if (comment == null) {
-            return;
-        }
-
-        Map<String, String> params = new HashMap<>();
-        params.put("content", comment.getText());
-        params.put("author", comment.getAuthorName());
-        params.put("author_email", comment.getAuthorEmail());
-        params.put("author_url", comment.getAuthorUrl());
-
-        final String path = "sites/" + comment.blogId + "/comments/" + comment.commentId;
-
-        RestRequest.Listener listener = jsonObject -> {
-            ReaderComment newComment = ReaderComment.fromJson(jsonObject, comment.blogId);
-            ReaderCommentTable.addOrUpdateComment(newComment);
-            if (actionListener != null) {
-                actionListener.onActionResult(true, newComment);
-            }
-//            EventBus.getDefault().post(new ReaderEvents.CommentModerated(true, comment.commentId));
-        };
-        RestRequest.ErrorListener errorListener = volleyError -> {
-            AppLog.w(T.READER, "comment update failed");
-            AppLog.e(T.READER, volleyError);
-            if (actionListener != null) {
-                actionListener.onActionResult(false, null);
-            }
-//            EventBus.getDefault().post(new ReaderEvents.CommentModerated(false, comment.commentId));
-        };
-
-        AppLog.i(T.READER, "updating comment");
-        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
-    }
 }
