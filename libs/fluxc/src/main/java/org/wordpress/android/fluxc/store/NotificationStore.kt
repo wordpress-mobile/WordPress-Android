@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.store
 import android.annotation.SuppressLint
 import android.content.Context
 import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -39,6 +41,10 @@ class NotificationStore @Inject constructor(
     }
 
     private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
+
+    private val unreadNotificationUpdates: MutableSharedFlow<OnNotificationChanged> = MutableSharedFlow(replay = 0)
+
+    fun observeNotificationChanges(): Flow<OnNotificationChanged> = unreadNotificationUpdates
 
     class RegisterDevicePayload(
         val gcmToken: String,
@@ -454,6 +460,7 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.MARK_NOTIFICATIONS_SEEN
         }
         emitChange(onNotificationChanged)
+        onUnreadNotificationUpdate(onNotificationChanged)
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -483,7 +490,9 @@ class NotificationStore @Inject constructor(
                 result.notifications?.forEach {
                     changedNotificationLocalIds.add(it.noteId)
                 }
+                causeOfChange = NotificationAction.MARK_NOTIFICATIONS_SEEN
             }
+            onUnreadNotificationUpdate(onNotificationChanged)
             onNotificationChanged
         }
     }
@@ -496,5 +505,12 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.UPDATE_NOTIFICATION
         }
         emitChange(onNotificationChanged)
+        onUnreadNotificationUpdate(onNotificationChanged)
+    }
+
+    private fun onUnreadNotificationUpdate(onNotificationChanged: OnNotificationChanged) {
+        coroutineEngine.launch(T.API, this, "Unread notification state updated") {
+            unreadNotificationUpdates.emit(onNotificationChanged)
+        }
     }
 }
