@@ -11,6 +11,96 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/views_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/views_title"
+                style="@style/MySiteTodaysStatsCardStatTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_todays_stat_card_views"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/views_count"
+                style="@style/MySiteTodaysStatsCardStatCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/views_title"
+                tools:text="1 million" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/visitors_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toEndOf="@+id/views_layout"
+            app:layout_constraintTop_toTopOf="@+id/views_layout">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/visitors_title"
+                style="@style/MySiteTodaysStatsCardStatTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_todays_stat_card_visitors"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/visitors_count"
+                style="@style/MySiteTodaysStatsCardStatCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/visitors_title"
+                tools:text="1 million" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/likes_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/visitors_layout"
+            app:layout_constraintTop_toTopOf="@+id/visitors_layout">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/likes_title"
+                style="@style/MySiteTodaysStatsCardStatTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_todays_stat_card_likes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/likes_count"
+                style="@style/MySiteTodaysStatsCardStatCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/likes_title"
+                tools:text="1,123" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
             style="@style/MySiteTodaysStatsCardTitle"
@@ -22,61 +112,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/views_title"
-            style="@style/MySiteTodaysStatsCardStatTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/my_site_todays_stat_card_views"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/visitors_title"
-            style="@style/MySiteTodaysStatsCardStatTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_site_todays_stat_card_visitors"
-            app:layout_constraintStart_toStartOf="@+id/visitors_count"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/likes_title"
-            style="@style/MySiteTodaysStatsCardStatTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_site_todays_stat_card_likes"
-            app:layout_constraintStart_toStartOf="@+id/likes_count"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/views_count"
-            style="@style/MySiteTodaysStatsCardStatCountText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/views_title"
-            tools:text="1,987" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/visitors_count"
-            style="@style/MySiteTodaysStatsCardStatCountText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/views_count"
-            app:layout_constraintTop_toBottomOf="@+id/visitors_title"
-            tools:text="1,543" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/likes_count"
-            style="@style/MySiteTodaysStatsCardStatCountText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/visitors_count"
-            app:layout_constraintTop_toBottomOf="@+id/likes_title"
-            tools:text="1,123" />
-
         <include
             android:id="@+id/footer_link"
             layout="@layout/my_site_card_footer_link"
@@ -84,7 +119,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/views_count" />
+            app:layout_constraintTop_toBottomOf="@+id/views_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
