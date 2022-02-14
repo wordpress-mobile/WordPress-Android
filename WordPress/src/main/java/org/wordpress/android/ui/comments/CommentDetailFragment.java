@@ -655,6 +655,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (updatedComment != null) {
             setComment(updatedComment, mSite);
         }
+        if (mNotificationsDetailListFragment != null) {
+            mNotificationsDetailListFragment.refreshBlocksForEditedComment(mNote.getId());
+        }
     }
 
     /**
@@ -686,7 +689,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    // TODO [RenanLukas] handle Reader CommentSource when it's ready
     @Nullable
     private CommentIdentifier mapCommentIdentifier() {
         switch (mCommentSource) {
