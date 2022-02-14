@@ -168,13 +168,14 @@ class SiteStoreTest {
     @Test
     fun `creates a new site`() = test {
         val dryRun = false
-        val payload = NewSitePayload("New site", "CZ", PUBLIC, dryRun)
+        val payload = NewSitePayload("New site", "CZ", "Europe/London", PUBLIC, dryRun)
         val newSiteRemoteId: Long = 123
         val response = NewSiteResponsePayload(newSiteRemoteId, dryRun)
         whenever(
                 siteRestClient.newSite(
                         payload.siteName,
                         payload.language,
+                        payload.timeZoneId,
                         payload.visibility,
                         null,
                         null,
@@ -191,7 +192,7 @@ class SiteStoreTest {
     @Test
     fun `fails to create a new site`() = test {
         val dryRun = false
-        val payload = NewSitePayload("New site", "CZ", PUBLIC, dryRun)
+        val payload = NewSitePayload("New site", "CZ", "Europe/London", PUBLIC, dryRun)
         val response = NewSiteResponsePayload()
         val newSiteError = NewSiteError(SITE_NAME_INVALID, "Site name invalid")
         response.error = newSiteError
@@ -199,6 +200,7 @@ class SiteStoreTest {
                 siteRestClient.newSite(
                         payload.siteName,
                         payload.language,
+                        payload.timeZoneId,
                         payload.visibility,
                         null,
                         null,
