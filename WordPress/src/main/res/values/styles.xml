@@ -801,6 +801,8 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
         <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="MySiteTodaysStatsCardStatCountText">
@@ -814,6 +816,8 @@
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
         <item name="android:minWidth">@dimen/my_site_today_stats_card_stat_title_min_width</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <!--My Site Card - Post Item-->
