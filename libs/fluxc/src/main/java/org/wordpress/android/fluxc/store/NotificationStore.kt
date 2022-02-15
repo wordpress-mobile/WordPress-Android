@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -438,6 +439,7 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.FETCH_NOTIFICATION
         }
         emitChange(onNotificationChanged)
+        onUnreadNotificationUpdate(onNotificationChanged)
     }
 
     private fun markNotificationSeen(payload: MarkNotificationsSeenPayload) {
@@ -460,7 +462,6 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.MARK_NOTIFICATIONS_SEEN
         }
         emitChange(onNotificationChanged)
-        onUnreadNotificationUpdate(onNotificationChanged)
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -505,10 +506,13 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.UPDATE_NOTIFICATION
         }
         emitChange(onNotificationChanged)
-        onUnreadNotificationUpdate(onNotificationChanged)
     }
 
     private fun onUnreadNotificationUpdate(onNotificationChanged: OnNotificationChanged) {
+        Log.i(
+            "TEST_UNSEEN",
+            "NotificationStore onUnreadNotificationUpdate: ${onNotificationChanged.causeOfChange.toString()}"
+        )
         coroutineEngine.launch(T.API, this, "Unread notification state updated") {
             unreadNotificationUpdates.emit(onNotificationChanged)
         }
