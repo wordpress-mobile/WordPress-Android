@@ -18,13 +18,12 @@ set +o pipefail
 # Usage:
 #   rename_apk_aab.sh [file1.apk] [file2.aab] [...]
 #
-# Without any parameter, applies the rename to every APK/AAB file found in ~/Downloads
+# Without any parameter, applies the rename to every APK/AAB file found at the top level of the ~/Downloads directory
 #
 INPUT_FILES=( "$@" )
 if [[ $# -lt 1 ]]; then
-  IFS=$'\n'
-  INPUT_FILES=( $(find ~/Downloads -name *.apk -o -name *.aab) )
-  unset IFS
+  shopt -s nullglob
+  INPUT_FILES=(~/Downloads/*.{aab,apk})
 fi
 
 
