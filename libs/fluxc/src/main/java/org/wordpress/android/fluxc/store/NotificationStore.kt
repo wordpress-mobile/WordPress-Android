@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.store
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -509,10 +508,6 @@ class NotificationStore @Inject constructor(
     }
 
     private fun onUnreadNotificationUpdate(onNotificationChanged: OnNotificationChanged) {
-        Log.i(
-            "TEST_UNSEEN",
-            "NotificationStore onUnreadNotificationUpdate: ${onNotificationChanged.causeOfChange.toString()}"
-        )
         coroutineEngine.launch(T.API, this, "Unread notification state updated") {
             unreadNotificationUpdates.emit(onNotificationChanged)
         }
