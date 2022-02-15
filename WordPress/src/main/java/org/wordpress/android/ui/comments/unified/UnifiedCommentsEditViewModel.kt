@@ -304,11 +304,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 readerCommentIdentifier.remoteCommentId
         )
 
-        readerComment?.let {
-            it.text = commentEssentials.commentText
-            it.authorName = commentEssentials.userName
-            it.authorEmail = commentEssentials.userEmail
-            it.authorUrl = commentEssentials.userUrl
+        readerComment?.apply {
+            text = commentEssentials.commentText
+            authorName = commentEssentials.userName
+            authorEmail = commentEssentials.userEmail
+            authorUrl = commentEssentials.userUrl
             readerCommentTableWrapper.addOrUpdateComment(readerComment)
         }
         _uiActionEvent.postValue(Event(DONE))
