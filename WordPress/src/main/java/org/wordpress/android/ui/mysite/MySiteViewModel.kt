@@ -324,8 +324,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
-        val shouldShowImage = !buildConfigWrapper.isJetpackApp
-                && displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+        val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
+                displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(shouldShowImage)
     }
 
