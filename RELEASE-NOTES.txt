@@ -8,6 +8,7 @@
 * [*] Login Epilogue: Fixed bug where if no sites available, then new login epilogue screen without clickable sites and with "create new site" is shown instead of no sites empty "My Site" view. [https://github.com/wordpress-mobile/WordPress-Android/pull/15944]
 * [*] Fixes flickering when changing the preview mode in Page or Site design picker [https://github.com/wordpress-mobile/WordPress-Android/pull/15943]
 * [*] Reader: Admins and Editors can edit comments from Reader [https://github.com/wordpress-mobile/WordPress-Android/pull/15957]
+* [*] Block Editor: Stop editor from sometimes closing after composing a story block [https://github.com/wordpress-mobile/WordPress-Android/pull/15960]
 
 19.2
 -----
