@@ -1,9 +1,8 @@
 ext {
     coroutinesVersion = '1.5.2'
     wordPressUtilsVersion = '2.3.0'
-
-    wordPressLoginVersion = '77-d20212ae45ca76ff33dc84b34fc56a50b841652f'
-    gutenbergMobileVersion = 'v1.71.0'
+    wordPressLoginVersion = 'trunk-3f8bfa7e2c5af8daa9ae1cfc391cd6c5fa0ca4d5'
+    gutenbergMobileVersion = 'v1.71.1'
     storiesVersion = '1.2.1'
     aboutAutomatticVersion = '0.0.4'
 
@@ -15,7 +14,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.34.0'
+    fluxCVersion = 'trunk-de82b3be1964375835c06f9b5d0c060a216373ee'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
