@@ -610,13 +610,10 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(stat)
         val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
         if (imageUri != null) {
-            selectedSiteRepository.showSiteIconProgressBar(true)
             launch(bgDispatcher) {
                 val fetchMedia = wpMediaUtilsWrapper.fetchMediaToUriWrapper(imageUri)
                 if (fetchMedia != null) {
                     _onNavigation.postValue(Event(SiteNavigationAction.OpenCropActivity(fetchMedia)))
-                } else {
-                    selectedSiteRepository.showSiteIconProgressBar(false)
                 }
             }
         }
