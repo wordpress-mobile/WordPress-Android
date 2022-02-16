@@ -44,11 +44,8 @@ import org.hamcrest.CoreMatchers.`is` as Is
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val ERROR_RESULT_FETCH_QUERY = "error_result_query" to "GENERIC_ERROR"
 private val ERROR_RESULT_FETCH_QUERY_INVALID = "empty_result_query_invalid" to "INVALID_QUERY"
-private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair(
-        "multi_result_query",
-        MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
-)
-private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
+private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
+private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
