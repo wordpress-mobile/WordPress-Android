@@ -177,10 +177,11 @@ REPOSITORY_NAME = 'WordPress-Android'
   lane :complete_code_freeze do |options|
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
-    localize_binary_deps()
-    localize_libs()
+    localize_libraries()
     send_strings_for_translation()
+
     ensure_git_status_clean()
+    push_to_git_remote
 
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
@@ -719,7 +720,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   end
 
 ########################################################################
-# Dependencies handling lanes
+# Libraries Translation Merging
 ########################################################################
   main_strings_path = './WordPress/src/main/res/values/strings.xml'
   update_strings_path = './fastlane/resources/values/'
@@ -769,20 +770,8 @@ REPOSITORY_NAME = 'WordPress-Android'
     sh('git push origin HEAD')
   end
 
-  private_lane :commit_strings do |options|
-    if options[:auto_commit] then
-       sh("cd .. && git add #{main_strings_path}")
-       sh("git commit -m 'Update strings for translation'")
-       sh('git push origin HEAD')
-    else
-      UI.important("Your #{main_strings_path} has changed.")
-      UI.input('Please, review the changes, commit them and press return to continue.')
-    end
-  end
-
-
   desc 'Merge libraries strings files into the main app one'
-  lane :localize_libs do |options|
+  lane :localize_libraries do |options|
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
     an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)
 
@@ -793,15 +782,18 @@ REPOSITORY_NAME = 'WordPress-Android'
         import_key: lib[:import_key],
         repository: lib[:repository],
         file_path: lib[:strings_file_path],
-        github_release_prefix: lib[:github_release_prefix])
+        github_release_prefix: lib[:github_release_prefix]
+      )
 
       if download_path.nil?
-        error_message = "Can't download strings file for #{lib[:name]}.\r\n"
-        error_message += "Strings for this library won't get translated.\r\n"
-        error_message += 'Do you want to continue anyway?'
+        error_message = <<~ERROR
+          Can't download strings file for #{lib[:name]}.
+          Strings for this library won't get translated.
+          Do you want to continue anyway?
+        ERROR
         UI.user_error! 'Abort.' unless UI.confirm(error_message)
       else
-        UI.message("Strings.xml file for #{lib[:name]} downloaded to #{download_path}.")
+        UI.message("`strings.xml` file for #{lib[:name]} downloaded to #{download_path}.")
         if lib.key?(:merge_tool)
           sh(lib[:merge_tool], lib[:name], download_path)
         else
@@ -816,8 +808,8 @@ REPOSITORY_NAME = 'WordPress-Android'
       end
     end
 
-    is_repo_clean = ('git status --porcelain').empty?
-    commit_strings(options) unless is_repo_clean
+    # Commit changes
+    git_commit(path: main_strings_path, message: 'Update strings for translation of libraries', allow_nothing_to_commit: true)
   end
 
 ########################################################################
