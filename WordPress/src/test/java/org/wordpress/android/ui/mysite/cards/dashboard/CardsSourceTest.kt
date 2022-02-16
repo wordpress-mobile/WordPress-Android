@@ -26,7 +26,7 @@ import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
-import org.wordpress.android.util.config.MySiteDashboardStatsCardFeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 
 /* SITE */
 
@@ -80,7 +80,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var cardsStore: CardsStore
     @Mock private lateinit var siteModel: SiteModel
-    @Mock private lateinit var statsCardFeatureConfig: MySiteDashboardStatsCardFeatureConfig
+    @Mock private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     @Mock private lateinit var mockedDataJsonUtils: MockedDataJsonUtils
     private lateinit var cardSource: CardsSource
 
@@ -100,7 +100,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource = CardsSource(
                 selectedSiteRepository,
                 cardsStore,
-                statsCardFeatureConfig,
+                todaysStatsCardFeatureConfig,
                 mockedDataJsonUtils,
                 TEST_DISPATCHER
         )

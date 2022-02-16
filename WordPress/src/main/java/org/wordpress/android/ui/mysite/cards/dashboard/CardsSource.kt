@@ -16,7 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.mockdata.MockedDataJsonUtils
-import org.wordpress.android.util.config.MySiteDashboardStatsCardFeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -25,7 +25,7 @@ const val REFRESH_DELAY = 500L
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
-    private val statsCardFeatureConfig: MySiteDashboardStatsCardFeatureConfig,
+    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     mockedDataJsonUtils: MockedDataJsonUtils,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
@@ -48,7 +48,7 @@ class CardsSource @Inject constructor(
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             coroutineScope.launch(bgDispatcher) {
-                if (statsCardFeatureConfig.isEnabled()) {
+                if (todaysStatsCardFeatureConfig.isEnabled()) {
                     postValue(CardsUpdate(mockedCardsData))
                 } else {
                     cardsStore.getCards(selectedSite).collect { result ->
@@ -90,7 +90,7 @@ class CardsSource @Inject constructor(
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-            if (statsCardFeatureConfig.isEnabled()) {
+            if (todaysStatsCardFeatureConfig.isEnabled()) {
                 postState(CardsUpdate(mockedCardsData))
             } else {
                 val result = cardsStore.fetchCards(selectedSite)
