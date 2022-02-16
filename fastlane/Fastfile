@@ -722,13 +722,12 @@ REPOSITORY_NAME = 'WordPress-Android'
 ########################################################################
 # Libraries Translation Merging
 ########################################################################
-  main_strings_path = './WordPress/src/main/res/values/strings.xml'
-  update_strings_path = './fastlane/resources/values/'
-  libraries_strings_path = [
+  MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
+  FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  LOCAL_LIBRARIES_STRINGS_PATHS = [
     { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] }
-  ]
-
-  binary_imported_libraries = [
+  ].freeze
+  REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
       name: 'Gutenberg Native',
       import_key: 'gutenbergMobileVersion',
@@ -762,21 +761,21 @@ REPOSITORY_NAME = 'WordPress-Android'
       github_release_prefix: "",
       exclusions: []
     },
-  ]
+  ].freeze
 
   lane :update_frozen_strings_for_translation do |options|
-    FileUtils.mkdir_p(update_strings_path)
-    FileUtils.cp(main_strings_path, update_strings_path)
-    git_commit(path: File.join(update_strings_path, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
+    FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
+    FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
+    git_commit(path: File.join(FROZEN_STRINGS_DIR_PATH, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
   end
 
   desc 'Merge libraries strings files into the main app one'
   lane :localize_libraries do |options|
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
-    an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)
+    an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 
     # Merge `strings.xml` files of libraries that are hosted in separate repositories (and linked as binary dependencies with the project)
-    binary_imported_libraries.each do |lib|
+    REMOTE_LIBRARIES_STRINGS_PATHS.each do |lib|
       download_path = android_download_file_by_version(
         library_name: lib[:name],
         import_key: lib[:import_key],
@@ -797,19 +796,19 @@ REPOSITORY_NAME = 'WordPress-Android'
         if lib.key?(:merge_tool)
           sh(lib[:merge_tool], lib[:name], download_path)
         else
-          lib_to_merge = [ {
+          lib_to_merge = [{
             library: lib[:name],
             strings_path: download_path,
             exclusions: lib[:exclusions]
           }]
-          an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: lib_to_merge)
+          an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         end
         File.delete(download_path) if File.exist?(download_path)
       end
     end
 
     # Commit changes
-    git_commit(path: main_strings_path, message: 'Update strings for translation of libraries', allow_nothing_to_commit: true)
+    git_commit(path: MAIN_STRINGS_PATH, message: 'Update strings for translation of libraries', allow_nothing_to_commit: true)
   end
 
 ########################################################################
