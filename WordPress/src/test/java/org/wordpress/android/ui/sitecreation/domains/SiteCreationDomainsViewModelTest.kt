@@ -23,6 +23,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
@@ -36,11 +37,13 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private const val ERROR_RESULT_FETCH_QUERY = "error_result_query"
+private const val ERROR_RESULT_FETCH_QUERY_INVALID = "empty_result_query_invalid"
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair(
         "multi_result_query",
         MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
@@ -130,6 +133,24 @@ class SiteCreationDomainsViewModelTest {
         }
     }
 
+    private fun <T> testWithInvalidQueryErrorResponse(
+        block: suspend CoroutineScope.() -> T
+    ) {
+        test {
+            whenever(
+                    fetchDomainsUseCase.fetchDomains(
+                            eq(ERROR_RESULT_FETCH_QUERY_INVALID),
+                            isNull(),
+                            eq(true),
+                            eq(true),
+                            any()
+                    )
+            )
+                    .thenReturn(createFailedOnSuggestedDomains(ERROR_RESULT_FETCH_QUERY_INVALID, "INVALID_QUERY"))
+            block()
+        }
+    }
+
     /**
      * Verifies the UI state for when the VM is started with an empty site title.
      */
@@ -215,6 +236,23 @@ class SiteCreationDomainsViewModelTest {
                 instanceOf(DomainsFetchSuggestionsErrorUiState::class.java)
         )
     }
+
+    /**
+     * Verifies the UI state for after the user enters a non-empty query which results in INVALID_QUERY error.
+     */
+    @Test
+    fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() =
+            testWithInvalidQueryErrorResponse {
+                viewModel.start()
+                viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY_INVALID)
+                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+                verify(uiStateObserver, times(3)).onChanged(captor.capture())
+                verifyEmptyItemsContentUiState(
+                        captor.thirdValue,
+                        showClearButton = true,
+                        isInvalidQuery = true
+                )
+            }
 
     /**
      * Verifies the UI state after the user enters an empty query (presses clear button) with an empty site title
@@ -308,11 +346,20 @@ class SiteCreationDomainsViewModelTest {
      */
     private fun verifyEmptyItemsContentUiState(
         uiState: DomainsUiState,
-        showClearButton: Boolean = false
+        showClearButton: Boolean = false,
+        isInvalidQuery: Boolean = false
     ) {
         assertThat(uiState.searchInputUiState.showProgress, Is(false))
         assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
         assertThat(uiState.contentState, instanceOf(DomainsUiContentState.Empty::class.java))
+        val contentStateAsEmpty = uiState.contentState as DomainsUiContentState.Empty
+        assertThat(contentStateAsEmpty.message, instanceOf(UiStringRes::class.java))
+        val expectedEmptyListTextMessage = if (isInvalidQuery) {
+            R.string.new_site_creation_empty_domain_list_message_invalid_query
+        } else {
+            R.string.new_site_creation_empty_domain_list_message
+        }
+        assertThat((contentStateAsEmpty.message as UiStringRes).stringRes, Is(expectedEmptyListTextMessage))
         assertThat(uiState.contentState.items.size, Is(0))
     }
 
@@ -331,9 +378,12 @@ class SiteCreationDomainsViewModelTest {
     /**
      * Helper function that creates an error [OnSuggestedDomains] event.
      */
-    private fun createFailedOnSuggestedDomains(searchQuery: String): OnSuggestedDomains {
+    private fun createFailedOnSuggestedDomains(
+        searchQuery: String,
+        apiErrorType: String = "GENERIC_ERROR"
+    ): OnSuggestedDomains {
         val event = OnSuggestedDomains(searchQuery, emptyList())
-        event.error = SuggestDomainError("GENERIC_ERROR", "test")
+        event.error = SuggestDomainError(apiErrorType, "test")
         return event
     }
 
