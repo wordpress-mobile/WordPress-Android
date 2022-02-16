@@ -9,6 +9,12 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.notification.NoteIdSet
 import org.wordpress.android.fluxc.model.notification.NotificationModel
@@ -21,6 +27,8 @@ import javax.inject.Singleton
 
 @Singleton
 class NotificationSqlUtils @Inject constructor(private val formattableContentMapper: FormattableContentMapper) {
+    private val dataUpdatesTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
     fun insertOrUpdateNotification(notification: NotificationModel): Int {
         val notificationResult = WellSql.select(NotificationModelBuilder::class.java)
                 .where().beginGroup()
@@ -36,6 +44,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         return if (notificationResult.isEmpty()) {
             // insert
             WellSql.insert(notification.toBuilder()).asSingleTransaction(true).execute()
+            dataUpdatesTrigger.tryEmit(Unit)
             1
         } else {
             // update
@@ -43,7 +52,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
             WellSql.update(NotificationModelBuilder::class.java).whereId(oldId).put(
                     notification.toBuilder(),
                     UpdateAllExceptId<NotificationModelBuilder>(NotificationModelBuilder::class.java)
-            ).execute()
+            ).execute().also(::triggerUpdateIfNeeded)
         }
     }
 
@@ -120,6 +129,21 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .map { it.build(formattableContentMapper) }
     }
 
+    fun observeNotificationsForSite(
+        site: SiteModel,
+        @SelectQuery.Order order: Int = ORDER_DESCENDING,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): Flow<List<NotificationModel>> {
+        return dataUpdatesTrigger
+            .onStart { emit(Unit) }
+            .mapLatest {
+                withContext(Dispatchers.IO) {
+                    getNotificationsForSite(site, order, filterByType, filterBySubtype)
+                }
+        }
+    }
+
     fun hasUnreadNotificationsForSite(
         site: SiteModel,
         filterByType: List<String>? = null,
@@ -175,13 +199,21 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .firstOrNull()?.build(formattableContentMapper)
     }
 
-    fun deleteAllNotifications() = WellSql.delete(NotificationModelBuilder::class.java).execute()
+    fun deleteAllNotifications() = WellSql.delete(NotificationModelBuilder::class.java)
+            .execute()
+            .also(::triggerUpdateIfNeeded)
 
     fun deleteNotificationByRemoteId(remoteNoteId: Long): Int {
         return WellSql.delete(NotificationModelBuilder::class.java)
                 .where().beginGroup()
                 .equals(NotificationModelTable.REMOTE_NOTE_ID, remoteNoteId)
-                .endGroup().endWhere().execute()
+                .endGroup().endWhere()
+                .execute()
+                .also(::triggerUpdateIfNeeded)
+    }
+
+    private fun triggerUpdateIfNeeded(affectedRows: Int) {
+        if (affectedRows != 0) dataUpdatesTrigger.tryEmit(Unit)
     }
 
     private fun NotificationModel.toBuilder(): NotificationModelBuilder {
