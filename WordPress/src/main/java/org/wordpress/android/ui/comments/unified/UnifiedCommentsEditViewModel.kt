@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentsStore
@@ -14,6 +15,7 @@ import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
@@ -48,7 +50,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
     private val getCommentUseCase: GetCommentUseCase,
-    private val notificationActionsWrapper: NotificationsActionsWrapper
+    private val notificationActionsWrapper: NotificationsActionsWrapper,
+    private val readerCommentTableWrapper: ReaderCommentTableWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -247,11 +250,17 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         commentEntity?.run {
             val isCommentEntityUpdated = updateCommentEntity(this, editedCommentEssentials)
             if (isCommentEntityUpdated) {
-                if (commentIdentifier is NotificationCommentIdentifier) {
-                    updateNotificationEntity()
-                } else {
-                    _uiActionEvent.postValue(Event(DONE))
-                    localCommentCacheUpdateHandler.requestCommentsUpdate()
+                when (commentIdentifier) {
+                    is NotificationCommentIdentifier -> {
+                        updateNotificationEntity()
+                    }
+                    is ReaderCommentIdentifier -> {
+                        updateReaderEntity(editedCommentEssentials)
+                    }
+                    else -> {
+                        _uiActionEvent.postValue(Event(DONE))
+                        localCommentCacheUpdateHandler.requestCommentsUpdate()
+                    }
                 }
             } else {
                 showUpdateCommentError()
@@ -269,6 +278,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 authorEmail = editedCommentEssentials.userEmail,
                 content = editedCommentEssentials.commentText
         )
+
         val result = commentsStore.updateEditComment(site, updatedComment)
         return !result.isError
     }
@@ -283,6 +293,26 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 showUpdateNotificationError()
             }
         }
+    }
+
+    private suspend fun updateReaderEntity(commentEssentials: CommentEssentials) {
+        val readerCommentIdentifier = commentIdentifier as ReaderCommentIdentifier
+
+        val readerComment = readerCommentTableWrapper.getComment(
+                site.siteId,
+                readerCommentIdentifier.postId,
+                readerCommentIdentifier.remoteCommentId
+        )
+
+        readerComment?.apply {
+            text = commentEssentials.commentText
+            authorName = commentEssentials.userName
+            authorEmail = commentEssentials.userEmail
+            authorUrl = commentEssentials.userUrl
+            readerCommentTableWrapper.addOrUpdateComment(readerComment)
+        }
+        _uiActionEvent.postValue(Event(DONE))
+        localCommentCacheUpdateHandler.requestCommentsUpdate()
     }
 
     private suspend fun showUpdateCommentError() {
