@@ -15,8 +15,12 @@ class CardsTracker @Inject constructor(
 ) {
     enum class Type(val label: String) {
         ERROR("error"),
-        TODAYS_STATS("todays_stats"),
+        STATS("stats"),
         POST("post")
+    }
+
+    enum class StatsSubtype(val label: String) {
+        TODAYS_STATS("todays_stats")
     }
 
     enum class PostSubtype(val label: String) {
@@ -27,11 +31,11 @@ class CardsTracker @Inject constructor(
     }
 
     fun trackTodaysStatsCardFooterLinkClicked() {
-        trackCardFooterLinkClicked(STATS, Type.TODAYS_STATS.label)
+        trackCardFooterLinkClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
     }
 
     fun trackTodaysStatsCardClicked() {
-        trackCardItemClicked(STATS, Type.TODAYS_STATS.label)
+        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
     }
 
     fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
@@ -81,7 +85,7 @@ fun DashboardCardType.toTypeValue(): Type {
     return when (this) {
         DashboardCardType.ERROR_CARD -> Type.ERROR
         DashboardCardType.TODAYS_STATS_CARD_ERROR -> Type.ERROR
-        DashboardCardType.TODAYS_STATS_CARD -> Type.TODAYS_STATS
+        DashboardCardType.TODAYS_STATS_CARD -> Type.STATS
         DashboardCardType.POST_CARD_ERROR -> Type.ERROR
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST

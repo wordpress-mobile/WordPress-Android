@@ -9,6 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -38,13 +39,13 @@ class CardsShownTracker @Inject constructor(
         is TodaysStatsCard.Error -> trackCardShown(
                 Pair(
                         card.dashboardCardType.toTypeValue().label,
-                        Type.TODAYS_STATS.label
+                        StatsSubtype.TODAYS_STATS.label
                 )
         )
         is TodaysStatsCardWithData -> trackCardShown(
                 Pair(
-                        CardsTracker.STATS,
-                        Type.TODAYS_STATS.label
+                        card.dashboardCardType.toTypeValue().label,
+                        StatsSubtype.TODAYS_STATS.label
                 )
         )
         is PostCard.Error -> trackCardShown(
