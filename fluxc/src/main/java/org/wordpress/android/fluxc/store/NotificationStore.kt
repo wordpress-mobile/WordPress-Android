@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -41,10 +40,6 @@ class NotificationStore @Inject constructor(
     }
 
     private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
-
-    private val unreadNotificationUpdates: MutableSharedFlow<Unit> = MutableSharedFlow(replay = 0)
-
-    fun observeNotificationChanges(): Flow<Unit> = unreadNotificationUpdates
 
     class RegisterDevicePayload(
         val gcmToken: String,
@@ -235,6 +230,13 @@ class NotificationStore @Inject constructor(
         filterBySubtype: List<String>? = null
     ): List<NotificationModel> =
             notificationSqlUtils.getNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
+
+    fun observeNotificationsForSite(
+        site: SiteModel,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): Flow<List<NotificationModel>> =
+            notificationSqlUtils.observeNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
 
     /**
      * Returns true if the given site has unread notifications
@@ -438,7 +440,6 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.FETCH_NOTIFICATION
         }
         emitChange(onNotificationChanged)
-        onUnreadNotificationUpdate()
     }
 
     private fun markNotificationSeen(payload: MarkNotificationsSeenPayload) {
@@ -491,7 +492,6 @@ class NotificationStore @Inject constructor(
                     changedNotificationLocalIds.add(it.noteId)
                 }
             }
-            onUnreadNotificationUpdate()
             onNotificationChanged
         }
     }
@@ -504,11 +504,5 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.UPDATE_NOTIFICATION
         }
         emitChange(onNotificationChanged)
-    }
-
-    private fun onUnreadNotificationUpdate() {
-        coroutineEngine.launch(T.API, this, "Unread notification state updated") {
-            unreadNotificationUpdates.emit(Unit)
-        }
     }
 }
