@@ -783,13 +783,10 @@ REPOSITORY_NAME = 'WordPress-Android'
 
   desc 'Merge libraries strings files into the main app one'
   lane :localize_libs do |options|
-    if an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path) then
-      commit_strings(options)
-    end
-  end
+    # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
+    an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)
 
-  desc 'Import strings from binary dependencies'
-  lane :localize_binary_deps do |options|
+    # Merge `strings.xml` files of libraries that are hosted in separate repositories (and linked as binary dependencies with the project)
     binary_imported_libraries.each do |lib|
       download_path = android_download_file_by_version(
         library_name: lib[:name],
