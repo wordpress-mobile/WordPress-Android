@@ -10,11 +10,12 @@ import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.notification.NoteIdSet
 import org.wordpress.android.fluxc.model.notification.NotificationModel
@@ -136,12 +137,11 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         filterBySubtype: List<String>? = null
     ): Flow<List<NotificationModel>> {
         return dataUpdatesTrigger
-            .onStart { emit(Unit) }
-            .mapLatest {
-                withContext(Dispatchers.IO) {
+                .onStart { emit(Unit) }
+                .mapLatest {
                     getNotificationsForSite(site, order, filterByType, filterBySubtype)
                 }
-            }
+                .flowOn(Dispatchers.IO)
     }
 
     fun hasUnreadNotificationsForSite(
