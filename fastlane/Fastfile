@@ -178,7 +178,7 @@ REPOSITORY_NAME = 'WordPress-Android'
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
     localize_libraries()
-    send_strings_for_translation()
+    update_frozen_strings_for_translation()
 
     ensure_git_status_clean()
     push_to_git_remote
@@ -302,7 +302,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   desc 'Updates a release branch for a new beta release'
   lane :new_beta_release do |options|
     android_betabuild_prechecks(base_version: options[:base_version], skip_confirm: options[:skip_confirm])
-    send_strings_for_translation()
+    update_frozen_strings_for_translation()
     download_translations()
     android_bump_version_beta()
     new_version = android_get_app_version()
@@ -764,10 +764,10 @@ REPOSITORY_NAME = 'WordPress-Android'
     },
   ]
 
-  private_lane :send_strings_for_translation do |options|
-    sh("cd .. && mkdir -p #{update_strings_path} && cp #{main_strings_path} #{update_strings_path} && git add #{update_strings_path}strings.xml")
-    sh('git diff-index --quiet HEAD || git commit -m "Send strings to translation."')
-    sh('git push origin HEAD')
+  lane :update_frozen_strings_for_translation do |options|
+    FileUtils.mkdir_p(update_strings_path)
+    FileUtils.cp(main_strings_path, update_strings_path)
+    git_commit(path: File.join(update_strings_path, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
   end
 
   desc 'Merge libraries strings files into the main app one'
