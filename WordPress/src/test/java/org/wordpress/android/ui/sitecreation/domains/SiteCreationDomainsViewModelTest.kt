@@ -42,8 +42,8 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
-private const val ERROR_RESULT_FETCH_QUERY = "error_result_query"
-private const val ERROR_RESULT_FETCH_QUERY_INVALID = "empty_result_query_invalid"
+private val ERROR_RESULT_FETCH_QUERY = "error_result_query" to "GENERIC_ERROR"
+private val ERROR_RESULT_FETCH_QUERY_INVALID = "empty_result_query_invalid" to "INVALID_QUERY"
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair(
         "multi_result_query",
         MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
@@ -116,38 +116,21 @@ class SiteCreationDomainsViewModelTest {
     }
 
     private fun <T> testWithErrorResponse(
-        block: suspend CoroutineScope.() -> T
+        queryResultErrorPair: Pair<String, String> = ERROR_RESULT_FETCH_QUERY,
+        block: suspend CoroutineScope.(String) -> T
     ) {
         test {
             whenever(
                     fetchDomainsUseCase.fetchDomains(
-                            eq(ERROR_RESULT_FETCH_QUERY),
+                            eq(queryResultErrorPair.first),
                             isNull(),
                             eq(true),
                             eq(true),
                             any()
                     )
             )
-                    .thenReturn(createFailedOnSuggestedDomains(ERROR_RESULT_FETCH_QUERY))
-            block()
-        }
-    }
-
-    private fun <T> testWithInvalidQueryErrorResponse(
-        block: suspend CoroutineScope.() -> T
-    ) {
-        test {
-            whenever(
-                    fetchDomainsUseCase.fetchDomains(
-                            eq(ERROR_RESULT_FETCH_QUERY_INVALID),
-                            isNull(),
-                            eq(true),
-                            eq(true),
-                            any()
-                    )
-            )
-                    .thenReturn(createFailedOnSuggestedDomains(ERROR_RESULT_FETCH_QUERY_INVALID, "INVALID_QUERY"))
-            block()
+                    .thenReturn(createFailedOnSuggestedDomains(queryResultErrorPair.first, queryResultErrorPair.second))
+            block(queryResultErrorPair.first)
         }
     }
 
@@ -221,9 +204,9 @@ class SiteCreationDomainsViewModelTest {
      * Verifies the UI state for after the user enters a non-empty query which results in error.
      */
     @Test
-    fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = testWithErrorResponse {
+    fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = testWithErrorResponse { query ->
         viewModel.start()
-        viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY)
+        viewModel.updateQuery(query)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(
@@ -242,9 +225,9 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() =
-            testWithInvalidQueryErrorResponse {
+            testWithErrorResponse(ERROR_RESULT_FETCH_QUERY_INVALID) { query ->
                 viewModel.start()
-                viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY_INVALID)
+                viewModel.updateQuery(query)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
                 verifyEmptyItemsContentUiState(
@@ -380,7 +363,7 @@ class SiteCreationDomainsViewModelTest {
      */
     private fun createFailedOnSuggestedDomains(
         searchQuery: String,
-        apiErrorType: String = "GENERIC_ERROR"
+        apiErrorType: String
     ): OnSuggestedDomains {
         val event = OnSuggestedDomains(searchQuery, emptyList())
         event.error = SuggestDomainError(apiErrorType, "test")
