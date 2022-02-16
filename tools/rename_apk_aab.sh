@@ -48,9 +48,9 @@ BUNDLETOOL=$(command -v bundletool)
 # Sets PKG, VNAME, VCODE and SIGNED_SUFFIX
 info_for_apk() {
   # Use aapt2 to extract package name, versionCode and versionName
-  INFO_LINE=$($AAPT2 dump badging "$1" | head -n 1)
+  INFO_LINE=$("$AAPT2" dump badging "$1" | head -n 1)
   [[ "$INFO_LINE" =~ name=\'([^\']*)\'[[:blank:]]versionCode=\'([^\']*)\'[[:blank:]]versionName=\'([^\']*)\' ]] && PKG=${BASH_REMATCH[1]} && VCODE=${BASH_REMATCH[2]} && VNAME=${BASH_REMATCH[3]}
-  SIGNED_SUFFIX=$($APKSIGNER verify --print-certs "$1" | grep -qE "(CN=Android, OU=Android, O=Google Inc.)|(O=Automattic Inc.)" && echo "-Signed")
+  SIGNED_SUFFIX=$("$APKSIGNER" verify --print-certs "$1" | grep -qE "(CN=Android, OU=Android, O=Google Inc.)|(O=Automattic Inc.)" && echo "-Signed")
 }
 
 ### Extract info from a single AAB file
@@ -106,7 +106,7 @@ auto_rename_file() {
     NEW_NAME="$BASENAME.aab"
   fi
 
-  echo "$(basename "$1") ==> $NEW_NAME"
+  echo "$(basename "$1") ==> $NEW_NAME (versionCode: $VCODE)"
   mv "$1" "$(dirname "$1")/$NEW_NAME"
 }
 
