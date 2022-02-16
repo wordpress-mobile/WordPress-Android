@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -eu
 
 # This script aims to rename any `.apk` or `.aab` file to `[wpandroid|jpandroid]-{version}[-Signed].apk/aab`
 # depending on the APK/AAB package name, version name and package signature.
@@ -11,29 +11,34 @@
 # no parameter provided – the files will be renamed with a basename appropriate to the ones we use when attaching
 # those files to the GitHub release.
 
-
+set +o pipefail
 
 ### Input Parameters ###
 
 # Usage:
 #   rename_apk_aab.sh [file1.apk] [file2.aab] [...]
 #
-# Without any parameter, applies the rename to every APK/AAB file found in ~/Downloads
+# Without any parameter, applies the rename to every APK/AAB file found at the top level of the ~/Downloads directory
 #
 INPUT_FILES=( "$@" )
 if [[ $# -lt 1 ]]; then
-  IFS=$'\n'
-  INPUT_FILES=( $(find ~/Downloads -name *.apk -o -name *.aab) )
-  unset IFS
+  shopt -s nullglob
+  INPUT_FILES=(~/Downloads/*.{aab,apk})
 fi
 
 
 ##################################
 ### Path to Android tools used ###
 ##################################
-AAPT2=$(ls -1t ${ANDROID_SDK_ROOT:-$ANDROID_HOME}/build-tools/*/aapt2 | head -n1)
-APKSIGNER=$(ls -1t ${ANDROID_SDK_ROOT:-$ANDROID_HOME}/build-tools/*/apksigner | head -n1)
+[[ -d "${ANDROID_SDK_ROOT:-$ANDROID_HOME}" ]] || ( echo "You need to have either \`ANDROID_SDK_ROOT\` or \`ANDROID_HOME\` env var defined, and pointing to your Android SDK installation directory." && exit 1 )
+
+AAPT2=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/aapt2 | head -n1)
+APKSIGNER=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/apksigner | head -n1)
 BUNDLETOOL="/usr/local/bin/bundletool"
+
+[[ -x "$AAPT2" ]] || ( echo "Failed to find the \`aapt2\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )
+[[ -x "$APKSIGNER" ]] || ( echo "Failed to find the \`apksigner\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )
+[[ -x "$BUNDLETOOL" ]] || ( echo "Failed to find the \`bundletool\` executable; install it using \`brew install bundletool\`" && exit 1 )
 
 ######################
 ### Helper Methods ###
