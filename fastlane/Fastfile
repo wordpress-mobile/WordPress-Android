@@ -764,8 +764,10 @@ REPOSITORY_NAME = 'WordPress-Android'
   ].freeze
 
   lane :update_frozen_strings_for_translation do |options|
-    FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
-    FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
+    Dir.chdir('..') do
+      FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
+    end
     git_commit(path: File.join(FROZEN_STRINGS_DIR_PATH, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
   end
 
