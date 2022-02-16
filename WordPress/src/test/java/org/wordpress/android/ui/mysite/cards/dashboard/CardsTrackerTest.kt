@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -24,6 +25,20 @@ class CardsTrackerTest {
     @Before
     fun setUp() {
         cardsTracker = CardsTracker(cardsShownTracker, analyticsTracker)
+    }
+
+    @Test
+    fun `when today's stats card footer link is clicked, then today's stats card footer click event is tracked`() {
+        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
+
+        verifyFooterLinkClickedTracked(Type.STATS, StatsSubtype.TODAYS_STATS.label)
+    }
+
+    @Test
+    fun `when today's stats card is clicked, then today's stats card item click event is tracked`() {
+        cardsTracker.trackTodaysStatsCardClicked()
+
+        verifyCardItemClickedTracked(Type.STATS, StatsSubtype.TODAYS_STATS.label)
     }
 
     @Test
