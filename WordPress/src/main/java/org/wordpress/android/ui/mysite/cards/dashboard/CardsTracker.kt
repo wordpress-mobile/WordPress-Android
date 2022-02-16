@@ -26,12 +26,20 @@ class CardsTracker @Inject constructor(
         SCHEDULED("scheduled")
     }
 
+    fun trackTodaysStatsCardFooterLinkClicked() {
+        trackCardFooterLinkClicked(STATS, Type.TODAYS_STATS.label)
+    }
+
+    fun trackTodaysStatsCardClicked() {
+        trackCardItemClicked(STATS, Type.TODAYS_STATS.label)
+    }
+
     fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
         trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
     fun trackPostItemClicked(postCardType: PostCardType) {
-        trackCardPostItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
+        trackCardItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
@@ -44,7 +52,7 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun trackCardPostItemClicked(type: String, subtype: String) {
+    private fun trackCardItemClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
                 mapOf(
@@ -65,6 +73,7 @@ class CardsTracker @Inject constructor(
     companion object {
         const val TYPE = "type"
         const val SUBTYPE = "subtype"
+        const val STATS = "stats"
     }
 }
 

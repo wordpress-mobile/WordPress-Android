@@ -17,9 +17,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REF
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -328,9 +328,15 @@ class MySiteViewModel @Inject constructor(
         return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
     }
 
-    private fun onTodaysStatsCardFooterLinkClick() = navigateToTodaysStats()
+    private fun onTodaysStatsCardFooterLinkClick() {
+        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
+        navigateToTodaysStats()
+    }
 
-    private fun onTodaysStatsCardClick() = navigateToTodaysStats()
+    private fun onTodaysStatsCardClick() {
+        cardsTracker.trackTodaysStatsCardClicked()
+        navigateToTodaysStats()
+    }
 
     private fun navigateToTodaysStats() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
