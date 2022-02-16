@@ -158,11 +158,6 @@ REPOSITORY_NAME = 'WordPress-Android'
     setbranchprotection(repository: GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository: GHHELPER_REPO, milestone: new_version)
 
-    localize_binary_deps()
-    localize_libs()
-    send_strings_for_translation()
-    ensure_git_status_clean()
-
     UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them as necessary if any item does not apply for Jetpack before sending them to Editorial.")
   end
 
@@ -181,6 +176,12 @@ REPOSITORY_NAME = 'WordPress-Android'
   desc 'Trigger a release build for a given app after code freeze'
   lane :complete_code_freeze do |options|
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
+
+    localize_binary_deps()
+    localize_libs()
+    send_strings_for_translation()
+    ensure_git_status_clean()
+
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
