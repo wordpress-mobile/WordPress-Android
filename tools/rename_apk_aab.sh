@@ -34,7 +34,7 @@ fi
 
 AAPT2=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/aapt2 | head -n1)
 APKSIGNER=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/apksigner | head -n1)
-BUNDLETOOL="/usr/local/bin/bundletool"
+BUNDLETOOL=$(command -v bundletool)
 
 [[ -x "$AAPT2" ]] || ( echo "Failed to find the \`aapt2\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )
 [[ -x "$APKSIGNER" ]] || ( echo "Failed to find the \`apksigner\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )
@@ -56,9 +56,9 @@ info_for_apk() {
 ### Extract info from a single AAB file
 # Sets PKG, VNAME, VCODE
 info_for_aab() {
-  PKG=$(bundletool dump manifest --bundle "$1" --xpath /manifest/@package)
-  VCODE=$(bundletool dump manifest --bundle "$1" --xpath /manifest/@android:versionCode)
-  VNAME=$(bundletool dump manifest --bundle "$1" --xpath /manifest/@android:versionName)
+  PKG=$("$BUNDLETOOL" dump manifest --bundle "$1" --xpath /manifest/@package)
+  VCODE=$("$BUNDLETOOL" dump manifest --bundle "$1" --xpath /manifest/@android:versionCode)
+  VNAME=$("$BUNDLETOOL" dump manifest --bundle "$1" --xpath /manifest/@android:versionName)
 }
 
 ### Extract info from a single APK or AAB file
