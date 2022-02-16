@@ -141,7 +141,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 withContext(Dispatchers.IO) {
                     getNotificationsForSite(site, order, filterByType, filterBySubtype)
                 }
-        }
+            }
     }
 
     fun hasUnreadNotificationsForSite(
