@@ -154,11 +154,11 @@ public class ReaderComment {
     }
 
     public String getAuthorEmail() {
-        return mAuthorEmail;
+        return StringUtils.notNullStr(mAuthorName);
     }
 
     public void setAuthorEmail(String authorEmail) {
-        mAuthorEmail = authorEmail;
+        mAuthorEmail = StringUtils.notNullStr(authorEmail);
     }
 
     @Override
