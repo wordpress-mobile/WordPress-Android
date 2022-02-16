@@ -43,7 +43,7 @@ class CardsShownTracker @Inject constructor(
         )
         is TodaysStatsCardWithData -> trackCardShown(
                 Pair(
-                        card.dashboardCardType.toTypeValue().label,
+                        CardsTracker.STATS,
                         Type.TODAYS_STATS.label
                 )
         )
