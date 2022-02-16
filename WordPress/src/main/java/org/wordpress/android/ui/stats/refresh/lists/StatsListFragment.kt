@@ -152,6 +152,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val nonNullActivity = requireActivity()
         with(StatsListFragmentBinding.bind(view)) {
             binding = this
+            pageContainer.layoutTransition.setAnimateParentHierarchy(false)
             initializeViews(savedInstanceState)
             initializeViewModels(nonNullActivity)
         }

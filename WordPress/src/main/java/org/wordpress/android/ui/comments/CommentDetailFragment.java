@@ -689,7 +689,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    // TODO [RenanLukas] handle Reader CommentSource when it's ready
     @Nullable
     private CommentIdentifier mapCommentIdentifier() {
         switch (mCommentSource) {
