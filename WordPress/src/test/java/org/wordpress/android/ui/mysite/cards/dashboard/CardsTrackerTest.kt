@@ -30,61 +30,61 @@ class CardsTrackerTest {
     fun `when post create first footer link is clicked, then post create first event is tracked`() {
         cardsTracker.trackPostCardFooterLinkClicked(PostCardType.CREATE_FIRST)
 
-        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.CREATE_FIRST)
+        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.CREATE_FIRST.label)
     }
 
     @Test
     fun `when post create next footer link is clicked, then post create next event is tracked`() {
         cardsTracker.trackPostCardFooterLinkClicked(PostCardType.CREATE_NEXT)
 
-        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.CREATE_NEXT)
+        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.CREATE_NEXT.label)
     }
 
     @Test
     fun `when post draft footer link is clicked, then post draft event is tracked`() {
         cardsTracker.trackPostCardFooterLinkClicked(PostCardType.DRAFT)
 
-        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.DRAFT)
+        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.DRAFT.label)
     }
 
     @Test
     fun `when post scheduled footer link is clicked, then post scheduled event is tracked`() {
         cardsTracker.trackPostCardFooterLinkClicked(PostCardType.SCHEDULED)
 
-        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.SCHEDULED)
+        verifyFooterLinkClickedTracked(Type.POST, PostSubtype.SCHEDULED.label)
     }
 
     @Test
     fun `when post draft item is clicked, then post item event is tracked`() {
         cardsTracker.trackPostItemClicked(PostCardType.DRAFT)
 
-        verifyPostItemClickedTracked(Type.POST, PostSubtype.DRAFT)
+        verifyCardItemClickedTracked(Type.POST, PostSubtype.DRAFT.label)
     }
 
     @Test
     fun `when post scheduled item is clicked, then post item event is tracked`() {
         cardsTracker.trackPostItemClicked(PostCardType.SCHEDULED)
 
-        verifyPostItemClickedTracked(Type.POST, PostSubtype.SCHEDULED)
+        verifyCardItemClickedTracked(Type.POST, PostSubtype.SCHEDULED.label)
     }
 
     private fun verifyFooterLinkClickedTracked(
         typeValue: Type,
-        subtypeValue: PostSubtype
+        subtypeValue: String
     ) {
         verify(analyticsTracker).track(
                 Stat.MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
-                mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue.label)
+                mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
         )
     }
 
-    private fun verifyPostItemClickedTracked(
+    private fun verifyCardItemClickedTracked(
         typeValue: Type,
-        subtypeValue: PostSubtype
+        subtypeValue: String
     ) {
         verify(analyticsTracker).track(
                 Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
-                mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue.label)
+                mapOf(TYPE to typeValue.label, SUBTYPE to subtypeValue)
         )
     }
 }
