@@ -42,9 +42,9 @@ class NotificationStore @Inject constructor(
 
     private val preferences by lazy { PreferenceUtils.getFluxCPreferences(context) }
 
-    private val unreadNotificationUpdates: MutableSharedFlow<OnNotificationChanged> = MutableSharedFlow(replay = 0)
+    private val unreadNotificationUpdates: MutableSharedFlow<Unit> = MutableSharedFlow(replay = 0)
 
-    fun observeNotificationChanges(): Flow<OnNotificationChanged> = unreadNotificationUpdates
+    fun observeNotificationChanges(): Flow<Unit> = unreadNotificationUpdates
 
     class RegisterDevicePayload(
         val gcmToken: String,
@@ -438,7 +438,7 @@ class NotificationStore @Inject constructor(
             causeOfChange = NotificationAction.FETCH_NOTIFICATION
         }
         emitChange(onNotificationChanged)
-        onUnreadNotificationUpdate(onNotificationChanged)
+        onUnreadNotificationUpdate()
     }
 
     private fun markNotificationSeen(payload: MarkNotificationsSeenPayload) {
@@ -490,9 +490,8 @@ class NotificationStore @Inject constructor(
                 result.notifications?.forEach {
                     changedNotificationLocalIds.add(it.noteId)
                 }
-                causeOfChange = NotificationAction.MARK_NOTIFICATIONS_SEEN
             }
-            onUnreadNotificationUpdate(onNotificationChanged)
+            onUnreadNotificationUpdate()
             onNotificationChanged
         }
     }
@@ -507,9 +506,9 @@ class NotificationStore @Inject constructor(
         emitChange(onNotificationChanged)
     }
 
-    private fun onUnreadNotificationUpdate(onNotificationChanged: OnNotificationChanged) {
+    private fun onUnreadNotificationUpdate() {
         coroutineEngine.launch(T.API, this, "Unread notification state updated") {
-            unreadNotificationUpdates.emit(onNotificationChanged)
+            unreadNotificationUpdates.emit(Unit)
         }
     }
 }
