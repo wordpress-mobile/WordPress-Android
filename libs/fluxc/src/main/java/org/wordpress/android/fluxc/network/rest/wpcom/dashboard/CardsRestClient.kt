@@ -34,9 +34,9 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchCards(site: SiteModel): CardsPayload<CardsResponse> {
+    suspend fun fetchCards(site: SiteModel, cardTypes: List<CardModel.Type>): CardsPayload<CardsResponse> {
         val url = WPCOMV2.sites.site(site.siteId).dashboard.cards_data.url
-        val params = buildDashboardCardsParams()
+        val params = buildDashboardCardsParams(cardTypes)
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
@@ -49,7 +49,8 @@ class CardsRestClient @Inject constructor(
         }
     }
 
-    private fun buildDashboardCardsParams() = mapOf(CARDS to listOf(POSTS, TODAYS_STATS).joinToString(","))
+    private fun buildDashboardCardsParams(cardTypes: List<CardModel.Type>) =
+            mapOf(CARDS to cardTypes.joinToString(",") { it.label })
 
     data class CardsResponse(
         @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,
@@ -105,8 +106,6 @@ class CardsRestClient @Inject constructor(
 
     companion object {
         private const val CARDS = "cards"
-        private const val POSTS = "posts"
-        private const val TODAYS_STATS = "todays_stats"
     }
 }
 
