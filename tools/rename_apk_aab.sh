@@ -34,7 +34,7 @@ fi
 
 AAPT2=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/aapt2 | head -n1)
 APKSIGNER=$(ls -1t "${ANDROID_SDK_ROOT:-$ANDROID_HOME}"/build-tools/*/apksigner | head -n1)
-BUNDLETOOL="/usr/local/bin/bundletool"
+BUNDLETOOL=$(command -v bundletool)
 
 [[ -x "$AAPT2" ]] || ( echo "Failed to find the \`aapt2\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )
 [[ -x "$APKSIGNER" ]] || ( echo "Failed to find the \`apksigner\` tool in your \$ANDROID_SDK_ROOT" && exit 1 )
@@ -48,17 +48,17 @@ BUNDLETOOL="/usr/local/bin/bundletool"
 # Sets PKG, VNAME, VCODE and SIGNED_SUFFIX
 info_for_apk() {
   # Use aapt2 to extract package name, versionCode and versionName
-  INFO_LINE=$($AAPT2 dump badging "$1" | head -n 1)
+  INFO_LINE=$("$AAPT2" dump badging "$1" | head -n 1)
   [[ "$INFO_LINE" =~ name=\'([^\']*)\'[[:blank:]]versionCode=\'([^\']*)\'[[:blank:]]versionName=\'([^\']*)\' ]] && PKG=${BASH_REMATCH[1]} && VCODE=${BASH_REMATCH[2]} && VNAME=${BASH_REMATCH[3]}
-  SIGNED_SUFFIX=$($APKSIGNER verify --print-certs "$1" | grep -qE "(CN=Android, OU=Android, O=Google Inc.)|(O=Automattic Inc.)" && echo "-Signed")
+  SIGNED_SUFFIX=$("$APKSIGNER" verify --print-certs "$1" | grep -qE "(CN=Android, OU=Android, O=Google Inc.)|(O=Automattic Inc.)" && echo "-Signed")
 }
 
 ### Extract info from a single AAB file
 # Sets PKG, VNAME, VCODE
 info_for_aab() {
-  PKG=$(bundletool dump manifest --bundle "$1" --xpath /manifest/@package)
-  VCODE=$(bundletool dump manifest --bundle "$1" --xpath /manifest/@android:versionCode)
-  VNAME=$(bundletool dump manifest --bundle "$1" --xpath /manifest/@android:versionName)
+  PKG=$("$BUNDLETOOL" dump manifest --bundle "$1" --xpath /manifest/@package)
+  VCODE=$("$BUNDLETOOL" dump manifest --bundle "$1" --xpath /manifest/@android:versionCode)
+  VNAME=$("$BUNDLETOOL" dump manifest --bundle "$1" --xpath /manifest/@android:versionName)
 }
 
 ### Extract info from a single APK or AAB file
@@ -106,7 +106,7 @@ auto_rename_file() {
     NEW_NAME="$BASENAME.aab"
   fi
 
-  echo "$(basename "$1") ==> $NEW_NAME"
+  echo "$(basename "$1") ==> $NEW_NAME (versionCode: $VCODE)"
   mv "$1" "$(dirname "$1")/$NEW_NAME"
 }
 
