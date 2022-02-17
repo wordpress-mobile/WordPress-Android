@@ -18,19 +18,18 @@ class TodaysStatsCardBuilder @Inject constructor(
     fun build(params: TodaysStatsCardBuilderParams) = params.todaysStatsCard?.let {
         val error = it.error
         if (error != null) {
-            createTodaysStatsCardWithError(error)
+            handleError(error)
         } else {
             createTodaysStatsCardWithData(it)
         }
     }
 
-    private fun createTodaysStatsCardWithError(error: TodaysStatsCardError) = if (shouldShowError(error)) {
-        TodaysStatsCard.Error(
-                title = UiStringRes(R.string.my_site_todays_stat_card_title)
-        )
-    } else {
-        null
-    }
+    private fun handleError(error: TodaysStatsCardError) =
+            if (shouldShowError(error)) createTodaysStatsCardWithError() else null
+
+    private fun createTodaysStatsCardWithError() = TodaysStatsCard.Error(
+            title = UiStringRes(R.string.my_site_todays_stat_card_title)
+    )
 
     private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel) = TodaysStatsCardWithData(
             views = statToUiString(model.views),
