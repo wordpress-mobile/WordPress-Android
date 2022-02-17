@@ -325,32 +325,32 @@ class CardsStoreTest {
 
     @Test
     fun `given today's stats jetpack disconn error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID))
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
                 .thenReturn(
                         flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)))
                 )
 
-        val result = cardsStore.getCards(siteModel).single()
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
 
         assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)
     }
 
     @Test
     fun `given today's stats jetpack disabled error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID))
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
                 .thenReturn(flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.JETPACK_DISABLED))))
 
-        val result = cardsStore.getCards(siteModel).single()
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
 
         assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.JETPACK_DISABLED)
     }
 
     @Test
     fun `given today's stats jetpack unauth error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID))
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
                 .thenReturn(flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.UNAUTHORIZED))))
 
-        val result = cardsStore.getCards(siteModel).single()
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
 
         assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.UNAUTHORIZED)
     }
@@ -369,9 +369,9 @@ class CardsStoreTest {
 
     @Test
     fun `given posts card unauth error, when get cards triggered, then error exists in the card`() = test {
-        whenever(dao.get(SITE_LOCAL_ID)).thenReturn(flowOf(listOf(POSTS_WITH_ERROR_ENTITY)))
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES)).thenReturn(flowOf(listOf(POSTS_WITH_ERROR_ENTITY)))
 
-        val result = cardsStore.getCards(siteModel).single()
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
 
         assertThat(result.findPostsCardError()?.type).isEqualTo(PostCardErrorType.UNAUTHORIZED)
     }
