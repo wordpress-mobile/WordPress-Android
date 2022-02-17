@@ -292,21 +292,22 @@ class ReaderPostDetailViewModel @Inject constructor(
         if (!commentsSnippetFeatureConfig.isEnabled()) return
 
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
-
         post?.let {
-            val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
-                    it.blogId,
-                    it.postId,
-                    it.numReplies
-            ) ?: true
+            if (!post.isExternal) {
+                val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
+                        it.blogId,
+                        it.postId,
+                        it.numReplies
+                ) ?: true
 
-            if (!isRepliesDataChanged) return
+                if (!isRepliesDataChanged) return
 
-            readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
-                    contextProvider.getContext(),
-                    blogId,
-                    postId
-            )
+                readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
+                        contextProvider.getContext(),
+                        blogId,
+                        postId
+                )
+            }
         }
     }
 

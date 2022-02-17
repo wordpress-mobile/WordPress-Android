@@ -34,17 +34,20 @@ class SiteCreationServiceManager @Inject constructor(
 
     private lateinit var siteData: SiteCreationServiceData
     private lateinit var languageId: String
+    private lateinit var timeZoneId: String
     private lateinit var serviceListener: SiteCreationServiceManagerListener
     private var isRetry by Delegates.notNull<Boolean>()
     private var newSiteRemoteId by Delegates.notNull<Long>()
 
     fun onStart(
         languageWordPressId: String,
+        timeZoneId: String,
         previousState: String?,
         data: SiteCreationServiceData,
         serviceListener: SiteCreationServiceManagerListener
     ) {
         languageId = languageWordPressId
+        this.timeZoneId = timeZoneId
         siteData = data
         this.serviceListener = serviceListener
 
@@ -104,7 +107,7 @@ class SiteCreationServiceManager @Inject constructor(
             )
             val createSiteEvent: OnNewSiteCreated
             try {
-                createSiteEvent = createSiteUseCase.createSite(siteData, languageId)
+                createSiteEvent = createSiteUseCase.createSite(siteData, languageId, timeZoneId)
             } catch (e: IllegalStateException) {
                 AppLog.e(T.SITE_CREATION, e.message ?: "Unexpected error.")
                 executePhase(FAILURE)

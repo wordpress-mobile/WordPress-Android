@@ -29,6 +29,7 @@ class CreateSiteUseCase @Inject constructor(
     suspend fun createSite(
         siteData: SiteCreationServiceData,
         languageWordPressId: String,
+        timeZoneId: String,
         siteVisibility: SiteVisibility = PUBLIC,
         dryRun: Boolean = false
     ): OnNewSiteCreated {
@@ -51,6 +52,7 @@ class CreateSiteUseCase @Inject constructor(
             val newSitePayload = NewSitePayload(
                     domain,
                     languageWordPressId,
+                    timeZoneId,
                     siteVisibility,
                     siteData.segmentId,
                     siteData.siteDesign,

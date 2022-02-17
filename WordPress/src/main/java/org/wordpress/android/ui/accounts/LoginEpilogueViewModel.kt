@@ -44,4 +44,12 @@ class LoginEpilogueViewModel @Inject constructor(
     private fun handleSitesFound() {
         _navigationEvents.postValue(Event(LoginNavigationEvents.CloseWithResultOk))
     }
+
+    fun onLoginEpilogueResume(doLoginUpdate: Boolean) {
+        if (!doLoginUpdate && !siteStore.hasSite()) handleNoSitesFound()
+    }
+
+    fun onLoginFinished(doLoginUpdate: Boolean) {
+        if (doLoginUpdate && !siteStore.hasSite()) handleNoSitesFound()
+    }
 }

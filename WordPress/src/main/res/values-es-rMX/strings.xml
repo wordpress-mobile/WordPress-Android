@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-27 13:14:38+0000
+Translation-Revision-Date: 2022-02-08 13:49:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
@@ -160,8 +160,8 @@ Language: es_MX
     <string name="login_prologue_title_third">Mira los comentarios y avisos en tiempo real.</string>
     <string name="media_loading_failed">La carga del medio ha fallado</string>
     <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" no es totalmente compatible</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" no es totalmente compatible</string>
     <string name="stories_intro_description_second">Son publicados como una nueva entrada de blog en tu sitio para que tu audiencia nunca se pierda nada.</string>
     <string name="stories_intro_create_story_post_label">Crear una entrada de historia</string>
     <string name="gutenberg_native_choose_images">Elegir las imágenes</string>

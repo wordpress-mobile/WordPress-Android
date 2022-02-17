@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-21 13:01:51+0000
+Translation-Revision-Date: 2022-02-09 09:58:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="comment_moderation_error">Yorumlar kontrol edilemedi</string>
+    <string name="reader_comment_menu_trash">Çöpe taşı</string>
+    <string name="reader_comment_menu_spam">İstenmeyen olarak işaretle</string>
+    <string name="reader_comment_menu_unapprove">Onayı kaldır</string>
+    <string name="gutenberg_native_tiled_gallery_settings">Döşenmiş galeri ayarları</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Yerleşim seçim ekranına ilerler</string>
+    <string name="gutenberg_native_gallery_style">Galeri biçimi</string>
+    <string name="sharing_facebook_warning_positive_button">Webe git</string>
+    <string name="sharing_facebook_warning_message">Facebook hesabınızı WordPress.com web sitesine bağlayabilirsiniz. Tamamladığınızda WordPress uygulamasına dönüp paylaşım ayarlarını değiştirin.</string>
     <string name="about_automattic_app_icon_description">Uygulama simgesi</string>
     <string name="about_automattic_back_icon_description">Geri simgesi</string>
     <string name="about_automattic_logo_description">Automattic logosu</string>
@@ -54,7 +63,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Varsayılan yazı tipi boyutunu seçmek için iki kez dokunun</string>
     <string name="gutenberg_native_contact_support">Destek ile iletişim kur</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">İçerik Yok</string>
     <string name="reader_comments_follow_conversation">Sohbeti Takip Et</string>
     <string name="reader_comments_be_first_to_comment">İlk yorumu siz yapın</string>
     <string name="reader_comments_view_all">Tüm yorumları görüntüle</string>
@@ -235,8 +243,8 @@ Language: tr
     <string name="blogging_reminders_done">Tamamlandı</string>
     <string name="blogging_reminders_notify_me">Bana bildir</string>
     <string name="restore_details_enter_server_creds_msg">Yedeklemelerinizden tek tıkla geri yüklemeyi etkinleştirmek için &lt;a href=\"%1$s\"&gt;sunucu kimlik bilgilerinizi girin&lt;/a&gt;.</string>
-    <string name="gutenberg_native_set_as_featured_image">Öne Çıkarılan Görsel olarak ayarla </string>
-    <string name="gutenberg_native_remove_as_featured_image">Öne Çıkan Görsel kategorisinden kaldır </string>
+    <string name="gutenberg_native_set_as_featured_image">Öne çıkarılan görsel olarak ayarla </string>
+    <string name="gutenberg_native_remove_as_featured_image">Öne çıkan görseli kaldır </string>
     <string name="fab_add_category_desc">Kategori oluştur</string>
     <string name="support_ticket_subject">Android için WordPress Desteği</string>
     <string name="site_settings_categories_hint">Sitenizin kategorilerini yönetin</string>
@@ -289,16 +297,19 @@ Language: tr
     <string name="user_profile_site_section_header">Site</string>
     <string name="user_profile_bottom_sheet_description">Kullanıcı profili alt sayfa bilgileri</string>
     <string name="likes_list_screen_title">Beğeniler listesi %s</string>
+    <string name="gutenberg_native_two">İki</string>
+    <string name="gutenberg_native_three">Üç</string>
     <string name="gutenberg_native_s_social_icon">%s sosyal simge</string>
     <string name="gutenberg_native_mention">Bahsetme</string>
     <string name="gutenberg_native_preview_post">Yazıyı önizle</string>
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
+    <string name="gutenberg_native_one">Bir</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
     <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>
-    <string name="gutenberg_native_featured">Öne çıkan</string>
+    <string name="gutenberg_native_four">Dört</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
@@ -712,7 +723,7 @@ Language: tr
     <string name="media_loading_failed">Medya yükleme başarısız oldu</string>
     <string name="reader_discover_recommended_blogs_header">Takip edilecek siteler</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" tamamen desteklenmiyor</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' tamamen desteklenmiyor</string>
     <string name="gutenberg_native_help_button">Yardım düğmesi</string>
     <string name="gutenberg_native_edit_using_web_editor">Web düzenleyicisini kullanarak düzenle</string>
     <string name="gutenberg_native_choose_images">Görsel seç</string>
@@ -2951,6 +2962,7 @@ Language: tr
     <string name="reader_likes_multi">%,d kişi bunu beğendi</string>
     <string name="cant_share_no_visible_blog">Görünür bir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
+    <string name="comment_unapproved">Yorumun onayı kaldırıldı</string>
     <string name="reader_toast_err_get_post">Bu yazıya erişilemiyor</string>
     <string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
     <string name="pick_video">Video seçin</string>

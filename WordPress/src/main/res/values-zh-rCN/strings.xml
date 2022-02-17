@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-20 22:13:35+0000
+Translation-Revision-Date: 2022-02-07 15:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">平铺图片库设置</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">导航至布局选择界面</string>
+    <string name="sharing_facebook_warning_positive_button">转到网页</string>
+    <string name="sharing_facebook_warning_message">您可以在 WordPress.com 网站上连接您的 Facebook 账户。 完成后，返回 WordPress 应用程序更改您的共享设置。</string>
     <string name="about_automattic_app_icon_description">应用程序图标</string>
     <string name="about_automattic_back_icon_description">返回图标</string>
     <string name="about_automattic_logo_description">Automattic 徽标</string>
@@ -53,7 +57,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_select_font_size">轻按两下选择字体大小</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">轻按两下选择默认字体大小</string>
     <string name="gutenberg_native_contact_support">联系支持</string>
-    <string name="my_site_no_content_post">尚无评论</string>
     <string name="reader_comments_follow_conversation">关注对话</string>
     <string name="reader_comments_be_first_to_comment">成为第一个发表评论的用户</string>
     <string name="reader_comments_view_all">查看所有评论</string>
@@ -176,7 +179,6 @@ Language: zh_CN
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">区块是您不需要知道如何编写代码就能够插入、重新排列和设置样式的内容。 区块让您能够以轻松而现代的方式创建精美的布局。</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">区块让您能够专注于编写您的内容，因为您需要的所有格式化工具将帮助您清楚地传达您的消息。</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">将您的内容排成列，添加调用操作按钮，并用文字覆盖图片。</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">随时可通过点按左下角工具栏中的“+”图标添加新区块。</string>
     <string name="quick_start_sites_type_tasks_completed">总计 %2$s 项任务，其中 %1$s 项已完成</string>
     <string name="quick_start_dialog_need_help_manage_site_message">通过快速练习了解基础知识。</string>
     <string name="comment_batch_moderation_error">未能对一条或多条评论进行审核</string>
@@ -234,8 +236,6 @@ Language: zh_CN
     <string name="blogging_reminders_done">完成</string>
     <string name="blogging_reminders_notify_me">通知我</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;输入您的服务器凭据&lt;/a&gt;以启用从备份中一键恢复站点的功能。</string>
-    <string name="gutenberg_native_set_as_featured_image">设为特色图片</string>
-    <string name="gutenberg_native_remove_as_featured_image">移除特色图片</string>
     <string name="fab_add_category_desc">创建分类</string>
     <string name="support_ticket_subject">Android 版 WordPress 支持</string>
     <string name="site_settings_categories_hint">管理您的站点分类</string>
@@ -247,8 +247,6 @@ Language: zh_CN
     <string name="storage_utils_dialog_ok_button">查看存储</string>
     <string name="storage_utils_dialog_message">我们需要在设备上保存您的内容才能发布。查看您的存储设置并删除文件以释放空间。</string>
     <string name="storage_utils_dialog_title">设备存储不足</string>
-    <string name="gutenberg_native_y_axis_position">Y轴位置</string>
-    <string name="gutenberg_native_x_axis_position">X轴位置</string>
     <string name="gutenberg_native_type_a_url">键入URL</string>
     <string name="gutenberg_native_slash_inserter_results">斜杠插入器结果</string>
     <string name="gutenberg_native_s_has_url_set">%s已设置URL</string>
@@ -297,7 +295,6 @@ Language: zh_CN
     <string name="gutenberg_native_text_color">文字颜色</string>
     <string name="gutenberg_native_s_link">%s 链接</string>
     <string name="gutenberg_native_padding">内边距</string>
-    <string name="gutenberg_native_featured">文章特色图片</string>
     <string name="gutenberg_native_custom_url">自定义 URL</string>
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
@@ -309,7 +306,6 @@ Language: zh_CN
     <string name="gutenberg_native_transform_block">转换区块…</string>
     <string name="gutenberg_native_failed_to_insert_media">未能插入媒体。</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">未能插入音频文件。</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">描述图像的目的。如果图像纯粹是装饰性的，则留空。 </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s转换为%2$s</string>
     <string name="like_faces_error_loading_message">数据加载错误。%s.</string>
     <string name="like_title_plural">%d 喜欢</string>
@@ -327,7 +323,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">双击可编辑占位符文字</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">双击可编辑标签文字</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">双击编辑按钮文字</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">双击更改单位</string>
     <string name="gutenberg_native_current_placeholder_text_is">当前占位符文本</string>
     <string name="gutenberg_native_clear_search">清除搜索</string>
     <string name="gutenberg_native_cancel_search">取消搜索</string>
@@ -710,7 +705,6 @@ Language: zh_CN
     <string name="media_loading_failed">媒体加载失败</string>
     <string name="reader_discover_recommended_blogs_header">关注的站点</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我们正在努力在每个版本中添加更多区块。</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">不完全支持“%s”</string>
     <string name="gutenberg_native_help_button">“帮助”按钮</string>
     <string name="gutenberg_native_edit_using_web_editor">使用 Web 编辑器进行编辑</string>
     <string name="gutenberg_native_choose_images">选择图片</string>
