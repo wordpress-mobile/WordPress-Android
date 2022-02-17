@@ -34,7 +34,8 @@ public class ReaderCommentTable {
             + " num_likes,"
             + " is_liked,"
             + " page_number,"
-            + " short_url";
+            + " short_url,"
+            + " fetched_timestamp";
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -56,6 +57,7 @@ public class ReaderCommentTable {
                    + " is_liked INTEGER DEFAULT 0,"
                    + " page_number INTEGER DEFAULT 0,"
                    + " short_url TEXT,"
+                   + " fetched_timestamp INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (blog_id, post_id, comment_id))");
         db.execSQL("CREATE INDEX idx_page_number ON tbl_comments(page_number)");
     }
@@ -140,7 +142,7 @@ public class ReaderCommentTable {
 
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId), CommentStatus.APPROVED.toString()};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(
-                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? AND status =? ORDER BY timestamp", args);
+                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? AND status =? ORDER BY fetched_timestamp", args);
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {
@@ -196,7 +198,7 @@ public class ReaderCommentTable {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments (" + COLUMN_NAMES + ") "
                                                    + "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,"
-                                                   + "?17)");
+                                                   + "?17,?18)");
         try {
             for (ReaderComment comment : comments) {
                 stmt.bindLong(1, comment.blogId);
@@ -216,6 +218,7 @@ public class ReaderCommentTable {
                 stmt.bindLong(15, SqlUtils.boolToSql(comment.isLikedByCurrentUser));
                 stmt.bindLong(16, comment.pageNumber);
                 stmt.bindString(17, comment.getShortUrl());
+                stmt.bindLong(18, System.currentTimeMillis());
 
                 stmt.execute();
             }
@@ -367,6 +370,8 @@ public class ReaderCommentTable {
         comment.pageNumber = c.getInt(c.getColumnIndexOrThrow("page_number"));
 
         comment.setShortUrl(c.getString(c.getColumnIndexOrThrow("short_url")));
+
+        comment.setFetchedTimestamp(c.getLong(c.getColumnIndexOrThrow("fetched_timestamp")));
 
         return comment;
     }

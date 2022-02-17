@@ -20,6 +20,7 @@ public class ReaderComment {
     private String mStatus;
     private String mText;
     private String mShortUrl;
+    private String mAuthorEmail;
 
     private String mPublished;
     public long timestamp;
@@ -31,6 +32,9 @@ public class ReaderComment {
     public boolean isLikedByCurrentUser;
 
     public int pageNumber;
+
+    // denotes when comment was fetched and stored in DB
+    public long fetchedTimestamp;
 
     // not stored in db - denotes the indentation level when displaying this comment
     public transient int level = 0;
@@ -70,6 +74,7 @@ public class ReaderComment {
             comment.mAuthorUrl = JSONUtils.getString(jsonAuthor, "URL");
             comment.authorId = jsonAuthor.optLong("ID");
             comment.authorBlogId = jsonAuthor.optLong("site_ID");
+            comment.mAuthorEmail = JSONUtils.getString(jsonAuthor, "email");
         }
 
         JSONObject jsonParent = json.optJSONObject("parent");
@@ -155,6 +160,22 @@ public class ReaderComment {
         mShortUrl = shortUrl;
     }
 
+    public long getFetchedTimestamp() {
+        return fetchedTimestamp;
+    }
+
+    public void setFetchedTimestamp(long fetchedTimestamp) {
+        this.fetchedTimestamp = fetchedTimestamp;
+    }
+
+    public String getAuthorEmail() {
+        return mAuthorEmail;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        mAuthorEmail = authorEmail;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -169,6 +190,7 @@ public class ReaderComment {
                && StringUtils.equals(mAuthorName, otherComment.mAuthorName)
                && StringUtils.equals(mAuthorAvatar, otherComment.mAuthorAvatar)
                && StringUtils.equals(mAuthorUrl, otherComment.mAuthorUrl)
+               && StringUtils.equals(mAuthorEmail, otherComment.mAuthorEmail)
                && StringUtils.equals(mStatus, otherComment.mStatus)
                && StringUtils.equals(mText, otherComment.mText)
                && StringUtils.equals(mPublished, otherComment.mPublished)

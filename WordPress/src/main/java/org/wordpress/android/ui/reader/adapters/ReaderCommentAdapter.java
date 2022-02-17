@@ -695,8 +695,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mMoreCommentsExist = mTmpMoreCommentsExist;
 
             if (result) {
+                ReaderCommentList leveledComments = new ReaderCommentLeveler(mTmpComments).createLevelList();
+                leveledComments.removeAll(mComments);
                 // assign the comments with children sorted under their parents and indent levels applied
-                mComments = new ReaderCommentLeveler(mTmpComments).createLevelList();
+                mComments.addAll(leveledComments);
                 notifyDataSetChanged();
             }
             if (mDataLoadedListener != null) {
