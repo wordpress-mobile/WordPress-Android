@@ -19,7 +19,7 @@ class ErrorWithinCardViewHolder(
         mySiteToolbar.update(card.title)
     }
 
-    private fun MySiteCardToolbarBinding.update(title: UiString?) {
+    private fun MySiteCardToolbarBinding.update(title: UiString) {
         uiHelpers.setTextOrHide(mySiteCardToolbarTitle, title)
     }
 }
