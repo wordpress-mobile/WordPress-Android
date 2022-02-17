@@ -159,7 +159,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given stats feature enabled, when build is invoked, then todays stats are requested from network`() = test {
         val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
         whenever(statsCardFeatureConfig.isEnabled()).thenReturn(true)
         whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
         cardSource.refresh.observeForever { }
