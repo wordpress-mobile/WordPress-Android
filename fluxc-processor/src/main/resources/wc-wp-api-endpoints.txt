@@ -48,6 +48,7 @@
 /payments/orders/<id>/capture_terminal_payment
 /payments/accounts
 /payments/orders/<order_id>/create_customer
+/payments/charges/<charge_id>#String/
 
 /payments/terminal/locations/store
 
@@ -56,6 +57,7 @@
 /wc_stripe/orders/<order_id>/create_customer
 /wc_stripe/connection_tokens
 /wc_stripe/orders/<order_id>/capture_terminal_payment
+/wc_stripe/charges/<charge_id>#String/
 
 /taxes
 /taxes/classes/
