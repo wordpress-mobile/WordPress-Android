@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store
 import android.annotation.SuppressLint
 import android.content.Context
 import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
+import kotlinx.coroutines.flow.Flow
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -229,6 +230,13 @@ class NotificationStore @Inject constructor(
         filterBySubtype: List<String>? = null
     ): List<NotificationModel> =
             notificationSqlUtils.getNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
+
+    fun observeNotificationsForSite(
+        site: SiteModel,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): Flow<List<NotificationModel>> =
+            notificationSqlUtils.observeNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
 
     /**
      * Returns true if the given site has unread notifications

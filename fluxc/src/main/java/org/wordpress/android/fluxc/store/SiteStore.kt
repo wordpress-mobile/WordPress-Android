@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
+import androidx.annotation.VisibleForTesting
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
@@ -141,24 +142,26 @@ open class SiteStore
         @JvmField var url: String = ""
     ) : Payload<BaseNetworkError>()
 
-    data class FetchSitesPayload(@JvmField val filters: List<SiteFilter> = ArrayList()) : Payload<BaseNetworkError>()
+    data class FetchSitesPayload @JvmOverloads constructor(
+        @JvmField val filters: List<SiteFilter> = ArrayList(),
+        @JvmField val filterJetpackConnectedPackageSite: Boolean = false
+    ) : Payload<BaseNetworkError>()
 
     data class NewSitePayload(
         @JvmField val siteName: String,
         @JvmField val language: String,
+        @JvmField val timeZoneId: String?,
         @JvmField val visibility: SiteVisibility,
         @JvmField val segmentId: Long? = null,
         @JvmField val siteDesign: String? = null,
         @JvmField val dryRun: Boolean
     ) : Payload<BaseNetworkError>() {
-        constructor(siteName: String, language: String, visibility: SiteVisibility, dryRun: Boolean) : this(
-                siteName,
-                language,
-                visibility,
-                null,
-                null,
-                dryRun
-        )
+        constructor(
+            siteName: String,
+            language: String,
+            visibility: SiteVisibility,
+            dryRun: Boolean
+        ) : this(siteName, language, null, visibility, null, null, dryRun)
 
         constructor(
             siteName: String,
@@ -166,7 +169,15 @@ open class SiteStore
             visibility: SiteVisibility,
             segmentId: Long?,
             dryRun: Boolean
-        ) : this(siteName, language, visibility, segmentId, null, dryRun)
+        ) : this(siteName, language, null, visibility, segmentId, null, dryRun)
+
+        constructor(
+            siteName: String,
+            language: String,
+            timeZoneId: String,
+            visibility: SiteVisibility,
+            dryRun: Boolean
+        ) : this(siteName, language, timeZoneId, visibility, null, null, dryRun)
     }
 
     data class FetchedPostFormatsPayload(
@@ -1273,8 +1284,10 @@ open class SiteStore
     }
 
     suspend fun fetchSites(payload: FetchSitesPayload): OnSiteChanged {
-        val result = siteRestClient.fetchSites(payload.filters)
-        return handleFetchedSitesWPComRest(result)
+        return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
+            val result = siteRestClient.fetchSites(payload.filters, payload.filterJetpackConnectedPackageSite)
+            handleFetchedSitesWPComRest(result)
+        }
     }
 
     suspend fun fetchSitesXmlRpc(payload: RefreshSitesXMLRPCPayload): OnSiteChanged {
@@ -1438,10 +1451,16 @@ open class SiteStore
         return rowsAffected
     }
 
+    @VisibleForTesting
     suspend fun createNewSite(payload: NewSitePayload): OnNewSiteCreated {
         val result = siteRestClient.newSite(
-                payload.siteName, payload.language, payload.visibility,
-                payload.segmentId, payload.siteDesign, payload.dryRun
+                payload.siteName,
+                payload.language,
+                payload.timeZoneId,
+                payload.visibility,
+                payload.segmentId,
+                payload.siteDesign,
+                payload.dryRun
         )
         return handleCreateNewSiteCompleted(
                 payload = result
