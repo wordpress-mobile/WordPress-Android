@@ -115,13 +115,13 @@ class CardsSourceTest : BaseUnitTest() {
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
 
-        verify(cardsStore).getCards(siteModel)
+        verify(cardsStore).getCards(siteModel, DEFAULT_CARD_TYPE)
     }
 
     @Test
     fun `given build is invoked, when cards are collected, then data is loaded (database)`() = test {
         val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         cardSource.refresh.observeForever { }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
@@ -134,7 +134,7 @@ class CardsSourceTest : BaseUnitTest() {
 
     @Test
     fun `when build is invoked, then cards are fetched from store (network)`() = test {
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(CARDS_MODEL)))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(CardsResult(CARDS_MODEL)))
         cardSource.refresh.observeForever { }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -145,7 +145,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given no error, when build is invoked, then data is only loaded from get cards (database)`() = test {
         val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(CardsResult())
         cardSource.refresh.observeForever { }
 
@@ -158,7 +158,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
         val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
         cardSource.refresh.observeForever { }
 
@@ -177,7 +177,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given no error, when refresh is invoked, then data is only loaded from get cards (database)`() = test {
         val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
         cardSource.refresh.observeForever { }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
@@ -191,7 +191,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given error, when refresh is invoked, then error snackbar with stale message also shown (network)`() = test {
         val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(apiError)
         cardSource.refresh.observeForever { }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
@@ -226,7 +226,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `when refresh is invoked, then refresh is set to false`() = test {
         val result = mutableListOf<Boolean>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success).thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -244,7 +244,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
         val result = mutableListOf<Boolean>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(success)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
@@ -262,7 +262,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Test
     fun `given error, when data has been refreshed, then refresh is set to false`() = test {
         val result = mutableListOf<Boolean>()
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
+        whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
         whenever(cardsStore.fetchCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(apiError)
         cardSource.refresh.observeForever { result.add(it) }
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
