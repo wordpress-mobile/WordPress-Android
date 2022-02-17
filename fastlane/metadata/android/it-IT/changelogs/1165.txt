@@ -1,0 +1,7 @@
+19.1:
+- Giustifica i pulsanti in modo corretto nel blocco Pulsanti.
+- Visualizza i nomi dei blocchi in ebraico e indonesiano.
+- Visualizza le impostazioni delle immagini in evidenza e dei colori del blocco Copertina tradotte.
+- Non è più visibile il pulsante di supporto nell'editor a blocchi non supportato.
+- Ricevi una notifica se le combinazioni di colori del testo/di sfondo non sono adatte alla lettura.
+- Incorri in meno problemi con la modifica del colore del testo non selezionato.

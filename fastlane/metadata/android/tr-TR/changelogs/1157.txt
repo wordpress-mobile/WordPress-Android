@@ -1,6 +1,0 @@
-19.0:
-- Gönderiler de dahil olmak üzere kart tabanlı bir şeritle panonuzu yönetin.
-- Ücretsiz paketlerle 5 dakikaya kadar uzunlukta video yükleyin.
-- Jetpack/Düzen Izgarası blokları da dahil olmak üzere kendi dilinizde daha fazla kullanıcı arayüzü metni görün.
-- Geri al tuşuna bastıktan sonra metin biçimlendirmesini koruyun.
-- Blok başlıkları artık ekleyici menüsünde ortaya hizalanmıştır.

@@ -414,6 +414,7 @@
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
+    <string name="comment_unapproved">Comment unapproved</string>
     <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comment_approved_talkback">Comment approved</string>
@@ -448,6 +449,12 @@
     <string name="mnu_comment_delete_permanently">Delete</string>
     <string name="mnu_comment_liked">Liked</string>
 
+    <string name="reader_comment_menu_unapprove">Unapprove</string>
+    <string name="reader_comment_menu_spam">Mark as Spam</string>
+    <string name="reader_comment_menu_trash">Move to Trash</string>
+    <string name="reader_comment_menu_share" translatable="false">@string/share_desc</string>
+
+
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="dlg_confirm_action_trash">Trash</string>
@@ -468,6 +475,7 @@
     <string name="comment_q_action_replying">Replying…</string>
     <string name="comment_q_action_copied_url">Link address copied</string>
     <string name="comment_batch_moderation_error">Failed to moderate one or more comments</string>
+    <string name="comment_moderation_error">Failed to moderate comments</string>
 
     <!-- pending draft local notifications -->
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
@@ -2210,7 +2218,6 @@
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
     <string name="my_site_untitled_post">Untitled</string>
-    <string name="my_site_no_content_post">No Content</string>
     <string name="my_site_create_first_post_title">Create your first post</string>
     <string name="my_site_create_first_post_excerpt">Posts appear on your blog page in reverse chronological order. It\'s time to share your ideas with the world!</string>
     <string name="my_site_create_next_post_title">Create your next post</string>
@@ -3340,7 +3347,7 @@
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources">%1$s. %2$s is %3$s %4$s.</string>
     <!-- translators: 1: From block title, e.g. Paragraph. 2: To block title, e.g. Header. -->
     <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources">%1$s transformed to %2$s</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">Add a new block at any time by tapping on the + icon in the toolbar on the bottom left. </string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources">Add a new block at any time by tapping on the + icon in the toolbar on the bottom left.</string>
     <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
     <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources">Add alt text</string>
     <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources">ADD AUDIO</string>
@@ -3433,12 +3440,12 @@
     <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources">Customize blocks</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cut block</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">Describe the purpose of the image. Leave empty if the image is purely decorative. </string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur" tools:ignore="UnusedResources">Describe the purpose of the image. Leave empty if the image is purely decorative.</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">Double tap and hold to edit</string>
     <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Double tap to add a block</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources">Double tap to add a link.</string>
-    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">double–tap to change unit</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources">double-tap to change unit</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources">Double tap to edit button text</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources">Double tap to edit label text</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources">Double tap to edit placeholder text</string>
@@ -3625,7 +3632,7 @@ translators: Block name. %s: The localized block name -->
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources">%s has URL set</string>
     <!-- translators: Missing block alert title. %s: The localized block name -->
-    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully–supported</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully-supported</string>
     <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
     <string name="gutenberg_native_s_link" tools:ignore="UnusedResources">%s link</string>
     <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
@@ -3690,8 +3697,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources">What is alt text?</string>
     <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources">Width Settings</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
-    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">X–Axis Position</string>
-    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Y–Axis Position</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources">X-Axis Position</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources">Y-Axis Position</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">You can edit this block using the web version of the editor.</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">You can rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it above or below other blocks.</string>
     <!--/Autogenerated:Gutenberg Native-->

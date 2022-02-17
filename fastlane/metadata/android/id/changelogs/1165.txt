@@ -1,0 +1,7 @@
+19.1:
+- Ratakan tombol dengan benar di blok Tombol.
+- Lihat nama blok dalam bahasa Ibrani dan Indonesia.
+- Lihat gambar unggulan dan pengaturan warna blok Sampul yang diterjemahkan.
+- Tidak lagi menampilkan tombol bantuan di editor blok yang tidak didukung.
+- Pemberitahuan jika kombinasi warna teks/latar belakang sulit dibaca.
+- Lebih sedikit masalah saat mengubah warna teks yang tidak dipilih.

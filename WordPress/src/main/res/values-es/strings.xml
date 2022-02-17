@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 05:13:33+0000
+Translation-Revision-Date: 2022-02-08 05:01:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="reader_comment_menu_spam">Marcar como spam</string>
+    <string name="reader_comment_menu_trash">Mover a la papelera</string>
+    <string name="comment_moderation_error">Fallo al moderar los comentarios</string>
+    <string name="reader_comment_menu_unapprove">Rechazar</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Navega a la pantalla de selección del diseño</string>
+    <string name="gutenberg_native_tiled_gallery_settings">Ajustes de la galería de mosaico</string>
+    <string name="sharing_facebook_warning_message">Puedes conectar tu cuenta de Facebook en la web de WordPress.com. Cuando lo hayas hecho, vuelve a la aplicación de WordPress para cambiar tus ajustes para compartir.</string>
+    <string name="sharing_facebook_warning_positive_button">Ir a la web</string>
+    <string name="gutenberg_native_gallery_style">Estilo de la galería</string>
     <string name="about_automattic_wordpress">WordPress</string>
     <string name="about_automattic_logo_description">Logotipo de Automattic</string>
     <string name="about_automattic_back_icon_description">Icono de volver</string>
@@ -55,7 +64,6 @@ Language: es
     <string name="reader_comments_view_all">Ver todos los comentarios</string>
     <string name="reader_comments_be_first_to_comment">Sé el primero en comentar</string>
     <string name="reader_comments_follow_conversation">Seguir la conversación</string>
-    <string name="my_site_no_content_post">Sin contenido</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="gutenberg_native_contact_support">Contactar con el soporte</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Toca dos veces para seleccionar el tamaño de fuente por defecto</string>
@@ -177,8 +185,8 @@ Language: es
     <string name="gutenberg_native_build_layouts">Crear diseños</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Los bloques te permiten centrarte en la escritura de tu contenido, sabiendo que todas las herramientas de formato que necesitas están ahí para ayudarte a transmitir tu mensaje.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organiza tu contenido en columnas, añade botones de llamada a la acción y superpón imágenes con texto.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Añade un nuevo bloque en cualquier momento tocando el icono «+» en la barra de herramientas de la parte inferior izquierda. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s de %2$s completado</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Añade un nuevo bloque en cualquier momento tocando el icono «+» en la barra de herramientas en la parte inferior izquierda. </string>
     <string name="comment_batch_moderation_error">Ha fallado la moderación de uno o más comentarios</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Aprende lo básico con un rápido recorrido.</string>
     <string name="create_site_notification_create_site_action">Crear un sitio</string>
@@ -236,9 +244,9 @@ Language: es
     <string name="blogging_reminders_done">Hecho</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Introduce las credenciales de tu servidor&lt;/a&gt; para activar las restauraciones del sitio con un clic de las copias de seguridad.</string>
     <string name="fab_add_category_desc">Crear una categoría</string>
+    <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="gutenberg_native_remove_as_featured_image">Eliminar como imagen destacada</string>
     <string name="gutenberg_native_set_as_featured_image">Establecer como imagen destacada</string>
-    <string name="support_ticket_subject">Soporte de WordPress para Android</string>
     <string name="site_settings_categories_hint">Gestiona las categorías de tu sitio</string>
     <string name="page_is_posts_page_warning">El contenido de la página de tus últimas entradas se genera automáticamente y no se puede editar.</string>
     <string name="site_settings_categories_title">Categorías</string>
@@ -289,16 +297,19 @@ Language: es
     <string name="user_profile_site_section_header">Sitio</string>
     <string name="user_profile_bottom_sheet_description">Información de hoja inferior del perfil de usuario</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
+    <string name="gutenberg_native_two">Dos</string>
+    <string name="gutenberg_native_three">Tres</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
     <string name="gutenberg_native_preview_post">Previsualizar la entrada</string>
     <string name="gutenberg_native_retry">Reintentar</string>
+    <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
     <string name="gutenberg_native_padding">Relleno</string>
-    <string name="gutenberg_native_featured">Destacado</string>
+    <string name="gutenberg_native_four">Cuatro</string>
     <string name="gutenberg_native_create_embed">Crear una incrustación</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
     <string name="gutenberg_native_column_d">Columna %d</string>
@@ -310,10 +321,10 @@ Language: es
     <string name="gutenberg_native_transform_block">Transformar bloque…</string>
     <string name="gutenberg_native_failed_to_insert_media">Fallo al insertar los medios.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Fallo al insertar el archivo de audio.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe el propósito de la imagen. Déjalo vacío si la imagen es puramente decorativa.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s transformado a %2$s</string>
     <string name="like_faces_error_loading_message">Error al cargar los datos de me gusta. %s</string>
     <string name="like_title_plural">%d me gusta</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Describe el propósito de la imagen. Déjalo vacío si la imagen es puramente decorativa.</string>
     <string name="like_title_singular">1 me gusta</string>
     <string name="suggestion">Sugerencia:</string>
     <string name="gutenberg_native_use_icon_button">Usar botón de icono</string>
@@ -327,8 +338,8 @@ Language: es
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Doble toque para editar el texto del marcador de posición</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Doble toque para editar el texto de la etiqueta</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Doble toque para editar el texto del botón</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">doble-toque para cambiar la unidad</string>
     <string name="gutenberg_native_outside">Exterior</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">doble toque para cambiar la unidad</string>
     <string name="gutenberg_native_current_placeholder_text_is">El texto de marcador de posición actual es</string>
     <string name="gutenberg_native_clear_search">Vaciar la búsqueda</string>
     <string name="gutenberg_native_cancel_search">Cancelar la búsqueda</string>
@@ -711,8 +722,8 @@ Language: es
     <string name="login_prologue_title_fifth">Sigue tus sitios favoritos y descubre nuevos blogs.</string>
     <string name="media_loading_failed">La carga del medio ha fallado</string>
     <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">«%s» no es totalmente compatible</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">«%s» no es totalmente compatible</string>
     <string name="stories_intro_description_second">Son publicados como una nueva entrada de blog en tu sitio para que tu audiencia nunca se pierda nada.</string>
     <string name="stories_intro_create_story_post_label">Crear una entrada de historia</string>
     <string name="gutenberg_native_choose_images">Elegir las imágenes</string>
@@ -2947,6 +2958,7 @@ Language: es
     <string name="reader_toast_err_remove_tag">No se ha podido eliminar este tema</string>
     <string name="share_link">Compartir enlace</string>
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
+    <string name="comment_unapproved">Comentario no aprobado</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
     <string name="comment_spammed">Comentado marcado como spam</string>

@@ -1,19 +1,19 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -79,9 +79,14 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 
     private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
-        statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
-        tabLayout.setupWithViewPager(statsPager)
-        statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+        val adapter = StatsPagerAdapter(activity)
+        statsPager.adapter = adapter
+        statsPager.setPageTransformer(
+                MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+        )
+        TabLayoutMediator(tabLayout, statsPager) { tab, position ->
+            tab.text = adapter.getTabTitle(position)
+        }.attach()
         tabLayout.addOnTabSelectedListener(selectedTabListener)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
@@ -228,18 +233,15 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 }
 
-class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
-        fm,
-        BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-) {
-    override fun getCount(): Int = statsSections.size
+class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
+    override fun getItemCount(): Int = statsSections.size
 
-    override fun getItem(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {
         return StatsListFragment.newInstance(statsSections[position])
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        return context.getString(statsSections[position].titleRes)
+    fun getTabTitle(position: Int): CharSequence {
+        return activity.getString(statsSections[position].titleRes)
     }
 }
 
