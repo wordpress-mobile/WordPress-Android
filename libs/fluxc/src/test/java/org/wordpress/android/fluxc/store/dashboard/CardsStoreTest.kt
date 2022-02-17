@@ -153,13 +153,33 @@ class CardsStoreTest {
     }
 
     @Test
-    fun `given cards response, when fetch cards gets triggered, then cards model is inserted into db`() = test {
+    fun `given all card types, when fetch cards triggered, then all cards model is inserted into db`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
         whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
 
         cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         verify(dao).insertWithDate(siteModel.id, CARDS_MODEL)
+    }
+
+    @Test
+    fun `given todays stats type, when fetch cards triggered, then today's stats card model inserted into db`() = test {
+        val payload = CardsPayload(CardsResponse(todaysStats = TODAYS_STATS_RESPONSE))
+        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.TODAYS_STATS))).thenReturn(payload)
+
+        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.TODAYS_STATS))
+
+        verify(dao).insertWithDate(siteModel.id, listOf(TODAYS_STATS_MODEL))
+    }
+
+    @Test
+    fun `given posts type, when fetch cards triggered, then post card model inserted into db`() = test {
+        val payload = CardsPayload(CardsResponse(posts = POSTS_RESPONSE))
+        whenever(restClient.fetchCards(siteModel, listOf(CardModel.Type.POSTS))).thenReturn(payload)
+
+        cardsStore.fetchCards(siteModel, listOf(CardModel.Type.POSTS))
+
+        verify(dao).insertWithDate(siteModel.id, listOf(POSTS_MODEL))
     }
 
     @Test
