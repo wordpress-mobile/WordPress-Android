@@ -177,10 +177,10 @@ REPOSITORY_NAME = 'WordPress-Android'
   lane :complete_code_freeze do |options|
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
-    localize_libraries()
-    update_frozen_strings_for_translation()
+    localize_libraries
+    update_frozen_strings_for_translation
 
-    ensure_git_status_clean()
+    ensure_git_status_clean
     push_to_git_remote
 
     new_version = android_get_app_version()
@@ -302,7 +302,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   desc 'Updates a release branch for a new beta release'
   lane :new_beta_release do |options|
     android_betabuild_prechecks(base_version: options[:base_version], skip_confirm: options[:skip_confirm])
-    update_frozen_strings_for_translation()
+    update_frozen_strings_for_translation
     download_translations()
     android_bump_version_beta()
     new_version = android_get_app_version()
@@ -763,7 +763,10 @@ REPOSITORY_NAME = 'WordPress-Android'
     },
   ].freeze
 
-  lane :update_frozen_strings_for_translation do |options|
+  lane :update_frozen_strings_for_translation do
+    # We need to `cd` to the parent directory because, unlike when calling fastlane actions, commands running directly from the `Fastfile`
+    # (like `FileUtils` calls here) run relative to the `./fastlane` folder, but the `*_DIR_PATH` we use are relative to the repo root.
+    # See: https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
     Dir.chdir('..') do
       FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
       FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
@@ -772,7 +775,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   end
 
   desc 'Merge libraries strings files into the main app one'
-  lane :localize_libraries do |options|
+  lane :localize_libraries 
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
     an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 
