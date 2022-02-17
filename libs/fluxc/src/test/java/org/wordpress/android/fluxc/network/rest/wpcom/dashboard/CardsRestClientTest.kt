@@ -109,6 +109,7 @@ class CardsRestClientTest {
     @Mock private lateinit var site: SiteModel
 
     private lateinit var urlCaptor: KArgumentCaptor<String>
+    private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: CardsRestClient
 
     private val siteId: Long = 1
@@ -116,6 +117,7 @@ class CardsRestClientTest {
     @Before
     fun setUp() {
         urlCaptor = argumentCaptor()
+        paramsCaptor = argumentCaptor()
         restClient = CardsRestClient(
                 wpComGsonRequestBuilder,
                 dispatcher,
@@ -263,7 +265,7 @@ class CardsRestClientTest {
                 wpComGsonRequestBuilder.syncGetRequest(
                         eq(restClient),
                         urlCaptor.capture(),
-                        eq(mapOf()),
+                        paramsCaptor.capture(),
                         eq(CardsResponse::class.java),
                         eq(false),
                         any(),
@@ -322,7 +324,7 @@ class CardsRestClientTest {
     companion object {
         private const val API_BASE_PATH = "https://public-api.wordpress.com/wpcom/v2"
         private const val API_SITE_PATH = "$API_BASE_PATH/sites"
-        private const val API_DASHBOARD_CARDS_PATH = "dashboard/cards/"
+        private const val API_DASHBOARD_CARDS_PATH = "dashboard/cards-data/"
 
         private const val DASHBOARD_CARDS_JSON = "wp/dashboard/cards.json"
         private const val DASHBOARD_CARDS_WITH_ERRORS_JSON = "wp/dashboard/cards_with_errors.json"
