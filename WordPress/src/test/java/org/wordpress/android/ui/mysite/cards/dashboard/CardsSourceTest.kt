@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.Type.POSTS
-import org.wordpress.android.fluxc.model.dashboard.CardModel.Type.TODAYS_STATS
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 import org.wordpress.android.fluxc.store.dashboard.CardsStore
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
@@ -76,7 +74,7 @@ private val CARDS_MODEL: List<CardModel> = listOf(
 )
 
 private val DEFAULT_CARD_TYPE = listOf(CardModel.Type.POSTS)
-private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.POSTS, CardModel.Type.TODAYS_STATS)
+private val STATS_FEATURED_ENABLED_CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
 
 @InternalCoroutinesApi
 class CardsSourceTest : BaseUnitTest() {
@@ -163,14 +161,12 @@ class CardsSourceTest : BaseUnitTest() {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
         whenever(statsCardFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(cardsStore.fetchCards(siteModel, listOf(POSTS, TODAYS_STATS))).thenReturn(success)
-
+        whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
         cardSource.refresh.observeForever { }
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
-        cardSource.refresh()
 
-        verify(cardsStore).fetchCards(siteModel, listOf(POSTS, TODAYS_STATS))
+        verify(cardsStore).fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
     }
 
     @Test
