@@ -55,6 +55,10 @@ const val POST_CONTENT = "content"
 const val POST_FEATURED_IMAGE = "featuredImage"
 const val POST_DATE = "2021-12-27 11:33:55"
 
+/* CARD TYPES */
+
+private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
+
 /* RESPONSE */
 
 private val TODAYS_STATS_RESPONSE = TodaysStatsResponse(
@@ -178,9 +182,9 @@ class CardsStoreTest {
     @Test
     fun `given cards response, when fetch cards gets triggered, then cards model is inserted into db`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel)
+        cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         verify(dao).insertWithDate(siteModel.id, CARDS_MODEL)
     }
@@ -188,9 +192,9 @@ class CardsStoreTest {
     @Test
     fun `given cards response, when fetch cards gets triggered, then empty cards model is returned`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel)
+        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         assertThat(result.model).isNull()
         assertThat(result.error).isNull()
@@ -199,10 +203,10 @@ class CardsStoreTest {
     @Test
     fun `given card response with exception, when fetch cards gets triggered, then cards error is returned`() = test {
         val payload = CardsPayload(CARDS_RESPONSE)
-        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
         whenever(dao.insertWithDate(siteModel.id, CARDS_MODEL)).thenThrow(IllegalStateException("Error"))
 
-        val result = cardsStore.fetchCards(siteModel)
+        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         assertThat(result.model).isNull()
         assertEquals(CardsErrorType.GENERIC_ERROR, result.error.type)
@@ -213,9 +217,9 @@ class CardsStoreTest {
     fun `given cards error, when fetch cards gets triggered, then cards error is returned`() = test {
         val errorType = CardsErrorType.API_ERROR
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel)
+        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         assertThat(result.model).isNull()
         assertEquals(errorType, result.error.type)
@@ -226,9 +230,9 @@ class CardsStoreTest {
     fun `given authorization required, when fetch cards gets triggered, then db is cleared of cards model`() = test {
         val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
 
-        cardsStore.fetchCards(siteModel)
+        cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         verify(dao).clear()
     }
@@ -237,9 +241,9 @@ class CardsStoreTest {
     fun `given authorization required, when fetch cards gets triggered, then empty cards model is returned`() = test {
         val errorType = CardsErrorType.AUTHORIZATION_REQUIRED
         val payload = CardsPayload<CardsResponse>(CardsError(errorType))
-        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel)
+        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         assertThat(result.model).isNull()
         assertThat(result.error).isNull()
@@ -248,9 +252,9 @@ class CardsStoreTest {
     @Test
     fun `given empty cards payload, when fetch cards gets triggered, then cards error is returned`() = test {
         val payload = CardsPayload<CardsResponse>()
-        whenever(restClient.fetchCards(siteModel)).thenReturn(payload)
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(payload)
 
-        val result = cardsStore.fetchCards(siteModel)
+        val result = cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         assertThat(result.model).isNull()
         assertEquals(CardsErrorType.INVALID_RESPONSE, result.error.type)

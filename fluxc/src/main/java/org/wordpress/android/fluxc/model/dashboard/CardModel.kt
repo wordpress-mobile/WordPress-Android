@@ -8,10 +8,11 @@ sealed class CardModel(
     val type: Type
 ) {
     enum class Type(
-        val classOf: Class<*>
+        val classOf: Class<*>,
+        val label: String
     ) {
-        TODAYS_STATS(TodaysStatsCardModel::class.java),
-        POSTS(PostsCardModel::class.java)
+        TODAYS_STATS(TodaysStatsCardModel::class.java, "todays_stats"),
+        POSTS(PostsCardModel::class.java, "posts")
     }
 
     data class TodaysStatsCardModel(
