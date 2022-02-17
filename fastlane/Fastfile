@@ -813,7 +813,7 @@ REPOSITORY_NAME = 'WordPress-Android'
     end
 
     # Commit changes
-    git_commit(path: MAIN_STRINGS_PATH, message: 'Update strings for translation of libraries', allow_nothing_to_commit: true)
+    git_commit(path: MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
   end
 
 ########################################################################
