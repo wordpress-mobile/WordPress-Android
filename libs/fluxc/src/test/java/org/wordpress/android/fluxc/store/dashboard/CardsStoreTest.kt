@@ -111,7 +111,7 @@ private val CARDS_MODEL = listOf(
 )
 
 /* ENTITY */
-private val STATS_ENTITY = CardEntity(
+private val TODAYS_STATS_ENTITY = CardEntity(
         siteLocalId = SITE_LOCAL_ID,
         type = CardModel.Type.TODAYS_STATS.name,
         date = CardsUtils.getInsertDate(),
@@ -126,7 +126,7 @@ private val POSTS_ENTITY = CardEntity(
 )
 
 private val CARDS_ENTITY = listOf(
-        STATS_ENTITY,
+        TODAYS_STATS_ENTITY,
         POSTS_ENTITY
 )
 
@@ -236,10 +236,30 @@ class CardsStoreTest {
 
     @Test
     fun `when get cards gets triggered, then a flow of cards model is returned`() = test {
-        whenever(dao.get(SITE_LOCAL_ID)).thenReturn(flowOf(CARDS_ENTITY))
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES)).thenReturn(flowOf(CARDS_ENTITY))
 
-        val result = cardsStore.getCards(siteModel).single()
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
 
         assertThat(result).isEqualTo(CardsResult(CARDS_MODEL))
+    }
+
+    @Test
+    fun `when get cards gets triggered for today's stats only, then a flow of today's stats card model is returned`() =
+            test {
+                whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.TODAYS_STATS)))
+                        .thenReturn(flowOf(listOf(TODAYS_STATS_ENTITY)))
+
+                val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.TODAYS_STATS)).single()
+
+                assertThat(result).isEqualTo(CardsResult(listOf(TODAYS_STATS_MODEL)))
+            }
+
+    @Test
+    fun `when get cards gets triggered for posts only, then a flow of post card model is returned`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, listOf(CardModel.Type.POSTS))).thenReturn(flowOf(listOf(POSTS_ENTITY)))
+
+        val result = cardsStore.getCards(siteModel, listOf(CardModel.Type.POSTS)).single()
+
+        assertThat(result).isEqualTo(CardsResult(listOf(POSTS_MODEL)))
     }
 }
