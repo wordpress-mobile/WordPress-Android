@@ -17,7 +17,6 @@
         android:maxHeight="@dimen/avatar_sz_medium"
         android:minHeight="@dimen/avatar_sz_small"
         android:padding="@dimen/me_avatar_padding"
-        android:src="@drawable/ic_user_white_24dp"
         tools:ignore="UnusedAttribute" />
 
 </LinearLayout>
