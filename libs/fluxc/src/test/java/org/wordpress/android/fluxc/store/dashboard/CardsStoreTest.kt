@@ -275,10 +275,10 @@ class CardsStoreTest {
     @Test
     fun `given todays stats card with error, when fetch cards triggered, then card with error inserted into db`() =
             test {
-                whenever(restClient.fetchCards(siteModel)).thenReturn(CardsPayload(cardsRespone))
+                whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
                 whenever(cardsRespone.toCards()).thenReturn(listOf(TODAYS_STATS_WITH_ERROR_MODEL))
 
-                cardsStore.fetchCards(siteModel)
+                cardsStore.fetchCards(siteModel, CARD_TYPES)
 
                 verify(dao).insertWithDate(siteModel.id, listOf(TODAYS_STATS_WITH_ERROR_MODEL))
             }
@@ -319,10 +319,10 @@ class CardsStoreTest {
 
     @Test
     fun `given posts card with error, when fetch cards triggered, then card with error inserted into db`() = test {
-        whenever(restClient.fetchCards(siteModel)).thenReturn(CardsPayload(cardsRespone))
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
         whenever(cardsRespone.toCards()).thenReturn(listOf(POSTS_WITH_ERROR_MODEL))
 
-        cardsStore.fetchCards(siteModel)
+        cardsStore.fetchCards(siteModel, CARD_TYPES)
 
         verify(dao).insertWithDate(siteModel.id, listOf(POSTS_WITH_ERROR_MODEL))
     }
