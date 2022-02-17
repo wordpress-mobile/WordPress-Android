@@ -2,7 +2,7 @@
 
 /read/sites/$site#String/notification-subscriptions/$action#String
 
-/sites/$site/dashboard/cards
+/sites/$site/dashboard/cards-data
 
 /sites/$site/activity
 /sites/$site/activity/count/group
