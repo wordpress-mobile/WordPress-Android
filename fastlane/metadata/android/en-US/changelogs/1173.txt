@@ -1,0 +1,6 @@
+19.2:
+- Font size and line height are now supported for block themes.
+- Admins and Editors can remove Reader post comments.
+- Add new stat cards in the Settings menu on the Stats screen.
+- Changing media in an Image block that’s also a Featured Image prompts a Featured Image update.
+- Share text, images, and video in the app using your device’s Share action.

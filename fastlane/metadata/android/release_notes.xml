@@ -1,162 +1,148 @@
 <ar>
-19.1:
-- اضبط الأزرار بطريقة صحيحة في مكوِّن الأزرار.
-- اطلع على أسماء المكوِّن باللغة العبرية والإندونيسية.
-- اطلع على إعدادات لون الصورة البارزة المترجمة ومكوِّن الغلاف.
-- لم تعد ترى زر المساعدة في محرِّر المكوِّن غير المدعوم.
-- يتم إعلامك إذا كان من الصعب قراءة مجموعات ألوان النص/الخلفية.
-- واجه مشكلات أقل عند تغيير لون نص غير محدَّد.
+19.2:
+- تم دعم حجم الخط وارتفاع السطر الآن لقوالب المكوِّن.
+- يمكن للمسؤولين والمحرِّرين إزالة تعليقات تدوينة القارئ.
+- أضف بطاقات إحصاءات جديدة في قائمة الإعدادات على شاشة الإحصاءات.
+- يؤدي تغيير الوسائط في مكوِّن صورة الذي يكون كذلك صورة بارزة إلى المطالبة بتحديث الصورة البارزة.
+- شارك النص والصور ومقاطع الفيديو في التطبيق باستخدام إجراء مشاركة جهازك.
 </ar>
 <de-DE>
-19.1:
-- Buttons im Button-Block richtig ausrichten
-- Blocknamen auf Hebräisch und Indonesisch anzeigen
-- Übersetzte Farbeinstellungen für Beitragsbild und Cover-Block anzeigen
-- Hilfe-Button im nicht unterstützen Block-Editor nicht mehr sichtbar
-- Benachrichtigen lassen, wenn Kombinationen aus Text-/Hintergrundfarbe schwer lesbar sind
-- Probleme beim Wechseln der Farbe von nicht ausgewähltem Text reduziert
+19.2:
+– Schriftgröße und Zeilenhöhe für Block-Themes werden jetzt unterstützt.
+– Admins und Redakteure können Beitragskommentare von Lesern entfernen.
+– Neue Statistikkarten im Einstellungsmenü des Statistikbildschirms hinzugefügt.
+– Beim Ändern von Medien in einem Bildblock, der auch als Beitragsbild verwendet wird, kann auch gleich das Beitragsbild aktualisiert werden.
+– Du kannst jetzt Text, Bilder und Videos in der App mit der Freigabefunktion deines Geräts teilen.
 </de-DE>
 <en-US>
-19.1:
-- Justify buttons properly in the Buttons block.
-- See block names in Hebrew and Indonesian.
-- See translated featured image and Cover block color settings.
-- No longer see the help button in the unsupported block editor.
-- Be notified if text/background color combos are hard to read.
-- Run into fewer issues when changing the color of non-selected text.
+19.2:
+- Font size and line height are now supported for block themes.
+- Admins and Editors can remove Reader post comments.
+- Add new stat cards in the Settings menu on the Stats screen.
+- Changing media in an Image block that’s also a Featured Image prompts a Featured Image update.
+- Share text, images, and video in the app using your device’s Share action.
 </en-US>
 <es-ES>
-19.1:
-- Justificar correctamente los botones en el bloque de botones.
-- Ver los nombres de los bloques en hebreo e indonesio.
-- Ver traducidos los ajustes de la imagen destacada y del color del bloque de cubierta.
-- Ya no se ve el botón de ayuda en el editor de bloques no compatible.
-- Recibir un aviso si las combinaciones de color del texto/fondo son difíciles de leer.
-- Reducir los problemas al cambiar el color del texto no seleccionado.
+19.2:
+- Compatibilidad con el tamaño de la fuente y la altura de la línea para los temas de bloques.
+- Eliminación de los comentarios de las entradas del administrador/editor.
+- Nuevas fichas de estadísticas en el menú de ajustes de la pantalla de estadísticas.
+- Aviso al cambiar los medios de imagen/imagen destacada.
 </es-ES>
 <fr-CA>
-19.1 :
-- Justification des boutons dans le bloc Buttons.
-- Noms des blocs en hébreu et en indonésien.
-- Traduction des paramètres de couleur de l’image mise en avant et du bloc Couverture.
-- Absence de bouton d’aide dans l’éditeur de blocs non pris en charge.
-- Notifications de contraste entre le texte et la couleur d’arrière-plan.
-- Moins de problèmes pour modifier la couleur du texte non sélectionné.
+19.2 :
+- Prise en charge des tailles de police et des hauteurs de ligne dans les thèmes de blog
+- Suppression par l’administrateur/éditeur des commentaires ajoutés aux articles
+- Nouvelles cartes de statistiques dans le menu Réglages de l’écran des statistiques
+- Demande de confirmation lors du remplacement de l’image/image mise en avant
 </fr-CA>
 <fr-FR>
-19.1 :
-- Justification des boutons dans le bloc Buttons.
-- Noms des blocs en hébreu et en indonésien.
-- Traduction des paramètres de couleur de l’image mise en avant et du bloc Couverture.
-- Absence de bouton d’aide dans l’éditeur de blocs non pris en charge.
-- Notifications de contraste entre le texte et la couleur d’arrière-plan.
-- Moins de problèmes pour modifier la couleur du texte non sélectionné.
+19.2 :
+- Prise en charge des tailles de police et des hauteurs de ligne dans les thèmes de blog
+- Suppression par l’administrateur/éditeur des commentaires ajoutés aux articles
+- Nouvelles cartes de statistiques dans le menu Réglages de l’écran des statistiques
+- Demande de confirmation lors du remplacement de l’image/image mise en avant
 </fr-FR>
 <iw-IL>
-19.1:
-- אפשר ליישר את הכפתור בצורה תקינה בבלוק הכפתורים.
-- אפשר להציג את שמות הבלוקים בעברית ובאינדונזית.
-- ניתן לראות הגדרות צבע מתורגמות בתמונה המרכזית ובבלוק הכיסוי.
-- הסרנו את כפתור העזרה בעורכי בלוקים שאינם נתמכים.
-- ניתן לקבל הודעה על שילובים קשים לקריאה בין צבע הטקסט וצבע הרקע.
-- יש פחות בעיות כאשר משנים צבע של טקסט שלא נבחר.
+19.2:
+- גודל הגופן וגובה השורה נתמכים עכשיו בערכות עיצוב של בלוקים.
+- מנהלי מערכת ועורכים יכולים להסיר תגובות של קוראים לפוסטים.
+- הוספת כרטיסים חדשים של נתונים סטטיסטיים בתפריט ההגדרות במסך 'נתונים סטטיסטיים'.
+- שינוי מדיה בבלוק תמונה שהוא גם תמונה מרכזית מפעיל הודעה על עדכון של תמונה מרכזית.
+- שיתוף טקסט, תמונות ווידאו באפליקציה באמצעות פעולת השיתוף של המכשיר.
 </iw-IL>
 <id>
-19.1:
-- Ratakan tombol dengan benar di blok Tombol.
-- Lihat nama blok dalam bahasa Ibrani dan Indonesia.
-- Lihat gambar unggulan dan pengaturan warna blok Sampul yang diterjemahkan.
-- Tidak lagi menampilkan tombol bantuan di editor blok yang tidak didukung.
-- Pemberitahuan jika kombinasi warna teks/latar belakang sulit dibaca.
-- Lebih sedikit masalah saat mengubah warna teks yang tidak dipilih.
+19.2:
+- Ukuran font dan tinggi baris sekarang didukung untuk tema blok.
+- Admin dan Editor dapat menghapus komentar artikel Reader.
+- Tambahkan kartu statistik baru di menu Pengaturan di layar Statistik.
+- Mengubah media di blok Gambar yang juga merupakan Gambar Unggulan akan meminta pembaruan Gambar Unggulan.
+- Bagikan teks, gambar, dan video di aplikasi menggunakan fitur Berbagi perangkat Anda.
 </id>
 <it-IT>
-19.1:
-- Giustifica i pulsanti in modo corretto nel blocco Pulsanti.
-- Visualizza i nomi dei blocchi in ebraico e indonesiano.
-- Visualizza le impostazioni delle immagini in evidenza e dei colori del blocco Copertina tradotte.
-- Non è più visibile il pulsante di supporto nell'editor a blocchi non supportato.
-- Ricevi una notifica se le combinazioni di colori del testo/di sfondo non sono adatte alla lettura.
-- Incorri in meno problemi con la modifica del colore del testo non selezionato.
+19.2:
+- La dimensione del carattere e l'altezza della linea sono ora supportati per i temi dei blocchi.
+- Amministratori ed Editori possono rimuovere i commenti agli articoli nel Reader.
+- Aggiungi nuove carte statistiche nel menu Impostazioni della schermata Statistiche.
+- Modificare l'elemento multimediale in un blocco Immagine che è anche immagine in evidenza ne richiede un aggiornamento.
+- Condividi testo, immagini e video nell'app utilizzando l'azione Condividi del tuo dispositivo.
 </it-IT>
 <ja-JP>
-19.1:
-- 「ボタン」ブロックのボタン配置の改善。
-- ヘブライ語とインドネシア語でのブロック名の表示。
-- 翻訳されたアイキャッチ画像と「カバー」ブロックの色設定の表示。
-- サポートされていないブロックエディターでのヘルプボタンの非表示。
-- テキストと背景色の組み合わせによって読みづらさが生じる場合の通知。
-- 選択されていないテキストの色を変更する際に生じる問題の削減。
+19.2:
+- ブロックテーマでフォントサイズと行の高さが調整できるようになりました。
+- 管理者と編集者が読者の投稿コメントを削除できるようになりました。
+- 「統計情報」画面の「設定」メニューに新しい統計カードを追加しました。
+- 「アイキャッチ画像」でもある「画像」ブロック内のメディアを変更すると、「アイキャッチ画像」の更新を知らせるメッセージが表示されます。
+- 端末の「共有」アクションを使用して、アプリ内でテキスト、画像、動画を共有できます。
 </ja-JP>
 <ko-KR>
-19.1:
-- 버튼 블록에서 버튼 양쪽이 적절히 맞춰집니다.
-- 히브리어와 인도네시아어로 블록 이름이 표시됩니다.
-- 번역된 특성 이미지 및 커버 블록 색상 설정이 표시됩니다.
-- 지원되지 않는 블록 편집기에 더는 도움말 버튼이 표시되지 않습니다.
-- 텍스트/배경 색상 조합이 판독하기 어려우면 알림이 표시됩니다.
-- 선택하지 않은 텍스트 색상을 변경할 때 문제가 적게 발생합니다.
+19.2:
+- 이제 글꼴 크기와 줄 높이가 블록 테마에 대해 지원됩니다.
+- 관리자와 편집자가 뉴스피드 글 댓글을 제거할 수 있습니다.
+- 통계 화면의 설정 메뉴에 새 통계 카드를 추가합니다.
+- 특성 이미지이기도 한 이미지 블록에서 미디어를 변경하면 특성 이미지를 업데이트하라는 메시지가 표시됩니다.
+- 기기의 공유 작업을 통해 텍스트, 이미지 및 비디오를 공유합니다.
 </ko-KR>
 <nl-NL>
-19.1:
-- Knoppen correct uitlijnen in het knoppen blok.
-- Zie bloknamen in het Hebreeuws en Indonesisch.
-- Zie de vertaalde uitgelichte afbeelding en de kleurinstellingen van het omslagafbeelding blok.
-- Zie de help-knop niet meer in de niet-ondersteunde blok-editor.
-- Ontvang een melding als combinaties van tekst-/achtergrondkleur moeilijk te lezen zijn.
-- Loop tegen minder problemen aan bij het wijzigen van de kleur van niet-geselecteerde tekst.
+19.2:
+- Lettertypegrootte en regelhoogte worden nu ondersteund voor blokthema's.
+- Beheerders en editors kunnen reader bericht reacties verwijderen.
+- Voeg nieuwe statistiek kaarten toe in het Instellingen menu op het scherm Statistieken.
+- Als je media wijzigt in een afbeelding blok dat ook een uitgelichte afbeelding is, wordt een update van de aanbevolen afbeelding gevraagd.
+- Deel tekst, afbeeldingen en video in de app met behulp van de Delen actie van je apparaat.
 </nl-NL>
 <pt-BR>
-19.1:
-- Justifique os botões de forma adequada no bloco de botões.
-- Veja os nomes de blocos em hebraico e indonésio.
-- Veja a tradução das configurações de cor do bloco de cobertura e imagem destacada.
-- Diga adeus ao botão de ajuda no editor de blocos incompatíveis.
-- Receba uma notificação se as combinações de cor de fundo e de texto dificultarem a leitura.
-- Tenha menos problemas na alteração da cor do texto não selecionado.
+19.2:
+- Compatibilidade com altura de linha e tamanho de fonte em temas de blocos.
+- Remoção de comentário em posts para administrador/editor.
+- Novos cartões de estatísticas na tela Estatísticas do menu Configurações.
+- Aviso ao alterar mídia de imagem/imagem destacada.
 </pt-BR>
 <ru-RU>
-19.1:
-- Правильное выравнивание кнопки в блоке кнопок.
-- Имена блоков на иврите и индонезийском языке.
-- Переведены цветовые настройки избранного изображения и обложки.
-- Кнопка справки в неподдерживаемом редакторе блоков более не отображается.
-- Получайте уведомления, если комбинации цвета текста/фона плохо читаются.
-- Меньше проблем при изменении цвета невыделенного текста.
+19.2:
+- Размер шрифта и высота строки теперь поддерживаются для блочных тем.
+- Администраторы и редакторы могут удалять комментарии к записям в Чтиве.
+- Новые карты статистики в меню «Настройки» на экране «Статистика».
+- Изменение медиафайла в блоке изображения, который также является избранным изображением, приводит к обновлению избранного изображения.
+- Делитесь текстом, изображениями и видео в приложении с помощью функции «Поделиться» на вашем устройстве.
 </ru-RU>
 <sv-SE>
-19.1:
-– Justering av knappen i knappblocket.
-– Blocknamn visas på hebreiska och indonesiska.
-– Översättning visas för block för utvald bild och färginställningar för omslagsblock.
-– Hjälpknappen visas inte längre i blockredigeraren som inte stöds.
-– Du underrättas om kontrasten är låg mellan textens och bakgrundens färg.
-– Färre problem byte av textfärg för ej markerad text.
+19.2:
+- Nu stöds textstorlek och radhöjd i blockteman.
+- Administratörer och redaktörer kan ta bort inläggskommentarer i läsaren.
+- Menypunkt för att lägga till nytt statistikkort under inställningar i statistikvyn.
+- Vid byte av mediafil i ett bildblock som samtidigt är den utvalda bilden frågar appen om byte av den utvalda bilden.
+- Du kan dela text, bilder och video i appen via enhetens delningsfunktion.
 </sv-SE>
 <tr-TR>
-19.1:
-- Düğmeler bloğunda doğru düğme hizalaması.
-- Blok isimlerini İbranice ve Endonezyaca görüntüleme.
-- Öne çıkan görsel ve manşet blog renk ayarlarının çevirilerini görün.
-- Artık desteklenmeyen blok düzenleyicide yardım düğmesi yok.
-- Metin/arka plan renk kontrastı okunamayacak düzeydeyse bildirim alın.
-- Seçili olmayan metin rengi değişiminde daha az problem yaşayın.
+19.2:
+- Yazı tipi boyutu ve satır yüksekliği artık blok temalar için destekleniyor.
+- Yöneticiler ve Editörler, Okuyucu gönderi yorumlarını kaldırabilir.
+- İstatistikler ekranındaki Ayarlar menüsüne yeni istatistik kartları ekleyebilirsiniz.
+- Bir Görsel blokunda, aynı zamanda bir Öne Çıkan Görsel olan ortamı değiştirmek istediğinizde, Öne Çıkan Görsel ile ilgili bir güncelleme istemi alın.
+- Cihazınızdaki Paylaş eylemini kullanarak uygulamada metin, resim ve video paylaşın
 </tr-TR>
+<vi>
+19.2:
+- Font size and line height are now supported for block themes.
+- Admins and Editors can remove Reader post comments.
+- Add new stat cards in the Settings menu on the Stats screen.
+- Changing media in an Image block that’s also a Featured Image prompts a Featured Image update.
+- Share text, images, and video in the app using your device’s Share action.
+</vi>
 <zh-CN>
-19.1:
-- 在按钮区块里正确的对齐按钮。
-- 看区块的名字的希伯来和印度尼西亚的语言翻译。
-- 看特色图片区块和封面区块的设置的语言翻译。
-- 不再看到帮助按钮在不支持的区块编辑器。
-- 接收通告当文本和背景的颜色组合难以阅读。
-- 遇到比较少问题当要更改未选择的文本的颜色。
+19.2：
+- 现在，区块主题支持字体大小和行高。
+- 管理员和编辑可以删除读者的文章评论。
+- 在“统计数据”界面的“设置”菜单中添加了新统计数据卡。
+- 如果在“图片区块”中更改媒体（同时也是一个特色图片），系统会提示您特色图片发生更新。
+- 使用您设备的“共享”操作在应用程序中共享文本、图片和视频。
 </zh-CN>
 <zh-TW>
-19.1:
-- 在按鈕區塊裏正確的對齊按鈕。
-- 看區塊的名字的希伯來和印度尼西亞的語言翻譯。
-- 看特色圖片區塊和封面區塊的設置的語言翻譯。
-- 不再看到幫助按鈕在不支持的區塊編輯器。
-- 接收通告當文本和背景的顔色組合難以閱讀。
-- 遇到比較少問題當要更改未選擇的文本的顔色。
+19.2：
+- 現已支援區塊佈景主題的字型大小和行高。
+- 管理員和編輯者可移除讀者的文章留言。
+- 在「統計資料」畫面的「設定」選單中新增統計資料卡片。
+- 若圖片區塊中的媒體同時也做為特色圖片，變更該媒體時會收到更新特色圖片的提示。
+- 使用裝置的「分享」動作來分享應用程式中的文字、圖片和影片。
 </zh-TW>
