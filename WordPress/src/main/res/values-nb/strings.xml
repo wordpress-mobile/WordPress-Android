@@ -19,8 +19,6 @@ Language: nb_NO
     <string name="blogging_reminders_update">Oppdater</string>
     <string name="blogging_reminders_n_a_week">%s i uka</string>
     <string name="blogging_reminders_done">Utført</string>
-    <string name="gutenberg_native_set_as_featured_image">Sett som fremhevet bilde</string>
-    <string name="gutenberg_native_remove_as_featured_image">Fjern som fremhevet bilde</string>
     <string name="fab_add_category_desc">Opprett kategori</string>
     <string name="support_ticket_subject">WordPress for Android-kundestøtte</string>
     <string name="site_settings_categories_hint">Behandle nettstedets stikkord</string>
@@ -34,7 +32,6 @@ Language: nb_NO
     <string name="gutenberg_native_transform_block">Omform blokk…</string>
     <string name="gutenberg_native_failed_to_insert_media">Kunne ikke sette inn media.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Kunne ikke sette inn lydfil.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beskriv hensikten med bildet. La stå tom om bildet kun er dekorativt.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s omformet til %2$s</string>
     <string name="like_title_plural">%d likinger</string>
     <string name="like_title_singular">1 liking</string>

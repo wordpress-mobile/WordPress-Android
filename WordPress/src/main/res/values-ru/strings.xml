@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-11 05:08:23+0000
+Translation-Revision-Date: 2022-02-07 18:37:21+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="comment_moderation_error">Ошибка модерации комментариев</string>
+    <string name="reader_comment_menu_trash">Переместить в корзину</string>
+    <string name="reader_comment_menu_spam">Пометить как спам</string>
+    <string name="reader_comment_menu_unapprove">Отклонить</string>
+    <string name="gutenberg_native_tiled_gallery_settings">Настройки плиточной галереи</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">Навигация к экрану выбора макета</string>
+    <string name="gutenberg_native_gallery_style">Стиль галереи</string>
+    <string name="sharing_facebook_warning_positive_button">Переход на веб-сайт</string>
+    <string name="sharing_facebook_warning_message">Вы можете подключить свою учётную запись Facebook на сайте WordPress.com. После этого вернитесь в приложение WordPress, чтобы изменить настройки возможностей поделиться.</string>
     <string name="about_automattic_app_icon_description">Значок приложения</string>
     <string name="about_automattic_back_icon_description">Значок Назад</string>
     <string name="about_automattic_logo_description">логотип Automattic</string>
@@ -54,7 +63,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Нажмите дважды для выбора размера шрифта по умолчанию</string>
     <string name="gutenberg_native_contact_support">Обратиться в службу поддержки</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
-    <string name="my_site_no_content_post">Нет содержимого</string>
     <string name="reader_comments_follow_conversation">Подписаться на беседу</string>
     <string name="reader_comments_be_first_to_comment">Будьте первым, кто оставит комментарий</string>
     <string name="reader_comments_view_all">Посмотреть все комментарии</string>
@@ -177,7 +185,7 @@ Language: ru
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Блоки - это части содержимого, которые можно вставлять, переставлять и стилизовать, без необходимости использования кода. Блоки - это простой и современный способ создавать красивые макеты.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Блоки позволяют вам сосредоточиться на написании, знайте о том, что все инструменты форматирования доступны здесь, чтобы оформить ваше сообщение.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Оформите содержимое в столбцы, добавьте кнопки призыва к действию и изображения с наложением текста.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Добавьте новый блок в любое время, нажав на значок + на панели инструментов внизу слева. </string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Добавьте новый блок в любое время, нажав на значок + на панели инструментов внизу слева.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s из %2$s завершено</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Изучите основы с помощью быстрого пошагового руководства.</string>
     <string name="comment_batch_moderation_error">Неудалось отмодерировать один или несколько комментариев</string>
@@ -289,16 +297,19 @@ Language: ru
     <string name="user_profile_site_section_header">Сайт</string>
     <string name="user_profile_bottom_sheet_description">Нижняя часть информации профиля пользователя</string>
     <string name="likes_list_screen_title">Отметки \"нравится\" %s</string>
+    <string name="gutenberg_native_two">Два</string>
+    <string name="gutenberg_native_three">Три</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
     <string name="gutenberg_native_preview_post">Предварительный просмотр записи</string>
     <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
     <string name="gutenberg_native_retry">Повторить</string>
+    <string name="gutenberg_native_one">Один</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_s_link">ссылка на %s</string>
     <string name="gutenberg_native_padding">Отступ</string>
-    <string name="gutenberg_native_featured">Избранное</string>
+    <string name="gutenberg_native_four">Четыре</string>
     <string name="gutenberg_native_custom_url">Произвольный URL</string>
     <string name="gutenberg_native_create_embed">Создать встроенный объект</string>
     <string name="gutenberg_native_column_d">Столбец %d</string>
@@ -2951,6 +2962,7 @@ Language: ru
     <string name="reader_likes_multi">Понравилось %,d людям</string>
     <string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
     <string name="comment_spammed">Комментарий помечен как спам.</string>
+    <string name="comment_unapproved">Комментарий отклонён</string>
     <string name="reader_toast_err_get_post">Не удаётся загрузить эту запись</string>
     <string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
     <string name="pick_video">Выберите видео</string>

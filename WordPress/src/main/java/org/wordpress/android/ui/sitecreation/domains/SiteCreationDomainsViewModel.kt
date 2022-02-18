@@ -179,11 +179,23 @@ class SiteCreationDomainsViewModel @Inject constructor(
             val domainNames = event.suggestions.map { it.domain_name }
                     .partition { it.startsWith("${query.value}.") }
                     .toList().flatten()
-            updateUiStateToContent(query, Success(domainNames))
+
+            // We inform the user when the search query contains non-alphanumeric characters
+            val emptyListMessage = if (event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY) {
+                UiStringRes(R.string.new_site_creation_empty_domain_list_message_invalid_query)
+            } else {
+                UiStringRes(R.string.new_site_creation_empty_domain_list_message)
+            }
+
+            updateUiStateToContent(query, Success(domainNames), emptyListMessage)
         }
     }
 
-    private fun updateUiStateToContent(query: DomainSuggestionsQuery?, state: ListState<String>) {
+    private fun updateUiStateToContent(
+        query: DomainSuggestionsQuery?,
+        state: ListState<String>,
+        emptyListMessage: UiString? = null
+    ) {
         listState = state
         val isNonEmptyUserQuery = isNonEmptyUserQuery(query)
         updateUiState(
@@ -197,7 +209,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                                 showDivider = state.data.isNotEmpty(),
                                 showKeyboard = true
                         ),
-                        contentState = createDomainsUiContentState(query, state),
+                        contentState = createDomainsUiContentState(query, state, emptyListMessage),
                         createSiteButtonContainerVisibility = selectedDomain != null
                 )
         )
@@ -209,7 +221,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun createDomainsUiContentState(
         query: DomainSuggestionsQuery?,
-        state: ListState<String>
+        state: ListState<String>,
+        emptyListMessage: UiString?
     ): DomainsUiContentState {
         // Only treat it as an error if the search is user initiated
         val isError = isNonEmptyUserQuery(query) && state is Error
@@ -223,7 +236,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         )
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
-                DomainsUiContentState.Empty
+                DomainsUiContentState.Empty(emptyListMessage)
             } else DomainsUiContentState.Initial
         } else {
             DomainsUiContentState.VisibleItems(items)
@@ -339,7 +352,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     items = emptyList()
             )
 
-            object Empty : DomainsUiContentState(
+            class Empty(val message: UiString?) : DomainsUiContentState(
                     emptyViewVisibility = true,
                     exampleViewVisibility = false,
                     items = emptyList()
