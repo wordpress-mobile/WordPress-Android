@@ -7,6 +7,8 @@
 * [*] Site creation: Fixed bug where sites created within the app were not given the correct time zone, leading to post scheduling issues. [https://github.com/wordpress-mobile/WordPress-Android/pull/15904]
 * [*] Login Epilogue: Fixed bug where if no sites available, then new login epilogue screen without clickable sites and with "create new site" is shown instead of no sites empty "My Site" view. [https://github.com/wordpress-mobile/WordPress-Android/pull/15944]
 * [*] Fixes flickering when changing the preview mode in Page or Site design picker [https://github.com/wordpress-mobile/WordPress-Android/pull/15943]
+* [*] Reader: Admins and Editors can edit comments from Reader [https://github.com/wordpress-mobile/WordPress-Android/pull/15957]
+* [*] Improves the error message shown when trying to create a new site with non-English characters in the domain name [https://github.com/wordpress-mobile/WordPress-Android/pull/15969]
 
 19.2
 -----

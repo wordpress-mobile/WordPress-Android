@@ -10,11 +10,15 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_ERROR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -33,6 +37,7 @@ private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-0
 @InternalCoroutinesApi
 class PostCardBuilderTest : BaseUnitTest() {
     @Mock private lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock private lateinit var appLogWrapper: AppLogWrapper
 
     private lateinit var builder: PostCardBuilder
     private val post = PostCardModel(
@@ -48,12 +53,32 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = PostCardBuilder(localeManagerWrapper)
+        builder = PostCardBuilder(localeManagerWrapper, appLogWrapper)
         setUpMocks()
     }
 
     private fun setUpMocks() {
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+    }
+
+    /* POST CARD ERROR */
+
+    @Test
+    fun `given post unauth error, when card is built, then posts card not exist`() {
+        val posts = PostsCardModel(error = PostCardError(PostCardErrorType.UNAUTHORIZED))
+
+        val postsCard = buildPostsCard(posts)
+
+        assertThat(postsCard).isEmpty()
+    }
+
+    @Test
+    fun `given post generic error, when card is built, then error card exists`() {
+        val posts = PostsCardModel(error = PostCardError(PostCardErrorType.GENERIC_ERROR))
+
+        val postsCard = buildPostsCard(posts)
+
+        assertThat(postsCard.filterPostErrorCard()).isInstanceOf(PostCard.Error::class.java)
     }
 
     /* CREATE FIRST POST CARD */
@@ -320,6 +345,8 @@ class PostCardBuilderTest : BaseUnitTest() {
 
         assertThat((postsCard.filterScheduledPostCard())?.postItems?.first()?.isTimeIconVisible).isTrue
     }
+
+    private fun List<PostCard>.filterPostErrorCard() = firstOrNull { it.dashboardCardType == POST_CARD_ERROR }
 
     @Suppress("UNCHECKED_CAST")
     private fun List<PostCard>.filterCreateFirstPostCard() = (
