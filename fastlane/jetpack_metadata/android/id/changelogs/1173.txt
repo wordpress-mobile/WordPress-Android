@@ -1,0 +1,5 @@
+19.2:
+- Sekarang ukuran font dan ketinggian baris didukung untuk tema blok.
+- Tambahan kartu statistik baru pada menu Pengaturan di layar Statistik.
+- Ketika mengubah media pada blog Gambar yang juga merupakan Gambar Andalan pos, Anda akan melihat permintaan konfirmasi untuk mengganti Gambar Andalan.
+- Bagikan teks, gambar, dan video pada aplikasi menggunakan tindakan Bagikan dari perangkat Anda.

@@ -1,0 +1,6 @@
+19.2:
+- Nu stöds textstorlek och radhöjd i blockteman.
+- Administratörer och redaktörer kan ta bort inläggskommentarer i läsaren.
+- Menypunkt för att lägga till nytt statistikkort under inställningar i statistikvyn.
+- Vid byte av mediafil i ett bildblock som samtidigt är den utvalda bilden frågar appen om byte av den utvalda bilden.
+- Du kan dela text, bilder och video i appen via enhetens delningsfunktion.

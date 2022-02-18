@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-07 15:54:07+0000
+Translation-Revision-Date: 2022-02-15 18:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="comment_moderation_error">未能对评论进行审核</string>
+    <string name="reader_comment_menu_trash">移至回收站</string>
+    <string name="reader_comment_menu_spam">标记为垃圾评论</string>
+    <string name="reader_comment_menu_unapprove">不批准</string>
     <string name="gutenberg_native_tiled_gallery_settings">平铺图片库设置</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">导航至布局选择界面</string>
     <string name="sharing_facebook_warning_positive_button">转到网页</string>
@@ -247,6 +251,8 @@ Language: zh_CN
     <string name="storage_utils_dialog_ok_button">查看存储</string>
     <string name="storage_utils_dialog_message">我们需要在设备上保存您的内容才能发布。查看您的存储设置并删除文件以释放空间。</string>
     <string name="storage_utils_dialog_title">设备存储不足</string>
+    <string name="gutenberg_native_y_axis_position">Y 轴位置</string>
+    <string name="gutenberg_native_x_axis_position">X 轴位置</string>
     <string name="gutenberg_native_type_a_url">键入URL</string>
     <string name="gutenberg_native_slash_inserter_results">斜杠插入器结果</string>
     <string name="gutenberg_native_s_has_url_set">%s已设置URL</string>
@@ -306,6 +312,7 @@ Language: zh_CN
     <string name="gutenberg_native_transform_block">转换区块…</string>
     <string name="gutenberg_native_failed_to_insert_media">未能插入媒体。</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">未能插入音频文件。</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">描述图片的用途。 如果图片仅作装饰用，请留空。</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s转换为%2$s</string>
     <string name="like_faces_error_loading_message">数据加载错误。%s.</string>
     <string name="like_title_plural">%d 喜欢</string>
@@ -2943,6 +2950,7 @@ Language: zh_CN
     <string name="reader_likes_multi">%,d 人喜欢了</string>
     <string name="cant_share_no_visible_blog">没有可见的博客，您就不能分享到WordPress</string>
     <string name="comment_spammed">评论被标记为垃圾评论</string>
+    <string name="comment_unapproved">评论未获批准</string>
     <string name="reader_toast_err_get_post">无法检索这篇文章</string>
     <string name="reader_likes_you_and_one">您和另外1人喜欢了</string>
     <string name="pick_video">选择视频</string>

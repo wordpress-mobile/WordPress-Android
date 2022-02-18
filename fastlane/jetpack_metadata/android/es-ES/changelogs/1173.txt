@@ -1,0 +1,5 @@
+19.2:
+- Ahora, los temas de bloques son compatibles con el tamaño de la fuente y la altura de la línea.
+- Añade nuevas fichas de estadísticas en el menú de Ajustes de la pantalla de Estadísticas.
+- Al cambiar los archivos de medios en un bloque de imagen (que también sea la imagen destacada de una entrada), recibirás un aviso para sustituir esta imagen destacada.
+- Comparte texto, imágenes y videos en la aplicación mediante la acción Compartir de tu dispositivo.

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-03 09:54:07+0000
+Translation-Revision-Date: 2022-02-18 13:08:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="reader_comment_menu_trash">In den Papierkorb verschieben</string>
+    <string name="reader_comment_menu_spam">Als Spam markieren</string>
+    <string name="comment_moderation_error">Das Moderieren der Kommentare ist fehlgeschlagen</string>
+    <string name="reader_comment_menu_unapprove">Zurückweisen</string>
     <string name="gutenberg_native_tiled_gallery_settings">Einstellungen für gekachelte Galerien</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigiert zum Layout-Auswahlbildschirm</string>
     <string name="gutenberg_native_gallery_style">Galerie-Stil</string>
@@ -182,8 +186,9 @@ Language: de
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blocks geben dir die Möglichkeit, dich voll und ganz auf das Verfassen deiner Inhalte zu konzentrieren. Alle Tools zur Formatierung sind vorhanden, damit du deine Ideen und Meinungen ganz nach deinen Wünschen präsentieren kannst.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Ordne deinen Inhalt in Spalten an und füge Buttons mit Handlungsaufrufen sowie überlagerte Texte auf Bildern hinzu.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s von %2$s abgeschlossen</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Du kannst jederzeit einen neuen Block hinzufügen, indem du auf das Icon „+“ in der Werkzeugleiste unten links klickst.</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Lerne die Grundlagen mit einer kurzen Erklärung.</string>
-    <string name="comment_batch_moderation_error">Moderation von einem oder mehreren Kommentaren fehlgeschlagen</string>
+    <string name="comment_batch_moderation_error">Das Moderieren von einem oder mehrerer Kommentare ist fehlgeschlagen</string>
     <string name="create_site_notification_create_site_action">Website erstellen</string>
     <string name="create_site_notification_title">Erstelle deine WordPress-Website</string>
     <string name="stats_disabled_enable_stats_button">Website-Statistiken aktivieren</string>
@@ -251,6 +256,8 @@ Language: de
     <string name="storage_utils_dialog_ok_button">Speicher anzeigen</string>
     <string name="storage_utils_dialog_message">Zum Veröffentlichen müssen die Inhalte auf deinem Gerät gespeichert werden. Überprüfe deine Speichereinstellungen und entferne Dateien, um Platz zu schaffen.</string>
     <string name="storage_utils_dialog_title">Unzureichender Gerätespeicher</string>
+    <string name="gutenberg_native_y_axis_position">Position auf der y-Achse</string>
+    <string name="gutenberg_native_x_axis_position">Position auf der x-Achse</string>
     <string name="gutenberg_native_type_a_url">URL eingeben</string>
     <string name="gutenberg_native_slash_inserter_results">Ergebnisse der Schrägstrich-Eingabe</string>
     <string name="gutenberg_native_s_has_url_set">Für %s wurde eine URL festgelegt</string>
@@ -312,11 +319,12 @@ Language: de
     <string name="gutenberg_native_what_is_alt_text">Was ist Alt-Text?</string>
     <string name="gutenberg_native_transform_s_to">%s umwandeln in</string>
     <string name="gutenberg_native_transform_block">Block umwandeln …</string>
-    <string name="gutenberg_native_failed_to_insert_media">Das Medium konnte nicht eingefügt werden.</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file">Audiodatei kann nicht eingefügt werden.</string>
+    <string name="gutenberg_native_failed_to_insert_media">Das Einfügen des Mediums ist fehlgeschlagen.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s umgewandelt in %2$s</string>
     <string name="like_faces_error_loading_message">Fehler beim Laden der „Like“-Daten. %s.</string>
     <string name="like_title_plural">%d Gefällt mir</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschreibe den Zweck des Bildes. Lass dieses Feld frei, falls das Bild rein dekorativ ist.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file">Das Einfügen der Audiodatei ist fehlgeschlagen.</string>
     <string name="like_title_singular">1 Like</string>
     <string name="suggestion">Vorschlag:</string>
     <string name="gutenberg_native_use_icon_button">Icon-Button verwenden</string>
@@ -331,6 +339,7 @@ Language: de
     <string name="gutenberg_native_double_tap_to_edit_label_text">Zum Bearbeiten des Label-Texts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Zum Bearbeiten des Button-Texts zweimal tippen</string>
     <string name="gutenberg_native_outside">Außen</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">Zum Wechseln der Einheit zweimal tippen</string>
     <string name="gutenberg_native_current_placeholder_text_is">Aktueller Platzhaltertext ist</string>
     <string name="gutenberg_native_clear_search">Suche löschen</string>
     <string name="gutenberg_native_cancel_search">Suche abbrechen</string>
@@ -714,6 +723,7 @@ Language: de
     <string name="media_loading_failed">Laden der Medien fehlgeschlagen</string>
     <string name="reader_discover_recommended_blogs_header">Websites, denen du folgen möchtest</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Wir arbeiten hart daran, mit jeder Veröffentlichung weitere Blöcke hinzuzufügen.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">‚%s‘ wird nicht vollständig unterstützt</string>
     <string name="gutenberg_native_help_button">Hilfe-Button</string>
     <string name="gutenberg_native_choose_images">Bilder auswählen</string>
     <string name="gutenberg_native_edit_using_web_editor">Mit dem Webeditor bearbeiten</string>
