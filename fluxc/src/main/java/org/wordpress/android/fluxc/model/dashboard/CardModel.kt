@@ -6,10 +6,19 @@ sealed class CardModel(
     val type: Type
 ) {
     enum class Type(
-        val classOf: Class<*>
+        val classOf: Class<*>,
+        val label: String
     ) {
-        POSTS(PostsCardModel::class.java)
+        TODAYS_STATS(TodaysStatsCardModel::class.java, "todays_stats"),
+        POSTS(PostsCardModel::class.java, "posts")
     }
+
+    data class TodaysStatsCardModel(
+        val views: Int,
+        val visitors: Int,
+        val likes: Int,
+        val comments: Int
+    ) : CardModel(Type.TODAYS_STATS)
 
     data class PostsCardModel(
         val hasPublished: Boolean,

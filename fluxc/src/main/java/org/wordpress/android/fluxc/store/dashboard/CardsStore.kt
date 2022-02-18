@@ -21,9 +21,10 @@ class CardsStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchCards(
-        site: SiteModel
+        site: SiteModel,
+        cardTypes: List<CardModel.Type>
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchCards") {
-        val payload = restClient.fetchCards(site)
+        val payload = restClient.fetchCards(site, cardTypes)
         return@withDefaultContext storeCards(site, payload)
     }
 
@@ -57,8 +58,9 @@ class CardsStore @Inject constructor(
     }
 
     fun getCards(
-        site: SiteModel
-    ) = cardsDao.get(site.id).map { cards ->
+        site: SiteModel,
+        cardTypes: List<CardModel.Type>
+    ) = cardsDao.get(site.id, cardTypes).map { cards ->
         CardsResult(cards.map { it.toCard() })
     }
 

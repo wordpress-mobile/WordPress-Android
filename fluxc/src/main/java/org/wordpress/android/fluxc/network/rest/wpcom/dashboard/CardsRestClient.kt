@@ -6,8 +6,10 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -32,12 +34,13 @@ class CardsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchCards(site: SiteModel): CardsPayload<CardsResponse> {
-        val url = WPCOMV2.sites.site(site.siteId).dashboard.cards.url
+    suspend fun fetchCards(site: SiteModel, cardTypes: List<CardModel.Type>): CardsPayload<CardsResponse> {
+        val url = WPCOMV2.sites.site(site.siteId).dashboard.cards_data.url
+        val params = buildDashboardCardsParams(cardTypes)
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
-                mapOf(),
+                params,
                 CardsResponse::class.java
         )
         return when (response) {
@@ -46,11 +49,30 @@ class CardsRestClient @Inject constructor(
         }
     }
 
+    private fun buildDashboardCardsParams(cardTypes: List<CardModel.Type>) =
+            mapOf(CARDS to cardTypes.joinToString(",") { it.label })
+
     data class CardsResponse(
-        @SerializedName("posts") val posts: PostsResponse
+        @SerializedName("todays_stats") val todaysStats: TodaysStatsResponse? = null,
+        @SerializedName("posts") val posts: PostsResponse? = null
     ) {
-        fun toCards() = listOf(
-                posts.toPosts()
+        fun toCards() = arrayListOf<CardModel>().apply {
+            todaysStats?.let { add(it.toTodaysStatsCard()) }
+            posts?.let { add(it.toPosts()) }
+        }.toList()
+    }
+
+    data class TodaysStatsResponse(
+        @SerializedName("views") val views: Int? = null,
+        @SerializedName("visitors") val visitors: Int? = null,
+        @SerializedName("likes") val likes: Int? = null,
+        @SerializedName("comments") val comments: Int? = null
+    ) {
+        fun toTodaysStatsCard() = TodaysStatsCardModel(
+                views = views ?: 0,
+                visitors = visitors ?: 0,
+                likes = likes ?: 0,
+                comments = comments ?: 0
         )
     }
 
@@ -80,6 +102,10 @@ class CardsRestClient @Inject constructor(
                 featuredImage = featuredImage,
                 date = CardsUtils.fromDate(date)
         )
+    }
+
+    companion object {
+        private const val CARDS = "cards"
     }
 }
 
