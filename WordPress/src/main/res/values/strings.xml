@@ -2216,6 +2216,12 @@
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
     <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
 
+    <!-- My Site - Today's Stats Card -->
+    <string name="my_site_todays_stat_card_title">Today\'s Stats</string>
+    <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
+    <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
+    <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
+
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>

@@ -785,6 +785,39 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <!--My Site Card - Today's Stats Item-->
+    <style name="MySiteTodaysStatsCardTitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_title_line_spacing_extra</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardStatTitle" >
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardStatCountText">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:minWidth">@dimen/my_site_today_stats_card_stat_title_min_width</item>
+    </style>
+
     <!--My Site Card - Post Item-->
     <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
 
