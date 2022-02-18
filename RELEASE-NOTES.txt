@@ -10,6 +10,7 @@
 * [**] Jetpack App: Signup using WordPress.com, create your favorite site and enjoy the Reader inside Jetpack app. [https://github.com/wordpress-mobile/WordPress-Android/pull/15946]
 * [*] Reader: Admins and Editors can edit comments from Reader [https://github.com/wordpress-mobile/WordPress-Android/pull/15957]
 * [*] Improves the error message shown when trying to create a new site with non-English characters in the domain name [https://github.com/wordpress-mobile/WordPress-Android/pull/15969]
+* [*] Allows choosing email app during signup and login [https://github.com/wordpress-mobile/WordPress-Android/pull/15979]
 
 19.2
 -----
