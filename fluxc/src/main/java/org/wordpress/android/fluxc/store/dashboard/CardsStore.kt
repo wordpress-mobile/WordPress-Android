@@ -95,7 +95,8 @@ class CardsStore @Inject constructor(
     }
 
     class TodaysStatsCardError(
-        val type: TodaysStatsCardErrorType
+        val type: TodaysStatsCardErrorType,
+        val message: String? = null
     ) : OnChangedError
 
     enum class PostCardErrorType {
@@ -104,7 +105,8 @@ class CardsStore @Inject constructor(
     }
 
     class PostCardError(
-        val type: PostCardErrorType
+        val type: PostCardErrorType,
+        val message: String? = null
     ) : OnChangedError
 
     enum class CardsErrorType {
