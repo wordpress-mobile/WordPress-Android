@@ -120,6 +120,17 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given stats feature enabled, when build is invoked, then todays stats fromn store(database)`() = test {
+        val result = mutableListOf<CardsUpdate>()
+        whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
+        whenever(statsCardFeatureConfig.isEnabled()).thenReturn(true)
+
+        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+
+        verify(cardsStore).getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
+    }
+
+    @Test
     fun `given build is invoked, when cards are collected, then data is loaded (database)`() = test {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, DEFAULT_CARD_TYPE)).thenReturn(flowOf(data))
@@ -157,7 +168,7 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given stats feature enabled, when build is invoked, then todays stats are requested from network`() = test {
+    fun `given stats feature enabled, when refresh is invoked, then todays stats are requested from network`() = test {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
         whenever(statsCardFeatureConfig.isEnabled()).thenReturn(true)
