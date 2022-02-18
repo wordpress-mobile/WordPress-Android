@@ -8,9 +8,9 @@ import javax.inject.Inject
  * Configuration of the 'My Site Dashboard - Stats Card' that will add Stats Card on the 'My Site' screen.
  */
 @FeatureInDevelopment
-class MySiteDashboardStatsCardFeatureConfig @Inject constructor(
+class MySiteDashboardTodaysStatsCardFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
         appConfig,
-        BuildConfig.MY_SITE_DASHBOARD_STATS_CARD
+        BuildConfig.MY_SITE_DASHBOARD_TODAYS_STATS_CARD
 )

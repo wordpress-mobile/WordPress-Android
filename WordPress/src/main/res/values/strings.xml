@@ -452,6 +452,7 @@
     <string name="reader_comment_menu_unapprove">Unapprove</string>
     <string name="reader_comment_menu_spam">Mark as Spam</string>
     <string name="reader_comment_menu_trash">Move to Trash</string>
+    <string name="reader_comment_menu_edit">Edit</string>
     <string name="reader_comment_menu_share" translatable="false">@string/share_desc</string>
 
 
@@ -2215,6 +2216,14 @@
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
     <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
 
+    <!-- My Site - Today's Stats Card -->
+    <string name="my_site_todays_stat_card_title">Today\'s Stats</string>
+    <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
+    <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
+    <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
+
+
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
     <string name="my_site_post_card_scheduled_title">Upcoming scheduled posts</string>
@@ -2230,6 +2239,7 @@
     <!-- My Site - Error Card -->
     <string name="my_site_error_card_title">Some data hasn\'t loaded</string>
     <string name="my_site_error_card_subtitle">We\'re having trouble loading your site\'s data at the moment.</string>
+    <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -3170,6 +3180,7 @@
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. Only alphanumeric characters are allowed.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>

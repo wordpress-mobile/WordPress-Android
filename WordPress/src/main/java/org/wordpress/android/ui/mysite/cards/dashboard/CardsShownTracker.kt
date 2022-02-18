@@ -4,9 +4,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type.ERROR
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -29,7 +33,25 @@ class CardsShownTracker @Inject constructor(
         is ErrorCard -> trackCardShown(
                 Pair(
                         card.dashboardCardType.toTypeValue().label,
-                        ERROR.label
+                        Type.ERROR.label
+                )
+        )
+        is TodaysStatsCard.Error -> trackCardShown(
+                Pair(
+                        card.dashboardCardType.toTypeValue().label,
+                        StatsSubtype.TODAYS_STATS.label
+                )
+        )
+        is TodaysStatsCardWithData -> trackCardShown(
+                Pair(
+                        card.dashboardCardType.toTypeValue().label,
+                        StatsSubtype.TODAYS_STATS.label
+                )
+        )
+        is PostCard.Error -> trackCardShown(
+                Pair(
+                        card.dashboardCardType.toTypeValue().label,
+                        Type.POST.label
                 )
         )
         is PostCardWithoutPostItems -> trackCardShown(

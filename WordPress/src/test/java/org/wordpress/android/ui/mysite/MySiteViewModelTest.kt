@@ -28,6 +28,7 @@ import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
@@ -49,6 +50,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -197,6 +200,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
+    private var onTodaysStatsCardClick: (() -> Unit) = {}
+    private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
@@ -1046,6 +1051,28 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
     }
 
+    /* DASHBOARD TODAYS STATS CARD */
+
+    @Test
+    fun `given todays stat card, when card item is clicked, then stats page is opened`() =
+            test {
+                initSelectedSite()
+
+                onTodaysStatsCardClick.invoke()
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+            }
+
+    @Test
+    fun `given todays stat card, when footer link is clicked, then stats page is opened`() =
+            test {
+                initSelectedSite()
+
+                onTodaysStatsCardFooterLinkClick.invoke()
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+            }
+
     /* DASHBOARD POST CARD - FOOTER LINK */
 
     @Test
@@ -1815,8 +1842,25 @@ class MySiteViewModelTest : BaseUnitTest() {
                         initErrorCard(mockInvocation)
                     } else {
                         initPostCard(mockInvocation)
+                        initTodaysStatsCard(mockInvocation)
                     }
                 }
+        )
+    }
+
+    private fun initTodaysStatsCard(mockInvocation: InvocationOnMock): TodaysStatsCard {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onTodaysStatsCardClick = params.todaysStatsCardBuilderParams.onTodaysStatsCardClick
+        onTodaysStatsCardFooterLinkClick = params.todaysStatsCardBuilderParams.onFooterLinkClick
+        return TodaysStatsCardWithData(
+                views = UiStringText(mock()),
+                visitors = UiStringText(mock()),
+                likes = UiStringText(mock()),
+                onCardClick = onTodaysStatsCardClick,
+                footerLink = TodaysStatsCard.FooterLink(
+                        label = UiStringRes(string.my_site_todays_stats_card_footer_link_go_to_stats),
+                        onClick = onTodaysStatsCardFooterLinkClick
+                )
         )
     }
 

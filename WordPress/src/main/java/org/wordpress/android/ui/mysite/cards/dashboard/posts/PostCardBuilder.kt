@@ -3,6 +3,9 @@ package org.wordpress.android.ui.mysite.cards.dashboard.posts
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -13,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -20,21 +24,41 @@ import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class PostCardBuilder @Inject constructor(
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val appLogWrapper: AppLogWrapper
 ) {
-    fun build(params: PostCardBuilderParams): List<PostCard> = mutableListOf<PostCard>().apply {
-        val posts = params.posts
-        posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
-                ?.let { hasPublished ->
-                    if (hasPublished) {
-                        add(createNextPostCard(params.onFooterLinkClick))
-                    } else {
-                        add(createFirstPostCard(params.onFooterLinkClick))
-                    }
-                }
-        posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
-        posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
+    fun build(params: PostCardBuilderParams): List<PostCard> {
+        val error = params.posts?.error
+        return if (error != null) {
+            buildPostCardWithError(error)
+        } else {
+            buildPostCardsWithData(params)
+        }
     }
+
+    private fun buildPostCardWithError(error: PostCardError): List<PostCard.Error> {
+        error.message?.let { appLogWrapper.e(AppLog.T.MY_SITE_DASHBOARD, "Post Card Error: $it") }
+        return if (shouldShowError(error)) listOf(createPostErrorCard()) else emptyList()
+    }
+
+    private fun buildPostCardsWithData(params: PostCardBuilderParams) =
+            mutableListOf<PostCard>().apply {
+                val posts = params.posts
+                posts?.hasPublished?.takeIf { !posts.hasDraftsOrScheduledPosts() }
+                        ?.let { hasPublished ->
+                            if (hasPublished) {
+                                add(createNextPostCard(params.onFooterLinkClick))
+                            } else {
+                                add(createFirstPostCard(params.onFooterLinkClick))
+                            }
+                        }
+                posts?.draft?.takeIf { it.isNotEmpty() }?.let { add(it.createDraftPostsCard(params)) }
+                posts?.scheduled?.takeIf { it.isNotEmpty() }?.let { add(it.createScheduledPostsCard(params)) }
+            }.toList()
+
+    private fun createPostErrorCard() = PostCard.Error(
+            title = UiStringRes(R.string.posts)
+    )
 
     private fun createFirstPostCard(onFooterLinkClick: (postCardType: PostCardType) -> Unit) =
             PostCardWithoutPostItems(
@@ -121,6 +145,8 @@ class PostCardBuilder @Inject constructor(
 
     private fun constructPostDate(date: Date) =
             SimpleDateFormat(MONTH_DAY_FORMAT, localeManagerWrapper.getLocale()).format(date)
+
+    private fun shouldShowError(error: PostCardError) = error.type == PostCardErrorType.GENERIC_ERROR
 
     companion object {
         private const val MONTH_DAY_FORMAT = "MMM d"
