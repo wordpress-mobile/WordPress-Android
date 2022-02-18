@@ -297,7 +297,9 @@ class MySiteViewModel @Inject constructor(
                         onErrorRetryClick = this::onDashboardErrorRetry,
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
                                 todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
-                                        as? TodaysStatsCardModel
+                                        as? TodaysStatsCardModel,
+                                onTodaysStatsCardClick = this::onTodaysStatsCardClick,
+                                onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
@@ -324,6 +326,15 @@ class MySiteViewModel @Inject constructor(
                 )
         )
         return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
+    }
+
+    private fun onTodaysStatsCardFooterLinkClick() = navigateToTodaysStats()
+
+    private fun onTodaysStatsCardClick() = navigateToTodaysStats()
+
+    private fun navigateToTodaysStats() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
     }
 
     private fun buildNoSiteState(): NoSites {

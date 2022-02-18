@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErr
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
@@ -23,7 +24,7 @@ class TodaysStatsCardBuilder @Inject constructor(
         if (error != null) {
             handleError(error)
         } else {
-            createTodaysStatsCardWithData(it)
+            createTodaysStatsCardWithData(it, params)
         }
     }
 
@@ -36,11 +37,17 @@ class TodaysStatsCardBuilder @Inject constructor(
             title = UiStringRes(R.string.my_site_todays_stat_card_title)
     )
 
-    private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel) = TodaysStatsCardWithData(
-            views = statToUiString(model.views),
-            visitors = statToUiString(model.visitors),
-            likes = statToUiString(model.likes)
-    )
+    private fun createTodaysStatsCardWithData(model: TodaysStatsCardModel, params: TodaysStatsCardBuilderParams) =
+            TodaysStatsCardWithData(
+                    views = statToUiString(model.views),
+                    visitors = statToUiString(model.visitors),
+                    likes = statToUiString(model.likes),
+                    onCardClick = params.onTodaysStatsCardClick,
+                    footerLink = FooterLink(
+                            label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
+                            onClick = params.onFooterLinkClick
+                    )
+            )
 
     private fun shouldShowError(error: TodaysStatsCardError) = error.type == TodaysStatsCardErrorType.GENERIC_ERROR
 

@@ -8,14 +8,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 private const val TODAYS_STATS_VIEWS = 10000
@@ -120,12 +123,20 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     }
 
     private fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?) = builder.build(
-            TodaysStatsCardBuilderParams(todaysStatsCardModel)
+            TodaysStatsCardBuilderParams(todaysStatsCardModel, onTodaysStatsCardClick, onTodaysStatsCardFooterLinkClick)
     )
 
+    private val onTodaysStatsCardFooterLinkClick: () -> Unit = { }
+    private val onTodaysStatsCardClick: () -> Unit = { }
+
     private val todaysStatsCard = TodaysStatsCardWithData(
-            UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
-            UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
-            UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING)
+            views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
+            visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
+            likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
+            onCardClick = onTodaysStatsCardClick,
+            footerLink = FooterLink(
+                    label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
+                    onClick = onTodaysStatsCardFooterLinkClick
+            )
     )
 }
