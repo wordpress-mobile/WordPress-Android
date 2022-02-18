@@ -88,7 +88,7 @@ class CardsRestClient @Inject constructor(
                 UNAUTHORIZED -> TodaysStatsCardErrorType.UNAUTHORIZED
                 else -> TodaysStatsCardErrorType.GENERIC_ERROR
             }
-            return TodaysStatsCardError(errorType)
+            return TodaysStatsCardError(errorType, error)
         }
     }
 
@@ -110,7 +110,7 @@ class CardsRestClient @Inject constructor(
                 UNAUTHORIZED -> PostCardErrorType.UNAUTHORIZED
                 else -> PostCardErrorType.GENERIC_ERROR
             }
-            return PostCardError(errorType)
+            return PostCardError(errorType, error)
         }
     }
 
