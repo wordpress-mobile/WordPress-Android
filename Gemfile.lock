@@ -272,4 +272,4 @@ DEPENDENCIES
   rmagick (~> 4.1)
 
 BUNDLED WITH
-   2.2.26
+   2.3.7
