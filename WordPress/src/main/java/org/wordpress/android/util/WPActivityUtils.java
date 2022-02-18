@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +26,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WPActivityUtils {
@@ -138,18 +141,28 @@ public class WPActivityUtils {
         if (context == null) {
             return false;
         }
-
-        Intent intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
-        PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        return !emailApps.isEmpty();
+        return !queryEmailApps(context).isEmpty();
     }
 
-    public static void openEmailClient(Context context) {
-        Intent intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    public static void openEmailClientChooser(Context context, String title) {
+        if (context == null) {
+            return;
+        }
+        List<Intent> appIntents = new ArrayList();
+        for (ResolveInfo resolveInfo : queryEmailApps(context)) {
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage(resolveInfo.activityInfo.packageName);
+            appIntents.add(intent);
+        }
+        Intent[] appIntentsArray = appIntents.toArray(new Intent[appIntents.size()]);
+        Intent chooserIntent = Intent.createChooser(new Intent(), title);
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, appIntentsArray);
+        context.startActivity(chooserIntent);
+    }
+
+    private static List<ResolveInfo> queryEmailApps(@NonNull Context context) {
+        Intent emailAppIntent = new Intent(Intent.ACTION_SENDTO);
+        emailAppIntent.setData(Uri.parse("mailto:"));
+        return context.getPackageManager().queryIntentActivities(emailAppIntent, PackageManager.MATCH_ALL);
     }
 
     public static void disableReaderDeeplinks(Context context) {
