@@ -1,7 +1,0 @@
-19.1:
-- Knoppen worden correct uitgelijnd in het knopblok.
-- Namen van blokken zijn nu beschikbaar in het Hebreeuws en Indonesisch.
-- De kleurinstellingen van uitgelichte afbeeldingen en omslagafbeeldingblokken zijn vertaald.
-- De help-knop is niet meer zichtbaar in de niet-ondersteunde blokeditor.
-- Krijg een melding als de combinatie van de achtergrondkleur en de tekstkleur lastig te lezen is.
-- Er zijn minder problemen bij het veranderen van de tekstkleur van niet-geselecteerde tekst.
