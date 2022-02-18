@@ -16,7 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
@@ -82,13 +82,14 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findErrorCard()).isNotNull
     }
 
-    private fun DashboardCards.findTodaysStatsCard() = this.cards.find { it is TodaysStatsCard } as? TodaysStatsCard
+    private fun DashboardCards.findTodaysStatsCard() =
+            this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
 
     private fun DashboardCards.findPostCard() = this.cards.find { it is PostCard } as? PostCard
 
     private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
 
-    private val todaysStatsCard = mock<TodaysStatsCard>()
+    private val todaysStatsCard = mock<TodaysStatsCardWithData>()
 
     private fun createPostCards() = listOf(
             PostCardWithPostItems(
