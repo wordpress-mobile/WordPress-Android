@@ -21,6 +21,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -66,26 +70,48 @@ class CardsRestClient @Inject constructor(
         @SerializedName("views") val views: Int? = null,
         @SerializedName("visitors") val visitors: Int? = null,
         @SerializedName("likes") val likes: Int? = null,
-        @SerializedName("comments") val comments: Int? = null
+        @SerializedName("comments") val comments: Int? = null,
+        @SerializedName("error") val error: String? = null
     ) {
         fun toTodaysStatsCard() = TodaysStatsCardModel(
                 views = views ?: 0,
                 visitors = visitors ?: 0,
                 likes = likes ?: 0,
-                comments = comments ?: 0
+                comments = comments ?: 0,
+                error = error?.let { toTodaysStatsCardsError(it) }
         )
+
+        private fun toTodaysStatsCardsError(error: String): TodaysStatsCardError {
+            val errorType = when (error) {
+                JETPACK_DISCONNECTED -> TodaysStatsCardErrorType.JETPACK_DISCONNECTED
+                JETPACK_DISABLED -> TodaysStatsCardErrorType.JETPACK_DISABLED
+                UNAUTHORIZED -> TodaysStatsCardErrorType.UNAUTHORIZED
+                else -> TodaysStatsCardErrorType.GENERIC_ERROR
+            }
+            return TodaysStatsCardError(errorType, error)
+        }
     }
 
     data class PostsResponse(
-        @SerializedName("has_published") val hasPublished: Boolean,
-        @SerializedName("draft") val draft: List<PostResponse>,
-        @SerializedName("scheduled") val scheduled: List<PostResponse>
+        @SerializedName("has_published") val hasPublished: Boolean? = null,
+        @SerializedName("draft") val draft: List<PostResponse>? = null,
+        @SerializedName("scheduled") val scheduled: List<PostResponse>? = null,
+        @SerializedName("error") val error: String? = null
     ) {
         fun toPosts() = PostsCardModel(
-                hasPublished = hasPublished,
-                draft = draft.map { it.toPost() },
-                scheduled = scheduled.map { it.toPost() }
+                hasPublished = hasPublished ?: false,
+                draft = draft?.map { it.toPost() } ?: emptyList(),
+                scheduled = scheduled?.map { it.toPost() } ?: emptyList(),
+                error = error?.let { toPostCardError(it) }
         )
+
+        private fun toPostCardError(error: String): PostCardError {
+            val errorType = when (error) {
+                UNAUTHORIZED -> PostCardErrorType.UNAUTHORIZED
+                else -> PostCardErrorType.GENERIC_ERROR
+            }
+            return PostCardError(errorType, error)
+        }
     }
 
     data class PostResponse(
@@ -106,6 +132,9 @@ class CardsRestClient @Inject constructor(
 
     companion object {
         private const val CARDS = "cards"
+        private const val JETPACK_DISCONNECTED = "jetpack_disconnected"
+        private const val JETPACK_DISABLED = "jetpack_disabled"
+        private const val UNAUTHORIZED = "unauthorized"
     }
 }
 

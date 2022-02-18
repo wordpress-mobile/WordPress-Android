@@ -27,6 +27,10 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
+import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
@@ -91,6 +95,10 @@ private val TODAYS_STATS_MODEL = TodaysStatsCardModel(
         comments = TODAYS_STATS_COMMENTS
 )
 
+private val TODAYS_STATS_WITH_ERROR_MODEL = TodaysStatsCardModel(
+        error = TodaysStatsCardError(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)
+)
+
 private val POST_MODEL = PostCardModel(
         id = POST_ID,
         title = POST_TITLE,
@@ -103,6 +111,10 @@ private val POSTS_MODEL = PostsCardModel(
         hasPublished = false,
         draft = listOf(POST_MODEL),
         scheduled = listOf(POST_MODEL)
+)
+
+private val POSTS_WITH_ERROR_MODEL = PostsCardModel(
+        error = PostCardError(PostCardErrorType.UNAUTHORIZED)
 )
 
 private val CARDS_MODEL = listOf(
@@ -118,11 +130,25 @@ private val TODAYS_STATS_ENTITY = CardEntity(
         json = CardsUtils.GSON.toJson(TODAYS_STATS_MODEL)
 )
 
+private val TODAY_STATS_WITH_ERROR_ENTITY = CardEntity(
+        siteLocalId = SITE_LOCAL_ID,
+        type = CardModel.Type.TODAYS_STATS.name,
+        date = CardsUtils.getInsertDate(),
+        json = CardsUtils.GSON.toJson(TODAYS_STATS_WITH_ERROR_MODEL)
+)
+
 private val POSTS_ENTITY = CardEntity(
         siteLocalId = SITE_LOCAL_ID,
         type = CardModel.Type.POSTS.name,
         date = CardsUtils.getInsertDate(),
         json = CardsUtils.GSON.toJson(POSTS_MODEL)
+)
+
+private val POSTS_WITH_ERROR_ENTITY = CardEntity(
+        siteLocalId = SITE_LOCAL_ID,
+        type = CardModel.Type.POSTS.name,
+        date = CardsUtils.getInsertDate(),
+        json = CardsUtils.GSON.toJson(POSTS_WITH_ERROR_MODEL)
 )
 
 private val CARDS_ENTITY = listOf(
@@ -135,6 +161,7 @@ class CardsStoreTest {
     @Mock private lateinit var siteModel: SiteModel
     @Mock private lateinit var restClient: CardsRestClient
     @Mock private lateinit var dao: CardsDao
+    @Mock private lateinit var cardsRespone: CardsResponse
 
     private lateinit var cardsStore: CardsStore
 
@@ -282,4 +309,81 @@ class CardsStoreTest {
 
         assertThat(result).isEqualTo(CardsResult(listOf(POSTS_MODEL)))
     }
+
+    /* TODAYS STATS CARD WITH ERROR */
+
+    @Test
+    fun `given todays stats card with error, when fetch cards triggered, then card with error inserted into db`() =
+            test {
+                whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
+                whenever(cardsRespone.toCards()).thenReturn(listOf(TODAYS_STATS_WITH_ERROR_MODEL))
+
+                cardsStore.fetchCards(siteModel, CARD_TYPES)
+
+                verify(dao).insertWithDate(siteModel.id, listOf(TODAYS_STATS_WITH_ERROR_MODEL))
+            }
+
+    @Test
+    fun `given today's stats jetpack disconn error, when get cards triggered, then error exists in the card`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+                .thenReturn(
+                        flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)))
+                )
+
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+
+        assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.JETPACK_DISCONNECTED)
+    }
+
+    @Test
+    fun `given today's stats jetpack disabled error, when get cards triggered, then error exists in the card`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+                .thenReturn(flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.JETPACK_DISABLED))))
+
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+
+        assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.JETPACK_DISABLED)
+    }
+
+    @Test
+    fun `given today's stats jetpack unauth error, when get cards triggered, then error exists in the card`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES))
+                .thenReturn(flowOf(listOf(getTodaysStatsErrorCardEntity(TodaysStatsCardErrorType.UNAUTHORIZED))))
+
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+
+        assertThat(result.findTodaysStatsCardError()?.type).isEqualTo(TodaysStatsCardErrorType.UNAUTHORIZED)
+    }
+
+    /* POSTS CARD WITH ERROR */
+
+    @Test
+    fun `given posts card with error, when fetch cards triggered, then card with error inserted into db`() = test {
+        whenever(restClient.fetchCards(siteModel, CARD_TYPES)).thenReturn(CardsPayload(cardsRespone))
+        whenever(cardsRespone.toCards()).thenReturn(listOf(POSTS_WITH_ERROR_MODEL))
+
+        cardsStore.fetchCards(siteModel, CARD_TYPES)
+
+        verify(dao).insertWithDate(siteModel.id, listOf(POSTS_WITH_ERROR_MODEL))
+    }
+
+    @Test
+    fun `given posts card unauth error, when get cards triggered, then error exists in the card`() = test {
+        whenever(dao.get(SITE_LOCAL_ID, CARD_TYPES)).thenReturn(flowOf(listOf(POSTS_WITH_ERROR_ENTITY)))
+
+        val result = cardsStore.getCards(siteModel, CARD_TYPES).single()
+
+        assertThat(result.findPostsCardError()?.type).isEqualTo(PostCardErrorType.UNAUTHORIZED)
+    }
+
+    private fun CardsResult<List<CardModel>>.findTodaysStatsCardError(): TodaysStatsCardError? =
+            model?.filterIsInstance(TodaysStatsCardModel::class.java)?.firstOrNull()?.error
+
+    private fun CardsResult<List<CardModel>>.findPostsCardError(): PostCardError? =
+            model?.filterIsInstance(PostsCardModel::class.java)?.firstOrNull()?.error
+
+    private fun getTodaysStatsErrorCardEntity(type: TodaysStatsCardErrorType) =
+            TODAY_STATS_WITH_ERROR_ENTITY.copy(
+                    json = CardsUtils.GSON.toJson(TodaysStatsCardModel(error = TodaysStatsCardError(type)))
+            )
 }
