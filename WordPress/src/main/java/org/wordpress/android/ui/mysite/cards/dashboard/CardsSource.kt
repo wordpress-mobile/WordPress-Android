@@ -24,7 +24,7 @@ const val REFRESH_DELAY = 500L
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
-    private val todaysStatsCardFeatureConfig: MySiteDashboardStatsCardFeatureConfig,
+    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
     override val refresh = MutableLiveData(false)
