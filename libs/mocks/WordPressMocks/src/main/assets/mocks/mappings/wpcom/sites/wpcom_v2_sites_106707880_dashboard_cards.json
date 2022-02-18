@@ -1,11 +1,17 @@
 {
   "request": {
     "method": "GET",
-    "urlPath": "/wpcom/v2/sites/106707880/dashboard/cards/"
+    "urlPath": "/wpcom/v2/sites/106707880/dashboard/cards-data(/)?($|\\\\?.*)"
   },
   "response": {
     "status": 200,
     "jsonBody": {
+      "todays_stats": {
+        "views": 10,
+        "visitors": 20,
+        "likes": 30,
+        "comments": 40
+      },
       "posts": {
         "has_published": true,
         "draft": [
