@@ -99,6 +99,7 @@
         app:layout_constraintTop_toTopOf="@+id/recycler_view">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/domain_list_empty_view_message"
             style="@style/ActionableEmptyStateTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

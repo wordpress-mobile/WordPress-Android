@@ -1,6 +1,0 @@
-19.0:
-- Manage your dashboard with a card-based feed, including Posts.
-- Upload up to 5-minute videos on free plans.
-- See more user interface text in your language, including Jetpack/Layout Grid blocks.
-- Keep text formatting after hitting backspace.
-- Block titles are now center-aligned in the inserter menu.

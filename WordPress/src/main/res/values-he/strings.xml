@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-20 22:14:48+0000
+Translation-Revision-Date: 2022-02-05 21:57:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_tiled_gallery_settings">הגדרות גלריה פרושה</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen">מנתב למסך של בחירת הפריסה</string>
+    <string name="gutenberg_native_gallery_style">סגנון גלריה</string>
+    <string name="sharing_facebook_warning_positive_button">מעבר לאתר בדפדפן</string>
+    <string name="sharing_facebook_warning_message">אפשר לחבר את חשבון הפייסבוק לאתר שלך ב-WordPress.com. בסיום, אפשר לחזור לאפליקציה של WordPress כדי לשנות את הגדרות השיתוף.</string>
     <string name="about_automattic_app_icon_description">סמל האפליקציה</string>
     <string name="about_automattic_back_icon_description">סמל \'חזרה\'</string>
     <string name="about_automattic_logo_description">הסמל של Automattic</string>
@@ -53,11 +58,11 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_select_font_size">יש להקיש פעמיים כדי לבחור את גודל הגופן</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">יש להקיש פעמיים כדי לבחור את גודל הגופן שבברירת מחדל</string>
     <string name="gutenberg_native_contact_support">לפנות לתמיכה</string>
-    <string name="my_site_no_content_post">אין תוכן</string>
     <string name="reader_comments_follow_conversation">מעקב אחר השיחה</string>
     <string name="reader_comments_be_first_to_comment">יש לך אפשרות לרשום את התגובה הראשונה</string>
     <string name="reader_comments_view_all">להציג את כל התגובות</string>
     <string name="reader_comments_post_fetch_failure">אירעה שגיאה בקבלת הנתונים של הפוסט</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_fetch_failure">אירעה שגיאה בקבלת התגובות</string>
     <string name="reader_btn_follow_conversation_settings">הגדרות של מעקב אחר השיחה</string>
     <string name="gutenberg_native_from_clipboard">מהלוח</string>
@@ -139,6 +144,7 @@ Language: he_IL
     <string name="gutenberg_native_line_height">גובה השורה</string>
     <string name="domains_free_plan_get_your_domain_title">לקבל דומיין</string>
     <string name="recommend_app_generic_get_template_error">שגיאה לא ידועה בהבאת תבנית האפליקציה המומלצת</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">התקבלה תגובה לא חוקית</string>
     <string name="recommend_app_null_response">לא התקבלו תגובות</string>
     <string name="me_btn_share">לשתף את WordPress עם חברים</string>
@@ -170,11 +176,11 @@ Language: he_IL
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">כדאי להבליט את התוכן על ידי הוספה של תמונות, הנפשות GIF, סרטונים ומדיה מוטמעת בעמודים שלך.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">אפשר לנסות את האפשרויות על ידי הוספה של כמה בלוקים לפוסט או לעמוד שלך!</string>
     <string name="gutenberg_native_embed_media">להטמיע מדיה</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s">לכל בלוק יש הגדרות משלו. כדי למצוא אותן, יש להקיש על הבלוק. ההגדרות שלו יופיעו בסרגל הכלים שנמצא בתחתית המסך.</string>
     <string name="gutenberg_native_build_layouts">לבנות פריסות</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">הבלוקים הם חלקים של תוכן שאפשר להוסיף, לארגן ולעצב ללא צורך בניסיון עם כתיבת קודים. בלוקים הם אפשרות פשוטה ומודרנית ליצור פריסות יפות.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">הבלוקים מאפשרים לך להתמקד בכתיבת התוכן ולדעת שכל כלי העיצוב שנדרשים לך נמצאים בהישג יד כדי לעזור לך להעביר את המסר.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">אפשר לארגן את התוכן בטורים, להוסיף כפתורים של קריאה לפעולה ולהוסיף שכבה של טקסט על תמונות.</string>
-    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">ניתן להוסיף בלוק בכל עת על ידי הקשה על הסמל \'+\' בסרגל הכלים שנמצא בפינה השמאלית התחתונה. </string>
     <string name="quick_start_sites_type_tasks_completed">הושלמו ⁦%1$s⁩ מתוך ⁦%2$s⁩</string>
     <string name="quick_start_dialog_need_help_manage_site_message">כדאי ללמוד את השלבים הבסיסיים באמצעות סקירה זריזה.</string>
     <string name="comment_batch_moderation_error">לא ניתן היה לאשר תגובה אחת או יותר</string>
@@ -232,10 +238,10 @@ Language: he_IL
     <string name="blogging_reminders_done">סיימתי</string>
     <string name="blogging_reminders_notify_me">תשלחו לי הודעה</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;יש להזין את פרטי הכניסה של השרת&lt;/a&gt; כדי להפעיל שחזורים בלחיצה אחת מגיבויים.</string>
-    <string name="gutenberg_native_set_as_featured_image">להגדיר כתמונה מרכזית </string>
-    <string name="gutenberg_native_remove_as_featured_image">להסיר מהתמונה המרכזית </string>
     <string name="fab_add_category_desc">ליצור קטגוריה</string>
     <string name="support_ticket_subject">תמיכה ב-WordPress ל-Android</string>
+    <string name="gutenberg_native_set_as_featured_image">להגדיר כתמונה מרכזית</string>
+    <string name="gutenberg_native_remove_as_featured_image">להסיר מהתמונה המרכזית</string>
     <string name="site_settings_categories_hint">לנהל את הקטגוריות באתר שלך</string>
     <string name="site_settings_categories_title">קטגוריות</string>
     <string name="page_is_posts_page_warning">התוכן בעמוד \'הפוסטים האחרונים\' מיוצר באופן אוטומטי ולא ניתן לערוך אותו.</string>
@@ -245,8 +251,6 @@ Language: he_IL
     <string name="storage_utils_dialog_ok_button">להציג את שטח האחסון</string>
     <string name="storage_utils_dialog_message">אנחנו צריכים לשמור את התוכן במכשיר שלך לפני שנוכל לפרסם אותו. יש לבדוק את הגדרות האחסון שלך כדי להסיר קבצים ולפנות שטח אחסון.</string>
     <string name="storage_utils_dialog_title">אין מספיק שטח אחסון במכשיר</string>
-    <string name="gutenberg_native_y_axis_position">מיקום של ציר Y</string>
-    <string name="gutenberg_native_x_axis_position">מיקום של ציר X</string>
     <string name="gutenberg_native_type_a_url">יש להקליד כתובת URL</string>
     <string name="gutenberg_native_slash_inserter_results">תוצאות להוספה של קו נטוי</string>
     <string name="gutenberg_native_s_has_url_set">ב-%s הוגדרה כתובת URL</string>
@@ -286,16 +290,19 @@ Language: he_IL
     <string name="user_profile_untitled_site">(ללא כותרת)</string>
     <string name="user_profile_bottom_sheet_description">פרטי גיליון תחתון של פרופיל המשתמש</string>
     <string name="likes_list_screen_title">רשימת לייקים %s</string>
+    <string name="gutenberg_native_two">שניים</string>
+    <string name="gutenberg_native_three">שלושה</string>
     <string name="gutenberg_native_s_social_icon">סמל של הרשת החברתית %s</string>
     <string name="gutenberg_native_mention">אזכור</string>
     <string name="gutenberg_native_preview_page">תצוגה מקדימה של העמוד</string>
     <string name="gutenberg_native_preview_post">תצוגה מקדימה של הפוסט</string>
     <string name="gutenberg_native_retry">לנסות שוב</string>
+    <string name="gutenberg_native_one">אחד</string>
     <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_s_link">%s קישור</string>
     <string name="gutenberg_native_text_color">צבע טקסט</string>
     <string name="gutenberg_native_padding">מרווחים</string>
-    <string name="gutenberg_native_featured">מרכזיים</string>
+    <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_create_embed">ליצור תוכן מוטמע</string>
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_column_d">טור %d</string>
@@ -307,7 +314,6 @@ Language: he_IL
     <string name="gutenberg_native_transform_block">לשנות בלוק…</string>
     <string name="gutenberg_native_failed_to_insert_media">ההוספה של המדיה נכשלה.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">ההוספה של קובץ האודיו נכשלה.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">לתאר את מטרת התמונה. יש להשאיר את השדה ריק אם התמונה נוספה לצורך דקורטיבי בלבד. </string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">⁦%1$s⁩ שונה אל ⁦%2$s⁩</string>
     <string name="like_faces_error_loading_message">שגיאה בטעינה של נתוני הלייקים. %s.</string>
     <string name="like_title_plural">%d לייקים</string>
@@ -324,7 +330,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">יש להקיש פעמיים כדי לערוך את הטקסט של מציין המיקום</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">יש להקיש פעמיים כדי לערוך את הטקסט של התווית</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">יש להקיש פעמיים כדי לערוך את הטקסט של הכפתור</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">יש להקיש פעמיים כדי לשנות את היחידה</string>
     <string name="gutenberg_native_outside">חיצוני</string>
     <string name="gutenberg_native_current_placeholder_text_is">הטקסט הנוכחי של מציין מיקום הוא</string>
     <string name="gutenberg_native_clear_search">לנקות את החיפוש</string>
@@ -337,6 +342,7 @@ Language: he_IL
     <string name="comments_empty_list_filtered_unreplied">אין תגובות ללא מענה</string>
     <string name="comment_status_unreplied">ללא מענה</string>
     <string name="gutenberg_native_search_settings">הגדרות חיפוש</string>
+    <string name="gutenberg_native_add_link">להוסיף קישור</string>
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
@@ -708,7 +714,6 @@ Language: he_IL
     <string name="media_loading_failed">העלאת מדיה נכשלה</string>
     <string name="reader_discover_recommended_blogs_header">אתרים למעקב</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">אנחנו מקדישים מאמץ רב כדי להוסיף עוד בלוקים בכל גרסה.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' לא נתמך באופן מלא</string>
     <string name="gutenberg_native_help_button">כפתור עזרה</string>
     <string name="gutenberg_native_edit_using_web_editor">לערוך באמצעות עורך אינטרנט</string>
     <string name="gutenberg_native_choose_images">לבחור תמונות</string>
@@ -1452,6 +1457,7 @@ Language: he_IL
     <string name="stats_months_and_years_period_label">תקופה</string>
     <string name="stats_detail_months_and_years">חודשים ושנים</string>
     <string name="stats_insights_load_more">טעינת פריטים נוספים</string>
+    <string name="new_site_creation_preview_subtitle">תהיה לך אפשרות לשנות את המראה והאווירה של האתר בשלב מאוחר יותר</string>
     <string name="stats_insights_today_stats">היום</string>
     <string name="stats_insights_best_hour">השעה הטובה ביותר</string>
     <string name="stats_insights_best_day">היום הטוב ביותר</string>
@@ -1897,13 +1903,13 @@ Language: he_IL
     <string name="media_settings_screen_title">פרטי הקובץ</string>
     <string name="publicize_buttons_screen_title">כפתורי שיתוף</string>
     <string name="notifications_screen_title">הודעות</string>
-    <string name="reader_screen_title">Reader</string>
     <string name="me_section_screen_title">אני</string>
     <string name="my_site_section_screen_title">האתר שלי</string>
     <string name="notif_settings_screen_title">הגדרות הודעה</string>
     <string name="help_screen_title">עזרה ותמיכה</string>
     <string name="license_screen_title">רישיון</string>
     <string name="release_notes_screen_title">הערות לשחרור גרסה</string>
+    <string name="reader_screen_title">קורא</string>
     <string name="signup_epilogue_error_avatar_view">תמונת הפרופיל שלך הועלתה ותהיה זמינה בקרוב.</string>
     <string name="permissions_denied_message">נראה שהשבתת את פעילות ההרשאות שנדרשות לתכונה זו.&lt;br/&gt;&lt;br/&gt;כדי לשנות זאת, יש לערוך את ההרשאות שלך ולוודא שהפעלת את &lt;strong&gt;%s&lt;/strong&gt;.</string>
     <string name="permissions_denied_title">הרשאות</string>
@@ -2838,6 +2844,7 @@ Language: he_IL
     <string name="comment_trashed">התגובה הועברה לפח</string>
     <string name="posts_empty_list">אין פוסטים עדיין. למה לא ליצור אחד?</string>
     <string name="comment_reply_to_user">להגיב ל-%s</string>
+    <string name="help_and_support">עזרה ותמיכה</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
     <string name="reader_label_like">לייק</string>
     <string name="older_month">בן יותר מחודש</string>
