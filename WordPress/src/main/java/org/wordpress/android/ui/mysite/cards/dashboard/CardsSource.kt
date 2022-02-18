@@ -15,7 +15,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.config.MySiteDashboardStatsCardFeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,7 +24,7 @@ const val REFRESH_DELAY = 500L
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
-    private val statsCardFeatureConfig: MySiteDashboardStatsCardFeatureConfig,
+    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
     override val refresh = MutableLiveData(false)
@@ -94,7 +94,7 @@ class CardsSource @Inject constructor(
     }
 
     private fun getCardTypes() = mutableListOf<Type>().apply {
-        if (statsCardFeatureConfig.isEnabled()) add(Type.TODAYS_STATS)
+        if (todaysStatsCardFeatureConfig.isEnabled()) add(Type.TODAYS_STATS)
         add(Type.POSTS)
     }.toList()
 

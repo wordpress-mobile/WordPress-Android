@@ -111,7 +111,7 @@ android {
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
-        buildConfigField "boolean", "MY_SITE_DASHBOARD_STATS_CARD", "false"
+        buildConfigField "boolean", "MY_SITE_DASHBOARD_TODAYS_STATS_CARD", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"

@@ -24,7 +24,7 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.config.MySiteDashboardStatsCardFeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 
 /* SITE */
 
@@ -81,7 +81,7 @@ class CardsSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var cardsStore: CardsStore
     @Mock private lateinit var siteModel: SiteModel
-    @Mock private lateinit var statsCardFeatureConfig: MySiteDashboardStatsCardFeatureConfig
+    @Mock private lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     private lateinit var cardSource: CardsSource
 
     private val data = CardsResult(
@@ -98,7 +98,7 @@ class CardsSourceTest : BaseUnitTest() {
         cardSource = CardsSource(
                 selectedSiteRepository,
                 cardsStore,
-                statsCardFeatureConfig,
+                todaysStatsCardFeatureConfig,
                 TEST_DISPATCHER
         )
     }
@@ -120,10 +120,10 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given stats feature enabled, when build is invoked, then todays stats from store(database)`() = test {
+    fun `given today's stats feature enabled, when build is invoked, then todays stats from store(database)`() = test {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
-        whenever(statsCardFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(true)
 
         cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
@@ -168,17 +168,18 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given stats feature enabled, when refresh is invoked, then todays stats are requested from network`() = test {
-        val result = mutableListOf<CardsUpdate>()
-        whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
-        whenever(statsCardFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
-        cardSource.refresh.observeForever { }
+    fun `given today's stats feature enabled, when refresh is invoked, then todays stats are requested from network`() =
+            test {
+                val result = mutableListOf<CardsUpdate>()
+                whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
+                whenever(todaysStatsCardFeatureConfig.isEnabled()).thenReturn(true)
+                whenever(cardsStore.fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(success)
+                cardSource.refresh.observeForever { }
 
-        cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+                cardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 
-        verify(cardsStore).fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
-    }
+                verify(cardsStore).fetchCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)
+            }
 
     @Test
     fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
