@@ -52,7 +52,7 @@ sealed class SiteNavigationAction {
     ) : SiteNavigationAction()
 
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
-    data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
+    data class AddNewSite(val hasAccessToken: Boolean) : SiteNavigationAction()
     data class ShowQuickStartDialog(
         @StringRes val title: Int,
         @StringRes val message: Int,

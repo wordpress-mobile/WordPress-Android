@@ -68,6 +68,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -121,7 +122,8 @@ class MySiteViewModel @Inject constructor(
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
     private val siteItemsTracker: SiteItemsTracker,
-    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -345,7 +347,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
-        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+        val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
+                displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(shouldShowImage)
     }
 

@@ -304,7 +304,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
         is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
                 action.title,
                 action.message,
