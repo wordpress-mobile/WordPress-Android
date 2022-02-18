@@ -577,6 +577,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
     }
 
+    fun refreshBlocksForEditedComment(noteId: String) {
+        setNote(noteId)
+        reloadNoteBlocks()
+    }
+
     // Requests Reader content for certain notification types
     private fun requestReaderContentForNote() {
         if (notification == null || !isAdded) {

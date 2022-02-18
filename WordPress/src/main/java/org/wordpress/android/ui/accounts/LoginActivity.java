@@ -550,8 +550,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void showSignupMagicLink(String email) {
+        boolean isEmailClientAvailable = WPActivityUtils.isEmailClientAvailable(this);
         SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
-                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
+                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, isEmailClientAvailable);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 

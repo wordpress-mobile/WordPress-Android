@@ -1,135 +1,152 @@
 <en-US>
-- Manage your dashboard with a card-based feed, including Posts.
-- Upload up to 5-minute videos on free plans.
-- See more user interface text in your language, including Jetpack/Layout Grid blocks.
-- Keep text formatting after hitting backspace.
-- Block titles are now center-aligned in the inserter menu.
+- Justify buttons properly in the Buttons block.
+- See block names in Hebrew and Indonesian.
+- See translated featured image and Cover block color settings.
+- No longer see the help button in the unsupported block editor.
+- Be notified if text/background color combos are hard to read.
+- Run into fewer issues when changing the color of non-selected text.
 </en-US>
 <ar>
-19.0:
-- قم بإدارة لوحة التحكم الخاصة بك باستخدام موجز يستند إلى بطاقة، بما في ذلك المقالات.
-- ارفع مقاطع فيديو تصل إلى 5 دقائق في الخطط المجانية.
-- اطلع على مزيد من نص واجهة المستخدم بلغتك، بما في ذلك مكوِّنات Jetpack/شبكة التخطيط.
-- احتفظ بتنسيق النص بعد الضغط على زر الرجوع.
-- تمت محاذاة عناوين المكوِّن الآن إلى الوسط في قائمة أداة الإدراج.
+19.1:
+- اضبط الأزرار بطريقة صحيحة في مكوِّن الأزرار.
+- اطلع على أسماء المكوِّن باللغة العبرية والإندونيسية.
+- اطلع على إعدادات لون الصورة البارزة المترجمة ومكوِّن الغلاف.
+- لم تعد ترى زر المساعدة في محرِّر المكوِّن غير المدعوم.
+- يتم إعلامك إذا كان من الصعب قراءة مجموعات ألوان النص/الخلفية.
+- واجه مشكلات أقل عند تغيير لون نص غير محدَّد.
 </ar>
 <de-DE>
-19.0:
-– Verwalte dein Dashboard mit einem kartenbasierten Feed, einschließlich Beiträgen.
-– Lade bei Kostenlos-Tarifen Videos mit einer Länge von bis zu fünf Minuten hoch.
-– Zeige mehr Benutzeroberflächentext in deiner Sprache an, einschließlich Jetpack-/Layoutraster-Blöcken.
-– Behalte die Textformatierung nach Drücken auf die Rücktaste bei.
-– Blocktitel werden im Inserter-Menü nun zentriert ausgerichtet.
+19.1:
+– Buttons im Button-Block richtig ausrichten.
+– Blocknamen auf Hebräisch und Indonesisch anzeigen.
+– Übersetzte Farbeinstellungen für Beitragsbild und Cover-Block anzeigen.
+– Hilfe-Button im nicht unterstützten Block-Editor nicht mehr sichtbar.
+– Benachrichtigung, wenn Kombinationen aus Text-/Hintergrundfarbe schwer lesbar sind.
+– Probleme beim Wechseln der Farbe von nicht ausgewähltem Text reduziert.
 </de-DE>
 <es-ES>
-19.0:
-- Gestiona tu escritorio con un feed basado en tarjetas, incluidas las entradas.
-- Sube como máximo videos de 5 minutos en los planes gratuitos.
-- Visualiza más texto de la interfaz de usuario en tu idioma, incluidos los bloques de Jetpack y Cuadrícula de diseño.
-- Mantén el formato del texto después de pulsar la tecla Retroceso.
-- Ahora, los títulos de los bloques se alinean al centro en el menú del insertador.
+19.1:
+- Justifica correctamente los botones en el bloque de botón.
+- Visualiza los nombres de los bloques en hebreo e indonesio.
+- Visualiza la traducción de la imagen destacada y los ajustes de color del bloque de fondo.
+- Ya no verás el botón de ayuda en el editor de bloques no compatible.
+- Se te notificará si las combinaciones de color entre texto y fondo son difíciles de leer.
+- Encontrarás menos problemas al cambiar el color del texto no seleccionado.
 </es-ES>
 <fr-FR>
-19.0:
-- Gérez votre tableau de bord avec un flux lié à une carte, y compris les articles.
-- Chargez des vidéos de max. 5 minutes avec les plans gratuits.
-- Accédez à plus de texte d’interface utilisateur dans votre langue, dont Jetpack/blocs de grille de mise en page.
-- Conservez le formatage de texte après avoir appuyé sur la touche Retour arrière.
-- Les titres de blocs sont désormais alignés au centre dans le menu d’insertion.
+19.1 :
+- Justification de boutons correcte dans le bloc de boutons.
+- Affichage de noms de blocs en hébreu et indonésien.
+- Traduction des réglages de couleurs du bloc d'arrière-plan et de l'image mise en avant.
+- Disparition du bouton « aide » dans l’éditeur de blocs non pris en charge.
+- Notification en cas de mauvaise lisibilité de la combinaison de couleurs texte/arrière-plan choisie.
+- Moins de problèmes lors du changement de couleur d’un texte non sélectionné.
 </fr-FR>
 <iw-IL>
-19.0:
-- לנהל את לוח הבקרה שלך באמצעות פיד שמציג כרטיסים, כולל פוסטים.
-- להעלות סרטונים בני עד חמש דקות בתוכניות החינמיות.
-- להציג עוד טקסט בממשק המשתמש בשפה שלך, כולל בלוקים של Jetpack / רשת פריסות.
-- לשמור על עיצוב עקבי לטקסט לאחר הקשה על מקש המחיקה.
-- כותרות הבלוקים כעת מיושרות למרכז בתפריט של מוסיף הבלוקים.
+19.1:
+- אפשר ליישר את הכפתור בצורה תקינה בבלוק הכפתורים.
+- אפשר להציג את שמות הבלוקים בעברית ובאינדונזית.
+- ניתן לראות הגדרות צבע מתורגמות בתמונה המרכזית ובבלוק הכיסוי.
+- הסרנו את כפתור העזרה בעורכי בלוקים שאינם נתמכים.
+- ניתן לקבל הודעה על שילובים קשים לקריאה בין צבע הטקסט וצבע הרקע.
+- יש פחות בעיות כאשר משנים צבע של טקסט שלא נבחר.
 </iw-IL>
 <id>
-19.0:
-- Kelola dasbor Anda dengan feed berbasis kartu, termasuk Pos.
-- Unggah video berdurasi maksimal 5 menit pada paket gratis.
-- Lihat lebih banyak teks antarmuka dalam bahasa Anda, termasuk blok Jetpack/Petak Tata Letak.
-- Pertahankan pemformatan teks setelah menekan backspace.
-- Sekarang, judul blok pada menu penyisip rata tengah.
+19.1:
+- Tombol di blok Tombol kini dijajarkan dengan tepat.
+- Nama blok kini tersedia dalam bahasa Ibrani dan bahasa Indonesia.
+- Terjemahan untuk pengaturan warna blok gambar sorotan dan Sampul kini tersedia.
+- Tombol bantuan kini dihapus dari editor blok yang tidak didukung.
+- Dapatkan pemberitahuan jika kombinasi warna teks/latar belakang sulit dibaca.
+- Sebagian masalah saat mengganti warna dari teks yang tidak dipilih telah teratasi.
 </id>
 <it-IT>
-19.0:
-- Gestisci la bacheca con un feed basato su scheda, incluso Articoli.
-- Carica fino a 5 minuti di video con piani gratuiti.
-- Visualizza più testo dell'interfaccia utente nella tua lingua, inclusi i blocchi Jetpack/Griglia di layout.
-- Mantieni la formattazione del testo dopo che hai premuto backspace.
-- I titoli dei blocchi ora sono allineati al centro nel menu dello strumento per l'inserimento.
+19.1:
+- Giustifica i pulsanti in modo corretto nel blocco Pulsanti.
+- Visualizza i nomi dei blocchi in ebraico e indonesiano.
+- Visualizza le impostazioni delle immagini in evidenza e dei colori del blocco Copertina tradotte.
+- Non è più visibile il pulsante di supporto nell'editor a blocchi non supportato.
+- Ricevi una notifica se le combinazioni di colori del testo/di sfondo non sono adatte alla lettura.
+- Incorri in meno problemi con la modifica del colore del testo non selezionato.
 </it-IT>
 <ja-JP>
-19.0:
-- ブログ投稿を含むカードベースのフィードを使用してダッシュボードを管理します。
-- 無料プランでは最大5分の動画をアップロードできます。
-- Jetpack や Layout Grid ブロックなど、ご使用の言語で表示されるユーザーインターフェイスのテキストが増えました。
-- バックスペースを押した後もテキストの書式が維持されます。
-- ブロックタイトルは、挿入メニューで中央揃えになりました。
+19.1:
+- 「ボタン」ブロックのボタン配置の改善。
+- ヘブライ語とインドネシア語でのブロック名の表示。
+- 翻訳されたアイキャッチ画像と「カバー」ブロックの色設定の表示。
+- サポートされていないブロックエディターでのヘルプボタンの非表示。
+- テキストと背景色の組み合わせによって読みづらさが生じる場合の通知。
+- 選択されていないテキストの色を変更する際に生じる問題の削減。
 </ja-JP>
 <ko-KR>
-19.0:
-- 카드 기반 피드로 알림판을 관리하세요(글 포함).
-- 무료 요금제에서 최대 5분 비디오를 업로드하세요.
-- 원하는 언어로 추가 사용자 인터페이스 텍스트를 표시하세요(젯팩/레이아웃 그리드 블록 포함).
-- 백스페이스 키를 누른 후 텍스트 형식 지정을 유지하세요.
-- 블록 제목이 이제는 삽입기 메뉴의 가운데에 정렬됩니다.
+19.1:
+- 버튼 블록에서 버튼 양쪽이 적절히 맞춰집니다.
+- 히브리어와 인도네시아어로 블록 이름이 표시됩니다.
+- 번역된 특성 이미지 및 커버 블록 색상 설정이 표시됩니다.
+- 지원되지 않는 블록 편집기에 더는 도움말 버튼이 표시되지 않습니다.
+- 텍스트/배경 색상 조합이 판독하기 어려우면 알림이 표시됩니다.
+- 선택하지 않은 텍스트 색상을 변경할 때 문제가 적게 발생합니다.
 </ko-KR>
 <nl-NL>
-19.0:
-- Je dashboard beheren met een kaartgebaseerde feed, waaronder posts.
-- Upload video's van maximaal 5 minuten met gratis abonnementen.
-- Zie meer gebruikersinterface in je taal, waaronder Jetpack/indelingsrasterblokken.
-- Behoud tekstopmaak na het gebruik van backspace.
-- Bloktitels zijn nu in het midden uitgelijnd in het invoegermenu.
+19.1:
+- Knoppen worden correct uitgelijnd in het knopblok.
+- Namen van blokken zijn nu beschikbaar in het Hebreeuws en Indonesisch.
+- De kleurinstellingen van uitgelichte afbeeldingen en omslagafbeeldingblokken zijn vertaald.
+- De help-knop is niet meer zichtbaar in de niet-ondersteunde blokeditor.
+- Krijg een melding als de combinatie van de achtergrondkleur en de tekstkleur lastig te lezen is.
+- Er zijn minder problemen bij het veranderen van de tekstkleur van niet-geselecteerde tekst.
 </nl-NL>
 <pt-BR>
-19.0:
-- Gerencie o seu painel com um feed baseado em cartões, incluindo os posts.
-- Faça upload de vídeos de até 5 minutos nos planos gratuitos.
-- Veja mais textos da interface do usuário no seu idioma, incluindo os blocos Jetpack/Grade de layout.
-- Mantenha a formatação do texto mesmo após usar a tecla Backspace.
-- Aproveite que os títulos dos blocos agora são centralizados no menu de inserção.
+19.1:
+- Justifique os botões de forma adequada no bloco de botões.
+- Veja os nomes de blocos em hebraico e indonésio.
+- Veja a tradução das configurações de cor do bloco de cobertura e imagem destacada.
+- Diga adeus ao botão de ajuda no editor de blocos incompatíveis.
+- Receba uma notificação se as combinações de cor de fundo e de texto dificultarem a leitura.
+- Tenha menos problemas na alteração da cor do texto não selecionado.
 </pt-BR>
 <ru-RU>
-19.0:
-— Управление с помощью консоли с лентой на основе карточек, включая записи.
-— Загрузка видео длиной до 5 минут на бесплатных тарифных планах.
-— Больше элементов интерфейса на вашем языке, включая блоки Jetpack и разметки «Сетка».
-— Сохранение форматирования текста после нажатия клавиши стирания.
-— Заголовки блоков теперь выравниваются по центру в меню вставки.
+19.1:
+— Возможность корректного выравнивания кнопок в блоке кнопок.
+— Просмотр имён блоков на иврите и индонезийском языке.
+— Наличие перевода для избранного изображения и настроек цвета блока обложки.
+— Исчезновение кнопки справки в неподдерживаемом редакторе блоков.
+— Уведомления при неудачных сочетаниях цвета текста и фона, которые делают текст трудночитаемым.
+— Уменьшение числа проблем, приводящих к изменению цвета невыбранного текста.
 </ru-RU>
 <sv-SE>
-19.0:
-- Hantera din adminpanel med ett kortbaserat flöde, inklusive inlägg.
-- Ladda upp videoklipp som är upp till 5 minuter långa med gratispaket.
-- Se mer användargränssnittstext på ditt språk, inklusive Jetpack-/layoutrutnätsblock.
-- Behåll textformatering efter att ha tryckt på backsteg.
-Blockrubriker är nu centrerade i infogarmenyn.
+19.1:
+- Justera knappar korrekt i blocket Knappar.
+- Se blocknamn på hebreiska och indonesiska.
+- Se översättning av utvald bild och färginställningarna för blocket Omslag.
+- Hjälpknappen visas inte längre i blockredigeraren som inte stöds.
+- Få notiser om kombinationer av text-/bakgrundsfärger gör det svårt att läsa texten.
+- Färre problem med att ändra färg på ej markerad text.
 </sv-SE>
 <tr-TR>
-19.0:
-- Gönderiler de dahil olmak üzere kart tabanlı bir şeritle panonuzu yönetin.
-- Ücretsiz paketlerle 5 dakikaya kadar uzunlukta video yükleyin.
-- Jetpack/Düzen Izgarası blokları da dahil olmak üzere kendi dilinizde daha fazla kullanıcı arayüzü metni görün.
-- Geri al tuşuna bastıktan sonra metin biçimlendirmesini koruyun.
-- Blok başlıkları artık ekleyici menüsünde ortaya hizalanmıştır.
+19.1:
+- Düğmeler blokundaki düğmeleri düzgün şekilde hizalayın.
+- İbranice ve Endonezyaca blok adlarına bakın.
+- Çevrilmiş öne çıkan görsel ve Kapak bloku renk ayarlarını görün.
+- Desteklenmeyen blok düzenleyicide artık yardım düğmesini göremezsiniz.
+- Metin/arka plan rengi kombinasyonlarının okunması zor olduğunda bildirim alın.
+- Seçilmeyen metnin rengini değiştirirken daha az sorunla karşılaşın.
 </tr-TR>
 <zh-CN>
-19.0：
-- 使用基于卡片的 feed 管理仪表盘，包括文章。
-- 免费套餐最多可上传 5 分钟的视频。
-- 您可以使用自己的语言查看更多用户界面文本，包括 Jetpack/Layout Grid 区块。
-- 按退格键可使文本格式保持一致。
-- 区块标题现在在插入器菜单中居中对齐。
+19.1:
+- 在按钮区块里正确的对齐按钮。
+- 看区块的名字的希伯来和印度尼西亚的语言翻译。
+- 看特色图片区块和封面区块的设置的语言翻译。
+- 不再看到帮助按钮在不支持的区块编辑器。
+- 接收通告当文本和背景的颜色组合难以阅读。
+- 遇到比较少问题当要更改未选择的文本的颜色。
 </zh-CN>
 <zh-TW>
-19.0：
-- 使用包含文章的卡片式摘要，來管理你的儀表板。
-- 使用免費方案，上傳最長 5 分鐘的影片。
-- 用你自己的語言查看更多使用者介面，包含 Jetpack/格狀版面區塊。
-- 按下退格鍵後，保持文字格式不變。
-- 現在在插入工具選單中，區塊標題會置中對齊。
+19.1:
+- 在按鈕區塊裏正確的對齊按鈕。
+- 看區塊的名字的希伯來和印度尼西亞的語言翻譯。
+- 看特色圖片區塊和封面區塊的設置的語言翻譯。
+- 不再看到幫助按鈕在不支持的區塊編輯器。
+- 接收通告當文本和背景的顔色組合難以閱讀。
+- 遇到比較少問題當要更改未選擇的文本的顔色。
 </zh-TW>

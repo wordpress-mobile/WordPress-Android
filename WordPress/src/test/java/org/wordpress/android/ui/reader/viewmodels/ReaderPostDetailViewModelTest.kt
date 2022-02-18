@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -976,6 +977,26 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `onRefreshCommentsData does not start comment snippet service for external posts`() {
+        val externalPost = createDummyReaderPost(1, isWpComPost = false)
+        whenever(
+                readerPostTableWrapper.getBlogPost(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(externalPost)
+
+        viewModel.onRefreshCommentsData(1, 1)
+
+        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+        )
+    }
+
     private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(null, false))
@@ -983,16 +1004,17 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
-        this.postId = id
-        this.blogId = id * 100
-        this.feedId = id * 1000
-        this.title = "DummyPost"
-        this.featuredVideo = id.toString()
-        this.featuredImage = "/featured_image/$id/url"
-        this.isExternal = !isWpComPost
-        this.numReplies = 1
-    }
+    private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost =
+            ReaderPost().apply {
+                this.postId = id
+                this.blogId = id * 100
+                this.feedId = id * 1000
+                this.title = "DummyPost"
+                this.featuredVideo = id.toString()
+                this.featuredImage = "/featured_image/$id/url"
+                this.isExternal = !isWpComPost
+                this.numReplies = 1
+            }
 
     private fun createDummyReaderPostCommentSnippetList(): ReaderCommentList =
             ReaderCommentList().apply {
