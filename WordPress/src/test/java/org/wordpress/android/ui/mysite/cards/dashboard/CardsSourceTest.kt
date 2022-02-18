@@ -120,7 +120,7 @@ class CardsSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given stats feature enabled, when build is invoked, then todays stats fromn store(database)`() = test {
+    fun `given stats feature enabled, when build is invoked, then todays stats from store(database)`() = test {
         val result = mutableListOf<CardsUpdate>()
         whenever(cardsStore.getCards(siteModel, STATS_FEATURED_ENABLED_CARD_TYPES)).thenReturn(flowOf(data))
         whenever(statsCardFeatureConfig.isEnabled()).thenReturn(true)
