@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.PostCardErrorType
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -36,6 +37,7 @@ private val POST_DATE = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-12-0
 @InternalCoroutinesApi
 class PostCardBuilderTest : BaseUnitTest() {
     @Mock private lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock private lateinit var appLogWrapper: AppLogWrapper
 
     private lateinit var builder: PostCardBuilder
     private val post = PostCardModel(
@@ -51,7 +53,7 @@ class PostCardBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = PostCardBuilder(localeManagerWrapper)
+        builder = PostCardBuilder(localeManagerWrapper, appLogWrapper)
         setUpMocks()
     }
 

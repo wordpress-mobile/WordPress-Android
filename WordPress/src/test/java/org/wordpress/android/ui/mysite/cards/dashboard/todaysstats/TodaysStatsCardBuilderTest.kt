@@ -11,6 +11,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErrorType
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
@@ -29,6 +30,7 @@ private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
 @RunWith(MockitoJUnitRunner::class)
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Mock private lateinit var statsUtils: StatsUtils
+    @Mock private lateinit var appLogWrapper: AppLogWrapper
 
     private lateinit var builder: TodaysStatsCardBuilder
     private val todaysStatsCardModel = TodaysStatsCardModel(
@@ -40,7 +42,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = TodaysStatsCardBuilder(statsUtils)
+        builder = TodaysStatsCardBuilder(statsUtils, appLogWrapper)
         setUpMocks()
     }
 
