@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
@@ -31,6 +32,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.CardsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsRestClient.TodaysStatsResponse
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsPayload
 import org.wordpress.android.fluxc.test
@@ -39,7 +41,18 @@ import org.wordpress.android.fluxc.test
 
 private const val DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss"
 
+/* CARD TYPES */
+
+private val CARD_TYPES = listOf(CardModel.Type.TODAYS_STATS, CardModel.Type.POSTS)
+
 /* RESPONSE */
+
+private val TODAYS_STATS_RESPONSE = TodaysStatsResponse(
+        views = 100,
+        visitors = 30,
+        likes = 50,
+        comments = 10
+)
 
 private val DRAFT_POST_RESPONSE_TWO = PostResponse(
         id = 708,
@@ -77,6 +90,7 @@ private val POSTS_RESPONSE = PostsResponse(
 )
 
 private val CARDS_RESPONSE = CardsResponse(
+        todaysStats = TODAYS_STATS_RESPONSE,
         posts = POSTS_RESPONSE
 )
 
@@ -90,6 +104,7 @@ class CardsRestClientTest {
     @Mock private lateinit var site: SiteModel
 
     private lateinit var urlCaptor: KArgumentCaptor<String>
+    private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: CardsRestClient
 
     private val siteId: Long = 1
@@ -97,6 +112,7 @@ class CardsRestClientTest {
     @Before
     fun setUp() {
         urlCaptor = argumentCaptor()
+        paramsCaptor = argumentCaptor()
         restClient = CardsRestClient(
                 wpComGsonRequestBuilder,
                 dispatcher,
@@ -112,7 +128,7 @@ class CardsRestClientTest {
         val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_JSON)
         initFetchCards(data = getCardsResponseFromJsonString(json))
 
-        restClient.fetchCards(site)
+        restClient.fetchCards(site, CARD_TYPES)
 
         assertEquals(urlCaptor.firstValue, "$API_SITE_PATH/${site.siteId}/$API_DASHBOARD_CARDS_PATH")
     }
@@ -122,7 +138,7 @@ class CardsRestClientTest {
         val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_JSON)
         initFetchCards(data = getCardsResponseFromJsonString(json))
 
-        val result = restClient.fetchCards(site)
+        val result = restClient.fetchCards(site, CARD_TYPES)
 
         assertSuccess(CARDS_RESPONSE, result)
     }
@@ -131,7 +147,7 @@ class CardsRestClientTest {
     fun `given timeout, when fetch cards gets triggered, then return cards timeout error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.TIMEOUT)))
 
-        val result = restClient.fetchCards(site)
+        val result = restClient.fetchCards(site, CARD_TYPES)
 
         assertError(CardsErrorType.TIMEOUT, result)
     }
@@ -140,7 +156,7 @@ class CardsRestClientTest {
     fun `given network error, when fetch cards gets triggered, then return cards api error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
-        val result = restClient.fetchCards(site)
+        val result = restClient.fetchCards(site, CARD_TYPES)
 
         assertError(CardsErrorType.API_ERROR, result)
     }
@@ -149,7 +165,7 @@ class CardsRestClientTest {
     fun `given invalid response, when fetch cards gets triggered, then return cards invalid response error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.INVALID_RESPONSE)))
 
-        val result = restClient.fetchCards(site)
+        val result = restClient.fetchCards(site, CARD_TYPES)
 
         assertError(CardsErrorType.INVALID_RESPONSE, result)
     }
@@ -158,7 +174,7 @@ class CardsRestClientTest {
     fun `given not authenticated, when fetch cards gets triggered, then return cards auth required error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED)))
 
-        val result = restClient.fetchCards(site)
+        val result = restClient.fetchCards(site, CARD_TYPES)
 
         assertError(CardsErrorType.AUTHORIZATION_REQUIRED, result)
     }
@@ -167,7 +183,7 @@ class CardsRestClientTest {
     fun `given unknown error, when fetch cards gets triggered, then return cards generic error`() = test {
         initFetchCards(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)))
 
-        val result = restClient.fetchCards(site)
+        val result = restClient.fetchCards(site, CARD_TYPES)
 
         assertError(CardsErrorType.GENERIC_ERROR, result)
     }
@@ -188,7 +204,7 @@ class CardsRestClientTest {
                 wpComGsonRequestBuilder.syncGetRequest(
                         eq(restClient),
                         urlCaptor.capture(),
-                        eq(mapOf()),
+                        paramsCaptor.capture(),
                         eq(CardsResponse::class.java),
                         eq(false),
                         any(),
@@ -226,7 +242,7 @@ class CardsRestClientTest {
     companion object {
         private const val API_BASE_PATH = "https://public-api.wordpress.com/wpcom/v2"
         private const val API_SITE_PATH = "$API_BASE_PATH/sites"
-        private const val API_DASHBOARD_CARDS_PATH = "dashboard/cards/"
+        private const val API_DASHBOARD_CARDS_PATH = "dashboard/cards-data/"
 
         private const val DASHBOARD_CARDS_JSON = "wp/dashboard/cards.json"
     }
