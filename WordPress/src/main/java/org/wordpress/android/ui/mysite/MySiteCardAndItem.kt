@@ -33,6 +33,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
     enum class DashboardCardType {
         ERROR_CARD,
+        TODAYS_STATS_CARD_ERROR,
+        TODAYS_STATS_CARD,
+        POST_CARD_ERROR,
         POST_CARD_WITHOUT_POST_ITEMS,
         POST_CARD_WITH_POST_ITEMS
     }
@@ -96,14 +99,42 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 open val dashboardCardType: DashboardCardType
             ) {
                 data class ErrorCard(
-                    override val dashboardCardType: DashboardCardType = DashboardCardType.ERROR_CARD,
                     val onRetryClick: ListItemInteraction
-                ) : DashboardCard(dashboardCardType)
+                ) : DashboardCard(dashboardCardType = DashboardCardType.ERROR_CARD)
+
+                interface ErrorWithinCard {
+                    val title: UiString
+                }
+
+                sealed class TodaysStatsCard(
+                    override val dashboardCardType: DashboardCardType
+                ) : DashboardCard(dashboardCardType) {
+                    data class Error(
+                        override val title: UiString
+                    ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD_ERROR), ErrorWithinCard
+
+                    data class TodaysStatsCardWithData(
+                        val views: UiString,
+                        val visitors: UiString,
+                        val likes: UiString,
+                        val onCardClick: () -> Unit,
+                        val footerLink: FooterLink
+                    ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
+
+                    data class FooterLink(
+                        val label: UiString,
+                        val onClick: () -> Unit
+                    )
+                }
 
                 sealed class PostCard(
                     override val dashboardCardType: DashboardCardType,
-                    open val footerLink: FooterLink
+                    open val footerLink: FooterLink? = null
                 ) : DashboardCard(dashboardCardType) {
+                    data class Error(
+                        override val title: UiString
+                    ) : PostCard(dashboardCardType = DashboardCardType.POST_CARD_ERROR), ErrorWithinCard
+
                     data class PostCardWithoutPostItems(
                         val postCardType: PostCardType,
                         val title: UiString,

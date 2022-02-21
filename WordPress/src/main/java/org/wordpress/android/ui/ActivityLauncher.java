@@ -1379,12 +1379,12 @@ public class ActivityLauncher {
             Activity activity,
             boolean doLoginUpdate,
             ArrayList<Integer> oldSitesIds,
-            boolean isJetpackApp
+            boolean isSiteCreationEnabled
     ) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
-        if (!isJetpackApp) {
+        if (isSiteCreationEnabled) {
             activity.startActivityForResult(intent, RequestCodes.LOGIN_EPILOGUE);
         } else {
             activity.startActivity(intent);

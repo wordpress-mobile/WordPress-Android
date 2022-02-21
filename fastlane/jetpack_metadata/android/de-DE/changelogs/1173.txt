@@ -1,0 +1,5 @@
+19.2:
+– Schriftgröße und Zeilenhöhe für Block-Themes werden jetzt unterstützt.
+– Neue Statistikkarten im Einstellungsmenü des Statistikbildschirms hinzugefügt.
+– Beim Ändern von Medien in einem Bildblock, der auch als Beitragsbild verwendet wird, kannst du jetzt auch gleich das Beitragsbild ersetzen.
+– Du kannst jetzt Text, Bilder und Videos in der App mit der Freigabefunktion deines Geräts teilen.

@@ -1,0 +1,5 @@
+19.2:
+- Altura de linha e tamanho de fonte agora são compatíveis com temas de blocos.
+- Novos cartões de estatísticas adicionados ao menu Configurações na tela Estatísticas.
+- Ao alterar a mídia em um bloco de imagem que também é usada como uma imagem destacada em um post, aparecerá uma mensagem perguntando se você quer substituir a imagem destacada.
+- Compartilhamento de textos, imagens e vídeos no app com a ação Compartilhar do dispositivo.

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-09 09:54:08+0000
+Translation-Revision-Date: 2022-02-15 20:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="comment_moderation_error">無法審核留言</string>
+    <string name="reader_comment_menu_trash">移至垃圾桶</string>
+    <string name="reader_comment_menu_spam">標記為垃圾訊息</string>
+    <string name="reader_comment_menu_unapprove">取消核准</string>
     <string name="gutenberg_native_tiled_gallery_settings">並排圖庫設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">導覽至版面配置選取畫面</string>
     <string name="gutenberg_native_gallery_style">圖庫樣式</string>
@@ -180,6 +184,7 @@ Language: zh_TW
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">區塊可讓你專心撰寫內容，瞭解所有必要的格式工具一應俱全，協助你傳達自己的訊息。</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">在欄位中排列你的內容、新增「行動呼籲」按鈕，並在圖片中加上文字。</string>
     <string name="quick_start_sites_type_tasks_completed">已完成 %1$s 個，共 %2$s 個</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">點選左下角工具列的「+」號圖示，即可隨時新增區塊。</string>
     <string name="quick_start_dialog_need_help_manage_site_message">透過快速逐步解說瞭解基本知識。</string>
     <string name="comment_batch_moderation_error">無法審核一則或更多留言</string>
     <string name="create_site_notification_create_site_action">建立網站</string>
@@ -315,6 +320,7 @@ Language: zh_TW
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s 已轉換為 %2$s</string>
     <string name="like_faces_error_loading_message">載入讚資料時發生錯誤。%s。</string>
     <string name="like_title_plural">%d 按讚數</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">請說明圖片用途。 如果圖片只是為了裝飾，請保留空白。</string>
     <string name="like_title_singular">1 個讚</string>
     <string name="suggestion">建議：</string>
     <string name="gutenberg_native_use_icon_button">使用圖示按鈕</string>
@@ -329,6 +335,7 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_edit_label_text">按兩下以編輯標籤文字</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">按兩下以編輯按鈕文字</string>
     <string name="gutenberg_native_outside">外部</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">點兩下即可變更單位</string>
     <string name="gutenberg_native_current_placeholder_text_is">目前的預留位置文字是</string>
     <string name="gutenberg_native_clear_search">清除搜尋</string>
     <string name="gutenberg_native_cancel_search">取消搜尋</string>
@@ -711,6 +718,7 @@ Language: zh_TW
     <string name="media_loading_failed">媒體載入失敗</string>
     <string name="reader_discover_recommended_blogs_header">值得關注的網站</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我們正在努力開發，讓每次版本更新都可以新增更多區塊。</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">系統不完全支援「%s」</string>
     <string name="gutenberg_native_help_button">「協助」按鈕</string>
     <string name="gutenberg_native_edit_using_web_editor">使用網頁編輯器編輯</string>
     <string name="gutenberg_native_choose_images">選擇圖片</string>
@@ -2948,6 +2956,7 @@ Language: zh_TW
     <string name="reader_likes_multi">%,d 人說這個讚</string>
     <string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
     <string name="comment_spammed">已將留言標記為垃圾</string>
+    <string name="comment_unapproved">留言未核准</string>
     <string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
     <string name="pick_photo">選取照片</string>
     <string name="pick_video">選取影片</string>

@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -101,19 +102,19 @@ class CardsBuilderTest {
     /* QUICK ACTIONS CARD */
 
     @Test
-    fun `when build is Jetpack, then quick action card is not built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        val cards = buildCards()
-
-        assertThat(cards.findQuickActionsCard()).isNull()
-    }
-
-    @Test
-    fun `when build is WordPress, then quick action card is built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+    fun `when quick action enabled, then quick action card is built`() {
+        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(true)
         val cards = buildCards()
 
         assertThat(cards.findQuickActionsCard()).isNotNull
+    }
+
+    @Test
+    fun `when quick action disabled, then quick action card is not built`() {
+        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(false)
+        val cards = buildCards()
+
+        assertThat(cards.findQuickActionsCard()).isNull()
     }
 
     /* QUICK START CARD */
@@ -204,8 +205,9 @@ class CardsBuilderTest {
                         mock()
                 ),
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
-                    onErrorRetryClick = mock(),
-                    postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
+                        onErrorRetryClick = mock(),
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock()),
+                        postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )
     }

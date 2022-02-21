@@ -50,6 +50,7 @@ import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -116,6 +117,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
     @Inject StatsStore mStatsStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -241,7 +243,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
-            mMenuAdd.setVisible(!BuildConfig.IS_JETPACK_APP);
+            mMenuAdd.setVisible(mBuildConfigWrapper.isSiteCreationEnabled());
         }
 
         // no point showing search if there aren't multiple blogs
@@ -753,16 +755,24 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    public static void addSite(Activity activity, boolean isSignedInWpCom) {
-        // if user is signed into wp.com use the dialog to enable choosing whether to
-        // create a new wp.com blog or add a self-hosted one
-        if (isSignedInWpCom) {
-            DialogFragment dialog = new AddSiteDialog();
-            dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
+    public static void addSite(Activity activity, boolean hasAccessToken) {
+        if (hasAccessToken) {
+            if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
+                ActivityLauncher.newBlogForResult(activity);
+            } else {
+                // user is signed into wordpress app, so use the dialog to enable choosing whether to
+                // create a new wp.com blog or add a self-hosted one
+                showAddSiteDialog(activity);
+            }
         } else {
-            // user isn't signed into wp.com, so simply enable adding self-hosted
+            // user doesn't have an access token, so simply enable adding self-hosted
             ActivityLauncher.addSelfHostedSiteForResult(activity);
         }
+    }
+
+    private static void showAddSiteDialog(Activity activity) {
+        DialogFragment dialog = new AddSiteDialog();
+        dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
     }
 
     /*

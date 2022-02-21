@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-01 21:54:08+0000
+Translation-Revision-Date: 2022-02-15 18:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="comment_moderation_error">فشل إدارة التعليقات</string>
+    <string name="reader_comment_menu_trash">نقل إلى سلة المهملات</string>
+    <string name="reader_comment_menu_spam">وضع علامة مزعج</string>
+    <string name="reader_comment_menu_unapprove">غير موافق</string>
     <string name="gutenberg_native_tiled_gallery_settings">إعدادات المعرض المتجانب</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">ينتقل إلى شاشة اختيار التخطيط</string>
     <string name="gutenberg_native_gallery_style">نمط المعرض</string>
@@ -182,6 +186,7 @@ Language: ar
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">تسمح لك المكوِّنات بالتركيز على كتابة محتواك، مع العلم بأن جميع أدوات التنسيق التي تحتاج إليها متوافرة هناك لمساعدتك على توصيل رسالتك.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">قم بترتيب محتواك إلى أعمدة، وإضافة أزرار الدعوة إلى اتخاذ إجراء، وتراكب الصور باستخدام النص.</string>
     <string name="quick_start_sites_type_tasks_completed">⁦%1$s⁩ من ⁦%2$s⁩ مكتمل</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">أضف مكوِّنًا جديدًا في أي وقت عن طريق النقر على أيقونة + الموجودة في شريط الأدوات في أسفل اليسار.</string>
     <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
     <string name="quick_start_dialog_need_help_manage_site_message">تعرَّف على الأساسيات من خلال جولة سريعة.</string>
     <string name="create_site_notification_create_site_action">إنشاء موقع</string>
@@ -317,6 +322,7 @@ Language: ar
     <string name="gutenberg_native_failed_to_insert_audio_file">فشل في إدراج ملف صوتي.</string>
     <string name="like_faces_error_loading_message">خطأ أثناء تحميل بيانات \"الإعجابات\". %s</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">تم تحويل %1$s إلى %2$s</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">صف غرض الصورة. اترك ذلك الحقل فارغًا إذا كانت صورة للزينة فقط.</string>
     <string name="suggestion">اقتراح:</string>
     <string name="like_title_singular">إعجاب واحد</string>
     <string name="gutenberg_native_use_icon_button">استخدام زر الأيقونة</string>
@@ -2952,6 +2958,7 @@ Language: ar
     <string name="reader_likes_multi">%,d أحبوا هذا</string>
     <string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
     <string name="comment_spammed">تم وضع علامة مزعج على التعليق</string>
+    <string name="comment_unapproved">لم تتم الموافقة على التعليق</string>
     <string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
     <string name="pick_photo">تحديد صورة</string>
     <string name="pick_video">تحديد فيديو</string>

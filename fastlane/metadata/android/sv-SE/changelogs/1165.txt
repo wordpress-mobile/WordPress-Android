@@ -1,7 +1,0 @@
-19.1:
-– Justering av knappen i knappblocket.
-– Blocknamn visas på hebreiska och indonesiska.
-– Översättning visas för block för utvald bild och färginställningar för omslagsblock.
-– Hjälpknappen visas inte längre i blockredigeraren som inte stöds.
-– Du underrättas om kontrasten är låg mellan textens och bakgrundens färg.
-– Färre problem byte av textfärg för ej markerad text.

@@ -158,11 +158,6 @@ REPOSITORY_NAME = 'WordPress-Android'
     setbranchprotection(repository: GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository: GHHELPER_REPO, milestone: new_version)
 
-    localize_binary_deps()
-    localize_libs()
-    send_strings_for_translation()
-    ensure_git_status_clean()
-
     UI.message("Jetpack release notes were based on the same ones as WordPress. Don't forget to check #{release_notes_path('jetpack')} and amend them as necessary if any item does not apply for Jetpack before sending them to Editorial.")
   end
 
@@ -181,6 +176,13 @@ REPOSITORY_NAME = 'WordPress-Android'
   desc 'Trigger a release build for a given app after code freeze'
   lane :complete_code_freeze do |options|
     android_completecodefreeze_prechecks(skip_confirm: options[:skip_confirm])
+
+    localize_libraries
+    update_frozen_strings_for_translation
+
+    ensure_git_status_clean
+    push_to_git_remote
+
     new_version = android_get_app_version()
     trigger_release_build(branch_to_build: "release/#{new_version}")
   end
@@ -300,7 +302,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   desc 'Updates a release branch for a new beta release'
   lane :new_beta_release do |options|
     android_betabuild_prechecks(base_version: options[:base_version], skip_confirm: options[:skip_confirm])
-    send_strings_for_translation()
+    update_frozen_strings_for_translation
     download_translations()
     android_bump_version_beta()
     new_version = android_get_app_version()
@@ -576,17 +578,29 @@ REPOSITORY_NAME = 'WordPress-Android'
     aab_file_path = bundle_file_path(app, version)
 
     if File.exist? aab_file_path then
-      upload_to_play_store(
-        package_name: package_name,
-        aab: aab_file_path,
-        track: options[:track],
-        release_status: 'draft',
-        skip_upload_metadata: true,
-        skip_upload_changelogs: true,
-        skip_upload_images: true,
-        skip_upload_screenshots: true,
-        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
-      )
+      retry_count = 2
+      begin
+        upload_to_play_store(
+          package_name: package_name,
+          aab: aab_file_path,
+          track: options[:track],
+          release_status: 'draft',
+          skip_upload_metadata: true,
+          skip_upload_changelogs: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true,
+          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+        )
+      rescue FastlaneCore::Interface::FastlaneError => ex
+        # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
+        # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP alpha, WP beta, JP beta). Retrying usually fixes it
+        if ex.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+          UI.error "Upload failed with Google API error. Retrying in 2mn..."
+          sleep(120)
+          retry
+        end
+        raise
+      end
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
@@ -718,15 +732,14 @@ REPOSITORY_NAME = 'WordPress-Android'
   end
 
 ########################################################################
-# Dependencies handling lanes
+# Libraries Translation Merging
 ########################################################################
-  main_strings_path = './WordPress/src/main/res/values/strings.xml'
-  update_strings_path = './fastlane/resources/values/'
-  libraries_strings_path = [
+  MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
+  FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  LOCAL_LIBRARIES_STRINGS_PATHS = [
     { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] }
-  ]
-
-  binary_imported_libraries = [
+  ].freeze
+  REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
       name: 'Gutenberg Native',
       import_key: 'gutenbergMobileVersion',
@@ -760,66 +773,59 @@ REPOSITORY_NAME = 'WordPress-Android'
       github_release_prefix: "",
       exclusions: []
     },
-  ]
+  ].freeze
 
-  private_lane :send_strings_for_translation do |options|
-    sh("cd .. && mkdir -p #{update_strings_path} && cp #{main_strings_path} #{update_strings_path} && git add #{update_strings_path}strings.xml")
-    sh('git diff-index --quiet HEAD || git commit -m "Send strings to translation."')
-    sh('git push origin HEAD')
-  end
-
-  private_lane :commit_strings do |options|
-    if options[:auto_commit] then
-       sh("cd .. && git add #{main_strings_path}")
-       sh("git commit -m 'Update strings for translation'")
-       sh('git push origin HEAD')
-    else
-      UI.important("Your #{main_strings_path} has changed.")
-      UI.input('Please, review the changes, commit them and press return to continue.')
+  lane :update_frozen_strings_for_translation do
+    # We need to `cd` to the parent directory because, unlike when calling fastlane actions, commands running directly from the `Fastfile`
+    # (like `FileUtils` calls here) run relative to the `./fastlane` folder, but the `*_DIR_PATH` we use are relative to the repo root.
+    # See: https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
+    Dir.chdir('..') do
+      FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
     end
+    git_commit(path: File.join(FROZEN_STRINGS_DIR_PATH, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
   end
-
 
   desc 'Merge libraries strings files into the main app one'
-  lane :localize_libs do |options|
-    if an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path) then
-      commit_strings(options)
-    end
-  end
+  lane :localize_libraries 
+    # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
+    an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 
-  desc 'Import strings from binary dependencies'
-  lane :localize_binary_deps do |options|
-    binary_imported_libraries.each do |lib|
+    # Merge `strings.xml` files of libraries that are hosted in separate repositories (and linked as binary dependencies with the project)
+    REMOTE_LIBRARIES_STRINGS_PATHS.each do |lib|
       download_path = android_download_file_by_version(
         library_name: lib[:name],
         import_key: lib[:import_key],
         repository: lib[:repository],
         file_path: lib[:strings_file_path],
-        github_release_prefix: lib[:github_release_prefix])
+        github_release_prefix: lib[:github_release_prefix]
+      )
 
       if download_path.nil?
-        error_message = "Can't download strings file for #{lib[:name]}.\r\n"
-        error_message += "Strings for this library won't get translated.\r\n"
-        error_message += 'Do you want to continue anyway?'
+        error_message = <<~ERROR
+          Can't download strings file for #{lib[:name]}.
+          Strings for this library won't get translated.
+          Do you want to continue anyway?
+        ERROR
         UI.user_error! 'Abort.' unless UI.confirm(error_message)
       else
-        UI.message("Strings.xml file for #{lib[:name]} downloaded to #{download_path}.")
+        UI.message("`strings.xml` file for #{lib[:name]} downloaded to #{download_path}.")
         if lib.key?(:merge_tool)
           sh(lib[:merge_tool], lib[:name], download_path)
         else
-          lib_to_merge = [ {
+          lib_to_merge = [{
             library: lib[:name],
             strings_path: download_path,
             exclusions: lib[:exclusions]
           }]
-          an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: lib_to_merge)
+          an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         end
         File.delete(download_path) if File.exist?(download_path)
       end
     end
 
-    is_repo_clean = ('git status --porcelain').empty?
-    commit_strings(options) unless is_repo_clean
+    # Commit changes
+    git_commit(path: MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
   end
 
 ########################################################################

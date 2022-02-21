@@ -111,6 +111,9 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     private fun SiteCreationDomainsScreenBinding.updateContentUiState(contentState: DomainsUiContentState) {
         uiHelpers.updateVisibility(domainListEmptyView, contentState.emptyViewVisibility)
+        if (contentState is DomainsUiContentState.Empty && contentState.message != null) {
+            domainListEmptyViewMessage.text = uiHelpers.getTextOfUiString(requireContext(), contentState.message)
+        }
         uiHelpers.updateVisibility(siteCreationDomainsScreenExample.root, contentState.exampleViewVisibility)
         (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
 
