@@ -787,7 +787,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   end
 
   desc 'Merge libraries strings files into the main app one'
-  lane :localize_libraries 
+  lane :localize_libraries do
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
     an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 
