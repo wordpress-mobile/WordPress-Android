@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.4
+-----
+
+
 19.3
 -----
 * [*] Fixed email app detection in signup for Android 11, and removed the useless button when none are available. [https://github.com/wordpress-mobile/WordPress-Android/pull/15911]
