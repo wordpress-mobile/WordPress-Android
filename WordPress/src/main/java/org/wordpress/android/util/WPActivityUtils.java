@@ -160,9 +160,40 @@ public class WPActivityUtils {
     }
 
     private static List<ResolveInfo> queryEmailApps(@NonNull Context context) {
-        Intent emailAppIntent = new Intent(Intent.ACTION_SENDTO);
-        emailAppIntent.setData(Uri.parse("mailto:"));
-        return context.getPackageManager().queryIntentActivities(emailAppIntent, PackageManager.MATCH_ALL);
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> intentsInfoList = new ArrayList();
+
+        // Get all apps with category email
+        Intent emailAppIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
+        List<ResolveInfo> emailAppIntentInfo =
+                packageManager.queryIntentActivities(emailAppIntent, PackageManager.MATCH_ALL);
+        intentsInfoList.addAll(emailAppIntentInfo);
+
+        // Get all apps that are able to send emails
+        Intent sendEmailAppIntent = new Intent(Intent.ACTION_SENDTO);
+        sendEmailAppIntent.setData(Uri.parse("mailto:"));
+        List<ResolveInfo> sendEmailAppIntentInfo =
+                packageManager.queryIntentActivities(sendEmailAppIntent, PackageManager.MATCH_ALL);
+
+        // Merge the two app lists
+        addUniqueIntents(intentsInfoList, sendEmailAppIntentInfo);
+        return intentsInfoList;
+    }
+
+    private static void addUniqueIntents(List<ResolveInfo> list, List<ResolveInfo> intents) {
+        for (ResolveInfo intent : intents) {
+            boolean found = false;
+            for (ResolveInfo item : list) {
+                if (intent.activityInfo.applicationInfo.processName
+                        .equals(item.activityInfo.applicationInfo.processName)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                list.add(intent);
+            }
+        }
     }
 
     public static void disableReaderDeeplinks(Context context) {
