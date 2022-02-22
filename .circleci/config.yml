@@ -219,43 +219,6 @@ jobs:
       - git/shallow-checkout
       - bundle-install/bundle-install:
           cache_key_prefix: raw-screenshots-v2
-      - android/restore-gradle-cache
-      - copy-gradle-properties
-      - update-gradle-memory:
-          jvmargs: "Xmx1024m"
-      - run:
-          name: Build
-          command: ./gradlew WordPress:assembleWordPressVanillaDebug --stacktrace
-      - run:
-          name: Build Tests
-          command: ./gradlew WordPress:assembleWordPressVanillaDebugAndroidTest --stacktrace
-      - run:
-          name: Decrypt credentials
-          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
-      - android/firebase-test:
-          key-file: .circleci/.firebase.secrets.json
-          type: instrumentation
-          apk-path: WordPress/build/outputs/apk/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug.apk
-          test-apk-path: WordPress/build/outputs/apk/androidTest/wordpressVanilla/debug/org.wordpress.android-wordpress-vanilla-debug-androidTest.apk
-          test-targets: package org.wordpress.android.ui.screenshots
-          # NOTE: When updating this list of devices, ensure to also update the `phone:` and `tenInch:` parameters in "Download Raw Screenshots from Google Storage"
-          devices: |
-            model=blueline,version=28,orientation=portrait
-            model=gts3lltevzw,version=28,orientation=default
-          # NOTE: When updating this list of locales, ensure to also update the `promo_config:` keys accordingly in the `SUPPORTED_LOCALES` in `fastlane/Fastfile`
-          # locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
-          locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
-          project: api-project-108380595987
-          timeout: 30m
-          num-flaky-test-attempts: 2
-          results-history-name: CircleCI WordPress Screenshots
-      - android/save-gradle-cache
-      - run:
-          name: Download Raw Screenshots from Google Storage
-          command: |
-            TEST_BUCKET=$(cat log.txt | grep -o "gs://test\-lab\-.*/" | head -1)
-            export FASTLANE_SKIP_UPDATE_CHECK=1
-            bundle exec fastlane download_raw_screenshots bucket:"$TEST_BUCKET" phone:blueline-28 tenInch:gts3lltevzw-28
       - persist_to_workspace:
           root: .
           paths:
@@ -355,7 +318,9 @@ workflows:
           requires: [Hold]
   Screenshots:
     jobs:
-      - promo-screenshots
+      - raw-screenshots
+      - promo-screenshots:
+          requires: [raw-screenshots]
   Release Build:
     when: << pipeline.parameters.release_build >>
     jobs:
