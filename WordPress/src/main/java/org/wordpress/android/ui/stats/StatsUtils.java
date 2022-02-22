@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
@@ -12,51 +11,12 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.viewmodel.ResourceProvider;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
-    private static long toMs(String date, String pattern) {
-        if (date == null || date.equals("null")) {
-            AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
-            return -1;
-        }
-
-        if (pattern == null) {
-            AppLog.w(T.UTILS, "Trying to parse a Stats date with a null pattern");
-            return -1;
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.ROOT);
-        try {
-            return sdf.parse(date).getTime();
-        } catch (ParseException e) {
-            AppLog.e(T.UTILS, e);
-        }
-        return -1;
-    }
-
-    /**
-     * Converts date in the form of 2013-07-18 to ms *
-     */
-    public static long toMs(String date) {
-        return toMs(date, StatsConstants.STATS_INPUT_DATE_FORMAT);
-    }
-
-    /**
-     * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
-     */
-    public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
-        return sdf.format(new Date());
-    }
-
     /**
      * Get a diff between two dates
      *
@@ -193,26 +153,5 @@ public class StatsUtils {
         long years = StatsUtils.roundUp(currentDifference, 31536000);
         String followersYears = ctx.getString(R.string.stats_followers_years);
         return String.format(followersYears, years);
-    }
-
-    /**
-     * Transform a 2 characters country code into a 2 characters emoji flag.
-     * Emoji letter A starts at: 0x1F1E6 thus,
-     * 0x1F1E6 + 5 = 0x1F1EB represents the letter F
-     * 0x1F1E6 + 17 = 0x1F1F7 represents the letter R
-     * <p>
-     * FR: 0x1F1EB 0x1F1F7 is the french flag: 🇫🇷
-     * More infos on https://apps.timwhitlock.info/emoji/tables/iso3166
-     *
-     * @param countryCode - iso3166 country code (2chars)
-     * @return emoji string representing the flag
-     */
-    public static String countryCodeToEmoji(String countryCode) {
-        if (TextUtils.isEmpty(countryCode) || countryCode.length() != 2) {
-            return "";
-        }
-        int char1 = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
-        int char2 = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
-        return new String(Character.toChars(char1)) + new String(Character.toChars(char2));
     }
 }
