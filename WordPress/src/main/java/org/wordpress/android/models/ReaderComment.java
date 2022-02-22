@@ -14,13 +14,13 @@ public class ReaderComment {
     public long postId;
     public long parentId;
 
-    private String mAuthorName;
-    private String mAuthorAvatar;
-    private String mAuthorUrl;
+    private String mAuthorName = "";
+    private String mAuthorAvatar = "";
+    private String mAuthorUrl = "";
     private String mStatus;
     private String mText;
-    private String mShortUrl;
-    private String mAuthorEmail;
+    private String mShortUrl = "";
+    private String mAuthorEmail = "";
 
     private String mPublished;
     public long timestamp;
@@ -34,7 +34,7 @@ public class ReaderComment {
     public int pageNumber;
 
     // denotes when comment was fetched and stored in DB
-    public long fetchedTimestamp;
+    public long mRemoteOrder;
 
     // not stored in db - denotes the indentation level when displaying this comment
     public transient int level = 0;
@@ -160,20 +160,20 @@ public class ReaderComment {
         mShortUrl = shortUrl;
     }
 
-    public long getFetchedTimestamp() {
-        return fetchedTimestamp;
+    public long getRemoteOrder() {
+        return mRemoteOrder;
     }
 
-    public void setFetchedTimestamp(long fetchedTimestamp) {
-        this.fetchedTimestamp = fetchedTimestamp;
+    public void setRemoteOrder(long remoteOrder) {
+        this.mRemoteOrder = remoteOrder;
     }
 
     public String getAuthorEmail() {
-        return mAuthorEmail;
+        return StringUtils.notNullStr(mAuthorEmail);
     }
 
     public void setAuthorEmail(String authorEmail) {
-        mAuthorEmail = authorEmail;
+        mAuthorEmail = StringUtils.notNullStr(authorEmail);
     }
 
     @Override

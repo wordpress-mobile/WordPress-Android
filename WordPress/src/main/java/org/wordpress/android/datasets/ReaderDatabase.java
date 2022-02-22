@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 153;
+    private static final int DB_VERSION = 154;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -115,7 +115,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 150 - added tbl_posts.author_blog_id and tbl_posts.author_blog_url
      * 151 - removed existing followed-sites, blog posts from tbl_posts to fix duplicate posts issue
      * 152 - added short_url to tbl_comments
-     * 153 - added fetch_timestamp to tbl_comments
+     * 153 - added author_email to tbl_comments
+     * 154 - added remote_order to tbl_comments
      */
 
     /*
@@ -263,7 +264,10 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_comments ADD short_url TEXT;");
                 currentVersion++;
             case 152:
-                db.execSQL("ALTER TABLE tbl_comments ADD fetch_timestamp INTEGER;");
+                db.execSQL("ALTER TABLE tbl_comments ADD author_email TEXT;");
+                currentVersion++;
+            case 153:
+                db.execSQL("ALTER TABLE tbl_comments ADD remote_order INTEGER;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {
