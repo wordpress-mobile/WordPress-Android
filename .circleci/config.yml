@@ -269,7 +269,7 @@ jobs:
         type: boolean
         default: true
     macos:
-      xcode: 11.6.0
+      xcode: 13.2.1
     working_directory: /tmp/workspace
     steps:
       - attach_workspace:
@@ -279,9 +279,9 @@ jobs:
           keys:
             - &homebrew-cache-key v2-brew-imagemagick-{{ checksum "Gemfile.lock" }}
       - run:
-          name: Brew Install ImageMagick
+          name: Brew Install ImageMagick and drawText
           command: |
-            brew install pkg-config imagemagick
+            brew install pkg-config imagemagick automattic/build-tools/drawText
             brew cleanup
       - save_cache:
           paths:
