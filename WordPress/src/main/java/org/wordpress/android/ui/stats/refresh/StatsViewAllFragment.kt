@@ -115,7 +115,6 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         val nonNullActivity = requireActivity()
         with(StatsViewAllFragmentBinding.bind(view)) {
             this@StatsViewAllFragment.binding = this
-            statsListFragment.pageContainer.layoutTransition.setAnimateParentHierarchy(false)
             with(nonNullActivity as AppCompatActivity) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.let {
