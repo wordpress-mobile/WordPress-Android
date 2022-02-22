@@ -65,10 +65,10 @@ class StatsNavigator @Inject constructor(
                 ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS)
             }
             is ViewPost -> {
-                StatsNavigatorHelper.openPostInReaderOrInAppWebview(
+                StatsNavigatorHelper.openPostInReaderOrInAppWebView(
                         activity,
                         siteProvider.siteModel.siteId,
-                        target.postId.toString(),
+                        target.postId,
                         target.postType,
                         target.postUrl,
                         readerTracker
@@ -214,10 +214,10 @@ class StatsNavigator @Inject constructor(
                 ActivityLauncher.viewInsightsManagement(activity, siteProvider.siteModel.id)
             }
             is ViewAttachment -> {
-                StatsNavigatorHelper.openPostInReaderOrInAppWebview(
+                StatsNavigatorHelper.openPostInReaderOrInAppWebView(
                         activity,
                         siteProvider.siteModel.siteId,
-                        target.postId.toString(),
+                        target.postId,
                         target.postType,
                         target.postUrl,
                         readerTracker
