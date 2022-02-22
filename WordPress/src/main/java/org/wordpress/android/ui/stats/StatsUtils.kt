@@ -23,7 +23,7 @@ object StatsUtils {
      * @param timeUnit the unit in which you want the diff
      * @return the diff value, in the provided unit
      */
-    fun getDateDiff(date1: Date, date2: Date, timeUnit: TimeUnit): Long {
+    private fun getDateDiff(date1: Date, date2: Date, timeUnit: TimeUnit): Long {
         val diffInMillies = date2.time - date1.time
         return timeUnit.convert(diffInMillies, MILLISECONDS)
     }
