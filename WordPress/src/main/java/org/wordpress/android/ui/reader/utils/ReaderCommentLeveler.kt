@@ -12,7 +12,8 @@ class ReaderCommentLeveler(private val mComments: ReaderCommentList) {
     fun createLevelList(): ReaderCommentList {
         val result = ReaderCommentList()
 
-        mComments.forEachIndexed { index, comment ->
+
+        mComments.distinctBy { it.commentId }.forEachIndexed { index, comment ->
             if (comment.parentId == 0L || isParrentMissing(comment)) {
                 val depth = getLevel(comment)
                 comment.level = depth
@@ -39,8 +40,7 @@ class ReaderCommentLeveler(private val mComments: ReaderCommentList) {
                 readerComment.isOrphan = true
 
                 if (index > 0) {
-                    val previousComment = mComments[index - 1]
-
+                    val previousComment = result[index - 1]
                     readerComment.isNestedOrphan = previousComment.parentId == readerComment.parentId
                 }
             }

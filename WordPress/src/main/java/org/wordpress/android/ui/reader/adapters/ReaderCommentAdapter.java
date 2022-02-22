@@ -62,6 +62,7 @@ import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.stream.IntStream;
 
 import javax.inject.Inject;
 
@@ -590,9 +591,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         // appears under its parent and is correctly indented
         if (comment.parentId == 0) {
             mComments.add(comment);
-            notifyDataSetChanged();
+            mComments = new ReaderCommentLeveler(mComments).createLevelList();
+            notifyItemInserted(mComments.size());
         } else {
-            refreshComments();
+            int index = IntStream.range(0, mComments.size())
+                                 .filter(i -> mComments.get(i).commentId == comment.parentId)
+                                 .findFirst()
+                                 .orElse(0);
+
+            mComments.add(index + 1, comment);
+            mComments = new ReaderCommentLeveler(mComments).createLevelList();
+            notifyItemInserted(index + 1);
         }
     }
 
@@ -695,10 +704,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mMoreCommentsExist = mTmpMoreCommentsExist;
 
             if (result) {
-                ReaderCommentList leveledComments = new ReaderCommentLeveler(mTmpComments).createLevelList();
-                leveledComments.removeAll(mComments);
-                // assign the comments with children sorted under their parents and indent levels applied
-                mComments.addAll(leveledComments);
+                mTmpComments.removeAll(mComments);
+                mComments.addAll(mTmpComments);
+                mComments = new ReaderCommentLeveler(mComments).createLevelList();
                 notifyDataSetChanged();
             }
             if (mDataLoadedListener != null) {
