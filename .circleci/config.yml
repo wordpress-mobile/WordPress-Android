@@ -263,11 +263,6 @@ jobs:
             - Gemfile.lock
             - fastlane/
   promo-screenshots:
-    parameters:
-      post-to-slack:
-        description: Post to Slack when screenshots job has finished. SLACK_WEBHOOK ENV variable must be set.
-        type: boolean
-        default: true
     macos:
       xcode: 13.2.1
     working_directory: /tmp/workspace
@@ -294,27 +289,6 @@ jobs:
             bundle config --local --delete without
             bundle config --local with screenshots
             bundle install --path vendor/bundle
-      - run:
-          name: Download Promo Strings
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane download_promo_strings
-      - run:
-          name: Create Promo Screenshots
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane android create_promo_screenshots force:true
-      - run:
-          name: ZIP Metadata
-          command: cd fastlane/metadata; zip -r Android-Promo-Screenshots.zip android
-      - store_artifacts:
-          path: fastlane/metadata/Android-Promo-Screenshots.zip
-      - when:
-          condition: << parameters.post-to-slack >>
-          steps:
-            - slack/status:
-                include_job_number_field: false
-                include_project_field: false
-                webhook: '${SLACK_BUILD_WEBHOOK}'
-                # [Trial] Validate URLs (and IDs used within those) in both those messages and adapt to the ones for a8c instances once we integrate the PR from fork to main repo
-                failure_message: ':red_circle: WordPress Android Screenshots failed on \`${CIRCLE_BRANCH}\` branch. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
-                success_message: ':tada: WordPress Android Promo Screenshots have been generated and are ready to be reviewed. Download them <https://${CIRCLE_BUILD_NUM}-9306568-gh.circle-artifacts.com/0/fastlane/metadata/Android-Promo-Screenshots.zip|here>'
   WordPressUtils Connected Tests:
     executor:
       name: android/default
@@ -380,11 +354,8 @@ workflows:
       - Connected Tests:
           requires: [Hold]
   Screenshots:
-    when: << pipeline.parameters.generate_screenshots >>
     jobs:
-      - raw-screenshots
-      - promo-screenshots:
-          requires: [raw-screenshots]
+      - promo-screenshots
   Release Build:
     when: << pipeline.parameters.release_build >>
     jobs:
