@@ -99,6 +99,7 @@ public class ReaderCommentActions {
                 AppLog.i(T.READER, "comment succeeded");
                 ReaderComment newComment = ReaderComment.fromJson(jsonObject, post.blogId);
                 newComment.pageNumber = pageNumber;
+                newComment.setRemoteOrder(ReaderCommentTable.getNumCommentsForPost(post.blogId, post.postId) + 1);
                 ReaderCommentTable.addOrUpdateComment(newComment);
                 ReaderPostTable.incNumCommentsForPost(post.blogId, post.postId);
                 if (actionListener != null) {

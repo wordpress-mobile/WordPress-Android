@@ -226,6 +226,8 @@ public class ReaderCommentService extends Service {
                         ReaderCommentTable.purgeCommentsForPost(blogId, postId);
                     }
 
+                    int existingNumOfComments = ReaderCommentTable.getNumCommentsForPost(blogId, postId);
+
                     ReaderCommentList serverComments = new ReaderCommentList();
                     JSONArray jsonCommentList = jsonObject.optJSONArray("comments");
                     if (jsonCommentList != null) {
@@ -235,6 +237,7 @@ public class ReaderCommentService extends Service {
                             // extract this comment and add it to the list
                             ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
                             comment.pageNumber = pageNumber;
+                            comment.mRemoteOrder = existingNumOfComments + i + 1;
                             serverComments.add(comment);
 
                             // extract and save likes for this comment
