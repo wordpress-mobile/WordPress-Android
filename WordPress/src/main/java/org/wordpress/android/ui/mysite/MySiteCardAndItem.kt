@@ -116,8 +116,15 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                     data class TodaysStatsCardWithData(
                         val views: UiString,
                         val visitors: UiString,
-                        val likes: UiString
+                        val likes: UiString,
+                        val onCardClick: () -> Unit,
+                        val footerLink: FooterLink
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
+
+                    data class FooterLink(
+                        val label: UiString,
+                        val onClick: () -> Unit
+                    )
                 }
 
                 sealed class PostCard(

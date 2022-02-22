@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-25 09:46:53+0000
+Translation-Revision-Date: 2022-02-18 14:15:37+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="comment_moderation_error">Impossible de modérer les commentaires</string>
+    <string name="reader_comment_menu_trash">Mettre à la corbeille</string>
+    <string name="reader_comment_menu_spam">Marquer comme indésirable</string>
+    <string name="reader_comment_menu_unapprove">Désapprouver</string>
     <string name="gutenberg_native_tiled_gallery_settings">Réglages de la mosaïque d’images</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Ouvrir l’écran de sélection de la mise en page</string>
     <string name="gutenberg_native_gallery_style">Style de la galerie</string>
@@ -181,6 +185,7 @@ Language: fr
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Les blocs sont des éléments de contenu que vous pouvez insérer, réorganiser et styliser sans avoir besoin de savoir coder. Les blocs sont un moyen simple et moderne de créer de belles mises en page.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Les blocs vous permettent de vous concentrer sur la rédaction de votre contenu, en sachant que tous les outils de mise en forme dont vous avez besoin sont là pour vous aider à faire passer votre message.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organisez votre contenu en colonnes, ajoutez des boutons d’appel à l’action et superposez des images avec du texte.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Ajoutez un nouveau bloc à tout moment en appuyant sur l’icône + dans la barre d’outils en bas à gauche.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s sur %2$s terminés</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Apprenez les bases avec une procédure pas à pas rapide.</string>
     <string name="comment_batch_moderation_error">Échec de la modération d’un ou de plusieurs commentaires</string>
@@ -251,6 +256,8 @@ Language: fr
     <string name="storage_utils_dialog_ok_button">Afficher le stockage</string>
     <string name="storage_utils_dialog_message">Nous devons enregistrer votre contenu sur l’appareil avant de pouvoir le publier. Vérifiez les réglages de votre stockage et supprimez des fichiers pour libérer de l’espace.</string>
     <string name="storage_utils_dialog_title">Stockage de l’appareil insuffisant</string>
+    <string name="gutenberg_native_y_axis_position">Position sur l’axe Y</string>
+    <string name="gutenberg_native_x_axis_position">Position sur l’axe X</string>
     <string name="gutenberg_native_type_a_url">Saisir une URL</string>
     <string name="gutenberg_native_slash_inserter_results">Résultats de l’outil d’insertion de barre oblique</string>
     <string name="gutenberg_native_s_has_url_set">%s a une URL définie</string>
@@ -314,6 +321,7 @@ Language: fr
     <string name="gutenberg_native_transform_block">Transformer le bloc…</string>
     <string name="gutenberg_native_failed_to_insert_media">Échec d’insertion du média.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Échec d’insertion du fichier audio</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Décrivez le rôle de cette image. Ne rien remplir si l’image est purement décorative.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s a été transformé en %2$s</string>
     <string name="like_faces_error_loading_message">Erreur lors du chargement des données. %s.</string>
     <string name="like_title_plural">%d mentions J\'aime</string>
@@ -331,6 +339,7 @@ Language: fr
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Appuyer deux fois pour modifier le texte indicatif</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Appuyer deux fois pour modifier le texte de l’étiquette</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Appuyer deux fois pour modifier le texte du bouton</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">appuyer deux fois pour modifier l’unité</string>
     <string name="gutenberg_native_current_placeholder_text_is">Le texte indicatif actuel est</string>
     <string name="gutenberg_native_clear_search">Supprimer la recherche</string>
     <string name="gutenberg_native_cancel_search">Annuler la recherche</string>

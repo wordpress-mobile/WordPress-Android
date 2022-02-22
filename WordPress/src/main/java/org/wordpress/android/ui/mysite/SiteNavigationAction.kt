@@ -52,7 +52,7 @@ sealed class SiteNavigationAction {
     ) : SiteNavigationAction()
 
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
-    data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
+    data class AddNewSite(val hasAccessToken: Boolean) : SiteNavigationAction()
     data class ShowQuickStartDialog(
         @StringRes val title: Int,
         @StringRes val message: Int,
@@ -70,4 +70,5 @@ sealed class SiteNavigationAction {
     data class OpenEditorToCreateNewPost(val site: SiteModel) : SiteNavigationAction()
     data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
+    data class OpenTodaysStats(val site: SiteModel) : SiteNavigationAction()
 }

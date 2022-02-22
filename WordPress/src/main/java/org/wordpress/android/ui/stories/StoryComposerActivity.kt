@@ -194,8 +194,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
         }
 
-        val postEditorAnalyticsSession =
-                savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession?
+        val postEditorAnalyticsSession = savedInstanceState?.let { bundle ->
+            PostEditorAnalyticsSession.fromBundle(bundle, STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
+        }
 
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StoryComposerViewModel::class.java)

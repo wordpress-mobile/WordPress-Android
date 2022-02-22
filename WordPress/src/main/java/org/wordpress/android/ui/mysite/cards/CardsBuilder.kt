@@ -36,7 +36,7 @@ class CardsBuilder @Inject constructor(
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         cards.add(siteInfoCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams))
-        if (!buildConfigWrapper.isJetpackApp) {
+        if (buildConfigWrapper.isQuickActionEnabled) {
             cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
         }
         if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {

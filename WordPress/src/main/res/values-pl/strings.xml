@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-10 11:03:14+0000
+Translation-Revision-Date: 2022-02-18 09:56:59+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -657,12 +657,12 @@ Language: pl
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
     <string name="prepublishing_nudges_home_categories_not_set">Nie ustawiono</string>
     <string name="prepublishing_nudges_categories_action">Kategorie</string>
-    <string name="prepublishing_nudges_toolbar_title_add_categories">Dodaj nową kategorię</string>
     <string name="mlp_error_title">Szablony nie są dostępne z powodu błędu</string>
     <string name="mlp_network_error_title">Szablony nie są dostępne w trybie offline</string>
     <string name="mlp_network_error_subtitle">Stuknij ponów kiedy będziesz spowrotem online lub stwórz pustą stronę używając poniższego przycisku.</string>
     <string name="mlp_error_subtitle">Stuknij ponów lub stwórz pustą stronę używając poniższego przycisku.</string>
     <string name="prepublishing_nudges_add_category_button">Utwórz kategorię</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Utwórz kategorię</string>
     <string name="login_prologue_fifth_tag_six">Polityka</string>
     <string name="login_prologue_fifth_tag_five">Muzyka</string>
     <string name="login_prologue_fifth_tag_four">Ogrodnictwo</string>
@@ -1174,9 +1174,9 @@ Language: pl
     <string name="gutenberg_native_add_video">DODAJ FILM</string>
     <string name="gutenberg_native_add_url">Dodaj adres URL</string>
     <string name="gutenberg_native_add_image_or_video">DODAJ ZDJĘCIE LUB FILM</string>
-    <string name="gutenberg_native_add_image">DODAJ ZDJĘCIE</string>
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
     <string name="gutenberg_native_add_alt_text">Dodaj tekst alternatywny</string>
+    <string name="gutenberg_native_add_image">Dodaj obrazek</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
@@ -1999,7 +1999,7 @@ Language: pl
     <string name="tag_description_hint">Opis </string>
     <string name="tag_name_hint">Tag</string>
     <string name="site_settings_amp_summary">Twoja WordPressowa witryna wspiera Przyspieszone Strony Mobile (AMP),  inicjatywę Google,  która znacznie przyspiesza ładowanie stron na urządzeniach mobilnych</string>
-    <string name="add_new_tag">Dodaj tag</string>
+    <string name="add_new_tag">Utwórz tag</string>
     <string name="site_settings_amp_title">Przyspieszone Strony Mobilne (AMP)</string>
     <string name="site_settings_timezones_error">Nie można było wczytać stref czasowych</string>
     <string name="site_settings_format_help">Dowiedz się więcej o formatowaniu daty i czasu</string>
@@ -2843,7 +2843,6 @@ Language: pl
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
     <string name="mnu_comment_unspam">To nie jest spam</string>
     <string name="adding_cat_failed">Nie udało się dodać kategorii</string>
-    <string name="adding_cat_success">Pomyślnie dodano kategorię</string>
     <string name="cat_name_required">Nazwa kategorii jest wymagana</string>
     <string name="notifications_empty_list">Brak powiadomień</string>
     <string name="error_refresh_posts">W tej chwili nie można odświeżyć wpisów</string>
@@ -2863,6 +2862,7 @@ Language: pl
     <string name="username_or_password_incorrect">Niepoprawna nazwa użytkownika lub hasło</string>
     <string name="blog_not_found">Wystąpił błąd podczas dostępu do tego blogu</string>
     <string name="error_deleting_post">Wystąpił błąd podczas usuwania wpisu</string>
+    <string name="adding_cat_success">Kategoria została dodana</string>
     <string name="mnu_comment_unapprove">Odrzuć</string>
     <string name="new_post">Nowy wpis</string>
     <string name="new_media">Nowe media</string>
@@ -2873,7 +2873,6 @@ Language: pl
     <string name="error_blog_hidden">Ten blog jest ukryty i nie mógł zostać wczytany. Włącz go ponownie w ustawieniach i spróbuj ponownie.</string>
     <string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
     <string name="view_in_browser">Zobacz w przeglądarce</string>
-    <string name="add_new_category">Dodaj nową kategorię</string>
     <string name="category_name">Nazwa kategorii</string>
     <string name="cancel_edit">Anuluj edycję</string>
     <string name="connection_error">Błąd połączenia</string>
@@ -2915,6 +2914,7 @@ Language: pl
     <string name="comment_status_unapproved">Oczekujący</string>
     <string name="trash">Kosz</string>
     <string name="comment_status_approved">Zatwierdzono</string>
+    <string name="add_new_category">Utwórz kategorię</string>
     <string name="share_link">Udostępnij odnośnik</string>
     <string name="reader_empty_posts_in_tag_updating">Ładowanie wpisów…</string>
     <string name="comment_spammed">Komentarz został oznaczony jako spam</string>

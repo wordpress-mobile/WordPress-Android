@@ -578,17 +578,29 @@ REPOSITORY_NAME = 'WordPress-Android'
     aab_file_path = bundle_file_path(app, version)
 
     if File.exist? aab_file_path then
-      upload_to_play_store(
-        package_name: package_name,
-        aab: aab_file_path,
-        track: options[:track],
-        release_status: 'draft',
-        skip_upload_metadata: true,
-        skip_upload_changelogs: true,
-        skip_upload_images: true,
-        skip_upload_screenshots: true,
-        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
-      )
+      retry_count = 2
+      begin
+        upload_to_play_store(
+          package_name: package_name,
+          aab: aab_file_path,
+          track: options[:track],
+          release_status: 'draft',
+          skip_upload_metadata: true,
+          skip_upload_changelogs: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true,
+          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+        )
+      rescue FastlaneCore::Interface::FastlaneError => ex
+        # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
+        # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP alpha, WP beta, JP beta). Retrying usually fixes it
+        if ex.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+          UI.error "Upload failed with Google API error. Retrying in 2mn..."
+          sleep(120)
+          retry
+        end
+        raise
+      end
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
@@ -775,7 +787,7 @@ REPOSITORY_NAME = 'WordPress-Android'
   end
 
   desc 'Merge libraries strings files into the main app one'
-  lane :localize_libraries 
+  lane :localize_libraries do
     # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
     an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
 

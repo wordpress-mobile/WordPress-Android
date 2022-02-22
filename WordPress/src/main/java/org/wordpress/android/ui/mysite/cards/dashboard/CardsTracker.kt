@@ -15,8 +15,12 @@ class CardsTracker @Inject constructor(
 ) {
     enum class Type(val label: String) {
         ERROR("error"),
-        TODAYS_STATS("todays_stats"),
+        STATS("stats"),
         POST("post")
+    }
+
+    enum class StatsSubtype(val label: String) {
+        TODAYS_STATS("todays_stats")
     }
 
     enum class PostSubtype(val label: String) {
@@ -26,12 +30,20 @@ class CardsTracker @Inject constructor(
         SCHEDULED("scheduled")
     }
 
+    fun trackTodaysStatsCardFooterLinkClicked() {
+        trackCardFooterLinkClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
+    }
+
+    fun trackTodaysStatsCardClicked() {
+        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS.label)
+    }
+
     fun trackPostCardFooterLinkClicked(postCardType: PostCardType) {
         trackCardFooterLinkClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
     fun trackPostItemClicked(postCardType: PostCardType) {
-        trackCardPostItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
+        trackCardItemClicked(Type.POST.label, postCardType.toSubtypeValue().label)
     }
 
     private fun trackCardFooterLinkClicked(type: String, subtype: String) {
@@ -44,7 +56,7 @@ class CardsTracker @Inject constructor(
         )
     }
 
-    private fun trackCardPostItemClicked(type: String, subtype: String) {
+    private fun trackCardItemClicked(type: String, subtype: String) {
         analyticsTrackerWrapper.track(
                 Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
                 mapOf(
@@ -65,6 +77,7 @@ class CardsTracker @Inject constructor(
     companion object {
         const val TYPE = "type"
         const val SUBTYPE = "subtype"
+        const val STATS = "stats"
     }
 }
 
@@ -72,7 +85,7 @@ fun DashboardCardType.toTypeValue(): Type {
     return when (this) {
         DashboardCardType.ERROR_CARD -> Type.ERROR
         DashboardCardType.TODAYS_STATS_CARD_ERROR -> Type.ERROR
-        DashboardCardType.TODAYS_STATS_CARD -> Type.TODAYS_STATS
+        DashboardCardType.TODAYS_STATS_CARD -> Type.STATS
         DashboardCardType.POST_CARD_ERROR -> Type.ERROR
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST

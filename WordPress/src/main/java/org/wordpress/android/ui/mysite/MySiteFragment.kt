@@ -50,6 +50,7 @@ import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
+import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -303,7 +304,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
         is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
                 action.title,
                 action.message,
@@ -328,6 +329,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
+        is SiteNavigationAction.OpenTodaysStats ->
+            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.DAY)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

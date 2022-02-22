@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-03 09:54:07+0000
+Translation-Revision-Date: 2022-02-16 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="comment_moderation_error">コメントをモデレートできませんでした</string>
+    <string name="reader_comment_menu_trash">「ゴミ箱」へ移動</string>
+    <string name="reader_comment_menu_spam">「スパム」としてマーク</string>
+    <string name="reader_comment_menu_unapprove">承認を解除</string>
     <string name="gutenberg_native_tiled_gallery_settings">タイルギャラリー設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">レイアウト選択画面に移動します</string>
     <string name="gutenberg_native_gallery_style">ギャラリースタイル</string>
@@ -182,6 +186,7 @@ Language: ja_JP
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">ブロックがあることでコンテンツ作成に集中することができ、メッセージの発信に役立つすべての書式設定ツールが利用できます。</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">列へのコンテンツの配置、行動喚起ボタンの追加、テキストによる画像のオーバーレイを実行できます。</string>
     <string name="quick_start_sites_type_tasks_completed">%2$s個中%1$s個が完了</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">左下のツールバーにある + アイコンをタップして、新しいブロックをいつでも追加できます。</string>
     <string name="quick_start_dialog_need_help_manage_site_message">簡単なチュートリアルで基本を学びましょう。</string>
     <string name="comment_batch_moderation_error">1つ以上のコメントを承認できませんでした</string>
     <string name="create_site_notification_create_site_action">サイトを作成</string>
@@ -317,6 +322,7 @@ Language: ja_JP
     <string name="like_faces_error_loading_message">「いいね」データの読み込みに失敗しました。%s。</string>
     <string name="like_title_plural">%d個の「いいね」</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$sを%2$sに変換しました</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">画像の目的を説明します。 画像が単にデザインである場合は、空欄のままにします。</string>
     <string name="suggestion">提案:</string>
     <string name="like_title_singular">1個の「いいね」</string>
     <string name="gutenberg_native_use_icon_button">アイコンボタンを使用</string>
@@ -714,6 +720,7 @@ Language: ja_JP
     <string name="media_loading_failed">メディア読み込み失敗</string>
     <string name="reader_discover_recommended_blogs_header">フォローするサイト</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">リリースごとにブロックを追加できるよう努めています。</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">「%s」は十分にサポートされていません</string>
     <string name="gutenberg_native_help_button">ヘルプボタン</string>
     <string name="gutenberg_native_edit_using_web_editor">Web エディターを使って編集</string>
     <string name="gutenberg_native_choose_images">画像を選択</string>

@@ -17,9 +17,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REF
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -68,6 +68,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -121,7 +122,8 @@ class MySiteViewModel @Inject constructor(
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
     private val siteItemsTracker: SiteItemsTracker,
-    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -297,7 +299,9 @@ class MySiteViewModel @Inject constructor(
                         onErrorRetryClick = this::onDashboardErrorRetry,
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
                                 todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
-                                        as? TodaysStatsCardModel
+                                        as? TodaysStatsCardModel,
+                                onTodaysStatsCardClick = this::onTodaysStatsCardClick,
+                                onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
@@ -326,9 +330,25 @@ class MySiteViewModel @Inject constructor(
         return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
     }
 
+    private fun onTodaysStatsCardFooterLinkClick() {
+        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
+        navigateToTodaysStats()
+    }
+
+    private fun onTodaysStatsCardClick() {
+        cardsTracker.trackTodaysStatsCardClicked()
+        navigateToTodaysStats()
+    }
+
+    private fun navigateToTodaysStats() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
+    }
+
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
-        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+        val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
+                displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(shouldShowImage)
     }
 

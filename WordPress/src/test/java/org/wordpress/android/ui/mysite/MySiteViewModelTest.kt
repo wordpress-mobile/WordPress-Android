@@ -28,17 +28,18 @@ import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -49,6 +50,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems.PostItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -101,6 +104,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -147,6 +151,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var cardsTracker: CardsTracker
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
     @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -195,6 +200,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
+    private var onTodaysStatsCardClick: (() -> Unit) = {}
+    private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
@@ -293,7 +300,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mySiteSourceManager,
                 cardsTracker,
                 siteItemsTracker,
-                domainRegistrationCardShownTracker
+                domainRegistrationCardShownTracker,
+                buildConfigWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -418,7 +426,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* EMPTY VIEW */
 
     @Test
-    fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
+    fun `given wp app, when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
 
         onSiteSelected.value = null
@@ -428,8 +437,19 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
+    fun `given wp app, when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+
+        onSiteSelected.value = null
+
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
+    }
+
+    @Test
+    fun `given jp app, when no site is selected, hide empty view image`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
 
         onSiteSelected.value = null
 
@@ -1030,6 +1050,28 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(mySiteSourceManager).onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
     }
+
+    /* DASHBOARD TODAYS STATS CARD */
+
+    @Test
+    fun `given todays stat card, when card item is clicked, then stats page is opened`() =
+            test {
+                initSelectedSite()
+
+                onTodaysStatsCardClick.invoke()
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+            }
+
+    @Test
+    fun `given todays stat card, when footer link is clicked, then stats page is opened`() =
+            test {
+                initSelectedSite()
+
+                onTodaysStatsCardFooterLinkClick.invoke()
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+            }
 
     /* DASHBOARD POST CARD - FOOTER LINK */
 
@@ -1800,8 +1842,25 @@ class MySiteViewModelTest : BaseUnitTest() {
                         initErrorCard(mockInvocation)
                     } else {
                         initPostCard(mockInvocation)
+                        initTodaysStatsCard(mockInvocation)
                     }
                 }
+        )
+    }
+
+    private fun initTodaysStatsCard(mockInvocation: InvocationOnMock): TodaysStatsCard {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onTodaysStatsCardClick = params.todaysStatsCardBuilderParams.onTodaysStatsCardClick
+        onTodaysStatsCardFooterLinkClick = params.todaysStatsCardBuilderParams.onFooterLinkClick
+        return TodaysStatsCardWithData(
+                views = UiStringText(mock()),
+                visitors = UiStringText(mock()),
+                likes = UiStringText(mock()),
+                onCardClick = onTodaysStatsCardClick,
+                footerLink = TodaysStatsCard.FooterLink(
+                        label = UiStringRes(string.my_site_todays_stats_card_footer_link_go_to_stats),
+                        onClick = onTodaysStatsCardFooterLinkClick
+                )
         )
     }
 

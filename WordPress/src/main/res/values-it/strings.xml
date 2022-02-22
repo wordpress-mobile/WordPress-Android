@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-03 18:08:49+0000
+Translation-Revision-Date: 2022-02-15 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="comment_moderation_error">Moderazione dei commenti non riuscita</string>
+    <string name="reader_comment_menu_unapprove">Rimuovi approvazione</string>
     <string name="gutenberg_native_tiled_gallery_settings">Impostazioni galleria affiancata</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Naviga fino alla schermata di selezione del layout</string>
     <string name="gutenberg_native_gallery_style">Stile della galleria</string>
@@ -182,6 +184,7 @@ Language: it
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">I blocchi ti consentono di concentrarti sulla scrittura dei contenuti, perché tutti gli strumenti di formattazione di cui hai bisogno sono già lì per aiutarti a trasmettere il tuo messaggio.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organizza i tuoi contenuti in colonne, aggiungi pulsanti di inviti all\'azione e sovrapponi il testo alle immagini.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s di %2$s completati</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Aggiungi un nuovo blocco in qualsiasi momento toccando l\'icona + sulla barra degli strumenti nella parte inferiore sinistra.</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Scopri le nozioni di base grazie a una rapida guida dettagliata.</string>
     <string name="comment_batch_moderation_error">Non è stato possibile moderare uno o più commenti</string>
     <string name="create_site_notification_create_site_action">Crea il sito</string>
@@ -317,6 +320,7 @@ Language: it
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s trasformato in %2$s</string>
     <string name="like_faces_error_loading_message">Errore durante il caricamento di dati simili. %s.</string>
     <string name="like_title_plural">%d Mi piace</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrivi lo scopo dell\'immagine. Lascia vuoto, se l\'immagine è semplicemente decorativa.</string>
     <string name="suggestion">Suggerimento:</string>
     <string name="like_title_singular">1 Mi piace</string>
     <string name="gutenberg_native_use_icon_button">Usa pulsante icona</string>
@@ -714,6 +718,7 @@ Language: it
     <string name="media_loading_failed">Caricamento dei file multimediali non riuscito</string>
     <string name="reader_discover_recommended_blogs_header">Siti da seguire</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' non è pienamente supportato</string>
     <string name="gutenberg_native_choose_images">Scegli immagini</string>
     <string name="gutenberg_native_help_button">Pulsante di assistenza</string>
     <string name="gutenberg_native_edit_using_web_editor">Modifica utilizzando l\'editor web</string>

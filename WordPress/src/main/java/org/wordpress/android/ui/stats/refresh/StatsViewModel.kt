@@ -47,6 +47,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -66,7 +67,8 @@ class StatsViewModel
     private val statsSiteProvider: StatsSiteProvider,
     newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
-    private val notificationsTracker: SystemNotificationsTracker
+    private val notificationsTracker: SystemNotificationsTracker,
+    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -148,7 +150,12 @@ class StatsViewModel
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
 
-            analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)
+            // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
+            analyticsTracker.track(
+                    stat = AnalyticsTracker.Stat.STATS_ACCESSED,
+                    site = statsSiteProvider.siteModel,
+                    feature = todaysStatsCardFeatureConfig
+            )
 
             if (launchedFromWidget) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)

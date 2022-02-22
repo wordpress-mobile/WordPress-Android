@@ -102,19 +102,19 @@ class CardsBuilderTest {
     /* QUICK ACTIONS CARD */
 
     @Test
-    fun `when build is Jetpack, then quick action card is not built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        val cards = buildCards()
-
-        assertThat(cards.findQuickActionsCard()).isNull()
-    }
-
-    @Test
-    fun `when build is WordPress, then quick action card is built`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+    fun `when quick action enabled, then quick action card is built`() {
+        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(true)
         val cards = buildCards()
 
         assertThat(cards.findQuickActionsCard()).isNotNull
+    }
+
+    @Test
+    fun `when quick action disabled, then quick action card is not built`() {
+        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(false)
+        val cards = buildCards()
+
+        assertThat(cards.findQuickActionsCard()).isNull()
     }
 
     /* QUICK START CARD */
@@ -206,7 +206,7 @@ class CardsBuilderTest {
                 ),
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         onErrorRetryClick = mock(),
-                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock()),
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )

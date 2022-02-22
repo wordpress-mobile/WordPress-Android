@@ -52,7 +52,9 @@ sealed class MySiteCardAndItemBuilderParams {
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
-        val todaysStatsCard: TodaysStatsCardModel?
+        val todaysStatsCard: TodaysStatsCardModel?,
+        val onTodaysStatsCardClick: () -> Unit,
+        val onFooterLinkClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class PostCardBuilderParams(
