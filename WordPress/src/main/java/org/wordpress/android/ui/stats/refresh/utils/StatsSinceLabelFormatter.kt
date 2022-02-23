@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats
+package org.wordpress.android.ui.stats.refresh.utils
 
 import org.wordpress.android.R
 import org.wordpress.android.viewmodel.ResourceProvider
