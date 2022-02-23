@@ -11,8 +11,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.dashboard.CardsUtils
 
 @Dao
 abstract class CardsDao {
-    @Query("SELECT * FROM DashboardCards WHERE siteLocalId = :siteLocalId")
-    abstract fun get(siteLocalId: Int): Flow<List<CardEntity>>
+    @Query("SELECT * FROM DashboardCards WHERE siteLocalId = :siteLocalId AND type IN (:cardTypes)")
+    abstract fun get(siteLocalId: Int, cardTypes: List<CardModel.Type>): Flow<List<CardEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insert(card: List<CardEntity>)
