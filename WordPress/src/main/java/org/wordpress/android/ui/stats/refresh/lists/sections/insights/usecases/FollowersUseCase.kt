@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -44,12 +44,13 @@ import javax.inject.Named
 private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_PAGE_SIZE = 10
 
+@Suppress("LongParameterList")
 class FollowersUseCase(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val followersStore: FollowersStore,
     private val statsSiteProvider: StatsSiteProvider,
-    private val statsUtilsWrapper: StatsUtilsWrapper,
+    private val statsSinceLabelFormatter: StatsSinceLabelFormatter,
     private val resourceProvider: ResourceProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
@@ -209,7 +210,7 @@ class FollowersUseCase(
 
     private fun List<FollowerModel>.toUserItems(header: Header): List<ListItemWithIcon> {
         return this.mapIndexed { index, follower ->
-            val value = statsUtilsWrapper.getSinceLabelLowerCase(follower.dateSubscribed)
+            val value = statsSinceLabelFormatter.getSinceLabelLowerCase(follower.dateSubscribed)
             ListItemWithIcon(
                     iconUrl = follower.avatar,
                     iconStyle = AVATAR,
@@ -242,7 +243,7 @@ class FollowersUseCase(
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
         private val followersStore: FollowersStore,
         private val statsSiteProvider: StatsSiteProvider,
-        private val statsUtilsWrapper: StatsUtilsWrapper,
+        private val statsSinceLabelFormatter: StatsSinceLabelFormatter,
         private val resourceProvider: ResourceProvider,
         private val popupMenuHandler: ItemPopupMenuHandler,
         private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -254,7 +255,7 @@ class FollowersUseCase(
                         bgDispatcher,
                         followersStore,
                         statsSiteProvider,
-                        statsUtilsWrapper,
+                        statsSinceLabelFormatter,
                         resourceProvider,
                         analyticsTracker,
                         popupMenuHandler,

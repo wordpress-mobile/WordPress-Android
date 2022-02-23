@@ -3,11 +3,19 @@ package org.wordpress.android.ui.stats
 import org.wordpress.android.R
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.SECONDS
+import javax.inject.Inject
 
-object StatsSinceLabelFormatter {
+class StatsSinceLabelFormatter @Inject constructor(
+    val resourceProvider: ResourceProvider
+) {
+    fun getSinceLabelLowerCase(date: Date): String {
+        return getSinceLabel(resourceProvider, date).toLowerCase(Locale.getDefault())
+    }
+
     /**
      * Get a diff between two dates
      *
