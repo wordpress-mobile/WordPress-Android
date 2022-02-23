@@ -8,7 +8,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_STATS
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsViewType.ANNUAL_STATS
 import org.wordpress.android.ui.stats.StatsViewType.AUTHORS
 import org.wordpress.android.ui.stats.StatsViewType.CLICKS
@@ -66,7 +65,7 @@ class StatsNavigator @Inject constructor(
                 ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS)
             }
             is ViewPost -> {
-                StatsUtils.openPostInReaderOrInAppWebview(
+                StatsNavigatorHelper.openPostInReaderOrInAppWebview(
                         activity,
                         siteProvider.siteModel.siteId,
                         target.postId.toString(),
@@ -215,7 +214,7 @@ class StatsNavigator @Inject constructor(
                 ActivityLauncher.viewInsightsManagement(activity, siteProvider.siteModel.id)
             }
             is ViewAttachment -> {
-                StatsUtils.openPostInReaderOrInAppWebview(
+                StatsNavigatorHelper.openPostInReaderOrInAppWebview(
                         activity,
                         siteProvider.siteModel.siteId,
                         target.postId.toString(),
