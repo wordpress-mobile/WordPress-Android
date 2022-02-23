@@ -484,6 +484,12 @@ public class ReaderPostTable {
         setNumCommentsForPost(blogId, postId, numComments);
     }
 
+    public static void decrementNumCommentsForPost(long blogId, long postId) {
+        int numComments = getNumCommentsForPost(blogId, postId);
+        numComments--;
+        setNumCommentsForPost(blogId, postId, numComments);
+    }
+
     /*
      * returns the #likes known to exist for this post (ie: #likes the server says this post has), which
      * may differ from ReaderPostTable.getNumLikesForPost (which returns # local likes for this post)
