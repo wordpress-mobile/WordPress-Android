@@ -612,9 +612,14 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      * replace the comment that has the passed commentId with another comment
      */
     public void replaceComment(long commentId, ReaderComment comment) {
-        int position = positionOfCommentId(commentId);
-        if (position > -1 && mComments.replaceComment(commentId, comment)) {
-            notifyItemChanged(position);
+        int positionOfTargetComment = positionOfCommentId(comment.commentId);
+        if (positionOfTargetComment == -1) {
+            int position = positionOfCommentId(commentId);
+            if (position > -1 && mComments.replaceComment(commentId, comment)) {
+                notifyItemChanged(position);
+            }
+        } else {
+            removeComment(commentId);
         }
     }
 
