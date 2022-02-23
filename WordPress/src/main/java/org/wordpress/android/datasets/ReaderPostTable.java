@@ -486,8 +486,12 @@ public class ReaderPostTable {
 
     public static void decrementNumCommentsForPost(long blogId, long postId) {
         int numComments = getNumCommentsForPost(blogId, postId);
-        numComments--;
-        setNumCommentsForPost(blogId, postId, numComments);
+        if (numComments > 0) {
+            numComments--;
+            setNumCommentsForPost(blogId, postId, numComments);
+        } else {
+            AppLog.d(AppLog.T.READER, "Failed to decrement the number of post comments because they are 0");
+        }
     }
 
     /*
