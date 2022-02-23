@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.SECONDS
 
-object StatsUtils {
+object StatsSinceLabelFormatter {
     /**
      * Get a diff between two dates
      *

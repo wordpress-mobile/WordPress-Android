@@ -9,6 +9,6 @@ class StatsUtilsWrapper @Inject constructor(
     val resourceProvider: ResourceProvider
 ) {
     fun getSinceLabelLowerCase(date: Date): String {
-        return StatsUtils.getSinceLabel(resourceProvider, date).toLowerCase(Locale.getDefault())
+        return StatsSinceLabelFormatter.getSinceLabel(resourceProvider, date).toLowerCase(Locale.getDefault())
     }
 }
