@@ -2,7 +2,7 @@
 
 19.4
 -----
-
+* [*] Allows choosing email app during signup and login [https://github.com/wordpress-mobile/WordPress-Android/pull/15979]
 
 19.3
 -----
@@ -15,7 +15,6 @@
 * [*] Reader: Admins and Editors can edit comments from Reader [https://github.com/wordpress-mobile/WordPress-Android/pull/15957]
 * [*] Block Editor: Stop editor from unexpectedly closing while composing a story block when memory is low [https://github.com/wordpress-mobile/WordPress-Android/pull/15960]
 * [*] Improves the error message shown when trying to create a new site with non-English characters in the domain name [https://github.com/wordpress-mobile/WordPress-Android/pull/15969]
-* [*] Allows choosing email app during signup and login [https://github.com/wordpress-mobile/WordPress-Android/pull/15979]
 * [*] Fixed user able to enter comment edit flow despite lacking permission [https://github.com/wordpress-mobile/WordPress-Android/pull/15977]
 
 19.2
