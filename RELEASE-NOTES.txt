@@ -2,11 +2,10 @@
 
 19.4
 -----
-
+- [**] Login: improved error messages for login with self-hosted sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/15919]
 
 19.3
 -----
-- [**] Login: improved error messages for login with self-hosted sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/15919]
 * [*] Fixed email app detection in signup for Android 11, and removed the useless button when none are available. [https://github.com/wordpress-mobile/WordPress-Android/pull/15911]
 * [*] Comment editor: Notification comments support in the new editor [https://github.com/wordpress-mobile/WordPress-Android/pull/15884]
 * [*] Site creation: Fixed bug where sites created within the app were not given the correct time zone, leading to post scheduling issues. [https://github.com/wordpress-mobile/WordPress-Android/pull/15904]
