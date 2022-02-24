@@ -301,6 +301,7 @@ Language: th
     <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง…</string>
     <string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
     <string name="cant_share_no_visible_blog">คุณสามารถแบ่งปันไปยังเวิร์ดเพรสได้ถ้าไม่มีบล็อกที่มองเห็นได้</string>
+    <string name="comment_unapproved">ไม่อนุมัติความเห็นแล้ว</string>
     <string name="reader_likes_multi">%,d คนชอบสิ่งนี้</string>
     <string name="reader_likes_you_and_multi">คุณและ %,d คนชอบสิ่งนี้</string>
     <string name="pick_photo">เลือกรูปภาพ</string>

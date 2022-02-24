@@ -147,7 +147,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
         removeSightAndSoundsForAPI26();
-        removeFollowedBlogsPreferenceForJetpackApp();
+        removeFollowedBlogsPreferenceForIfDisabled();
 
         // Bump Analytics
         if (savedInstanceState == null) {
@@ -169,8 +169,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
     }
 
-    private void removeFollowedBlogsPreferenceForJetpackApp() {
-        if (mBuildConfigWrapper.isJetpackApp()) {
+    private void removeFollowedBlogsPreferenceForIfDisabled() {
+        if (!mBuildConfigWrapper.isFollowedSitesSettingsEnabled()) {
             PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
 

@@ -1,0 +1,5 @@
+19.2:
+- Compatibilidade com altura de linha e tamanho de fonte em temas de blocos.
+- Remoção de comentário em posts para administrador/editor.
+- Novos cartões de estatísticas na tela Estatísticas do menu Configurações.
+- Aviso ao alterar mídia de imagem/imagem destacada.

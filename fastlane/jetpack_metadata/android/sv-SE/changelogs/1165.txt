@@ -1,7 +1,0 @@
-19.1:
-- Justera knappar korrekt i blocket Knappar.
-- Se blocknamn på hebreiska och indonesiska.
-- Se översättning av utvald bild och färginställningarna för blocket Omslag.
-- Hjälpknappen visas inte längre i blockredigeraren som inte stöds.
-- Få notiser om kombinationer av text-/bakgrundsfärger gör det svårt att läsa texten.
-- Färre problem med att ändra färg på ej markerad text.

@@ -1,7 +1,0 @@
-19.1:
-- Düğmeler bloğunda doğru düğme hizalaması.
-- Blok isimlerini İbranice ve Endonezyaca görüntüleme.
-- Öne çıkan görsel ve manşet blog renk ayarlarının çevirilerini görün.
-- Artık desteklenmeyen blok düzenleyicide yardım düğmesi yok.
-- Metin/arka plan renk kontrastı okunamayacak düzeydeyse bildirim alın.
-- Seçili olmayan metin rengi değişiminde daha az problem yaşayın.

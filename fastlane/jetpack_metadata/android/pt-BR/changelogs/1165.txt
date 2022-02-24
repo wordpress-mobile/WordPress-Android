@@ -1,7 +1,0 @@
-19.1:
-- Justifique os botões de forma adequada no bloco de botões.
-- Veja os nomes de blocos em hebraico e indonésio.
-- Veja a tradução das configurações de cor do bloco de cobertura e imagem destacada.
-- Diga adeus ao botão de ajuda no editor de blocos incompatíveis.
-- Receba uma notificação se as combinações de cor de fundo e de texto dificultarem a leitura.
-- Tenha menos problemas na alteração da cor do texto não selecionado.

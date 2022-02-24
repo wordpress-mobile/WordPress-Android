@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
+import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
@@ -65,6 +67,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Inject ImageManager mImageManager;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject LoginEpilogueViewModel mParentViewModel;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -117,7 +121,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return !mBuildConfigWrapper.isJetpackApp()
+        return mBuildConfigWrapper.isSiteCreationEnabled()
                && !mShowAndReturn;
     }
 
@@ -160,6 +164,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViewModel();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -167,6 +177,11 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EPILOGUE_VIEWED);
             mUnifiedLoginTracker.track(Step.SUCCESS);
         }
+    }
+
+    private void initViewModel() {
+        mParentViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
+                .get(LoginEpilogueViewModel.class);
     }
 
     private void initAdapter() {
@@ -301,6 +316,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             // when from magiclink, we need to complete the login process here (update account and settings)
             doFinishLogin();
         }
+        mParentViewModel.onLoginEpilogueResume(mDoLoginUpdate);
     }
 
     @Override
@@ -382,5 +398,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         endProgress();
         setNewAdapter();
         mSitesList.setAdapter(mAdapter);
+
+        mParentViewModel.onLoginFinished(mDoLoginUpdate);
     }
 }

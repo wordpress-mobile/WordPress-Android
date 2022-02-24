@@ -1,6 +1,7 @@
-* [*] Block editor: Replacing the media for an image set as featured prompts to update the featured image [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3930]
-* [*] Block editor: Fixed an issue in sharing images from other apps [https://github.com/wordpress-mobile/WordPress-Android/pull/15864]
-* [**] Stats revamp: Adding a new settings button to the top app bar to manage Stats Insights Cards [https://github.com/wordpress-mobile/WordPress-Android/pull/15891]
-* [***] Block editor: Font size and line-height support for text-based blocks used in block-based themes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4519]
-* [**] Reader: Allow comment moderation from Reader. [https://github.com/wordpress-mobile/WordPress-Android/pull/15833]
-
+- No email button in signup when email app is unavailable
+- Notifications in new comment editor
+- Correct time zone for sites created in app
+- Bug fixes for empty “My Site” view and Page/Site preview
+- Reader comment editing for Admins/Editors
+- Low memory doesn’t affect editor story blocks
+- Better error text for new site URLs with non-English characters

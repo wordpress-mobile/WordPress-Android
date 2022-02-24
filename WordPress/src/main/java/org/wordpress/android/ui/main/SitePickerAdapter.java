@@ -472,7 +472,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean isNewLoginEpilogueScreenEnabled() {
-        return !mBuildConfigWrapper.isJetpackApp()
+        return mBuildConfigWrapper.isSiteCreationEnabled()
                && !mShowAndReturn;
     }
 
