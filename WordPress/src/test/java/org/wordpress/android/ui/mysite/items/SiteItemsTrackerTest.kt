@@ -33,6 +33,13 @@ class SiteItemsTrackerTest {
     }
 
     @Test
+    fun `when site item stats is clicked, then menu item tapped stats is tracked`() {
+        siteItemsTracker.trackSiteItemClicked(ListItemAction.STATS)
+
+        verifySiteItemClickedTracked(Type.STATS)
+    }
+
+    @Test
     fun `given not tracking site item, when site item is clicked, then click is not tracked`() {
         siteItemsTracker.trackSiteItemClicked(ListItemAction.VIEW_SITE)
 

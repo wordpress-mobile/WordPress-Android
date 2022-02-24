@@ -1,7 +1,0 @@
-19.1 :
-- Justification des boutons dans le bloc Buttons.
-- Noms des blocs en hébreu et en indonésien.
-- Traduction des paramètres de couleur de l’image mise en avant et du bloc Couverture.
-- Absence de bouton d’aide dans l’éditeur de blocs non pris en charge.
-- Notifications de contraste entre le texte et la couleur d’arrière-plan.
-- Moins de problèmes pour modifier la couleur du texte non sélectionné.

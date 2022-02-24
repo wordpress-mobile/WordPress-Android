@@ -1,6 +1,6 @@
-- Button justification in the Buttons block.
-- Block names in Hebrew and Indonesian.
-- Translated featured image and Cover block color settings.
-- No help button in the unsupported block editor.
-- Text/background color contrast notifications.
-- Fewer issues changing non-selected text color.
+- Notifications in new comment editor
+- Correct time zone for sites created in app
+- Reader comment editing for Admins/Editors
+- Low memory doesn’t affect editor story blocks
+- Error text for new site URLs with non-English characters
+- Assorted bug fixes and design improvements

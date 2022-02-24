@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_extra_large"
         android:contentDescription="@string/content_description_person_building_website"
-        android:src="@drawable/img_illustration_construct_site_190dp"
+        android:src="@drawable/img_post_signup_interstitial_screen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"

@@ -318,6 +318,11 @@
     <dimen name="my_site_card_footer_link_padding">16dp</dimen>
     <dimen name="my_site_card_footer_link_padding_top">8dp</dimen>
 
+    <!-- my site today's stats card item -->
+    <dimen name="my_site_todays_stats_card_title_line_spacing_extra">10sp</dimen>
+    <dimen name="my_site_todays_stats_card_stat_title_line_spacing_extra">8sp</dimen>
+    <dimen name="my_site_today_stats_card_stat_title_min_width">80dp</dimen>
+
     <!-- my site post card item -->
     <dimen name="my_site_post_item_image_corner_radius">2dp</dimen>
     <dimen name="my_site_post_item_image_size">48dp</dimen>

@@ -39,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class StatsViewModelTest : BaseUnitTest() {
@@ -53,6 +54,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
     @Mock lateinit var notificationsTracker: SystemNotificationsTracker
+    @Mock lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -71,7 +73,8 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsSiteProvider,
                 newsCardHandler,
                 statsModuleActivateUseCase,
-                notificationsTracker
+                notificationsTracker,
+                todaysStatsCardFeatureConfig
         )
 
         viewModel.start(1, false, null, null, false, null)
