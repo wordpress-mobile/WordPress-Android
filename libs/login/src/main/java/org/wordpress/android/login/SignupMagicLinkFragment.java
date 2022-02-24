@@ -41,6 +41,7 @@ public class SignupMagicLinkFragment extends Fragment {
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
     private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
+    private static final String ARG_IS_EMAIL_CLIENT_AVAILABLE = "ARG_IS_EMAIL_CLIENT_AVAILABLE";
     private static final String SIGNUP_FLOW_NAME = "mobile-android";
 
     public static final String TAG = "signup_magic_link_fragment_tag";
@@ -58,11 +59,20 @@ public class SignupMagicLinkFragment extends Fragment {
 
     public static SignupMagicLinkFragment newInstance(String email, boolean isJetpackConnect,
                                                       String jetpackConnectSource) {
-        SignupMagicLinkFragment fragment = new SignupMagicLinkFragment();
+        return newInstance(email, isJetpackConnect, jetpackConnectSource, null);
+    }
+
+    public static SignupMagicLinkFragment newInstance(String email, boolean isJetpackConnect,
+                                                      String jetpackConnectSource,
+                                                      Boolean isEmailClientAvailable) {
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
         args.putBoolean(ARG_IS_JETPACK_CONNECT, isJetpackConnect);
         args.putString(ARG_JETPACK_CONNECT_SOURCE, jetpackConnectSource);
+        if (isEmailClientAvailable != null) {
+            args.putBoolean(ARG_IS_EMAIL_CLIENT_AVAILABLE, isEmailClientAvailable);
+        }
+        SignupMagicLinkFragment fragment = new SignupMagicLinkFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,19 +88,38 @@ public class SignupMagicLinkFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    /** Determines whether to hide the "Check email button".
+     * When we know that the email client is not available, rather than toasting an error, we hide the button instead.
+     * @return
+     */
+    private boolean shouldHideButton() {
+        Bundle args = getArguments();
+        // preserve default behavior
+        if (args == null || !args.containsKey(ARG_IS_EMAIL_CLIENT_AVAILABLE)) {
+            return false;
+        }
+        // hide button if we know the client is not available
+        return !args.getBoolean(ARG_IS_EMAIL_CLIENT_AVAILABLE);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.signup_magic_link_screen, container, false);
 
         mOpenMailButton = layout.findViewById(R.id.signup_magic_link_button);
-        mOpenMailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mLoginListener != null) {
-                    mLoginListener.openEmailClient(false);
+
+        if (shouldHideButton()) {
+            mOpenMailButton.setVisibility(View.GONE);
+        } else {
+            mOpenMailButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mLoginListener != null) {
+                        mLoginListener.openEmailClient(false);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         if (getArguments() != null) {
             mIsJetpackConnect = getArguments().getBoolean(ARG_IS_JETPACK_CONNECT);
