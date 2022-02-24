@@ -1,4 +1,5 @@
-- Font size and line height are now supported for block themes.
-- Add new stat cards in the Settings menu on the Stats screen.
-- When changing the media in an Image block that’s also a post’s Featured Image, get a prompt to replace the Featured Image.
-- Share text, images, and video in the app using your device’s Share action.
+* [**] You can now Signup using WordPress.com and create your favorite site inside Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/pull/15946]
+* [**] You can now enjoy the Reader inside Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/pull/15946]
+* [*] Comment editor: Notification comments support in the new editor [https://github.com/wordpress-mobile/WordPress-Android/pull/15884]
+* [*] Fixes flickering when changing the preview mode in Page or Site design picker [https://github.com/wordpress-mobile/WordPress-Android/pull/15943]
+* [*] Block Editor: Stop editor from unexpectedly closing while composing a story block when memory is low [https://github.com/wordpress-mobile/WordPress-Android/pull/15960]

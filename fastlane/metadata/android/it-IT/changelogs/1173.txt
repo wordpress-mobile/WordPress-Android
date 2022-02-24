@@ -1,0 +1,6 @@
+19.2:
+- La dimensione del carattere e l'altezza della linea sono ora supportati per i temi dei blocchi.
+- Amministratori ed Editori possono rimuovere i commenti agli articoli nel Reader.
+- Aggiungi nuove carte statistiche nel menu Impostazioni della schermata Statistiche.
+- Modificare l'elemento multimediale in un blocco Immagine che è anche immagine in evidenza ne richiede un aggiornamento.
+- Condividi testo, immagini e video nell'app utilizzando l'azione Condividi del tuo dispositivo.

@@ -1,7 +1,0 @@
-19.1:
-- Justify buttons properly in the Buttons block.
-- See block names in Hebrew and Indonesian.
-- See translated featured image and Cover block color settings.
-- No longer see the help button in the unsupported block editor.
-- Be notified if text/background color combos are hard to read.
-- Run into fewer issues when changing the color of non-selected text.
