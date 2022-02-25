@@ -232,7 +232,7 @@ class MimeTypes {
         return expected.any { mimeType -> mimeType.subtypes.any { print(mimeType.type, it) == type } }
     }
 
-    fun getMimeTypeForExtension(extension: String): String? {
+    fun getMimeTypeForExtension(extension: String?): String? {
         return (imageTypes + videoTypes + audioTypes + documentTypes).find { it.extensions.contains(extension) }
                 ?.toString()
     }
