@@ -1,5 +1,5 @@
-* [**] You can now Signup using WordPress.com and create your favorite site inside Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/pull/15946]
-* [**] You can now enjoy the Reader inside Jetpack app [https://github.com/wordpress-mobile/WordPress-Android/pull/15946]
-* [*] Comment editor: Notification comments support in the new editor [https://github.com/wordpress-mobile/WordPress-Android/pull/15884]
-* [*] Fixes flickering when changing the preview mode in Page or Site design picker [https://github.com/wordpress-mobile/WordPress-Android/pull/15943]
-* [*] Block Editor: Stop editor from unexpectedly closing while composing a story block when memory is low [https://github.com/wordpress-mobile/WordPress-Android/pull/15960]
+- Sign up through WordPress.com and create sites in Jetpack
+- Use the Reader in Jetpack
+- See notifications in new comment editor
+- Get a fix for the flickering Page/Site preview
+- Keep editor story blocks from closing when memory is low
