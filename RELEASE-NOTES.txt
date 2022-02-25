@@ -2,7 +2,7 @@
 
 19.4
 -----
-
+* [*] Reader: nested comments with missing parent are now hidden from the comment list [https://github.com/wordpress-mobile/WordPress-Android/pull/15993]
 
 19.3
 -----
