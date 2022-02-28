@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -485,12 +486,18 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         mRequestedPassword = null;
     }
 
-    private void handleAuthError(AuthenticationErrorType error, String errorMessage) {
+    private void handleAuthError(AuthenticationErrorType error, XmlRpcErrorType xmlRpcErrorType, String errorMessage) {
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
             case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
             case HTTP_AUTH_ERROR:
-                showError(getString(R.string.username_or_password_incorrect));
+                if (error == AuthenticationErrorType.HTTP_AUTH_ERROR
+                    && xmlRpcErrorType == XmlRpcErrorType.AUTH_REQUIRED) {
+                    showError(getString(R.string.login_error_xml_rpc_auth_error_communicating));
+                } else {
+                    showError(getString(R.string.username_or_password_incorrect));
+                }
+
                 break;
             case INVALID_OTP:
             case INVALID_TOKEN:
@@ -538,7 +545,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
             mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                     event.error.type.toString(), event.error.message);
 
-            handleAuthError(event.error.type, event.error.message);
+            handleAuthError(event.error.type, event.error.xmlRpcErrorType, event.error.message);
 
             // end the progress last since it cleans up the requested username/password and those might be needed
             //  in handleAuthError()
@@ -614,7 +621,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                     errorMessage = getString(R.string.duplicate_site_detected);
                 }
             } else {
-                errorMessage = getString(R.string.login_error_while_adding_site, event.error.type.toString());
+                switch (event.error.selfHostedErrorType) {
+                    case XML_RPC_SERVICES_DISABLED:
+                        errorMessage = getString(R.string.login_error_xml_rpc_services_disabled);
+                        break;
+                    case UNABLE_TO_READ_SITE:
+                        errorMessage = getString(R.string.login_error_xml_rpc_cannot_read_site);
+                        break;
+                    case NOT_SET:
+                    default:
+                        errorMessage = getString(R.string.login_error_while_adding_site, event.error.type.toString());
+                }
             }
 
             AppLog.e(T.API, "Login with username/pass onSiteChanged has error: " + event.error.type

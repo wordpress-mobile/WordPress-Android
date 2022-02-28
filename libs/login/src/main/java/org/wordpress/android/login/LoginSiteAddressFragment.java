@@ -287,7 +287,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
                         });
                 break;
             case HTTP_AUTH_REQUIRED:
-                askForHttpAuthCredentials(failedEndpoint);
+                askForHttpAuthCredentials(failedEndpoint, R.string.login_error_xml_rpc_cannot_read_site_auth_required);
                 break;
             case NO_SITE_ERROR:
                 showError(R.string.no_site_error);
@@ -348,8 +348,11 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         }
     }
 
-    private void askForHttpAuthCredentials(@NonNull final String url) {
-        LoginHttpAuthDialogFragment loginHttpAuthDialogFragment = LoginHttpAuthDialogFragment.newInstance(url);
+    private void askForHttpAuthCredentials(@NonNull final String url, int messageId) {
+        LoginHttpAuthDialogFragment loginHttpAuthDialogFragment = LoginHttpAuthDialogFragment.newInstance(
+                url,
+                getString(messageId)
+        );
         loginHttpAuthDialogFragment.setTargetFragment(this, LoginHttpAuthDialogFragment.DO_HTTP_AUTH);
         loginHttpAuthDialogFragment.show(getFragmentManager(), LoginHttpAuthDialogFragment.TAG);
     }
