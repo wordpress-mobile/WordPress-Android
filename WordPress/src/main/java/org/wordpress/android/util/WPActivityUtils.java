@@ -141,7 +141,7 @@ public class WPActivityUtils {
         if (context == null) {
             return false;
         }
-        return !queryEmailApps(context).isEmpty();
+        return !queryEmailApps(context, false).isEmpty();
     }
 
     public static void openEmailClientChooser(Context context, String title) {
@@ -149,17 +149,19 @@ public class WPActivityUtils {
             return;
         }
         List<Intent> appIntents = new ArrayList();
-        for (ResolveInfo resolveInfo : queryEmailApps(context)) {
+        for (ResolveInfo resolveInfo : queryEmailApps(context, true)) {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(resolveInfo.activityInfo.packageName);
             appIntents.add(intent);
         }
+        Intent emailAppIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
         Intent[] appIntentsArray = appIntents.toArray(new Intent[appIntents.size()]);
-        Intent chooserIntent = Intent.createChooser(new Intent(), title);
+        Intent chooserIntent = Intent.createChooser(emailAppIntent, title);
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, appIntentsArray);
+        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(chooserIntent);
     }
 
-    private static List<ResolveInfo> queryEmailApps(@NonNull Context context) {
+    private static List<ResolveInfo> queryEmailApps(@NonNull Context context, Boolean excludeCategoryEmailApps) {
         PackageManager packageManager = context.getPackageManager();
         List<ResolveInfo> intentsInfoList = new ArrayList();
 
@@ -167,7 +169,9 @@ public class WPActivityUtils {
         Intent emailAppIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
         List<ResolveInfo> emailAppIntentInfo =
                 packageManager.queryIntentActivities(emailAppIntent, PackageManager.MATCH_ALL);
-        intentsInfoList.addAll(emailAppIntentInfo);
+        if (!excludeCategoryEmailApps) {
+            intentsInfoList.addAll(emailAppIntentInfo);
+        }
 
         // Get all apps that are able to send emails
         Intent sendEmailAppIntent = new Intent(Intent.ACTION_SENDTO);
@@ -175,15 +179,14 @@ public class WPActivityUtils {
         List<ResolveInfo> sendEmailAppIntentInfo =
                 packageManager.queryIntentActivities(sendEmailAppIntent, PackageManager.MATCH_ALL);
 
-        // Merge the two app lists
-        addUniqueIntents(intentsInfoList, sendEmailAppIntentInfo);
+        addNewIntents(intentsInfoList, emailAppIntentInfo, sendEmailAppIntentInfo);
         return intentsInfoList;
     }
 
-    private static void addUniqueIntents(List<ResolveInfo> list, List<ResolveInfo> intents) {
+    private static void addNewIntents(List<ResolveInfo> list, List<ResolveInfo> existing, List<ResolveInfo> intents) {
         for (ResolveInfo intent : intents) {
             boolean found = false;
-            for (ResolveInfo item : list) {
+            for (ResolveInfo item : existing) {
                 if (intent.activityInfo.applicationInfo.processName
                         .equals(item.activityInfo.applicationInfo.processName)) {
                     found = true;
