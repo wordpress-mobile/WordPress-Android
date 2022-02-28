@@ -201,8 +201,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             loadGravatar(uiModel.accountAvatarUrl)
             hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
-                is State.SiteSelected -> loadData(state.cardAndItems)
-                is State.NoSites -> loadEmptyView(state.shouldShowImage)
+                is State.SiteSelected -> loadData(state)
+                is State.NoSites -> loadEmptyView(state)
             }
         })
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
@@ -542,22 +542,24 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
     }
 
-    private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
+    private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
+        tabLayout.setVisible(state.showTabs)
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.loadData(state.cardAndItems)
     }
 
-    private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
+    private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        tabLayout.setVisible(state.showTabs)
         recyclerView.setVisible(false)
         viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
-            actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
+            actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
-        actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
+        actionableEmptyView.image.setVisible(state.shouldShowImage)
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {

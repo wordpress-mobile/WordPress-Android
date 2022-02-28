@@ -259,7 +259,7 @@ class MySiteViewModel @Inject constructor(
                 activeTask,
                 siteItems.indexOfFirst { it.activeQuickStartItem }
         )
-        return SiteSelected(siteItems)
+        return SiteSelected(showTabs = isMySiteTabsEnabled, cardAndItems = siteItems)
     }
 
     @Suppress("LongParameterList")
@@ -362,7 +362,7 @@ class MySiteViewModel @Inject constructor(
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
-        return NoSites(shouldShowImage)
+        return NoSites(shouldShowImage = shouldShowImage)
     }
 
     private fun orderForDisplay(
@@ -879,8 +879,9 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class State {
-        data class SiteSelected(val cardAndItems: List<MySiteCardAndItem>) : State()
-        data class NoSites(val shouldShowImage: Boolean) : State()
+        abstract val showTabs: Boolean
+        data class SiteSelected(override val showTabs: Boolean, val cardAndItems: List<MySiteCardAndItem>) : State()
+        data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
     }
 
     data class TextInputDialogModel(
