@@ -3,6 +3,7 @@
 19.4
 -----
 * [*] Reader: nested comments with missing parent are now hidden from the comment list [https://github.com/wordpress-mobile/WordPress-Android/pull/15993]
+* [*] Stats: Removed Latest Post Summary card from the defaults in Insights tab on Stats screen [https://github.com/wordpress-mobile/WordPress-Android/pull/16011]
 
 19.3
 -----
