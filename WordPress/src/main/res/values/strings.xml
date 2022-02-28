@@ -2213,6 +2213,8 @@
     <string name="my_site_quick_actions_title">Quick Links</string>
 
     <!-- My Site - Dashboard -->
+    <string name="my_site_dashboard_tab_title">Dashboard</string>
+    <string name="my_site_menu_tab_title">Menu</string>
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
     <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
 

@@ -114,6 +114,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.viewmodel.ContextProvider
@@ -152,6 +153,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
     @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -301,7 +303,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsTracker,
                 siteItemsTracker,
                 domainRegistrationCardShownTracker,
-                buildConfigWrapper
+                buildConfigWrapper,
+                mySiteDashboardTabsFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
