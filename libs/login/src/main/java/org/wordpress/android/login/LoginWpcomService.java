@@ -45,6 +45,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     private static final String ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN";
     private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
     private static final String ARG_JETPACK_APP_LOGIN = "ARG_JETPACK_APP_LOGIN";
+    private static final String ARG_WOO_APP_LOGIN = "ARG_WOO_APP_LOGIN";
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
 
     public enum LoginStep {
@@ -159,6 +160,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     private String mService;
     private boolean mIsSocialLogin;
     private boolean mIsJetpackAppLogin;
+    private boolean mIsWooAppLogin;
 
     public static void loginWithEmailAndPassword(
             Context context,
@@ -166,7 +168,8 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
             String password,
             String idToken, String service,
             boolean isSocialLogin,
-            boolean isJetpackAppLogin) {
+            boolean isJetpackAppLogin,
+            boolean isWooAppLogin) {
         Intent intent = new Intent(context, LoginWpcomService.class);
         intent.putExtra(ARG_EMAIL, email);
         intent.putExtra(ARG_PASSWORD, password);
@@ -174,6 +177,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         intent.putExtra(ARG_SOCIAL_SERVICE, service);
         intent.putExtra(ARG_SOCIAL_LOGIN, isSocialLogin);
         intent.putExtra(ARG_JETPACK_APP_LOGIN, isJetpackAppLogin);
+        intent.putExtra(ARG_WOO_APP_LOGIN, isWooAppLogin);
         context.startService(intent);
     }
 
@@ -263,6 +267,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         mService = intent.getStringExtra(ARG_SOCIAL_SERVICE);
         mIsSocialLogin = intent.getBooleanExtra(ARG_SOCIAL_LOGIN, false);
         mIsJetpackAppLogin = intent.getBooleanExtra(ARG_JETPACK_APP_LOGIN, false);
+        mIsWooAppLogin = intent.getBooleanExtra(ARG_WOO_APP_LOGIN, false);
 
         AuthenticatePayload payload = new AuthenticatePayload(email, password);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
@@ -382,7 +387,7 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             setState(LoginStep.FETCHING_SITES);
             // The user's account settings have also been fetched and stored - now we can fetch the user's sites
-            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(mIsJetpackAppLogin);
+            FetchSitesPayload payload = SiteUtils.getFetchSitesPayload(mIsJetpackAppLogin, mIsWooAppLogin);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(payload));
         }
     }
