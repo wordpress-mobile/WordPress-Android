@@ -14,7 +14,7 @@ class MySiteTabsAdapter(
         return if (position == 0) {
             MySiteTabFragment.newInstance()
         } else {
-            MySiteDashboardTabFragment.newInstance()
+            MySiteTabFragment.newInstance()
         }
     }
 }
