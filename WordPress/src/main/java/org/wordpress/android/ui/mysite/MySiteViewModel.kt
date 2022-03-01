@@ -141,7 +141,7 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    private val isMySiteTabsEnabled: Boolean
+    val isMySiteTabsEnabled: Boolean
         get() = mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
 
     val tabTitles: List<UiString>
