@@ -386,7 +386,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
 
-        // text selection alongside clickable links does not work on devices with api <= 26
+        // text selection alongside clickable links does not work on devices with api <= 27
         // https://issuetracker.google.com/issues/37068143
         mTxtContent.setTextIsSelectable(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P);
 

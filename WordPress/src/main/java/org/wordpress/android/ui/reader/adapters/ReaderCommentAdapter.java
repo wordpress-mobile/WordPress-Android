@@ -167,7 +167,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mReplyButtonIcon = view.findViewById(R.id.reply_button_icon);
             mCountLikes = view.findViewById(R.id.count_likes);
 
-            // text selection alongside clickable links does not work on devices with api <= 26
+            // text selection alongside clickable links does not work on devices with api <= 27
             // https://issuetracker.google.com/issues/37068143
             mTxtText.setTextIsSelectable(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P);
 
