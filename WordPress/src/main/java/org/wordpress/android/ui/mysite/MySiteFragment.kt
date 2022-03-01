@@ -12,16 +12,21 @@ import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class MySiteFragment : Fragment(R.layout.my_site_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
     private lateinit var viewModel: MySiteViewModel
 
     private var binding: MySiteFragmentBinding? = null
@@ -37,6 +42,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
         initViewModel()
         binding = MySiteFragmentBinding.bind(view).apply {
             setupToolbar()
+            setupObservers()
         }
     }
 
@@ -58,9 +64,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
                 meMenu.actionView.let { actionView ->
-                    // todo: annmarie - msd - need to move avatar back to my_site_fragment
                     // todo: annmarie - msd - need to add empty view back to my_site_fragment
-                    // actionView.setOnClickListener { viewModel.onAvatarPressed() }
+                    actionView.setOnClickListener { viewModel.onAvatarPressed() }
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
             }
@@ -96,6 +101,19 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
 
         // todo: annmarie - do something more clever here
         tabLayout.setVisible(true)
+    }
+
+    private fun MySiteFragmentBinding.setupObservers() {
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
+    }
+
+    @Suppress("ComplexMethod", "LongMethod")
+    private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
+        is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
+        else -> {
+            // Ignore any other navigation events
+        }
     }
 
     override fun onDestroyView() {
