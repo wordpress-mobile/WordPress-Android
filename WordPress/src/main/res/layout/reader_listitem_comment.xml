@@ -165,8 +165,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginBottom="@dimen/margin_medium"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColor="?attr/wpColorOnSurfaceHigh"
                 app:lineHeight="@dimen/reader_comments_content_line_height"

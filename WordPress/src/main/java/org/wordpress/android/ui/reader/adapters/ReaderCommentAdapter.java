@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -165,6 +166,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mReplyButtonLabel = view.findViewById(R.id.reply_button_label);
             mReplyButtonIcon = view.findViewById(R.id.reply_button_icon);
             mCountLikes = view.findViewById(R.id.count_likes);
+
+            // text selection alongside clickable links does not work on devices with api <= 26
+            // https://issuetracker.google.com/issues/37068143
+            mTxtText.setTextIsSelectable(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P);
 
             mThreadedCommentsUtils.setLinksClickable(mTxtText, mIsPrivatePost);
         }
