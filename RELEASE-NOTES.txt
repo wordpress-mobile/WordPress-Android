@@ -4,6 +4,7 @@
 -----
 * [**] Login: improved error messages for login with self-hosted sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/15919]
 * [*] Reader: nested comments with missing parent are now hidden from the comment list [https://github.com/wordpress-mobile/WordPress-Android/pull/15993]
+* [*] Content of the comments in comment detail and reader are selectable on devices with Android 9+ [https://github.com/wordpress-mobile/WordPress-Android/pull/16021]
 
 19.3
 -----
