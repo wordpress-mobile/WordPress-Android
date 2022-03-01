@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -384,6 +385,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
+
+        // text selection alongside clickable links does not work on devices with api <= 26
+        // https://issuetracker.google.com/issues/37068143
+        mTxtContent.setTextIsSelectable(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P);
 
         // this is necessary in order for anchor tags in the comment text to be clickable
         mTxtContent.setLinksClickable(true);
