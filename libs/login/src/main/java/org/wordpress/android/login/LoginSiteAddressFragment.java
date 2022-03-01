@@ -414,7 +414,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
                 handleConnectSiteInfoForWoo(event.info);
-            } else if (mLoginListener.getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY) {
+            } else if (!event.info.isWPCom && mLoginListener.getLoginMode() == LoginMode.JETPACK_LOGIN_ONLY) {
                 handleConnectSiteInfoForJetpack(event.info);
             } else {
                 handleConnectSiteInfoForWordPress(event.info);
