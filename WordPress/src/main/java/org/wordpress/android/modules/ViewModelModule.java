@@ -34,7 +34,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
 import org.wordpress.android.ui.mysite.tabs.MySiteDashboardTabViewModel;
-import org.wordpress.android.ui.mysite.tabs.MySiteMenuTabViewModel;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabViewModel;
 import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
@@ -481,8 +481,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MySiteMenuTabViewModel.class)
-    abstract ViewModel mySiteMenuTabViewModel(MySiteMenuTabViewModel viewModel);
+    @ViewModelKey(MySiteTabViewModel.class)
+    abstract ViewModel mySiteMenuTabViewModel(MySiteTabViewModel viewModel);
 
     @Binds
     @IntoMap

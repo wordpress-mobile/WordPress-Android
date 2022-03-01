@@ -6,7 +6,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 
 @RunWith(MockitoJUnitRunner::class)
-class MySiteMenuTabViewModelTest : BaseUnitTest() {
+class MySiteTabViewModelTest : BaseUnitTest() {
     @Test
     fun `dummy test`() {
     }

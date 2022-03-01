@@ -8,9 +8,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
-class MySiteMenuTabFragment : Fragment(R.layout.my_site_menu_tab_fragment) {
+class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: MySiteMenuTabViewModel
+    private lateinit var viewModel: MySiteTabViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +27,10 @@ class MySiteMenuTabFragment : Fragment(R.layout.my_site_menu_tab_fragment) {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteMenuTabViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteTabViewModel::class.java)
     }
 
     companion object {
-        fun newInstance() = MySiteMenuTabFragment()
+        fun newInstance() = MySiteTabFragment()
     }
 }
