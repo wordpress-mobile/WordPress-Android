@@ -12,7 +12,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -21,7 +21,7 @@ import java.util.Date
 @RunWith(MockitoJUnitRunner::class)
 class LatestPostSummaryMapperTest {
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
+    @Mock lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var mapper: LatestPostSummaryMapper
@@ -33,7 +33,7 @@ class LatestPostSummaryMapperTest {
     @Before
     fun setUp() {
         mapper = LatestPostSummaryMapper(
-                statsUtilsWrapper,
+                statsSinceLabelFormatter,
                 resourceProvider,
                 statsDateFormatter,
                 statsUtils
@@ -57,7 +57,7 @@ class LatestPostSummaryMapperTest {
         val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
 
         val sinceTimeLabel = "10 mins"
-        whenever(statsUtilsWrapper.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
+        whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
         val messageWithNoEngagement = "message with no engagement"
         whenever(
                 resourceProvider.getString(
@@ -89,7 +89,7 @@ class LatestPostSummaryMapperTest {
         val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
 
         val sinceTimeLabel = "10 mins"
-        whenever(statsUtilsWrapper.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
+        whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
         val messageWithEngagement = "message with no engagement"
         whenever(
                 resourceProvider.getString(
@@ -148,7 +148,7 @@ class LatestPostSummaryMapperTest {
         val model = InsightsLatestPostModel(siteId, postTitleWithHtml, postURL, date, postId, viewCount, 0, 0, listOf())
 
         val sinceTimeLabel = "10 mins"
-        whenever(statsUtilsWrapper.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
+        whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
 
         whenever(
                 resourceProvider.getString(

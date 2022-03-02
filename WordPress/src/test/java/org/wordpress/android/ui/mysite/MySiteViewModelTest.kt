@@ -114,6 +114,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.viewmodel.ContextProvider
@@ -152,6 +153,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
     @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -301,7 +303,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsTracker,
                 siteItemsTracker,
                 domainRegistrationCardShownTracker,
-                buildConfigWrapper
+                buildConfigWrapper,
+                mySiteDashboardTabsFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -364,6 +367,27 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* SITE STATE */
 
     @Test
+    fun `given my site tabs feature flag not enabled, when site is selected, then tabs are not visible`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
+
+        assertThat((uiModels.last().state as SiteSelected).showTabs).isFalse
+    }
+
+    @Test
+    fun `given my site tabs build config not enabled, when site is selected, then tabs are not visible`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = false)
+
+        assertThat((uiModels.last().state as SiteSelected).showTabs).isFalse
+    }
+
+    @Test
+    fun `given my site tabs build config with flag enabled, when site is selected, then tabs are visible`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        assertThat((uiModels.last().state as SiteSelected).showTabs).isTrue
+    }
+
+    @Test
     fun `model is empty with no selected site`() {
         onSiteSelected.value = null
         currentAvatar.value = CurrentAvatarUrl("")
@@ -424,6 +448,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* EMPTY VIEW */
+
+    @Test
+    fun `when no site is selected, then tabs are not visible`() {
+        onSiteSelected.value = null
+
+        assertThat((uiModels.last().state as NoSites).showTabs).isFalse
+    }
 
     @Test
     fun `given wp app, when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
@@ -1685,6 +1716,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initSelectedSite(
+        isMySiteDashboardTabsFeatureFlagEnabled: Boolean = false,
+        isMySiteTabsBuildConfigEnabled: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false
@@ -1696,6 +1729,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
+        whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         selectedSite.value = SelectedSite(site)
