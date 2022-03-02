@@ -154,10 +154,10 @@ public class WPActivityUtils {
             appIntents.add(intent);
         }
         Intent emailAppIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
+        emailAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Intent[] appIntentsArray = appIntents.toArray(new Intent[appIntents.size()]);
         Intent chooserIntent = Intent.createChooser(emailAppIntent, title);
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, appIntentsArray);
-        chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(chooserIntent);
     }
 
