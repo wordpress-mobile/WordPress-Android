@@ -43,8 +43,8 @@ class MediaLibraryDataSource(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val siteModel: SiteModel,
-    private val mediaTypes: Set<MediaType>
-) : MediaSource {
+    override val mediaTypes: Set<MediaType>
+) : MediaSource, MediaSourceWithTypes {
     init {
         dispatcher.register(this)
     }
