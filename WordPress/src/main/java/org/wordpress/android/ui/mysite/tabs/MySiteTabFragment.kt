@@ -536,17 +536,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
-
         private const val KEY_MY_SITE_TAB_TYPE = "key_my_site_tab_type"
-        const val MY_SITE_TAB_TYPE_DASHBOARD = "my_site_tab_type_dashboard"
-        const val MY_SITE_TAB_TYPE_SITE_MENU = "my_site_tab_type_site_menu"
-        const val MY_SITE_TAB_TYPE_EVERYTHING = "my_site_tab_type_everything"
 
-        // todo: annmarie - perhaps use an enum value ?
         @JvmStatic
-        fun newInstance(tabType: String) = MySiteTabFragment().apply {
+        fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {
             arguments = Bundle().apply {
-                putString(KEY_MY_SITE_TAB_TYPE, tabType)
+                putString(KEY_MY_SITE_TAB_TYPE, mySiteTabType.label)
             }
         }
     }

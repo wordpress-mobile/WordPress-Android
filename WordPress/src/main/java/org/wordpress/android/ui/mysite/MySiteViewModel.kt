@@ -61,7 +61,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -261,20 +261,20 @@ class MySiteViewModel @Inject constructor(
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
                 if (isMySiteTabsEnabled) {
-                    (siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU] as List<MySiteCardAndItem>)
+                    (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
                             .indexOfFirst { it.activeQuickStartItem }
                 } else {
-                    (siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING] as List<MySiteCardAndItem>)
+                    (siteItems[MySiteTabType.EVERYTHING] as List<MySiteCardAndItem>)
                             .indexOfFirst { it.activeQuickStartItem }
                 }
         )
-        // todo: Yes, !! is used because if the key doesn't exist it would be null, but it will always exist
-        // todo: annmarie - could we use a triple here? Possibly :)
+        // todo: annmarie Yes, !! is used because if the key doesn't exist it would be null, but it will always exist
+        // famous last words, but we are controlling the - let's see if we go down this path before refactoring
         return SiteSelected(
                 showTabs = isMySiteTabsEnabled,
-                cardAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING]!!,
-                siteMenuCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU]!!,
-                dashboardCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD]!!
+                cardAndItems = siteItems[MySiteTabType.EVERYTHING]!!,
+                siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
+                dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
     }
 
@@ -290,7 +290,7 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?
-    ): Map<String, List<MySiteCardAndItem>> {
+    ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
@@ -358,19 +358,19 @@ class MySiteViewModel @Inject constructor(
         )
 
         return mapOf(
-                MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING to orderForDisplay(
+                MySiteTabType.EVERYTHING to orderForDisplay(
                         infoItem,
                         cardsResult,
                         dynamicCards,
                         siteItems
                 ),
-                MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU to orderForDisplay(
+                MySiteTabType.SITE_MENU to orderForDisplay(
                         infoItem,
                         cardsResult.filterNot { it is DashboardCards }.toList(),
                         dynamicCards,
                         siteItems
                 ),
-                MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD to orderForDisplay(
+                MySiteTabType.DASHBOARD to orderForDisplay(
                         infoItem,
                         cardsResult.filterNot { it is QuickStartCard }.toList(),
                         dynamicCards,

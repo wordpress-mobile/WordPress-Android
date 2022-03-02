@@ -73,7 +73,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
                 meMenu.actionView.let { actionView ->
-                    // todo: annmarie - msd - need to add empty view back to my_site_fragment
                     actionView.setOnClickListener { viewModel.onAvatarPressed() }
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
@@ -107,9 +106,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiHelpers.getTextOfUiString(requireContext(), tabTitles[position])
         }.attach()
-
-        // todo: annmarie - do something more clever here
-        tabLayout.setVisible(true)
     }
 
     private fun MySiteFragmentBinding.setupContentViews() {
