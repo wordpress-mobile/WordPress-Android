@@ -11,6 +11,7 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         style="@style/StatsBlockText"
+        android:textColor="?attr/colorOnPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

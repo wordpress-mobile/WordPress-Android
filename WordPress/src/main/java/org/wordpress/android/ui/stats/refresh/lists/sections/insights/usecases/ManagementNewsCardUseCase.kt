@@ -10,9 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.DialogButtons
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ImageItem
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -35,13 +33,10 @@ class ManagementNewsCardUseCase
     override fun buildLoadingItem(): List<BlockListItem> = listOf()
 
     override fun buildUiModel(domainModel: Boolean): List<BlockListItem> {
-        val highlightedText = resourceProvider.getString(R.string.stats_management_add_new_stats_card)
-        val newsCardMessage = resourceProvider.getString(R.string.stats_management_news_card_message, highlightedText)
+        val newsCardMessage = resourceProvider.getString(R.string.stats_management_news_card_message)
         return listOf(
-                ImageItem(R.drawable.insights_management_feature_image),
-                Tag(R.string.stats_management_new),
                 BigTitle(R.string.stats_manage_your_stats),
-                Text(text = newsCardMessage, bolds = listOf(highlightedText)),
+                Text(text = newsCardMessage),
                 DialogButtons(
                         R.string.stats_management_try_it_now,
                         ListItemInteraction.create(this::onEditInsights),
