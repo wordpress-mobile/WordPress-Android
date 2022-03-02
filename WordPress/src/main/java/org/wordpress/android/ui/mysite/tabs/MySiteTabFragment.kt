@@ -132,8 +132,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     private fun MySiteTabFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
-        // todo: annmarie       actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
-
         val layoutManager = LinearLayoutManager(activity)
 
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
@@ -172,7 +170,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
-                is State.NoSites -> loadEmptyView(state)
+                is State.NoSites -> loadEmptyView()
             }
         })
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
@@ -513,25 +511,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     private fun MySiteTabFragmentBinding.loadData(state: State.SiteSelected) {
-        // todo: annmarie - this is also the place where msf was setting tabs visible
         recyclerView.setVisible(true)
-        // todo: annmarie - msd need to move emptyView to my_site_fragment
-        //  actionableEmptyView.setVisible(false)
-//        viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
-//            actionableEmptyView.setVisible(false)
-//        }
         (recyclerView.adapter as? MySiteAdapter)?.loadData(state.cardAndItems)
     }
 
-    private fun MySiteTabFragmentBinding.loadEmptyView(state: State.NoSites) {
-        // todo: annmarie - this is also the place where msf was setting tabs invisible
+    private fun MySiteTabFragmentBinding.loadEmptyView() {
         recyclerView.setVisible(false)
-// todo: annmarie - msd need to move emptyView to my_site_fragment
-        //        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
-//            actionableEmptyView.setVisible(true)
-//            actionableEmptyView.image.setVisible(state.shouldShowImage)
-//        }
-//        actionableEmptyView.image.setVisible(state.shouldShowImage)
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {

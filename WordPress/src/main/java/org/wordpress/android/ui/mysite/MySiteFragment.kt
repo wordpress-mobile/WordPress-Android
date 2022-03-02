@@ -5,6 +5,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
@@ -15,6 +16,7 @@ import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -42,6 +44,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
         initViewModel()
         binding = MySiteFragmentBinding.bind(view).apply {
             setupToolbar()
+            setupContentViews()
             setupObservers()
         }
     }
@@ -103,8 +106,35 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
         tabLayout.setVisible(true)
     }
 
+    private fun MySiteFragmentBinding.setupContentViews() {
+        actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
+    }
+
     private fun MySiteFragmentBinding.setupObservers() {
+        viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
+            when (val state = uiModel.state) {
+                is State.SiteSelected -> loadData(state)
+                is State.NoSites -> loadEmptyView(state)
+            }
+        })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
+    }
+
+    private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
+        tabLayout.setVisible(state.showTabs)
+        actionableEmptyView.setVisible(false)
+        viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(false)
+        }
+    }
+
+    private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        tabLayout.setVisible(state.showTabs)
+        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(true)
+            actionableEmptyView.image.setVisible(state.shouldShowImage)
+        }
+        actionableEmptyView.image.setVisible(state.shouldShowImage)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
