@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageView
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +31,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.RES
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
@@ -71,7 +69,6 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
@@ -87,7 +84,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
-    @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
@@ -166,7 +162,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     @Suppress("LongMethod")
     private fun MySiteTabFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
-            loadGravatar(uiModel.accountAvatarUrl)
             hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
@@ -392,18 +387,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         super.onDestroyView()
         binding = null
     }
-
-    private fun MySiteTabFragmentBinding.loadGravatar(avatarUrl: String) =
-            root.findViewById<ImageView>(R.id.avatar)?.let {
-                meGravatarLoader.load(
-                        false,
-                        meGravatarLoader.constructGravatarUrl(avatarUrl),
-                        null,
-                        it,
-                        USER,
-                        null
-                )
-            }
 
     @Suppress("ReturnCount", "LongMethod", "ComplexMethod")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

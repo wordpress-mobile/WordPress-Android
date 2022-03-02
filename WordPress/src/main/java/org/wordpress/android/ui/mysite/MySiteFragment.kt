@@ -20,6 +20,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -112,6 +113,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
 
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
+            loadGravatar(uiModel.accountAvatarUrl)
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView(state)
@@ -119,6 +121,18 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
         })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
     }
+
+    private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
+            root.findViewById<ImageView>(R.id.avatar)?.let {
+                meGravatarLoader.load(
+                        false,
+                        meGravatarLoader.constructGravatarUrl(avatarUrl),
+                        null,
+                        it,
+                        USER,
+                        null
+                )
+            }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
         tabLayout.setVisible(state.showTabs)
