@@ -263,8 +263,19 @@ class MediaPickerViewModel @Inject constructor(
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
         } else {
+            var stringId = R.string.media_empty_list
+
+            if ( domainModel?.mediaTypes?.size == 1 ){
+                stringId = when(domainModel.mediaTypes.first()) {
+                    IMAGE -> R.string.media_empty_image_list
+                    AUDIO -> R.string.media_empty_audio_list
+                    VIDEO -> R.string.media_empty_videos_list
+                    DOCUMENT -> R.string.media_empty_documents_list
+                    else -> R.string.media_empty_list
+                }
+            }
             PhotoListUiModel.Empty(
-                    UiStringRes(R.string.media_empty_list),
+                    UiStringRes(stringId),
                     image = R.drawable.img_illustration_media_105dp,
                     isSearching = isSearching == true
             )
