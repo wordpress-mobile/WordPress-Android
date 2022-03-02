@@ -59,7 +59,8 @@ class StatsStore
                 val types = mutableListOf<StatsType>()
 /**
  * Customize Insights Management card is being hidden for now.
- * It will be updated to new design in the next iteration
+ * It will be updated to new design in the next iteration.
+ * Also, make sure to remove @Ignore annotation on tests in StatsStoreTest when this is undone.
  **/
 //                if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)) {
 //                    types.add(ManagementType.NEWS_CARD)
