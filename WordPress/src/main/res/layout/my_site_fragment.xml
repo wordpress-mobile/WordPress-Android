@@ -3,28 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
+    android:clipChildren="false"
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:liftOnScroll="false">
+        android:layout_height="210dp"
+        app:liftOnScroll="false"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/prominent_toolbar_height"
-            app:title="@string/my_site_section_screen_title">
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@android:color/transparent"
+            >
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar_main"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:theme="@style/WordPress.ActionBar" />
+                app:theme="@style/WordPress.ActionBar"/>
+
+            <RelativeLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:visibility="visible"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="1.0">
+
+                <include
+                    android:id="@+id/site_info"
+                    layout="@layout/my_site_info_card"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
@@ -32,8 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:visibility="gone"
-            app:layout_scrollFlags="scroll|enterAlways"
+            android:visibility="visible"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             tools:text="@string/my_site_menu_tab_title"/>
 
     </com.google.android.material.appbar.AppBarLayout>

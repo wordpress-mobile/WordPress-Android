@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
@@ -23,6 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.MySiteFragmentBinding
+import org.wordpress.android.databinding.MySiteInfoCardBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
@@ -37,6 +39,9 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
@@ -72,6 +77,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
@@ -98,6 +104,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     private var binding: MySiteFragmentBinding? = null
+    private var collapsingToolbarLayout: CollapsingToolbarLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,6 +144,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         appbarMain.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
+
+            if(currentOffset==0)
+                collapsingToolbar.title = "Accused Kite"
+            else
+                collapsingToolbar.title = null
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
             avatar?.let { avatar ->
@@ -543,13 +555,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
+        val mySiteInfoCard = state.cardAndItems.filterIsInstance<Card>().filterIsInstance<SiteInfoCard>()[0]
+        siteInfo.loadMySiteDetails(mySiteInfoCard)
+
         tabLayout.setVisible(state.showTabs)
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        (recyclerView.adapter as? MySiteAdapter)?.loadData(state.cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.loadData(state.cardAndItems.subList(1,state.cardAndItems.lastIndex))
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
@@ -582,6 +597,30 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                     )
             )
         }
+    }
+
+    private fun MySiteInfoCardBinding.loadMySiteDetails(item:SiteInfoCard) {
+        if (item.iconState is IconState.Visible) {
+            mySiteBlavatar.visibility = View.VISIBLE
+            imageManager.load(mySiteBlavatar, BLAVATAR, item.iconState.url ?: "")
+            mySiteIconProgress.visibility = View.GONE
+            mySiteBlavatar.setOnClickListener { item.onIconClick.click() }
+        } else if (item.iconState is IconState.Progress) {
+            mySiteBlavatar.setOnClickListener(null)
+            mySiteIconProgress.visibility = View.VISIBLE
+            mySiteBlavatar.visibility = View.GONE
+        }
+        quickStartIconFocusPoint.setVisibleOrGone(item.showIconFocusPoint)
+        if (item.onTitleClick != null) {
+            siteInfoContainer.title.setOnClickListener { item.onTitleClick.click() }
+        } else {
+            siteInfoContainer.title.setOnClickListener(null)
+        }
+        siteInfoContainer.title.text = item.title
+        quickStartTitleFocusPoint.setVisibleOrGone(item.showTitleFocusPoint)
+        siteInfoContainer.subtitle.text = item.url
+        siteInfoContainer.subtitle.setOnClickListener { item.onUrlClick.click() }
+        switchSite.setOnClickListener { item.onSwitchSiteClick.click() }
     }
 
     private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
