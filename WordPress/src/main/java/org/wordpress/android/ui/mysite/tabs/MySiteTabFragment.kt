@@ -6,11 +6,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.mysite.MySiteViewModel
 import javax.inject.Inject
 
 class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: MySiteTabViewModel
+    private lateinit var viewModel: MySiteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +28,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment) {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteTabViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
     }
 
     companion object {
