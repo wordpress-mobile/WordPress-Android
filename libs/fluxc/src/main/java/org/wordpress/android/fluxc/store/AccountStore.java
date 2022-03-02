@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthEmailResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -48,6 +49,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.NOT_SET;
 
 /**
  * In-memory based and persisted in SQLite.
@@ -73,6 +76,10 @@ public class AccountStore extends Store {
         }
         public AuthenticateErrorPayload(@NonNull AuthenticationErrorType errorType) {
             this.error = new AuthenticationError(errorType, "");
+        }
+        public AuthenticateErrorPayload(@NonNull AuthenticationErrorType errorType,
+                                        @NonNull XmlRpcErrorType xmlRpcErrorType) {
+            this.error = new AuthenticationError(errorType, "", xmlRpcErrorType);
         }
     }
 
@@ -446,9 +453,18 @@ public class AccountStore extends Store {
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;
         public String message;
+        public XmlRpcErrorType xmlRpcErrorType = NOT_SET;
+
         public AuthenticationError(AuthenticationErrorType type, @NonNull String message) {
             this.type = type;
             this.message = message;
+        }
+        public AuthenticationError(AuthenticationErrorType type,
+                                   @NonNull String message,
+                                   XmlRpcErrorType xmlRpcErrorType) {
+            this.type = type;
+            this.message = message;
+            this.xmlRpcErrorType = xmlRpcErrorType;
         }
     }
 
