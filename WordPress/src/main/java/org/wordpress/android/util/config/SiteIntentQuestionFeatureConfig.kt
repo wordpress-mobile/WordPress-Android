@@ -11,5 +11,5 @@ import javax.inject.Inject
 class SiteIntentQuestionFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.SITE_INTENT_QUESTION,
+        BuildConfig.SITE_INTENT_QUESTION
 )
