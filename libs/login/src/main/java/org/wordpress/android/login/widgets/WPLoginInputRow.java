@@ -146,20 +146,17 @@ public class WPLoginInputRow extends RelativeLayout {
     }
 
     public void setOnEditorCommitListener(final OnEditorCommitListener listener) {
-        mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE
-                    || actionId == EditorInfo.IME_ACTION_NEXT
-                    || (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    listener.onEditorCommit();
-                }
-
-                // always consume the event so the focus stays in the EditText
-                return true;
+        mEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE
+                || actionId == EditorInfo.IME_ACTION_NEXT
+                || (event != null
+                    && event.getAction() == KeyEvent.ACTION_UP
+                    && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                listener.onEditorCommit();
             }
+
+            // always consume the event so the focus stays in the EditText
+            return true;
         });
     }
 
