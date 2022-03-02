@@ -185,18 +185,20 @@ public class WPActivityUtils {
 
     private static void addNewIntents(List<ResolveInfo> list, List<ResolveInfo> existing, List<ResolveInfo> intents) {
         for (ResolveInfo intent : intents) {
-            boolean found = false;
-            for (ResolveInfo item : existing) {
-                if (intent.activityInfo.applicationInfo.processName
-                        .equals(item.activityInfo.applicationInfo.processName)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
+            if (!intentExistsInList(intent, existing) && !intentExistsInList(intent, list)) {
                 list.add(intent);
             }
         }
+    }
+
+    private static boolean intentExistsInList(ResolveInfo intent, List<ResolveInfo> list) {
+        for (ResolveInfo item : list) {
+            if (intent.activityInfo.applicationInfo.processName
+                    .equals(item.activityInfo.applicationInfo.processName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void disableReaderDeeplinks(Context context) {
