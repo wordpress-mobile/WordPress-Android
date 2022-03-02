@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.ui.mediapicker.MediaItem
+import org.wordpress.android.ui.mediapicker.MediaType
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel.EmptyState
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.ClearFilter
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Filter
@@ -27,7 +28,8 @@ data class MediaLoader(
 ) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
-            var state = DomainModel()
+            var mediaTypes = if (mediaSource is MediaSourceWithTypes ) mediaSource?.mediaTypes else null
+            var state = DomainModel(mediaTypes = mediaTypes)
             var lastPerformedAction: LoadAction? = null
             for (loadAction in actions) {
                 val currentAction = if (loadAction is Retry) {
@@ -152,6 +154,7 @@ data class MediaLoader(
 
     data class DomainModel(
         val domainItems: List<MediaItem> = listOf(),
+        val mediaTypes: Set<MediaType>? = null,
         val hasMore: Boolean = false,
         val isFilteredResult: Boolean = false,
         val filter: String? = null,
