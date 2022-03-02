@@ -60,6 +60,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -255,11 +256,20 @@ class MySiteViewModel @Inject constructor(
                 scanAvailable,
                 cardsUpdate
         )
-        scrollToQuickStartTaskIfNecessary(
-                activeTask,
-                siteItems.indexOfFirst { it.activeQuickStartItem }
-        )
-        return SiteSelected(showTabs = isMySiteTabsEnabled, cardAndItems = siteItems)
+        // todo: annmarie this has to change because we have NO Idea which tab the scrollTo should be on AND
+        // we can't figure out which "list" this should happen on - this might be a later thing
+        // Regression testing on activeQuickStartItem is needed in the case of sharing - we would not
+        // scroll if not within the right tab? would we be marking the activeQuickStartItem differently??
+//        scrollToQuickStartTaskIfNecessary(
+//                activeTask,
+//                siteItems.indexOfFirst { it.activeQuickStartItem }
+//        )
+        return SiteSelected(
+                showTabs = isMySiteTabsEnabled,
+                cardAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING] as List<MySiteCardAndItem>,
+                siteMenuCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU] as List<MySiteCardAndItem>,
+                dashboardCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD] as List<MySiteCardAndItem>
+                )
     }
 
     @Suppress("LongParameterList")
@@ -274,7 +284,7 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?
-    ): List<MySiteCardAndItem> {
+    ): Map<String, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
@@ -332,15 +342,35 @@ class MySiteViewModel @Inject constructor(
         )
 
         val siteItems = siteItemsBuilder.build(
-                SiteItemsBuilderParams(
-                        site = site,
-                        activeTask = activeTask,
-                        backupAvailable = backupAvailable,
-                        scanAvailable = scanAvailable,
-                        onClick = this::onItemClick
+                    SiteItemsBuilderParams(
+                            site = site,
+                            activeTask = activeTask,
+                            backupAvailable = backupAvailable,
+                            scanAvailable = scanAvailable,
+                            onClick = this::onItemClick
+                    )
+        )
+
+        return mapOf(
+                MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING to orderForDisplay(
+                        infoItem,
+                        cardsResult,
+                        dynamicCards,
+                        siteItems
+                ),
+                MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU to orderForDisplay(
+                        infoItem,
+                        cardsResult.filterNot { it is DashboardCards }.toList(),
+                        dynamicCards,
+                        siteItems
+                ),
+                MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD to orderForDisplay(
+                        infoItem,
+                        cardsResult,
+                        dynamicCards,
+                        listOf()
                 )
         )
-        return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
@@ -387,6 +417,7 @@ class MySiteViewModel @Inject constructor(
         }.toList()
     }
 
+    // todo: Annmarie - probably need to track both "quickStartPosition" and the tab as a unit
     private fun scrollToQuickStartTaskIfNecessary(
         quickStartTask: QuickStartTask?,
         position: Int
@@ -877,7 +908,10 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val showTabs: Boolean
-        data class SiteSelected(override val showTabs: Boolean, val cardAndItems: List<MySiteCardAndItem>) : State()
+        data class SiteSelected(override val showTabs: Boolean,
+            val cardAndItems: List<MySiteCardAndItem>,
+            val siteMenuCardsAndItems: List<MySiteCardAndItem>,
+            val dashboardCardsAndItems: List<MySiteCardAndItem>) : State()
         data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
     }
 
