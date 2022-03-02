@@ -151,7 +151,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 collapsingToolbar.title = null
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
-            header.alpha = percentage.toFloat()/100
+            siteInfo.siteInfoCard.alpha = percentage.toFloat()/100
             avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
                 val maxSize = avatar.maxHeight
