@@ -116,7 +116,7 @@ public class WPLoginInputRow extends RelativeLayout {
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            state = restoreViewsState((SavedState) bundle.getParcelable(KEY_SUPER_STATE));
+            state = restoreViewsState(bundle.getParcelable(KEY_SUPER_STATE));
         }
 
         super.onRestoreInstanceState(state);
