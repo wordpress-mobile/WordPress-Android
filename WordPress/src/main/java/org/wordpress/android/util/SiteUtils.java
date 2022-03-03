@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -386,6 +387,6 @@ public class SiteUtils {
     @NonNull
     public static FetchSitesPayload getFetchSitesPayload() {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
-        return new FetchSitesPayload(siteFilters);
+        return new FetchSitesPayload(siteFilters, !BuildConfig.IS_JETPACK_APP);
     }
 }

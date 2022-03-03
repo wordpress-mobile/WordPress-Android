@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-18 14:15:37+0000
+Translation-Revision-Date: 2022-03-02 14:58:38+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Votre recherche contient des caractères non pris en charge dans les domaines WordPress.com. Seuls les caractères alphanumériques sont autorisés.</string>
+    <string name="my_site_error_within_card_subtitle">Vérifiez votre connexion Internet et actualisez la page.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Accéder aux statistiques</string>
+    <string name="my_site_todays_stat_card_title">Statistiques du jour</string>
+    <string name="error_edit_notification">Une erreur s’est produite lors de la mise à jour du contenu de la notification</string>
+    <string name="reader_comment_menu_edit">Modifier</string>
     <string name="comment_moderation_error">Impossible de modérer les commentaires</string>
     <string name="reader_comment_menu_trash">Mettre à la corbeille</string>
     <string name="reader_comment_menu_spam">Marquer comme indésirable</string>
@@ -723,6 +729,7 @@ Language: fr
     <string name="media_loading_failed">Échec du chargement du média</string>
     <string name="reader_discover_recommended_blogs_header">Sites à suivre</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Nous travaillons dur pour ajouter plus de blocs à chaque version.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">« %s » n’est pas entièrement pris en charge</string>
     <string name="gutenberg_native_help_button">Bouton d’aide</string>
     <string name="gutenberg_native_edit_using_web_editor">Modifier avec l’éditeur web</string>
     <string name="gutenberg_native_choose_images">Choisir des images</string>
