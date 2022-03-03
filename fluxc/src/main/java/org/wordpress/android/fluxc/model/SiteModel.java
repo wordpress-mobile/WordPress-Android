@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.model;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
@@ -23,6 +21,8 @@ import java.lang.annotation.Retention;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
