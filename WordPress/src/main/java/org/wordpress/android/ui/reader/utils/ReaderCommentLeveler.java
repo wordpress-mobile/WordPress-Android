@@ -23,7 +23,7 @@ public class ReaderCommentLeveler {
         // reset all levels, and add root comments to result
         for (ReaderComment comment : mComments) {
             comment.level = 0;
-            if (comment.parentId == 0 || !hasParent(comment)) {
+            if (comment.parentId == 0) {
                 result.add(comment);
             }
         }
@@ -81,14 +81,5 @@ public class ReaderCommentLeveler {
         for (ReaderComment comment : comments) {
             comment.level = level;
         }
-    }
-
-    private boolean hasParent(ReaderComment comment) {
-        for (ReaderComment parentComment : mComments) {
-            if (parentComment.commentId == comment.parentId) {
-                return true;
-            }
-        }
-        return false;
     }
 }

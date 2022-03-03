@@ -1209,7 +1209,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canEdit() {
-        return (mSite != null && canModerate());
+        return mSite != null && mSite.getHasCapabilityEditOthersPosts();
     }
 
     private boolean canLike() {

@@ -31,4 +31,6 @@ class BuildConfigWrapper @Inject constructor() {
     val isFollowedSitesSettingsEnabled = BuildConfig.ENABLE_FOLLOWED_SITES_SETTINGS
 
     val isWhatsNewFeatureEnabled = BuildConfig.ENABLE_WHATS_NEW_FEATURE
+
+    val isMySiteTabsEnabled = BuildConfig.ENABLE_MY_SITE_DASHBOARD_TABS
 }
