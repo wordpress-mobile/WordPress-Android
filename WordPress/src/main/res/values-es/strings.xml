@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-08 05:01:59+0000
+Translation-Revision-Date: 2022-02-22 07:13:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles en los dominios de WordPress.com. Solo se permiten caracteres alfanuméricos.</string>
+    <string name="error_edit_notification">Ha ocurrido un error al actualizar el contenido del aviso</string>
+    <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir a las estadísticas</string>
+    <string name="my_site_error_within_card_subtitle">Comprueba tu conexión a Internet y actualiza la página.</string>
+    <string name="reader_comment_menu_edit">Editar</string>
     <string name="reader_comment_menu_spam">Marcar como spam</string>
     <string name="reader_comment_menu_trash">Mover a la papelera</string>
     <string name="comment_moderation_error">Fallo al moderar los comentarios</string>
