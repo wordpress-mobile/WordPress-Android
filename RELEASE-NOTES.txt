@@ -5,6 +5,7 @@
 * [**] Login: improved error messages for login with self-hosted sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/15919]
 * [*] Reader: nested comments with missing parent are now hidden from the comment list [https://github.com/wordpress-mobile/WordPress-Android/pull/15993]
 * [*] My Site: Fixes indeterminate progress bar in site icon when cancelling editing [https://github.com/wordpress-mobile/WordPress-Android/pull/15958]
+* [*] Jetpack App: Fixes Keyboard shown in error message screen . [https://github.com/wordpress-mobile/WordPress-Android/pull/16038]
 
 19.3
 -----
