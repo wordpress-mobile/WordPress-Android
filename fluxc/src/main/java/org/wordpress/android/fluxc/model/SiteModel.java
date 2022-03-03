@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 
@@ -11,6 +13,7 @@ import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -20,8 +23,6 @@ import java.lang.annotation.Retention;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
@@ -152,6 +153,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public LocalId localId() {
         return new LocalOrRemoteId.LocalId(mId);
+    }
+
+    public RemoteId remoteId() {
+        if (mSiteId != 0L) {
+            return new RemoteId(mSiteId);
+        } else {
+            return new RemoteId(mSelfHostedSiteId);
+        }
     }
 
     public SiteModel() {
