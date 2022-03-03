@@ -1,10 +1,9 @@
-package org.wordpress.android.ui.stats;
+package org.wordpress.android.ui.stats
 
 /**
  * An enum of the different view types to appear on the stats view.
  */
-
-public enum StatsViewType {
+enum class StatsViewType {
     // TIMEFRAME_SELECTOR,
     GRAPH_AND_SUMMARY,
     TOP_POSTS_AND_PAGES,
