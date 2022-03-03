@@ -16,6 +16,7 @@ import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResu
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -55,6 +56,7 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
         initBackPressHandler()
         initViewModel()
         with(JetpackLoginEmptyViewBinding.bind(view)) {
+            ActivityUtils.hideKeyboardForced(view)
             initErrorMessageView()
             initClickListeners()
         }
