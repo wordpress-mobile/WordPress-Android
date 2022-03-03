@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-08 09:29:50+0000
+Translation-Revision-Date: 2022-02-21 18:40:40+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Vaše vyhledávání obsahuje znaky, které nejsou podporovány v doménách WordPress.com. Jsou povoleny pouze alfanumerické znaky.</string>
+    <string name="my_site_error_within_card_subtitle">Zkontrolujte připojení k internetu a obnovte stránku.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Přejít na statistiky</string>
+    <string name="my_site_todays_stat_card_title">Dnešní statistika</string>
+    <string name="error_edit_notification">Při aktualizaci obsahu oznámení došlo k chybě</string>
+    <string name="reader_comment_menu_edit">Upravit</string>
     <string name="comment_moderation_error">Komentáře se nepodařilo moderovat</string>
     <string name="reader_comment_menu_trash">Přesunout do koše</string>
     <string name="reader_comment_menu_spam">Označit jako spam</string>

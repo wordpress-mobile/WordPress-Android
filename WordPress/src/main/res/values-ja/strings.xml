@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-16 09:54:08+0000
+Translation-Revision-Date: 2022-02-25 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">検索内容に WordPress.com のドメインでは対応されていない文字が含まれています。 英数字のみ入力できます。</string>
+    <string name="my_site_error_within_card_subtitle">インターネット接続を確認してページを更新してください。</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">統計情報を表示</string>
+    <string name="my_site_todays_stat_card_title">今日の統計情報</string>
+    <string name="error_edit_notification">通知内容の更新中にエラーが発生しました</string>
+    <string name="reader_comment_menu_edit">編集</string>
     <string name="comment_moderation_error">コメントをモデレートできませんでした</string>
     <string name="reader_comment_menu_trash">「ゴミ箱」へ移動</string>
     <string name="reader_comment_menu_spam">「スパム」としてマーク</string>
@@ -256,6 +262,8 @@ Language: ja_JP
     <string name="storage_utils_dialog_ok_button">ストレージを表示</string>
     <string name="storage_utils_dialog_message">公開する前に端末にコンテンツを保存する必要があります。 ストレージ設定を確認して、ファイルを削除してスペースを空けてください。</string>
     <string name="storage_utils_dialog_title">端末のストレージ容量が足りません</string>
+    <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
+    <string name="gutenberg_native_x_axis_position">X 軸位置</string>
     <string name="gutenberg_native_type_a_url">URL を入力</string>
     <string name="gutenberg_native_slash_inserter_results">スラッシュ挿入結果</string>
     <string name="gutenberg_native_s_has_url_set">%s には URL 設定があります</string>
@@ -336,6 +344,7 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">ダブルタップしてプレースホルダーテキストを編集</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">ダブルタップしてラベルテキストを編集</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">ダブルタップしてボタンテキストを編集</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">ダブルタップして単位を変更</string>
     <string name="gutenberg_native_outside">外側</string>
     <string name="gutenberg_native_current_placeholder_text_is">現在のプレースホルダーテキストは</string>
     <string name="gutenberg_native_clear_search">検索をクリア</string>
