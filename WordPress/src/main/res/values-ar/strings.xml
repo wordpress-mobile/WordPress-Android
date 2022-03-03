@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-15 18:54:08+0000
+Translation-Revision-Date: 2022-02-24 11:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">يتضمن بحثك أحرف غير مدعومة في نطاقات ووردبريس.كوم. لا يُسمح سوى بالأحرف الهجائية العددية.</string>
+    <string name="my_site_todays_stat_card_title">إحصاءات اليوم</string>
+    <string name="my_site_error_within_card_subtitle">تحقَّق من اتصالك بالإنترنت وقم بتحديث الصفحة.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">الانتقال إلى الإحصاءات</string>
+    <string name="error_edit_notification">حدث خطأ في أثناء تحديث محتوى التنبيهات</string>
+    <string name="reader_comment_menu_edit">تحرير</string>
     <string name="comment_moderation_error">فشل إدارة التعليقات</string>
     <string name="reader_comment_menu_trash">نقل إلى سلة المهملات</string>
     <string name="reader_comment_menu_spam">وضع علامة مزعج</string>
@@ -256,6 +262,8 @@ Language: ar
     <string name="storage_utils_dialog_ok_button">عرض مساحة التخزين</string>
     <string name="storage_utils_dialog_message">يتعين علينا حفظ محتواك على جهازك قبل التمكن من نشره. راجع إعدادات التخزين الخاصة بك، وأزل الملفات لتوفير مساحة.</string>
     <string name="storage_utils_dialog_title">مساحة التخزين على الجهاز غير كافية</string>
+    <string name="gutenberg_native_y_axis_position">موضع المحور الصادي</string>
+    <string name="gutenberg_native_x_axis_position">موضع المحور السيني</string>
     <string name="gutenberg_native_type_a_url">كتابة عنوان URL</string>
     <string name="gutenberg_native_slash_inserter_results">نتائج أداة إدراج الشرطة المائلة</string>
     <string name="gutenberg_native_s_has_url_set">لدى %s عنوان URL معين</string>
@@ -332,6 +340,7 @@ Language: ar
     <string name="gutenberg_native_search_block_label_current_text_is">تسمية مكون البحث. النص الحالي هو</string>
     <string name="gutenberg_native_no_custom_placeholder_set">لم يتم تعيين عنصر نائب مخصص</string>
     <string name="gutenberg_native_hide_search_heading">إخفاء عنوان البحث</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">أنقر نقرًا مزدوجًا لتغيير الوحدة</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">أنقر نقرًا مزدوجًا لتحرير نص التسمية</string>
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">أنقر نقرًا مزدوجًا لتحرير نص العنصر النائب</string>
     <string name="gutenberg_native_inside">داخلي</string>
@@ -720,6 +729,7 @@ Language: ar
     <string name="reader_discover_recommended_blogs_header">مواقع لمتابعتها</string>
     <string name="media_loading_failed">فشل تحميل الوسائط</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">لم يتم دعم \"%s\" بالكامل</string>
     <string name="gutenberg_native_help_button">زر المساعدة</string>
     <string name="gutenberg_native_edit_using_web_editor">تحرير باستخدام محرر الويب</string>
     <string name="gutenberg_native_choose_images">اختيار الصور</string>

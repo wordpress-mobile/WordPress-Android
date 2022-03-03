@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-07 19:03:32+0000
+Translation-Revision-Date: 2022-02-21 19:13:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökfråga innehåller tecken som inte fungerar med domäner hos WordPress.com. Endast alfanumeriska tecken är tillåtna.</string>
+    <string name="my_site_error_within_card_subtitle">Kontrollera din internetanslutning och ladda om sidan.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gå till statistiken</string>
+    <string name="my_site_todays_stat_card_title">Dagens statistik</string>
+    <string name="error_edit_notification">Ett fel uppstod när innehållet i aviseringen skulle uppdateras</string>
+    <string name="reader_comment_menu_edit">Redigera</string>
     <string name="comment_moderation_error">Det gick inte att granska kommentarer</string>
     <string name="reader_comment_menu_trash">Lägg i papperskorgen</string>
     <string name="reader_comment_menu_spam">Markera som skräppost</string>
