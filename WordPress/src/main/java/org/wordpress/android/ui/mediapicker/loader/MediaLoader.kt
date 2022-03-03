@@ -28,7 +28,7 @@ data class MediaLoader(
 ) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
-            var mediaTypes = if (mediaSource is MediaSourceWithTypes ) mediaSource?.mediaTypes else null
+            val mediaTypes = (mediaSource as? MediaSourceWithTypes)?.mediaTypes
             var state = DomainModel(mediaTypes = mediaTypes)
             var lastPerformedAction: LoadAction? = null
             for (loadAction in actions) {
