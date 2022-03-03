@@ -3,6 +3,7 @@
 19.4
 -----
 * [*] Reader: nested comments with missing parent are now hidden from the comment list [https://github.com/wordpress-mobile/WordPress-Android/pull/15993]
+* [*] Fixed an issue which prevented uploading of captured photos after an orientation change. [https://github.com/wordpress-mobile/WordPress-Android/pull/16037]
 
 19.3
 -----
