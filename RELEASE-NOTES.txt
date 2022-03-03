@@ -2,7 +2,6 @@
 
 19.4
 -----
-* [*] Block editor: Fix autocorrected Headings applying bold formatting on iOS [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4557]
 * [***] Block editor: Support for multiple color palettes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4537]
 
 19.3
