@@ -1395,6 +1395,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_site_design_preview_loading";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
                 return "enhanced_site_creation_site_design_preview_loaded";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_VIEWED:
+                return "enhanced_site_creation_intent_question_viewed";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CANCELED:
+                return "enhanced_site_creation_intent_question_canceled";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_SKIPPED:
+                return "enhanced_site_creation_intent_question_skipped";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CONTINUE_PRESSED:
+                return "enhanced_site_creation_intent_question_continue_pressed";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED:
+                return "enhanced_site_creation_intent_question_vertical_selected";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED:
+                return "enhanced_site_creation_intent_question_search_focused";
             case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
                 return "layout_picker_preview_mode_changed";
             case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:
