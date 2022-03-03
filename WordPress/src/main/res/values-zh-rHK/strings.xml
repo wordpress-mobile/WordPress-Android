@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-15 20:54:08+0000
+Translation-Revision-Date: 2022-03-02 22:13:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">你的搜尋包含 WordPress.com 網域不支援的字元。 只能包含英數字元。</string>
+    <string name="my_site_error_within_card_subtitle">請檢查你的網際網路連線並重新整理頁面。</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">前往統計資料</string>
+    <string name="my_site_todays_stat_card_title">本日統計</string>
+    <string name="error_edit_notification">更新通知內容時發生錯誤</string>
+    <string name="reader_comment_menu_edit">編輯</string>
     <string name="comment_moderation_error">無法審核留言</string>
     <string name="reader_comment_menu_trash">移至垃圾桶</string>
     <string name="reader_comment_menu_spam">標記為垃圾訊息</string>
@@ -29,7 +35,6 @@ Language: zh_TW
     <string name="about_automattic_privacy_policy_item_title">隱私權政策</string>
     <string name="about_automattic_terms_of_service_item_title">服務條款</string>
     <string name="about_automattic_work_with_us_item_subtitle">隨時隨地都能處理工作</string>
-    <string name="about_automattic_work_with_us_item_title">與我們合作</string>
     <string name="about_automattic_family_item_title">Automattic 系列</string>
     <string name="about_automattic_legal_and_more_item_title">法律與其他</string>
     <string name="about_automattic_twitter_item_title">Twitter</string>
@@ -37,6 +42,7 @@ Language: zh_TW
     <string name="about_automattic_rate_us_item_title">為我們評分</string>
     <string name="about_automattic_share_with_friends_item_title">與朋友分享</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">你可以使用網頁版本的編輯器來編輯此區塊。</string>
+    <string name="about_automattic_work_with_us_item_title">加入我們</string>
     <string name="gutenberg_native_open_jetpack_security_settings">開啟 Jetpack Security 設定</string>
     <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">注意：您必須允取登入 WordPress.com 方可在行動編輯器中編輯此區塊。</string>
     <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">注意：版面配置可能會因佈景主題和螢幕尺寸而有所不同</string>
@@ -66,6 +72,7 @@ Language: zh_TW
     <string name="reader_comments_be_first_to_comment">成為第一位留言的人</string>
     <string name="reader_comments_view_all">查看所有留言</string>
     <string name="reader_comments_post_fetch_failure">取得文章的資料時發生錯誤</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_fetch_failure">取得留言時發生錯誤</string>
     <string name="reader_btn_follow_conversation_settings">關注討論設定</string>
     <string name="gutenberg_native_from_clipboard">從剪貼簿</string>
@@ -147,6 +154,7 @@ Language: zh_TW
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">收到無效回應</string>
     <string name="recommend_app_null_response">未收到回應</string>
     <string name="me_btn_share">向朋友推薦 WordPress</string>
@@ -254,6 +262,8 @@ Language: zh_TW
     <string name="storage_utils_dialog_ok_button">檢視儲存空間</string>
     <string name="storage_utils_dialog_message">我們需先將內容儲存在你的裝置上，然後才能發表。  請檢視你的儲存空間設定，並移除一些檔案以釋放空間。</string>
     <string name="storage_utils_dialog_title">裝置儲存空間不足</string>
+    <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
+    <string name="gutenberg_native_x_axis_position">X 軸位置</string>
     <string name="gutenberg_native_type_a_url">輸入 URL</string>
     <string name="gutenberg_native_slash_inserter_results">斜線插入工具結果</string>
     <string name="gutenberg_native_s_has_url_set">%s 有 URL 集</string>
@@ -346,6 +356,7 @@ Language: zh_TW
     <string name="get_likes_no_network_error">沒有可用的網路。</string>
     <string name="comments_empty_list_filtered_unreplied">沒有尚未回覆的留言</string>
     <string name="comment_status_unreplied">尚未回覆</string>
+    <string name="gutenberg_native_add_link">新增連結</string>
     <string name="gutenberg_native_search_settings">搜尋設定</string>
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
@@ -1380,6 +1391,7 @@ Language: zh_TW
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在註冊網域名稱…</string>
     <string name="domain_registration_state_picker_dialog_title">選取州/省</string>
     <string name="domain_registration_country_picker_dialog_title">選取國家</string>
+    <string name="domain_contact_information_register_domain_button">註冊網域</string>
     <string name="domain_contact_information_postal_code_hint">郵遞區號</string>
     <string name="domain_contact_information_state_hint">州</string>
     <string name="domain_contact_information_city_hint">城市</string>
@@ -1789,7 +1801,7 @@ Language: zh_TW
     <string name="my_site_icon_dialog_add_message">要新增網站圖示嗎？</string>
     <string name="my_site_icon_dialog_title">網站圖示</string>
     <string name="reader_followed_blog_notifications_this">此網站</string>
-    <string name="reader_followed_blog_notifications_action">啓用</string>
+    <string name="reader_followed_blog_notifications_action">啟用</string>
     <string name="reader_followed_blog_notifications">要啟用 %1$s%2$s%3$s 的通知？</string>
     <string name="reader_btn_notifications_on">開啟網站通知</string>
     <string name="reader_btn_notifications_off">關閉網站通知</string>

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
+import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -54,6 +56,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -128,7 +131,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 }
             }
         }
-
+        setupTabs(viewModel.tabTitles)
         val avatar = root.findViewById<ImageView>(R.id.avatar)
 
         appbarMain.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -147,6 +150,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 avatar.scaleY = newScale
             }
         })
+    }
+
+    private fun MySiteFragmentBinding.setupTabs(tabTitles: List<UiString>) {
+        val adapter = MySiteTabsAdapter(this@MySiteFragment, tabTitles)
+        viewPager.adapter = adapter
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = uiHelpers.getTextOfUiString(requireContext(), tabTitles[position])
+        }.attach()
     }
 
     private fun MySiteFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
@@ -189,8 +201,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             loadGravatar(uiModel.accountAvatarUrl)
             hideRefreshIndicatorIfNeeded()
             when (val state = uiModel.state) {
-                is State.SiteSelected -> loadData(state.cardAndItems)
-                is State.NoSites -> loadEmptyView(state.shouldShowImage)
+                is State.SiteSelected -> loadData(state)
+                is State.NoSites -> loadEmptyView(state)
             }
         })
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
@@ -530,22 +542,24 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         AnalyticsTracker.track(AnalyticsTracker.Stat.QUICK_START_REQUEST_VIEWED)
     }
 
-    private fun MySiteFragmentBinding.loadData(cardAndItems: List<MySiteCardAndItem>) {
+    private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
+        tabLayout.setVisible(state.showTabs)
         recyclerView.setVisible(true)
         actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.loadData(state.cardAndItems)
     }
 
-    private fun MySiteFragmentBinding.loadEmptyView(shouldShowEmptyViewImage: Boolean) {
+    private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        tabLayout.setVisible(state.showTabs)
         recyclerView.setVisible(false)
         viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
-            actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
+            actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
-        actionableEmptyView.image.setVisible(shouldShowEmptyViewImage)
+        actionableEmptyView.image.setVisible(state.shouldShowImage)
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {

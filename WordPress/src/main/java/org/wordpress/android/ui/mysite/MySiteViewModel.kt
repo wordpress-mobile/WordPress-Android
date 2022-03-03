@@ -67,6 +67,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -80,6 +81,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.util.filter
@@ -123,7 +125,8 @@ class MySiteViewModel @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val siteItemsTracker: SiteItemsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -137,6 +140,16 @@ class MySiteViewModel @Inject constructor(
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
     private var isSiteSelected = false
+
+    private val isMySiteTabsEnabled: Boolean
+        get() = mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
+
+    val tabTitles: List<UiString>
+        get() = if (isMySiteTabsEnabled) {
+            listOf(UiStringRes(R.string.my_site_menu_tab_title), UiStringRes(R.string.my_site_dashboard_tab_title))
+        } else {
+            listOf(UiStringRes(R.string.my_site_menu_tab_title))
+        }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -246,7 +259,7 @@ class MySiteViewModel @Inject constructor(
                 activeTask,
                 siteItems.indexOfFirst { it.activeQuickStartItem }
         )
-        return SiteSelected(siteItems)
+        return SiteSelected(showTabs = isMySiteTabsEnabled, cardAndItems = siteItems)
     }
 
     @Suppress("LongParameterList")
@@ -349,7 +362,7 @@ class MySiteViewModel @Inject constructor(
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
-        return NoSites(shouldShowImage)
+        return NoSites(shouldShowImage = shouldShowImage)
     }
 
     private fun orderForDisplay(
@@ -636,13 +649,10 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(stat)
         val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
         if (imageUri != null) {
-            selectedSiteRepository.showSiteIconProgressBar(true)
             launch(bgDispatcher) {
                 val fetchMedia = wpMediaUtilsWrapper.fetchMediaToUriWrapper(imageUri)
                 if (fetchMedia != null) {
                     _onNavigation.postValue(Event(SiteNavigationAction.OpenCropActivity(fetchMedia)))
-                } else {
-                    selectedSiteRepository.showSiteIconProgressBar(false)
                 }
             }
         }
@@ -866,8 +876,9 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class State {
-        data class SiteSelected(val cardAndItems: List<MySiteCardAndItem>) : State()
-        data class NoSites(val shouldShowImage: Boolean) : State()
+        abstract val showTabs: Boolean
+        data class SiteSelected(override val showTabs: Boolean, val cardAndItems: List<MySiteCardAndItem>) : State()
+        data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
     }
 
     data class TextInputDialogModel(
