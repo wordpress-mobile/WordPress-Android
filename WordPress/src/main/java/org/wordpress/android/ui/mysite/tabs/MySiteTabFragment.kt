@@ -100,23 +100,35 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initSoftKeyboard()
+        initDagger()
+    }
+
+    private fun initSoftKeyboard() {
         // The following prevents the soft keyboard from leaving a white space when dismissed.
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+    }
+
+    private fun initDagger() {
         (requireActivity().application as WordPress).component().inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
-        dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(BasicDialogViewModel::class.java)
-        dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(DynamicCardMenuViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViewModels()
         binding = MySiteTabFragmentBinding.bind(view).apply {
             setupContentViews(savedInstanceState)
             setupObservers()
             swipeToRefreshHelper.isRefreshing = true
         }
+    }
+
+    private fun initViewModels() {
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
+        dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(BasicDialogViewModel::class.java)
+        dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(DynamicCardMenuViewModel::class.java)
     }
 
     private fun MySiteTabFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
