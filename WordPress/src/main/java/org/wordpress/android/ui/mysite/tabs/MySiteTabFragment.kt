@@ -590,4 +590,3 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onQuickStartFullScreenDialogDismiss()
     }
 }
-

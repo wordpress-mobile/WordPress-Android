@@ -17,6 +17,3 @@ enum class MySiteTabType(val label: String) {
         }
     }
 }
-
-
-

@@ -913,10 +913,12 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val showTabs: Boolean
-        data class SiteSelected(override val showTabs: Boolean,
+        data class SiteSelected(
+            override val showTabs: Boolean,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
-            val dashboardCardsAndItems: List<MySiteCardAndItem>) : State()
+            val dashboardCardsAndItems: List<MySiteCardAndItem>
+        ) : State()
         data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
     }
 
