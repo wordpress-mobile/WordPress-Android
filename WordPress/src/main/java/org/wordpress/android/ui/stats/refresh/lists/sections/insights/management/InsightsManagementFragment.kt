@@ -40,8 +40,9 @@ class InsightsManagementFragment : DaggerFragment(R.layout.insights_management_f
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.save_insights) {
-            viewModel.onSaveInsights()
+        when (item.itemId) {
+            android.R.id.home -> viewModel.onBackPressed()
+            R.id.save_insights -> viewModel.onSaveInsights()
         }
         return true
     }
