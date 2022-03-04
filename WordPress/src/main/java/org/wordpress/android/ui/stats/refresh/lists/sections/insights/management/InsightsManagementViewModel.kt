@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Type.INSIGHT
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackWithType
+import org.wordpress.android.ui.stats.refresh.utils.trackWithTypes
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -73,7 +74,7 @@ class InsightsManagementViewModel @Inject constructor(
     }
 
     fun onSaveInsights() {
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_SAVED)
+        analyticsTrackerWrapper.trackWithTypes(Stat.STATS_INSIGHTS_MANAGEMENT_SAVED, addedInsightTypes)
         insightsUseCase.launch(defaultDispatcher) {
             statsStore.updateTypes(siteProvider.siteModel, addedInsightTypes.toList())
 
