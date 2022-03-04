@@ -659,10 +659,9 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
             mDispatcher.dispatch(ThemeActionBuilder.newRemoveSiteThemesAction(site));
         }
 
-        if (!BuildConfig.IS_JETPACK_APP || mSiteStore.hasSite()) {
-            // delete wpcom and jetpack sites
-            mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
-        }
+        // delete wpcom and jetpack sites
+        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
+
         // remove all lists
         mDispatcher.dispatch(ListActionBuilder.newRemoveAllListsAction());
         // remove all posts
