@@ -1,0 +1,6 @@
+19.3:
+- - WordPress.com üzerinden kaydolun ve Jetpack'te siteler oluşturun
+- Jetpack'te Okuyucuyu kullanın
+- Yeni yorum düzenleyicide bildirimleri görün
+- Titreyen Sayfa/Site önizlemesi için bir düzeltme alın
+- Bellek azaldığında düzenleyici hikaye bloklarının kapanmasını önleyin
