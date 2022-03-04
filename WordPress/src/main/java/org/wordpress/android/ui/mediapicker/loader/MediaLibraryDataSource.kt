@@ -36,6 +36,8 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("LongParameterList")
+@Suppress("LongParameterList")
 class MediaLibraryDataSource(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
