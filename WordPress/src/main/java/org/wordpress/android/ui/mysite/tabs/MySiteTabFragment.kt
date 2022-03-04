@@ -91,6 +91,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    private lateinit var mySiteTabType: MySiteTabType
 
     private var binding: MySiteTabFragmentBinding? = null
 
@@ -112,6 +113,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initTabType()
         binding = MySiteTabFragmentBinding.bind(view).apply {
             setupContentViews(savedInstanceState)
             setupObservers()
@@ -125,6 +127,18 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 .get(BasicDialogViewModel::class.java)
         dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(DynamicCardMenuViewModel::class.java)
+    }
+
+    // todo: annmarie - if we keep this, then think about instance state
+    private fun initTabType() {
+        mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
+            MySiteTabType.fromString(
+                    this.arguments?.getString(KEY_MY_SITE_TAB_TYPE, MySiteTabType.SITE_MENU.label)
+                            ?: MySiteTabType.SITE_MENU.label
+            )
+        } else {
+            MySiteTabType.EVERYTHING
+        }
     }
 
     private fun MySiteTabFragmentBinding.setupContentViews(savedInstanceState: Bundle?) {
@@ -495,7 +509,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     private fun MySiteTabFragmentBinding.loadData(state: State.SiteSelected) {
         recyclerView.setVisible(true)
-        (recyclerView.adapter as? MySiteAdapter)?.loadData(state.cardAndItems)
+        val cardAndItems = when (mySiteTabType) {
+            MySiteTabType.SITE_MENU -> state.siteMenuCardsAndItems
+            MySiteTabType.DASHBOARD -> state.dashboardCardsAndItems
+            else -> state.cardAndItems
+        }
+        (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
     }
 
     private fun MySiteTabFragmentBinding.loadEmptyView() {

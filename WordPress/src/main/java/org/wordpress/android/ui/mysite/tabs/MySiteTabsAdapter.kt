@@ -11,8 +11,8 @@ class MySiteTabsAdapter(
     override fun getItemCount(): Int = tabTitles.size
 
     override fun createFragment(position: Int) = if (position == 0) {
-        MySiteTabFragment.newInstance(MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU)
+        MySiteTabFragment.newInstance(MySiteTabType.SITE_MENU)
     } else {
-        MySiteTabFragment.newInstance(MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD)
+        MySiteTabFragment.newInstance(MySiteTabType.DASHBOARD)
     }
 }
