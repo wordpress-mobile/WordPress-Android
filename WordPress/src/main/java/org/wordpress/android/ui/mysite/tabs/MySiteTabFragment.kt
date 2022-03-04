@@ -98,6 +98,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         super.onCreate(savedInstanceState)
         initSoftKeyboard()
         initDagger()
+        initViewModels()
     }
 
     private fun initSoftKeyboard() {
@@ -111,7 +112,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModels()
         binding = MySiteTabFragmentBinding.bind(view).apply {
             setupContentViews(savedInstanceState)
             setupObservers()

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -8,6 +9,7 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
@@ -17,7 +19,9 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
+import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
+import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType.USER
@@ -26,7 +30,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class MySiteFragment : Fragment(R.layout.my_site_fragment) {
+class MySiteFragment : Fragment(R.layout.my_site_fragment),
+        QuickStartPromptClickInterface {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
@@ -151,7 +156,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
         actionableEmptyView.image.setVisible(state.shouldShowImage)
     }
 
-    @Suppress("ComplexMethod", "LongMethod")
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
         is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
@@ -159,6 +163,22 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment) {
             // Ignore any other navigation events
         }
     }
+
+    override fun onPositiveClicked(instanceTag: String) {
+        binding?.viewPager?.getCurrentFragment()?.onPositiveClicked(instanceTag)
+    }
+
+    override fun onNegativeClicked(instanceTag: String) {
+        binding?.viewPager?.getCurrentFragment()?.onNegativeClicked(instanceTag)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun ViewPager2.getCurrentFragment() =
+            this@MySiteFragment.childFragmentManager.findFragmentByTag("f$currentItem") as? MySiteTabFragment
 
     override fun onDestroyView() {
         super.onDestroyView()
