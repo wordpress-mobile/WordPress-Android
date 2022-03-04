@@ -101,6 +101,11 @@ class InsightsManagementViewModel @Inject constructor(
         _isMenuVisible.value = true
     }
 
+    fun onBackPressed() {
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_DISMISSED)
+        _closeInsightsManagement.call()
+    }
+
     sealed class InsightListItem(val type: Type) {
         enum class Type {
             HEADER, INSIGHT
