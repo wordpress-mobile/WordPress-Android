@@ -137,7 +137,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                             ?: MySiteTabType.SITE_MENU.label
             )
         } else {
-            MySiteTabType.EVERYTHING
+            MySiteTabType.ALL
         }
     }
 

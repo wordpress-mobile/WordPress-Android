@@ -264,7 +264,7 @@ class MySiteViewModel @Inject constructor(
                     (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
                             .indexOfFirst { it.activeQuickStartItem }
                 } else {
-                    (siteItems[MySiteTabType.EVERYTHING] as List<MySiteCardAndItem>)
+                    (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
                             .indexOfFirst { it.activeQuickStartItem }
                 }
         )
@@ -272,7 +272,7 @@ class MySiteViewModel @Inject constructor(
         // famous last words, but we are controlling the - let's see if we go down this path before refactoring
         return SiteSelected(
                 showTabs = isMySiteTabsEnabled,
-                cardAndItems = siteItems[MySiteTabType.EVERYTHING]!!,
+                cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
@@ -358,7 +358,7 @@ class MySiteViewModel @Inject constructor(
         )
 
         return mapOf(
-                MySiteTabType.EVERYTHING to orderForDisplay(
+                MySiteTabType.ALL to orderForDisplay(
                         infoItem,
                         cardsResult,
                         dynamicCards,
