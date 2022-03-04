@@ -1,0 +1,8 @@
+19.3:
+- Geen e-mailknop bij aanmelding wanneer de e-mailapp niet beschikbaar is
+- Meldingen in nieuwe reactie editor
+- Juiste tijdzone voor sites die in de app zijn gemaakt
+- Bugfixes voor lege "Mijn site" weergave en pagina/site voorbeeld
+- Reader reactie bewerking voor beheerders/redacteuren
+- Weinig geheugen heeft geen invloed op de editor verhaal blokken
+- Betere fouttekst voor nieuwe site URL's met niet-Engelse karakters
