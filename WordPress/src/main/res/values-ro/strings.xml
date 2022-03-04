@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-07 18:52:11+0000
+Translation-Revision-Date: 2022-02-22 13:34:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Căutarea ta include caractere care nu sunt acceptate în domeniile WordPress.com. Sunt permise numai caractere alfanumerice.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Mergi la statistici</string>
+    <string name="my_site_todays_stat_card_title">Statistici pentru azi</string>
+    <string name="error_edit_notification">A apărut o eroare în timpul actualizării conținutului notificării</string>
+    <string name="my_site_error_within_card_subtitle">Verifică dacă ai conexiune la internet și reîmprospătează pagina.</string>
+    <string name="reader_comment_menu_edit">Editează</string>
     <string name="comment_moderation_error">Moderarea comentariilor a eșuat</string>
     <string name="reader_comment_menu_trash">Aruncă la gunoi</string>
     <string name="reader_comment_menu_spam">Marchează ca spam</string>
@@ -2774,7 +2780,7 @@ Language: ro
     <string name="push_auth_expired">Cererea a expirat. Autentifică-te pe WordPress.com pentru a încerca din nou.</string>
     <string name="stats_insights_best_ever">Cele mai multe vizualizări dintotdeauna</string>
     <string name="ignore">Ignoră</string>
-    <string name="stats_insights_today">Statisticile zilei</string>
+    <string name="stats_insights_today">Statistici pentru azi</string>
     <string name="stats_insights_all_time">Articole, vizualizări și vizitatori dintotdeauna.</string>
     <string name="stats_insights">Privire generală</string>
     <string name="me_disconnect_from_wordpress_com">Dezautentificare din WordPress.com</string>
