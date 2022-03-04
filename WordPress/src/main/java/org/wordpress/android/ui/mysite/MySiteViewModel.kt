@@ -28,6 +28,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -256,20 +257,25 @@ class MySiteViewModel @Inject constructor(
                 scanAvailable,
                 cardsUpdate
         )
-        // todo: annmarie this has to change because we have NO Idea which tab the scrollTo should be on AND
-        // we can't figure out which "list" this should happen on - this might be a later thing
-        // Regression testing on activeQuickStartItem is needed in the case of sharing - we would not
-        // scroll if not within the right tab? would we be marking the activeQuickStartItem differently??
-//        scrollToQuickStartTaskIfNecessary(
-//                activeTask,
-//                siteItems.indexOfFirst { it.activeQuickStartItem }
-//        )
+
+        scrollToQuickStartTaskIfNecessary(
+                activeTask,
+                if (isMySiteTabsEnabled) {
+                    (siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU] as List<MySiteCardAndItem>)
+                            .indexOfFirst { it.activeQuickStartItem }
+                } else {
+                    (siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING] as List<MySiteCardAndItem>)
+                            .indexOfFirst { it.activeQuickStartItem }
+                }
+        )
+        // todo: Yes, !! is used because if the key doesn't exist it would be null, but it will always exist
+        // todo: annmarie - could we use a triple here? Possibly :)
         return SiteSelected(
                 showTabs = isMySiteTabsEnabled,
-                cardAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING] as List<MySiteCardAndItem>,
-                siteMenuCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU] as List<MySiteCardAndItem>,
-                dashboardCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD] as List<MySiteCardAndItem>
-                )
+                cardAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_EVERYTHING]!!,
+                siteMenuCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_SITE_MENU]!!,
+                dashboardCardsAndItems = siteItems[MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD]!!
+        )
     }
 
     @Suppress("LongParameterList")
@@ -366,7 +372,7 @@ class MySiteViewModel @Inject constructor(
                 ),
                 MySiteTabFragment.MY_SITE_TAB_TYPE_DASHBOARD to orderForDisplay(
                         infoItem,
-                        cardsResult,
+                        cardsResult.filterNot { it is QuickStartCard }.toList(),
                         dynamicCards,
                         listOf()
                 )
@@ -417,7 +423,6 @@ class MySiteViewModel @Inject constructor(
         }.toList()
     }
 
-    // todo: Annmarie - probably need to track both "quickStartPosition" and the tab as a unit
     private fun scrollToQuickStartTaskIfNecessary(
         quickStartTask: QuickStartTask?,
         position: Int
@@ -794,7 +799,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun checkAndStartLandOnTheEditor() {
+    private fun checkAndStartLandOnTheEditor() {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
