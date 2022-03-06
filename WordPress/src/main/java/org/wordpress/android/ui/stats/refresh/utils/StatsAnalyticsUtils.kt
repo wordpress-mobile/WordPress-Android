@@ -19,6 +19,7 @@ private const val INSIGHTS_PROPERTY = "insights"
 private const val DETAIL_PROPERTY = "detail"
 private const val ANNUAL_STATS_PROPERTY = "annual_stats"
 private const val TYPE = "type"
+private const val TYPES = "types"
 private const val WIDGET_TYPE = "widget_type"
 private const val TODAY_WIDGET_PROPERTY = "today"
 private const val WEEKLY_VIEWS_WIDGET_PROPERTY = "weekly_views"
@@ -50,6 +51,10 @@ fun AnalyticsTrackerWrapper.trackWithSection(stat: Stat, section: StatsSection) 
 
 fun AnalyticsTrackerWrapper.trackWithType(stat: Stat, insightType: InsightType) {
     this.track(stat, mapOf(TYPE to insightType.name))
+}
+
+fun AnalyticsTrackerWrapper.trackWithTypes(stat: Stat, insightTypes: Set<InsightType>) {
+    this.track(stat, mapOf(TYPES to insightTypes.map { it.name }))
 }
 
 fun AnalyticsTrackerWrapper.trackWithWidgetType(stat: Stat, widgetType: WidgetType) {

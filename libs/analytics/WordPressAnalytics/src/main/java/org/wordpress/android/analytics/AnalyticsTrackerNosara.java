@@ -1091,6 +1091,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_insights_type_removed";
             case STATS_INSIGHTS_MANAGEMENT_SAVED:
                 return "stats_insights_management_saved";
+            case STATS_INSIGHTS_MANAGEMENT_DISMISSED:
+                return "stats_insights_management_dismissed";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED:
                 return "stats_insights_management_type_added";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED:
