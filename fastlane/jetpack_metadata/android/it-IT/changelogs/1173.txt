@@ -1,5 +1,0 @@
-19.2:
-- La dimensione del carattere e l'altezza della linea sono ora supportati per i temi dei blocchi.
-- Aggiungi nuove carte statistiche nel menu Impostazioni della schermata Statistiche.
-- Quando modifichi l'elemento multimediale in un blocco Immagine che è anche immagine in evidenza in un articolo, visualizzerai una richiesta per sostituire l'immagine in evidenza.
-- Condividi testo, immagini e video nell'app utilizzando l'azione Condividi del tuo dispositivo.

@@ -1,0 +1,6 @@
+19.3:
+- Regístrate a través de WordPress.com y crea sitios en Jetpack.
+- Utiliza el Lector en Jetpack.
+- Consulta las notificaciones en el nuevo editor de comentarios.
+- Consigue una corrección para el parpadeo de la vista previa de página o sitio.
+- Evita que se cierren los bloques de historias del editor cuando haya poca memoria.

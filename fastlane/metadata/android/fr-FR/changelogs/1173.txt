@@ -1,5 +1,0 @@
-19.2 :
-- Prise en charge des tailles de police et des hauteurs de ligne dans les thèmes de blog
-- Suppression par l’administrateur/éditeur des commentaires ajoutés aux articles
-- Nouvelles cartes de statistiques dans le menu Réglages de l’écran des statistiques
-- Demande de confirmation lors du remplacement de l’image/image mise en avant

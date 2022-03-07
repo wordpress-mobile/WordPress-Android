@@ -1,5 +1,0 @@
-19.2:
-- Textstorlek och radhöjd stöds nu för blockteman.
-- Lägg till nya statistikkort i menyn Inställningar på skärmen Statistik.
-- Vid ändring av media i ett bildblock som också används som utvald bild för ett inlägg visas en prompt som gör det möjligt att byta ut den utvalda bilden.
-- Dela text, bilder och videoklipp i appen med hjälp av åtgärden Dela på din enhet.
