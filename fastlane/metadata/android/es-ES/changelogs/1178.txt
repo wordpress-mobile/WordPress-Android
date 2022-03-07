@@ -1,0 +1,7 @@
+19.3:
+- Avisos en el nuevo editor de comentarios
+- Corrección de la zona horaria de los sitios creados en la aplicación
+- Edición de comentarios del lector para los administradores/editores
+- La memoria baja no afecta a los bloques de historias del editor
+- Texto de error para las nuevas URL de sitios con caracteres no ingleses
+- Corrección de varios fallos y mejoras de diseño

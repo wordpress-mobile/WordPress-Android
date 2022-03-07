@@ -1,0 +1,6 @@
+19.3:
+– Auf WordPress.com registrieren und Websites in Jetpack erstellen
+– Den Reader in Jetpack nutzen
+– Benachrichtigungen im neuen Kommentar-Editor anzeigen
+– Fehlerkorrektur für das Flimmern der Seiten-/Websitevorschau
+– Story-Blocks im Editor werden bei geringem Speicherplatz nicht mehr geschlossen
