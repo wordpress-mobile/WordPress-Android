@@ -80,3 +80,5 @@
 /system_status
 
 /tracker
+
+/coupons
