@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
@@ -576,6 +577,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CategoriesListViewModel.class)
     abstract ViewModel categoriesViewModel(CategoriesListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoryDetailViewModel.class)
+    abstract ViewModel categoryDetailViewModel(CategoryDetailViewModel viewModel);
 
     @Binds
     @IntoMap
