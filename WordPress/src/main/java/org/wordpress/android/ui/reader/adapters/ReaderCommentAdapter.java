@@ -175,6 +175,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    // Workaround of issue with selectable text in RecyclerView
+    // https://code.google.com/p/android/issues/detail?id=208169
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (holder instanceof CommentHolder) {
+            ((CommentHolder) holder).mTxtText.setEnabled(false);
+            ((CommentHolder) holder).mTxtText.setEnabled(true);
+        }
+    }
+
     class PostHeaderHolder extends RecyclerView.ViewHolder {
         private final ReaderCommentsPostHeaderView mHeaderView;
 
