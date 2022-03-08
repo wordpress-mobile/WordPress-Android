@@ -1354,9 +1354,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void handleSiteRemoved() {
+        mSelectedSiteRepository.removeSite();
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // Reset site selection
-            mSelectedSiteRepository.removeSite();
             // Show the sign in screen
             if (BuildConfig.IS_JETPACK_APP) {
                 ActivityLauncher.showSignInForResultJetpackOnly(this);
