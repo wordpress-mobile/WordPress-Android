@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.generated.endpoint.XMLRPC
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequestBuilder.Response.Success
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class XMLRPCRequestBuilder
             try {
                 clazz.cast(obj)?.let { listener(it) }
             } catch (e: ClassCastException) {
-                errorListener.invoke(BaseNetworkError(INVALID_RESPONSE))
+                errorListener.invoke(BaseNetworkError(INVALID_RESPONSE, XmlRpcErrorType.UNABLE_TO_READ_SITE))
             }
         }, errorListener)
     }
