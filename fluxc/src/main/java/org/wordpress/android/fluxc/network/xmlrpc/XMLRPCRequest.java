@@ -41,6 +41,13 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     private final Object[] mParams;
     private final XmlSerializer mSerializer = Xml.newSerializer();
 
+    public enum XmlRpcErrorType {
+        NOT_SET,
+        METHOD_NOT_ALLOWED,
+        UNABLE_TO_READ_SITE,
+        AUTH_REQUIRED
+    }
+
     public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener<? super Object[]> listener,
                          BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
@@ -119,6 +126,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
         switch (error.type) {
             case HTTP_AUTH_ERROR:
                 payload.error.type = AuthenticationErrorType.HTTP_AUTH_ERROR;
+                payload.error.xmlRpcErrorType = XmlRpcErrorType.AUTH_REQUIRED;
                 break;
             case INVALID_SSL_CERTIFICATE:
                 payload.error.type = AuthenticationErrorType.INVALID_SSL_CERTIFICATE;

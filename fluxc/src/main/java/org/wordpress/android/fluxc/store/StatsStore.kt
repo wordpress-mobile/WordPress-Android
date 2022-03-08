@@ -19,8 +19,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
@@ -34,7 +35,7 @@ import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
-val DEFAULT_INSIGHTS = listOf(LATEST_POST_SUMMARY, TODAY_STATS, ALL_TIME_STATS, FOLLOWER_TOTALS)
+val DEFAULT_INSIGHTS = listOf(MOST_POPULAR_DAY_AND_HOUR, ALL_TIME_STATS, TODAY_STATS, FOLLOWERS, COMMENTS)
 val STATS_UNAVAILABLE_WITH_JETPACK = listOf(FILE_DOWNLOADS)
 const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
 
@@ -57,9 +58,14 @@ class StatsStore
     suspend fun getInsightTypes(site: SiteModel): List<StatsType> =
             coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "getInsightTypes") {
                 val types = mutableListOf<StatsType>()
-                if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)) {
-                    types.add(ManagementType.NEWS_CARD)
-                }
+/**
+ * Customize Insights Management card is being hidden for now.
+ * It will be updated to new design in the next iteration.
+ * Also, make sure to remove @Ignore annotation on tests in StatsStoreTest when this is undone.
+ **/
+//                if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)) {
+//                    types.add(ManagementType.NEWS_CARD)
+//                }
                 types.addAll(getAddedInsights(site))
                 types.add(ManagementType.CONTROL)
                 return@withDefaultContext types
