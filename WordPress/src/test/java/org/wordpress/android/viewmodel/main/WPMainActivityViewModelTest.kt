@@ -682,6 +682,25 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(false)
     }
 
+    @Test
+    fun `firstSite should be return the first site available in the list of sites`() {
+        val sites = mock<ArrayList<SiteModel>>()
+        whenever(mSiteStore.sites).thenReturn(sites)
+        val siteModel = mock<SiteModel>()
+        whenever(mSiteStore.hasSite()).thenReturn(true)
+        whenever(sites.get(0)).thenReturn(siteModel)
+
+        assertThat(viewModel.firstSite).isEqualTo(siteModel)
+    }
+
+    @Test
+    fun `firstSite should be return null when there are no sites`() {
+        val sites = mock<ArrayList<SiteModel>>()
+        whenever(mSiteStore.sites).thenReturn(sites)
+
+        assertThat(viewModel.firstSite).isEqualTo(null)
+    }
+
     private fun startViewModelWithDefaultParameters(
         isWhatsNewFeatureEnabled: Boolean = true,
         isCreateFabEnabled: Boolean = true
