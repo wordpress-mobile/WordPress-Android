@@ -26,6 +26,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -42,6 +43,9 @@ class CategoriesListViewModel @Inject constructor(
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _navigation:SingleLiveEvent<CategoryDetailNavigation> = SingleLiveEvent()
+    val navigation: SingleLiveEvent<CategoryDetailNavigation> = _navigation
 
     init {
         dispatcher.register(this)
@@ -97,12 +101,12 @@ class CategoriesListViewModel @Inject constructor(
     }
 
     fun createCategory() {
-        // todo implement the logic of creating category
+        _navigation.postValue(CreateCategory)
     }
 
     @SuppressWarnings("unused")
     fun onCategoryClicked(categoryNode: CategoryNode) {
-        // todo implement the logic of showing detail page
+        _navigation.postValue(EditCategory(categoryNode.categoryId))
     }
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {

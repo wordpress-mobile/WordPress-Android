@@ -10,6 +10,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsCategoriesListFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Content
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error
 import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Loading
@@ -83,6 +84,19 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
                 }
             }
         })
+
+        viewModel.navigation.observe(viewLifecycleOwner) {
+            when (it) {
+                is CreateCategory -> ActivityLauncher.showCategoryDetail(
+                        requireContext(),
+                        viewModel.siteModel,
+                        null
+                )
+                is EditCategory -> ActivityLauncher.showCategoryDetail(
+                        requireContext(),
+                        viewModel.siteModel,it.categoryId)
+            }
+        }
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.updateErrorContent(error: Error) {
