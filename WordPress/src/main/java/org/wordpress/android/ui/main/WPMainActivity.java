@@ -35,6 +35,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.extension.AndroidExtensionsKt;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -350,11 +351,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    if (BuildConfig.IS_JETPACK_APP) {
-                        ActivityLauncher.showSignInForResultJetpackOnly(this);
-                    } else {
-                        ActivityLauncher.showSignInForResult(this);
-                    }
+                    AndroidExtensionsKt.showSignInForResult(this);
                     finish();
                 }
             }
@@ -1356,13 +1353,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         mSelectedSiteRepository.removeSite();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
-            // Reset site selection
-            // Show the sign in screen
-            if (BuildConfig.IS_JETPACK_APP) {
-                ActivityLauncher.showSignInForResultJetpackOnly(this);
-            } else {
-                ActivityLauncher.showSignInForResult(this, true);
-            }
+            AndroidExtensionsKt.showSignInForResult(this);
         } else {
             if (mViewModel.isMultipleSiteAvailable()) {
                 ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
