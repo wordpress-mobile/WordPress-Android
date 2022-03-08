@@ -1354,10 +1354,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mSelectedSiteRepository.removeSite();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
             AndroidExtensionsKt.showSignInForResult(this);
-        } else {
-            if (mViewModel.isMultipleSiteAvailable()) {
-                ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
-            }
+            return;
+        }
+        if (mViewModel.isMultipleSiteAvailable()) {
+            ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
+            return;
         }
     }
 
