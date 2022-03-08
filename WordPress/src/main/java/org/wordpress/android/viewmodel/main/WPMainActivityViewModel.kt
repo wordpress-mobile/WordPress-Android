@@ -321,6 +321,10 @@ class WPMainActivityViewModel @Inject constructor(
         return listOf(followSitesTaskFocusPointInfo)
     }
 
+    fun handleSiteRemoved() {
+        mSelectedSiteRepository.removeSite()
+    }
+
     data class FocusPointInfo(
         val task: QuickStartTask,
         val isVisible: Boolean

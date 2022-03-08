@@ -1351,7 +1351,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void handleSiteRemoved() {
-        mSelectedSiteRepository.removeSite();
+        mViewModel.handleSiteRemoved();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
             AndroidExtensionsKt.showSignInForResult(this);
             return;
