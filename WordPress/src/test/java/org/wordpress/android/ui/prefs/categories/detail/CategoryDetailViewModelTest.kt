@@ -9,14 +9,14 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 
 @InternalCoroutinesApi
-class CategoryDetailViewModelTest : BaseUnitTest(){
+class CategoryDetailViewModelTest : BaseUnitTest() {
     private val dispatcher: Dispatcher = mock()
 
     private lateinit var viewModel: CategoryDetailViewModel
 
     @Before
     fun setUp() {
-        viewModel = CategoryDetailViewModel(TEST_DISPATCHER,dispatcher)
+        viewModel = CategoryDetailViewModel(TEST_DISPATCHER, dispatcher)
     }
 
     @Test
