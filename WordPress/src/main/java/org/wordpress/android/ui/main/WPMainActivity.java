@@ -1355,7 +1355,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void handleSiteRemoved() {
         mSelectedSiteRepository.removeSite();
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
             // Reset site selection
             // Show the sign in screen
             if (BuildConfig.IS_JETPACK_APP) {
@@ -1365,7 +1365,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         } else {
             if (mViewModel.isMultipleSiteAvailable()) {
-                ActivityLauncher.showSitePickerForResult(this, mSiteStore.getSites().get(0));
+                ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
             }
         }
     }
