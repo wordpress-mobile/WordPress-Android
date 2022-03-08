@@ -42,7 +42,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val SWITCH_TO_MY_SITE_DELAY = 500L
-private const val ONE_SITE  = 1
+private const val ONE_SITE = 1
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
@@ -51,8 +51,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val quickStartRepository: QuickStartRepository,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val mSelectedSiteRepository : SelectedSiteRepository,
-    private val mAccountStore : AccountStore,
+    private val mSelectedSiteRepository: SelectedSiteRepository,
+    private val mAccountStore: AccountStore,
     private val mSiteStore: SiteStore,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -107,13 +107,13 @@ class WPMainActivityViewModel @Inject constructor(
             .distinctUntilChanged()
             .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
-    val isMultipleSiteAvailable : Boolean
+    val isMultipleSiteAvailable: Boolean
         get() = mSiteStore.sitesCount > ONE_SITE
 
-    val firstSite : SiteModel?
+    val firstSite: SiteModel?
         get() = if (mSiteStore.hasSite()) { mSiteStore.sites.get(0) } else null
-    
-    val isSignedInWPComOrHasWPOrgSite : Boolean
+
+    val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
 
     fun start(site: SiteModel?) {
