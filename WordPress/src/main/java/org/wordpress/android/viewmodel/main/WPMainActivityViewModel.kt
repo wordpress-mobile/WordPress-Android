@@ -41,6 +41,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val SWITCH_TO_MY_SITE_DELAY = 500L
+private const val ONE_SITE  = 1
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
@@ -104,6 +105,9 @@ class WPMainActivityViewModel @Inject constructor(
             .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
             .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
+
+    val isMultipleSiteAvailable : Boolean
+        get() = mSiteStore.sitesCount > ONE_SITE
 
     fun start(site: SiteModel?) {
         if (isStarted) return
