@@ -1364,7 +1364,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 ActivityLauncher.showSignInForResult(this, true);
             }
         } else {
-            if (mSiteStore.getSitesCount() > 1) {
+            if (mViewModel.isMultipleSiteAvailable()) {
                 ActivityLauncher.showSitePickerForResult(this, mSiteStore.getSites().get(0));
             }
         }
