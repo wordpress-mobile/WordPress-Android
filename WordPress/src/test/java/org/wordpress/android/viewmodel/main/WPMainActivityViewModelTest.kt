@@ -5,7 +5,6 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -663,6 +662,24 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
+    }
+
+    @Test
+    fun `isMultipleSiteAvailable should be true when there are more than one site`() {
+        whenever(mSiteStore.sitesCount).thenReturn(2)
+        assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(true)
+    }
+
+    @Test
+    fun `isMultipleSiteAvailable should be false when there is only one site`() {
+        whenever(mSiteStore.sitesCount).thenReturn(1)
+        assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(false)
+    }
+
+    @Test
+    fun `isMultipleSiteAvailable should be false when there are no site`() {
+        whenever(mSiteStore.sitesCount).thenReturn(0)
+        assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(false)
     }
 
     private fun startViewModelWithDefaultParameters(
