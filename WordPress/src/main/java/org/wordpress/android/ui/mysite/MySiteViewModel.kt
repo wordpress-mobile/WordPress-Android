@@ -268,8 +268,7 @@ class MySiteViewModel @Inject constructor(
                             .indexOfFirst { it.activeQuickStartItem }
                 }
         )
-        // todo: annmarie Yes, !! is used because if the key doesn't exist it would be null, but it will always exist
-        // famous last words, but we are controlling the - let's see if we go down this path before refactoring
+        // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
                 showTabs = isMySiteTabsEnabled,
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
