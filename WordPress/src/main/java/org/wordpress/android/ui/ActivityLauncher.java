@@ -88,6 +88,7 @@ import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.categories.CategoriesListActivity;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -151,6 +152,7 @@ public class ActivityLauncher {
     public static final String SOURCE_TRACK_EVENT_PROPERTY_KEY = "source";
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
+    private static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
@@ -1616,6 +1618,14 @@ public class ActivityLauncher {
     public static void showCategoriesList(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, CategoriesListActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+    public static void showCategoryDetail(@NonNull Context context, @NonNull SiteModel site,
+                                          @Nullable Long categoryId) {
+        Intent intent = new Intent(context, CategoryDetailActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(CATEGORY_DETAIL_ID, categoryId);
         context.startActivity(intent);
     }
 
