@@ -1,0 +1,6 @@
+19.3:
+- Inscreva-se no WordPress.com e crie sites no Jetpack
+- Use o leitor no Jetpack
+- Veja as notificações no novo editor de comentários
+- Corrija a oscilação na visualização da página/site
+- Evite que os blocos de story do editor fechem quando há pouca memória

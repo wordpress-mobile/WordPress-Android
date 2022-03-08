@@ -1,0 +1,6 @@
+19,3 :
+- Inscrivez-vous WordPress.com et créez des sites dans Jetpack
+- Utilisez le lecteur dans Jetpack
+- Les notifications s’affichent dans le nouvel éditeur de commentaires
+- Correction du vacillement de l’aperçu des pages/du site
+- L’éditeur du bloc Story ne peut plus se fermer lorsque la mémoire est faible

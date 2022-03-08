@@ -1,5 +1,0 @@
-19.2:
-- Yazı tipi boyutu ve satır yüksekliği artık blok temalar için destekleniyor.
-- İstatistikler ekranındaki Ayarlar menüsüne yeni istatistik kartları ekleyebilirsiniz.
-- Bir Görsel blokunda, aynı zamanda bir Öne Çıkan Görsel olan ortamı değiştirmek istediğinizde, Öne Çıkan Görsel ile ilgili bir değiştirme istemi alın.
-- Cihazınızdaki Paylaş eylemini kullanarak uygulamada metin, resim ve video paylaşın

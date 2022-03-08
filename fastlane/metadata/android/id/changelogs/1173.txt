@@ -1,6 +1,0 @@
-19.2:
-- Ukuran font dan tinggi baris sekarang didukung untuk tema blok.
-- Admin dan Editor dapat menghapus komentar artikel Reader.
-- Tambahkan kartu statistik baru di menu Pengaturan di layar Statistik.
-- Mengubah media di blok Gambar yang juga merupakan Gambar Unggulan akan meminta pembaruan Gambar Unggulan.
-- Bagikan teks, gambar, dan video di aplikasi menggunakan fitur Berbagi perangkat Anda.

@@ -1,0 +1,6 @@
+19.3:
+- Registrera dig via WordPress.com och skapa webbplatser med Jetpack
+- Använd läsaren i Jetpack
+- Se notiser i den nya kommentarsredigeraren
+- Få en korrigering av den flimrande sid-/webbplatsförhandsgranskningen
+- Se till att redigerarens berättelseblock inte stängs vid lågt minne
