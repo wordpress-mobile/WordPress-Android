@@ -27,6 +27,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -108,6 +109,12 @@ class WPMainActivityViewModel @Inject constructor(
 
     val isMultipleSiteAvailable : Boolean
         get() = mSiteStore.sitesCount > ONE_SITE
+
+    val firstSite : SiteModel
+        get() = mSiteStore.sites.get(0)
+
+    val isSignedInWPComOrHasWPOrgSite : Boolean
+        get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
 
     fun start(site: SiteModel?) {
         if (isStarted) return
