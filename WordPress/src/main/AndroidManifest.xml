@@ -862,7 +862,8 @@
             android:value="true" />
 
         <receiver android:name=".ui.notifications.receivers.NotificationsPendingDraftsReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -872,7 +873,8 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -884,7 +886,8 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
             android:label="@string/stats_widget_all_time_insights_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -896,7 +899,8 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
             android:label="@string/stats_widget_today_insights_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -908,7 +912,8 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
             android:label="@string/stats_widget_minified_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
