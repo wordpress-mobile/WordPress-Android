@@ -266,7 +266,8 @@
         <activity-alias
             android:name=".ui.posts.PostsActivity"
             android:enabled="true"
-            android:targetActivity=".ui.WPLaunchActivity">
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -492,7 +493,8 @@
             />
         <activity-alias
             android:name=".WPComPostReaderActivity"
-            android:targetActivity=".ui.reader.ReaderPostPagerActivity">
+            android:targetActivity=".ui.reader.ReaderPostPagerActivity"
+            android:exported="true">
             <intent-filter>
                 <data
                     android:host="wordpress.com"
