@@ -27,7 +27,7 @@ class UnifiedCommentViewHolder(
     fun bind(item: Comment) = with(binding) {
         title.text = commentListUiUtils.formatCommentTitle(item.authorName, item.postTitle, title.context)
         comment.post { // we need to know the width of the view for image loading before rendering content
-            commentListUiUtils.displayHtmlComment(item.content, comment, comment.width)
+            commentListUiUtils.displayHtmlComment(item.content, comment, comment.lineHeight)
         }
 
         if (item.isSelected) {
