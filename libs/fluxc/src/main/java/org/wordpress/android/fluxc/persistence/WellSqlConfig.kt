@@ -1843,7 +1843,6 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 171 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DELETE FROM WCOrderSummaryModel")
-                    db.execSQL("DELETE FROM WCOrderNoteModel")
                     db.execSQL("DELETE FROM WCOrderShipmentTrackingModel")
                 }
             }
