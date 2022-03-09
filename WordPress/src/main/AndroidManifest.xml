@@ -743,6 +743,10 @@
             android:label="@string/categories"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <activity
+            android:name=".ui.prefs.categories.detail.CategoryDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"
