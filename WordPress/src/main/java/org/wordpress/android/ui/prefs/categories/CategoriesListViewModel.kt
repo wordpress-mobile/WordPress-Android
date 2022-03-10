@@ -101,6 +101,13 @@ class CategoriesListViewModel @Inject constructor(
         if (event.causeOfChange == TaxonomyAction.FETCH_CATEGORIES) processFetchCategoriesCallback(event)
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = MAIN)
+    fun onTermUploaded(event: OnTermUploaded) {
+        if (!event.isError)
+            getCategoriesFromDb()
+    }
+
     fun createCategory() {
         _navigation.postValue(CreateCategory)
     }
