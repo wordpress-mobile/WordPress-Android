@@ -114,7 +114,7 @@ class CategoriesListViewModel @Inject constructor(
 
     @SuppressWarnings("unused")
     fun onCategoryClicked(categoryNode: CategoryNode) {
-        _navigation.postValue(EditCategory(categoryNode.categoryId))
+        //_navigation.postValue(EditCategory(categoryNode.categoryId))
     }
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
