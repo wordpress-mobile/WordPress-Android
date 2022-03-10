@@ -18,8 +18,7 @@ class EditorActionsProvider @Inject constructor() {
         return if (userCanPublish) {
             when (postStatus) {
                 PostStatus.SCHEDULED -> PrimaryEditorAction.SCHEDULE
-                PostStatus.DRAFT -> PrimaryEditorAction.PUBLISH_NOW
-                PostStatus.PENDING, PostStatus.TRASHED -> PrimaryEditorAction.SAVE
+                PostStatus.DRAFT, PostStatus.PENDING, PostStatus.TRASHED -> PrimaryEditorAction.SAVE
                 PostStatus.PUBLISHED ->
                     if (isLandingEditor) PrimaryEditorAction.CONTINUE else PrimaryEditorAction.UPDATE
                 PostStatus.PRIVATE, PostStatus.UNKNOWN -> PrimaryEditorAction.UPDATE
@@ -52,8 +51,7 @@ class EditorActionsProvider @Inject constructor() {
     ): SecondaryEditorAction {
         return if (userCanPublish) {
             when (postStatus) {
-                PostStatus.DRAFT -> SecondaryEditorAction.SAVE
-                PostStatus.PENDING, PostStatus.SCHEDULED -> SecondaryEditorAction.PUBLISH_NOW
+                PostStatus.DRAFT, PostStatus.PENDING, PostStatus.SCHEDULED -> SecondaryEditorAction.PUBLISH_NOW
                 PostStatus.PRIVATE, PostStatus.PUBLISHED -> SecondaryEditorAction.NONE
                 PostStatus.TRASHED, PostStatus.UNKNOWN -> SecondaryEditorAction.SAVE_AS_DRAFT
             }
