@@ -11,7 +11,7 @@ ext {
     targetSdkVersion = 30
 
     coroutinesVersion = '1.3.9'
-    androidxWorkVersion = "2.4.0"
+    androidxWorkVersion = "2.7.0"
 
     daggerVersion = '2.29.1'
     fluxCVersion = '1.37.0'
