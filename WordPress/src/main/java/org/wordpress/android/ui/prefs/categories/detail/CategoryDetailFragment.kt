@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.prefs.categories.detail
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
@@ -15,6 +17,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.ParentCategorySpinnerAdapter
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.Failure
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.InProgress
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.Success
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.SubmitButtonUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
@@ -29,6 +34,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
 
     var spinnerTouched: Boolean = false
+    private var mProgressDialog: ProgressDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -135,6 +141,14 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
             }
             updateSubmitButton(uiState.submitButtonUiState)
         }
+
+        viewModel.onCategoryPush.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                InProgress -> showProgressDialog(R.string.adding_cat)
+                is Success -> showPostSuccess(it.stringResId)
+                is Failure -> showPostError(it.stringResId)
+            }
+        }
     }
 
     private fun CategoryDetailFragmentBinding.updateSubmitButton(submitButtonUiState: SubmitButtonUiState) {
@@ -156,5 +170,30 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
                 requireContext(), message,
                 SHORT
         )
+    }
+
+    private fun showProgressDialog(@StringRes messageId: Int) {
+        mProgressDialog = ProgressDialog(requireContext())
+        mProgressDialog!!.setCancelable(false)
+        mProgressDialog!!.setIndeterminate(true)
+        mProgressDialog!!.setMessage(getString(messageId))
+        mProgressDialog!!.show()
+    }
+
+    private fun hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog!!.isShowing) {
+            mProgressDialog!!.dismiss()
+        }
+    }
+
+    private fun showPostError(stringResId: Int) {
+        hideProgressDialog()
+        ToastUtils.showToast(requireContext(),stringResId)
+    }
+
+    private fun showPostSuccess(stringResId: Int) {
+        hideProgressDialog()
+        ToastUtils.showToast(requireContext(),stringResId)
+        requireActivity().finish()
     }
 }

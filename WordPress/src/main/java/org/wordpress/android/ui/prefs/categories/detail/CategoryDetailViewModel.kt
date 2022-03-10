@@ -9,12 +9,15 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AddCategoryUseCase
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.Failure
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.InProgress
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.Success
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.SubmitButtonUiState.SubmitButtonDisabledUiState
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.SubmitButtonUiState.SubmitButtonEnabledUiState
 import org.wordpress.android.ui.utils.UiString
@@ -42,8 +45,8 @@ class CategoryDetailViewModel @Inject constructor(
     private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
     val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
 
-    private val _toolbarTitleUiState = MutableLiveData<UiString>()
-    val toolbarTitleUiState: LiveData<UiString> = _toolbarTitleUiState
+    private val _onCategoryPush = MutableLiveData<Event<CategoryUpdateUiState>>()
+    val onCategoryPush: LiveData<Event<CategoryUpdateUiState>> = _onCategoryPush
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
@@ -71,7 +74,7 @@ class CategoryDetailViewModel @Inject constructor(
     private fun initCategories() {
         launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
-            siteCategories.add(topLevelCategory)
+            siteCategories.add(0, topLevelCategory)
             _uiState.postValue(
                     UiState(
                             toolbarTitle = UiStringRes(R.string.add_new_category),
@@ -102,7 +105,10 @@ class CategoryDetailViewModel @Inject constructor(
             )
             return
         }
-        addCategoryUseCase.addCategory(categoryText, parentCategory.categoryId, siteModel)
+        launch {
+            _onCategoryPush.postValue(Event(InProgress))
+            addCategoryUseCase.addCategory(categoryText, parentCategory.categoryId, siteModel)
+        }
     }
 
     fun categoryNameUpdated(inputValue: String) {
@@ -133,6 +139,12 @@ class CategoryDetailViewModel @Inject constructor(
         val submitButtonUiState: SubmitButtonUiState = SubmitButtonDisabledUiState
     )
 
+    sealed class CategoryUpdateUiState {
+        data class Success(val stringResId: Int) : CategoryUpdateUiState()
+        data class Failure(val stringResId: Int) : CategoryUpdateUiState()
+        object InProgress : CategoryUpdateUiState()
+    }
+
     sealed class SubmitButtonUiState(
         val visibility: Boolean = true,
         val enabled: Boolean = false
@@ -148,10 +160,15 @@ class CategoryDetailViewModel @Inject constructor(
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
-    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+    fun onTermUploaded(event: OnTermUploaded) {
         if (event.isError) AppLog.e(
                 T.SETTINGS,
-                "An error occurred while updating taxonomy with type: " + event.error.type
+                "An error occurred while uploading taxonomy with type: " + event.error.type
         )
+        if (event.isError) {
+            _onCategoryPush.postValue(Event(Failure(R.string.adding_cat_failed)))
+        }
+        else
+            _onCategoryPush.postValue(Event(Success(R.string.adding_cat_success)))
     }
 }
