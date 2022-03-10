@@ -13,15 +13,13 @@ import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CategoryDetailFragmentBinding
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.ParentCategorySpinnerAdapter
-import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.Failure
-import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.InProgress
-import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.CategoryUpdateUiState.Success
-import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel.SubmitButtonUiState
+import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Failure
+import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.InProgress
+import org.wordpress.android.ui.prefs.categories.detail.CategoryUpdateUiState.Success
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -45,7 +43,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
             initAdapter()
             initSpinner()
             initInputText()
-            initViewModel(getSite(savedInstanceState))
+            initViewModel()
         }
     }
 
@@ -53,24 +51,11 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
-    private fun CategoryDetailFragmentBinding.initViewModel(site: SiteModel) {
+    private fun CategoryDetailFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@CategoryDetailFragment, viewModelFactory)
                 .get(CategoryDetailViewModel::class.java)
         startObserving()
-        viewModel.start(site)
-    }
-
-    private fun getSite(savedInstanceState: Bundle?): SiteModel {
-        return if (savedInstanceState == null) {
-            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(WordPress.SITE, viewModel.siteModel)
-        super.onSaveInstanceState(outState)
+        viewModel.start()
     }
 
     private fun CategoryDetailFragmentBinding.initSubmitButton() {
@@ -145,8 +130,8 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         viewModel.onCategoryPush.observeEvent(viewLifecycleOwner) {
             when (it) {
                 InProgress -> showProgressDialog(R.string.adding_cat)
-                is Success -> showPostSuccess(it.stringResId)
-                is Failure -> showPostError(it.stringResId)
+                is Success -> showPostSuccess(it.message)
+                is Failure -> showPostError(it.errorMessage)
             }
         }
     }
@@ -164,14 +149,6 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         (parentCategory.adapter as? ParentCategorySpinnerAdapter)?.replaceItems(categoryLevels)
     }
 
-    private fun SnackbarMessageHolder.showToast() {
-        val message = uiHelpers.getTextOfUiString(requireContext(), this.message).toString()
-        ToastUtils.showToast(
-                requireContext(), message,
-                SHORT
-        )
-    }
-
     private fun showProgressDialog(@StringRes messageId: Int) {
         mProgressDialog = ProgressDialog(requireContext())
         mProgressDialog!!.setCancelable(false)
@@ -186,14 +163,22 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         }
     }
 
-    private fun showPostError(stringResId: Int) {
+    private fun showPostError(message: UiString) {
         hideProgressDialog()
-        ToastUtils.showToast(requireContext(),stringResId)
+        showToast(message)
     }
 
-    private fun showPostSuccess(stringResId: Int) {
+    private fun showPostSuccess(message: UiString) {
         hideProgressDialog()
-        ToastUtils.showToast(requireContext(),stringResId)
+        showToast(message)
         requireActivity().finish()
+    }
+
+    private fun showToast(uiString: UiString) {
+        val message = uiHelpers.getTextOfUiString(requireContext(), uiString).toString()
+        ToastUtils.showToast(
+                requireContext(), message,
+                SHORT
+        )
     }
 }

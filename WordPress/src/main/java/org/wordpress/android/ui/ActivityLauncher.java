@@ -1621,10 +1621,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showCategoryDetail(@NonNull Context context, @NonNull SiteModel site,
-                                          @Nullable Long categoryId) {
+    public static void showCategoryDetail(@NonNull Context context, @Nullable Long categoryId) {
         Intent intent = new Intent(context, CategoryDetailActivity.class);
-        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(CATEGORY_DETAIL_ID, categoryId);
         context.startActivity(intent);
     }

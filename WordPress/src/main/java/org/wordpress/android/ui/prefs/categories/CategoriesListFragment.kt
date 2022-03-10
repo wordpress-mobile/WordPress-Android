@@ -95,14 +95,8 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
         viewModel.navigation.observe(viewLifecycleOwner) {
             when (it) {
-                is CreateCategory -> ActivityLauncher.showCategoryDetail(
-                        requireContext(),
-                        viewModel.siteModel,
-                        null
-                )
-                is EditCategory -> ActivityLauncher.showCategoryDetail(
-                        requireContext(),
-                        viewModel.siteModel,it.categoryId)
+                is CreateCategory -> ActivityLauncher.showCategoryDetail(requireContext(), null)
+                is EditCategory -> ActivityLauncher.showCategoryDetail(requireContext(), it.categoryId)
             }
         }
     }
