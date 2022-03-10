@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs.categories
+package org.wordpress.android.ui.prefs.categories.list
 
 import android.os.Bundle
 import android.view.View
@@ -11,9 +11,10 @@ import org.wordpress.android.databinding.SiteSettingsCategoriesListFragmentBindi
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Content
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Loading
+import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.CreateCategory
+import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.EditCategory
+import org.wordpress.android.ui.prefs.categories.list.UiState.Content
+import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
@@ -87,7 +88,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
             actionableEmptyView.updateVisibility(it.errorVisible)
             when (it) {
                 is Content -> updateContentLayout(it.list)
-                is Error -> updateErrorContent(it)
+                is UiState.Error -> updateErrorContent(it)
                 is Loading -> {
                 }
             }
@@ -101,7 +102,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         }
     }
 
-    private fun SiteSettingsCategoriesListFragmentBinding.updateErrorContent(error: Error) {
+    private fun SiteSettingsCategoriesListFragmentBinding.updateErrorContent(error: UiState.Error) {
         uiHelpers.setTextOrHide(actionableEmptyView.title, error.title)
         uiHelpers.setTextOrHide(actionableEmptyView.subtitle, error.subtitle)
         uiHelpers.setImageOrHide(actionableEmptyView.image, error.image)

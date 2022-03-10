@@ -1,14 +1,11 @@
-package org.wordpress.android.ui.prefs.categories
+package org.wordpress.android.ui.prefs.categories.list
 
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
@@ -17,12 +14,11 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Content
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error.GenericError
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Error.NoConnection
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel.UiState.Loading
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.prefs.categories.list.CategoryDetailNavigation.CreateCategory
+import org.wordpress.android.ui.prefs.categories.list.UiState.Content
+import org.wordpress.android.ui.prefs.categories.list.UiState.Error.GenericError
+import org.wordpress.android.ui.prefs.categories.list.UiState.Error.NoConnection
+import org.wordpress.android.ui.prefs.categories.list.UiState.Loading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -114,7 +110,7 @@ class CategoriesListViewModel @Inject constructor(
 
     @SuppressWarnings("unused")
     fun onCategoryClicked(categoryNode: CategoryNode) {
-        //_navigation.postValue(EditCategory(categoryNode.categoryId))
+        // todo implement the logic of navigation to category detail page
     }
 
     private fun processFetchCategoriesCallback(event: OnTaxonomyChanged) {
@@ -125,36 +121,6 @@ class CategoriesListViewModel @Inject constructor(
         launch {
             val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             _uiState.postValue(Content(siteCategories))
-        }
-    }
-
-    sealed class UiState(
-        val loadingVisible: Boolean = false,
-        val contentVisible: Boolean = false,
-        val errorVisible: Boolean = false
-    ) {
-        data class Content(val list: List<CategoryNode>) : UiState(contentVisible = true)
-        object Loading : UiState(loadingVisible = true)
-        sealed class Error : UiState(errorVisible = true) {
-            abstract val image: Int
-            abstract val title: UiString
-            abstract val subtitle: UiString
-            open val buttonText: UiString? = null
-            open val action: (() -> Unit)? = null
-
-            data class NoConnection(override val action: () -> Unit) : Error() {
-                @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
-                override val title = UiStringRes(string.site_settings_categories_no_network_title)
-                override val subtitle = UiStringRes(string.site_settings_categories_no_network_subtitle)
-                override val buttonText = UiStringRes(string.retry)
-            }
-
-            data class GenericError(override val action: () -> Unit) : Error() {
-                @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
-                override val title = UiStringRes(string.site_settings_categories_request_failed_title)
-                override val subtitle = UiStringRes(string.site_settings_categories_request_failed_subtitle)
-                override val buttonText = UiStringRes(string.button_retry)
-            }
         }
     }
 }
