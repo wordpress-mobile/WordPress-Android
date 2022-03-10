@@ -2,7 +2,7 @@ ext {
     coroutinesVersion = '1.5.2'
     wordPressUtilsVersion = '2.4.0'
     wordPressLoginVersion = '0.12.0'
-    gutenbergMobileVersion = '4641-7d1fbf0fb191f1191472c80962e7330f5651593c'
+    gutenbergMobileVersion = '4641-44a44d26ed157e08629e897d0ae9618f59e17447'
     storiesVersion = '1.2.1'
     aboutAutomatticVersion = '0.0.4'
 
