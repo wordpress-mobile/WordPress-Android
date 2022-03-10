@@ -23,8 +23,8 @@ class EditorActionsProviderTest {
         val (primaryAction, secondaryAction) =
                 getPrimaryAndSecondaryActions(PostStatus.DRAFT, userCanPublish = true)
         // Assert
-        assertThat(primaryAction).isEqualTo(PrimaryEditorAction.PUBLISH_NOW)
-        assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.SAVE)
+        assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SAVE)
+        assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.PUBLISH_NOW)
     }
 
     @Test
