@@ -112,7 +112,7 @@ public class PendingDraftsNotificationsUtils {
                 context,
                 BROADCAST_BASE_REQUEST_CODE + makePendingDraftNotificationId(postId),
                 notifPendingDraftReceiverIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                getPendingIntentFlag()
         );
         return alarmIntentOneDay;
     }
@@ -126,7 +126,7 @@ public class PendingDraftsNotificationsUtils {
                         // need to add + 1 so the request code is different from oneDay and oneMonth
                         // pendingIntents, otherwise they overlap
                         notifPendingDraftReceiverIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        getPendingIntentFlag()
                 );
         return alarmIntentOneWeek;
     }
@@ -140,8 +140,12 @@ public class PendingDraftsNotificationsUtils {
                         // need to add + 2 so the request code is different from oneDay and oneWeek
                         // pendingIntents, otherwise they overlap
                         notifPendingDraftReceiverIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        getPendingIntentFlag()
                 );
         return alarmIntentOneMonth;
+    }
+
+    private static int getPendingIntentFlag() {
+        return PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
     }
 }

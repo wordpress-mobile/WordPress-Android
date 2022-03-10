@@ -160,7 +160,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 context,
                 BASE_REQUEST_CODE + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                 resultIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
         return pendingIntent;
@@ -200,7 +200,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 // need to add + 1 so the request code is different, otherwise they overlap
                 BASE_REQUEST_CODE + 1 + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                 openDraftIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         builder.addAction(R.drawable.ic_pencil_white_24dp, context.getText(R.string.edit), pendingIntent);
     }
@@ -219,7 +219,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 // need to add + 2 so the request code is different, otherwise they overlap
                 BASE_REQUEST_CODE + 2 + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                 ignoreIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore), ignorePendingIntent);
     }
@@ -239,7 +239,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 // need to add + 3 so the request code is different, otherwise they overlap
                 BASE_REQUEST_CODE + 3 + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                 notificationDeletedIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         builder.setDeleteIntent(dismissPendingIntent);
     }

@@ -63,7 +63,7 @@ class LocalNotificationWorker(
                 context,
                 0,
                 handler?.buildIntent(context),
-                PendingIntent.FLAG_CANCEL_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 

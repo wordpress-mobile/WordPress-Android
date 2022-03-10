@@ -550,7 +550,7 @@ public class GCMMessageHandler {
                     context,
                     0,
                     intent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
         }
 
@@ -781,6 +781,7 @@ public class GCMMessageHandler {
                         pushId,
                         resultIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                        | PendingIntent.FLAG_IMMUTABLE
                 );
                 builder.setContentIntent(pendingIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -978,7 +979,7 @@ public class GCMMessageHandler {
                     context,
                     AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG,
                     pushAuthIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
             builder.setContentIntent(pendingIntent);
 
@@ -1002,7 +1003,7 @@ public class GCMMessageHandler {
                     context,
                     AUTH_PUSH_REQUEST_CODE_APPROVE,
                     authApproveIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
 
             builder.addAction(R.drawable.ic_checkmark_white_24dp, context.getText(R.string.approve),
@@ -1016,7 +1017,7 @@ public class GCMMessageHandler {
                     context,
                     AUTH_PUSH_REQUEST_CODE_IGNORE,
                     authIgnoreIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
             builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
                     authIgnorePendingIntent);

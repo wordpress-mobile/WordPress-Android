@@ -358,7 +358,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         notificationBuilder.setContentIntent(pendingIntentPost);
 
@@ -369,7 +369,7 @@ class PostUploadNotifier {
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareableUrl);
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(R.drawable.ic_share_white_24dp, mContext.getString(R.string.share_action),
                     pendingIntent);
         }
@@ -378,7 +378,7 @@ class PostUploadNotifier {
         if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
             Intent publishIntent = UploadService.getPublishPostServiceIntent(mContext, post, isFirstTimePublish);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(R.drawable.ic_posts_white_24dp, mContext.getString(R.string.button_publish),
                     pendingIntent);
         }
@@ -417,7 +417,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
         );
 
         notificationBuilder.setSmallIcon(R.drawable.ic_app_white_24dp);
@@ -451,7 +451,7 @@ class PostUploadNotifier {
 
             PendingIntent actionPendingIntent =
                     PendingIntent.getActivity(mContext, RequestCodes.EDIT_POST, writePostIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT);
+                            PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder
                     .addAction(0, mContext.getString(R.string.media_files_uploaded_write_post), actionPendingIntent);
         }
@@ -513,7 +513,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
@@ -539,7 +539,7 @@ class PostUploadNotifier {
             Intent publishIntent = UploadService.getRetryUploadServiceIntent(mContext, post,
                     PostUtils.isFirstTimePublish(post));
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                     actionPendingIntent)
                                .setColor(mContext.getResources().getColor(R.color.accent));
@@ -590,7 +590,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
         );
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
@@ -617,7 +617,7 @@ class PostUploadNotifier {
             mediaListToRetry.addAll(mediaList);
             Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry, true);
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 1, publishIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
                     actionPendingIntent)
                                .setColor(mContext.getResources().getColor(R.color.accent));
