@@ -30,6 +30,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
 
         with(SiteSettingsCategoriesListFragmentBinding.bind(view)) {
             initRecyclerView()
+            initFabButton()
             initEmptyView()
             initViewModel(getSite(savedInstanceState))
         }
@@ -59,6 +60,12 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         )
     }
 
+    private fun SiteSettingsCategoriesListFragmentBinding.initFabButton() {
+        fabButton.setOnClickListener {
+            viewModel.createCategory()
+        }
+    }
+
     private fun SiteSettingsCategoriesListFragmentBinding.initEmptyView() {
         categoriesRecyclerView.setEmptyView(actionableEmptyView)
         actionableEmptyView.updateVisibility(false)
@@ -76,6 +83,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
         viewModel.uiState.observe(viewLifecycleOwner, {
             progressBar.updateVisibility(it.loadingVisible)
             categoriesRecyclerView.updateVisibility(it.contentVisible)
+            fabButton.updateVisibility(it.contentVisible)
             actionableEmptyView.updateVisibility(it.errorVisible)
             when (it) {
                 is Content -> updateContentLayout(it.list)

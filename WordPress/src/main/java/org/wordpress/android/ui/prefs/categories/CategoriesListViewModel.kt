@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
@@ -44,7 +45,7 @@ class CategoriesListViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _navigation:SingleLiveEvent<CategoryDetailNavigation> = SingleLiveEvent()
+    private val _navigation: SingleLiveEvent<CategoryDetailNavigation> = SingleLiveEvent()
     val navigation: SingleLiveEvent<CategoryDetailNavigation> = _navigation
 
     init {
