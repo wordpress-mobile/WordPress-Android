@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -543,11 +542,7 @@ public class GCMMessageHandler {
         }
 
         private PendingIntent getCommentActionPendingIntent(Context context, Intent intent) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionPendingIntentForService(context, intent);
-            } else {
-                return getCommentActionPendingIntentForActivity(context, intent);
-            }
+            return getCommentActionPendingIntentForService(context, intent);
         }
 
         private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent) {
@@ -559,21 +554,8 @@ public class GCMMessageHandler {
             );
         }
 
-        private PendingIntent getCommentActionPendingIntentForActivity(Context context, Intent intent) {
-            return PendingIntent.getActivity(
-                    context,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-            );
-        }
-
         private Intent getCommentActionReplyIntent(Context context, String noteId) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionIntentForService(context);
-            } else {
-                return getCommentActionIntentForActivity(context, noteId);
-            }
+            return getCommentActionIntentForService(context);
         }
 
         private Intent getCommentActionIntent(Context context) {
@@ -582,18 +564,6 @@ public class GCMMessageHandler {
 
         private Intent getCommentActionIntentForService(Context context) {
             return new Intent(context, NotificationsProcessingService.class);
-        }
-
-        private Intent getCommentActionIntentForActivity(Context context, String noteId) {
-            Intent intent = new Intent(context, WPMainActivity.class);
-            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setAction("android.intent.action.MAIN");
-            intent.addCategory("android.intent.category.LAUNCHER");
-            intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-            intent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-            return intent;
         }
 
         private Bitmap getLargeIconBitmap(Context context, String iconUrl, boolean shouldCircularizeIcon) {
