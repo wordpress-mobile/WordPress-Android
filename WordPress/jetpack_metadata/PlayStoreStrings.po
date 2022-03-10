@@ -24,6 +24,19 @@ msgid ""
 "- Logout button only has to be pressed once\n"
 msgstr ""
 
+#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_194"
+msgid ""
+"19.4:\n"
+"- Theme/default/custom color palettes\n"
+"- Email verification app selection\n"
+"- No nested comments if parent comment deleted\n"
+"- Images adjust after mid-capture reorientation\n"
+"- Progress bar fix for My Site icon edits\n"
+"- Reorganized default Insights list\n"
+"- Keyboard won’t cover up login errors\n"
+msgstr ""
+
 msgctxt "release_note_193"
 msgid ""
 "19.3:\n"
@@ -34,7 +47,6 @@ msgid ""
 "- Keep editor story blocks from closing when memory is low\n"
 msgstr ""
 
-#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 #. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
 msgctxt "short-description"
 msgid "Get powerful security and performance tools in your pocket."
