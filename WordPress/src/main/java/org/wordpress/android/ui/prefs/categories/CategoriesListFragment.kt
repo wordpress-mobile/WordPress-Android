@@ -80,7 +80,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
     }
 
     private fun SiteSettingsCategoriesListFragmentBinding.setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             progressBar.updateVisibility(it.loadingVisible)
             categoriesRecyclerView.updateVisibility(it.contentVisible)
             fabButton.updateVisibility(it.contentVisible)
@@ -91,7 +91,7 @@ class CategoriesListFragment : Fragment(R.layout.site_settings_categories_list_f
                 is Loading -> {
                 }
             }
-        })
+        }
 
         viewModel.navigation.observe(viewLifecycleOwner) {
             when (it) {
