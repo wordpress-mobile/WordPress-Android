@@ -100,8 +100,7 @@ class CategoriesListViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onTermUploaded(event: OnTermUploaded) {
-        if (!event.isError)
-            getCategoriesFromDb()
+        if (!event.isError) getCategoriesFromDb()
     }
 
     fun createCategory() {

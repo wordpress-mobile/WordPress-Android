@@ -26,6 +26,7 @@ import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: CategoryDetailViewModel
@@ -66,6 +67,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         }
     }
 
+    @Suppress("EmptyFunctionBlock")
     private fun CategoryDetailFragmentBinding.initInputText() {
         categoryName.requestFocus()
         categoryName.addTextChangedListener(object : TextWatcher {
@@ -99,6 +101,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         }
 
         parentCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @Suppress("EmptyFunctionBlock")
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 

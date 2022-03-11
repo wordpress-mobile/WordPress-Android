@@ -126,9 +126,11 @@ class CategoryDetailViewModel @Inject constructor(
                 T.SETTINGS,
                 "An error occurred while uploading taxonomy with type: " + event.error.type
         )
-        if (event.isError) {
-            _onCategoryPush.postValue(Event(Failure(UiStringRes(string.adding_cat_failed))))
-        } else
-            _onCategoryPush.postValue(Event(Success(UiStringRes(string.adding_cat_success))))
+        val categoryUiState = if (event.isError) {
+            Failure(UiStringRes(string.adding_cat_failed))
+        } else {
+            Success(UiStringRes(string.adding_cat_success))
+        }
+        _onCategoryPush.postValue(Event(categoryUiState))
     }
 }
