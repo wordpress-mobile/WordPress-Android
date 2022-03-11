@@ -155,6 +155,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.categories.CategoriesListFragment;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
@@ -694,6 +695,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(BloggingReminderBottomSheetFragment object);
 
     void inject(CategoriesListFragment object);
+
+    void inject(CategoryDetailFragment object);
 
     void inject(LayoutPreviewFragment object);
 
