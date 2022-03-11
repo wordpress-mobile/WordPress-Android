@@ -875,7 +875,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name"
