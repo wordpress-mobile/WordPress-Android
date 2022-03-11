@@ -104,7 +104,6 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         assertEquals(selectedCategoryParent, uiStates.last().selectedParentCategoryPosition)
     }
 
-
     @Test
     fun `given no internet, when submit is invoked, then ui state is updated`() {
         val categoryName = "Category name"
