@@ -74,7 +74,7 @@ class WPCustomImageGetter @JvmOverloads constructor(
         }
 
         // we need to set a separate width to custom emoji
-        val targetWidth = if (source.contains("wp.com") && source.contains("emojis")) {
+        val targetWidth = if (source.contains(".wp.com") && source.contains("emojis")) {
             maxEmojiWidth
         } else {
             maxWidth
