@@ -84,7 +84,7 @@ msgctxt "play_store_promo"
 msgid "Easily build your website & blog. Create posts & track analytics from anywhere!"
 msgstr ""
 
-#. translators: Multi-paragraph text used to display in the Play Store.
+#. translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!
 msgctxt "play_store_desc"
 msgid ""
 "WordPress for Android puts the power of web publishing in your pocket. It’s a website creator and so much more!\n"
@@ -134,7 +134,7 @@ msgid ""
 "California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.\n"
 msgstr ""
 
-#. translators: Title to be displayed in the Play Store. Limit to 50 characters including spaces and commas!
+#. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
 msgctxt "play_store_app_title"
 msgid "WordPress – Website Builder"
 msgstr ""

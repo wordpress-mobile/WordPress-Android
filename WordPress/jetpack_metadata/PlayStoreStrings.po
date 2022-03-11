@@ -52,7 +52,7 @@ msgctxt "short-description"
 msgid "Get powerful security and performance tools in your pocket."
 msgstr ""
 
-#. translators: Multi-paragraph text used to display in the Play Store.
+#. translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!
 msgctxt "app-store-description"
 msgid ""
 "Get powerful security and performance tools in your pocket with Jetpack for Android.\n"
@@ -66,7 +66,7 @@ msgid ""
 "View the Privacy Notice for California Users at https://automattic.com/privacy/#california-consumer-privacy-act-ccpa.\n"
 msgstr ""
 
-#. App store app name
+#. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
 msgctxt "app-store-name"
 msgid "Jetpack: WP Security & Speed"
 msgstr ""
