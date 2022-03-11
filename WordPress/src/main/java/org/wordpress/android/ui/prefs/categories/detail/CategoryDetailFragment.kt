@@ -62,6 +62,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private fun CategoryDetailFragmentBinding.initSubmitButton() {
         submitButton.setOnClickListener {
             viewModel.onSubmitButtonClick()
+            ActivityUtils.hideKeyboardForced(categoryName)
         }
     }
 
@@ -116,10 +117,6 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     }
 
     private fun CategoryDetailFragmentBinding.startObserving() {
-        viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner) {
-            ActivityUtils.hideKeyboardForced(categoryName)
-        }
-
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             loadCategories(uiState.categories)
             if (uiState.selectedParentCategoryPosition != parentCategory.selectedItemPosition) {

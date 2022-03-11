@@ -44,9 +44,6 @@ class CategoryDetailViewModel @Inject constructor(
 
     private val topLevelCategory = CategoryNode(0, 0, resourceProvider.getString(R.string.top_level_category_name))
 
-    private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
-    val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
-
     private val _onCategoryPush = MutableLiveData<Event<CategoryUpdateUiState>>()
     val onCategoryPush: LiveData<Event<CategoryUpdateUiState>> = _onCategoryPush
 
@@ -91,7 +88,6 @@ class CategoryDetailViewModel @Inject constructor(
 
     private fun addCategory(categoryText: String, parentCategory: CategoryNode) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _dismissKeyboard.postValue(Event(Unit))
             _onCategoryPush.postValue(
                     Event(Failure(UiStringRes(R.string.no_network_message)))
             )
