@@ -30,8 +30,9 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: CategoryDetailViewModel
     @Inject lateinit var uiHelpers: UiHelpers
+    private lateinit var categoryAdapter: ParentCategorySpinnerAdapter
 
-    var spinnerTouched: Boolean = false
+    private var spinnerTouched: Boolean = false
     private var mProgressDialog: ProgressDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,8 +40,8 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         initDagger()
 
         with(CategoryDetailFragmentBinding.bind(view)) {
-            initSubmitButton()
             initAdapter()
+            initSubmitButton()
             initSpinner()
             initInputText()
             initViewModel()
@@ -74,14 +75,14 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                viewModel.categoryNameUpdated(s.toString())
+                viewModel.onCategoryNameUpdated(s.toString())
             }
         })
         ActivityUtils.showKeyboard(categoryName)
     }
 
     private fun CategoryDetailFragmentBinding.initAdapter() {
-        val categoryAdapter = ParentCategorySpinnerAdapter(
+        categoryAdapter = ParentCategorySpinnerAdapter(
                 activity,
                 layout.categories_row_parent,
                 arrayListOf<CategoryNode>()
@@ -107,7 +108,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
                 id: Long
             ) {
                 if (spinnerTouched) {
-                    viewModel.parentCategorySelected(position)
+                    viewModel.onParentCategorySelected(position)
                     spinnerTouched = false
                 }
             }
@@ -139,14 +140,12 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private fun CategoryDetailFragmentBinding.updateSubmitButton(submitButtonUiState: SubmitButtonUiState) {
         with(submitButton) {
             isEnabled = submitButtonUiState.enabled
-        }
-        with(uiHelpers) {
-            updateVisibility(submitButton, submitButtonUiState.visibility)
+            uiHelpers.updateVisibility(this, submitButtonUiState.visibility)
         }
     }
 
-    private fun CategoryDetailFragmentBinding.loadCategories(categoryLevels: ArrayList<CategoryNode>) {
-        (parentCategory.adapter as? ParentCategorySpinnerAdapter)?.replaceItems(categoryLevels)
+    private fun loadCategories(categoryLevels: ArrayList<CategoryNode>) {
+        categoryAdapter.replaceItems(categoryLevels)
     }
 
     private fun showProgressDialog(@StringRes messageId: Int) {

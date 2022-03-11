@@ -85,10 +85,7 @@ class CategoryDetailViewModel @Inject constructor(
 
     fun onSubmitButtonClick() {
         _uiState.value?.let { state ->
-            addCategory(
-                    state.categoryName,
-                    state.categories[state.selectedParentCategoryPosition]
-            )
+            addCategory(state.categoryName, state.categories[state.selectedParentCategoryPosition])
         }
     }
 
@@ -106,7 +103,7 @@ class CategoryDetailViewModel @Inject constructor(
         }
     }
 
-    fun categoryNameUpdated(inputValue: String) {
+    fun onCategoryNameUpdated(inputValue: String) {
         uiState.value?.let { state ->
             val submitButtonUiState = if (inputValue.isNotEmpty()) {
                 SubmitButtonEnabledUiState
@@ -120,7 +117,7 @@ class CategoryDetailViewModel @Inject constructor(
         }
     }
 
-    fun parentCategorySelected(position: Int) {
+    fun onParentCategorySelected(position: Int) {
         _uiState.value?.let { state ->
             _uiState.value = state.copy(selectedParentCategoryPosition = position)
         }
