@@ -150,10 +150,12 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
 
     private fun showProgressDialog(@StringRes messageId: Int) {
         mProgressDialog = ProgressDialog(requireContext())
-        mProgressDialog!!.setCancelable(false)
-        mProgressDialog!!.setIndeterminate(true)
-        mProgressDialog!!.setMessage(getString(messageId))
-        mProgressDialog!!.show()
+        mProgressDialog?.apply {
+            setCancelable(false)
+            isIndeterminate = true
+            setMessage(getString(messageId))
+        }
+        mProgressDialog?.show()
     }
 
     private fun hideProgressDialog() {
