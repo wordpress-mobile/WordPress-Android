@@ -180,7 +180,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
-        if (holder instanceof CommentHolder) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && holder instanceof CommentHolder) {
             ((CommentHolder) holder).mTxtText.setEnabled(false);
             ((CommentHolder) holder).mTxtText.setEnabled(true);
         }
