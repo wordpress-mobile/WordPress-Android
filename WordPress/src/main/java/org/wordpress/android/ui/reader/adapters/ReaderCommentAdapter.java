@@ -398,10 +398,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
-        commentHolder.mTxtText.post(
-                () -> CommentUtils.displayHtmlComment(commentHolder.mTxtText, comment.getText(), maxImageWidth,
-                        commentHolder.mTxtText.getLineHeight(),
-                        commentHolder.mTxtText.getResources().getString(R.string.comment_unable_to_show_error)));
+        String renderingError = commentHolder.mTxtText.getResources().getString(R.string.comment_unable_to_show_error);
+        CommentUtils.displayHtmlComment(commentHolder.mTxtText, comment.getText(), maxImageWidth,
+                commentHolder.mTxtText.getLineHeight(), renderingError);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
