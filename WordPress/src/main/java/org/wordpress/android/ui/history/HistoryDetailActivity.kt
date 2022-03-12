@@ -22,16 +22,14 @@ class HistoryDetailActivity : LocaleAwareActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val extras = requireNotNull(intent.extras)
-        val revision = extras.getParcelable<Revision>(HistoryDetailContainerFragment.EXTRA_REVISION)
-        val revisions = extras.getParcelableArrayList<Revision>(HistoryDetailContainerFragment.EXTRA_REVISIONS)
+        val revision = extras.getParcelable<Revision>(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION)
+        val previousRevisionsIds =
+                extras.getLongArray(HistoryDetailContainerFragment.EXTRA_PREVIOUS_REVISIONS_IDS)
 
         var historyDetailContainerFragment = supportFragmentManager.findFragmentByTag(KEY_HISTORY_DETAIL_FRAGMENT)
 
         if (historyDetailContainerFragment == null) {
-            historyDetailContainerFragment = HistoryDetailContainerFragment.newInstance(
-                    revision,
-                    revisions as ArrayList<Revision>
-            )
+            historyDetailContainerFragment = HistoryDetailContainerFragment.newInstance(revision, previousRevisionsIds)
             supportFragmentManager
                     .beginTransaction()
                     .add(R.id.fragment_container, historyDetailContainerFragment, KEY_HISTORY_DETAIL_FRAGMENT)

@@ -33,6 +33,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.util.AniUtils;
@@ -53,6 +55,7 @@ import org.wordpress.aztec.plugins.wpcomments.HiddenGutenbergPlugin;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -73,17 +76,20 @@ public class HistoryDetailContainerFragment extends Fragment {
     private boolean mIsChevronClicked = false;
     private boolean mIsFragmentRecreated = false;
 
-    public static final String EXTRA_REVISION = "EXTRA_REVISION";
-    public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
+    public static final String EXTRA_CURRENT_REVISION = "EXTRA_CURRENT_REVISION";
+    public static final String EXTRA_PREVIOUS_REVISIONS_IDS = "EXTRA_PREVIOUS_REVISIONS_IDS";
     public static final String KEY_REVISION = "KEY_REVISION";
     public static final String KEY_IS_IN_VISUAL_PREVIEW = "KEY_IS_IN_VISUAL_PREVIEW";
 
     @Inject ImageManager mImageManager;
 
-    public static HistoryDetailContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
+    @Inject PostStore mPostStore;
+
+    public static HistoryDetailContainerFragment newInstance(final Revision revision,
+                                                             final long[] previousRevisionsIds) {
         Bundle args = new Bundle();
-        args.putParcelable(EXTRA_REVISION, revision);
-        args.putParcelableArrayList(EXTRA_REVISIONS, revisions);
+        args.putParcelable(EXTRA_CURRENT_REVISION, revision);
+        args.putLongArray(EXTRA_PREVIOUS_REVISIONS_IDS, previousRevisionsIds);
         HistoryDetailContainerFragment fragment = new HistoryDetailContainerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -95,13 +101,14 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mIsFragmentRecreated = savedInstanceState != null;
 
-        if (getArguments() != null) {
-            mRevision = getArguments().getParcelable(EXTRA_REVISION);
-            mRevisions = getArguments().getParcelableArrayList(EXTRA_REVISIONS);
-        }
+        mapRevisions();
 
         if (mRevisions != null) {
-            mPosition = mRevisions.indexOf(mRevision);
+            for (final Revision revision : mRevisions) {
+                if (revision.getRevisionId() == mRevision.getRevisionId()) {
+                    mPosition = mRevisions.indexOf(revision);
+                }
+            }
         } else {
             throw new IllegalArgumentException("Revisions list extra is null in HistoryDetailContainerFragment");
         }
@@ -170,6 +177,37 @@ public class HistoryDetailContainerFragment extends Fragment {
         resetOnPageChangeListener();
 
         return rootView;
+    }
+
+    private void mapRevisions() {
+        if (getArguments() != null) {
+            mRevision = getArguments().getParcelable(EXTRA_CURRENT_REVISION);
+
+            final long[] previousRevisionsIds = getArguments().getLongArray(EXTRA_PREVIOUS_REVISIONS_IDS);
+            final List<RevisionModel> revisionModels = new ArrayList<>();
+            for (final long revisionId : previousRevisionsIds) {
+                revisionModels.add(mPostStore.getRevisionById(revisionId));
+            }
+            mRevisions = mapRevisionModelsToRevisions(revisionModels);
+        }
+    }
+
+    @Nullable
+    private ArrayList<Revision> mapRevisionModelsToRevisions(@Nullable final List<RevisionModel> revisionModels) {
+        if (revisionModels == null) {
+            return null;
+        }
+        final ArrayList<Revision> revisions = new ArrayList<>();
+        for (int i = 0; i < revisionModels.size(); i++) {
+            final RevisionModel current = revisionModels.get(i);
+            final Revision revision = new Revision(current.getRevisionId(), current.getDiffFromVersion(),
+                    current.getTotalAdditions(), current.getTotalDeletions(), current.getPostContent(),
+                    current.getPostExcerpt(), current.getPostTitle(), current.getPostDateGmt(),
+                    current.getPostModifiedGmt(), current.getPostAuthorId(), current.getTitleDiffs(),
+                    current.getContentDiffs(), null, null);
+            revisions.add(revision);
+        }
+        return revisions;
     }
 
     @Override
