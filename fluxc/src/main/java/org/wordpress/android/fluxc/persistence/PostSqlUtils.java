@@ -341,6 +341,19 @@ public class PostSqlUtils {
                 .endGroup().endWhere().getAsModel();
     }
 
+    @Nullable
+    public LocalRevisionModel getRevisionById(@NonNull final String revisionId) {
+        final List<LocalRevisionModel> localRevisionModels = WellSql.select(LocalRevisionModel.class)
+                      .where().beginGroup()
+                      .equals(LocalRevisionModelTable.REVISION_ID, revisionId)
+                      .endGroup().endWhere().getAsModel();
+        if (localRevisionModels != null && !localRevisionModels.isEmpty()) {
+            return localRevisionModels.get(0);
+        } else {
+            return null;
+        }
+    }
+
     public List<LocalDiffModel> getLocalRevisionDiffs(LocalRevisionModel revision) {
         return WellSql.select(LocalDiffModel.class)
                 .where().beginGroup()

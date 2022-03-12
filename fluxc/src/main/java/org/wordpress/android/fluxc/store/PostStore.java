@@ -1237,6 +1237,20 @@ public class PostStore extends Store {
         return RevisionModel.fromLocalRevisionAndDiffs(localRevision, localDiffs);
     }
 
+    @Nullable
+    public RevisionModel getRevisionById(final long revisionId) {
+        final String revisionIdString = String.valueOf(revisionId);
+        final LocalRevisionModel localRevision = mPostSqlUtils.getRevisionById(revisionIdString);
+
+        if (localRevision == null) {
+            return null;
+        }
+
+        List<LocalDiffModel> localDiffs = mPostSqlUtils.getLocalRevisionDiffs(localRevision);
+
+        return RevisionModel.fromLocalRevisionAndDiffs(localRevision, localDiffs);
+    }
+
     public void deleteLocalRevision(RevisionModel revisionModel, SiteModel site, PostModel post) {
         mPostSqlUtils.deleteLocalRevisionAndDiffs(
                 LocalRevisionModel.fromRevisionModel(revisionModel, site, post));
