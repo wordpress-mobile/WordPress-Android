@@ -116,6 +116,7 @@
     <string name="status_and_visibility">Status &amp; Visibility</string>
 
     <string name="button_not_now">Not now</string>
+    <string name="button_skip">Skip</string>
 
     <string name="at_username">\@%s</string>
 
@@ -3186,6 +3187,8 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_intents_header_title">What’s your website about?</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type you own</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
