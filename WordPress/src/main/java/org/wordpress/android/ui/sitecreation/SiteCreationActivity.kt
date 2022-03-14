@@ -109,6 +109,12 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onBackPressedObservable.observe(this, Observer {
             super.onBackPressed()
         })
+        siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
+            mainViewModel.onBackPressed()
+        })
+        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this, Observer {
+            mainViewModel.onSiteIntentSkipped()
+        })
         hppViewModel.onBackButtonPressed.observe(this, Observer {
             mainViewModel.onBackPressed()
         })

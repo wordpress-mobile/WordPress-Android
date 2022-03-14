@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -20,11 +22,27 @@ class SiteCreationIntentsViewModel @Inject constructor(
 
     private var isStarted = false
 
+    private val _onSkipButtonPressed = SingleLiveEvent<Unit>()
+    val onSkipButtonPressed: LiveData<Unit> = _onSkipButtonPressed
+
+    private val _onBackButtonPressed = SingleLiveEvent<Unit>()
+    val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+
     fun start() {
         if (isStarted) {
             return
         }
         isStarted = true
         // tracker.trackSiteIntentQuestionViewed()
+    }
+
+    fun onSkipPressed() {
+        // tracker.trackSiteIntentQuestionSkipped()
+        _onSkipButtonPressed.call()
+    }
+
+    fun onBackPressed() {
+        // tracker.trackSiteIntentQuestionCanceled()
+        _onBackButtonPressed.call()
     }
 }

@@ -95,6 +95,10 @@ class SiteCreationMainVM @Inject constructor(
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
+    fun onSiteIntentSkipped() {
+        wizardManager.showNextStep()
+    }
+
     fun onSiteDesignSelected(siteDesign: String) {
         siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()

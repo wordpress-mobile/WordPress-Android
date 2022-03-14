@@ -50,6 +50,7 @@ class SiteCreationIntentsFragment : Fragment() {
             this@SiteCreationIntentsFragment.binding = binding
             setupUi()
             setupViewModel()
+            setupActionListeners()
         }
     }
 
@@ -66,6 +67,11 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
         viewModel.start()
+    }
+
+    private fun SiteCreationIntentsFragmentBinding.setupActionListeners() {
+        siteCreationIntentsTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
+        siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
     }
 
     override fun onDestroyView() {
