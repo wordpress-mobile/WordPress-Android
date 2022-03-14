@@ -206,6 +206,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
@@ -583,6 +584,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ModalLayoutPickerFragment object);
 
     void inject(HomePagePickerFragment object);
+
+    void inject(SiteCreationIntentsFragment object);
 
     void inject(SubfilterBottomSheetFragment object);
 
