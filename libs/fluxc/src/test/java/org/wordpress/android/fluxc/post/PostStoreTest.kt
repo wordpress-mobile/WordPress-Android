@@ -296,20 +296,6 @@ class PostStoreTest {
         verifyNoMoreInteractions(dispatcher)
     }
 
-//        @Nullable
-//    public RevisionModel getRevisionById(final long revisionId) {
-//        final String revisionIdString = String.valueOf(revisionId);
-//        final LocalRevisionModel localRevision = mPostSqlUtils.getRevisionById(revisionIdString);
-//
-//        if (localRevision == null) {
-//            return null;
-//        }
-//
-//        List<LocalDiffModel> localDiffs = mPostSqlUtils.getLocalRevisionDiffs(localRevision);
-//
-//        return RevisionModel.fromLocalRevisionAndDiffs(localRevision, localDiffs);
-//    }
-
     @Test
     fun `Should return mapped RevisionModel when getRevisionById is called`() {
         // Arrange
