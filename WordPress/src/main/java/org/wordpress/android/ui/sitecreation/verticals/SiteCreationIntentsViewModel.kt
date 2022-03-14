@@ -70,6 +70,6 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     data class IntentsUiState(
-        val isHeaderVisible: Boolean = false,
+        val isHeaderVisible: Boolean = false
     )
 }
