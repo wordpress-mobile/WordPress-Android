@@ -11,6 +11,8 @@ DEPENDENCY_TREE_VERSION="1.2.0"
 git config --global user.email '$( git log --format='%ae' $CIRCLE_SHA1^! )'
 git config --global user.name '$( git log --format='%an' $CIRCLE_SHA1^! )'
 
+currentBranch=$(git rev-parse --abbrev-ref HEAD)
+
 prNumber="${CIRCLE_PULL_REQUEST##*/}"
 githubUrl="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$prNumber"
 githubResponse="$(curl "$githubUrl" -H "Authorization: token $GITHUB_API_TOKEN")"
@@ -43,6 +45,7 @@ fi
 chmod +x dependency-tree-diff.jar
 ./dependency-tree-diff.jar $TARGET_BRANCH_DEPENDENCIES_FILE $CURRENT_TARGET_BRANCH_DEPENDENCIES_FILE > $DIFF_DEPENDENCIES_FILE
 
+git checkout "$currentBranch"
 if [ -s $DIFF_DEPENDENCIES_FILE ]; then
   echo "There are changes in dependencies of the project"
   cat "$DIFF_DEPENDENCIES_FILE"
