@@ -760,9 +760,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(mComment.getDatePublished()),
                 WordPress.getContext()));
 
-        int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz,
-                getString(R.string.comment_unable_to_show_error));
+        String renderingError = getString(R.string.comment_unable_to_show_error);
+        mTxtContent.post(() -> CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(),
+                mTxtContent.getWidth(), mTxtContent.getLineHeight(), renderingError));
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
