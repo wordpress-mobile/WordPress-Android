@@ -372,6 +372,7 @@ class MySiteViewModel @Inject constructor(
                 MySiteTabType.DASHBOARD to orderForDisplay(
                         infoItem,
                         cardsResult.filterNot { it is QuickStartCard }.toList(),
+                        listOf(),
                         listOf()
                 )
         )
