@@ -13,7 +13,7 @@ ext {
     coroutinesVersion = '1.3.9'
     androidxWorkVersion = "2.4.0"
 
-    daggerVersion = '2.40.5'
+    daggerVersion = '2.41'
     fluxCVersion = '1.37.0'
 
     appCompatVersion = '1.0.2'
