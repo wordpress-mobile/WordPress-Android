@@ -5,11 +5,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 enum class SiteCreationStep : WizardStep {
-    SEGMENTS, DOMAINS, SITE_PREVIEW;
+    SEGMENTS, DOMAINS, SITE_PREVIEW, INTENTS;
 
     companion object {
         fun fromString(input: String): SiteCreationStep {
             return when (input) {
+                "site_creation_intents" -> INTENTS
                 "site_creation_segments" -> SEGMENTS
                 "site_creation_domains" -> DOMAINS
                 "site_creation_site_preview" -> SITE_PREVIEW
@@ -23,6 +24,7 @@ enum class SiteCreationStep : WizardStep {
 class SiteCreationStepsProvider @Inject constructor() {
     fun getSteps(): List<SiteCreationStep> {
         return listOf(
+                SiteCreationStep.fromString("site_creation_intents"),
                 SiteCreationStep.fromString("site_creation_segments"),
                 SiteCreationStep.fromString("site_creation_domains"),
                 SiteCreationStep.fromString("site_creation_site_preview")
