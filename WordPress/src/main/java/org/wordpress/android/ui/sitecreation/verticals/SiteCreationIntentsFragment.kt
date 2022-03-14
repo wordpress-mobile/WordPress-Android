@@ -61,7 +61,7 @@ class SiteCreationIntentsFragment : Fragment() {
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
-        siteCreationIntentsTitlebar.title.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
+        siteCreationIntentsTitlebar.appBarTitle.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
         siteCreationHeaderItem.title.setText(R.string.new_site_creation_intents_header_title)
         siteCreationHeaderItem.subtitle.setText(R.string.new_site_creation_intents_header_subtitle)
     }
@@ -76,7 +76,7 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(
-                siteCreationIntentsTitlebar.title,
+                siteCreationIntentsTitlebar.appBarTitle,
                 siteCreationHeaderItem.title,
                 visible
         )

@@ -15,7 +15,7 @@
 
     <!--TODO: Rename ModalLayoutPickerHeader style to something more generic. -->
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/appBarTitle"
         style="@style/ModalLayoutPickerHeader"
         android:layout_width="0dp"
         android:layout_weight="1"
