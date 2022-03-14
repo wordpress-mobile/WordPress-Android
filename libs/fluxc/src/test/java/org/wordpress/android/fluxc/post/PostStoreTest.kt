@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Test
+import org.junit.Assert.assertEquals
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -20,6 +21,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.revisions.LocalDiffModel
+import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel
+import org.wordpress.android.fluxc.model.revisions.RevisionModel
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload
 import org.wordpress.android.fluxc.store.PostStore
@@ -290,6 +294,61 @@ class PostStoreTest {
             (this.type == ListAction.FETCHED_LIST_ITEMS)
         })
         verifyNoMoreInteractions(dispatcher)
+    }
+
+//        @Nullable
+//    public RevisionModel getRevisionById(final long revisionId) {
+//        final String revisionIdString = String.valueOf(revisionId);
+//        final LocalRevisionModel localRevision = mPostSqlUtils.getRevisionById(revisionIdString);
+//
+//        if (localRevision == null) {
+//            return null;
+//        }
+//
+//        List<LocalDiffModel> localDiffs = mPostSqlUtils.getLocalRevisionDiffs(localRevision);
+//
+//        return RevisionModel.fromLocalRevisionAndDiffs(localRevision, localDiffs);
+//    }
+
+    @Test
+    fun `Should return mapped RevisionModel when getRevisionById is called`() {
+        // Arrange
+        val localRevision = LocalRevisionModel(1)
+        val localDiffs = listOf<LocalDiffModel>(LocalDiffModel(1))
+        whenever(postSqlUtils.getRevisionById(any())).thenReturn(localRevision)
+        whenever(postSqlUtils.getLocalRevisionDiffs(any())).thenReturn(localDiffs)
+
+        // Act
+        val expected = RevisionModel.fromLocalRevisionAndDiffs(localRevision, localDiffs)
+        val actual = store.getRevisionById(1L)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Should return null when PostSqlUtils getRevisionById returns null`() {
+        // Arrange
+        whenever(postSqlUtils.getRevisionById(any())).thenReturn(null)
+
+        // Act
+        val expected = null
+        val actual = store.getRevisionById(1L)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Should call PostSqlUtils getRevisionById when getRevisionById is called`() {
+        // Arrange
+        whenever(postSqlUtils.getRevisionById(any())).thenReturn(LocalRevisionModel())
+
+        // Act
+        store.getRevisionById(1L)
+
+        // Assert
+        verify(postSqlUtils).getRevisionById("1")
     }
 
     private fun createFetchedPostListAction(
