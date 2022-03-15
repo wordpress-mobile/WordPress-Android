@@ -82,3 +82,4 @@
 /tracker
 
 /coupons
+/coupons/<id>/
