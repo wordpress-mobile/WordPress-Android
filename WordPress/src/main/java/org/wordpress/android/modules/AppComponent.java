@@ -155,6 +155,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.categories.CategoriesListFragment;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
@@ -232,7 +233,6 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
-import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
@@ -486,8 +486,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(AddCategoryFragment object);
 
-    void inject(HtmlToSpannedConverter object);
-
     void inject(PluginBrowserActivity object);
 
     void inject(ActivityLogListActivity object);
@@ -697,6 +695,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(BloggingReminderBottomSheetFragment object);
 
     void inject(CategoriesListFragment object);
+
+    void inject(CategoryDetailFragment object);
 
     void inject(LayoutPreviewFragment object);
 

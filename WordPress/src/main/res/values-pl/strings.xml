@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-18 09:56:59+0000
+Translation-Revision-Date: 2022-03-04 06:55:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -838,13 +838,13 @@ Language: pl
     <string name="magic_link_not_seeing_email_message">Nie widzisz wiadomości email? Sprawdź folder Spam lub Wiadomości Śmieci w swoim programie pocztowym.</string>
     <string name="login_magic_links_sent_label">Sprawdź pocztę na tym urządzeniu i stuknij na odnośnik we wiadomości email, którą otrzymałe(a)ś od WordPress.com.</string>
     <string name="login_magic_links_label">Prześlemy tobie odnośnik, który zaloguje ciebie natychmiast, bez konieczności wpisywania hasła.</string>
-    <string name="check_email">Sprawdź pocztę</string>
     <string name="get_started">Rozpocznij</string>
     <string name="enter_email_to_continue_wordpress_com">Wprowadź adres email aby zalogować się albo utworzyć konto WordPress.com.</string>
     <string name="or_type_your_password">Lub wprowadź hasło</string>
     <string name="create_account">Utwórz konto</string>
     <string name="send_link_by_email">Wyślij odnośnik przez email</string>
     <string name="reset_your_password">Zresetuj hasło</string>
+    <string name="check_email">Sprawdź skrzynkę e-mail</string>
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby nadać nowy tytuł</string>
     <string name="quick_start_list_update_site_title_title">Sprawdź tytuł witryny</string>
@@ -1045,10 +1045,10 @@ Language: pl
     <string name="dlg_cancel_action_dont_trash">Nie usuwaj</string>
     <string name="dlg_confirm_action_trash">Do kosza</string>
     <string name="stats_insights_management_activity">Aktywność</string>
-    <string name="stats_insights_management_posts_and_pages">Wpisy i Strony</string>
     <string name="stats_insights_management_general">Ogólne</string>
     <string name="stats_management_screen_title">Dodaj nową kartę</string>
     <string name="stats_management_add_new_stats_card">Dodaj kartę nowych statystyk</string>
+    <string name="stats_insights_management_posts_and_pages">Wpisy i strony</string>
     <string name="reader_self_hosted_select_filter">Użyj przycisku filtra aby odnaleźć wpisy dotyczące określonych tematów</string>
     <string name="reader_bottom_sheet_content_description">Wybierz znacznik lub witrynę, wyskakujące okienko</string>
     <string name="reader_btn_select_filter_content_description">Wybierz witrynę lub znacznik aby odfiltrować wpisy</string>
@@ -1346,13 +1346,13 @@ Language: pl
     <string name="domain_registration_country_picker_dialog_title">Wybierz kraj</string>
     <string name="domain_contact_information_register_domain_button">Zarejestruj domenę</string>
     <string name="domain_contact_information_postal_code_hint">Kod pocztowy</string>
-    <string name="domain_contact_information_city_hint">Miasto</string>
     <string name="domain_contact_information_address_hint_two">Adres 2</string>
     <string name="domain_contact_information_address_hint">Adres</string>
     <string name="domain_contact_information_country_hint">Kraj</string>
     <string name="domain_contact_information_country_code_hint">Kod kraju</string>
     <string name="domain_contact_information_state_hint">Stan</string>
     <string name="domain_contact_information_phone_number_hint">Numer telefonu</string>
+    <string name="domain_contact_information_city_hint">Miejscowość</string>
     <string name="domain_contact_information_organization_hint">Organizacja (opcjonalnie)</string>
     <string name="domain_contact_information_description">Dla twojej wygody, wypełniliśmy wstępnie twoje dane kontaktowe\nWordpress.com. Przejrzyj je aby upewnić się, że wpisane są prawidłowe informacje dla tej domeny.</string>
     <string name="domain_contact_information_title">Informacje kontaktowe domeny</string>
@@ -1528,8 +1528,6 @@ Language: pl
     <string name="stats_clicks_label">Kliknięcia</string>
     <string name="stats_clicks_link_label">Odnośnik</string>
     <string name="stats_clicks">Kliknięcia</string>
-    <string name="stats_referrers">Odsyłający</string>
-    <string name="stats_posts_and_pages">Wpisy i Strony</string>
     <string name="stats_insights_path">Ścieżka</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_google_plus">Google+</string>
@@ -1550,6 +1548,8 @@ Language: pl
     <string name="stats_author_views_label">Wyświetlenia</string>
     <string name="stats_referrer_label">Strona odsyłająca</string>
     <string name="stats_search_terms">Szukane wyrażenia</string>
+    <string name="stats_referrers">Odsyłające</string>
+    <string name="stats_posts_and_pages">Wpisy i strony</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
     <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, podsumowanie twojego ostatniego wpisu pojawi się tu:</string>
@@ -1590,13 +1590,13 @@ Language: pl
     <string name="media_space_used">%1$s wykorzystano</string>
     <string name="history_loading_revision">Wczytywanie rewizji</string>
     <string name="history_loaded_revision">Rewizja wczytana</string>
-    <string name="history_load_dialog_button_positive">Wczytaj</string>
     <string name="history_empty_title">Brak historii</string>
     <string name="history_empty_subtitle_post">Kiedy wprowadzisz zmiany do swoich wpisów, będziesz miał(a) w tym miejscu możliwość przejrzenia historii.</string>
     <string name="history_empty_subtitle_page">Kiedy wprowadzisz zmiany do swoich stron, będziesz miał(a) w tym miejscu możliwość przejrzenia historii.</string>
     <string name="enter_wpcom_or_jetpack_site">Proszę wprowadzić witrynę WordPress.com lub witrynę z własnym hostingiem z podłączonym Jetpackiem.</string>
     <string name="history_footer_post">Wpis utworzono %1$s o %2$s</string>
     <string name="history_footer_page">Utworzono stronę %1$s o %2$s</string>
+    <string name="history_load_dialog_button_positive">Ładowanie</string>
     <string name="description_user">Obrazek profilowy użytkownika</string>
     <string name="image_size_full_label">Pełny rozmiar</string>
     <string name="image_size_large_label">Duży</string>
@@ -2934,7 +2934,6 @@ Language: pl
     <string name="reader_toast_err_comment_failed">Nie udało się opublikować twojego komentarza</string>
     <string name="reader_toast_err_share_intent">Nie udało się udostępnić</string>
     <string name="reader_hint_comment_on_comment">Odpowiedz na komentarz…</string>
-    <string name="reader_btn_unfollow">Obserwujesz</string>
     <string name="reader_btn_follow">Obserwuj</string>
     <string name="reader_likes_only_you">Lubisz to</string>
     <string name="reader_toast_err_view_image">Nie można wyświetlić obrazka</string>
@@ -2944,6 +2943,7 @@ Language: pl
     <string name="reader_toast_err_tag_exists">Obserwujesz już ten temat</string>
     <string name="reader_untitled_post">(Bez nazwy)</string>
     <string name="comments_empty_list">Brak komentarzy</string>
+    <string name="reader_btn_unfollow">Obserwowane</string>
     <string name="themes">Motywy</string>
     <string name="media_gallery_type_tiled">Kafelki</string>
     <string name="media_gallery_type_squares">Kwadraty</string>
@@ -2961,9 +2961,9 @@ Language: pl
     <string name="stats_timeframe_weeks">Tygodnie</string>
     <string name="stats_timeframe_months">Miesiące</string>
     <string name="media_gallery_type_circles">Kręgi</string>
-    <string name="stats_view_referrers">Polecający</string>
     <string name="theme_activate_button">Włącz</string>
     <string name="media_edit_caption_text">Podpis</string>
+    <string name="stats_view_referrers">Odsyłające</string>
     <string name="discard">Odrzuć</string>
     <string name="manage">Zarządzaj</string>
     <string name="note_reply_successful">Odpowiedź opublikowana</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-01-25 06:34:31+0000
+Translation-Revision-Date: 2022-03-02 22:26:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Je zoekopdracht bevat karakters die niet worden ondersteund in WordPress.com domeinen. Alleen alfanumerieke karakters zijn toegestaan.</string>
+    <string name="my_site_error_within_card_subtitle">Controleer je internetverbinding en vernieuw de pagina.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ga naar de statistieken</string>
+    <string name="my_site_todays_stat_card_title">Statistieken van vandaag</string>
+    <string name="error_edit_notification">Er is een fout opgetreden bij het updaten van de inhoud van de melding</string>
+    <string name="reader_comment_menu_edit">Bewerken</string>
+    <string name="comment_moderation_error">Modereren reacties mislukt</string>
+    <string name="reader_comment_menu_trash">Verplaats naar prullenbak</string>
+    <string name="reader_comment_menu_spam">Markeer als spam</string>
+    <string name="reader_comment_menu_unapprove">Weigeren</string>
     <string name="gutenberg_native_tiled_gallery_settings">Getegelde galerij instellingen</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Navigeert naar het lay-out selectiescherm</string>
     <string name="gutenberg_native_gallery_style">Galerij stijl</string>
@@ -181,6 +191,7 @@ Language: nl
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Rangschik je inhoud in kolommen, voeg Oproep tot actie knoppen toe, en overlap afbeeldingen met tekst.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Voeg op elk moment een nieuw blok toe, door te tikken op het + pictogram in de toolbar links onderaan. </string>
     <string name="quick_start_sites_type_tasks_completed">%1$s van %2$s afgerond</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Leer de basis met een snelle walkthrough.</string>
     <string name="comment_batch_moderation_error">Kan een of meerdere reacties niet modereren</string>
@@ -251,6 +262,8 @@ Language: nl
     <string name="storage_utils_dialog_ok_button">Bekijk de opslag</string>
     <string name="storage_utils_dialog_message">We moeten je inhoud op het apparaat opslaan voordat deze kan worden gepubliceerd. Bekijk je opslaginstellingen en verwijder bestanden om ruimte vrij te maken.</string>
     <string name="storage_utils_dialog_title">Onvoldoende apparaat opslag</string>
+    <string name="gutenberg_native_y_axis_position">Y-as positie</string>
+    <string name="gutenberg_native_x_axis_position">X-as positie</string>
     <string name="gutenberg_native_type_a_url">Typ een URL</string>
     <string name="gutenberg_native_slash_inserter_results">Slash inserter resultaten</string>
     <string name="gutenberg_native_s_has_url_set">%s heeft URL ingesteld</string>
@@ -314,6 +327,7 @@ Language: nl
     <string name="gutenberg_native_transform_block">Transformeer blok…</string>
     <string name="gutenberg_native_failed_to_insert_media">Media invoegen is mislukt.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Audiobestand invoegen is mislukt.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beschrijf het doel van de afbeelding. Laat leeg als de afbeelding puur decoratief is.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s getransformeerd naar %2$s</string>
     <string name="like_faces_error_loading_message">Fout bij het laden van like gegevens. %s.</string>
     <string name="like_title_plural">%d vind-ik-leuks</string>
@@ -331,6 +345,7 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Twee keer tikken om de plaatshouder tekst te bewerken</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Twee keer tikken om de labeltekst te bewerken</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Twee keer tikken om de knoptekst te bewerken</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">twee keer tikken om de eenheid te wijzigen</string>
     <string name="gutenberg_native_current_placeholder_text_is">Huidige plaatshouder tekst is</string>
     <string name="gutenberg_native_clear_search">Zoekopdracht wissen</string>
     <string name="gutenberg_native_cancel_search">Zoekopdracht annuleren</string>
@@ -714,6 +729,7 @@ Language: nl
     <string name="media_loading_failed">Media laden is mislukt</string>
     <string name="reader_discover_recommended_blogs_header">Sites om te volgen</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">We werken hard om meer blokken toe te voegen bij elke release.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' wordt niet volledig ondersteund</string>
     <string name="gutenberg_native_help_button">Help knop</string>
     <string name="gutenberg_native_edit_using_web_editor">Bewerk met gebruik van de webeditor</string>
     <string name="gutenberg_native_choose_images">Kies afbeeldingen</string>

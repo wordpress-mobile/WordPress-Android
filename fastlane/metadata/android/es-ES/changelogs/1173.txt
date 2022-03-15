@@ -1,5 +1,0 @@
-19.2:
-- Compatibilidad con el tamaño de la fuente y la altura de la línea para los temas de bloques.
-- Eliminación de los comentarios de las entradas del administrador/editor.
-- Nuevas fichas de estadísticas en el menú de ajustes de la pantalla de estadísticas.
-- Aviso al cambiar los medios de imagen/imagen destacada.

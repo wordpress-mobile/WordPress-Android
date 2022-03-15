@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-07 18:37:21+0000
+Translation-Revision-Date: 2022-02-21 17:04:55+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Ваш поиск включает символы, которые не поддерживаются в доменах WordPress.com. Допускаются только буквенно-цифровые символы.</string>
+    <string name="my_site_error_within_card_subtitle">Проверьте подключение к Интернету и обновите страницу.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Перейти к статистике</string>
+    <string name="my_site_todays_stat_card_title">Статистика за сегодня</string>
+    <string name="error_edit_notification">Произошла ошибка при обновлении содержимого уведомления</string>
+    <string name="reader_comment_menu_edit">Редактировать</string>
     <string name="comment_moderation_error">Ошибка модерации комментариев</string>
     <string name="reader_comment_menu_trash">Переместить в корзину</string>
     <string name="reader_comment_menu_spam">Пометить как спам</string>

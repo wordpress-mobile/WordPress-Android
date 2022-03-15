@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-08 12:39:01+0000
+Translation-Revision-Date: 2022-02-22 09:01:38+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Pencarian Anda menyertakan karakter yang tidak didukung di domain WordPress.com. Hanya karakter alfanumerik yang diperbolehkan.</string>
+    <string name="my_site_error_within_card_subtitle">Periksa koneksi internet Anda dan muat ulang halaman.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Buka statistik</string>
+    <string name="my_site_todays_stat_card_title">Statistik Hari Ini</string>
+    <string name="error_edit_notification">Terjadi eror saat memperbarui konten notifikasi</string>
+    <string name="reader_comment_menu_edit">Edit</string>
     <string name="comment_moderation_error">Gagal memoderasi komentar</string>
     <string name="reader_comment_menu_trash">Pindahkan ke Tong Sampah</string>
     <string name="reader_comment_menu_spam">Tandai sebagai Spam</string>

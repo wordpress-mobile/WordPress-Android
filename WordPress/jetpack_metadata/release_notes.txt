@@ -1,5 +1,8 @@
-- Sign up through WordPress.com and create sites in Jetpack
-- Use the Reader in Jetpack
-- See notifications in new comment editor
-- Get a fix for the flickering Page/Site preview
-- Keep editor story blocks from closing when memory is low
+- Theme/default/custom color palettes
+- Email app choice when verifying email at signup/login
+- No nested comments if parent comment is deleted
+- Images adjust after new mid-capture orientation
+- Progress bar fix for My Site icon edits
+- Reorganized default Insights list
+- Keyboard won’t cover login error message
+- Logout button only has to be pressed once

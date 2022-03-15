@@ -2819,6 +2819,7 @@
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
+    <string name="login_select_email_client">Which email app do you use?</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_epilogue_mysites_heading">Choose a site to open</string>

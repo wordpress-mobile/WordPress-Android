@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-11-05 15:19:37+0000
+Translation-Revision-Date: 2022-02-20 17:49:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: eu_ES
 -->
 <resources>
+    <string name="reader_comment_menu_trash">Zakarrontzira mugitu</string>
+    <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_app_icon_description">App ikonoa</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_source_code_item_title">Iturburu Kodea</string>
+    <string name="about_automattic_privacy_policy_item_title">Pribatutasun politika</string>
+    <string name="about_automattic_terms_of_service_item_title">Zerbitzuaren terminoak</string>
+    <string name="about_automattic_instagram_item_title">Instagram</string>
+    <string name="about_automattic_twitter_item_title">Twitter</string>
+    <string name="about_automattic_rate_us_item_title">Baloratu gaitzazu</string>
+    <string name="about_automattic_version_label">%1$s bertsioa</string>
+    <string name="about_blog">Bloga</string>
+    <string name="gutenberg_native_font_size">Letra-tipo tamaina</string>
+    <string name="about_automattic_main_page_title">%1$s(r)i buruz</string>
+    <string name="reader_comments_view_all">Ikusi iruzkin guztiak</string>
+    <string name="me_btn_about">WordPressi buruz</string>
+    <string name="gutenberg_native_featured_image">Nabarmendutako irudia</string>
+    <string name="gutenberg_native_from_clipboard">Arbeletik</string>
+    <string name="my_site_post_card_link_create_post">Bidalketa sortu</string>
+    <string name="my_site_create_first_post_title">Sortu ezazu zure lehen bidalketa</string>
+    <string name="my_site_untitled_post">Izenbururik gabe</string>
+    <string name="gutenberg_native_create_link">Sortu esteka</string>
     <string name="domains_title">Domeinuak</string>
     <string name="post_status_sticky">Itsaskorra</string>
+    <string name="domains_search_for_a_domain_button">Bilatu domeinu bat</string>
+    <string name="domains_add_a_domain">Gehitu domeinu bat</string>
+    <string name="domains_site_domains">Zure gunearen domeinuak</string>
     <string name="comment_edit_user_name">Izena</string>
     <string name="comment_edit_comment">Iruzkina</string>
     <string name="comment_edit_web_address">Web helbidea</string>
