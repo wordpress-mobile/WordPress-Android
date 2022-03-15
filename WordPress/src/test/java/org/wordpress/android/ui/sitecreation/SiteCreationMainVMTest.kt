@@ -18,6 +18,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -154,6 +155,13 @@ class SiteCreationMainVMTest {
         whenever(wizardManager.stepPosition(siteCreationStep)).thenReturn(LAST_STEP_INDEX)
         assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
                 .isInstanceOf(ScreenTitleEmpty::class.java)
+    }
+
+    @Test
+    fun titleForDomainStepIsChooseADomain() {
+        whenever(siteCreationStep.name).thenReturn(SiteCreationStep.DOMAINS.name)
+        assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
+                .isEqualTo(ScreenTitleGeneral(R.string.new_site_creation_domain_header_title))
     }
 
     @Test
