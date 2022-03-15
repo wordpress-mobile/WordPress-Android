@@ -1,7 +1,7 @@
 ext {
     wordPressUtilsVersion = '2.4.0'
     wordPressLoginVersion = '0.12.0'
-    gutenbergMobileVersion = 'v1.71.3'
+    gutenbergMobileVersion = '4661-37cc87936d'
     storiesVersion = '1.2.1'
     aboutAutomatticVersion = '0.0.4'
 
