@@ -59,8 +59,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock lateinit var mAccountStore: AccountStore
-    @Mock lateinit var mSiteStore: SiteStore
+    @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var siteStore: SiteStore
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -99,8 +99,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 quickStartRepository,
                 NoDelayCoroutineDispatcher(),
                 selectedSiteRepository,
-                mAccountStore,
-                mSiteStore
+                accountStore,
+                siteStore
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver
@@ -667,28 +667,28 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `isMultipleSiteAvailable should be true when there are more than one site`() {
-        whenever(mSiteStore.sitesCount).thenReturn(2)
+        whenever(siteStore.sitesCount).thenReturn(2)
         assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(true)
     }
 
     @Test
     fun `isMultipleSiteAvailable should be false when there is only one site`() {
-        whenever(mSiteStore.sitesCount).thenReturn(1)
+        whenever(siteStore.sitesCount).thenReturn(1)
         assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(false)
     }
 
     @Test
     fun `isMultipleSiteAvailable should be false when there are no site`() {
-        whenever(mSiteStore.sitesCount).thenReturn(0)
+        whenever(siteStore.sitesCount).thenReturn(0)
         assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(false)
     }
 
     @Test
     fun `firstSite should be return the first site available in the list of sites`() {
         val sites = mock<ArrayList<SiteModel>>()
-        whenever(mSiteStore.sites).thenReturn(sites)
+        whenever(siteStore.sites).thenReturn(sites)
         val siteModel = mock<SiteModel>()
-        whenever(mSiteStore.hasSite()).thenReturn(true)
+        whenever(siteStore.hasSite()).thenReturn(true)
         whenever(sites.get(0)).thenReturn(siteModel)
 
         assertThat(viewModel.firstSite).isEqualTo(siteModel)
@@ -697,7 +697,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `firstSite should be return null when there are no sites`() {
         val sites = mock<ArrayList<SiteModel>>()
-        whenever(mSiteStore.sites).thenReturn(sites)
+        whenever(siteStore.sites).thenReturn(sites)
 
         assertThat(viewModel.firstSite).isEqualTo(null)
     }

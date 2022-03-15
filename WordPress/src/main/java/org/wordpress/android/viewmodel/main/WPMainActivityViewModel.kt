@@ -51,9 +51,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val quickStartRepository: QuickStartRepository,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val mSelectedSiteRepository: SelectedSiteRepository,
-    private val mAccountStore: AccountStore,
-    private val mSiteStore: SiteStore,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -108,13 +108,13 @@ class WPMainActivityViewModel @Inject constructor(
             .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
     val isMultipleSiteAvailable: Boolean
-        get() = mSiteStore.sitesCount > ONE_SITE
+        get() = siteStore.sitesCount > ONE_SITE
 
     val firstSite: SiteModel?
-        get() = if (mSiteStore.hasSite()) { mSiteStore.sites.get(0) } else null
+        get() = if (siteStore.hasSite()) { siteStore.sites.get(0) } else null
 
     val isSignedInWPComOrHasWPOrgSite: Boolean
-        get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+        get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
 
     fun start(site: SiteModel?) {
         if (isStarted) return
@@ -322,7 +322,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun handleSiteRemoved() {
-        mSelectedSiteRepository.removeSite()
+        selectedSiteRepository.removeSite()
     }
 
     data class FocusPointInfo(
