@@ -61,7 +61,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     }
 
     public static void updateContextLocale() {
-        AppInitializer.updateContextLocale();
+        AppInitializer.Companion.updateContextLocale();
     }
 
     public static RestClientUtils getRestClientUtils() {

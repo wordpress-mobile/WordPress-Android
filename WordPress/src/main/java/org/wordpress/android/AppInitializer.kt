@@ -983,7 +983,7 @@ class AppInitializer @Inject constructor(
             }
         }
 
-        @JvmStatic fun getBitmapCache(): BitmapLruCache {
+        fun getBitmapCache(): BitmapLruCache {
             if (bitmapCache == null) {
                 // The cache size will be measured in kilobytes rather than number of items.
                 // See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
@@ -997,7 +997,7 @@ class AppInitializer @Inject constructor(
         /**
          * Update locale of the static context when language is changed.
          */
-        @JvmStatic fun updateContextLocale() {
+        fun updateContextLocale() {
             context = LocaleManager.setLocale(context)
         }
     }
