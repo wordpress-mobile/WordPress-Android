@@ -102,6 +102,12 @@ class SiteCreationMainVMTest {
     }
 
     @Test
+    fun onSiteIntentSkippedPropagatedToWizardManager() {
+        viewModel.onSiteIntentSkipped()
+        verify(wizardManager).showNextStep()
+    }
+
+    @Test
     fun backNotSuppressedWhenNotLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(false)
         viewModel.onBackPressed()
