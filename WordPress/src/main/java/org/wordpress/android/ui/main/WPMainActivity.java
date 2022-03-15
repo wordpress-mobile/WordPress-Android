@@ -1357,7 +1357,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
         if (mViewModel.isMultipleSiteAvailable()) {
             ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
-            return;
         }
     }
 
