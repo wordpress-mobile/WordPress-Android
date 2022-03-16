@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
@@ -127,9 +126,9 @@ class CategoryDetailViewModel @Inject constructor(
                 "An error occurred while uploading taxonomy with type: " + event.error.type
         )
         val categoryUiState = if (event.isError) {
-            Failure(UiStringRes(string.adding_cat_failed))
+            Failure(UiStringRes(R.string.adding_cat_failed))
         } else {
-            Success(UiStringRes(string.adding_cat_success))
+            Success(UiStringRes(R.string.adding_cat_success))
         }
         _onCategoryPush.postValue(Event(categoryUiState))
     }

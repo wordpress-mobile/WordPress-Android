@@ -10,7 +10,6 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.CategoryDetailFragmentBinding
 import org.wordpress.android.models.CategoryNode
@@ -56,7 +55,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private fun CategoryDetailFragmentBinding.initAdapter() {
         categoryAdapter = ParentCategorySpinnerAdapter(
                 activity,
-                layout.categories_row_parent,
+                R.layout.categories_row_parent,
                 arrayListOf<CategoryNode>()
         )
         parentCategory.adapter = categoryAdapter

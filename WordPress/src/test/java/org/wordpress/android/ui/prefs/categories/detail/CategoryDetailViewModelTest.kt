@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -132,7 +131,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onTermUploaded(getTermUploadSuccess())
         assertEquals(
-                Success(UiStringRes(string.adding_cat_success)),
+                Success(UiStringRes(R.string.adding_cat_success)),
                 (onCategoryPushStates[0].peekContent() as Success)
         )
     }
@@ -142,7 +141,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
         viewModel.start()
         viewModel.onTermUploaded(getTermUploadError())
         assertEquals(
-                Failure(UiStringRes(string.adding_cat_failed)),
+                Failure(UiStringRes(R.string.adding_cat_failed)),
                 (onCategoryPushStates[0].peekContent() as Failure)
         )
     }
