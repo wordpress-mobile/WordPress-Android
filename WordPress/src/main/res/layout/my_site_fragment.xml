@@ -42,10 +42,10 @@
                     android:id="@+id/site_info"
                     layout="@layout/my_site_info_card"
                     android:layout_width="match_parent"
-                    android:layout_alignParentTop="true"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="1.0"/>
+                    app:layout_collapseParallaxMultiplier="1.0" />
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_layout"

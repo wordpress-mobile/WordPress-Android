@@ -11,20 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
 import org.wordpress.android.databinding.MySiteInfoCardBinding
-import org.wordpress.android.databinding.MySiteInfoCardBinding
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
@@ -33,20 +27,6 @@ import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.MAIN
-import org.wordpress.android.util.AppLog.T.UTILS
-import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.SnackbarItem
-import org.wordpress.android.util.SnackbarItem.Action
-import org.wordpress.android.util.SnackbarItem.Info
-import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
@@ -60,10 +40,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: MySiteViewModel
 
     private var binding: MySiteFragmentBinding? = null
-    private var collapsingToolbarLayout: CollapsingToolbarLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,13 +91,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
-            if(currentOffset==0)
-                collapsingToolbar.title = "Accused Kite"
-            else
-                collapsingToolbar.title = null
+            updateCollapsibleToolbarTitle(currentOffset)
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
-            siteInfo.siteInfoCard.alpha = percentage.toFloat()/100
+            animateSiteInfoCard(percentage)
             avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
                 val maxSize = avatar.maxHeight
@@ -129,6 +106,17 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 avatar.scaleY = newScale
             }
         })
+    }
+
+    private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
+        if(currentOffset==0)
+            collapsingToolbar.title = "Accused Kite"
+        else
+            collapsingToolbar.title = null
+    }
+
+    private fun MySiteFragmentBinding.animateSiteInfoCard(percentage: Int) {
+        siteInfo.siteInfoCard.alpha = percentage.toFloat()/100
     }
 
     private fun MySiteFragmentBinding.setupTabs(tabTitles: List<UiString>) {
@@ -215,10 +203,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfoContainer.subtitle.text = item.url
         siteInfoContainer.subtitle.setOnClickListener { item.onUrlClick.click() }
         switchSite.setOnClickListener { item.onSwitchSiteClick.click() }
-    }
-
-    private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
-        swipeToRefreshHelper.setEnabled(isEnabled)
     }
 
     override fun onPositiveClicked(instanceTag: String) {
