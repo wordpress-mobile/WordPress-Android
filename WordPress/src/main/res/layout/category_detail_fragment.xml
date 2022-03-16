@@ -6,30 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/parent_category"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        app:layout_constraintEnd_toEndOf="@+id/parentDescLabel"
-        app:layout_constraintStart_toStartOf="@+id/parentDescLabel"
-        app:layout_constraintTop_toBottomOf="@+id/parentDescLabel"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
-        tools:listitem="@layout/wp_simple_list_item_1" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/submit_button"
-        style="@style/WordPress.PrepubPrimaryButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:enabled="false"
-        android:text="@string/prepublishing_nudges_add_category_button"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/parent_category"
-        app:layout_constraintStart_toStartOf="@+id/parent_category"
-        app:layout_constraintTop_toBottomOf="@+id/parent_category" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/category_name_container"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -63,5 +39,29 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/category_name_container"
         app:layout_constraintTop_toBottomOf="@+id/category_name_container" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/parent_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="@+id/parentDescLabel"
+        app:layout_constraintStart_toStartOf="@+id/parentDescLabel"
+        app:layout_constraintTop_toBottomOf="@+id/parentDescLabel"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+        tools:listitem="@layout/wp_simple_list_item_1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submit_button"
+        style="@style/WordPress.PrepubPrimaryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:enabled="false"
+        android:text="@string/prepublishing_nudges_add_category_button"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/parent_category"
+        app:layout_constraintStart_toStartOf="@+id/parent_category"
+        app:layout_constraintTop_toBottomOf="@+id/parent_category" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
