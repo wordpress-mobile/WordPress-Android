@@ -53,37 +53,6 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
-    private fun CategoryDetailFragmentBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@CategoryDetailFragment, viewModelFactory)
-                .get(CategoryDetailViewModel::class.java)
-        startObserving()
-        viewModel.start()
-    }
-
-    private fun CategoryDetailFragmentBinding.initSubmitButton() {
-        submitButton.setOnClickListener {
-            viewModel.onSubmitButtonClick()
-            ActivityUtils.hideKeyboardForced(categoryName)
-        }
-    }
-
-    @Suppress("EmptyFunctionBlock")
-    private fun CategoryDetailFragmentBinding.initInputText() {
-        categoryName.requestFocus()
-        categoryName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                viewModel.onCategoryNameUpdated(s.toString())
-            }
-        })
-        ActivityUtils.showKeyboard(categoryName)
-    }
-
     private fun CategoryDetailFragmentBinding.initAdapter() {
         categoryAdapter = ParentCategorySpinnerAdapter(
                 activity,
@@ -91,6 +60,13 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
                 arrayListOf<CategoryNode>()
         )
         parentCategory.adapter = categoryAdapter
+    }
+
+    private fun CategoryDetailFragmentBinding.initSubmitButton() {
+        submitButton.setOnClickListener {
+            viewModel.onSubmitButtonClick()
+            ActivityUtils.hideKeyboardForced(categoryName)
+        }
     }
 
     private fun CategoryDetailFragmentBinding.initSpinner() {
@@ -117,6 +93,30 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
                 }
             }
         }
+    }
+
+    @Suppress("EmptyFunctionBlock")
+    private fun CategoryDetailFragmentBinding.initInputText() {
+        categoryName.requestFocus()
+        categoryName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.onCategoryNameUpdated(s.toString())
+            }
+        })
+        ActivityUtils.showKeyboard(categoryName)
+    }
+
+    private fun CategoryDetailFragmentBinding.initViewModel() {
+        viewModel = ViewModelProvider(this@CategoryDetailFragment, viewModelFactory)
+                .get(CategoryDetailViewModel::class.java)
+        startObserving()
+        viewModel.start()
     }
 
     private fun CategoryDetailFragmentBinding.startObserving() {
