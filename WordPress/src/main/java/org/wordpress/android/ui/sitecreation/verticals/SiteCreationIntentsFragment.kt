@@ -55,11 +55,6 @@ class SiteCreationIntentsFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (requireActivity().application as WordPress).component().inject(this)
-    }
-
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         siteCreationHeaderItem.title.setText(R.string.new_site_creation_intents_header_title)
