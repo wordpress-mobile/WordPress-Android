@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-08 16:20:35+0000
+Translation-Revision-Date: 2022-03-11 13:00:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="login_select_email_client">Que aplicación de correo electrónico usas?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Houbo un problema ao comunicar co sitio. Devolveuse un código de erro HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">As chamadas XML-RPC parecen bloqueadas neste sitio (código de erro 401). Se o intento de acceso falla, toca na icona de axuda para ver as FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Non se puido ler o sitio WordPress nesa URL. Toca na icona de axuda para ver as FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled">Os servizos XML-RPC están desactivados neste sitio.</string>
+    <string name="my_site_menu_tab_title">Menú</string>
+    <string name="my_site_dashboard_tab_title">Escritorio</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">A túa busca inclúe caracteres non compatibles nos dominios de WordPress.com. Permítense os seguintes caracteres: A–Z, a–z, 0–9.</string>
+    <string name="my_site_error_within_card_subtitle">Comproba a túa conexión a Internet e actualiza a páxina.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir ás estatísticas</string>
+    <string name="my_site_todays_stat_card_title">Estatísticas de hoxe</string>
+    <string name="error_edit_notification">Ocorreu un erro ao actualizar o contido do aviso</string>
+    <string name="reader_comment_menu_edit">Editar</string>
     <string name="comment_moderation_error">Fallo ao moderar os comentarios</string>
     <string name="reader_comment_menu_trash">Mover á papeleira</string>
     <string name="reader_comment_menu_spam">Marcar como spam</string>
