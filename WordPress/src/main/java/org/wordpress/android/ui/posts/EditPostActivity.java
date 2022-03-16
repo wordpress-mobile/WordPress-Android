@@ -1948,14 +1948,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private long[] getRevisionsIds(@NonNull final List<Revision> revisions) {
-        final ArrayList<Long> idsList = new ArrayList<>();
+        final long[] idsArray = new long[revisions.size()];
         for (int i = 0; i < revisions.size(); i++) {
             final Revision current = revisions.get(i);
-            idsList.add(current.getRevisionId());
-        }
-        final long[] idsArray = new long[idsList.size()];
-        for (int i = 0; i < idsList.size(); i++) {
-            idsArray[i] = idsList.get(i);
+            idsArray[i] = current.getRevisionId();
         }
         return idsArray;
     }
