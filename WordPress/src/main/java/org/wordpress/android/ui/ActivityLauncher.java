@@ -1096,7 +1096,7 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewHistoryDetailForResult(@NonNull final Activity activity,@NonNull final Revision revision,
+    public static void viewHistoryDetailForResult(@NonNull final Activity activity, @NonNull final Revision revision,
                                                   @NonNull final long[] previousRevisionsIds, final long postId,
                                                   final long siteId) {
         Intent intent = new Intent(activity, HistoryDetailActivity.class);
