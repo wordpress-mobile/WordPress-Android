@@ -230,7 +230,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun removeRevisionsFromLocalDB(post: PostModel) {
-            postStore.deleteLocalRevisionOfAPostOrPage(post)
+        postStore.deleteLocalRevisionOfAPostOrPage(post)
     }
 
     data class ShowDialogEvent(val historyListItem: HistoryListItem, val revisionsList: List<Revision>)
