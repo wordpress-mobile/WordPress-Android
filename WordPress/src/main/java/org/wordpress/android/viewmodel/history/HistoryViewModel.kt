@@ -229,10 +229,8 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    private fun removeRevisionsFromLocalDB(post: PostModel, revisions: List<RevisionModel>) {
-        revisions.forEach {
-            postStore.deleteLocalRevision(it, site, post)
-        }
+    private fun removeRevisionsFromLocalDB(post: PostModel) {
+            postStore.deleteLocalRevisionOfAPostOrPage(post)
     }
 
     data class ShowDialogEvent(val historyListItem: HistoryListItem, val revisionsList: List<Revision>)
@@ -250,7 +248,7 @@ class HistoryViewModel @Inject constructor(
         } else {
             _listStatus.value = HistoryListStatus.DONE
             createRevisionsList(event.revisionsModel.revisions)
-            removeRevisionsFromLocalDB(event.post, event.revisionsModel.revisions)
+            removeRevisionsFromLocalDB(event.post)
             saveRevisionsToLocalDB(event.post, event.revisionsModel.revisions)
         }
     }
