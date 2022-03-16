@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.PostStore.PostListItem
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 
 @RunWith(MockitoJUnitRunner::class)
 class PostStoreTest {
