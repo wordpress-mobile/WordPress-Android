@@ -1,6 +1,7 @@
-- Notifications in new comment editor
-- Correct time zone for sites created in app
-- Reader comment editing for Admins/Editors
-- Low memory doesn’t affect editor story blocks
-- Error text for new site URLs with non-English characters
-- Assorted bug fixes and design improvements
+- Theme/default/custom color palettes
+- Better login error text
+- Email verification app selection
+- No nested comments if parent comment deleted
+- Images adjust after mid-capture reorientation
+- Progress bar fix for My Site icon edits
+- Reorganized default Insights list

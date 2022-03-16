@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.utils.SiteUtils
-import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
@@ -205,7 +204,7 @@ class StatsDateFormatter
                 calendar.time
             }
             YEARS -> {
-                val sdf = SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT)
+                val sdf = SimpleDateFormat(STATS_INPUT_FORMAT, Locale.ROOT)
                 // Calculate the end of the week
                 val parsedDate = sdf.parse(date)
                 val calendar: Calendar = Calendar.getInstance()

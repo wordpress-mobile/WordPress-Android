@@ -43,6 +43,7 @@ class CommentViewHolder(
                 textCommentText,
                 state.commentText,
                 threadedCommentsUtils.getMaxWidthForContent(),
+                textCommentText.lineHeight,
                 itemView.resources.getString(R.string.comment_unable_to_show_error)
         )
     }

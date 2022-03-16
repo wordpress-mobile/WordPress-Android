@@ -28,6 +28,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -60,6 +61,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -141,7 +143,7 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    private val isMySiteTabsEnabled: Boolean
+    val isMySiteTabsEnabled: Boolean
         get() = mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
 
     val tabTitles: List<UiString>
@@ -255,11 +257,24 @@ class MySiteViewModel @Inject constructor(
                 scanAvailable,
                 cardsUpdate
         )
+
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
-                siteItems.indexOfFirst { it.activeQuickStartItem }
+                if (isMySiteTabsEnabled) {
+                    (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
+                            .indexOfFirst { it.activeQuickStartItem }
+                } else {
+                    (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
+                            .indexOfFirst { it.activeQuickStartItem }
+                }
         )
-        return SiteSelected(showTabs = isMySiteTabsEnabled, cardAndItems = siteItems)
+        // It is okay to use !! here because we are explicitly creating the lists
+        return SiteSelected(
+                showTabs = isMySiteTabsEnabled,
+                cardAndItems = siteItems[MySiteTabType.ALL]!!,
+                siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
+                dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
+        )
     }
 
     @Suppress("LongParameterList")
@@ -274,7 +289,7 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?
-    ): List<MySiteCardAndItem> {
+    ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
@@ -332,15 +347,35 @@ class MySiteViewModel @Inject constructor(
         )
 
         val siteItems = siteItemsBuilder.build(
-                SiteItemsBuilderParams(
-                        site = site,
-                        activeTask = activeTask,
-                        backupAvailable = backupAvailable,
-                        scanAvailable = scanAvailable,
-                        onClick = this::onItemClick
+                    SiteItemsBuilderParams(
+                            site = site,
+                            activeTask = activeTask,
+                            backupAvailable = backupAvailable,
+                            scanAvailable = scanAvailable,
+                            onClick = this::onItemClick
+                    )
+        )
+
+        return mapOf(
+                MySiteTabType.ALL to orderForDisplay(
+                        infoItem,
+                        cardsResult,
+                        dynamicCards,
+                        siteItems
+                ),
+                MySiteTabType.SITE_MENU to orderForDisplay(
+                        infoItem,
+                        cardsResult.filterNot { it is DashboardCards }.toList(),
+                        dynamicCards,
+                        siteItems
+                ),
+                MySiteTabType.DASHBOARD to orderForDisplay(
+                        infoItem,
+                        cardsResult.filterNot { it is QuickStartCard }.toList(),
+                        listOf(),
+                        listOf()
                 )
         )
-        return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
@@ -649,13 +684,10 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(stat)
         val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
         if (imageUri != null) {
-            selectedSiteRepository.showSiteIconProgressBar(true)
             launch(bgDispatcher) {
                 val fetchMedia = wpMediaUtilsWrapper.fetchMediaToUriWrapper(imageUri)
                 if (fetchMedia != null) {
                     _onNavigation.postValue(Event(SiteNavigationAction.OpenCropActivity(fetchMedia)))
-                } else {
-                    selectedSiteRepository.showSiteIconProgressBar(false)
                 }
             }
         }
@@ -766,7 +798,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun checkAndStartLandOnTheEditor() {
+    private fun checkAndStartLandOnTheEditor() {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
@@ -880,7 +912,12 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val showTabs: Boolean
-        data class SiteSelected(override val showTabs: Boolean, val cardAndItems: List<MySiteCardAndItem>) : State()
+        data class SiteSelected(
+            override val showTabs: Boolean,
+            val cardAndItems: List<MySiteCardAndItem>,
+            val siteMenuCardsAndItems: List<MySiteCardAndItem>,
+            val dashboardCardsAndItems: List<MySiteCardAndItem>
+        ) : State()
         data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
     }
 

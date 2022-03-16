@@ -19,6 +19,7 @@ repositories {
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress.wellsql"
+            includeGroup "org.wordpress-mobile"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
@@ -117,6 +118,7 @@ android {
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
+        buildConfigField "boolean", "SITE_INTENT_QUESTION", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -309,7 +311,6 @@ dependencies {
 
     // Provided by maven central
     implementation 'com.google.code.gson:gson:2.6.2'
-    implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
     implementation "androidx.core:core:$coreVersion"
     implementation "androidx.core:core-ktx:$coreVersion"

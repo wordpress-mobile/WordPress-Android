@@ -26,7 +26,9 @@ class UnifiedCommentViewHolder(
 ) : UnifiedCommentListViewHolder<CommentListItemBinding>(parent.viewBinding(CommentListItemBinding::inflate)) {
     fun bind(item: Comment) = with(binding) {
         title.text = commentListUiUtils.formatCommentTitle(item.authorName, item.postTitle, title.context)
-        comment.text = commentListUiUtils.formatCommentContent(item.content, comment.context)
+        comment.post { // we need to know the width of the view for image loading before rendering content
+            commentListUiUtils.displayHtmlComment(item.content, comment, comment.width, comment.lineHeight)
+        }
 
         if (item.isSelected) {
             imageManager.cancelRequestAndClearImageView(avatar)

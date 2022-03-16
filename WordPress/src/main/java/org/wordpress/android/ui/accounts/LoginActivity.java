@@ -585,7 +585,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 mLoginAnalyticsListener.trackSignupMagicLinkOpenEmailClientClicked();
             }
 
-            WPActivityUtils.openEmailClient(this);
+            WPActivityUtils.openEmailClientChooser(this, getString(R.string.login_select_email_client));
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
         }

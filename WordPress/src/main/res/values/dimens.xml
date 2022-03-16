@@ -224,9 +224,6 @@
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
-    <!-- max size for images in Reader comments -->
-    <dimen name="reader_comment_max_image_size">160dp</dimen>
-
     <dimen name="reader_comments_actions_height">24dp</dimen>
     <dimen name="reader_comments_content_line_height">24dp</dimen>
     <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
@@ -652,6 +649,9 @@
     <!-- Home Page Picker -->
     <dimen name="hpp_button_max_width">244dp</dimen>
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
+
+    <!-- Site Intent Question -->
+    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
