@@ -18,7 +18,6 @@ import javax.inject.Inject
 /**
  * Implements the Site Intent Question UI
  */
-@Suppress("TooManyFunctions")
 class SiteCreationIntentsFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelper: UiHelpers
