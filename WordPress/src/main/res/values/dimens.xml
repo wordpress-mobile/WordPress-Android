@@ -650,6 +650,9 @@
     <dimen name="hpp_button_max_width">244dp</dimen>
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 
+    <!-- Site Intent Question -->
+    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
+
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
