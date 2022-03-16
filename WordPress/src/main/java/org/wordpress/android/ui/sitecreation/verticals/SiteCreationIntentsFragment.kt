@@ -47,8 +47,8 @@ class SiteCreationIntentsFragment : Fragment() {
                 .get(SiteCreationIntentsViewModel::class.java)
 
         val binding = SiteCreationIntentsFragmentBinding.bind(view)
+        this.binding = binding
         with(binding) {
-            this@SiteCreationIntentsFragment.binding = binding
             setupUi()
             setupViewModel()
             setupActionListeners()
