@@ -95,6 +95,10 @@ class SiteCreationMainVM @Inject constructor(
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
+    fun onSiteIntentSkipped() {
+        wizardManager.showNextStep()
+    }
+
     fun onSiteDesignSelected(siteDesign: String) {
         siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()
@@ -139,7 +143,7 @@ class SiteCreationMainVM @Inject constructor(
         val stepCount = wizardManager.stepsCount
         val firstStep = stepPosition == 1
         val lastStep = stepPosition == stepCount
-        val singleInBetweenStepDomains = wizardManager.stepsCount == 3 && step.name == DOMAINS.name
+        val singleInBetweenStepDomains = step.name == DOMAINS.name
 
         return when {
             firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)

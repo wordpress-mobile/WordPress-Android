@@ -89,8 +89,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
-import org.wordpress.android.ui.mysite.tabs.MySiteDashboardTabFragment;
-import org.wordpress.android.ui.mysite.tabs.MySiteMenuTabFragment;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -206,6 +205,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
@@ -584,6 +584,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(HomePagePickerFragment object);
 
+    void inject(SiteCreationIntentsFragment object);
+
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
@@ -656,9 +658,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(MySiteFragment object);
 
-    void inject(MySiteDashboardTabFragment object);
-
-    void inject(MySiteMenuTabFragment object);
+    void inject(MySiteTabFragment object);
 
     void inject(BackupDownloadActivity object);
 

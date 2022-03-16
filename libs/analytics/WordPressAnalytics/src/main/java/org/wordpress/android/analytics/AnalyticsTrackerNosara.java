@@ -1292,7 +1292,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_EMAIL_BUTTON_TAPPED:
                 return "signup_email_button_tapped";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED:
-                return "signup_email_epilogue_gravatar_cropped:";
+                return "signup_email_epilogue_gravatar_cropped";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED:
                 return "signup_email_epilogue_gallery_picked";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW:
