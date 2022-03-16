@@ -34,7 +34,7 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     private lateinit var categoryAdapter: ParentCategorySpinnerAdapter
 
     private var spinnerTouched: Boolean = false
-    private var mProgressDialog: ProgressDialog? = null
+    private var progressDialog: ProgressDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -149,18 +149,18 @@ class CategoryDetailFragment : Fragment(R.layout.category_detail_fragment) {
     }
 
     private fun showProgressDialog(@StringRes messageId: Int) {
-        mProgressDialog = ProgressDialog(requireContext())
-        mProgressDialog?.apply {
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog?.apply {
             setCancelable(false)
             isIndeterminate = true
             setMessage(getString(messageId))
         }
-        mProgressDialog?.show()
+        progressDialog?.show()
     }
 
     private fun hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog!!.isShowing) {
-            mProgressDialog!!.dismiss()
+        if (progressDialog != null && progressDialog!!.isShowing) {
+            progressDialog!!.dismiss()
         }
     }
 
