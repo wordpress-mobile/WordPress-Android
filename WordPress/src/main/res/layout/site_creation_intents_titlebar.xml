@@ -13,7 +13,6 @@
         android:src="@drawable/ic_arrow_left_white_24dp"
         android:tint="?attr/colorOnSurface" />
 
-    <!--TODO: Rename ModalLayoutPickerHeader style to something more generic. -->
     <TextView
         android:id="@+id/appBarTitle"
         style="@style/ModalLayoutPickerHeader"
