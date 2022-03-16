@@ -19,6 +19,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
@@ -32,6 +33,8 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
@@ -47,6 +50,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var mainViewModel: SiteCreationMainVM
     private lateinit var hppViewModel: HomePagePickerViewModel
+    private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +58,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         setContentView(R.layout.site_creation_activity)
         mainViewModel = ViewModelProvider(this, viewModelFactory).get(SiteCreationMainVM::class.java)
         hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
+        siteCreationIntentsViewModel = ViewModelProvider(this, viewModelFactory)
+                .get(SiteCreationIntentsViewModel::class.java)
         mainViewModel.start(savedInstanceState)
         hppViewModel.loadSavedState(savedInstanceState)
 
@@ -103,6 +109,12 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onBackPressedObservable.observe(this, Observer {
             super.onBackPressed()
         })
+        siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
+            mainViewModel.onBackPressed()
+        })
+        siteCreationIntentsViewModel.onSkipButtonPressed.observe(this, Observer {
+            mainViewModel.onSiteIntentSkipped()
+        })
         hppViewModel.onBackButtonPressed.observe(this, Observer {
             mainViewModel.onBackPressed()
         })
@@ -130,6 +142,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
+            INTENTS -> SiteCreationIntentsFragment()
             SEGMENTS -> HomePagePickerFragment()
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle

@@ -1,0 +1,6 @@
+19.3:
+- Daftar melalui WordPress.com dan buat situs di Jetpack
+- Gunakan Pembaca di Jetpack
+- Lihat pemberitahuan di editor komentar baru
+- Perbaiki efek pratinjau Halaman/Situs yang mengganggu
+- Jaga blok cerita editor tetap terbuka saat memori rendah

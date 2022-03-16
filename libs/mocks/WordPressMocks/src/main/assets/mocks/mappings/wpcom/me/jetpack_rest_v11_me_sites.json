@@ -217,8 +217,6 @@
           },
           "launch_status": false,
           "site_migration": null,
-          "is_fse_active": false,
-          "is_fse_eligible": false,
           "is_core_site_editor_enabled": false,
           "updates": {
             "wordpress": 0,
@@ -425,8 +423,6 @@
           },
           "launch_status": false,
           "site_migration": null,
-          "is_fse_active": false,
-          "is_fse_eligible": false,
           "is_core_site_editor_enabled": false,
           "updates": {
             "wordpress": 0,
@@ -639,8 +635,6 @@
           },
           "launch_status": false,
           "site_migration": null,
-          "is_fse_active": false,
-          "is_fse_eligible": false,
           "is_core_site_editor_enabled": false,
           "updates": {
             "wordpress": 0,

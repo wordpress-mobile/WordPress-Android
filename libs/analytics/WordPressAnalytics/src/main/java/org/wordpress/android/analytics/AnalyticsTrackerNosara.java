@@ -1091,6 +1091,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_insights_type_removed";
             case STATS_INSIGHTS_MANAGEMENT_SAVED:
                 return "stats_insights_management_saved";
+            case STATS_INSIGHTS_MANAGEMENT_DISMISSED:
+                return "stats_insights_management_dismissed";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED:
                 return "stats_insights_management_type_added";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED:
@@ -1290,7 +1292,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_EMAIL_BUTTON_TAPPED:
                 return "signup_email_button_tapped";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED:
-                return "signup_email_epilogue_gravatar_cropped:";
+                return "signup_email_epilogue_gravatar_cropped";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED:
                 return "signup_email_epilogue_gallery_picked";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW:

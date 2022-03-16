@@ -1,5 +1,0 @@
-19.2:
-- Lettertypegrootte en regelafstand worden nu ondersteund voor blokthema's.
-- Nieuwe statistiekenkaarten zijn toegevoegd aan het Instellingenmenu in het Statistiekenvenster.
-- Als je de media veranderd in een afbeeldingblok dat ook een uitgelichte afbeelding is, krijg je vanaf nu een prompt om de uitgelichte afbeelding te vervangen.
-- Deel tekst, afbeeldingen en video's in de app met de optie Delen van je apparaat.

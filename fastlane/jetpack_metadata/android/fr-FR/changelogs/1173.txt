@@ -1,5 +1,0 @@
-19.2 :
-- Les tailles de police et les hauteurs de ligne sont désormais prises en charge dans les thèmes de blog.
-- De nouvelles cartes de statistiques sont disponibles dans le menu Réglages de l’écran des statistiques.
-- Lorsque vous remplacez le média d’un bloc d’image qui correspond à l’image mise en avant d’un article, une demande de confirmation du changement s’affiche.
-- Partagez du texte, des images et des vidéo depuis l’application grâce à l’option Partager de votre appareil.

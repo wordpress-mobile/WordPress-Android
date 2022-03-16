@@ -1,6 +1,0 @@
-19.2:
-- Lettertypegrootte en regelhoogte worden nu ondersteund voor blokthema's.
-- Beheerders en editors kunnen reader bericht reacties verwijderen.
-- Voeg nieuwe statistiek kaarten toe in het Instellingen menu op het scherm Statistieken.
-- Als je media wijzigt in een afbeelding blok dat ook een uitgelichte afbeelding is, wordt een update van de aanbevolen afbeelding gevraagd.
-- Deel tekst, afbeeldingen en video in de app met behulp van de Delen actie van je apparaat.
