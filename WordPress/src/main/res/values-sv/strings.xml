@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-21 19:13:16+0000
+Translation-Revision-Date: 2022-03-07 20:35:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökfråga innehåller tecken som inte fungerar med domäner hos WordPress.com. Endast alfanumeriska tecken är tillåtna.</string>
+    <string name="login_select_email_client">Vilken e-postapp använder du?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Det uppstod ett problem med att kommunicera med webbplatsen. En HTTP-felkod 401 returnerades.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Anrop med XML-RPC verkar blockerade på denna webbplats (felkod 401). Om försöket att logga in misslyckas tryck på hjälpikonen för att se vanliga frågor.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Kunde inte läsa WordPress-webbplatsen på denna URL. Tryck på hjälpikonen för att se vanliga frågor.</string>
+    <string name="login_error_xml_rpc_services_disabled">Tjänsten XML-RPC är inaktiverad på denna webbplats.</string>
+    <string name="my_site_menu_tab_title">Meny</string>
+    <string name="my_site_dashboard_tab_title">Adminpanel</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökning innehåller tecken som inte stöds i WordPress.com-domäner. Följande tecken är tillåtna: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrollera din internetanslutning och ladda om sidan.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gå till statistiken</string>
     <string name="my_site_todays_stat_card_title">Dagens statistik</string>

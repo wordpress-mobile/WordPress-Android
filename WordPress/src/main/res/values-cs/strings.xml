@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-21 18:40:40+0000
+Translation-Revision-Date: 2022-03-08 08:25:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">Vaše vyhledávání obsahuje znaky, které nejsou podporovány v doménách WordPress.com. Jsou povoleny pouze alfanumerické znaky.</string>
+    <string name="login_select_email_client">Jakou e-mailovou aplikaci používáte?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Při komunikaci se stránkou došlo k problému. Byl vrácen kód chyby HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Zdá se, že volání XML-RPC jsou na tomto webu blokována (kód chyby 401). Pokud se pokus o přihlášení nezdaří, klepněte na ikonu nápovědy pro zobrazení FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Nelze číst WordPress web na této adrese URL. Klepnutím na ikonu nápovědy zobrazíte FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled">Služby publikačního protokolu XML-RPC nejsou na tomto webu povoleny.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Nástěnka</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Vaše vyhledávání obsahuje znaky, které nejsou podporovány v doménách WordPress.com. Jsou povoleny pouze alfanumerické znaky: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Zkontrolujte připojení k internetu a obnovte stránku.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Přejít na statistiky</string>
     <string name="my_site_todays_stat_card_title">Dnešní statistika</string>
