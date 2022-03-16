@@ -27,10 +27,10 @@ import org.wordpress.android.fluxc.model.revisions.RevisionModel
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.PostStore.PostListItem
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 
 @RunWith(MockitoJUnitRunner::class)
 class PostStoreTest {
@@ -301,12 +301,12 @@ class PostStoreTest {
         // Arrange
         val localRevision = LocalRevisionModel(1)
         val localDiffs = listOf<LocalDiffModel>(LocalDiffModel(1))
-        whenever(postSqlUtils.getRevisionById(any())).thenReturn(localRevision)
+        whenever(postSqlUtils.getRevisionById(any(), any(), any())).thenReturn(localRevision)
         whenever(postSqlUtils.getLocalRevisionDiffs(any())).thenReturn(localDiffs)
 
         // Act
         val expected = RevisionModel.fromLocalRevisionAndDiffs(localRevision, localDiffs)
-        val actual = store.getRevisionById(1L)
+        val actual = store.getRevisionById(1L, 1L, 1L)
 
         // Assert
         assertEquals(expected, actual)
@@ -315,11 +315,11 @@ class PostStoreTest {
     @Test
     fun `Should return null when PostSqlUtils getRevisionById returns null`() {
         // Arrange
-        whenever(postSqlUtils.getRevisionById(any())).thenReturn(null)
+        whenever(postSqlUtils.getRevisionById(any(), any(), any())).thenReturn(null)
 
         // Act
         val expected = null
-        val actual = store.getRevisionById(1L)
+        val actual = store.getRevisionById(1L, 1L, 1L)
 
         // Assert
         assertEquals(expected, actual)
@@ -328,13 +328,38 @@ class PostStoreTest {
     @Test
     fun `Should call PostSqlUtils getRevisionById when getRevisionById is called`() {
         // Arrange
-        whenever(postSqlUtils.getRevisionById(any())).thenReturn(LocalRevisionModel())
+        whenever(postSqlUtils.getRevisionById(any(), any(), any())).thenReturn(LocalRevisionModel())
 
         // Act
-        store.getRevisionById(1L)
+        store.getRevisionById(1L, 1L, 1L)
 
         // Assert
-        verify(postSqlUtils).getRevisionById("1")
+        verify(postSqlUtils).getRevisionById("1", 1L, 1L)
+    }
+
+    @Test
+    fun `Should delete all revisions and diffs of a Post when removePost is called`() {
+        // Arrange
+        whenever(postSqlUtils.deletePost(any())).thenReturn(1)
+        val postModel = createPostModel()
+
+        // Act
+        store.onAction(PostActionBuilder.newRemovePostAction(postModel))
+
+        // Assert
+        verify(postSqlUtils).deleteLocalRevisionAndDiffsOfAPostOrPage(postModel)
+    }
+
+    @Test
+    fun `Should remove all revisions and diffs when removeAllPosts is called`() {
+        // Arrange
+        val postModel = createPostModel()
+
+        // Act
+        store.onAction(PostActionBuilder.newRemoveAllPostsAction())
+
+        // Assert
+        verify(postSqlUtils).deleteAllLocalRevisionsAndDiffs()
     }
 
     private fun createFetchedPostListAction(
@@ -342,13 +367,13 @@ class PostStoreTest {
         listDescriptor: PostListDescriptor = mockedListDescriptor,
         postError: PostError? = null
     ) = PostActionBuilder.newFetchedPostListAction(
-            FetchPostListResponsePayload(
-                    listDescriptor,
-                    postListItems,
-                    false,
-                    false,
-                    postError
-            )
+        PostStore.FetchPostListResponsePayload(
+            listDescriptor,
+            postListItems,
+            false,
+            false,
+            postError
+        )
     )
 
     private fun createPostModel(isLocallyChanged: Boolean = false, postStatus: PostStatus = PUBLISHED): PostModel {

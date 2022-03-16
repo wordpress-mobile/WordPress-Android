@@ -1144,6 +1144,7 @@ public class PostStore extends Store {
                 new ListItemsRemovedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()),
                         Collections.singletonList(post.getRemotePostId()))));
         int rowsAffected = mPostSqlUtils.deletePost(post);
+        deleteLocalRevisionOfAPostOrPage(post);
 
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RemovePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
@@ -1152,6 +1153,7 @@ public class PostStore extends Store {
 
     private void removeAllPosts() {
         int rowsAffected = mPostSqlUtils.deleteAllPosts();
+        deleteAllLocalRevisionAndDiffs();
         OnPostChanged event = new OnPostChanged(RemoveAllPosts.INSTANCE, rowsAffected);
         emitChange(event);
     }
@@ -1238,9 +1240,9 @@ public class PostStore extends Store {
     }
 
     @Nullable
-    public RevisionModel getRevisionById(final long revisionId) {
+    public RevisionModel getRevisionById(final long revisionId, final long postId, final long siteId) {
         final String revisionIdString = String.valueOf(revisionId);
-        final LocalRevisionModel localRevision = mPostSqlUtils.getRevisionById(revisionIdString);
+        final LocalRevisionModel localRevision = mPostSqlUtils.getRevisionById(revisionIdString, postId, siteId);
 
         if (localRevision == null) {
             return null;
@@ -1258,5 +1260,9 @@ public class PostStore extends Store {
 
     public void deleteLocalRevisionOfAPostOrPage(PostModel post) {
         mPostSqlUtils.deleteLocalRevisionAndDiffsOfAPostOrPage(post);
+    }
+
+    public void deleteAllLocalRevisionAndDiffs() {
+        mPostSqlUtils.deleteAllLocalRevisionsAndDiffs();
     }
 }

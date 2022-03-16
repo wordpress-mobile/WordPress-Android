@@ -342,10 +342,12 @@ public class PostSqlUtils {
     }
 
     @Nullable
-    public LocalRevisionModel getRevisionById(@NonNull final String revisionId) {
+    public LocalRevisionModel getRevisionById(@NonNull final String revisionId, final long postId, final long siteId) {
         final List<LocalRevisionModel> localRevisionModels = WellSql.select(LocalRevisionModel.class)
                       .where().beginGroup()
                       .equals(LocalRevisionModelTable.REVISION_ID, revisionId)
+                      .equals(LocalRevisionModelTable.POST_ID, postId)
+                      .equals(LocalRevisionModelTable.SITE_ID, siteId)
                       .endGroup().endWhere().getAsModel();
         if (localRevisionModels != null && !localRevisionModels.isEmpty()) {
             return localRevisionModels.get(0);
@@ -391,6 +393,11 @@ public class PostSqlUtils {
                 .equals(LocalRevisionModelTable.POST_ID, post.getRemotePostId())
                 .equals(LocalRevisionModelTable.SITE_ID, post.getRemoteSiteId())
                 .endGroup().endWhere().execute();
+    }
+
+    public void deleteAllLocalRevisionsAndDiffs() {
+        WellSql.delete(LocalRevisionModel.class).execute();
+        WellSql.delete(LocalDiffModel.class).execute();
     }
 
     public List<LocalId> getLocalPostIdsForFilter(SiteModel site, boolean isPage, String searchQuery,
