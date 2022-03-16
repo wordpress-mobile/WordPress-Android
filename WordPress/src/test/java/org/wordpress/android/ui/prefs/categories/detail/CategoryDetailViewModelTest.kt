@@ -104,7 +104,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no internet, when submit is invoked, then ui state is updated`() {
+    fun `given no internet, when submit is invoked, then no network message is shown`() {
         val categoryName = "Category name"
         viewModel.start()
         viewModel.onCategoryNameUpdated(categoryName)
