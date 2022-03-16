@@ -142,12 +142,9 @@ class StorePostViewModel
                         updateFromEditor.content
                 )
 
-                // only makes sense to change the publish date and locally changed date if the Post was actually changed
-                if (postTitleOrContentChanged) {
-                    postRepository.updatePublishDateIfShouldBePublishedImmediately(
-                            postModel
-                    )
-                }
+                postRepository.updatePublishDateIfShouldBePublishedImmediately(
+                        postModel
+                )
 
                 postTitleOrContentChanged
             }
