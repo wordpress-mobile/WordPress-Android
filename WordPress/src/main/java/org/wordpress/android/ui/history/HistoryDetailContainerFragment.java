@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -78,6 +77,8 @@ public class HistoryDetailContainerFragment extends Fragment {
 
     public static final String EXTRA_CURRENT_REVISION = "EXTRA_CURRENT_REVISION";
     public static final String EXTRA_PREVIOUS_REVISIONS_IDS = "EXTRA_PREVIOUS_REVISIONS_IDS";
+    public static final String EXTRA_POST_ID = "EXTRA_POST_ID";
+    public static final String EXTRA_SITE_ID = "EXTRA_SITE_ID";
     public static final String KEY_REVISION = "KEY_REVISION";
     public static final String KEY_IS_IN_VISUAL_PREVIEW = "KEY_IS_IN_VISUAL_PREVIEW";
 
@@ -86,10 +87,14 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Inject PostStore mPostStore;
 
     public static HistoryDetailContainerFragment newInstance(final Revision revision,
-                                                             final long[] previousRevisionsIds) {
+                                                             final long[] previousRevisionsIds,
+                                                             final long postId,
+                                                             final long siteId) {
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_CURRENT_REVISION, revision);
         args.putLongArray(EXTRA_PREVIOUS_REVISIONS_IDS, previousRevisionsIds);
+        args.putLong(EXTRA_POST_ID, postId);
+        args.putLong(EXTRA_SITE_ID, siteId);
         HistoryDetailContainerFragment fragment = new HistoryDetailContainerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -125,21 +130,15 @@ public class HistoryDetailContainerFragment extends Fragment {
         mTotalDeletions = rootView.findViewById(R.id.diff_deletions);
 
         mNextButton = rootView.findViewById(R.id.next);
-        mNextButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mIsChevronClicked = true;
-                mViewPager.setCurrentItem(mPosition + 1, true);
-            }
+        mNextButton.setOnClickListener(view -> {
+            mIsChevronClicked = true;
+            mViewPager.setCurrentItem(mPosition + 1, true);
         });
 
         mPreviousButton = rootView.findViewById(R.id.previous);
-        mPreviousButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mIsChevronClicked = true;
-                mViewPager.setCurrentItem(mPosition - 1, true);
-            }
+        mPreviousButton.setOnClickListener(view -> {
+            mIsChevronClicked = true;
+            mViewPager.setCurrentItem(mPosition - 1, true);
         });
 
         mVisualTitle = rootView.findViewById(R.id.visual_title);
@@ -185,8 +184,10 @@ public class HistoryDetailContainerFragment extends Fragment {
 
             final long[] previousRevisionsIds = getArguments().getLongArray(EXTRA_PREVIOUS_REVISIONS_IDS);
             final List<RevisionModel> revisionModels = new ArrayList<>();
+            final long postId = getArguments().getLong(EXTRA_POST_ID);
+            final long siteId = getArguments().getLong(EXTRA_SITE_ID);
             for (final long revisionId : previousRevisionsIds) {
-                revisionModels.add(mPostStore.getRevisionById(revisionId));
+                revisionModels.add(mPostStore.getRevisionById(revisionId, postId, siteId));
             }
             mRevisions = mapRevisionModelsToRevisions(revisionModels);
         }

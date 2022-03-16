@@ -1096,12 +1096,15 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewHistoryDetailForResult(@NonNull final Activity activity, @NonNull final Revision revision,
-                                                  @NonNull final long[] previousRevisionsIds) {
+    public static void viewHistoryDetailForResult(@NonNull final Activity activity,@NonNull final Revision revision,
+                                                  @NonNull final long[] previousRevisionsIds, final long postId,
+                                                  final long siteId) {
         Intent intent = new Intent(activity, HistoryDetailActivity.class);
         intent.putExtra(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION, revision);
         final Bundle extras = new Bundle();
         extras.putLongArray(HistoryDetailContainerFragment.EXTRA_PREVIOUS_REVISIONS_IDS, previousRevisionsIds);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_POST_ID, postId);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_SITE_ID, siteId);
         intent.putExtras(extras);
         activity.startActivityForResult(intent, RequestCodes.HISTORY_DETAIL);
     }
