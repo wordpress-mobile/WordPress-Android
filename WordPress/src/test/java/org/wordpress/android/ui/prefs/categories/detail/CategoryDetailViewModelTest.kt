@@ -82,6 +82,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `when vm starts, then submit button is shown and disabled`() {
         viewModel.start()
+
         assertFalse(uiStates.first().submitButtonUiState.enabled)
         assertTrue(uiStates.first().submitButtonUiState.visibility)
     }
@@ -90,6 +91,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun `given category name is updated, when vm starts, then submit button is enabled`() {
         viewModel.start()
         viewModel.onCategoryNameUpdated("category name")
+
         assertTrue(uiStates.last().submitButtonUiState.enabled)
     }
 
@@ -97,18 +99,22 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun ` given parent category is updated, when vm starts, then ui state is updated`() {
         val categoryNode = CategoryNode(1, 1, "Category")
         whenever(getCategoriesUseCase.getSiteCategories(siteModel)).thenReturn(arrayListOf(categoryNode))
+
         viewModel.start()
         val selectedCategoryParent = 2
         viewModel.onParentCategorySelected(selectedCategoryParent)
+
         assertEquals(selectedCategoryParent, uiStates.last().selectedParentCategoryPosition)
     }
 
     @Test
     fun `given no internet, when submit is invoked, then no network message is shown`() {
         val categoryName = "Category name"
+
         viewModel.start()
         viewModel.onCategoryNameUpdated(categoryName)
         viewModel.onSubmitButtonClick()
+
         assertEquals(
                 Failure(UiStringRes(R.string.no_network_message)),
                 (onCategoryPushStates[0].peekContent() as Failure)
@@ -119,9 +125,11 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun `given internet available, when submit is invoked, then add category is invoked`() {
         val categoryName = "Category name"
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
         viewModel.start()
         viewModel.onCategoryNameUpdated(categoryName)
         viewModel.onSubmitButtonClick()
+
         assertEquals(InProgress, onCategoryPushStates[0].peekContent())
         verify(addCategoryUseCase).addCategory(categoryName, 0, siteModel)
     }
@@ -130,6 +138,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun `given api success, when submit is invoked, then success message is shown`() {
         viewModel.start()
         viewModel.onTermUploaded(getTermUploadSuccess())
+
         assertEquals(
                 Success(UiStringRes(R.string.adding_cat_success)),
                 (onCategoryPushStates[0].peekContent() as Success)
@@ -140,6 +149,7 @@ class CategoryDetailViewModelTest : BaseUnitTest() {
     fun `given api error, when submit is invoked, then error message is shown`() {
         viewModel.start()
         viewModel.onTermUploaded(getTermUploadError())
+
         assertEquals(
                 Failure(UiStringRes(R.string.adding_cat_failed)),
                 (onCategoryPushStates[0].peekContent() as Failure)
