@@ -25,8 +25,8 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.IncludePromptSwitched
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PromptSwitch
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
@@ -176,7 +176,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
             BloggingRemindersViewHolder<BloggingRemindersPromptSwitchBinding>(
                     parentView.viewBinding(BloggingRemindersPromptSwitchBinding::inflate)
             ) {
-        fun onBind(item: IncludePromptSwitched) = with(binding) {
+        fun onBind(item: PromptSwitch) = with(binding) {
             includePromptSwitch.isChecked = item.isToggled
             includePromptSwitch.setOnCheckedChangeListener { _, _ -> item.onClick.click() }
         }

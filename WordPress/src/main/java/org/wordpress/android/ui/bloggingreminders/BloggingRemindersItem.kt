@@ -59,7 +59,7 @@ sealed class BloggingRemindersItem(val type: Type) {
         val onClick: ListItemInteraction
     ) : BloggingRemindersItem(NOTIFICATION_TIME)
 
-    data class IncludePromptSwitched(
+    data class PromptSwitch(
         val isToggled: Boolean,
         val onClick: ListItemInteraction
     ) : BloggingRemindersItem(INCLUDE_PROMPT_SWITCH)

@@ -7,7 +7,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.IncludePromptSwitched
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PromptSwitch
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
@@ -51,7 +51,7 @@ class BloggingRemindersAdapter @Inject constructor(private val uiHelpers: UiHelp
             is DayButtonsViewHolder -> holder.onBind(item as DayButtons, payloads.firstOrNull() as? DayButtonsPayload)
             is TipViewHolder -> holder.onBind(item as Tip)
             is TimeViewHolder -> holder.onBind(item as TimeItem)
-            is IncludePromptSwitchViewHolder -> holder.onBind(item as IncludePromptSwitched)
+            is IncludePromptSwitchViewHolder -> holder.onBind(item as PromptSwitch)
         }
     }
 
