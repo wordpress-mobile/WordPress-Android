@@ -552,6 +552,7 @@
     <string name="add_new_category">Add new category</string>
     <string name="category_name">Category name</string>
     <string name="category_parent">Parent category (optional):</string>
+    <string name="adding_cat">Adding category</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>

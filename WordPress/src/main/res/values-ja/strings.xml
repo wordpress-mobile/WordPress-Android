@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-25 09:54:08+0000
+Translation-Revision-Date: 2022-03-10 09:54:17+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">検索内容に WordPress.com のドメインでは対応されていない文字が含まれています。 英数字のみ入力できます。</string>
+    <string name="login_select_email_client">どのメールアプリを使用していますか ?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">サイトとの通信中に問題が発生しました。 HTTP エラーコード401が返されました。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">このサイトでは XML-RPC コールがブロックされているようです (エラーコード401)。 ログインに失敗する場合は、ヘルプアイコンをタップして FAQ をご確認ください。</string>
+    <string name="login_error_xml_rpc_cannot_read_site">ご指定の URL の WordPress サイトを読み込めません。 ヘルプアイコンをタップして FAQ を表示してください。</string>
+    <string name="login_error_xml_rpc_services_disabled">このサイトでは XML-RPC サービスが無効になっています。</string>
+    <string name="my_site_menu_tab_title">メニュー</string>
+    <string name="my_site_dashboard_tab_title">ダッシュボード</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">検索内容に WordPress.com のドメインではサポートされていない文字が含まれています。 サポートされている文字は A–Z、a–z、0–9です。</string>
     <string name="my_site_error_within_card_subtitle">インターネット接続を確認してページを更新してください。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">統計情報を表示</string>
     <string name="my_site_todays_stat_card_title">今日の統計情報</string>
