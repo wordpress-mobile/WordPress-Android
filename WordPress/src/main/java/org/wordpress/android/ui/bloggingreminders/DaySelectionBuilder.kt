@@ -32,7 +32,7 @@ class DaySelectionBuilder
         bloggingRemindersModel: BloggingRemindersUiModel?,
         onSelectDay: (DayOfWeek) -> Unit,
         onSelectTime: () -> Unit,
-        onPromptSwitchToggled: () -> Unit,
+        onPromptSwitchToggled: () -> Unit
     ): List<BloggingRemindersItem> {
         val daysOfWeek = daysProvider.getDaysOfWeekByLocale()
         val text = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)

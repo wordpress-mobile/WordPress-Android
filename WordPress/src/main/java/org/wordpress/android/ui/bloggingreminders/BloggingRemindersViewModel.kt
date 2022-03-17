@@ -22,7 +22,6 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
@@ -180,9 +179,11 @@ class BloggingRemindersViewModel @Inject constructor(
                             bloggingRemindersModel.siteId,
                             bloggingRemindersModel.hour,
                             bloggingRemindersModel.minute,
-                            bloggingRemindersModel.toReminderConfig())
+                            bloggingRemindersModel.toReminderConfig()
+                    )
                     analyticsTracker.trackRemindersScheduled(
-                            daysCount, bloggingRemindersModel.getNotificationTime24hour())
+                            daysCount, bloggingRemindersModel.getNotificationTime24hour()
+                    )
                 } else {
                     reminderScheduler.cancelBySiteId(bloggingRemindersModel.siteId)
                     analyticsTracker.trackRemindersCancelled()
@@ -260,7 +261,7 @@ class BloggingRemindersViewModel @Inject constructor(
 
     enum class Screen(val trackingName: String) {
         PROLOGUE("main"), // displayed after post is published
-        PROLOGUE_SETTINGS("main"),  // displayed from Site Settings before showing cadence selector
+        PROLOGUE_SETTINGS("main"), // displayed from Site Settings before showing cadence selector
         SELECTION("day_picker"), // cadence selector
         EPILOGUE("all_set")
     }

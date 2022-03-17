@@ -42,7 +42,6 @@ class PrologueBuilder
                     HighEmphasisText(UiStringRes(R.string.set_up_blogging_reminders_message))
             )
         }
-
     }
 
     fun buildPrimaryButton(
