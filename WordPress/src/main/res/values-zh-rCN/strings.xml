@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-02 22:14:11+0000
+Translation-Revision-Date: 2022-03-11 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 只允许使用字母数字字符。</string>
+    <string name="login_select_email_client">您使用哪款电子邮件应用程序？</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">与站点通信时出现问题。 返回了 HTTP 错误代码 401。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 调用似乎已被该站点屏蔽（错误代码 401）。 如果尝试登录失败，可点击帮助图标查看常见问题解答。</string>
+    <string name="login_error_xml_rpc_cannot_read_site">无法通过该 URL 读取 WordPress 站点。 点击帮助图标查看常见问题解答。</string>
+    <string name="login_error_xml_rpc_services_disabled">本站点禁用 XML-RPC 服务。</string>
+    <string name="my_site_menu_tab_title">菜单</string>
+    <string name="my_site_dashboard_tab_title">仪表盘</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 允许使用以下字符：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">请检查您网络连接并刷新页面。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">转至统计数据</string>
     <string name="my_site_todays_stat_card_title">今日统计</string>

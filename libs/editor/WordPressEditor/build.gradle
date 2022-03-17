@@ -8,6 +8,7 @@ repositories {
         content {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress-mobile"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
         }
     }
