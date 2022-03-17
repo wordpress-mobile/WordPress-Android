@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
@@ -23,6 +24,8 @@ class OnboardingDialogFragment : DialogFragment() {
 
     companion object {
         const val TAG = "BLOGGING_PROMPTS_ONBOARDING_DIALOG_FRAGMENT"
+
+        fun newInstance(): OnboardingDialogFragment = OnboardingDialogFragment()
     }
 
     override fun getTheme(): Int {
@@ -54,6 +57,11 @@ class OnboardingDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = BloggingPromptsOnboardingDialogFragmentBinding.bind(view)
+        setupTryNow(binding.tryNow)
+    }
+
+    private fun setupTryNow(tryNow: MaterialButton) {
+        tryNow.setOnClickListener { viewModel.onTryNow() }
     }
 
     override fun onAttach(context: Context) {
