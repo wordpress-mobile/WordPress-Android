@@ -6,8 +6,8 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.IncludePromptSwitched
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PromptSwitch
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
@@ -64,7 +64,7 @@ class DaySelectionBuilder
 
             if (bloggingPromptsFeatureConfig.isEnabled()) {
                 selectionList.add(
-                        IncludePromptSwitched(
+                        PromptSwitch(
                                 bloggingRemindersModel.isPromptIncluded,
                                 ListItemInteraction.create(onPromptSwitchToggled)
                         )
