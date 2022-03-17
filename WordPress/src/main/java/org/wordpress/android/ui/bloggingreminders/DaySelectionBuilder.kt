@@ -6,6 +6,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButto
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.IncludePromptSwitched
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
@@ -15,6 +16,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.time.DayOfWeek
 import java.time.format.TextStyle.SHORT
 import javax.inject.Inject
@@ -23,12 +25,14 @@ class DaySelectionBuilder
 @Inject constructor(
     private val daysProvider: DaysProvider,
     private val dayLabelUtils: DayLabelUtils,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
 ) {
     fun buildSelection(
         bloggingRemindersModel: BloggingRemindersUiModel?,
         onSelectDay: (DayOfWeek) -> Unit,
-        onSelectTime: () -> Unit
+        onSelectTime: () -> Unit,
+        onPromptSwitchToggled: () -> Unit,
     ): List<BloggingRemindersItem> {
         val daysOfWeek = daysProvider.getDaysOfWeekByLocale()
         val text = dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)
@@ -54,7 +58,18 @@ class DaySelectionBuilder
             selectionList.add(
                     TimeItem(
                             UiStringText(bloggingRemindersModel.getNotificationTime()),
-                            ListItemInteraction.create(onSelectTime)))
+                            ListItemInteraction.create(onSelectTime)
+                    )
+            )
+
+            if (bloggingPromptsFeatureConfig.isEnabled()) {
+                selectionList.add(
+                        IncludePromptSwitched(
+                                bloggingRemindersModel.isPromptIncluded,
+                                ListItemInteraction.create(onPromptSwitchToggled)
+                        )
+                )
+            }
         }
 
         selectionList.add(

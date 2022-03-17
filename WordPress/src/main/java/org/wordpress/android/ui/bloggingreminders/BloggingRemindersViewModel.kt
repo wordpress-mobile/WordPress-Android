@@ -22,6 +22,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Scr
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
@@ -29,7 +30,6 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
-import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -69,7 +69,7 @@ class BloggingRemindersViewModel @Inject constructor(
                 PROLOGUE -> prologueBuilder.buildUiItems()
                 PROLOGUE_SETTINGS -> prologueBuilder.buildUiItemsForSettings()
                 SELECTION -> daySelectionBuilder.buildSelection(
-                        bloggingRemindersModel, this::selectDay, this::selectTime
+                        bloggingRemindersModel, this::selectDay, this::selectTime, this::togglePromptSwitch
                 )
                 EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
@@ -147,6 +147,11 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun selectTime() {
         _isTimePickerShowing.value = Event(true)
+    }
+
+    private fun togglePromptSwitch() {
+        val currentState = _bloggingRemindersModel.value!!
+        _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = !currentState.isPromptIncluded)
     }
 
     fun onChangeTime(hour: Int, minute: Int) {
@@ -254,9 +259,9 @@ class BloggingRemindersViewModel @Inject constructor(
             WeeklyReminder(this.enabledDays)
 
     enum class Screen(val trackingName: String) {
-        PROLOGUE("main"),
-        PROLOGUE_SETTINGS("main"),
-        SELECTION("day_picker"),
+        PROLOGUE("main"), // displayed after post is published
+        PROLOGUE_SETTINGS("main"),  // displayed from Site Settings before showing cadence selector
+        SELECTION("day_picker"), // cadence selector
         EPILOGUE("all_set")
     }
 
