@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
@@ -271,6 +272,7 @@ class MySiteViewModel @Inject constructor(
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
                 showTabs = isMySiteTabsEnabled,
+                siteInfoCardItem = siteItems[MySiteTabType.ALL]!!.filterIsInstance<Card>().filterIsInstance<SiteInfoCard>()[0],
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
@@ -914,6 +916,7 @@ class MySiteViewModel @Inject constructor(
         abstract val showTabs: Boolean
         data class SiteSelected(
             override val showTabs: Boolean,
+            val siteInfoCardItem: SiteInfoCard,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>

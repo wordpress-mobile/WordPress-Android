@@ -3,14 +3,17 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.widget.ImageView
+import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -44,6 +47,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var viewModel: MySiteViewModel
 
     private var binding: MySiteFragmentBinding? = null
+    private var siteTitle:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +114,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
         if(currentOffset==0)
-            collapsingToolbar.title = "Accused Kite"
+            collapsingToolbar.title = siteTitle
         else
             collapsingToolbar.title = null
     }
@@ -156,20 +160,53 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
-        tabLayout.setVisible(state.showTabs)
+        handleTabVisibility(state.showTabs)
         actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
+        siteInfo.loadMySiteDetails(state.siteInfoCardItem)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
-        tabLayout.setVisible(state.showTabs)
+        handleTabVisibility(state.showTabs)
         viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
+    }
+
+    private fun MySiteFragmentBinding.handleTabVisibility(visible: Boolean) {
+        tabLayout.setVisible(visible)
+        if(visible)
+            showTabs()
+        else
+            hideTabs()
+    }
+
+    private fun MySiteFragmentBinding.showTabs() {
+        val newHeight = dpToPx(200) // New height in pixels
+        appbarMain.requestLayout()
+        appbarMain.layoutParams.height = newHeight
+
+        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
+        layoutParams?.setMargins(0,0,0, 150)
+        toolbarMain.layoutParams = layoutParams;
+    }
+
+    private fun MySiteFragmentBinding.hideTabs() {
+        val newHeight = dpToPx(156) // New height in pixels
+        appbarMain.requestLayout()
+        appbarMain.layoutParams.height = newHeight
+
+        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
+        layoutParams?.setMargins(0,0,0, 0)
+        toolbarMain.layoutParams = layoutParams;
+    }
+
+    fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
     }
 
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
@@ -181,28 +218,31 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    private fun MySiteInfoCardBinding.loadMySiteDetails(item: SiteInfoCard) {
-        if (item.iconState is IconState.Visible) {
-            mySiteBlavatar.visibility = View.VISIBLE
-            imageManager.load(mySiteBlavatar, BLAVATAR, item.iconState.url ?: "")
-            mySiteIconProgress.visibility = View.GONE
-            mySiteBlavatar.setOnClickListener { item.onIconClick.click() }
-        } else if (item.iconState is IconState.Progress) {
-            mySiteBlavatar.setOnClickListener(null)
-            mySiteIconProgress.visibility = View.VISIBLE
-            mySiteBlavatar.visibility = View.GONE
+    private fun MySiteInfoCardBinding.loadMySiteDetails(site: SiteInfoCard?) {
+        site?.let {
+            siteTitle = site.title
+            if (site.iconState is IconState.Visible) {
+                mySiteBlavatar.visibility = View.VISIBLE
+                imageManager.load(mySiteBlavatar, BLAVATAR, site.iconState.url ?: "")
+                mySiteIconProgress.visibility = View.GONE
+                mySiteBlavatar.setOnClickListener { site.onIconClick.click() }
+            } else if (site.iconState is IconState.Progress) {
+                mySiteBlavatar.setOnClickListener(null)
+                mySiteIconProgress.visibility = View.VISIBLE
+                mySiteBlavatar.visibility = View.GONE
+            }
+            quickStartIconFocusPoint.setVisibleOrGone(site.showIconFocusPoint)
+            if (site.onTitleClick != null) {
+                siteInfoContainer.title.setOnClickListener { site.onTitleClick.click() }
+            } else {
+                siteInfoContainer.title.setOnClickListener(null)
+            }
+            siteInfoContainer.title.text = site.title
+            quickStartTitleFocusPoint.setVisibleOrGone(site.showTitleFocusPoint)
+            siteInfoContainer.subtitle.text = site.url
+            siteInfoContainer.subtitle.setOnClickListener { site.onUrlClick.click() }
+            switchSite.setOnClickListener { site.onSwitchSiteClick.click() }
         }
-        quickStartIconFocusPoint.setVisibleOrGone(item.showIconFocusPoint)
-        if (item.onTitleClick != null) {
-            siteInfoContainer.title.setOnClickListener { item.onTitleClick.click() }
-        } else {
-            siteInfoContainer.title.setOnClickListener(null)
-        }
-        siteInfoContainer.title.text = item.title
-        quickStartTitleFocusPoint.setVisibleOrGone(item.showTitleFocusPoint)
-        siteInfoContainer.subtitle.text = item.url
-        siteInfoContainer.subtitle.setOnClickListener { item.onUrlClick.click() }
-        switchSite.setOnClickListener { item.onSwitchSiteClick.click() }
     }
 
     override fun onPositiveClicked(instanceTag: String) {

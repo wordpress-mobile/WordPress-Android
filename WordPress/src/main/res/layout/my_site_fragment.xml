@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             app:contentScrim="@android:color/transparent"
             android:layout_height="wrap_content"
-            app:expandedTitleMarginBottom="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:expandedTitleTextAppearance="@android:color/transparent"
             >
@@ -28,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:layout_marginBottom="?attr/actionBarSize"
                 app:theme="@style/WordPress.ActionBar"/>
 
             <RelativeLayout
@@ -44,6 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:visibility="visible"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="1.0" />
 
@@ -55,7 +54,7 @@
                     android:layout_gravity="bottom"
                     android:visibility="visible"
                     app:layout_collapseMode="pin"
-                    tools:text="@string/my_site_menu_tab_title"/>
+                    tools:text="@string/my_site_menu_tab_title" />
             </RelativeLayout>
 
 
