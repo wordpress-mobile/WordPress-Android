@@ -6,16 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragmentBinding
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.util.setStatusBarAsSurfaceColor
+import org.wordpress.android.util.updateSystemUiVisibility
 import javax.inject.Inject
 
 class OnboardingDialogFragment : DialogFragment() {
@@ -36,15 +34,8 @@ class OnboardingDialogFragment : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(OnboardingViewModel::class.java)
-
-        val window: Window? = dialog.window
-        window?.let {
-            window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
-            if (!resources.configuration.isDarkTheme()) {
-                window.decorView.systemUiVisibility = window.decorView
-                        .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
+        dialog.setStatusBarAsSurfaceColor()
+        dialog.updateSystemUiVisibility()
         return dialog
     }
 

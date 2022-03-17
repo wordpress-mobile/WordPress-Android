@@ -19,6 +19,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.util.setStatusBarAsSurfaceColor
+import org.wordpress.android.util.updateSystemUiVisibility
 import javax.inject.Inject
 
 class FeatureAnnouncementDialogFragment : DialogFragment() {
@@ -37,15 +39,8 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
-
-        val window: Window? = dialog.window
-        window?.let {
-            window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
-            if (!resources.configuration.isDarkTheme()) {
-                window.decorView.systemUiVisibility = window.decorView
-                        .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
+        dialog.setStatusBarAsSurfaceColor()
+        dialog.updateSystemUiVisibility()
         return dialog
     }
 
