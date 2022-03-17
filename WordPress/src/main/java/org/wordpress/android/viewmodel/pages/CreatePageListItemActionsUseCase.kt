@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
+import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -45,6 +46,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                 mutableSetOf(
                         VIEW_PAGE,
                         COPY,
+                        COPY_LINK,
                         SET_PARENT
                 ).apply {
                     if (siteModel.isUsingWpComRestApi &&

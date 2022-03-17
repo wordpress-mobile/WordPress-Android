@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
@@ -35,6 +36,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
+import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -434,7 +436,7 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, PageStatus.DRAFT)
+            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.remoteId, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
@@ -442,6 +444,7 @@ class PagesViewModel
             SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
             COPY -> onCopyPage(page)
+            COPY_LINK -> copyPageLink(page)
         }
         return true
     }
@@ -522,6 +525,14 @@ class PagesViewModel
                 )
             }
         }
+    }
+
+    private fun copyPageLink(page: Page) {
+        TODO("Need to adapt this code to current context")
+//        val pageLink = postStore.getPostByLocalPostId(page.localId)
+//        activity.clipboardManager?.setPrimaryClip(
+//                ClipData.newPlainText("${page.localId}", pageLink)
+//        ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
     }
 
     private fun previewPage(page: Page) {
