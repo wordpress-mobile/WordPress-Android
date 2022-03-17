@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-22 19:09:01+0000
+Translation-Revision-Date: 2022-03-11 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">La tua ricerca include caratteri non supportati nei domini di WordPress.com. Sono ammessi solo caratteri alfanumerici.</string>
+    <string name="login_select_email_client">Quale app per e-mail utilizzi?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Si è verificato un problema durante la comunicazione con il sito. È stato restituito un codice di errore HTTP .</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Le chiamate XML-RPC sembrano bloccate su questo sito (codice di errore 401). Se il tentativo di accesso fallisce, tocca l\'icona della guida per visualizzare le FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Impossibile leggere il sito WordPress associato a questo URL. Tocca l\'icona della guida per visualizzare le domande frequenti.</string>
+    <string name="login_error_xml_rpc_services_disabled">Il servizio XML-RPC è disattivato su questo sito.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Bacheca</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">La tua ricerca include caratteri non supportati nei domini WordPress.com. Sono consentiti i seguenti caratteri: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controlla la tua connessione a Internet e ricarica la pagina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Vai alle statistiche</string>
     <string name="my_site_todays_stat_card_title">Statistiche odierne</string>

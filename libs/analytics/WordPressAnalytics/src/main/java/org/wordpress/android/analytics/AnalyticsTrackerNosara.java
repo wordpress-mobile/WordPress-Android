@@ -1091,6 +1091,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_insights_type_removed";
             case STATS_INSIGHTS_MANAGEMENT_SAVED:
                 return "stats_insights_management_saved";
+            case STATS_INSIGHTS_MANAGEMENT_DISMISSED:
+                return "stats_insights_management_dismissed";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED:
                 return "stats_insights_management_type_added";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED:
@@ -1290,7 +1292,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SIGNUP_EMAIL_BUTTON_TAPPED:
                 return "signup_email_button_tapped";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED:
-                return "signup_email_epilogue_gravatar_cropped:";
+                return "signup_email_epilogue_gravatar_cropped";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED:
                 return "signup_email_epilogue_gallery_picked";
             case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW:
@@ -1395,6 +1397,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_site_design_preview_loading";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
                 return "enhanced_site_creation_site_design_preview_loaded";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_VIEWED:
+                return "enhanced_site_creation_intent_question_viewed";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CANCELED:
+                return "enhanced_site_creation_intent_question_canceled";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_SKIPPED:
+                return "enhanced_site_creation_intent_question_skipped";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CONTINUE_PRESSED:
+                return "enhanced_site_creation_intent_question_continue_pressed";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED:
+                return "enhanced_site_creation_intent_question_vertical_selected";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED:
+                return "enhanced_site_creation_intent_question_search_focused";
             case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
                 return "layout_picker_preview_mode_changed";
             case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:

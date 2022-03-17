@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-02 06:37:46+0000
+Translation-Revision-Date: 2022-03-15 07:06:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -53,12 +53,12 @@ Language: pl
     <string name="gutenberg_native_font_size">Rozmiar czcionki</string>
     <string name="gutenberg_native_double_tap_to_select_font_size">Stuknij dwukrotnie aby wybrać rozmiar czcionki</string>
     <string name="gutenberg_native_double_tap_to_select_default_font_size">Stuknij dwukrotnie aby wybrać domyślny rozmiar czcionki</string>
-    <string name="gutenberg_native_contact_support">Skontaktuj się ze wsparciem</string>
     <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_follow_conversation">Obserwuj konwersację</string>
     <string name="reader_comments_be_first_to_comment">Napisz pierwszy komentarz</string>
     <string name="reader_comments_view_all">Zobacz wszystkie komentarze</string>
     <string name="reader_comments_post_fetch_failure">Wystąpił błąd podczas pobierania danych wpisu</string>
+    <string name="gutenberg_native_contact_support">Kontakt z pomocą techniczną</string>
     <string name="reader_comments_fetch_failure">Wystąpił błąd podczas pobierania komentarzy</string>
     <string name="reader_btn_follow_conversation_settings">Obserwuj ustawienia konwersacji</string>
     <string name="gutenberg_native_from_clipboard">Że schowka</string>
@@ -354,18 +354,18 @@ Language: pl
     <string name="quick_start_card_menu_hide">Pomiń na razie</string>
     <string name="magic_link_not_meaning_to_create_account">Nie zamierzałaś/eś tworzyć nowego konta? Cofnij się i wprowadź ponownie swój adres email.</string>
     <string name="invite_links_disable_dialog_message">Po włączeniu tego łącza z zaproszeniem, nie będzie możliwości wykorzystania go do zaproszenia kogoś do zespołu. Czy jesteś pewien/pewna?</string>
-    <string name="invite_links_disable_dialog_title">Dezaktywuj odnośnik do zaproszenia</string>
     <string name="invite_links_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
     <string name="invite_links_null_response">Nie otrzymano odpowiedzi</string>
     <string name="invite_links_cannot_get_role_data_error">Wystąpił błąd podczas pobierania danych dla roli %1$s</string>
     <string name="invite_links_cannot_get_roles_error">Wystąpił błąd podczas pobierania ról</string>
     <string name="invite_links_generic_get_data_error">Nieznany błąd podczas pobierania danych z odnośników z zaproszeniami</string>
-    <string name="invite_links_disable_invite_link">Dezaktywuj odnośnik z zaproszeniem</string>
+    <string name="invite_links_disable_dialog_title">Wyłącz odnośnik do zaproszenia</string>
     <string name="invite_links_share_invite_link">Udostępnij odnośnik z zaproszeniem</string>
     <string name="invite_links_generate">Generuj nowy odnośnik</string>
     <string name="invite_links_get_status_retry">Odśwież status odnośnika</string>
     <string name="invite_links_section_title">Odnośnik z zaproszeniem</string>
     <string name="invite_links_expire_date">Wygasa %1$s</string>
+    <string name="invite_links_disable_invite_link">Wyłącz odnośnik do zaproszenia</string>
     <string name="threats_found_singular">Odnaleziono zagrożenie</string>
     <string name="threats_found_plural">Odnaleziono zagrożenia</string>
     <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Skanowanie zakończone&lt;/b&gt; &lt;br&gt; Znaleziono %s potencjalne/ych zagrożenia/ń</string>
@@ -817,8 +817,8 @@ Language: pl
     <string name="my_site_bottom_sheet_add_story">Wpis z relacją</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Edytowanie ikon witryn z samodzielnym hostingiem wymaga wtyczki Jetpack.</string>
     <string name="pick_file">Dodaj plik</string>
-    <string name="gutenberg_native_replace_video">Zamień plik wideo</string>
     <string name="gutenberg_native_replace_image_or_video">Zamień zdjęcie lub film</string>
+    <string name="gutenberg_native_replace_video">Zastąp film</string>
     <string name="gutenberg_native_choose_video">Wybierz film</string>
     <string name="gutenberg_native_choose_image_or_video">Wybierz zdjęcie lub film</string>
     <string name="gutenberg_native_choose_image">Wybierz obrazek</string>
@@ -988,12 +988,12 @@ Language: pl
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
-    <string name="preview_image_description">Podgląd zdjęcia</string>
     <string name="error_unknown_page_type">Nieznany format strony</string>
     <string name="error_page_not_submitted">Nie można było ukończyć tego działania, i przesłać tej strony do przeglądu.</string>
     <string name="error_page_not_scheduled">Nie można było przesłać tego pliku mediów i zaplanować daty opublikowania tej strony. </string>
     <string name="error_page_not_published_private">Nie można było ukończyć tego działania, i opublikować tej prywatnej strony. </string>
     <string name="failed_to_load_image_tap_to_retry">Nie udało się wczytać obrazka. \nSuknij aby spróbować ponownie. </string>
+    <string name="preview_image_description">Podgląd obrazka</string>
     <string name="error_page_not_published">Nie można było ukończyć tego działania, i opublikować tej strony. </string>
     <string name="error_page_not_submitted_retrying">Nie można było przesłać tej strony do przeglądu, ale spróbujemy ponownie później. </string>
     <string name="error_page_not_scheduled_retrying">Nie można było zaplanować opublikowania tej strony, ale spróbujemy ponownie później.</string>
@@ -1346,13 +1346,13 @@ Language: pl
     <string name="domain_registration_country_picker_dialog_title">Wybierz kraj</string>
     <string name="domain_contact_information_register_domain_button">Zarejestruj domenę</string>
     <string name="domain_contact_information_postal_code_hint">Kod pocztowy</string>
-    <string name="domain_contact_information_city_hint">Miasto</string>
     <string name="domain_contact_information_address_hint_two">Adres 2</string>
     <string name="domain_contact_information_address_hint">Adres</string>
     <string name="domain_contact_information_country_hint">Kraj</string>
     <string name="domain_contact_information_country_code_hint">Kod kraju</string>
     <string name="domain_contact_information_state_hint">Stan</string>
     <string name="domain_contact_information_phone_number_hint">Numer telefonu</string>
+    <string name="domain_contact_information_city_hint">Miejscowość</string>
     <string name="domain_contact_information_organization_hint">Organizacja (opcjonalnie)</string>
     <string name="domain_contact_information_description">Dla twojej wygody, wypełniliśmy wstępnie twoje dane kontaktowe\nWordpress.com. Przejrzyj je aby upewnić się, że wpisane są prawidłowe informacje dla tej domeny.</string>
     <string name="domain_contact_information_title">Informacje kontaktowe domeny</string>
@@ -1963,7 +1963,7 @@ Language: pl
     <string name="site_settings_like_header">Lubię</string>
     <string name="plugin_see_all">Zobaczy wszystko</string>
     <string name="notifications_jetpack_connection_setup_info">Aby uzyskać pomocne powiadomienia na swoim urządzeniu ze swojej WordPressowej witryny, będziesz musiał zainstalować wtyczkę Jetpack. Czy chciałbyś skonfigurować Jetpacka?</string>
-    <string name="site_settings_lazy_load_images">Lazy load - wczytuj tylko widoczne na stronie obrazki</string>
+    <string name="site_settings_lazy_load_images">Leniwe ładowanie obrazków</string>
     <string name="stats_jetpack_connection_setup">Zainstaluj Jetpacka</string>
     <string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
     <string name="plugin_info_your_version">Twoja wersja WordPressa</string>
@@ -2464,8 +2464,8 @@ Language: pl
     <string name="plans">Plany</string>
     <string name="export_your_content_message">Twoje wpisy, strony i ustawienia zostaną przesłane na adres %s.</string>
     <string name="export_your_content">Wyeksportuj zawartość</string>
-    <string name="exporting_content_progress">Eksportowanie zawartości</string>
     <string name="export_email_sent">Wysłano email z danymi eksportowymi!</string>
+    <string name="exporting_content_progress">Eksportowanie zawartości…</string>
     <string name="show_purchases">Pokaż zakupy</string>
     <string name="checking_purchases">Sprawdzanie zakupów</string>
     <string name="premium_upgrades_message">Masz aktywowane plany premium na swojej witrynie. Anuluj plany przed usunięciem swojej witryny.</string>
@@ -2589,7 +2589,7 @@ Language: pl
     <string name="site_settings_rp_preview2_title">Aplikacja WordPress dla Androida przeszła dużą aktualizację wyglądu</string>
     <string name="site_settings_rp_preview1_site">W sekcji \"Urządzenia mobilne\"</string>
     <string name="site_settings_rp_preview1_title">Dostępna jest duża aktualizacja iPhona/iPada</string>
-    <string name="site_settings_rp_show_images_title">Pokaż obrazki</string>
+    <string name="site_settings_rp_show_images_title">Wyświetlaj obrazki</string>
     <string name="site_settings_rp_show_header_title">Pokaż nagłówek</string>
     <string name="site_settings_rp_switch_summary">Wyświetla odpowiednią zawartość z twojej witryny poniżej twoich wpisów.</string>
     <string name="site_settings_rp_switch_title">Pokaż podobne wpisy</string>
@@ -2598,7 +2598,7 @@ Language: pl
     <string name="site_settings_multiple_links_hint">Ignoruje limit odnośników od znanych tobie użytkowników</string>
     <string name="site_settings_allowlist_hint">Inny komentarz tego samego autora musi zostać wcześniej zatwierdzony</string>
     <string name="site_settings_user_account_required_hint">Użytkownicy muszą być zarejestrowani i zalogowani, aby móc komentować</string>
-    <string name="site_settings_identity_required_hint">Autor komentarza musi podać imię oraz e-mail</string>
+    <string name="site_settings_identity_required_hint">Autor komentarza musi wprowadzić swój podpis oraz adres e-mail</string>
     <string name="site_settings_paging_hint">Pokaż komentarze w kawałkach o określonym rozmiarze</string>
     <string name="site_settings_threading_hint">Zezwalaj na zagnieżdżanie do określonej głębokości</string>
     <string name="site_settings_sort_by_hint">Określa porządek w jakim prezentowane są komentarze</string>
@@ -3020,7 +3020,7 @@ Language: pl
     <string name="publish_now">Opublikuj teraz</string>
     <string name="reply">Odpowiedz</string>
     <string-array name="blogging_reminders_count">
-        <item>Raz</item>
+        <item>Jednorazowo</item>
         <item>Dwukrotnie</item>
         <item>Trzy razy</item>
         <item>Cztery razy</item>

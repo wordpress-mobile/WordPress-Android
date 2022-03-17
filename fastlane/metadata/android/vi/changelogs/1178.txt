@@ -1,0 +1,7 @@
+19.3:
+- Thông báo trong trình soạn thảo bình luận
+- Sửa đúng múi giờ cho blog tạo bằng app
+- Sửa bình luận cho Admins/Editors
+- Bộ nhớ thấp không ảnh hưởng khối story
+- Báo lỗi khi tạo blog URL ký tự lạ
+- Sửa lỗi và cải thiện thiết kế
