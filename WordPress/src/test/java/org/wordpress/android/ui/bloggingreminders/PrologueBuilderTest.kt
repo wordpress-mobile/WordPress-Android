@@ -56,7 +56,6 @@ class PrologueBuilderTest {
         assertBloggingPromptsModel(uiModel)
     }
 
-
     @Test
     fun `builds correct UI model for settings when prompts feature is on`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)

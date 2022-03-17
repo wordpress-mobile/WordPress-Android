@@ -196,7 +196,6 @@ class DaySelectionBuilderTest {
         assertThat(potentialSwitches.size).isEqualTo(1)
     }
 
-
     @Test
     fun `include prompt switch is not visible when days are not selected`() {
         val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute)
