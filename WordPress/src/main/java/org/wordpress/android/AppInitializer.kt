@@ -397,6 +397,16 @@ class AppInitializer @Inject constructor(
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             notificationManager.createNotificationChannel(transientChannel)
+
+            // Create the WEEKLY ROUNDUP channel (used for weekly roundup notification containing weekly stats)
+            val weeklyRoundupChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_weekly_roundup_id),
+                    application.getString(R.string.notification_channel_weekly_roundup_title),
+                    NotificationManager.IMPORTANCE_LOW
+            )
+            // Register the channel with the system; you can't change the importance or other notification behaviors
+            // after this
+            notificationManager.createNotificationChannel(weeklyRoundupChannel)
         }
     }
 
