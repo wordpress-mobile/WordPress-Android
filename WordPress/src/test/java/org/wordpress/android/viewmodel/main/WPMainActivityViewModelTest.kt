@@ -696,8 +696,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `firstSite should return null when there are no sites`() {
-        val sites = mock<ArrayList<SiteModel>>()
-        whenever(siteStore.sites).thenReturn(sites)
+        whenever(siteStore.hasSite()).thenReturn(false)
 
         assertThat(viewModel.firstSite).isEqualTo(null)
     }
