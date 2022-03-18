@@ -116,6 +116,7 @@
     <string name="status_and_visibility">Status &amp; Visibility</string>
 
     <string name="button_not_now">Not now</string>
+    <string name="button_skip">Skip</string>
 
     <string name="at_username">\@%s</string>
 
@@ -551,6 +552,7 @@
     <string name="add_new_category">Add new category</string>
     <string name="category_name">Category name</string>
     <string name="category_parent">Parent category (optional):</string>
+    <string name="adding_cat">Adding category</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
@@ -2213,8 +2215,8 @@
     <string name="my_site_quick_actions_title">Quick Links</string>
 
     <!-- My Site - Dashboard -->
-    <string name="my_site_dashboard_tab_title">Dashboard</string>
-    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Home</string>
+    <string name="my_site_menu_tab_title">Site Menu</string>
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
     <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
 
@@ -3186,6 +3188,8 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_intents_header_title">What’s your website about?</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type you own</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -3275,7 +3279,6 @@
     <string name="hpp_title">Choose a design</string>
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
     <string name="hpp_choose_button">Choose</string>
-    <string name="hpp_skip_button">Skip</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>

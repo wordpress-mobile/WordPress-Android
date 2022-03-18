@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-22 13:34:31+0000
+Translation-Revision-Date: 2022-03-07 21:11:54+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">Căutarea ta include caractere care nu sunt acceptate în domeniile WordPress.com. Sunt permise numai caractere alfanumerice.</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">A fost o problemă la comunicarea cu site-ul. A fost returnat codul de eroare HTTP 401.</string>
+    <string name="login_select_email_client">Ce aplicație pentru email folosești?</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Nu pot să găsesc un site WordPress la acel URL. Atinge iconul pentru ajutor ca să vezi Întrebări frecvente.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Apelările XML-RPC par a fi blocate pe acest site (cod eroare 401). Dacă încercarea de autentificare eșuează, atinge iconul pentru ajutor ca să vezi Întrebări frecvente.</string>
+    <string name="my_site_dashboard_tab_title">Panou control</string>
+    <string name="my_site_menu_tab_title">Meniu</string>
+    <string name="login_error_xml_rpc_services_disabled">Serviciile XML-RPC sunt dezactivate pe acest site.</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Căutarea ta include caractere care nu sunt acceptate în domeniile WordPress.com. Sunt permise următoarele caractere: A–Z, a–z, 0–9.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Mergi la statistici</string>
     <string name="my_site_todays_stat_card_title">Statistici pentru azi</string>
     <string name="error_edit_notification">A apărut o eroare în timpul actualizării conținutului notificării</string>

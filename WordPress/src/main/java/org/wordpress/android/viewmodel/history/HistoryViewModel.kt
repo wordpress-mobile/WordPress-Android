@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -39,6 +38,7 @@ import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("TooManyFunctions")
 class HistoryViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
@@ -223,6 +223,16 @@ class HistoryViewModel @Inject constructor(
         fetchRevisions()
     }
 
+    private fun saveRevisionsToLocalDB(post: PostModel, revisions: List<RevisionModel>) {
+        revisions.forEach {
+            postStore.setLocalRevision(it, site, post)
+        }
+    }
+
+    private fun removeRevisionsFromLocalDB(post: PostModel) {
+        postStore.deleteLocalRevisionOfAPostOrPage(post)
+    }
+
     data class ShowDialogEvent(val historyListItem: HistoryListItem, val revisionsList: List<Revision>)
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -238,6 +248,8 @@ class HistoryViewModel @Inject constructor(
         } else {
             _listStatus.value = HistoryListStatus.DONE
             createRevisionsList(event.revisionsModel.revisions)
+            removeRevisionsFromLocalDB(event.post)
+            saveRevisionsToLocalDB(event.post, event.revisionsModel.revisions)
         }
     }
 }

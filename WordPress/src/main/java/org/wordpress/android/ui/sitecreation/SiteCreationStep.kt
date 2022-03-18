@@ -1,31 +1,36 @@
 package org.wordpress.android.ui.sitecreation
 
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
+import org.wordpress.android.util.config.SiteIntentQuestionFeatureConfig
 import org.wordpress.android.util.wizard.WizardStep
 import javax.inject.Inject
 import javax.inject.Singleton
 
 enum class SiteCreationStep : WizardStep {
-    SEGMENTS, DOMAINS, SITE_PREVIEW;
-
-    companion object {
-        fun fromString(input: String): SiteCreationStep {
-            return when (input) {
-                "site_creation_segments" -> SEGMENTS
-                "site_creation_domains" -> DOMAINS
-                "site_creation_site_preview" -> SITE_PREVIEW
-                else -> throw IllegalArgumentException("SiteCreationStep not recognized: \$input")
-            }
-        }
-    }
+    SEGMENTS, DOMAINS, SITE_PREVIEW, INTENTS;
 }
 
 @Singleton
-class SiteCreationStepsProvider @Inject constructor() {
+class SiteCreationStepsProvider @Inject constructor(
+    private val siteIntentQuestionFeatureConfig: SiteIntentQuestionFeatureConfig
+) {
     fun getSteps(): List<SiteCreationStep> {
+        if (siteIntentQuestionFeatureConfig.isEnabled()) {
+            return listOf(
+                    INTENTS,
+                    SEGMENTS,
+                    DOMAINS,
+                    SITE_PREVIEW
+            )
+        }
+
         return listOf(
-                SiteCreationStep.fromString("site_creation_segments"),
-                SiteCreationStep.fromString("site_creation_domains"),
-                SiteCreationStep.fromString("site_creation_site_preview")
+                SEGMENTS,
+                DOMAINS,
+                SITE_PREVIEW
         )
     }
 }

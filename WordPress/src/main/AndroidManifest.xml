@@ -749,12 +749,13 @@
 
         <!-- Site Settings Categories -->
         <activity
-            android:name=".ui.prefs.categories.CategoriesListActivity"
+            android:name=".ui.prefs.categories.list.CategoriesListActivity"
             android:label="@string/categories"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <activity
             android:name=".ui.prefs.categories.detail.CategoryDetailActivity"
+            android:label="@string/add_new_category"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->
