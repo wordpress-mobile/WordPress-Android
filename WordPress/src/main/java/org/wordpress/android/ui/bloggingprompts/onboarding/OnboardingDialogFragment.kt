@@ -7,11 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragmentBinding
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.bloggingprompts.onboarding.Action.OpenEditor
+import org.wordpress.android.util.exhaustive
 import org.wordpress.android.util.setStatusBarAsSurfaceColor
 import org.wordpress.android.util.updateSystemUiVisibility
 import javax.inject.Inject
@@ -49,14 +53,28 @@ class OnboardingDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val binding = BloggingPromptsOnboardingDialogFragmentBinding.bind(view)
         setupTryNow(binding.tryNow)
+        setupUiStateObserver()
+        setupActionObserver()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     private fun setupTryNow(tryNow: MaterialButton) {
         tryNow.setOnClickListener { viewModel.onTryNow() }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
+    private fun setupUiStateObserver() {
+
+    }
+
+    private fun setupActionObserver() {
+        viewModel.action.observe(this, { action ->
+            when (action) {
+                is OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
+            }.exhaustive
+        })
     }
 }

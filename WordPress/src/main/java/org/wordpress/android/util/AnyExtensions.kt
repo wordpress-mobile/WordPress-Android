@@ -1,4 +1,4 @@
 package org.wordpress.android.util
 
-class AnyExtensions {
-}
+val Any?.exhaustive
+    get() = Unit
