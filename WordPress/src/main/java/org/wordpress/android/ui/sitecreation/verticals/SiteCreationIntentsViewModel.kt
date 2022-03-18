@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,6 +35,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
+    private val _onIntentSelected = SingleLiveEvent<String>()
+    val onIntentSelected: LiveData<String> = _onIntentSelected
+
     fun start() {
         if (isStarted) return
         isStarted = true
@@ -64,11 +66,14 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
         val newItems = intentArray.mapIndexed { index, verticalText ->
             val item = DefaultIntentItemUiState(verticalText, emojiArray[index])
-            val message = "$verticalText selected"
-            item.onItemTapped = { Log.d("Intents", message) }
+            item.onItemTapped = { intentSelected(verticalText) }
             return@mapIndexed item
         }
         _uiState.value = DefaultItems(items = newItems)
+    }
+
+    private fun intentSelected(intent: String) {
+        _onIntentSelected.value = intent
     }
 
     sealed class IntentsUiState(

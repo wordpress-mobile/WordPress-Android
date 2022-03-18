@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.verticals.IntentsScreenListener
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -34,6 +36,7 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
+    val siteIntent: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: String? = null
@@ -93,6 +96,13 @@ class SiteCreationMainVM @Inject constructor(
         outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
         outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
+    }
+
+    fun onSiteIntentSelected(intent: String) {
+        siteCreationState = siteCreationState.copy(siteIntent = intent)
+        val message = "$intent selected"
+        Log.d("Intents", message)
+        wizardManager.showNextStep()
     }
 
     fun onSiteIntentSkipped() {
