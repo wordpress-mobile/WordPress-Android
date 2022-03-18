@@ -172,7 +172,7 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
         }
     }
 
-    class IncludePromptSwitchViewHolder(parentView: ViewGroup) :
+    class PromptSwitchViewHolder(parentView: ViewGroup) :
             BloggingRemindersViewHolder<BloggingRemindersPromptSwitchBinding>(
                     parentView.viewBinding(BloggingRemindersPromptSwitchBinding::inflate)
             ) {

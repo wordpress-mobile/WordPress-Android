@@ -3893,8 +3893,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_notification_time">Notification time</string>
     <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we\'ll send you a reminder!</string>
-    <string name="blogging_reminders_include_prompt_title">Include daily prompt</string>
-    <string name="blogging_reminders_include_prompt_subtitle">Reminder will include a daily prompt</string>
+    <string name="blogging_reminders_prompt_title">Include daily prompt</string>
+    <string name="blogging_reminders_prompt_subtitle">Reminder will include a daily prompt</string>
 
     <!-- Stats module disabled error view -->
     <string name="stats_disabled_title">Looking for stats?</string>

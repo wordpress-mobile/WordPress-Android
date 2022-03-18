@@ -6,7 +6,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.CAP
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.DAY_BUTTONS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.HIGH_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.ILLUSTRATION
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.INCLUDE_PROMPT_SWITCH
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.PROMPT_SWITCH
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.LOW_EMPHASIS_TEXT
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.NOTIFICATION_TIME
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Type.TIP
@@ -24,7 +24,7 @@ sealed class BloggingRemindersItem(val type: Type) {
         DAY_BUTTONS,
         TIP,
         NOTIFICATION_TIME,
-        INCLUDE_PROMPT_SWITCH,
+        PROMPT_SWITCH,
     }
 
     data class Illustration(@DrawableRes val illustration: Int) : BloggingRemindersItem(ILLUSTRATION)
@@ -62,7 +62,7 @@ sealed class BloggingRemindersItem(val type: Type) {
     data class PromptSwitch(
         val isToggled: Boolean,
         val onClick: ListItemInteraction
-    ) : BloggingRemindersItem(INCLUDE_PROMPT_SWITCH)
+    ) : BloggingRemindersItem(PROMPT_SWITCH)
 
     data class Tip(val title: UiString, val message: UiString) : BloggingRemindersItem(TIP)
 }
