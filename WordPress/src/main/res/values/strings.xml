@@ -2921,11 +2921,13 @@
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="notification_channel_reminder_title">Reminder</string>
+    <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
     <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
+    <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
     <string content_override="true" name="login_notification_channel_id" translatable="false">@string/notification_channel_normal_id</string>
