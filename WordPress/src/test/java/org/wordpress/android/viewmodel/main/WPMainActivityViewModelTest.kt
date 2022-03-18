@@ -684,7 +684,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `firstSite should be return the first site available in the list of sites`() {
+    fun `firstSite should return the first site available in the list of sites`() {
         val sites = mock<ArrayList<SiteModel>>()
         whenever(siteStore.sites).thenReturn(sites)
         val siteModel = mock<SiteModel>()
@@ -695,7 +695,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `firstSite should be return null when there are no sites`() {
+    fun `firstSite should return null when there are no sites`() {
         val sites = mock<ArrayList<SiteModel>>()
         whenever(siteStore.sites).thenReturn(sites)
 
