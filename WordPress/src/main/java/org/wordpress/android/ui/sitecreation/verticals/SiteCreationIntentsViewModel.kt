@@ -6,12 +6,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 class SiteCreationIntentsViewModel @Inject constructor(
+    private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
@@ -29,16 +31,16 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun start() {
         if (isStarted) return
         isStarted = true
-        // tracker.trackSiteIntentQuestionViewed()
+        analyticsTracker.trackSiteIntentQuestionViewed()
     }
 
     fun onSkipPressed() {
-        // tracker.trackSiteIntentQuestionSkipped()
+        analyticsTracker.trackSiteIntentQuestionSkipped()
         _onSkipButtonPressed.call()
     }
 
     fun onBackPressed() {
-        // tracker.trackSiteIntentQuestionCanceled()
+        analyticsTracker.trackSiteIntentQuestionCanceled()
         _onBackButtonPressed.call()
     }
 }
