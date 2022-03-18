@@ -350,7 +350,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    AndroidExtensionsKt.showSignInForResult(this);
+                    ActivityLauncher.showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     finish();
                 }
             }
@@ -1352,7 +1352,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         mViewModel.handleSiteRemoved();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
-            AndroidExtensionsKt.showSignInForResult(this);
+            ActivityLauncher.showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }
         if (mViewModel.getHasMultipleSites()) {

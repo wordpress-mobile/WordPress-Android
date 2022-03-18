@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.wordpress.stories.compose.frame.FrameSaveNotifier;
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -1359,6 +1360,14 @@ public class ActivityLauncher {
                     Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
+        if (BuildConfig.IS_JETPACK_APP) {
+            ActivityLauncher.showSignInForResultJetpackOnly(activity);
+        } else {
+            ActivityLauncher.showSignInForResultWpComOnly(activity);
+        }
     }
 
     public static void showSignInForResultWpComOnly(Activity activity) {
