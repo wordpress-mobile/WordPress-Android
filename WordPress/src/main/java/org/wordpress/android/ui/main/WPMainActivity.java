@@ -1355,7 +1355,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             AndroidExtensionsKt.showSignInForResult(this);
             return;
         }
-        if (mViewModel.isMultipleSiteAvailable()) {
+        if (mViewModel.getHasMultipleSites()) {
             ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
         }
     }

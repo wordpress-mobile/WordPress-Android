@@ -666,21 +666,21 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `isMultipleSiteAvailable should be true when there are more than one site`() {
+    fun `hasMultipleSites should be true when there are more than one site`() {
         whenever(siteStore.sitesCount).thenReturn(2)
-        assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(true)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(true)
     }
 
     @Test
-    fun `isMultipleSiteAvailable should be false when there is only one site`() {
+    fun `hasMultipleSites should be false when there is only one site`() {
         whenever(siteStore.sitesCount).thenReturn(1)
-        assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(false)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(false)
     }
 
     @Test
-    fun `isMultipleSiteAvailable should be false when there are no site`() {
+    fun `hasMultipleSites should be false when there are no site`() {
         whenever(siteStore.sitesCount).thenReturn(0)
-        assertThat(viewModel.isMultipleSiteAvailable).isEqualTo(false)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(false)
     }
 
     @Test

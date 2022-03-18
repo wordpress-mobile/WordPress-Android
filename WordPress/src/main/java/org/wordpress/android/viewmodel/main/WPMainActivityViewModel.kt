@@ -107,7 +107,7 @@ class WPMainActivityViewModel @Inject constructor(
             .distinctUntilChanged()
             .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
-    val isMultipleSiteAvailable: Boolean
+    val hasMultipleSites: Boolean
         get() = siteStore.sitesCount > ONE_SITE
 
     val firstSite: SiteModel?
