@@ -166,6 +166,23 @@ class DaySelectionBuilderTest {
     }
 
     @Test
+    fun `primary button shows a different label when blogging prompt FF is on`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+
+        val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, true, onConfirm)
+
+        assertThat(primaryButton).isEqualTo(
+                PrimaryButton(
+                        UiStringRes(R.string.blogging_prompt_set_reminders),
+                        true,
+                        Companion.create(bloggingRemindersModel, onConfirm)
+                )
+        )
+    }
+
+    @Test
     fun `click on primary button confirm selection`() {
         val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
 

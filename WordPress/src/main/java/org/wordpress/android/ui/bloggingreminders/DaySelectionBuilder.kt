@@ -89,7 +89,11 @@ class DaySelectionBuilder
             true
         }
         val buttonText = if (isFirstTimeFlow) {
-            R.string.blogging_reminders_notify_me
+            if (bloggingPromptsFeatureConfig.isEnabled()) {
+                string.blogging_prompt_set_reminders
+            } else {
+                string.blogging_reminders_notify_me
+            }
         } else {
             R.string.blogging_reminders_update
         }
