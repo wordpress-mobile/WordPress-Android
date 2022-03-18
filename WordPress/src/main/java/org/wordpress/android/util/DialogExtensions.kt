@@ -6,6 +6,8 @@ import android.os.Build
 import android.view.View
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.isDarkTheme
 
 @SuppressLint("InlinedApi")
 fun Dialog.getPreferenceDialogContainerView(): View? {

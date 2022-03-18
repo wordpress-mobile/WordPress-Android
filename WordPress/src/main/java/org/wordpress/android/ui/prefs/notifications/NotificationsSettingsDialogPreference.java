@@ -32,7 +32,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.notifications.PrefMainSwitchToolbarView.MainSwitchToolbarListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ContextUtilsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.Iterator;
@@ -134,7 +134,7 @@ public class NotificationsSettingsDialogPreference extends DialogPreference
                     R.dimen.notifications_settings_dialog_divider_height
             );
             dividerView
-                    .setBackground(ContextUtilsKt.getDrawableFromAttribute(getContext(), android.R.attr.listDivider));
+                    .setBackground(ContextExtensionsKt.getDrawableFromAttribute(getContext(), android.R.attr.listDivider));
             dividerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, dividerHeight));
             innerView.addView(dividerView);
         } else {

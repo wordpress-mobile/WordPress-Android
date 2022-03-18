@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
@@ -15,7 +14,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.Action.OpenEditor
-import org.wordpress.android.util.exhaustive
+import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.setStatusBarAsSurfaceColor
 import org.wordpress.android.util.updateSystemUiVisibility
 import javax.inject.Inject

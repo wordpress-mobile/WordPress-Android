@@ -14,7 +14,7 @@ import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import java.util.Locale
 
 class MediaThumbnailViewUtils(val imageManager: ImageManager) {

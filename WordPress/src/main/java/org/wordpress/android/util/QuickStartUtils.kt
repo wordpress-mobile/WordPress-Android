@@ -40,6 +40,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 @Suppress("TooManyFunctions")
 object QuickStartUtils {

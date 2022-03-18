@@ -11,7 +11,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import org.wordpress.android.R
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction
 import org.wordpress.android.util.ColorUtils.setImageResourceWithTint
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class ActivityLogListItemMenuAdapter(
     context: Context,

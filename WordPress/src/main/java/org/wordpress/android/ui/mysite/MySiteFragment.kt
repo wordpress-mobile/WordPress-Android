@@ -25,7 +25,7 @@ import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartP
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType.USER
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 

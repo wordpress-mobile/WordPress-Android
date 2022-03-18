@@ -1,4 +1,4 @@
-package org.wordpress.android.util
+package org.wordpress.android.util.extensions
 
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
@@ -8,6 +8,7 @@ import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.view.Window
 import androidx.core.content.ContextCompat
+import org.wordpress.android.R
 
 fun Window.setLightStatusBar(showInLightMode: Boolean) {
     if (isLightTheme()) {

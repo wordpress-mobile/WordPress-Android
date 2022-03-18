@@ -27,12 +27,12 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.QuickStartUtils
-import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
-import org.wordpress.android.util.currentLocale
-import org.wordpress.android.util.getDrawableFromAttribute
+import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
+import org.wordpress.android.util.extensions.currentLocale
+import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
@@ -64,7 +64,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
         private val pageLayout = itemView.findViewById<ViewGroup>(R.id.page_layout)
-        private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
+        private val selectableBackground: Drawable? = parent.context.   getDrawableFromAttribute(
                 android.R.attr.selectableItemBackground
         )
 
