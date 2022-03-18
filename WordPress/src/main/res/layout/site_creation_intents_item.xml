@@ -7,25 +7,22 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:minHeight="@dimen/one_line_list_item_height"
-    android:paddingStart="@dimen/margin_large"
     tools:ignore="RtlSymmetry">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="@dimen/site_creation_segments_icon_size"
-        android:layout_height="@dimen/site_creation_segments_icon_size"
+    <!-- TODO: support dark mode -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/vertical_emoji"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/bg_oval_neutral_20"
-        android:contentDescription="@null"
-        android:padding="4dp"
-        android:tintMode="src_in"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintCircleRadius="@dimen/site_creation_segments_icon_size"
-        app:tint="?attr/wpColorOnSurfaceMedium"
-        tools:src="@drawable/ic_wordpress_white_24dp"
-        tools:tint="@color/neutral_80" />
+        android:background="@drawable/bg_oval_neutral_20"
+        android:backgroundTint="@color/gray_10"
+        tools:text="&#128188;" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/vertical_text"
@@ -36,8 +33,9 @@
         android:paddingTop="@dimen/margin_medium"
         android:textAlignment="viewStart"
         android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintStart_toEndOf="@+id/vertical_emoji"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Business &amp; Services" />
 

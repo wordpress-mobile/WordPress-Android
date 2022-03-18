@@ -71,6 +71,7 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
+        viewModel.initializeFromResources(resources)
         viewModel.start()
     }
 

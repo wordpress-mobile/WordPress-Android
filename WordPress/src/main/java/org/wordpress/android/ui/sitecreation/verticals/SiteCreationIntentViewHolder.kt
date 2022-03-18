@@ -27,7 +27,7 @@ sealed class SiteCreationIntentViewHolder(internal val parent: ViewGroup, @Layou
     ) : SiteCreationIntentViewHolder(parentView, R.layout.site_creation_intents_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val verticalText = itemView.findViewById<TextView>(R.id.vertical_text)
-        private val verticalIcon = itemView.findViewById<ImageView>(R.id.icon)
+        private val emoji = itemView.findViewById<TextView>(R.id.vertical_emoji)
         private var onIntentSelected: (() -> Unit)? = null
 
         init {
@@ -41,7 +41,7 @@ sealed class SiteCreationIntentViewHolder(internal val parent: ViewGroup, @Layou
 //            onIntentSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             onIntentSelected = uiState.onItemTapped
             verticalText.text = uiState.verticalText
-            verticalIcon.setImageResource(uiState.verticalIconResId)
+            emoji.text = uiState.emoji
         }
     }
 }

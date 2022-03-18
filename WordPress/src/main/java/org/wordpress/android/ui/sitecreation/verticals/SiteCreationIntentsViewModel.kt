@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
+import android.content.res.Resources
 import android.util.Log
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,11 +9,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.DefaultItems
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -40,53 +40,6 @@ class SiteCreationIntentsViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
         // tracker.trackSiteIntentQuestionViewed()
-        val initialState = DefaultItems(items = listOf(
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Art", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Business", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Fashion", drawable.ic_wordpress_white_24dp),
-                DefaultIntentItemUiState("Finance", drawable.ic_wordpress_white_24dp),
-        ))
-        initialState.items.forEach {
-            val message = (it as DefaultIntentItemUiState).verticalText + " selected"
-            it.onItemTapped = { Log.d("Intents", message) }
-        }
-        updateUiState(initialState)
     }
 
     fun onSkipPressed() {
@@ -103,6 +56,21 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
+    fun initializeFromResources(resources: Resources) {
+        val intentArray = resources.getStringArray(R.array.site_creation_intents_strings)
+        val emojiArray = resources.getStringArray(R.array.site_creation_intents_emojis)
+        if (intentArray.size != emojiArray.size) {
+            throw Exception("Intents arrays size mismatch")
+        }
+        val newItems = intentArray.mapIndexed { index, verticalText ->
+            val item = DefaultIntentItemUiState(verticalText, emojiArray[index])
+            val message = "$verticalText selected"
+            item.onItemTapped = { Log.d("Intents", message) }
+            return@mapIndexed item
+        }
+        _uiState.value = DefaultItems(items = newItems)
+    }
+
     sealed class IntentsUiState(
         val items: List<IntentListItemUiState>
     ) {
@@ -116,7 +84,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
 
         data class DefaultIntentItemUiState(
             val verticalText: String,
-            @DrawableRes val verticalIconResId: Int
+            val emoji: String
         ) : IntentListItemUiState()
     }
 }
