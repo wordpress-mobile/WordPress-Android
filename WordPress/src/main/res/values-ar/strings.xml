@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-24 11:54:07+0000
+Translation-Revision-Date: 2022-03-11 18:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">يتضمن بحثك أحرف غير مدعومة في نطاقات ووردبريس.كوم. لا يُسمح سوى بالأحرف الهجائية العددية.</string>
+    <string name="login_select_email_client">ما تطبيق البريد الإلكتروني الذي تستخدمه؟</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">حدثت مشكلة في أثناء الاتصال بالموقع. تم إرجاع رمز خطأ HTTP رقم 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">تبدو استدعاءات XML-RPC محظورة على هذا الموقع (رمز الخطأ 401). إذا فشلت محاولة تسجيل الدخول، فانقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">يتعذر قراءة موقع WordPress على معرف URL ذلك. انقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
+    <string name="login_error_xml_rpc_services_disabled">خدمات XML-RPC غير مفعلة في هذا الموقع.</string>
+    <string name="my_site_menu_tab_title">القائمة</string>
+    <string name="my_site_dashboard_tab_title">لوحة التحكم</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">يتضمن بحثك أحرف غير مدعومة في نطاقات ووردبريس.كوم. يُسمح بالأحرف الآتية: من A إلى Z، ومن a إلى z، ومن 0 إلى 9.</string>
     <string name="my_site_todays_stat_card_title">إحصاءات اليوم</string>
     <string name="my_site_error_within_card_subtitle">تحقَّق من اتصالك بالإنترنت وقم بتحديث الصفحة.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">الانتقال إلى الإحصاءات</string>

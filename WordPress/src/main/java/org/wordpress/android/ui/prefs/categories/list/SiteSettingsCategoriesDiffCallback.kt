@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs.categories
+package org.wordpress.android.ui.prefs.categories.list
 
 import android.os.Bundle
 import androidx.recyclerview.widget.DiffUtil

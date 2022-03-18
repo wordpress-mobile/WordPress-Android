@@ -3,6 +3,7 @@
 19.5
 -----
 * [***] Post editor: Replaced the "Publish" button with a "Save" button for draft posts. The "Publish" button for a draft post is moved to the menu reachable via the vertical ellipsis button. [https://github.com/wordpress-mobile/WordPress-Android/pull/16084]
+* [*] Notification: Adds Weekly Roundup switch to App info -> Notification menu to disable them for all sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/16118]
 
 19.4
 -----
