@@ -707,7 +707,7 @@ REPOSITORY_NAME = 'WordPress-Android'
       "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
       play_store_promo: { desc: 'short_description.txt', max_size: 80 },
       play_store_desc: { desc: 'full_description.txt', max_size: 0 },
-      play_store_app_title: { desc: 'title.txt', max_size: 50 }
+      play_store_app_title: { desc: 'title.txt', max_size: 30 }
     }
 
     delete_old_changelogs(app: 'wordpress', build: options[:build_number])
@@ -735,7 +735,7 @@ REPOSITORY_NAME = 'WordPress-Android'
       "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
       'short-description': { desc: 'short_description.txt', max_size: 80 },
       'app-store-description': { desc: 'full_description.txt', max_size: 0 },
-      'app-store-name': { desc: 'title.txt', max_size: 50 }
+      'app-store-name': { desc: 'title.txt', max_size: 30 }
     }
 
     delete_old_changelogs(app: 'jetpack', build: options[:build_number])
