@@ -1,8 +1,0 @@
-19.3:
-- E-posta uygulaması kullanılamadığında kayıt sırasında artık e-posta düğmesi yoktur
-- Yeni yorum düzenleyicide bildirimler
-- Uygulamada oluşturulan siteler için doğru saat dilimi 
-- Boş "Sitem" görünümü ve Sayfa/Site önizlemesi için hata düzeltmeleri
-- Yöneticiler/Editörler için okuyucu yorumlarını düzenleme olanağı
-- Düşük bellek, düzenleyici hikaye bloklarını etkilemez
-- İngilizce olmayan karakterlere sahip yeni site URL'leri için daha iyi hata metni
