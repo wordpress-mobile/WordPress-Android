@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.DefaultItems
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.lang.Exception
 import javax.inject.Inject
@@ -18,6 +19,7 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 class SiteCreationIntentsViewModel @Inject constructor(
+    private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
@@ -41,16 +43,16 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun start() {
         if (isStarted) return
         isStarted = true
-        // tracker.trackSiteIntentQuestionViewed()
+        analyticsTracker.trackSiteIntentQuestionViewed()
     }
 
     fun onSkipPressed() {
-        // tracker.trackSiteIntentQuestionSkipped()
+        analyticsTracker.trackSiteIntentQuestionSkipped()
         _onSkipButtonPressed.call()
     }
 
     fun onBackPressed() {
-        // tracker.trackSiteIntentQuestionCanceled()
+        analyticsTracker.trackSiteIntentQuestionCanceled()
         _onBackButtonPressed.call()
     }
 
@@ -73,6 +75,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     private fun intentSelected(intent: String) {
+        // TODO: determine what slugs (and ids) to use for the default intents
+        analyticsTracker.trackSiteIntentQuestionVerticalSelected(intent, "defaultSlugFor: $intent")
         _onIntentSelected.value = intent
     }
 
