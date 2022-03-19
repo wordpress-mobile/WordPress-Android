@@ -2,15 +2,18 @@ package org.wordpress.android.ui.mysite
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -103,9 +106,22 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         val adapter = MySiteTabsAdapter(this@MySiteFragment, tabTitles)
         viewPager.adapter = adapter
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = uiHelpers.getTextOfUiString(requireContext(), tabTitles[position])
-        }.attach()
+        TabLayoutMediator(tabLayout, viewPager) { _, _ -> updateTabs() }.attach()
+    }
+
+    private fun MySiteFragmentBinding.updateTabs() {
+        viewModel.tabTitles.forEachIndexed { index, tabTitle ->
+            val tab = tabLayout.getTabAt(index) as TabLayout.Tab
+            updateTab(tab, tabTitle)
+        }
+    }
+
+    private fun MySiteFragmentBinding.updateTab(tab: TabLayout.Tab, tabTitle: UiString) {
+        val customView = tab.customView ?: createTabCustomView(tab)
+        with(customView) {
+            val title = findViewById<TextView>(R.id.tab_label)
+            title.text = uiHelpers.getTextOfUiString(requireContext(), tabTitle)
+        }
     }
 
     private fun MySiteFragmentBinding.setupContentViews() {
@@ -176,6 +192,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun ViewPager2.getCurrentFragment() =
             this@MySiteFragment.childFragmentManager.findFragmentByTag("f$currentItem") as? MySiteTabFragment
+
+    private fun MySiteFragmentBinding.createTabCustomView(tab: TabLayout.Tab): View {
+        val customView = LayoutInflater.from(context)
+                .inflate(R.layout.my_site_tab_custom_view, tabLayout, false)
+        tab.customView = customView
+        return customView
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
