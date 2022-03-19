@@ -162,7 +162,8 @@ class AppInitializer @Inject constructor(
     @Inject lateinit var oAuthAuthenticator: OAuthAuthenticator
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
-    private lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
+    lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
+        private set
 
     private lateinit var credentialsClient: GoogleApiClient
 
@@ -664,10 +665,6 @@ class AppInitializer @Inject constructor(
             }
         })
         EmojiCompat.init(config)
-    }
-
-    fun getStoryNotificationTrackerProvider(): StoryNotificationTrackerProvider {
-        return storyNotificationTrackerProvider
     }
 
     @Suppress("unused")
