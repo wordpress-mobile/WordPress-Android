@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.widget.ImageView
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.LayoutParams
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -192,7 +190,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
         layoutParams?.setMargins(0,0,0, 150)
-        toolbarMain.layoutParams = layoutParams;
+        toolbarMain.layoutParams = layoutParams
     }
 
     private fun MySiteFragmentBinding.hideTabs() {
@@ -202,7 +200,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
         layoutParams?.setMargins(0,0,0, 0)
-        toolbarMain.layoutParams = layoutParams;
+        toolbarMain.layoutParams = layoutParams
     }
 
     fun dpToPx(dp: Int): Int {
