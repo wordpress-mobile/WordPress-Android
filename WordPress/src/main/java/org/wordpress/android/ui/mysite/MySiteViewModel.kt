@@ -26,12 +26,11 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -310,15 +309,6 @@ class MySiteViewModel @Inject constructor(
                 )
         )
         val cardsResult = cardsBuilder.build(
-                SiteInfoCardBuilderParams(
-                        site = site,
-                        showSiteIconProgressBar = showSiteIconProgressBar,
-                        titleClick = this::titleClick,
-                        iconClick = this::iconClick,
-                        urlClick = this::urlClick,
-                        switchSiteClick = this::switchSiteClick,
-                        activeTask = activeTask
-                ),
                 QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,

@@ -3,8 +3,8 @@ package org.wordpress.android.ui.mysite.cards.siteinfo
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.SiteUtils
