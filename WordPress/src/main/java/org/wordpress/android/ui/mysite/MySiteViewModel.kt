@@ -56,6 +56,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -116,6 +117,7 @@ class MySiteViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardBuilder: QuickStartCardBuilder,
+    private val siteInfoCardBuilder: SiteInfoCardBuilder,
     private val homePageDataLoader: HomePageDataLoader,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
@@ -248,7 +250,6 @@ class MySiteViewModel @Inject constructor(
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
-                showSiteIconProgressBar,
                 activeTask,
                 isDomainCreditAvailable,
                 quickStartCategories,
@@ -258,6 +259,18 @@ class MySiteViewModel @Inject constructor(
                 scanAvailable,
                 cardsUpdate
         )
+
+        val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
+                site = site,
+                showSiteIconProgressBar = showSiteIconProgressBar,
+                titleClick = this::titleClick,
+                iconClick = this::iconClick,
+                urlClick = this::urlClick,
+                switchSiteClick = this::switchSiteClick,
+                activeTask = activeTask
+        )
+
+        val siteInfo = siteInfoCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
 
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
@@ -272,7 +285,7 @@ class MySiteViewModel @Inject constructor(
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
                 showTabs = isMySiteTabsEnabled,
-                siteInfoCardItem = siteItems[MySiteTabType.ALL]!!.filterIsInstance<Card>().filterIsInstance<SiteInfoCard>()[0],
+                siteInfo = siteInfo,
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
@@ -282,7 +295,6 @@ class MySiteViewModel @Inject constructor(
     @Suppress("LongParameterList")
     private fun buildSiteSelectedState(
         site: SiteModel,
-        showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
         isDomainCreditAvailable: Boolean,
         quickStartCategories: List<QuickStartCategory>,
@@ -408,13 +420,10 @@ class MySiteViewModel @Inject constructor(
         dynamicCards: List<MySiteCardAndItem>,
         siteItems: List<MySiteCardAndItem>
     ): List<MySiteCardAndItem> {
-        val indexOfSiteInfoCard = cards.indexOfFirst { it is SiteInfoCard }
-        val indexOfCards = indexOfSiteInfoCard + 1
         val indexOfDashboardCards = cards.indexOfFirst { it is DashboardCards }
         return mutableListOf<MySiteCardAndItem>().apply {
-            add(cards[indexOfSiteInfoCard])
             infoItem?.let { add(infoItem) }
-            addAll(cards.subList(indexOfCards, cards.size))
+            addAll(cards)
             if (indexOfDashboardCards == -1) {
                 addAll(dynamicCards)
             } else {
@@ -916,7 +925,7 @@ class MySiteViewModel @Inject constructor(
         abstract val showTabs: Boolean
         data class SiteSelected(
             override val showTabs: Boolean,
-            val siteInfoCardItem: SiteInfoCard,
+            val siteInfo: SiteInfoCard,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
