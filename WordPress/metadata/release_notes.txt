@@ -1,7 +1,5 @@
-- Theme, default and custom color palettes
-- Helpful login error messages on self-hosted sites
-- Email app selection when verifying email at signup/login
-- No nested Reader comments if parent comment is deleted
-- Images display after changing orientation mid-capture
-- Fix for progress bar for My Site icon edits
-- Reorganized list of default Insights
+* [*] Notification: Adds Weekly Roundup switch to App info -> Notification menu to disable them for all sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/16118]
+* [*] Block Editor: Add GIF badge for animated GIFs uploaded to Image blocks [https://github.com/WordPress/gutenberg/pull/38996]
+* [*] Block Editor: Small refinement to media upload errors, including centering and tweaking copy. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4597]
+* [*] Block Editor: Fix issue with list's starting index and the order [https://github.com/WordPress/gutenberg/pull/39354]
+

@@ -1,0 +1,9 @@
+19.4:
+- Thema-/standaard/persoonlijke kleurpaletten
+- Kies een app voor e-mailverificatie
+- Geen geneste reacties als de bovenliggende reactie is verwijderd
+- Afbeeldingen passen zich aan als ze opnieuw worden georiënteerd tijdens het vastleggen
+- Probleem met de voortgangsbalk van het bewerken van het pictogram Mijn site opgelost
+- De Inzichtenlijst gereorganiseerd
+- Het toetsenbord bedekt de foutmelding niet meer
+- De knop voor het uitloggen hoeft maar één keer te worden ingedrukt

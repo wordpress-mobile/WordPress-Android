@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-02 22:13:50+0000
+Translation-Revision-Date: 2022-03-10 17:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 영숫자만 허용됩니다.</string>
+    <string name="login_select_email_client">어떤 이메일 앱을 사용하시나요?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">사이트와 통신하는 중 문제가 발생했습니다. HTTP 오류 코드 401이 반환되었습니다.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
+    <string name="login_error_xml_rpc_services_disabled">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
+    <string name="my_site_menu_tab_title">메뉴</string>
+    <string name="my_site_dashboard_tab_title">알림판</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">통계로 이동</string>
     <string name="my_site_todays_stat_card_title">오늘의 통계</string>
