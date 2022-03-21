@@ -9,7 +9,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/app_bar_with_site_info_height"
+        android:visibility="gone"
         app:liftOnScroll="false">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -52,7 +53,7 @@
                     android:layout_below ="@id/site_info"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_gravity="bottom"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_collapseMode="pin"
                     tools:text="@string/my_site_menu_tab_title" />
             </RelativeLayout>

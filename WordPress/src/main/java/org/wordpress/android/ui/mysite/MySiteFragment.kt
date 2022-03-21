@@ -45,7 +45,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private lateinit var viewModel: MySiteViewModel
 
     private var binding: MySiteFragmentBinding? = null
-    private var siteTitle:String? = null
+    private var siteTitle: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +58,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         initViewModel()
         binding = MySiteFragmentBinding.bind(view).apply {
             setupToolbar()
+            initTabType()
             setupContentViews()
             setupObservers()
         }
@@ -110,17 +111,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         })
     }
 
-    private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
-        if(currentOffset==0)
-            collapsingToolbar.title = siteTitle
-        else
-            collapsingToolbar.title = null
-    }
-
-    private fun MySiteFragmentBinding.animateSiteInfoCard(percentage: Int) {
-        siteInfo.siteInfoCard.alpha = percentage.toFloat()/100
-    }
-
     private fun MySiteFragmentBinding.setupTabs(tabTitles: List<UiString>) {
         val adapter = MySiteTabsAdapter(this@MySiteFragment, tabTitles)
         viewPager.adapter = adapter
@@ -128,6 +118,37 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiHelpers.getTextOfUiString(requireContext(), tabTitles[position])
         }.attach()
+    }
+
+    private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
+        if (currentOffset == 0)
+            collapsingToolbar.title = siteTitle
+        else
+            collapsingToolbar.title = null
+    }
+
+    private fun MySiteFragmentBinding.animateSiteInfoCard(percentage: Int) {
+        siteInfo.siteInfoCard.alpha = percentage.toFloat() / 100
+    }
+
+    private fun MySiteFragmentBinding.initTabType() {
+        if (viewModel.isMySiteTabsEnabled)
+            showTabs()
+    }
+
+    private fun MySiteFragmentBinding.showTabs() {
+        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_tabs_height).toInt() // New height in pixels
+        appbarMain.layoutParams.height = newHeight
+        updateToolbarBottomMargin(newHeight)
+        tabLayout.setVisible(true)
+        appbarMain.requestLayout()
+    }
+
+    private fun MySiteFragmentBinding.updateToolbarBottomMargin(appBarHeight: Int) {
+        val bottomMargin  =  (appBarHeight/resources.displayMetrics.density).toInt()
+        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
+        layoutParams?.setMargins(0, 0, 0, bottomMargin)
+        toolbarMain.layoutParams = layoutParams
     }
 
     private fun MySiteFragmentBinding.setupContentViews() {
@@ -158,53 +179,22 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
-        handleTabVisibility(state.showTabs)
         actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
+        appbarMain.setVisible(true)
         siteInfo.loadMySiteDetails(state.siteInfo)
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
-        handleTabVisibility(state.showTabs)
         viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
-    }
-
-    private fun MySiteFragmentBinding.handleTabVisibility(visible: Boolean) {
-        tabLayout.setVisible(visible)
-        if(visible)
-            showTabs()
-        else
-            hideTabs()
-    }
-
-    private fun MySiteFragmentBinding.showTabs() {
-        val newHeight = dpToPx(200) // New height in pixels
-        appbarMain.requestLayout()
-        appbarMain.layoutParams.height = newHeight
-
-        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
-        layoutParams?.setMargins(0,0,0, 150)
-        toolbarMain.layoutParams = layoutParams
-    }
-
-    private fun MySiteFragmentBinding.hideTabs() {
-        val newHeight = dpToPx(156) // New height in pixels
-        appbarMain.requestLayout()
-        appbarMain.layoutParams.height = newHeight
-
-        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
-        layoutParams?.setMargins(0,0,0, 0)
-        toolbarMain.layoutParams = layoutParams
-    }
-
-    fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
+        appbarMain.setVisible(false)
+        siteTitle = null
     }
 
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
