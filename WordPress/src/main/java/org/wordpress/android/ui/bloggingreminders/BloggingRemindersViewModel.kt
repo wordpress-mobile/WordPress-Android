@@ -149,8 +149,9 @@ class BloggingRemindersViewModel @Inject constructor(
     }
 
     private fun togglePromptSwitch() {
-        val currentState = _bloggingRemindersModel.value!!
-        _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = !currentState.isPromptIncluded)
+        _bloggingRemindersModel.value?.let { currentState ->
+            _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = !currentState.isPromptIncluded)
+        }
     }
 
     fun onChangeTime(hour: Int, minute: Int) {
