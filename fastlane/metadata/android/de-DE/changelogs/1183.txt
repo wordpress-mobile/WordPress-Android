@@ -1,0 +1,8 @@
+19.4:
+- Theme-/Standard- und individuelle Farbpaletten
+- Hilfreiche Fehlermeldungen bei der Anmeldung auf selbst gehosteten Websites
+- E-Mail-App-Auswahl bei E-Mail-Verifizierung für Registrierung/Anmeldung
+- Keine verschachtelten Reader-Kommentare, wenn der übergeordnete Kommentar gelöscht wird
+- Bilder werden nach Neuausrichtung der mittleren Aufnahme angezeigt
+- Problem der Fortschrittsleiste bei Bearbeitungen des Website-Icons behoben
+- Liste der Standardeinsichten umstrukturiert

@@ -1,0 +1,8 @@
+19.4:
+- Thema, standaard en aangepaste kleurenpaletten
+- Behulpzame login foutberichten op zelf gehoste sites
+- E-mail app selectie bij het verifiëren van e-mail bij aanmelden/login
+- Geen geneste reader reacties als hoofd reactie is verwijderd
+- Afbeeldingen worden weergegeven na het wijzigen van oriëntatie mid-capture
+- Oplossing voor voortgangsbalk voor Mijn site pictogram bewerkingen
+- Gereorganiseerde lijst van standaard Insights

@@ -1,8 +1,0 @@
-19.3:
-- Nessun pulsante per le e-mail nell'iscrizione se l'app delle e-mail non è disponibile
-- Notifiche nel nuovo editor dei commenti
-- Fuso orario corretto per siti creati nell'app
-- Correzioni di bug per la visualizzazione vuota "Il mio sito" e l'anteprima di Pagina/Sito
-- Modifica dei commenti del lettore per Amministratori/Editor
-- La scarsa memoria non influisce sui blocchi Storia dell'editor
-- Testo dell'errore migliorato per nuovi URL del sito con caratteri non inglesi

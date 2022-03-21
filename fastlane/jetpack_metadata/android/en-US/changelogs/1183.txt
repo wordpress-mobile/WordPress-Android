@@ -1,0 +1,8 @@
+- Theme/default/custom color palettes
+- Email app choice when verifying email at signup/login
+- No nested comments if parent comment is deleted
+- Images adjust after new mid-capture orientation
+- Progress bar fix for My Site icon edits
+- Reorganized default Insights list
+- Keyboard won’t cover login error message
+- Logout button only has to be pressed once

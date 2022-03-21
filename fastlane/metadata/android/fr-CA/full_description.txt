@@ -1,9 +1,9 @@
-WordPress pour Android vous donne accès à la puissance de la publication sur le Web. Il s’agit d’un créateur de sites Web et plus encore !
+WordPress pour Android vous donne accès à la puissance de la publication sur le Web. Il s’agit d’un créateur de sites Web et plus encore !
 
 CRÉER
 - Permet d’héberger vos idées sur le Web. WordPress pour Android est un créateur de sites Web et de blogs. Utilisez-le pour créer votre site Web.
 - Sélectionnez l’apparence qui vous convient parmi les nombreux thèmes WordPress disponibles, puis personnalisez-le avec des photos, des couleurs et des polices pour qu’il vous ressemble et soit unique.
-- Des conseils de démarrage rapide sont intégrés pour vous guider tout au long de la configuration de base de votre nouveau site Web et garantir son succès. (Nous ne vous aidons pas seulement à créer votre site Web. Nous sommes votre partenaire et assurons l’animation !)
+- Des conseils de démarrage rapide sont intégrés pour vous guider tout au long de la configuration de base de votre nouveau site Web et garantir son succès. (Nous ne vous aidons pas seulement à créer votre site Web. Nous sommes votre partenaire et assurons l’animation !)
 
 STATS
 - Consultez les statistiques de votre site Web en temps réel pour suivre l’activité sur votre site.
@@ -15,7 +15,7 @@ NOTIFICATIONS
 - Répondez aux nouveaux commentaires dès leur publication. Les discussions restent fluides et vos lecteurs vous seront reconnaissants.
 
 PUBLIER
-- Créez des mises à jour, des histoires, des essais photos et des annonces... Tout ce que vous voulez ! -- grâce à l’éditeur.
+- Créez des mises à jour, des histoires, des essais photos et des annonces... Tout ce que vous voulez ! -- grâce à l’éditeur.
 - Donnez vie à vos articles et pages avec des photos et des vidéos personnelles ou recherchez l’image parfaite dans la collection intégrée de photos professionnelles gratuites.
 - Enregistrez vos idées sous forme de brouillons afin de les réutiliser lorsque l’inspiration vous revient ou programmez de nouveaux articles afin que votre site soit toujours agréable et intéressant à consulter.
 - Ajoutez des étiquettes et des catégories pour permettre aux nouveaux lecteurs de découvrir vos articles et regardez votre public grossir.
@@ -28,16 +28,10 @@ PARTAGER
 - Configurez le partage automatique pour prévenir vos abonnés sur les réseaux sociaux de la publication d’un nouvel article. Publication croisée automatiquement sur Facebook, Twitter, et plus encore.
 - Ajoutez des boutons de partage sur les réseaux sociaux à vos articles pour permettre à vos visiteurs de les partager avec leur réseau et faire de vos fans des ambassadeurs.
 
-Pourquoi WordPress ?
+Pourquoi WordPress ?
 
-Il existe de nombreux services de blogging, créateurs de sites Web et réseaux sociaux. Pourquoi créer votre site Web avec WordPress ?
+Il existe de nombreux services de blogging, créateurs de sites Web et réseaux sociaux. Pourquoi créer votre site Web avec WordPress ?
 
 WordPress propulse plus du tiers du Web. Son utilisation couvre les blogs de loisirs, les entreprises de toutes tailles, les boutiques en ligne et même les plus grands sites d’informations sur Internet. Il est probable que la plupart de vos sites Web préférés fonctionnent sous WordPress.
-
-Avec WordPress, vous restez propriétaire de votre contenu. D’autres réseaux sociaux vous considèrent comme une marchandise et s’approprient le contenu que vous publiez. Avec WordPress, tout ce que vous publiez vous appartient et vous pouvez le récupérer quand vous le voulez.
-
-WordPress est un outil de création de sites Web open source. Cela signifie que tout le monde peut voir comment il est conçu et même contribuer à sa conception. D’autres services et réseaux sociaux sont propriétaires. Ce sont des systèmes fermés. Vous ne saurez jamais vraiment comme il fonctionne et ce qu’ils font. En outre, ils peuvent disparaître !
-
-Que vous ayez besoin d’un outil de création de sites Web pour créer votre site Web ou d’un simple outil de création de blogs, WordPress est là pour vous. Il propose de magnifiques designs et de puissantes fonctionnalités tout en vous offrant la liberté de créer tout ce que vous voulez.
 
 WordPress pour Android prend en charge les sites auto-hébergés fonctionnant sous WordPress 4.0 et versions ultérieures, et tous les sites sur WordPress.com. Comme WordPress, WordPress pour Android est open source. Consultez https://apps.wordpress.com/contribute/ pour en savoir plus. Besoin d’aide avec l’application ? Envoyez-nous un tweet à @WPAndroid ou visitez nos forums sur https://android.forums.wordpress.org/forum/troubleshooting.

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-02 22:26:55+0000
+Translation-Revision-Date: 2022-03-18 11:42:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="login_select_email_client">Welke e-mail app gebruik je?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Er is een probleem opgetreden bij de communicatie met de site. Er is een HTTP foutcode 401 teruggestuurd.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC aanroepen lijken geblokkeerd op deze site (foutcode 401). Als de poging om in te loggen mislukt, tik je op het hulppictogram om de veelgestelde vragen te bekijken.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Kan de WordPress site niet lezen op die URL. Tik op het hulppictogram om de veelgestelde vragen te bekijken.</string>
+    <string name="login_error_xml_rpc_services_disabled">XML-RPC diensten zijn uitgeschakeld op deze site.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Dashboard</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Je zoekopdracht bevat karakters die niet worden ondersteund in WordPress.com domeinen. De volgende tekens zijn toegestaan: A-Z, a-z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controleer je internetverbinding en vernieuw de pagina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ga naar de statistieken</string>
     <string name="my_site_todays_stat_card_title">Statistieken van vandaag</string>
