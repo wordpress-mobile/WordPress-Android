@@ -17,9 +17,9 @@ import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.isDarkTheme
 import javax.inject.Inject
 
-class OnboardingDialogFragment : DialogFragment() {
+class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: OnboardingViewModel
+    private lateinit var viewModel: BloggingPromptsOnboardingViewModel
 
     companion object {
         const val TAG = "BLOGGING_PROMPTS_ONBOARDING_DIALOG_FRAGMENT"
@@ -32,7 +32,7 @@ class OnboardingDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(OnboardingViewModel::class.java)
+                .get(BloggingPromptsOnboardingViewModel::class.java)
 
         val window: Window? = dialog.window
         window?.let {
