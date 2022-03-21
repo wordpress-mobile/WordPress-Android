@@ -15,6 +15,8 @@ updates:
       - dependency-name: "com.android.tools.build:gradle"
       # Bumping 1.2.1 to 1.3.0 causes some issues, fist spotted in Reader. For more details, see
       # https://github.com/wordpress-mobile/WordPress-Android/pull/14431
+      # An update related issue has been created to make sure that this gets the needed attention:
+      # https://github.com/wordpress-mobile/WordPress-Android/issues/16132
       - dependency-name: "com.google.android.material:material"
       # Bumping 2.26.3 to 2.27.2 will break the mocks. For more details, see
       # https://github.com/wiremock/wiremock/issues/1345#issuecomment-656060968
