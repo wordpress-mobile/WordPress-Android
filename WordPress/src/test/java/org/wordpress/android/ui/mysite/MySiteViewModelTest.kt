@@ -1686,6 +1686,16 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given selected site with all qs origin, when all cards and items, then qs cards exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.ALL)
+
+        val items = (uiModels.last().state as SiteSelected).cardAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
+    }
+
+    @Test
     fun `given selected site, when dashboard cards and items, then dashboard cards exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
