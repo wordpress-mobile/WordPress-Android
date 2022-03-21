@@ -1674,7 +1674,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* STATE LISTS */
-    @InternalCoroutinesApi
     @Test
     fun `given site select exists, then cardAndItem lists are not empty`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
@@ -1685,33 +1684,69 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getSiteMenuTabLastItems().isNotEmpty())
     }
 
-    @InternalCoroutinesApi
     @Test
-    fun `given selected site, when dashboard cards and items, then list does not contain quick start or list items`() {
+    fun `given selected site, when dashboard cards and items, then dashboard cards exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        setUpSiteItemBuilder()
-        initSelectedSite(isQuickStartDynamicCardEnabled = false)
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
-        items.forEach {
-            assertThat(it).isNotInstanceOf(ListItem::class.java)
-            assertThat(it).isNotInstanceOf(QuickStartCard::class.java)
-        }
+        assertThat(items.filterIsInstance(DashboardCards::class.java)).isNotEmpty
     }
 
-    @InternalCoroutinesApi
     @Test
-    fun `given selected site, when site menu cards and items, then list does not contain dashboard cards`() {
+    fun `given selected site, when dashboard cards and items, then list items not exist`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite(isQuickStartDynamicCardEnabled = false)
+        initSelectedSite()
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(ListItem::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site, when dashboard cards and items, then qs card not exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite()
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site, when site menu cards and items, then dashboard cards not exist`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
-        items.forEach {
-            assertThat(it).isNotInstanceOf(DashboardCards::class.java)
-        }
+        assertThat(items.filterIsInstance(DashboardCards::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site, when site menu cards and items, then list items exist`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite()
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(ListItem::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given selected site, when site menu cards and items, then qs card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite()
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty()
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
