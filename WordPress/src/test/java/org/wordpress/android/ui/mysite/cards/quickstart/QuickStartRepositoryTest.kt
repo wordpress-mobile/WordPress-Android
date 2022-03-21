@@ -34,6 +34,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -52,6 +53,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -75,7 +77,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 htmlCompat,
                 quickStartDynamicCardsFeatureConfig,
                 contextProvider,
-                htmlMessageUtils
+                htmlMessageUtils,
+                mySiteDashboardTabsFeatureConfig
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()

@@ -39,6 +39,7 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -65,7 +66,8 @@ class QuickStartRepository
     private val htmlCompat: HtmlCompatWrapper,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
-    private val htmlMessageUtils: HtmlMessageUtils
+    private val htmlMessageUtils: HtmlMessageUtils,
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
 ) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -81,6 +83,11 @@ class QuickStartRepository
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
+    val quickStartOrigin = if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+        QuickStartOrigin.DASHBOARD
+    } else {
+        QuickStartOrigin.ALL
+    }
 
     private var pendingTask: QuickStartTask? = null
 
@@ -252,6 +259,12 @@ class QuickStartRepository
     private fun onQuickStartNoticeNegativeAction(task: QuickStartTask) {
         analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
         appPrefsWrapper.setLastSkippedQuickStartTask(task)
+    }
+
+    enum class QuickStartOrigin {
+        SITE_MENU,
+        DASHBOARD,
+        ALL
     }
 
     data class QuickStartCategory(
