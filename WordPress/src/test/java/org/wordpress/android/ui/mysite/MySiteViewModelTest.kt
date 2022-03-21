@@ -91,6 +91,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -1706,10 +1707,21 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site, when dashboard cards and items, then qs card not exists`() {
+    fun `given selected site with dashboard qs origin, when dashboard cards and items, then qs card exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.DASHBOARD)
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given selected site with site menu qs origin, when dashboard cards and items, then qs card not exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.SITE_MENU)
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
@@ -1739,14 +1751,25 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site, when site menu cards and items, then qs card exists`() {
+    fun `given selected site with dashboard qs origin, when site menu cards and items, then qs card not exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.DASHBOARD)
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
-        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty()
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site with site menu qs origin, when site menu cards and items, then qs card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.SITE_MENU)
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
@@ -1800,7 +1823,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         isMySiteTabsBuildConfigEnabled: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
-        showStaleMessage: Boolean = false
+        showStaleMessage: Boolean = false,
+        quickStartOrigin: QuickStartOrigin = QuickStartOrigin.ALL
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -1811,6 +1835,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
+        whenever(quickStartRepository.quickStartOrigin).thenReturn(quickStartOrigin)
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         selectedSite.value = SelectedSite(site)
