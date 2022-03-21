@@ -34,6 +34,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
@@ -67,6 +68,7 @@ class QuickStartRepository
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
+    buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
 ) : CoroutineScope {
     private val job: Job = Job()
@@ -83,7 +85,7 @@ class QuickStartRepository
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
-    val quickStartOrigin = if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+    val quickStartOrigin = if (mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled) {
         QuickStartOrigin.DASHBOARD
     } else {
         QuickStartOrigin.ALL
