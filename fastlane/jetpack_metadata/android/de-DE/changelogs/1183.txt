@@ -1,0 +1,9 @@
+19.4:
+- Theme-/Standard-/individuelle Farbpaletten
+- App-Auswahl bei E-Mail-Verifizierung
+- Keine verschachtelten Kommentare bei Löschung des übergeordneten Kommentars
+- Bilder werden nach Neuausrichtung der mittleren Aufnahme angepasst
+- Problem der Fortschrittsleiste bei Bearbeitungen des Website-Icons behoben
+- Liste der Standardeinsichten umstrukturiert
+- Fehlermeldung bei Anmeldung wird auf der Tastatur nicht verborgen
+- Abmelde-Button muss nur einmal gedrückt werden

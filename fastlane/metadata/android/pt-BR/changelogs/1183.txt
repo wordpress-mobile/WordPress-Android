@@ -1,0 +1,8 @@
+19.4:
+- Paletas de cores personalizadas, padrão e de tema
+- Mensagens de erro de login úteis em sites auto-hospedados
+- Seleção do aplicativo de e-mail ao verificar o e-mail no login
+- Nenhum comentário aninhado do Leitor se o comentário principal for excluído
+- Exibição de imagens após alterar a orientação no meio da captura
+- Correção da barra de progresso para edições do ícone Meu site
+- Reorganização da lista de informações padrão

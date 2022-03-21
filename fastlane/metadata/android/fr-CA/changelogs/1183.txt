@@ -1,0 +1,8 @@
+19.4 :
+- Palettes de couleurs thématiques/par défaut/personnalisées
+- Amélioration des messages d’erreur de connexion
+- Sélection de l’application pour la vérification de l’adresse e-mail
+- Aucune imbrication des commentaires possible si le commentaire parent a été supprimé
+- Ajustement des images après leur réorientation à mi-capture
+- Amélioration de la barre de progression pour les modifications apportées à l’icône du site
+- Réorganisation de la liste non personnalisée des tendances
