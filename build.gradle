@@ -44,7 +44,7 @@ ext {
 buildscript {
     ext.kotlinVersion = '1.5.32'
     ext.navComponentVersion = '2.3.5'
-    ext.detektVersion = '1.15.0'
+    ext.detektVersion = '1.19.0'
 
     repositories {
         maven {
