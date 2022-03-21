@@ -1,0 +1,38 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    open-pull-requests-limit: 6
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "bot: dependencies update"
+    reviewers:
+      - "wordpress-mobile/android-developers"
+    ignore:
+      # The Android Gradle Plugin is a dependency that needs to be in sync with other
+      # in-house libraries due to compatibility with composite build.
+      - dependency-name: "com.android.tools.build:gradle"
+      # Bumping 1.2.1 to 1.3.0 causes some issues, fist spotted in Reader. For more details, see
+      # https://github.com/wordpress-mobile/WordPress-Android/pull/14431
+      # An update related issue has been created to make sure that this gets the needed attention:
+      # https://github.com/wordpress-mobile/WordPress-Android/issues/16132
+      - dependency-name: "com.google.android.material:material"
+      # Bumping 2.26.3 to 2.27.2 will break the mocks. For more details, see
+      # https://github.com/wiremock/wiremock/issues/1345#issuecomment-656060968
+      - dependency-name: "com.github.tomakehurst:wiremock"
+      # Our libraries that are stored in S3 have a custom versioning scheme which doesn't work with
+      # dependapot.
+      - dependency-name: "org.wordpress:fluxc"
+      - dependency-name: "org.wordpress:utils"
+      - dependency-name: "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+      - dependency-name: "org.wordpress:login"
+      - dependency-name: "com.automattic:stories"
+      - dependency-name: "com.automattic.stories:mp4compose"
+      - dependency-name: "com.automattic.stories:photoeditor"
+      - dependency-name: "org.wordpress:aztec"
+      - dependency-name: "org.wordpress.aztec:wordpress-shortcodes"
+      - dependency-name: "org.wordpress.aztec:wordpress-comments"
+      - dependency-name: "org.wordpress.aztec:glide-loader"
+      - dependency-name: "org.wordpress.aztec:picasso-loader"
+      - dependency-name: "com.automattic:about"
