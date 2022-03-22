@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <string-array name="site_creation_intents_slugs">
+        <item>business_services</item>
+        <item>food</item>
+        <item>health</item>
+        <item>home_improvement</item>
+        <item>local_services</item>
+        <item>news</item>
+        <item>photography</item>
+        <item>travel</item>
+    </string-array>
     <string-array name="site_creation_intents_strings">
         <item>@string/site_creation_intents_business_services_intent</item>
         <item>@string/site_creation_intents_food_intent</item>

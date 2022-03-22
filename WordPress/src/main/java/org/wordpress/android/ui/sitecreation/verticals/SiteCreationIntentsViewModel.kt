@@ -60,23 +60,26 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     fun initializeFromResources(resources: Resources) {
-        val intentArray = resources.getStringArray(R.array.site_creation_intents_strings)
+        val slugsArray = resources.getStringArray(R.array.site_creation_intents_slugs)
+        val verticalArray = resources.getStringArray(R.array.site_creation_intents_strings)
         val emojiArray = resources.getStringArray(R.array.site_creation_intents_emojis)
         if (slugsArray.size != verticalArray.size || slugsArray.size != emojiArray.size) {
             throw IllegalStateException("Intents arrays size mismatch")
         }
-        val newItems = intentArray.mapIndexed { index, verticalText ->
-            val item = DefaultIntentItemUiState(verticalText, emojiArray[index])
-            item.onItemTapped = { intentSelected(verticalText) }
+        val newItems = slugsArray.mapIndexed { index, slug ->
+            val vertical = verticalArray[index]
+            val emoji = emojiArray[index]
+            val item = DefaultIntentItemUiState(slug, vertical, emoji)
+            item.onItemTapped = { intentSelected(slug, vertical) }
             return@mapIndexed item
         }
         _uiState.value = DefaultItems(items = newItems)
     }
 
-    private fun intentSelected(intent: String) {
+    private fun intentSelected(slug: String, vertical: String) {
         // TODO: determine what slugs (and ids) to use for the default intents
-        analyticsTracker.trackSiteIntentQuestionVerticalSelected(intent, "defaultSlugFor: $intent")
-        _onIntentSelected.value = intent
+        analyticsTracker.trackSiteIntentQuestionVerticalSelected(vertical, slug)
+        _onIntentSelected.value = vertical
     }
 
     sealed class IntentsUiState(
@@ -91,6 +94,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         var onItemTapped: (() -> Unit)? = null
 
         data class DefaultIntentItemUiState(
+            val verticalSlug: String,
             val verticalText: String,
             val emoji: String
         ) : IntentListItemUiState()
