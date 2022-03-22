@@ -56,12 +56,37 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_extra_medium_large"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
+                android:hint="@string/new_site_creation_intents_input_hint"
+                android:imeOptions="actionSearch|flagNoExtractUi"
+                android:importantForAutofill="noExcludeDescendants"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:importantForAccessibility="no"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
