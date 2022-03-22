@@ -140,6 +140,7 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
+    private val _tabsUiState = MutableLiveData<TabsUiState>()
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -192,39 +193,30 @@ class MySiteViewModel @Inject constructor(
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
             }.addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
 
-    val uiModel: LiveData<UiModel> = state.map { (
-            currentAvatarUrl,
-            site,
-            showSiteIconProgressBar,
-            isDomainCreditAvailable,
-            scanAvailable,
-            backupAvailable,
-            activeTask,
-            quickStartCategories,
-            pinnedDynamicCard,
-            visibleDynamicCards,
-            cardsUpdate
-    ) ->
-        val state = if (site != null) {
-            cardsUpdate?.checkAndShowSnackbarError()
-            val state = buildSiteSelectedStateAndScroll(
-                    site,
-                    showSiteIconProgressBar,
-                    activeTask,
-                    isDomainCreditAvailable,
-                    quickStartCategories,
-                    pinnedDynamicCard,
-                    visibleDynamicCards,
-                    backupAvailable,
-                    scanAvailable,
-                    cardsUpdate
-            )
-            trackCardsAndItemsShownIfNeeded(state)
-            state
-        } else {
-            buildNoSiteState()
+    val uiModel: LiveData<UiModel> = merge(_tabsUiState, state) { tabsUiState, mySiteUiState ->
+        with(requireNotNull(mySiteUiState)) {
+            val state = if (site != null) {
+                cardsUpdate?.checkAndShowSnackbarError()
+                val state = buildSiteSelectedStateAndScroll(
+                        tabsUiState,
+                        site,
+                        showSiteIconProgressBar,
+                        activeTask,
+                        isDomainCreditAvailable,
+                        quickStartCategories,
+                        pinnedDynamicCard,
+                        visibleDynamicCards,
+                        backupAvailable,
+                        scanAvailable,
+                        cardsUpdate
+                )
+                trackCardsAndItemsShownIfNeeded(state)
+                state
+            } else {
+                buildNoSiteState()
+            }
+            UiModel(currentAvatarUrl.orEmpty(), state)
         }
-        UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
@@ -236,6 +228,7 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("LongParameterList")
     private fun buildSiteSelectedStateAndScroll(
+        tabsUiState: TabsUiState?,
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
@@ -272,7 +265,7 @@ class MySiteViewModel @Inject constructor(
         )
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-                tabsUiState = TabsUiState(
+                tabsUiState = tabsUiState ?: TabsUiState(
                         showTabs = isMySiteTabsEnabled,
                         tabUiStates = orderedTabTypes.map {
                             TabUiState(
