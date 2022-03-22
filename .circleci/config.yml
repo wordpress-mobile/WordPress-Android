@@ -164,7 +164,19 @@ jobs:
           name: Create GitHub Release
           command: |
             bundle exec fastlane create_gh_release
-
+  Dependency Tree Diff:
+    executor:
+      name: android/default
+      api-version: "28"
+    steps:
+      - checkout
+      - copy-gradle-properties
+      - run:
+          name: Build dependency diff report
+          command: |
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              ./tools/dependency-tree-diff/dependency-tree-diff.sh
+            fi
 
   Connected Tests:
     parameters:
@@ -348,6 +360,7 @@ workflows:
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     jobs:
+      - Dependency Tree Diff
       - Installable Build:
           filters:
             branches:

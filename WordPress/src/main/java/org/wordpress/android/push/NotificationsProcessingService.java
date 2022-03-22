@@ -135,7 +135,8 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
 
-        return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent
+                .getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     public static void stopService(Context context) {

@@ -91,6 +91,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -1674,7 +1675,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* STATE LISTS */
-    @InternalCoroutinesApi
     @Test
     fun `given site select exists, then cardAndItem lists are not empty`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
@@ -1685,33 +1685,101 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getSiteMenuTabLastItems().isNotEmpty())
     }
 
-    @InternalCoroutinesApi
     @Test
-    fun `given selected site, when dashboard cards and items, then list does not contain quick start or list items`() {
+    fun `given selected site with all qs origin, when all cards and items, then qs cards exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        setUpSiteItemBuilder()
-        initSelectedSite(isQuickStartDynamicCardEnabled = false)
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.ALL)
+
+        val items = (uiModels.last().state as SiteSelected).cardAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given selected site, when dashboard cards and items, then dashboard cards exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
-        items.forEach {
-            assertThat(it).isNotInstanceOf(ListItem::class.java)
-            assertThat(it).isNotInstanceOf(QuickStartCard::class.java)
-        }
+        assertThat(items.filterIsInstance(DashboardCards::class.java)).isNotEmpty
     }
 
-    @InternalCoroutinesApi
     @Test
-    fun `given selected site, when site menu cards and items, then list does not contain dashboard cards`() {
+    fun `given selected site, when dashboard cards and items, then list items not exist`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite(isQuickStartDynamicCardEnabled = false)
+        initSelectedSite()
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(ListItem::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site with dashboard qs origin, when dashboard cards and items, then qs card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.DASHBOARD)
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given selected site with site menu qs origin, when dashboard cards and items, then qs card not exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.SITE_MENU)
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site, when site menu cards and items, then dashboard cards not exist`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
-        items.forEach {
-            assertThat(it).isNotInstanceOf(DashboardCards::class.java)
-        }
+        assertThat(items.filterIsInstance(DashboardCards::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site, when site menu cards and items, then list items exist`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite()
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(ListItem::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given selected site with dashboard qs origin, when site menu cards and items, then qs card not exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.DASHBOARD)
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site with site menu qs origin, when site menu cards and items, then qs card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+        initSelectedSite(quickStartOrigin = QuickStartOrigin.SITE_MENU)
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
@@ -1765,7 +1833,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         isMySiteTabsBuildConfigEnabled: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
-        showStaleMessage: Boolean = false
+        showStaleMessage: Boolean = false,
+        quickStartOrigin: QuickStartOrigin = QuickStartOrigin.ALL
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -1776,6 +1845,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
+        whenever(quickStartRepository.quickStartOrigin).thenReturn(quickStartOrigin)
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         selectedSite.value = SelectedSite(site)
