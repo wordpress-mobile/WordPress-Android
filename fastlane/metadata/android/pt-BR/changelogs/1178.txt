@@ -1,7 +1,0 @@
-19.3:
-- Notificações no novo editor de comentários
-- Fuso horário correto nos sites criados no app
-- Edição de comentários no editor para administradores/editores
-- Pouca memória não afeta os blocos de story do editor
-- Texto do erro para novas URLs de sites com caracteres que não fazem parte da língua inglesa
-- Correções de bugs e melhorias no design variadas
