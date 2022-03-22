@@ -272,7 +272,6 @@ class MySiteViewModel @Inject constructor(
         )
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-                showTabs = isMySiteTabsEnabled,
                 tabsUiState = TabsUiState(
                         showTabs = isMySiteTabsEnabled,
                         tabUiStates = orderedTabTypes.map {
@@ -940,11 +939,9 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class State {
-        abstract val showTabs: Boolean
         abstract val tabsUiState: TabsUiState
 
         data class SiteSelected(
-            override val showTabs: Boolean,
             override val tabsUiState: TabsUiState,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
@@ -952,7 +949,6 @@ class MySiteViewModel @Inject constructor(
         ) : State()
 
         data class NoSites(
-            override val showTabs: Boolean = false,
             override val tabsUiState: TabsUiState,
             val shouldShowImage: Boolean
         ) : State()
