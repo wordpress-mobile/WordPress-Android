@@ -21,7 +21,7 @@ public class WordPressDebug extends WordPress {
 
     @Override
     protected void initDaggerComponent() {
-        mAppComponent = DaggerAppComponentDebug.builder()
+        appComponent = DaggerAppComponentDebug.builder()
                                                .application(this)
                                                .build();
     }

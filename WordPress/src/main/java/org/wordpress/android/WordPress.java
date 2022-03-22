@@ -5,11 +5,10 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
-import androidx.multidex.MultiDexApplication;
+import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 
-import org.wordpress.android.AppInitializer.StoryNotificationTrackerProvider;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.modules.AppComponent;
 import org.wordpress.android.modules.DaggerAppComponent;
@@ -25,7 +24,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 
-public class WordPress extends MultiDexApplication implements HasAndroidInjector {
+public class WordPress extends BaseWordPress implements HasAndroidInjector {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
     public static final String REMOTE_SITE_ID = "REMOTE_SITE_ID";
@@ -40,10 +39,16 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     public static RequestQueue sRequestQueue;
     public static FluxCImageLoader sImageLoader;
 
-    protected AppComponent mAppComponent;
+    @Override public AndroidInjector<Object> androidInjector() {
+        return mDispatchingAndroidInjector;
+    }
+
+    @NonNull @Override public AppInitializer initializer() {
+        return mAppInitializer;
+    }
 
     public AppComponent component() {
-        return mAppComponent;
+        return appComponent;
     }
 
     public static BitmapLruCache getBitmapCache() {
@@ -55,9 +60,9 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     }
 
     protected void initDaggerComponent() {
-        mAppComponent = DaggerAppComponent.builder()
-                                          .application(this)
-                                          .build();
+        appComponent = DaggerAppComponent.builder()
+                                         .application(this)
+                                         .build();
     }
 
     public static void updateContextLocale() {
@@ -109,10 +114,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
     public static final String USER_AGENT_APPNAME = "wp-android";
 
-    public void wordPressComSignOut() {
-        mAppInitializer.wordPressComSignOut();
-    }
-
     /**
      * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
      * are used at the project level to set custom fields.
@@ -154,13 +155,5 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         }
 
         return "";
-    }
-
-    public StoryNotificationTrackerProvider getStoryNotificationTrackerProvider() {
-        return mAppInitializer.getStoryNotificationTrackerProvider();
-    }
-
-    @Override public AndroidInjector<Object> androidInjector() {
-        return mDispatchingAndroidInjector;
     }
 }
