@@ -455,6 +455,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onTabChanged(position: Int) {
+        quickStartRepository.quickStartTaskOrigin = orderedTabTypes[position]
     }
 
     @Suppress("ComplexMethod")

@@ -3076,6 +3076,7 @@
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
+    <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
 
     <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="quick_start_card_menu_unpin">Unpin this</string>
