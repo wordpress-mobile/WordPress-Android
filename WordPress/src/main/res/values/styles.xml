@@ -832,6 +832,10 @@
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
+
+    <!--My Site Card - Dashboard-->
+    <style name="MySiteBloggingPromptCardTitle" parent="MySiteCardItemTitle"/>
+
     <!--People Management Styles-->
     <style name="PersonAvatar">
         <item name="android:layout_width">@dimen/people_avatar_sz</item>
