@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -83,10 +82,10 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -122,7 +121,7 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    private val landOnTheEditorABExperiment: LandOnTheEditorABExperiment,
+    private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
@@ -807,10 +806,10 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun performFirstStepAfterSiteCreation(siteLocalId: Int) {
-        if (landOnTheEditorABExperiment.getVariation() is Control) {
-            checkAndStartQuickStart(siteLocalId)
-        } else {
+        if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor()
+        } else {
+            checkAndStartQuickStart(siteLocalId)
         }
     }
 

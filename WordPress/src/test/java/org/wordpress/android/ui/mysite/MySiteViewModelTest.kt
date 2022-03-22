@@ -35,8 +35,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
-import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
@@ -114,10 +112,10 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.viewmodel.ContextProvider
 import java.util.Date
 
@@ -148,7 +146,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
-    @Mock lateinit var landOnTheEditorABExperiment: LandOnTheEditorABExperiment
+    @Mock lateinit var landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
@@ -298,7 +296,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
-                landOnTheEditorABExperiment,
+                landOnTheEditorFeatureConfig,
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
                 cardsTracker,
@@ -1621,8 +1619,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
-    fun `given the land on the editor experiment is running, then the home page editor is shown`() = test {
-        whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Treatment("experiment"))
+    fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
+        whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel.performFirstStepAfterSiteCreation(siteLocalId)
 
@@ -1631,8 +1629,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given the land on the editor experiment is not running, then the home page editor is not shown`() = test {
-        whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Control)
+    fun `given the land on the editor feature is not enabled, then the home page editor is not shown`() = test {
+        whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(false)
 
         viewModel.performFirstStepAfterSiteCreation(siteLocalId)
 
