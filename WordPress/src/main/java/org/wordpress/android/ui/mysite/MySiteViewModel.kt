@@ -140,7 +140,18 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
-    private val _tabsUiState = MutableLiveData<TabsUiState>()
+    private val _tabsUiState = quickStartRepository.onQuickStartSiteMenuStep.map { quickStartSiteMenuStep ->
+        val previousTabsUiState = uiModel.value?.state?.tabsUiState
+        previousTabsUiState?.copy(
+                tabUiStates = previousTabsUiState.tabUiStates.map {
+                    if (it.tabType == MySiteTabType.SITE_MENU) {
+                        it.copy(showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false)
+                    } else {
+                        it
+                    }
+                }
+        )
+    }
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -270,6 +281,7 @@ class MySiteViewModel @Inject constructor(
                         tabUiStates = orderedTabTypes.map {
                             TabUiState(
                                     label = UiStringRes(it.stringResId),
+                                    tabType = it,
                                     showQuickStartFocusPoint = false
                             )
                         }
@@ -957,6 +969,7 @@ class MySiteViewModel @Inject constructor(
     ) {
         data class TabUiState(
             val label: UiString,
+            val tabType: MySiteTabType,
             val showQuickStartFocusPoint: Boolean = false
         )
     }
