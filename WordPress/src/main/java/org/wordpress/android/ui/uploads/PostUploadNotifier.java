@@ -85,7 +85,7 @@ class PostUploadNotifier {
         mSystemNotificationsTracker = systemNotificationsTracker;
         sNotificationData = new NotificationData();
         mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
-                                                                              Context.NOTIFICATION_SERVICE);
+                Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext(),
                 context.getString(R.string.notification_channel_transient_id));
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload)
@@ -360,7 +360,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         notificationBuilder.setContentIntent(pendingIntentPost);
 
@@ -371,18 +371,18 @@ class PostUploadNotifier {
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareableUrl);
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
-                                                                     PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(R.drawable.ic_share_white_24dp, mContext.getString(R.string.share_action),
-                                          pendingIntent);
+                    pendingIntent);
         }
 
         // add draft Publish action for drafts
         if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
             Intent publishIntent = UploadService.getPublishPostServiceIntent(mContext, post, isFirstTimePublish);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
-                                                                   PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(R.drawable.ic_posts_white_24dp, mContext.getString(R.string.button_publish),
-                                          pendingIntent);
+                    pendingIntent);
         }
 
         doNotify(notificationId, notificationBuilder.build(), notificationType);
@@ -415,9 +415,12 @@ class PostUploadNotifier {
         NotificationType notificationType = NotificationType.MEDIA_UPLOAD_SUCCESS;
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
-                                                                (int) notificationId,
-                                                                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                mContext,
+                (int) notificationId,
+                notificationIntent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         notificationBuilder.setSmallIcon(R.drawable.ic_app_white_24dp);
         notificationBuilder.setColor(mContext.getResources().getColor(R.color.primary_50));
@@ -450,9 +453,9 @@ class PostUploadNotifier {
 
             PendingIntent actionPendingIntent =
                     PendingIntent.getActivity(mContext, RequestCodes.EDIT_POST, writePostIntent,
-                                              PendingIntent.FLAG_CANCEL_CURRENT);
-            notificationBuilder.addAction(0, mContext.getString(R.string.media_files_uploaded_write_post),
-                                          actionPendingIntent);
+                            PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            notificationBuilder
+                    .addAction(0, mContext.getString(R.string.media_files_uploaded_write_post), actionPendingIntent);
         }
 
         doNotify(notificationId, notificationBuilder.build(), notificationType);
@@ -512,7 +515,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
@@ -536,11 +539,11 @@ class PostUploadNotifier {
         // Add RETRY action - only available on Aztec
         if (AppPrefs.isAztecEditorEnabled()) {
             Intent publishIntent = UploadService.getRetryUploadServiceIntent(mContext, post,
-                                                                            PostUtils.isFirstTimePublish(post));
+                    PostUtils.isFirstTimePublish(post));
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
-                                                                         PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
-                                          actionPendingIntent)
+                    actionPendingIntent)
                                .setColor(mContext.getResources().getColor(R.color.accent));
         }
 
@@ -585,9 +588,12 @@ class PostUploadNotifier {
         NotificationType notificationType = NotificationType.MEDIA_UPLOAD_ERROR;
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
-                                                                (int) notificationId,
-                                                                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                mContext,
+                (int) notificationId,
+                notificationIntent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
 
@@ -613,9 +619,9 @@ class PostUploadNotifier {
             mediaListToRetry.addAll(mediaList);
             Intent publishIntent = UploadService.getUploadMediaServiceIntent(mContext, mediaListToRetry, true);
             PendingIntent actionPendingIntent = PendingIntent.getService(mContext, 1, publishIntent,
-                                                                         PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             notificationBuilder.addAction(0, mContext.getString(R.string.retry),
-                                          actionPendingIntent)
+                    actionPendingIntent)
                                .setColor(mContext.getResources().getColor(R.color.accent));
         }
 
@@ -636,48 +642,53 @@ class PostUploadNotifier {
             switch (getPagesAndOrPostsType(postItemsNotUploaded)) {
                 case POST:
                     newErrorMessage = (mediaItemsNotUploaded == 1
-                        ? mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_one_file)
-                        : String.format(
-                                mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_files_plural),
-                        mediaItemsNotUploaded));
+                            ? mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_one_file)
+                            : String.format(
+                                    mContext.getString(
+                                            R.string.media_file_post_singular_mixed_not_uploaded_files_plural),
+                                    mediaItemsNotUploaded));
                     break;
                 case PAGE:
                     newErrorMessage = (mediaItemsNotUploaded == 1
-                        ? mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_one_file)
-                        : String.format(
-                                mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_files_plural),
-                        mediaItemsNotUploaded));
+                            ? mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_one_file)
+                            : String.format(
+                                    mContext.getString(
+                                            R.string.media_file_page_singular_mixed_not_uploaded_files_plural),
+                                    mediaItemsNotUploaded));
                     break;
                 case PAGES:
                     newErrorMessage = (mediaItemsNotUploaded == 1
                             ? String.format(
-                                mContext.getString(R.string.media_file_pages_plural_mixed_not_uploaded_one_file),
-                                postItemsNotUploaded)
+                            mContext.getString(R.string.media_file_pages_plural_mixed_not_uploaded_one_file),
+                            postItemsNotUploaded)
                             : String.format(
-                                mContext.getString(R.string.media_file_pages_plural_mixed_not_uploaded_files_plural),
-                                postItemsNotUploaded,
-                                mediaItemsNotUploaded));
+                                    mContext.getString(
+                                            R.string.media_file_pages_plural_mixed_not_uploaded_files_plural),
+                                    postItemsNotUploaded,
+                                    mediaItemsNotUploaded));
                     break;
                 case PAGES_OR_POSTS:
                     newErrorMessage = (mediaItemsNotUploaded == 1
-                    ? String.format(
+                            ? String.format(
                             mContext.getString(R.string.media_file_pages_and_posts_mixed_not_uploaded_one_file),
                             postItemsNotUploaded)
-                    : String.format(
-                            mContext.getString(R.string.media_file_pages_and_posts_mixed_not_uploaded_files_plural),
-                            postItemsNotUploaded,
-                            mediaItemsNotUploaded));
+                            : String.format(
+                                    mContext.getString(
+                                            R.string.media_file_pages_and_posts_mixed_not_uploaded_files_plural),
+                                    postItemsNotUploaded,
+                                    mediaItemsNotUploaded));
                     break;
                 case POSTS:
                 default:
                     newErrorMessage = (mediaItemsNotUploaded == 1
-                    ? String.format(
+                            ? String.format(
                             mContext.getString(R.string.media_file_posts_plural_mixed_not_uploaded_one_file),
                             postItemsNotUploaded)
-                    : String.format(
-                            mContext.getString(R.string.media_file_posts_plural_mixed_not_uploaded_files_plural),
-                            postItemsNotUploaded,
-                            mediaItemsNotUploaded));
+                            : String.format(
+                                    mContext.getString(
+                                            R.string.media_file_posts_plural_mixed_not_uploaded_files_plural),
+                                    postItemsNotUploaded,
+                                    mediaItemsNotUploaded));
                     break;
             }
         } else if (postItemsNotUploaded > 0) {
@@ -718,7 +729,7 @@ class PostUploadNotifier {
             && (getCurrentMediaItem()) > 0) {
             // some media items were uploaded successfully
             newErrorMessage += String.format(mContext.getString(R.string.media_files_uploaded_successfully),
-                                             sNotificationData.mCurrentMediaItem);
+                    sNotificationData.mCurrentMediaItem);
         }
 
         return newErrorMessage;
@@ -737,7 +748,7 @@ class PostUploadNotifier {
             if (mediaItemsNotUploaded <= sNotificationData.mCurrentMediaItem) {
                 // some media items were uploaded successfully
                 newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_successfully),
-                                                       sNotificationData.mCurrentMediaItem);
+                        sNotificationData.mCurrentMediaItem);
             }
         }
 
@@ -748,7 +759,7 @@ class PostUploadNotifier {
         // all media items were uploaded successfully
         String successMessage = mediaItemsUploaded == 1 ? mContext.getString(R.string.media_file_uploaded)
                 : String.format(mContext.getString(R.string.media_all_files_uploaded_successfully),
-                                mediaItemsUploaded);
+                        mediaItemsUploaded);
         return successMessage;
     }
 
@@ -868,7 +879,7 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForPost(PostImmutableModel post) {
         String uploadingMessage =
                 (post != null && post.isPage()) ? mContext.getString(R.string.uploading_subtitle_pages_only_one)
-                : mContext.getString(R.string.uploading_subtitle_posts_only_one);
+                        : mContext.getString(R.string.uploading_subtitle_posts_only_one);
         return uploadingMessage;
     }
 

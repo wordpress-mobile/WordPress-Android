@@ -1029,10 +1029,12 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <!-- Remove the default WorkManagerInitializer so we can use our own -->
+        <!-- Remove the default WorkManagerInitializer so we can use our own
+        Since WorkManager 2.6, App Startup is used internally within WorkManager.
+        To provide a custom initializer we need to remove the androidx.startup node.-->
         <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
     </application>
