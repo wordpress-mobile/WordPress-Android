@@ -348,13 +348,13 @@ class MySiteViewModel @Inject constructor(
         )
 
         val siteItems = siteItemsBuilder.build(
-                    SiteItemsBuilderParams(
-                            site = site,
-                            activeTask = activeTask,
-                            backupAvailable = backupAvailable,
-                            scanAvailable = scanAvailable,
-                            onClick = this::onItemClick
-                    )
+                SiteItemsBuilderParams(
+                        site = site,
+                        activeTask = activeTask,
+                        backupAvailable = backupAvailable,
+                        scanAvailable = scanAvailable,
+                        onClick = this::onItemClick
+                )
         )
 
         return mapOf(
@@ -366,13 +366,17 @@ class MySiteViewModel @Inject constructor(
                 ),
                 MySiteTabType.SITE_MENU to orderForDisplay(
                         infoItem,
-                        cardsResult.filterNot { getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type) },
+                        cardsResult.filterNot {
+                            getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
+                        },
                         dynamicCards,
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
                         infoItem,
-                        cardsResult.filterNot { getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type) },
+                        cardsResult.filterNot {
+                            getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
+                        },
                         listOf(),
                         listOf()
                 )
@@ -924,12 +928,14 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val showTabs: Boolean
+
         data class SiteSelected(
             override val showTabs: Boolean,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
         ) : State()
+
         data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
     }
 
