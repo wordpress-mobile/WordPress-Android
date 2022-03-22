@@ -115,7 +115,7 @@ class QuickStartRepository
         pendingTask = null
     }
 
-    private fun clearSiteMenuStep() {
+    fun clearSiteMenuStep() {
         if (_onQuickStartSiteMenuStep.value != null) {
             _onQuickStartSiteMenuStep.value = null
         }

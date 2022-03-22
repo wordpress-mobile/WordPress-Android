@@ -11,6 +11,7 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REFRESH
@@ -145,7 +146,10 @@ class MySiteViewModel @Inject constructor(
         previousTabsUiState?.copy(
                 tabUiStates = previousTabsUiState.tabUiStates.map {
                     if (it.tabType == MySiteTabType.SITE_MENU) {
-                        it.copy(showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false)
+                        it.copy(
+                                showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false,
+                                pendingTask = quickStartSiteMenuStep?.task
+                        )
                     } else {
                         it
                     }
@@ -468,6 +472,17 @@ class MySiteViewModel @Inject constructor(
 
     fun onTabChanged(position: Int) {
         quickStartRepository.quickStartTaskOrigin = orderedTabTypes[position]
+        if (position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU)) {
+            findUiStateForTab(MySiteTabType.SITE_MENU)?.pendingTask?.let { requestSiteMenuStepPendingTask(it) }
+        }
+    }
+
+    private fun requestSiteMenuStepPendingTask(pendingTask: QuickStartTask) {
+        quickStartRepository.clearSiteMenuStep()
+        launch {
+            delay(TAB_TRANSITION_DELAY_MS)
+            quickStartRepository.setActiveTask(pendingTask)
+        }
     }
 
     @Suppress("ComplexMethod")
@@ -942,6 +957,9 @@ class MySiteViewModel @Inject constructor(
         cardsTracker.resetShown()
     }
 
+    private fun findUiStateForTab(tabType: MySiteTabType) =
+            _tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
@@ -970,7 +988,8 @@ class MySiteViewModel @Inject constructor(
         data class TabUiState(
             val label: UiString,
             val tabType: MySiteTabType,
-            val showQuickStartFocusPoint: Boolean = false
+            val showQuickStartFocusPoint: Boolean = false,
+            val pendingTask: QuickStartTask? = null
         )
     }
 
@@ -997,5 +1016,6 @@ class MySiteViewModel @Inject constructor(
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
+        const val TAB_TRANSITION_DELAY_MS = 300L
     }
 }
