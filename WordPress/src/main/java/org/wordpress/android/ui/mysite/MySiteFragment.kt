@@ -23,10 +23,10 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
@@ -81,7 +81,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 }
             }
         }
-        setupTabs(viewModel.tabTitles)
+        setupTabs(viewModel.orderedTabTypes)
         val avatar = root.findViewById<ImageView>(R.id.avatar)
 
         appbarMain.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -102,25 +102,25 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         })
     }
 
-    private fun MySiteFragmentBinding.setupTabs(tabTitles: List<UiString>) {
-        val adapter = MySiteTabsAdapter(this@MySiteFragment, tabTitles)
+    private fun MySiteFragmentBinding.setupTabs(orderedTabTypes: List<MySiteTabType>) {
+        val adapter = MySiteTabsAdapter(this@MySiteFragment, orderedTabTypes)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { _, _ -> updateTabs() }.attach()
     }
 
     private fun MySiteFragmentBinding.updateTabs() {
-        viewModel.tabTitles.forEachIndexed { index, tabTitle ->
+        viewModel.orderedTabTypes.forEachIndexed { index, tabType ->
             val tab = tabLayout.getTabAt(index) as TabLayout.Tab
-            updateTab(tab, tabTitle)
+            updateTab(tab, tabType)
         }
     }
 
-    private fun MySiteFragmentBinding.updateTab(tab: TabLayout.Tab, tabTitle: UiString) {
+    private fun MySiteFragmentBinding.updateTab(tab: TabLayout.Tab, tabType: MySiteTabType) {
         val customView = tab.customView ?: createTabCustomView(tab)
         with(customView) {
             val title = findViewById<TextView>(R.id.tab_label)
-            title.text = uiHelpers.getTextOfUiString(requireContext(), tabTitle)
+            title.text = getString(tabType.stringResId)
         }
     }
 
