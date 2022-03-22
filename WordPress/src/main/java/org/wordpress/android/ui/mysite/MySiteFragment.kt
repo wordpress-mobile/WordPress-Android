@@ -58,7 +58,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         initViewModel()
         binding = MySiteFragmentBinding.bind(view).apply {
             setupToolbar()
-            initTabType()
             setupContentViews()
             setupObservers()
         }
@@ -131,26 +130,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         siteInfo.siteInfoCard.alpha = percentage.toFloat() / 100
     }
 
-    private fun MySiteFragmentBinding.initTabType() {
-        if (viewModel.isMySiteTabsEnabled)
-            showTabs()
-    }
-
-    private fun MySiteFragmentBinding.showTabs() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_tabs_height).toInt() // New height in pixels
-        appbarMain.layoutParams.height = newHeight
-        updateToolbarBottomMargin(newHeight)
-        tabLayout.setVisible(true)
-        appbarMain.requestLayout()
-    }
-
-    private fun MySiteFragmentBinding.updateToolbarBottomMargin(appBarHeight: Int) {
-        val bottomMargin  =  (appBarHeight/resources.displayMetrics.density).toInt()
-        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
-        layoutParams?.setMargins(0, 0, 0, bottomMargin)
-        toolbarMain.layoutParams = layoutParams
-    }
-
     private fun MySiteFragmentBinding.setupContentViews() {
         actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
     }
@@ -183,27 +162,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        appbarMain.setVisible(true)
         siteInfo.loadMySiteDetails(state.siteInfo)
-    }
-
-    private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
-        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
-            actionableEmptyView.setVisible(true)
-            actionableEmptyView.image.setVisible(state.shouldShowImage)
-        }
-        actionableEmptyView.image.setVisible(state.shouldShowImage)
-        appbarMain.setVisible(false)
-        siteTitle = null
-    }
-
-    private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
-        is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
-        else -> {
-            // Pass all other navigationAction on to the child fragment, so they can be handled properly
-            binding?.viewPager?.getCurrentFragment()?.handleNavigationAction(action)
-        }
+        showAppbar()
     }
 
     private fun MySiteInfoCardBinding.loadMySiteDetails(site: SiteInfoCard?) {
@@ -230,6 +190,62 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             siteInfoContainer.subtitle.text = site.url
             siteInfoContainer.subtitle.setOnClickListener { site.onUrlClick.click() }
             switchSite.setOnClickListener { site.onSwitchSiteClick.click() }
+        }
+    }
+
+    private fun MySiteFragmentBinding.showAppbar() {
+        header.setVisible(true)
+        if (viewModel.isMySiteTabsEnabled)
+            showSiteInfoToolbarWithTabs()
+        else showSiteInfoToolbarWithoutTabs()
+    }
+
+    private fun MySiteFragmentBinding.showSiteInfoToolbarWithTabs() {
+        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_tabs_height).toInt() // New height in pixels
+        appbarMain.layoutParams.height = newHeight
+        updateToolbarBottomMargin(newHeight)
+        tabLayout.setVisible(true)
+        appbarMain.requestLayout()
+    }
+
+    private fun MySiteFragmentBinding.showSiteInfoToolbarWithoutTabs() {
+        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_height).toInt() // New height in pixels
+        appbarMain.layoutParams.height = newHeight
+        updateToolbarBottomMargin(0)
+        tabLayout.setVisible(false)
+        appbarMain.requestLayout()
+    }
+
+    private fun MySiteFragmentBinding.updateToolbarBottomMargin(appBarHeight: Int) {
+        val bottomMargin  =  (appBarHeight/resources.displayMetrics.density).toInt()
+        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
+        layoutParams?.setMargins(0, 0, 0, bottomMargin)
+        toolbarMain.layoutParams = layoutParams
+    }
+
+    private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
+        viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
+            actionableEmptyView.setVisible(true)
+            actionableEmptyView.image.setVisible(state.shouldShowImage)
+        }
+        actionableEmptyView.image.setVisible(state.shouldShowImage)
+        hideSiteInfoToolbarView()
+    }
+
+    private fun MySiteFragmentBinding.hideSiteInfoToolbarView() {
+        val newHeight = resources.getDimension(R.dimen.app_bar_with_no_site_info_height).toInt()
+        appbarMain.setExpanded(false,true)
+        appbarMain.layoutParams.height = newHeight
+        updateToolbarBottomMargin(0)
+        appbarMain.requestLayout()
+    }
+
+    private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
+        is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
+        else -> {
+            // Pass all other navigationAction on to the child fragment, so they can be handled properly
+            binding?.viewPager?.getCurrentFragment()?.handleNavigationAction(action)
         }
     }
 
