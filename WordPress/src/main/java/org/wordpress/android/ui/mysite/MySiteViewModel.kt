@@ -45,6 +45,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
+import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -70,6 +71,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -271,6 +273,15 @@ class MySiteViewModel @Inject constructor(
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
                 showTabs = isMySiteTabsEnabled,
+                tabsUiState = TabsUiState(
+                        showTabs = isMySiteTabsEnabled,
+                        tabUiStates = orderedTabTypes.map {
+                            TabUiState(
+                                    label = UiStringRes(it.stringResId),
+                                    showQuickStartFocusPoint = false
+                            )
+                        }
+                ),
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
@@ -412,7 +423,10 @@ class MySiteViewModel @Inject constructor(
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
-        return NoSites(shouldShowImage = shouldShowImage)
+        return NoSites(
+                tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
+                shouldShowImage = shouldShowImage
+        )
     }
 
     private fun orderForDisplay(
@@ -927,15 +941,31 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val showTabs: Boolean
+        abstract val tabsUiState: TabsUiState
 
         data class SiteSelected(
             override val showTabs: Boolean,
+            override val tabsUiState: TabsUiState,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
         ) : State()
 
-        data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
+        data class NoSites(
+            override val showTabs: Boolean = false,
+            override val tabsUiState: TabsUiState,
+            val shouldShowImage: Boolean
+        ) : State()
+    }
+
+    data class TabsUiState(
+        val showTabs: Boolean = false,
+        val tabUiStates: List<TabUiState>
+    ) {
+        data class TabUiState(
+            val label: UiString,
+            val showQuickStartFocusPoint: Boolean = false
+        )
     }
 
     data class TextInputDialogModel(
