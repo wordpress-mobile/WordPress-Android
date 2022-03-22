@@ -366,20 +366,20 @@ class MySiteViewModel @Inject constructor(
                 ),
                 MySiteTabType.SITE_MENU to orderForDisplay(
                         infoItem,
-                        cardsResult.filterNot { getCardTypeFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type) },
+                        cardsResult.filterNot { getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type) },
                         dynamicCards,
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
                         infoItem,
-                        cardsResult.filterNot { getCardTypeFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type) },
+                        cardsResult.filterNot { getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type) },
                         listOf(),
                         listOf()
                 )
         )
     }
 
-    private fun getCardTypeFiltersForTab(tabType: MySiteTabType) = when (tabType) {
+    private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
             if (quickStartRepository.quickStartOrigin == QuickStartOrigin.DASHBOARD) add(Type.QUICK_START_CARD)
