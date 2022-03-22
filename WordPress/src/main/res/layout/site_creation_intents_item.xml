@@ -10,7 +10,6 @@
     tools:background="?attr/layoutPickerBackground"
     tools:ignore="RtlSymmetry">
 
-    <!-- TODO: support dark mode -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/vertical_emoji"
         android:layout_width="32dp"

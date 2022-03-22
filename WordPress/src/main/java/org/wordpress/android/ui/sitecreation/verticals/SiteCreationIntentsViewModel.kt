@@ -13,7 +13,6 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewMo
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -63,8 +62,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun initializeFromResources(resources: Resources) {
         val intentArray = resources.getStringArray(R.array.site_creation_intents_strings)
         val emojiArray = resources.getStringArray(R.array.site_creation_intents_emojis)
-        if (intentArray.size != emojiArray.size) {
-            throw Exception("Intents arrays size mismatch")
+        if (slugsArray.size != verticalArray.size || slugsArray.size != emojiArray.size) {
+            throw IllegalStateException("Intents arrays size mismatch")
         }
         val newItems = intentArray.mapIndexed { index, verticalText ->
             val item = DefaultIntentItemUiState(verticalText, emojiArray[index])

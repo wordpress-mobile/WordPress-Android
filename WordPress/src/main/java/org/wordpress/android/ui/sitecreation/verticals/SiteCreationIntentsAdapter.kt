@@ -8,8 +8,6 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewMo
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
 import org.wordpress.android.ui.utils.UiHelpers
 
-private const val defaultSuggestionItemViewType: Int = 1
-
 class SiteCreationIntentsAdapter(private val uiHelpers: UiHelpers) : Adapter<SiteCreationIntentViewHolder>() {
     private val items = mutableListOf<IntentListItemUiState>()
 
@@ -40,5 +38,9 @@ class SiteCreationIntentsAdapter(private val uiHelpers: UiHelpers) : Adapter<Sit
         return when (items[position]) {
             is DefaultIntentItemUiState -> defaultSuggestionItemViewType
         }
+    }
+
+    companion object {
+        private const val defaultSuggestionItemViewType: Int = 1
     }
 }

@@ -61,7 +61,6 @@ class SiteCreationIntentsFragment : Fragment() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         siteCreationHeaderItem.title.setText(R.string.new_site_creation_intents_header_title)
         siteCreationHeaderItem.subtitle.setText(R.string.new_site_creation_intents_header_subtitle)
-        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
     }
 

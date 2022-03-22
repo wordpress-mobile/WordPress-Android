@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.verticals
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
@@ -38,8 +37,7 @@ sealed class SiteCreationIntentViewHolder(internal val parent: ViewGroup, @Layou
 
         override fun onBind(uiState: IntentListItemUiState) {
             uiState as DefaultIntentItemUiState
-//            onIntentSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
-            onIntentSelected = uiState.onItemTapped
+            onIntentSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             verticalText.text = uiState.verticalText
             emoji.text = uiState.emoji
         }

@@ -113,5 +113,5 @@
     <color name="grey_900">#ff212121</color>
 
     <!-- Site creation  -->
-    <color name="site_creation_intent_item_emoji_bg">#dcdcdc</color>
+    <color name="site_creation_intent_item_emoji_bg">@color/grey_lighten_30</color>
 </resources>
