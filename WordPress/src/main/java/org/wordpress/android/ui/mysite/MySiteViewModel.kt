@@ -28,9 +28,9 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -55,6 +55,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -347,13 +348,13 @@ class MySiteViewModel @Inject constructor(
         )
 
         val siteItems = siteItemsBuilder.build(
-                    SiteItemsBuilderParams(
-                            site = site,
-                            activeTask = activeTask,
-                            backupAvailable = backupAvailable,
-                            scanAvailable = scanAvailable,
-                            onClick = this::onItemClick
-                    )
+                SiteItemsBuilderParams(
+                        site = site,
+                        activeTask = activeTask,
+                        backupAvailable = backupAvailable,
+                        scanAvailable = scanAvailable,
+                        onClick = this::onItemClick
+                )
         )
 
         return mapOf(
@@ -365,17 +366,32 @@ class MySiteViewModel @Inject constructor(
                 ),
                 MySiteTabType.SITE_MENU to orderForDisplay(
                         infoItem,
-                        cardsResult.filterNot { it is DashboardCards }.toList(),
+                        cardsResult.filterNot {
+                            getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
+                        },
                         dynamicCards,
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
                         infoItem,
-                        cardsResult.filterNot { it is QuickStartCard }.toList(),
+                        cardsResult.filterNot {
+                            getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
+                        },
                         listOf(),
                         listOf()
                 )
         )
+    }
+
+    private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
+        MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
+            add(Type.DASHBOARD_CARDS)
+            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.DASHBOARD) add(Type.QUICK_START_CARD)
+        }
+        MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
+            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.SITE_MENU) add(Type.QUICK_START_CARD)
+        }
+        MySiteTabType.ALL -> emptyList()
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
@@ -912,12 +928,14 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val showTabs: Boolean
+
         data class SiteSelected(
             override val showTabs: Boolean,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
         ) : State()
+
         data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
     }
 
