@@ -1,7 +1,6 @@
 package org.wordpress.android.workers.reminder
 
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_CANCEL_CURRENT
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import org.wordpress.android.R
@@ -43,7 +42,7 @@ class ReminderNotifier @Inject constructor(
                                     actionsShownByDefault = true,
                                     notificationType = BLOGGING_REMINDERS
                             ),
-                            FLAG_CANCEL_CURRENT
+                            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                 },
                 contentTitle = resourceProvider.getString(R.string.blogging_reminders_notification_title, siteName),
