@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-22 09:01:38+0000
+Translation-Revision-Date: 2022-03-11 23:44:12+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">Pencarian Anda menyertakan karakter yang tidak didukung di domain WordPress.com. Hanya karakter alfanumerik yang diperbolehkan.</string>
+    <string name="login_select_email_client">Aplikasi email apa yang Anda gunakan?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Ada kendala saat berkomunikasi dengan situs. Kode error HTTP 401 dikembalikan.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Panggilan XML-RPC tampaknya diblok di situs ini (kode error 401). Jika upaya login gagal, ketuk ikon bantuan untuk melihat FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Tidak dapat membaca situs WordPress dalam URL tersebut. Ketuk ikon bantuan untuk melihat FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled">Layanan XML-RPC tidak tersedia di situs ini.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Dasbor</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Pencarian Anda includes karakter yang tidak didukung di domain WordPress.com. Karakter berikut diperbolehkan: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Periksa koneksi internet Anda dan muat ulang halaman.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Buka statistik</string>
     <string name="my_site_todays_stat_card_title">Statistik Hari Ini</string>

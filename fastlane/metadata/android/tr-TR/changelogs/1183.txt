@@ -1,0 +1,8 @@
+19.4:
+- Tema, varsayılan ve özel renk paletleri
+- Barındırılan sitelerde faydalı oturum açma hata mesajları
+- Kayıt/giriş sırasında e-postayı doğrularken e-posta uygulaması seçimi
+- Üst yorum silinirse iç içe Okuyucu yorumu yok
+- Görseller, yakalamanın ortasında yön değiştirildikten sonra görüntülenir
+- Sitem simgesi düzenlemeleri için ilerleme çubuğu düzeltmesi
+- Varsayılan Öngörülerin yeniden düzenlenmiş listesi

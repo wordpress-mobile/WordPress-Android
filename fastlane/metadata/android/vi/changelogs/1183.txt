@@ -1,0 +1,8 @@
+19.4:
+- Chủ đề/mặc định/tùy chọn mẫu màu
+- Thông báo lỗi khi  đăng nhập
+- Chọn app xác thực email
+- Xóa bình luận con khi bình luận mẹ xóa
+- Xoay ảnh
+- Sửa thanh tiến trình tải biểu tượng blog
+- Xếp lại thống kê

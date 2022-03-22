@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-02 22:13:14+0000
+Translation-Revision-Date: 2022-03-10 22:14:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">你的搜尋包含 WordPress.com 網域不支援的字元。 只能包含英數字元。</string>
+    <string name="login_select_email_client">你使用哪個電子郵件應用程式？</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">與網站通訊時發生問題。 已傳回 HTTP 錯誤代碼 401。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">這個網站似乎封鎖了 XML-RPC 呼叫 (錯誤代碼 401)。 如果嘗試登入失敗，請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_cannot_read_site">無法透過該 URL 讀取 WordPress 網站。 請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_services_disabled">這個網站尚未開啟 XML-RPC 服務</string>
+    <string name="my_site_menu_tab_title">選單</string>
+    <string name="my_site_dashboard_tab_title">控制台</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">你的搜尋包含 WordPress.com 網域不支援的字元。 允許使用以下字元：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">請檢查你的網際網路連線並重新整理頁面。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">前往統計資料</string>
     <string name="my_site_todays_stat_card_title">本日統計</string>
@@ -873,7 +880,7 @@ Language: zh_TW
     <string name="signup_confirmation_title">註冊確認</string>
     <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
     <string name="enter_your_site_address">輸入你現有的網址</string>
-    <string name="gutenberg_native_convert_to_link">轉換為連結</string>
+    <string name="gutenberg_native_convert_to_link">轉換成連結</string>
     <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
     <string name="signup_confirmation_message">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
     <string name="signup_magic_link_message">我們已透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>

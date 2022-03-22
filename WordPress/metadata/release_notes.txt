@@ -1,8 +1,5 @@
-* [***] Block editor: Support for multiple color palettes [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4537]
-* [*] Allows choosing email app during signup and login [https://github.com/wordpress-mobile/WordPress-Android/pull/15979]
-* [**] Login: improved error messages for login with self-hosted sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/15919]
-* [*] Reader: nested comments with missing parent are now hidden from the comment list [https://github.com/wordpress-mobile/WordPress-Android/pull/15993]
-* [*] Fixed an issue which prevented uploading of captured photos after an orientation change. [https://github.com/wordpress-mobile/WordPress-Android/pull/16037]
-* [*] My Site: Fixes indeterminate progress bar in site icon when cancelling editing [https://github.com/wordpress-mobile/WordPress-Android/pull/15958]
-* [*] Stats: Re-organized the default view in Insights, presenting more interesting data at a glance [https://github.com/wordpress-mobile/WordPress-Android/pull/16036]
+* [*] Notification: Adds Weekly Roundup switch to App info -> Notification menu to disable them for all sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/16118]
+* [*] Block Editor: Add GIF badge for animated GIFs uploaded to Image blocks [https://github.com/WordPress/gutenberg/pull/38996]
+* [*] Block Editor: Small refinement to media upload errors, including centering and tweaking copy. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4597]
+* [*] Block Editor: Fix issue with list's starting index and the order [https://github.com/WordPress/gutenberg/pull/39354]
 
