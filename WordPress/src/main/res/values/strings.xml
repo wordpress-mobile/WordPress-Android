@@ -3191,7 +3191,7 @@
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
-    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type you own</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -3217,6 +3217,16 @@
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
+
+    <!-- Site Creation intents -->
+    <string name="site_creation_intents_business_services_intent">Business &amp; Services</string>
+    <string name="site_creation_intents_food_intent">Food</string>
+    <string name="site_creation_intents_health_intent">Health</string>
+    <string name="site_creation_intents_home_improvement_intent">Home Improvement</string>
+    <string name="site_creation_intents_local_services_intent">Local Services</string>
+    <string name="site_creation_intents_news_intent">News</string>
+    <string name="site_creation_intents_photography_intent">Photography</string>
+    <string name="site_creation_intents_travel_intent">Travel</string>
 
     <!-- App rating dialog -->
     <string name="app_rating_title">Enjoying WordPress?</string>
