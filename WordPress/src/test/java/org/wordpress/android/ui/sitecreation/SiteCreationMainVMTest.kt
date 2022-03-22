@@ -184,7 +184,7 @@ class SiteCreationMainVMTest {
     fun siteCreationStateRestored() {
         /* we need to model a real use case of data only existing for steps the user has visited (Segment only in
         this case). Otherwise, subsequent steps' state will be cleared and make the test fail. (issue #10189)*/
-        val expectedState = SiteCreationState(SEGMENT_ID)
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
         whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
                 .thenReturn(expectedState)
 
