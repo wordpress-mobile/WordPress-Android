@@ -3190,6 +3190,7 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_intents_input_hint">Eg. Lifestyle, Poetry, Politics</string>
