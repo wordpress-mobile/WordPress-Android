@@ -454,6 +454,9 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    fun onTabChanged(position: Int) {
+    }
+
     @Suppress("ComplexMethod")
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->

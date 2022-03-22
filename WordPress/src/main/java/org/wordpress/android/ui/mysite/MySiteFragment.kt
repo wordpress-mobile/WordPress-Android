@@ -48,6 +48,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private val isTabMediatorAttached: Boolean
         get() = tabLayoutMediator?.isAttached == true
 
+    private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            viewModel.onTabChanged(position)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSoftKeyboard()
@@ -115,6 +122,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupViewPager() {
         val adapter = MySiteTabsAdapter(this@MySiteFragment, viewModel.orderedTabTypes)
         viewPager.adapter = adapter
+        viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
     private fun MySiteFragmentBinding.setupActionableEmptyView() {
