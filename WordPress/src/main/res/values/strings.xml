@@ -3218,6 +3218,16 @@
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
 
+    <!-- Site Creation intents -->
+    <string name="site_creation_intents_business_services_intent">Business &amp; Services</string>
+    <string name="site_creation_intents_food_intent">Food</string>
+    <string name="site_creation_intents_health_intent">Health</string>
+    <string name="site_creation_intents_home_improvement_intent">Home Improvement</string>
+    <string name="site_creation_intents_local_services_intent">Local Services</string>
+    <string name="site_creation_intents_news_intent">News</string>
+    <string name="site_creation_intents_photography_intent">Photography</string>
+    <string name="site_creation_intents_travel_intent">Travel</string>
+
     <!-- App rating dialog -->
     <string name="app_rating_title">Enjoying WordPress?</string>
     <string name="app_rating_message">Nice to see you again! If you’re digging the app, we\’d love a rating on the Google Play Store.</string>
