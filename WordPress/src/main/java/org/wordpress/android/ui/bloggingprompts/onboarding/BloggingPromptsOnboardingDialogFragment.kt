@@ -15,8 +15,7 @@ import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragment
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.util.extensions.exhaustive
-import org.wordpress.android.util.setStatusBarAsSurfaceColor
-import org.wordpress.android.util.updateSystemUiVisibility
+import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
@@ -39,7 +38,6 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BloggingPromptsOnboardingViewModel::class.java)
         dialog.setStatusBarAsSurfaceColor()
-        dialog.updateSystemUiVisibility()
         return dialog
     }
 

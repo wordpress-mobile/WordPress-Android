@@ -15,8 +15,7 @@ import org.wordpress.android.databinding.StoriesIntroDialogFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.util.setStatusBarAsSurfaceColor
-import org.wordpress.android.util.updateSystemUiVisibility
+import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class StoriesIntroDialogFragment : DialogFragment() {
@@ -46,7 +45,6 @@ class StoriesIntroDialogFragment : DialogFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StoriesIntroViewModel::class.java)
         dialog.setStatusBarAsSurfaceColor()
-        dialog.updateSystemUiVisibility()
         return dialog
     }
 

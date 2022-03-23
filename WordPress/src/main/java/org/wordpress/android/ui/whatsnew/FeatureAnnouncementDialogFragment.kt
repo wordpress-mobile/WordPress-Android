@@ -15,8 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.util.setStatusBarAsSurfaceColor
-import org.wordpress.android.util.updateSystemUiVisibility
+import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class FeatureAnnouncementDialogFragment : DialogFragment() {
@@ -36,7 +35,6 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
         dialog.setStatusBarAsSurfaceColor()
-        dialog.updateSystemUiVisibility()
         return dialog
     }
 
