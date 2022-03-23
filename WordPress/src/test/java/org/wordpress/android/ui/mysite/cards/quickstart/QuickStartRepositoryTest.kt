@@ -96,6 +96,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         site.id = siteLocalId
     }
 
+    /* QUICK START SKIP */
+
     @Test
     fun `when quick start is skipped, then all quick start tasks for the selected site are set to done`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -127,6 +129,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 verify(quickStartStore).setQuickStartNotificationReceived(siteLocalId.toLong(), true)
             }
 
+    /* QUICK START COMPLETE TASK */
+
     @Test
     fun `completeTask does not marks active task as done if it is different`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
@@ -141,6 +145,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         verifyZeroInteractions(quickStartStore)
     }
 
+    /* QUICK START REQUEST NEXT STEP */
+
     @Test
     fun `requestNextStepOfTask emits quick start event`() = test {
         initQuickStartInProgress()
@@ -150,6 +156,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         verify(eventBus).postSticky(QuickStartEvent(ENABLE_POST_SHARING))
     }
+
+    /* QUICK START REMINDER NOTIFICATION */
 
     @Test
     fun `given active task != completed task, when task is completed, then reminder notifs are not triggered`() = test {
@@ -177,6 +185,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 contextProvider.getContext()
         )
     }
+
+    /* QUICK START NOTICE */
 
     @Test
     fun `given uncompleted task exists, when show quick start notice is triggered, then snackbar is shown`() = test {
