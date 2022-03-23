@@ -29,7 +29,7 @@
         <item>sports</item>
         <item>technology</item>
         <item>travel</item>
-        <item>_writing_poetry</item>
+        <item>writing_poetry</item>
     </string-array>
     <string-array name="site_creation_intents_strings">
         <item>@string/site_creation_intent_art</item>
