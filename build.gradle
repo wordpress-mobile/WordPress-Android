@@ -25,7 +25,7 @@ ext {
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
     tracksVersion = '2.2.0'
-    roomVersion = '2.3.0'
+    roomVersion = '2.4.2'
 
     coreLibraryDesugaringVersion = '1.1.5'
 
