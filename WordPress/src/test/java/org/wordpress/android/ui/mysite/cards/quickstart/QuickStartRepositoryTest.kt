@@ -20,9 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -136,11 +133,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
-        quickStartRepository.setActiveTask(PUBLISH_POST)
+        quickStartRepository.setActiveTask(QuickStartTask.PUBLISH_POST)
 
         reset(quickStartStore)
 
-        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
+        quickStartRepository.completeTask(QuickStartTask.UPDATE_SITE_TITLE)
 
         verifyZeroInteractions(quickStartStore)
     }
@@ -151,10 +148,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `requestNextStepOfTask emits quick start event`() = test {
         initQuickStartInProgress()
 
-        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
-        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+        quickStartRepository.setActiveTask(QuickStartTask.ENABLE_POST_SHARING)
+        quickStartRepository.requestNextStepOfTask(QuickStartTask.ENABLE_POST_SHARING)
 
-        verify(eventBus).postSticky(QuickStartEvent(ENABLE_POST_SHARING))
+        verify(eventBus).postSticky(QuickStartEvent(QuickStartTask.ENABLE_POST_SHARING))
     }
 
     /* QUICK START REMINDER NOTIFICATION */
@@ -163,9 +160,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `given active task != completed task, when task is completed, then reminder notifs are not triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartRepository.setActiveTask(PUBLISH_POST)
+        quickStartRepository.setActiveTask(QuickStartTask.PUBLISH_POST)
 
-        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
+        quickStartRepository.completeTask(QuickStartTask.UPDATE_SITE_TITLE)
 
         verify(quickStartUtilsWrapper, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
     }
@@ -174,14 +171,14 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `given active task = completed task, when task is completed, then reminder notifs are triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartRepository.setActiveTask(PUBLISH_POST)
+        quickStartRepository.setActiveTask(QuickStartTask.PUBLISH_POST)
 
-        quickStartRepository.completeTask(PUBLISH_POST)
+        quickStartRepository.completeTask(QuickStartTask.PUBLISH_POST)
 
         verify(quickStartUtilsWrapper).completeTaskAndRemindNextOne(
-                PUBLISH_POST,
+                QuickStartTask.PUBLISH_POST,
                 site,
-                QuickStartEvent(PUBLISH_POST),
+                QuickStartEvent(QuickStartTask.PUBLISH_POST),
                 contextProvider.getContext()
         )
     }
@@ -190,7 +187,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given uncompleted task exists, when show quick start notice is triggered, then snackbar is shown`() = test {
-        initStore(nextUncompletedTask = PUBLISH_POST)
+        initStore(nextUncompletedTask = QuickStartTask.PUBLISH_POST)
 
         quickStartRepository.checkAndShowQuickStartNotice()
 
@@ -209,23 +206,23 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `when show quick start notice dismissed using swipe-to-dismiss action, then the task is skipped`() = test {
-        initStore(nextUncompletedTask = PUBLISH_POST)
+        initStore(nextUncompletedTask = QuickStartTask.PUBLISH_POST)
         quickStartRepository.checkAndShowQuickStartNotice()
 
         snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_SWIPE)
 
-        verify(appPrefsWrapper).setLastSkippedQuickStartTask(PUBLISH_POST)
+        verify(appPrefsWrapper).setLastSkippedQuickStartTask(QuickStartTask.PUBLISH_POST)
     }
 
     @Test
     fun `when show quick start notice dismissed using non swipe-to-dismiss action, then the task is not skipped`() =
             test {
-                initStore(nextUncompletedTask = PUBLISH_POST)
+                initStore(nextUncompletedTask = QuickStartTask.PUBLISH_POST)
                 quickStartRepository.checkAndShowQuickStartNotice()
 
                 snackbars.last().onDismissAction.invoke(Callback.DISMISS_EVENT_ACTION)
 
-                verify(appPrefsWrapper, never()).setLastSkippedQuickStartTask(PUBLISH_POST)
+                verify(appPrefsWrapper, never()).setLastSkippedQuickStartTask(QuickStartTask.PUBLISH_POST)
             }
 
     private fun initQuickStartInProgress() {
