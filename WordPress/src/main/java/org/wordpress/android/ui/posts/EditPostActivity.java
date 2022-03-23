@@ -184,7 +184,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;

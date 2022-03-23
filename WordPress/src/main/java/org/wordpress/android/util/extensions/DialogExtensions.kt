@@ -1,10 +1,11 @@
-package org.wordpress.android.util
+package org.wordpress.android.util.extensions
 
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Build
 import android.view.View
 import org.wordpress.android.R
+import org.wordpress.android.R.attr
 
 @SuppressLint("InlinedApi")
 fun Dialog.getPreferenceDialogContainerView(): View? {
@@ -22,4 +23,14 @@ fun Dialog.getPreferenceDialogContainerView(): View? {
     }
 
     return view
+}
+
+fun Dialog.setStatusBarAsSurfaceColor() {
+    window?.apply {
+        statusBarColor = context.getColorFromAttribute(attr.colorSurface)
+        if (!context.resources.configuration.isDarkTheme()) {
+            decorView.systemUiVisibility = decorView
+                    .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
+    }
 }

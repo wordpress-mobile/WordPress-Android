@@ -18,8 +18,8 @@ import androidx.core.view.ViewCompat
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 
 /**
  * Custom view for main switch in toolbar for preferences.

@@ -127,7 +127,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -530,7 +530,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return true;
         });
 
-        ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
             mViewModel.onTooltipTapped(getSelectedSite());

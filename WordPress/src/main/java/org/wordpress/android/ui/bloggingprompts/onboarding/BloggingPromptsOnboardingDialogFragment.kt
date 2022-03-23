@@ -6,15 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragmentBinding
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
+import org.wordpress.android.util.extensions.exhaustive
+import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
@@ -23,6 +24,9 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
 
     companion object {
         const val TAG = "BLOGGING_PROMPTS_ONBOARDING_DIALOG_FRAGMENT"
+
+        @JvmStatic
+        fun newInstance(): BloggingPromptsOnboardingDialogFragment = BloggingPromptsOnboardingDialogFragment()
     }
 
     override fun getTheme(): Int {
@@ -33,15 +37,7 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BloggingPromptsOnboardingViewModel::class.java)
-
-        val window: Window? = dialog.window
-        window?.let {
-            window.statusBarColor = dialog.context.getColorFromAttribute(attr.colorSurface)
-            if (!resources.configuration.isDarkTheme()) {
-                window.decorView.systemUiVisibility = window.decorView
-                        .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
+        dialog.setStatusBarAsSurfaceColor()
         return dialog
     }
 
@@ -54,10 +50,25 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = BloggingPromptsOnboardingDialogFragmentBinding.bind(view)
+        setupTryNow(binding.tryNow)
+        setupActionObserver()
+        viewModel.start()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    private fun setupTryNow(tryNow: MaterialButton) {
+        tryNow.setOnClickListener { viewModel.onTryNow() }
+    }
+
+    private fun setupActionObserver() {
+        viewModel.action.observe(this, { action ->
+            when (action) {
+                is OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
+            }.exhaustive
+        })
     }
 }

@@ -34,7 +34,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/blogging_prompts_onboarding_try_now"
+                android:id="@+id/try_now"
                 style="@style/WordPress.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,13 +44,13 @@
                 android:layout_marginTop="@dimen/margin_large"
                 android:text="@string/blogging_prompts_onboarding_try_it_now"
                 android:textAllCaps="false"
-                app:layout_constraintBottom_toTopOf="@+id/blogging_prompts_onboarding_remind_me"
+                app:layout_constraintBottom_toTopOf="@+id/remind_me"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/blogging_prompts_onboarding_remind_me"
+                android:id="@+id/remind_me"
                 style="@style/QuickStartPromptDialogSecondaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/blogging_prompts_onboarding_try_now" />
+                app:layout_constraintTop_toBottomOf="@+id/try_now" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

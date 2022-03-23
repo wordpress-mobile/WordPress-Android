@@ -1,4 +1,4 @@
-package org.wordpress.android.util
+package org.wordpress.android.util.extensions
 
 import android.content.res.Configuration
 

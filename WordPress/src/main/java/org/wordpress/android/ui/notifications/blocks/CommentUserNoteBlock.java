@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;

@@ -46,7 +46,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
-import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import java.util.HashMap
 import javax.inject.Inject
 
