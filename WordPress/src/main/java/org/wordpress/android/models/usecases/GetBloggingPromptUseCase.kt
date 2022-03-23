@@ -6,12 +6,18 @@ import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import javax.inject.Inject
 
 class GetBloggingPromptUseCase @Inject constructor() {
-
-    //TODO Fetch from Store when implementation is ready
+    // TODO fetch from Store when implementation is ready
     fun execute(): Flow<BloggingPrompt> = flow {
-        BloggingPrompt(
-                text = "This is a blogging prompt!",
-                numberOfAnswers = 7
+        emit(
+                BloggingPrompt(
+                        text = "This is a blogging prompt!",
+                        numberOfAnswers = 7,
+                        template = """
+                            <!-- wp:pullquote {"textAlign":"center"} -->
+                            <figure class="wp-block-pullquote has-text-align-center"><blockquote><p><strong>Prompt text</strong></p><cite><a href="https://wordpress.com/">WordPress</a> - </cite></blockquote></figure>
+                            <!-- /wp:pullquote -->
+                            """
+                )
         )
     }
 }

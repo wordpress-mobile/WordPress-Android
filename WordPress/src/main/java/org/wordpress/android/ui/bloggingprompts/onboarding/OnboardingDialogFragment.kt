@@ -26,6 +26,7 @@ class OnboardingDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "BLOGGING_PROMPTS_ONBOARDING_DIALOG_FRAGMENT"
 
+        @JvmStatic
         fun newInstance(): OnboardingDialogFragment = OnboardingDialogFragment()
     }
 
@@ -54,6 +55,7 @@ class OnboardingDialogFragment : DialogFragment() {
         setupTryNow(binding.tryNow)
         setupUiStateObserver()
         setupActionObserver()
+        viewModel.start()
     }
 
     override fun onAttach(context: Context) {
@@ -66,7 +68,6 @@ class OnboardingDialogFragment : DialogFragment() {
     }
 
     private fun setupUiStateObserver() {
-
     }
 
     private fun setupActionObserver() {

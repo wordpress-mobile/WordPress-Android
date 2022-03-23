@@ -77,6 +77,7 @@ import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.bloggingprompts.onboarding.OnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
@@ -410,6 +411,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+
+        final OnboardingDialogFragment dialogFragment = OnboardingDialogFragment.newInstance();
+        dialogFragment.show(getSupportFragmentManager(), OnboardingDialogFragment.TAG);
     }
 
     private boolean isGooglePlayServicesAvailable(Activity activity) {
