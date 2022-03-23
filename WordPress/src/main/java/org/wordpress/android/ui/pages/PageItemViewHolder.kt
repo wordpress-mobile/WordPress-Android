@@ -64,7 +64,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(R.id.page_item)
         private val pageLayout = itemView.findViewById<ViewGroup>(R.id.page_layout)
-        private val selectableBackground: Drawable? = parent.context.   getDrawableFromAttribute(
+        private val selectableBackground: Drawable? = parent.context.getDrawableFromAttribute(
                 android.R.attr.selectableItemBackground
         )
 

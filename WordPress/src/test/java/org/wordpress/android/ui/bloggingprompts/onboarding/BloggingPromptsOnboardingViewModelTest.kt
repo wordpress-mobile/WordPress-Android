@@ -14,7 +14,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
-
     private val getBloggingPromptUseCase: GetBloggingPromptUseCase = mock()
     private val bloggingPromptsOnboardingViewModel = BloggingPromptsOnboardingViewModel(getBloggingPromptUseCase)
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
