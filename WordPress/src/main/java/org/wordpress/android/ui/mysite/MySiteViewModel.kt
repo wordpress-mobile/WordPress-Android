@@ -58,6 +58,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -141,20 +142,16 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
-    private val _tabsUiState = quickStartRepository.onQuickStartSiteMenuStep.map { quickStartSiteMenuStep ->
-        val previousTabsUiState = uiModel.value?.state?.tabsUiState
-        previousTabsUiState?.copy(
-                tabUiStates = previousTabsUiState.tabUiStates.map {
-                    if (it.tabType == MySiteTabType.SITE_MENU) {
-                        it.copy(
-                                showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false,
-                                pendingTask = quickStartSiteMenuStep?.task
-                        )
-                    } else {
-                        it
-                    }
-                }
-        )
+
+    private val tabsUiState = quickStartRepository.onQuickStartSiteMenuStep.switchMap { quickStartSiteMenuStep ->
+        val result = MediatorLiveData<TabsUiState>()
+        /* We want to filter out tabs state livedata update when state is not set in uiModel.
+           Without this check, tabs state livedata merge with state livedata may return a null state
+           when building UiModel. */
+        uiModel.value?.state?.tabsUiState?.let {
+            result.value = it.copy(tabUiStates = it.update(quickStartSiteMenuStep))
+        }
+        result
     }
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
@@ -208,7 +205,7 @@ class MySiteViewModel @Inject constructor(
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
             }.addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
 
-    val uiModel: LiveData<UiModel> = merge(_tabsUiState, state) { tabsUiState, mySiteUiState ->
+    val uiModel: LiveData<UiModel> = merge(tabsUiState, state) { tabsUiState, mySiteUiState ->
         with(requireNotNull(mySiteUiState)) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
@@ -958,7 +955,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun findUiStateForTab(tabType: MySiteTabType) =
-            _tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
+            tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
 
     data class UiModel(
         val accountAvatarUrl: String,
@@ -991,6 +988,17 @@ class MySiteViewModel @Inject constructor(
             val showQuickStartFocusPoint: Boolean = false,
             val pendingTask: QuickStartTask? = null
         )
+
+        fun update(quickStartSiteMenuStep: QuickStartSiteMenuStep?) = tabUiStates.map { tabUiState ->
+            if (tabUiState.tabType == MySiteTabType.SITE_MENU) {
+                tabUiState.copy(
+                        showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false,
+                        pendingTask = quickStartSiteMenuStep?.task
+                )
+            } else {
+                tabUiState
+            }
+        }
     }
 
     data class TextInputDialogModel(
