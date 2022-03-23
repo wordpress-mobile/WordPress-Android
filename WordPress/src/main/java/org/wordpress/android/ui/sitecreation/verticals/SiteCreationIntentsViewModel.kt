@@ -89,7 +89,6 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     private fun intentSelected(slug: String, vertical: String) {
-        // TODO: determine what slugs (and ids) to use for the default intents
         analyticsTracker.trackSiteIntentQuestionVerticalSelected(vertical, slug)
         _onIntentSelected.value = vertical
     }
