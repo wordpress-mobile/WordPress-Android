@@ -13,7 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.bloggingprompts.onboarding.Action.OpenEditor
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.setStatusBarAsSurfaceColor
 import org.wordpress.android.util.updateSystemUiVisibility

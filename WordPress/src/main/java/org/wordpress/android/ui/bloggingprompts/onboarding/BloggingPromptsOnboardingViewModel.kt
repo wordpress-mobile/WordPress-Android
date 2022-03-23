@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.models.usecases.GetBloggingPromptUseCase
-import org.wordpress.android.ui.bloggingprompts.onboarding.Action.OpenEditor
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingViewModel @Inject constructor(
@@ -16,11 +16,11 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
 ) : ViewModel() {
     private lateinit var bloggingPrompt: BloggingPrompt
 
-    private val _uiState = MutableLiveData<UiState>()
-    val uiState: LiveData<UiState> = _uiState
+    private val _uiState = MutableLiveData<BloggingPromptsOnboardingUiState>()
+    val uiState: LiveData<BloggingPromptsOnboardingUiState> = _uiState
 
-    private val _action = MutableLiveData<Action>()
-    val action: LiveData<Action> = _action
+    private val _action = MutableLiveData<BloggingPromptsOnboardingAction>()
+    val action: LiveData<BloggingPromptsOnboardingAction> = _action
 
     fun start() {
         viewModelScope.launch {
