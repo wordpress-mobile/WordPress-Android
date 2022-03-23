@@ -113,6 +113,7 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupActionListeners() {
         siteCreationIntentsTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
+        continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
         input.setOnFocusChangeListener { _, _ -> viewModel.onInputFocused() }
         input.doOnTextChanged { text, _, _, _ -> viewModel.onSearchTextChanged(text?.toString() ?: "") }
