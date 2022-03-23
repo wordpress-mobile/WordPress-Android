@@ -369,21 +369,21 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given my site tabs feature flag not enabled, when site is selected, then tabs are not visible`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
 
-        assertThat((uiModels.last().state as SiteSelected).showTabs).isFalse
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
     }
 
     @Test
     fun `given my site tabs build config not enabled, when site is selected, then tabs are not visible`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = false)
 
-        assertThat((uiModels.last().state as SiteSelected).showTabs).isFalse
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
     }
 
     @Test
     fun `given my site tabs build config with flag enabled, when site is selected, then tabs are visible`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
 
-        assertThat((uiModels.last().state as SiteSelected).showTabs).isTrue
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue
     }
 
     @Test
@@ -452,7 +452,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected, then tabs are not visible`() {
         onSiteSelected.value = null
 
-        assertThat((uiModels.last().state as NoSites).showTabs).isFalse
+        assertThat((uiModels.last().state as NoSites).tabsUiState.showTabs).isFalse
     }
 
     @Test
