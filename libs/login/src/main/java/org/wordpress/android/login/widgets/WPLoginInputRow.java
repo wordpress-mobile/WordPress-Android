@@ -90,11 +90,9 @@ public class WPLoginInputRow extends RelativeLayout {
                     mTextInputLayout.setEndIconDrawable(R.drawable.selector_password_visibility);
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    if (a.hasValue(R.styleable.wpLoginInputRow_android_textAlignment)) {
-                        mEditText.setTextAlignment(
-                                a.getInt(R.styleable.wpLoginInputRow_android_textAlignment, TEXT_ALIGNMENT_GRAVITY));
-                    }
+                if (a.hasValue(R.styleable.wpLoginInputRow_android_textAlignment)) {
+                    mEditText.setTextAlignment(
+                            a.getInt(R.styleable.wpLoginInputRow_android_textAlignment, TEXT_ALIGNMENT_GRAVITY));
                 }
             } finally {
                 a.recycle();
@@ -118,7 +116,7 @@ public class WPLoginInputRow extends RelativeLayout {
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            state = restoreViewsState((SavedState) bundle.getParcelable(KEY_SUPER_STATE));
+            state = restoreViewsState(bundle.getParcelable(KEY_SUPER_STATE));
         }
 
         super.onRestoreInstanceState(state);
@@ -148,20 +146,17 @@ public class WPLoginInputRow extends RelativeLayout {
     }
 
     public void setOnEditorCommitListener(final OnEditorCommitListener listener) {
-        mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE
-                    || actionId == EditorInfo.IME_ACTION_NEXT
-                    || (event != null
-                        && event.getAction() == KeyEvent.ACTION_UP
-                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    listener.onEditorCommit();
-                }
-
-                // always consume the event so the focus stays in the EditText
-                return true;
+        mEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE
+                || actionId == EditorInfo.IME_ACTION_NEXT
+                || (event != null
+                    && event.getAction() == KeyEvent.ACTION_UP
+                    && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                listener.onEditorCommit();
             }
+
+            // always consume the event so the focus stays in the EditText
+            return true;
         });
     }
 

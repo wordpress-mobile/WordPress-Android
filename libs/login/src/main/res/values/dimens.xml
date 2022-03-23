@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <item name="material_emphasis_low" format="float" type="dimen">0.12</item>
 
     <dimen name="margin_none">0dp</dimen>
