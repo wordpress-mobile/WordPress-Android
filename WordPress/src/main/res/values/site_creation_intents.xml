@@ -93,5 +93,12 @@
         <item>&#9992;</item><!-- ✈️ Travel -->
         <item>&#128211;</item><!-- 📓 Writing & Poetry -->
     </string-array>
+    <string-array name="site_creation_intents_defaults">
+        <item>food</item>
+        <item>news</item>
+        <item>lifestyle</item>
+        <item>personal</item>
+        <item>photography</item>
+        <item>travel</item>
     </string-array>
 </resources>

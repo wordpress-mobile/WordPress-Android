@@ -63,6 +63,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         val slugsArray = resources.getStringArray(R.array.site_creation_intents_slugs)
         val verticalArray = resources.getStringArray(R.array.site_creation_intents_strings)
         val emojiArray = resources.getStringArray(R.array.site_creation_intents_emojis)
+        val defaultsArray = resources.getStringArray(R.array.site_creation_intents_defaults)
         if (slugsArray.size != verticalArray.size || slugsArray.size != emojiArray.size) {
             throw IllegalStateException("Intents arrays size mismatch")
         }
@@ -72,7 +73,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
             val item = DefaultIntentItemUiState(slug, vertical, emoji)
             item.onItemTapped = { intentSelected(slug, vertical) }
             return@mapIndexed item
-        }
+        }.filter { it.verticalSlug in defaultsArray }
         _uiState.value = DefaultItems(items = newItems)
     }
 
