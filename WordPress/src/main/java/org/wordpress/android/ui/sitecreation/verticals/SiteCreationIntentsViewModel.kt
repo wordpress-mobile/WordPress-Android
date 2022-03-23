@@ -9,8 +9,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,7 +37,6 @@ class SiteCreationIntentsViewModel @Inject constructor(
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
     private val _onContinueButtonPressed = SingleLiveEvent<String>()
-    val onContinueButtonPressed: LiveData<String> = _onContinueButtonPressed
 
     private val _onIntentSelected = SingleLiveEvent<String>()
     val onIntentSelected: LiveData<String> = _onIntentSelected
@@ -72,6 +72,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         val slugsArray = resources.getStringArray(R.array.site_creation_intents_slugs)
         val verticalArray = resources.getStringArray(R.array.site_creation_intents_strings)
         val emojiArray = resources.getStringArray(R.array.site_creation_intents_emojis)
+        val defaultsArray = resources.getStringArray(R.array.site_creation_intents_defaults)
         if (slugsArray.size != verticalArray.size || slugsArray.size != emojiArray.size) {
             throw IllegalStateException("Intents arrays size mismatch")
         }
@@ -81,9 +82,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
             val item = DefaultIntentItemUiState(slug, vertical, emoji)
             item.onItemTapped = { intentSelected(slug, vertical) }
             return@mapIndexed item
-        }
+        }.filter { it.verticalSlug in defaultsArray }
         _uiState.value = IntentsUiState(
-                content = IntentsUiState.Content.DefaultItems(items = newItems)
+                content = DefaultItems(items = newItems)
         )
     }
 

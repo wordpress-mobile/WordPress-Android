@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.mysite.tabs
 
-enum class MySiteTabType(val label: String) {
-    ALL("all"),
-    DASHBOARD("dashboard"),
-    SITE_MENU("site_menu");
+import androidx.annotation.StringRes
+import org.wordpress.android.R
+
+enum class MySiteTabType(val label: String, @StringRes val stringResId: Int) {
+    ALL("all", R.string.my_site_all_tab_title),
+    DASHBOARD("dashboard", R.string.my_site_dashboard_tab_title),
+    SITE_MENU("site_menu", R.string.my_site_menu_tab_title);
 
     override fun toString() = label
 
