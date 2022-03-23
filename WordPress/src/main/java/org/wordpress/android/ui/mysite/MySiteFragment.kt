@@ -166,31 +166,29 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         showAppbar()
     }
 
-    private fun MySiteInfoCardBinding.loadMySiteDetails(site: SiteInfoCard?) {
-        site?.let {
-            siteTitle = site.title
-            if (site.iconState is IconState.Visible) {
-                mySiteBlavatar.visibility = View.VISIBLE
-                imageManager.load(mySiteBlavatar, BLAVATAR, site.iconState.url ?: "")
-                mySiteIconProgress.visibility = View.GONE
-                mySiteBlavatar.setOnClickListener { site.onIconClick.click() }
-            } else if (site.iconState is IconState.Progress) {
-                mySiteBlavatar.setOnClickListener(null)
-                mySiteIconProgress.visibility = View.VISIBLE
-                mySiteBlavatar.visibility = View.GONE
-            }
-            quickStartIconFocusPoint.setVisibleOrGone(site.showIconFocusPoint)
-            if (site.onTitleClick != null) {
-                siteInfoContainer.title.setOnClickListener { site.onTitleClick.click() }
-            } else {
-                siteInfoContainer.title.setOnClickListener(null)
-            }
-            siteInfoContainer.title.text = site.title
-            quickStartTitleFocusPoint.setVisibleOrGone(site.showTitleFocusPoint)
-            siteInfoContainer.subtitle.text = site.url
-            siteInfoContainer.subtitle.setOnClickListener { site.onUrlClick.click() }
-            switchSite.setOnClickListener { site.onSwitchSiteClick.click() }
+    private fun MySiteInfoCardBinding.loadMySiteDetails(site: SiteInfoCard) {
+        siteTitle = site.title
+        if (site.iconState is IconState.Visible) {
+            mySiteBlavatar.visibility = View.VISIBLE
+            imageManager.load(mySiteBlavatar, BLAVATAR, site.iconState.url ?: "")
+            mySiteIconProgress.visibility = View.GONE
+            mySiteBlavatar.setOnClickListener { site.onIconClick.click() }
+        } else if (site.iconState is IconState.Progress) {
+            mySiteBlavatar.setOnClickListener(null)
+            mySiteIconProgress.visibility = View.VISIBLE
+            mySiteBlavatar.visibility = View.GONE
         }
+        quickStartIconFocusPoint.setVisibleOrGone(site.showIconFocusPoint)
+        if (site.onTitleClick != null) {
+            siteInfoContainer.title.setOnClickListener { site.onTitleClick.click() }
+        } else {
+            siteInfoContainer.title.setOnClickListener(null)
+        }
+        siteInfoContainer.title.text = site.title
+        quickStartTitleFocusPoint.setVisibleOrGone(site.showTitleFocusPoint)
+        siteInfoContainer.subtitle.text = site.url
+        siteInfoContainer.subtitle.setOnClickListener { site.onUrlClick.click() }
+        switchSite.setOnClickListener { site.onSwitchSiteClick.click() }
     }
 
     private fun MySiteFragmentBinding.showAppbar() {
@@ -201,7 +199,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.showSiteInfoToolbarWithTabs() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_tabs_height).toInt() // New height in pixels
+        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_tabs_height).toInt()
         appbarMain.layoutParams.height = newHeight
         updateToolbarBottomMargin(newHeight)
         tabLayout.setVisible(true)
