@@ -122,6 +122,7 @@ android {
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "false"
+        buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
