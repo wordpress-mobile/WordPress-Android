@@ -1884,7 +1884,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dashboardCardsBuilderParams = any()
         )
 
-        doAnswer{
+        doAnswer {
             siteInfoCard = initSiteInfoCard(it)
             siteInfoCard
         }.whenever(siteInfoCardBuilder).buildSiteInfoCard(any())
