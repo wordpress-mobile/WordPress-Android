@@ -70,12 +70,12 @@ class SiteCreationIntentsFragment : Fragment() {
         updateContinueButtonVisibility(uiState.isContinueButtonVisible)
     }
 
-    private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldShowAppBarTitle: Boolean) {
+    private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
         // In landscape mode this code doesn't apply, since the header texts are not in the layout
         uiHelper.fadeInfadeOutViews(
                 siteCreationIntentsTitlebar.appBarTitle,
                 siteCreationIntentsHeader.title,
-                shouldShowAppBarTitle
+                shouldAppBarTitleBeVisible
         )
     }
 
