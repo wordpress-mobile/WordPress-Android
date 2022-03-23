@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
