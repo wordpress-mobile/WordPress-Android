@@ -87,17 +87,14 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldBeVisible: Boolean) {
         val headerLayout = siteCreationIntentsHeader.root
-
-        val onAnimationEnd = Runnable {
-            headerLayout.isVisible = shouldBeVisible
-        }
+        val toggleVisibility = Runnable { headerLayout.isVisible = shouldBeVisible }
 
         when {
             !shouldBeVisible && headerLayout.isVisible -> {
-                headerLayout.animate().translationY(-headerLayout.height.toFloat()).withEndAction(onAnimationEnd)
+                headerLayout.animate().translationY(-headerLayout.height.toFloat()).withEndAction(toggleVisibility)
             }
             shouldBeVisible && headerLayout.isGone -> {
-                headerLayout.animate().translationY(0f).withEndAction(onAnimationEnd)
+                headerLayout.animate().translationY(0f).withEndAction(toggleVisibility)
             }
         }
     }
