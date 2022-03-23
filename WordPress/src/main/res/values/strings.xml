@@ -3221,14 +3221,35 @@
     <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
 
     <!-- Site Creation intents -->
-    <string name="site_creation_intents_business_services_intent">Business &amp; Services</string>
-    <string name="site_creation_intents_food_intent">Food</string>
-    <string name="site_creation_intents_health_intent">Health</string>
-    <string name="site_creation_intents_home_improvement_intent">Home Improvement</string>
-    <string name="site_creation_intents_local_services_intent">Local Services</string>
-    <string name="site_creation_intents_news_intent">News</string>
-    <string name="site_creation_intents_photography_intent">Photography</string>
-    <string name="site_creation_intents_travel_intent">Travel</string>
+    <string name="site_creation_intent_art">Art</string>
+    <string name="site_creation_intent_automotive">Automotive</string>
+    <string name="site_creation_intent_beauty">Beauty</string>
+    <string name="site_creation_intent_books">Books</string>
+    <string name="site_creation_intent_business">Business</string>
+    <string name="site_creation_intent_community_nonprofit">Community &amp; Non-Profit</string>
+    <string name="site_creation_intent_education">Education</string>
+    <string name="site_creation_intent_diy">DIY</string>
+    <string name="site_creation_intent_fashion">Fashion</string>
+    <string name="site_creation_intent_finance">Finance</string>
+    <string name="site_creation_intent_film_television">Film &amp; Television</string>
+    <string name="site_creation_intent_fitness_exercise">Fitness &amp; Exercise</string>
+    <string name="site_creation_intent_food">Food</string>
+    <string name="site_creation_intent_gaming">Gaming</string>
+    <string name="site_creation_intent_health">Health</string>
+    <string name="site_creation_intent_interior_design">Interior Design</string>
+    <string name="site_creation_intent_lifestyle">Lifestyle</string>
+    <string name="site_creation_intent_local_services">Local Services</string>
+    <string name="site_creation_intent_music">Music</string>
+    <string name="site_creation_intent_news">News</string>
+    <string name="site_creation_intent_parenting">Parenting</string>
+    <string name="site_creation_intent_people">People</string>
+    <string name="site_creation_intent_personal">Personal</string>
+    <string name="site_creation_intent_photography">Photography</string>
+    <string name="site_creation_intent_politics">Politics</string>
+    <string name="site_creation_intent_sports">Sports</string>
+    <string name="site_creation_intent_technology">Technology</string>
+    <string name="site_creation_intent_travel">Travel</string>
+    <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
 
     <!-- App rating dialog -->
     <string name="app_rating_title">Enjoying WordPress?</string>
