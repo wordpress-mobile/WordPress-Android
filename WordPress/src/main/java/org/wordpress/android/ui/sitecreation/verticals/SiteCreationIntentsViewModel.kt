@@ -89,22 +89,23 @@ class SiteCreationIntentsViewModel @Inject constructor(
      * @param scrollThreshold the scroll threshold
      */
     fun onAppBarOffsetChanged(verticalOffset: Int, scrollThreshold: Int) {
-        val shouldHeaderBeVisible = verticalOffset < scrollThreshold
+        val shouldAppBarTitleBeVisible = verticalOffset < scrollThreshold
+
         uiState.value?.let { state ->
-            if (state.isAppBarTitleVisible == shouldHeaderBeVisible) return // No change
+            if (state.isAppBarTitleVisible == shouldAppBarTitleBeVisible || !state.isHeaderVisible) return
             updateUiState(
-                    state.copy(isAppBarTitleVisible = shouldHeaderBeVisible)
+                    state.copy(isAppBarTitleVisible = shouldAppBarTitleBeVisible)
             )
         }
     }
 
     fun onInputFocused() {
         uiState.value?.let { state ->
-            if (!state.isHeaderVisible) return@let
+            if (!state.isHeaderVisible) return
             updateUiState(
                     state.copy(
-                            isAppBarTitleVisible = true,
-                            isHeaderVisible = false
+                            isHeaderVisible = false,
+                            isAppBarTitleVisible = true
                     )
             )
         }

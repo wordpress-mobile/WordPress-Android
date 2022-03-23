@@ -62,7 +62,7 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
-        appBarLayout.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        root.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
@@ -80,18 +80,18 @@ class SiteCreationIntentsFragment : Fragment() {
         )
     }
 
-    private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldHeaderBeVisible: Boolean) {
+    private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldShow: Boolean) {
         val headerLayout = siteCreationIntentsHeader.root
 
         val onAnimationEnd = Runnable {
-            headerLayout.isVisible = shouldHeaderBeVisible
+            headerLayout.isVisible = shouldShow
         }
 
         when {
-            !shouldHeaderBeVisible && headerLayout.isVisible -> {
+            !shouldShow && headerLayout.isVisible -> {
                 headerLayout.animate().translationY(-headerLayout.height.toFloat()).withEndAction(onAnimationEnd)
             }
-            shouldHeaderBeVisible && headerLayout.isGone -> {
+            shouldShow && headerLayout.isGone -> {
                 headerLayout.animate().translationY(0f).withEndAction(onAnimationEnd)
             }
         }
