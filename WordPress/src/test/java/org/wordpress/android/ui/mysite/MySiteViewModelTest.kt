@@ -405,7 +405,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
-        assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
+        assertThat(getSiteInfoItem()).isInstanceOf(SiteInfoCard::class.java)
     }
 
     @Test
@@ -1792,14 +1792,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findDomainRegistrationCard() =
             getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
-    private fun findSiteInfoCard() =
-            getLastItems().find { it is SiteInfoCard } as SiteInfoCard?
-
     private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
 
     private fun getDashboardTabLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
     private fun getSiteMenuTabLastItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+    private fun getSiteInfoItem() = (uiModels.last().state as SiteSelected).siteInfo
 
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoCardAction) {
         onSiteChange.value = site
@@ -1808,7 +1807,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         while (uiModels.last().state is NoSites) {
             delay(100)
         }
-        val siteInfoCard = findSiteInfoCard()!!
+        val siteInfoCard = getSiteInfoItem()
         when (action) {
             SiteInfoCardAction.TITLE_CLICK -> siteInfoCard.onTitleClick!!.click()
             SiteInfoCardAction.ICON_CLICK -> siteInfoCard.onIconClick.click()
@@ -1860,14 +1859,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun setUpCardsBuilder() {
         doAnswer {
-            siteInfoCard = initSiteInfoCard(it)
             val quickActionsCard = initQuickActionsCard(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
             if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
                 listOf(
-                        siteInfoCard,
                         quickActionsCard,
                         domainRegistrationCard,
                         quickStartCard,
@@ -1875,7 +1872,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             } else {
                 listOf<MySiteCardAndItem>(
-                        siteInfoCard,
                         quickActionsCard,
                         domainRegistrationCard,
                         quickStartCard
@@ -1887,6 +1883,11 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickStartCardBuilderParams = any(),
                 dashboardCardsBuilderParams = any()
         )
+
+        doAnswer{
+            siteInfoCard = initSiteInfoCard(it)
+            siteInfoCard
+        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(any())
     }
 
     private fun setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled: Boolean) {
