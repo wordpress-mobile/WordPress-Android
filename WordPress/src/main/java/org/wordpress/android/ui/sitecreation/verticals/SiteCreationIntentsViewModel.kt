@@ -98,8 +98,21 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
+    fun onInputFocused() {
+        uiState.value?.let { state ->
+            if (!state.isHeaderVisible) return@let
+            updateUiState(
+                    state.copy(
+                            isAppBarTitleVisible = true,
+                            isHeaderVisible = false
+                    )
+            )
+        }
+    }
+
     data class IntentsUiState(
         val isAppBarTitleVisible: Boolean = false,
+        val isHeaderVisible: Boolean = true,
         val content: Content
     ) {
         sealed class Content(

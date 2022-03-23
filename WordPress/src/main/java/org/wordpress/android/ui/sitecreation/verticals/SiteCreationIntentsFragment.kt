@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
@@ -59,20 +62,39 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
+        appBarLayout.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
-        setHeaderVisibility(uiState.isAppBarTitleVisible)
+        updateTitleVisibility(uiState.isAppBarTitleVisible)
+        animateHeaderVisibility(uiState.isHeaderVisible)
     }
 
-    private fun SiteCreationIntentsFragmentBinding.setHeaderVisibility(shouldShowAppBarTitle: Boolean) {
+    private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldShowAppBarTitle: Boolean) {
         // In landscape mode this code doesn't apply, since the header texts are not in the layout
         uiHelper.fadeInfadeOutViews(
                 siteCreationIntentsTitlebar.appBarTitle,
                 siteCreationIntentsHeader.title,
                 shouldShowAppBarTitle
         )
+    }
+
+    private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldHeaderBeVisible: Boolean) {
+        val headerLayout = siteCreationIntentsHeader.root
+
+        val onAnimationEnd = Runnable {
+            headerLayout.isVisible = shouldHeaderBeVisible
+        }
+
+        when {
+            !shouldHeaderBeVisible && headerLayout.isVisible -> {
+                headerLayout.animate().translationY(-headerLayout.height.toFloat()).withEndAction(onAnimationEnd)
+            }
+            shouldHeaderBeVisible && headerLayout.isGone -> {
+                headerLayout.animate().translationY(0f).withEndAction(onAnimationEnd)
+            }
+        }
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
@@ -87,6 +109,7 @@ class SiteCreationIntentsFragment : Fragment() {
         siteCreationIntentsTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
         setScrollListener()
+        input.setOnFocusChangeListener { _, _ -> viewModel.onInputFocused() }
     }
 
     private fun SiteCreationIntentsFragmentBinding.setScrollListener() {
