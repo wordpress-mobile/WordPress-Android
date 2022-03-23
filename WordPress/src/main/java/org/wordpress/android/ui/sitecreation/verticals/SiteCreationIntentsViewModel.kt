@@ -104,8 +104,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
             if (!state.isHeaderVisible) return
             updateUiState(
                     state.copy(
-                            isHeaderVisible = false,
-                            isAppBarTitleVisible = true
+                            isAppBarTitleVisible = true,
+                            isHeaderVisible = false
                     )
             )
         }
