@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import android.animation.LayoutTransition
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -62,7 +61,6 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
-        root.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
