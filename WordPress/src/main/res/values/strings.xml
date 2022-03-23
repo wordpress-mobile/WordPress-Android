@@ -627,6 +627,7 @@
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Reminders and prompts</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -3906,6 +3907,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
     <string name="blogging_reminders_notification_time">Notification time</string>
+    <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we\’ll send you a reminder!</string>
+    <string name="blogging_reminders_prompt_title">Include daily prompt</string>
+    <string name="blogging_reminders_prompt_subtitle">Reminder will include a daily prompt</string>
+    <string name="blogging_prompt_set_reminders">Set reminders</string>
 
     <!-- Stats module disabled error view -->
     <string name="stats_disabled_title">Looking for stats?</string>
