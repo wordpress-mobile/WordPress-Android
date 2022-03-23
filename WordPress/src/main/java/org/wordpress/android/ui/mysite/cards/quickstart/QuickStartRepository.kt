@@ -195,7 +195,7 @@ class QuickStartRepository
                 R.string.quick_start_site_menu_tab_message_short,
                 resourceProvider.getString(R.string.my_site_menu_tab_title)
         )
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
+        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(htmlCompat.fromHtml(shortQuickStartMessage)))))
         _onQuickStartSiteMenuStep.postValue(QuickStartSiteMenuStep(true, task))
     }
 

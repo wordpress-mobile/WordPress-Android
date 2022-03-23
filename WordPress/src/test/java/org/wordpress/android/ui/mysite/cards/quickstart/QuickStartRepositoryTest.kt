@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.mysite.cards.quickstart
 
+import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar.Callback
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
@@ -22,6 +24,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -57,7 +61,16 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
+    private lateinit var quickStartSiteMenuStep: MutableList<QuickStartSiteMenuStep?>
     private val siteLocalId = 1
+
+    private val siteMenuTasks = listOf(
+            QuickStartTask.VIEW_SITE,
+            QuickStartTask.ENABLE_POST_SHARING,
+            QuickStartTask.EXPLORE_PLANS
+    )
+
+    private val nonSiteMenuTasks = QuickStartTask.values().subtract(siteMenuTasks)
 
     @InternalCoroutinesApi
     @Before
@@ -82,12 +95,16 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
+        quickStartSiteMenuStep = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
                     ?.let { snackbars.add(it) }
         }
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
+        }
+        quickStartRepository.onQuickStartSiteMenuStep.observeForever {
+            quickStartSiteMenuStep.add(it)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -140,6 +157,49 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.completeTask(QuickStartTask.UPDATE_SITE_TITLE)
 
         verifyZeroInteractions(quickStartStore)
+    }
+
+    /* QUICK START REQUEST SITE MENU STEP */
+
+    @Test
+    fun `given task origin site menu tab, when site menu task is activated, then site menu step is not started`() {
+        quickStartRepository.quickStartTaskOrigin = MySiteTabType.SITE_MENU
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(siteMenuTasks.random())
+
+        assertThat(quickStartSiteMenuStep).isEmpty()
+    }
+
+    @Test
+    fun `given task origin dashboard tab, when site menu task is activated, then site menu step is started`() {
+        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        initQuickStartInProgress()
+        val task = siteMenuTasks.random()
+
+        quickStartRepository.setActiveTask(task)
+
+        assertThat(quickStartSiteMenuStep.last()).isEqualTo(QuickStartSiteMenuStep(true, task))
+    }
+
+    @Test
+    fun `given task origin dashboard tab, when non site menu task is activated, then site menu step is not started`() {
+        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(nonSiteMenuTasks.random())
+
+        assertThat(quickStartSiteMenuStep).isEmpty()
+    }
+
+    @Test
+    fun `given task origin dashboard tab, when site menu task is activated, then snackbar is shown`() {
+        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(siteMenuTasks.random())
+
+        assertThat(snackbars).isNotEmpty
     }
 
     /* QUICK START REQUEST NEXT STEP */
@@ -238,5 +298,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(siteLocalId.toLong()))
                 .thenReturn(nextUncompletedTask)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
+        whenever(resourceProvider.getString(anyOrNull(), anyOrNull())).thenReturn("")
+        whenever(htmlCompat.fromHtml(anyOrNull(), eq(HtmlCompat.FROM_HTML_MODE_COMPACT))).thenReturn("")
     }
 }
