@@ -7,6 +7,8 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerTitle"
+        android:lineSpacingExtra="-4sp"
+        android:letterSpacing="0.01"
         android:paddingBottom="@dimen/margin_large"
         app:fixWidowWords="true"
         android:text="@string/new_site_creation_intents_header_title" />
@@ -15,7 +17,8 @@
         android:id="@+id/subtitle"
         style="@style/ModalLayoutPickerSubtitle"
         android:paddingBottom="@dimen/margin_extra_medium_large"
-        android:lineSpacingMultiplier="1.2"
+        android:lineSpacingExtra="5sp"
+        android:letterSpacing="0.01"
         app:fixWidowWords="true"
         android:text="@string/new_site_creation_intents_header_subtitle" />
 </LinearLayout>
