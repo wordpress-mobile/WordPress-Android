@@ -627,6 +627,7 @@
     <string name="site_settings_timezone_title">Timezone</string>
     <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
     <string name="site_settings_blogging_reminders_title">Blogging reminders</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Reminders and prompts</string>
     <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
@@ -3191,7 +3192,7 @@
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
-    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type you own</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -3217,6 +3218,16 @@
     <string name="new_site_creation_clear_all_content_description">Clear</string>
     <string name="new_site_creation_site_preview_content_description">Showing site preview</string>
     <string name="new_site_creation_preview_back_pressed_warning">You may lose your progress. Are you sure you want to exit?</string>
+
+    <!-- Site Creation intents -->
+    <string name="site_creation_intents_business_services_intent">Business &amp; Services</string>
+    <string name="site_creation_intents_food_intent">Food</string>
+    <string name="site_creation_intents_health_intent">Health</string>
+    <string name="site_creation_intents_home_improvement_intent">Home Improvement</string>
+    <string name="site_creation_intents_local_services_intent">Local Services</string>
+    <string name="site_creation_intents_news_intent">News</string>
+    <string name="site_creation_intents_photography_intent">Photography</string>
+    <string name="site_creation_intents_travel_intent">Travel</string>
 
     <!-- App rating dialog -->
     <string name="app_rating_title">Enjoying WordPress?</string>
@@ -3896,6 +3907,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_reminders_tip">Tip</string>
     <string name="blogging_reminders_tip_message">Posting regularly can help keep your readers engaged, and attract new visitors to your site.</string>
     <string name="blogging_reminders_notification_time">Notification time</string>
+    <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we\’ll send you a reminder!</string>
+    <string name="blogging_reminders_prompt_title">Include daily prompt</string>
+    <string name="blogging_reminders_prompt_subtitle">Reminder will include a daily prompt</string>
+    <string name="blogging_prompt_set_reminders">Set reminders</string>
 
     <!-- Stats module disabled error view -->
     <string name="stats_disabled_title">Looking for stats?</string>
@@ -3942,4 +3958,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_logo_description">Automattic logo</string>
     <string name="about_automattic_back_icon_description">Back icon</string>
     <string name="about_automattic_app_icon_description">App icon</string>
+
+    <!-- Blogging prompts -->
+    <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
+    <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
 </resources>

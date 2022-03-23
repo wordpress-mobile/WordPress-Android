@@ -96,4 +96,7 @@
     <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_100</color>
     <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_40</color>
     <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_90</color>
+
+    <!-- Site creation  -->
+    <color name="site_creation_intent_item_emoji_bg">#3d3d3d</color>
 </resources>
