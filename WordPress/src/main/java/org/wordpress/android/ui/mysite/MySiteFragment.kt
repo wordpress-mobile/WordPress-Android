@@ -33,7 +33,6 @@ import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
@@ -117,15 +116,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 avatar.scaleY = newScale
             }
         })
-    }
-
-    private fun MySiteFragmentBinding.setupTabs(tabTitles: List<UiString>) {
-        val adapter = MySiteTabsAdapter(this@MySiteFragment, tabTitles)
-        viewPager.adapter = adapter
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = uiHelpers.getTextOfUiString(requireContext(), tabTitles[position])
-        }.attach()
     }
 
     private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
