@@ -22,8 +22,8 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include
-                android:id="@+id/site_creation_header_item"
-                layout="@layout/site_creation_header_item"
+                android:id="@+id/site_creation_intents_header"
+                layout="@layout/site_creation_intents_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
