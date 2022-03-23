@@ -654,6 +654,7 @@
 
     <!-- Site Intent Question -->
     <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_large</dimen>
+    <dimen name="siq_header_scroll_snap_threshold">-96dp</dimen>
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>

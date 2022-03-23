@@ -9,9 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -73,7 +72,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
             item.onItemTapped = { intentSelected(slug, vertical) }
             return@mapIndexed item
         }
-        _uiState.value = DefaultItems(items = newItems)
+        _uiState.value = IntentsUiState(
+                content = IntentsUiState.Content.DefaultItems(items = newItems)
+        )
     }
 
     private fun intentSelected(slug: String, vertical: String) {
@@ -82,12 +83,32 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _onIntentSelected.value = vertical
     }
 
-    sealed class IntentsUiState(
-        val items: List<IntentListItemUiState>
+    /**
+     * Appbar scrolled event used to set the header and title visibility
+     * @param verticalOffset the scroll state vertical offset
+     * @param scrollThreshold the scroll threshold
+     */
+    fun onAppBarOffsetChanged(verticalOffset: Int, scrollThreshold: Int) {
+        val shouldHeaderBeVisible = verticalOffset < scrollThreshold
+        uiState.value?.let { state ->
+            if (state.isAppBarTitleVisible == shouldHeaderBeVisible) return // No change
+            updateUiState(
+                    state.copy(isAppBarTitleVisible = shouldHeaderBeVisible)
+            )
+        }
+    }
+
+    data class IntentsUiState(
+        val isAppBarTitleVisible: Boolean = false,
+        val content: Content
     ) {
-        class DefaultItems(items: List<IntentListItemUiState>) : IntentsUiState(
-                items = items
-        )
+        sealed class Content(
+            val items: List<IntentListItemUiState>
+        ) {
+            class DefaultItems(
+                items: List<IntentListItemUiState>
+            ) : Content(items = items)
+        }
     }
 
     sealed class IntentListItemUiState {

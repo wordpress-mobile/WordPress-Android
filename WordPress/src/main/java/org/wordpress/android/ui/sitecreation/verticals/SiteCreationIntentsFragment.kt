@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.appbar.AppBarLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationIntentsFragmentBinding
@@ -57,13 +58,21 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
-        siteCreationHeaderItem.title.setText(R.string.new_site_creation_intents_header_title)
-        siteCreationHeaderItem.subtitle.setText(R.string.new_site_creation_intents_header_subtitle)
         recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
-        (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.items)
+        (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
+        setHeaderVisibility(uiState.isAppBarTitleVisible)
+    }
+
+    private fun SiteCreationIntentsFragmentBinding.setHeaderVisibility(shouldShowAppBarTitle: Boolean) {
+        // In landscape mode this code doesn't apply, since the header texts are not in the layout
+        uiHelper.fadeInfadeOutViews(
+                siteCreationIntentsTitlebar.appBarTitle,
+                siteCreationIntentsHeader.title,
+                shouldShowAppBarTitle
+        )
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
@@ -77,6 +86,15 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupActionListeners() {
         siteCreationIntentsTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
+        setScrollListener()
+    }
+
+    private fun SiteCreationIntentsFragmentBinding.setScrollListener() {
+        val scrollThreshold = resources.getDimension(R.dimen.siq_header_scroll_snap_threshold).toInt()
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
+        })
+        viewModel.onAppBarOffsetChanged(verticalOffset = 0, scrollThreshold)
     }
 
     override fun onDestroyView() {
