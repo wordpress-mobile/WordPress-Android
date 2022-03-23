@@ -120,10 +120,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
-        if (currentOffset == 0)
-            collapsingToolbar.title = siteTitle
-        else
-            collapsingToolbar.title = null
+        if (currentOffset == 0) collapsingToolbar.title = siteTitle
+        else collapsingToolbar.title = null
     }
 
     private fun MySiteFragmentBinding.animateSiteInfoCard(percentage: Int) {
@@ -193,8 +191,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.showAppbar() {
         header.setVisible(true)
-        if (viewModel.isMySiteTabsEnabled)
-            showSiteInfoToolbarWithTabs()
+        if (viewModel.isMySiteTabsEnabled) showSiteInfoToolbarWithTabs()
         else showSiteInfoToolbarWithoutTabs()
     }
 
@@ -207,7 +204,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.showSiteInfoToolbarWithoutTabs() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_height).toInt() // New height in pixels
+        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_height).toInt()
         appbarMain.layoutParams.height = newHeight
         updateToolbarBottomMargin(0)
         tabLayout.setVisible(false)
@@ -215,7 +212,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.updateToolbarBottomMargin(appBarHeight: Int) {
-        val bottomMargin  =  (appBarHeight/resources.displayMetrics.density).toInt()
+        val bottomMargin = (appBarHeight / resources.displayMetrics.density).toInt()
         val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
         layoutParams?.setMargins(0, 0, 0, bottomMargin)
         toolbarMain.layoutParams = layoutParams
@@ -232,7 +229,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.hideSiteInfoToolbarView() {
         val newHeight = resources.getDimension(R.dimen.app_bar_with_no_site_info_height).toInt()
-        appbarMain.setExpanded(false,true)
+        appbarMain.setExpanded(false, true)
         appbarMain.layoutParams.height = newHeight
         updateToolbarBottomMargin(0)
         appbarMain.requestLayout()
