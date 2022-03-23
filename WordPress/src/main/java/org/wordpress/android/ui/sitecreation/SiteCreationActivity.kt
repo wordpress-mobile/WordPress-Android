@@ -33,6 +33,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel
+import org.wordpress.android.ui.sitecreation.verticals.IntentsScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
@@ -41,6 +42,7 @@ import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class SiteCreationActivity : LocaleAwareActivity(),
+        IntentsScreenListener,
         DomainsScreenListener,
         SitePreviewScreenListener,
         OnHelpClickedListener,
@@ -121,6 +123,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
         hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
             mainViewModel.onSiteDesignSelected(design.template)
         })
+    }
+
+    override fun onIntentSelected(intent: String) {
+        mainViewModel.onSiteIntentSelected(intent)
     }
 
     override fun onDomainSelected(domain: String) {

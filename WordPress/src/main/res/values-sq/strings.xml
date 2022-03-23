@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-19 12:23:14+0000
+Translation-Revision-Date: 2022-03-08 14:24:22+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="login_select_email_client">Cilin aplikacion email përdorni?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Pati një problem komunikimi me sajtin. U kthye një kod gabimi HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">S’arrihet të lexohet sajti WordPress tek ajo URL. Prekni ikonën e ndihmës që të shihni PBR.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Duket se në këtë sajt bllokohen thirrjet XML-RPC (kod gabimi 401). Nëse dështon përpjekja për hyrje, prekni ikonën e ndihmës që të shihni PBR.</string>
+    <string name="login_error_xml_rpc_services_disabled">Shërbimet XML-RPC janë të çaktivizuara për këtë sajt.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Pult</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Kërkimi juaj përmban shenja të pambuluara në përkatësi WordPress.com. Lejohen shenjat vijuese: A–Z, a–z, 0–9.</string>
+    <string name="my_site_error_within_card_subtitle">Kontrolloni lidhjen tuaj internet dhe rifreskoni faqen.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Shko te statistikat</string>
+    <string name="my_site_todays_stat_card_title">Statistikat e Sotme</string>
+    <string name="error_edit_notification">Ndodhi një gabim teksa përditësohej lënda e njoftimit</string>
+    <string name="reader_comment_menu_edit">Përpunojeni</string>
     <string name="comment_moderation_error">S’u arrit të moderohen komente</string>
     <string name="reader_comment_menu_trash">Shpjere te Hedhurinat</string>
     <string name="reader_comment_menu_spam">Shënoje si të Padëshiruar</string>

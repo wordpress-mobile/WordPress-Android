@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <string-array name="site_creation_intents_slugs">
+        <item>business_services</item>
+        <item>food</item>
+        <item>health</item>
+        <item>home_improvement</item>
+        <item>local_services</item>
+        <item>news</item>
+        <item>photography</item>
+        <item>travel</item>
+    </string-array>
+    <string-array name="site_creation_intents_strings">
+        <item>@string/site_creation_intents_business_services_intent</item>
+        <item>@string/site_creation_intents_food_intent</item>
+        <item>@string/site_creation_intents_health_intent</item>
+        <item>@string/site_creation_intents_home_improvement_intent</item>
+        <item>@string/site_creation_intents_local_services_intent</item>
+        <item>@string/site_creation_intents_news_intent</item>
+        <item>@string/site_creation_intents_photography_intent</item>
+        <item>@string/site_creation_intents_travel_intent</item>
+    </string-array>
+    <string-array name="site_creation_intents_emojis">
+        <item>&#128188;</item><!-- Briefcase -->
+        <item>&#127828;</item><!-- Cheeseburger -->
+        <item>&#10084;</item><!-- Heart -->
+        <item>&#127968;</item><!-- House -->
+        <item>&#8505;</item><!-- Information -->
+        <item>&#128478;</item><!-- Newspaper -->
+        <item>&#128247;</item><!-- Camera -->
+        <item>&#9992;</item><!-- Airplane -->
+    </string-array>
+</resources>

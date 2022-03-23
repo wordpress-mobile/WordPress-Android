@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -1097,10 +1098,16 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {
+    public static void viewHistoryDetailForResult(@NonNull final Activity activity, @NonNull final Revision revision,
+                                                  @NonNull final long[] previousRevisionsIds, final long postId,
+                                                  final long siteId) {
         Intent intent = new Intent(activity, HistoryDetailActivity.class);
-        intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
-        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, new ArrayList<>(revisions));
+        intent.putExtra(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION, revision);
+        final Bundle extras = new Bundle();
+        extras.putLongArray(HistoryDetailContainerFragment.EXTRA_PREVIOUS_REVISIONS_IDS, previousRevisionsIds);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_POST_ID, postId);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_SITE_ID, siteId);
+        intent.putExtras(extras);
         activity.startActivityForResult(intent, RequestCodes.HISTORY_DETAIL);
     }
 

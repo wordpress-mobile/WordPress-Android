@@ -12,19 +12,21 @@ import androidx.viewbinding.ViewBinding
 import org.wordpress.android.databinding.BloggingRemindersCaptionBinding
 import org.wordpress.android.databinding.BloggingRemindersDayButtonsBinding
 import org.wordpress.android.databinding.BloggingRemindersIllustrationBinding
+import org.wordpress.android.databinding.BloggingRemindersPromptSwitchBinding
 import org.wordpress.android.databinding.BloggingRemindersTextHighEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTextMediumEmphasisBinding
 import org.wordpress.android.databinding.BloggingRemindersTimeBinding
 import org.wordpress.android.databinding.BloggingRemindersTipBinding
 import org.wordpress.android.databinding.BloggingRemindersTitleBinding
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersDiffCallback.DayButtonsPayload
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Caption
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.DayButtons.DayItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.EmphasizedText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.HighEmphasisText
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Illustration
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.MediumEmphasisText
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.PromptSwitch
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.TimeItem
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
@@ -167,6 +169,16 @@ sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding:
         fun onBind(item: TimeItem) = with(binding) {
             uiHelpers.setTextOrHide(timeButton, item.time)
             timeItem.setOnClickListener { item.onClick.click() }
+        }
+    }
+
+    class PromptSwitchViewHolder(parentView: ViewGroup) :
+            BloggingRemindersViewHolder<BloggingRemindersPromptSwitchBinding>(
+                    parentView.viewBinding(BloggingRemindersPromptSwitchBinding::inflate)
+            ) {
+        fun onBind(item: PromptSwitch) = with(binding) {
+            includePromptSwitch.isChecked = item.isToggled
+            includePromptSwitch.setOnCheckedChangeListener { _, _ -> item.onClick.click() }
         }
     }
 }

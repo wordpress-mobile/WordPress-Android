@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-22 07:14:07+0000
+Translation-Revision-Date: 2022-03-08 05:30:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles en los dominios de WordPress.com. Solo se permiten caracteres alfanuméricos.</string>
+    <string name="login_select_email_client">¿Qué aplicación de correo electrónico usas?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Ha habido un problema al comunicar con el sitio. Se ha devuelto un código de error HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Las llamadas XML-RPC parecen bloqueadas en este sitio (código de error 401). Si el intento de acceso falla, toca en el icono de ayuda para ver las FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">No se ha podido leer el sitio WordPress en esa URL. Toca en el icono de ayuda para ver las FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled">Los servicios XML-RPC están desactivados en este sitio.</string>
+    <string name="my_site_menu_tab_title">Menú</string>
+    <string name="my_site_dashboard_tab_title">Escritorio</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles en los dominios de WordPress.com. Se permiten los siguientes caracteres: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Comprueba tu conexión a Internet y actualiza la página.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir a las estadísticas</string>
     <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>

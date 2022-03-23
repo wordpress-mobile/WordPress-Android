@@ -1,0 +1,8 @@
+19.4:
+- Paletas de color del tema/por defecto/personalizadas
+- Mejor texto de error de acceso
+- Selección de la aplicación de verificación del correo electrónico
+- Ningún comentario anidado si se borra el comentario principal
+- Ajuste de las imágenes después de la reorientación a mitad de la captura
+- Corrección de la barra de progreso para las ediciones de iconos de «Mi sitio»
+- Reorganización de la lista por defecto de información

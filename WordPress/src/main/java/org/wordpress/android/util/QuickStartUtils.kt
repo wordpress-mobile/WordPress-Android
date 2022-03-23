@@ -276,7 +276,7 @@ object QuickStartUtils {
                 context,
                 RequestCodes.QUICK_START_REMINDER_RECEIVER,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.set(
                 AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + QUICK_START_REMINDER_INTERVAL,
@@ -292,7 +292,7 @@ object QuickStartUtils {
                 context,
                 RequestCodes.QUICK_START_REMINDER_RECEIVER,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)
     }

@@ -100,6 +100,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
@@ -183,6 +184,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
 
@@ -1208,6 +1210,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mBloggingRemindersFeatureConfig.isEnabled()) {
             removeBloggingRemindersSettings();
         } else {
+            if (mBloggingPromptsFeatureConfig.isEnabled()) {
+                mBloggingRemindersPref.setTitle(R.string.site_settings_blogging_reminders_and_prompts_title);
+            }
+
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
                     .get(BloggingRemindersViewModel.class);
             BloggingReminderUtils.observeBottomSheet(
@@ -1934,7 +1940,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * This removes all preferences from the General preference group, except for Blogging Reminders – in practice it
      * is removed as well, but then added back.
-     *
+     * <p>
      * In the future, we should consider either moving the Blogging Reminders preference to its own group or
      * replace this approach with something more scalable and efficient.
      */

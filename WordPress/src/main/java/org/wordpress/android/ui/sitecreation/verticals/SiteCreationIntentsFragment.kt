@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationIntentsFragmentBinding
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
@@ -58,9 +59,18 @@ class SiteCreationIntentsFragment : Fragment() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         siteCreationHeaderItem.title.setText(R.string.new_site_creation_intents_header_title)
         siteCreationHeaderItem.subtitle.setText(R.string.new_site_creation_intents_header_subtitle)
+        recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
     }
 
-    private fun setupViewModel() {
+    private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
+        (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.items)
+    }
+
+    private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
+        viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
+        viewModel.onIntentSelected.observe(viewLifecycleOwner, (requireActivity() as
+                IntentsScreenListener)::onIntentSelected)
+        viewModel.initializeFromResources(resources)
         viewModel.start()
     }
 

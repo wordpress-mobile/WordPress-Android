@@ -1,0 +1,8 @@
+19.4 :
+- Palettes colorées thématiques/par défaut/perso
+- Sélection de l’appli pour la vérification de l’adresse e-mail
+- Pas de commentaires imbriqués possibles si le parent a été supprimé
+- Ajustement des images après leur réorientation à mi-capture
+- Barre de progression améliorée pour les modifications de l’icône du site
+- Liste par défaut des tendances réorganisée
+- Plus de masquage des erreurs de connexion par le clavier

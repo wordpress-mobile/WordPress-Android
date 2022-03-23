@@ -12,11 +12,7 @@ class GetBloggingPromptUseCase @Inject constructor() {
                 BloggingPrompt(
                         text = "This is a blogging prompt!",
                         numberOfAnswers = 7,
-                        template = """
-                            <!-- wp:pullquote {"textAlign":"center"} -->
-                            <figure class="wp-block-pullquote has-text-align-center"><blockquote><p><strong>Prompt text</strong></p><cite><a href="https://wordpress.com/">WordPress</a> - </cite></blockquote></figure>
-                            <!-- /wp:pullquote -->
-                            """
+                        template = ""
                 )
         )
     }
