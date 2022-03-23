@@ -28,7 +28,11 @@ class CardsBuilder @Inject constructor(
                             ?.let { add(it) }
                     addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
                     if (bloggingPromptsFeatureConfig.isEnabled()) {
-                        add(bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams))
+                        add(
+                                bloggingPromptCardBuilder.build(
+                                        dashboardCardsBuilderParams.bloggingPromptCardBuilderParams
+                                )
+                        )
                     }
                 }
             }.toList()

@@ -126,7 +126,8 @@ class CardsBuilderTest : BaseUnitTest() {
 
     private fun DashboardCards.findPostCard() = this.cards.find { it is PostCard } as? PostCard
 
-    private fun DashboardCards.findBloggingPromptCard() = this.cards.find { it is BloggingPromptCard } as? BloggingPromptCard
+    private fun DashboardCards.findBloggingPromptCard() =
+            this.cards.find { it is BloggingPromptCard } as? BloggingPromptCard
 
     private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
 
