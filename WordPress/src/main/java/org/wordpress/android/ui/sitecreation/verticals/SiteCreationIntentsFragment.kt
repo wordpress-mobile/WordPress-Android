@@ -69,6 +69,7 @@ class SiteCreationIntentsFragment : Fragment() {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         animateHeaderVisibility(uiState.isHeaderVisible)
+        updateContinueButtonVisibility(uiState.isContinueButtonVisible)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldShowAppBarTitle: Boolean) {
@@ -78,6 +79,11 @@ class SiteCreationIntentsFragment : Fragment() {
                 siteCreationIntentsHeader.title,
                 shouldShowAppBarTitle
         )
+    }
+
+    private fun SiteCreationIntentsFragmentBinding.updateContinueButtonVisibility(shouldBeVisible: Boolean) {
+        continueButtonContainer.isVisible = shouldBeVisible
+        continueButtonShadow.isVisible = shouldBeVisible
     }
 
     private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldShow: Boolean) {
