@@ -1,24 +1,20 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragmentBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
+import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
 import org.wordpress.android.util.extensions.exhaustive
-import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
-class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
+class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel
 
@@ -27,18 +23,6 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
 
         @JvmStatic
         fun newInstance(): BloggingPromptsOnboardingDialogFragment = BloggingPromptsOnboardingDialogFragment()
-    }
-
-    override fun getTheme(): Int {
-        return R.style.BloggingPromptsOnboardingDialogFragment
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(BloggingPromptsOnboardingViewModel::class.java)
-        dialog.setStatusBarAsSurfaceColor()
-        return dialog
     }
 
     override fun onCreateView(
@@ -58,6 +42,12 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onPrimaryButtonClick() = viewModel.onTryNow()
+
+    override fun onSecondaryButtonClick() {
+
     }
 
     private fun setupTryNow(tryNow: MaterialButton) {

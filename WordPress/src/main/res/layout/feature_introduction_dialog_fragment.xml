@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,6 +19,44 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/content_container"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/header_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:alpha="@dimen/material_emphasis_medium"
+                    android:contentDescription="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_add_outline_grey_dark_24dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/content_container"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_container">
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
@@ -34,7 +73,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/try_now"
+                android:id="@+id/primary_button"
                 style="@style/WordPress.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,26 +81,26 @@
                 android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_large"
-                android:text="@string/blogging_prompts_onboarding_try_it_now"
                 android:textAllCaps="false"
-                app:layout_constraintBottom_toTopOf="@+id/remind_me"
+                app:layout_constraintBottom_toTopOf="@+id/secondary_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Primary button" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/remind_me"
+                android:id="@+id/secondary_button"
                 style="@style/QuickStartPromptDialogSecondaryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_large"
                 android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"
-                android:text="@string/blogging_prompts_onboarding_remind_me"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/try_now" />
+                app:layout_constraintTop_toBottomOf="@+id/primary_button"
+                tools:text="Secondary button" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
