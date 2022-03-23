@@ -111,9 +111,24 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
+    fun onSearchTextChanged(query: String) {
+        // TODO Implement search
+        uiState.value?.let { state ->
+            updateUiState(
+                    state.copy(
+                            isContinueButtonVisible = query.isNotEmpty(),
+                            searchQuery = query,
+                            content = IntentsUiState.Content.Empty
+                    )
+            )
+        }
+    }
+
     data class IntentsUiState(
         val isAppBarTitleVisible: Boolean = false,
         val isHeaderVisible: Boolean = true,
+        val isContinueButtonVisible: Boolean = false,
+        val searchQuery: String? = null,
         val content: Content
     ) {
         sealed class Content(
@@ -122,6 +137,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
             class DefaultItems(
                 items: List<IntentListItemUiState>
             ) : Content(items = items)
+
+            object Empty : Content(emptyList())
         }
     }
 
