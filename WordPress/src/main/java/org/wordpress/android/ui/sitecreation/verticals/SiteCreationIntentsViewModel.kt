@@ -112,6 +112,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun onInputFocused() {
         uiState.value?.let { state ->
             if (!state.isHeaderVisible) return
+            analyticsTracker.trackSiteIntentQuestionSearchFocused()
             updateUiState(
                     state.copy(
                             isAppBarTitleVisible = true,
