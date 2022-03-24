@@ -21,6 +21,8 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -265,16 +267,12 @@ class MySiteViewModel @Inject constructor(
 
         val siteInfo = siteInfoCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
 
-        scrollToQuickStartTaskIfNecessary(
-                activeTask,
-                if (isMySiteTabsEnabled) {
-                    (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
-                            .indexOfFirst { it.activeQuickStartItem }
-                } else {
-                    (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
-                            .indexOfFirst { it.activeQuickStartItem }
-                }
-        )
+        if (activeTask != null) {
+            scrollToQuickStartTask(
+                    activeTask,
+                    getPositionOfQuickStartItem(siteItems)
+            )
+        }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
                 tabsUiState = tabsUiState ?: TabsUiState(
@@ -292,6 +290,15 @@ class MySiteViewModel @Inject constructor(
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
     }
+
+    private fun getPositionOfQuickStartItem(siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>) =
+            if (isMySiteTabsEnabled) {
+                (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
+                        .indexOfFirst { it.activeQuickStartItem }
+            } else {
+                (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
+                        .indexOfFirst { it.activeQuickStartItem }
+            }
 
     @Suppress("LongParameterList")
     private fun buildSiteSelectedState(
@@ -443,15 +450,18 @@ class MySiteViewModel @Inject constructor(
         }.toList()
     }
 
-    private fun scrollToQuickStartTaskIfNecessary(
-        quickStartTask: QuickStartTask?,
+    private fun scrollToQuickStartTask(
+        quickStartTask: QuickStartTask,
         position: Int
     ) {
-        if (quickStartTask == null) {
-            _activeTaskPosition.postValue(null)
-        } else if (_activeTaskPosition.value?.first != quickStartTask && position >= 0) {
+        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderTask(quickStartTask,position)) {
             _activeTaskPosition.postValue(quickStartTask to position)
         }
+    }
+
+    private fun isSiteHeaderTask(quickStartTask: QuickStartTask, position: Int): Boolean {
+        return if (position == -1 && (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
+        else position >= 0
     }
 
     @Suppress("ComplexMethod")
