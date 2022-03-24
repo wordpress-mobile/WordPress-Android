@@ -60,6 +60,15 @@ class SiteCreationIntentsFragment : Fragment() {
         }
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        // We add the textChanged listener after the viewState has been restored otherwise the viewModel callback
+        // gets called when the system restores the value to the EditText
+        // which results in an unwanted uiState update.
+        binding?.addSearchTextChangedListener()
+    }
+
+
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
@@ -114,7 +123,12 @@ class SiteCreationIntentsFragment : Fragment() {
         continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
         input.setOnFocusChangeListener { _, _ -> viewModel.onInputFocused() }
-        input.doOnTextChanged { text, _, _, _ -> viewModel.onSearchTextChanged(text?.toString() ?: "") }
+    }
+
+    private fun SiteCreationIntentsFragmentBinding.addSearchTextChangedListener() {
+        input.doOnTextChanged { text, _, _, _ ->
+            viewModel.onSearchTextChanged(text?.toString() ?: "")
+        }
     }
 
     private fun SiteCreationIntentsFragmentBinding.setScrollListener() {
