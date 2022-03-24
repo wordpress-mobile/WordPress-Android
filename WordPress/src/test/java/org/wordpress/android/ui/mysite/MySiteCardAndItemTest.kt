@@ -10,8 +10,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState.Visible
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState.Visible
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -42,8 +42,8 @@ class MySiteCardAndItemTest {
     private fun initSiteInfoCard(
         showTitleFocusPoint: Boolean = false,
         showIconFocusPoint: Boolean = false
-    ): SiteInfoCard {
-        return SiteInfoCard(
+    ): SiteInfoHeaderCard {
+        return SiteInfoHeaderCard(
                 title = "test",
                 url = "url",
                 iconState = Visible(null),

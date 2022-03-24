@@ -20,7 +20,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
@@ -137,8 +136,6 @@ class CardsBuilderTest {
 
     private fun List<MySiteCardAndItem>.findQuickActionsCard() =
             this.find { it is QuickActionsCard } as QuickActionsCard?
-
-    private fun List<MySiteCardAndItem>.findSiteInfoCard() = this.find { it is SiteInfoCard } as SiteInfoCard?
 
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
 

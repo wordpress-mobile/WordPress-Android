@@ -24,8 +24,8 @@ import org.wordpress.android.databinding.MySiteInfoCardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
@@ -33,10 +33,10 @@ import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.QuickStartFocusPoint
 import javax.inject.Inject
@@ -174,33 +174,33 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        siteInfo.loadMySiteDetails(state.siteInfo)
+        siteInfo.loadMySiteDetails(state.siteInfoHeader)
         showAppbar()
     }
 
-    private fun MySiteInfoCardBinding.loadMySiteDetails(site: SiteInfoCard) {
-        siteTitle = site.title
-        if (site.iconState is IconState.Visible) {
+    private fun MySiteInfoCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
+        siteTitle = siteInfoHeader.title
+        if (siteInfoHeader.iconState is IconState.Visible) {
             mySiteBlavatar.visibility = View.VISIBLE
-            imageManager.load(mySiteBlavatar, BLAVATAR, site.iconState.url ?: "")
+            imageManager.load(mySiteBlavatar, BLAVATAR, siteInfoHeader.iconState.url ?: "")
             mySiteIconProgress.visibility = View.GONE
-            mySiteBlavatar.setOnClickListener { site.onIconClick.click() }
-        } else if (site.iconState is IconState.Progress) {
+            mySiteBlavatar.setOnClickListener { siteInfoHeader.onIconClick.click() }
+        } else if (siteInfoHeader.iconState is IconState.Progress) {
             mySiteBlavatar.setOnClickListener(null)
             mySiteIconProgress.visibility = View.VISIBLE
             mySiteBlavatar.visibility = View.GONE
         }
-        quickStartIconFocusPoint.setVisibleOrGone(site.showIconFocusPoint)
-        if (site.onTitleClick != null) {
-            siteInfoContainer.title.setOnClickListener { site.onTitleClick.click() }
+        quickStartIconFocusPoint.setVisibleOrGone(siteInfoHeader.showIconFocusPoint)
+        if (siteInfoHeader.onTitleClick != null) {
+            siteInfoContainer.title.setOnClickListener { siteInfoHeader.onTitleClick.click() }
         } else {
             siteInfoContainer.title.setOnClickListener(null)
         }
-        siteInfoContainer.title.text = site.title
-        quickStartTitleFocusPoint.setVisibleOrGone(site.showTitleFocusPoint)
-        siteInfoContainer.subtitle.text = site.url
-        siteInfoContainer.subtitle.setOnClickListener { site.onUrlClick.click() }
-        switchSite.setOnClickListener { site.onSwitchSiteClick.click() }
+        siteInfoContainer.title.text = siteInfoHeader.title
+        quickStartTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showTitleFocusPoint)
+        siteInfoContainer.subtitle.text = siteInfoHeader.url
+        siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
+        switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
     }
 
     private fun MySiteFragmentBinding.showAppbar() {

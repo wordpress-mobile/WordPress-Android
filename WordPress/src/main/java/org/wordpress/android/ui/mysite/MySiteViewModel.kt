@@ -28,7 +28,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -56,7 +56,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -117,7 +117,7 @@ class MySiteViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val siteInfoCardBuilder: SiteInfoCardBuilder,
+    private val siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder,
     private val homePageDataLoader: HomePageDataLoader,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
@@ -263,7 +263,7 @@ class MySiteViewModel @Inject constructor(
                 activeTask = activeTask
         )
 
-        val siteInfo = siteInfoCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
+        val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
 
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
@@ -286,7 +286,7 @@ class MySiteViewModel @Inject constructor(
                             )
                         }
                 ),
-                siteInfo = siteInfo,
+                siteInfoHeader = siteInfo,
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
@@ -936,7 +936,7 @@ class MySiteViewModel @Inject constructor(
 
         data class SiteSelected(
             override val tabsUiState: TabsUiState,
-            val siteInfo: SiteInfoCard,
+            val siteInfoHeader: SiteInfoHeaderCard,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
