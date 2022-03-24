@@ -36,8 +36,6 @@ class SiteCreationIntentsViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
-    private val _onContinueButtonPressed = SingleLiveEvent<String>()
-
     private val _onIntentSelected = SingleLiveEvent<String>()
     val onIntentSelected: LiveData<String> = _onIntentSelected
 
@@ -60,7 +58,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun onContinuePressed() {
         uiState.value?.let { state ->
             analyticsTracker.trackSiteIntentQuestionContinuePressed(state.searchQuery.orEmpty())
-            _onContinueButtonPressed.value = state.searchQuery
+            _onIntentSelected.value = state.searchQuery
         }
     }
 
