@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.verticals
 import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineDispatcher
@@ -65,5 +66,14 @@ class SiteCreationIntentsViewModelTest {
         verify(analyticsTracker).trackSiteIntentQuestionSearchFocused()
         assertThat(viewModel.uiState.value?.isAppBarTitleVisible).isEqualTo(true)
         assertThat(viewModel.uiState.value?.isHeaderVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `when the continue button is pressed the analytics event is emitted with the search input value`() {
+        val valueOfSearchInput = "test vertical"
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        viewModel.onContinuePressed()
+        verify(analyticsTracker).trackSiteIntentQuestionContinuePressed(eq(valueOfSearchInput))
     }
 }
