@@ -8,6 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="@dimen/margin_medium_large"
+    android:maxWidth="@dimen/my_site_content_area"
     android:id="@+id/site_info_card"
     tools:ignore="RtlSymmetry">
 
