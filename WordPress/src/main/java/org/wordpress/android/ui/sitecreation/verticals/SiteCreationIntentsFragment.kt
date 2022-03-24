@@ -121,7 +121,7 @@ class SiteCreationIntentsFragment : Fragment() {
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
         continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
-        input.setOnFocusChangeListener { _, _ -> viewModel.onSearchInputFocused() }
+        input.setOnFocusChangeListener { _, willFocus -> if (willFocus) viewModel.onSearchInputFocused() }
     }
 
     private fun SiteCreationIntentsFragmentBinding.addSearchTextChangedListener() {
