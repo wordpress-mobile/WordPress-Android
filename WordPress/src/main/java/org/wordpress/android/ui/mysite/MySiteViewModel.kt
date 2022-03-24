@@ -345,6 +345,7 @@ class MySiteViewModel @Inject constructor(
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                                 // TODO @klymyam fetch the actual blogging prompt
                                 if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                    @Suppress("MagicNumber")
                                     BloggingPrompt(
                                             "Test Prompt",
                                             19,

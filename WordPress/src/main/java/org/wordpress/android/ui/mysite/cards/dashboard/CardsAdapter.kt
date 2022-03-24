@@ -63,6 +63,7 @@ class CardsAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    @Suppress("ComplexMethod")
     class DashboardCardsDiffUtil(
         private val oldList: List<DashboardCard>,
         private val newList: List<DashboardCard>
