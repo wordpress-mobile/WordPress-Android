@@ -143,16 +143,17 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
 
-    private val tabsUiState = quickStartRepository.onQuickStartSiteMenuStep.switchMap { quickStartSiteMenuStep ->
-        val result = MediatorLiveData<TabsUiState>()
-        /* We want to filter out tabs state livedata update when state is not set in uiModel.
-           Without this check, tabs state livedata merge with state livedata may return a null state
-           when building UiModel. */
-        uiModel.value?.state?.tabsUiState?.let {
-            result.value = it.copy(tabUiStates = it.update(quickStartSiteMenuStep))
-        }
-        result
-    }
+    private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
+            .switchMap { quickStartSiteMenuStep ->
+                val result = MutableLiveData<TabsUiState>()
+                /* We want to filter out tabs state livedata update when state is not set in uiModel.
+                   Without this check, tabs state livedata merge with state livedata may return a null state
+                   when building UiModel. */
+                uiModel.value?.state?.tabsUiState?.let {
+                    result.value = it.copy(tabUiStates = it.update(quickStartSiteMenuStep))
+                }
+                result
+            }
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
