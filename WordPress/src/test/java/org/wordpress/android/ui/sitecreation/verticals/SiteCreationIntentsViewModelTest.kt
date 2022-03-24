@@ -1,8 +1,12 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
+import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineDispatcher
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,12 +22,14 @@ class SiteCreationIntentsViewModelTest {
 
     @Mock lateinit var analyticsTracker: SiteCreationTracker
     @Mock lateinit var dispatcher: CoroutineDispatcher
+    @Mock private lateinit var resources: Resources
 
     private lateinit var viewModel: SiteCreationIntentsViewModel
 
     @Before
     fun setUp() {
         viewModel = SiteCreationIntentsViewModel(analyticsTracker, dispatcher)
+        whenever(resources.getStringArray(any())).thenReturn(emptyArray())
     }
 
     @Test
@@ -39,8 +45,11 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
-    fun `when the back button is pressed an analytics event is emitted`() {
-        viewModel.onBackPressed()
-        verify(analyticsTracker).trackSiteIntentQuestionCanceled()
+    fun `when the search input is focused an analytics event is emitted and the ui is updated`() {
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchInputFocused()
+        verify(analyticsTracker).trackSiteIntentQuestionSearchFocused()
+        assertThat(viewModel.uiState.value?.isAppBarTitleVisible).isEqualTo(true)
+        assertThat(viewModel.uiState.value?.isHeaderVisible).isEqualTo(false)
     }
 }
