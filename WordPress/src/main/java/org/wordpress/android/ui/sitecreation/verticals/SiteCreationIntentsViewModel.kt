@@ -121,7 +121,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     fun onSearchTextChanged(query: String) {
-        // TODO Implement search
+        // TODO Implement search in issue #16053
         uiState.value?.let { state ->
             updateUiState(
                     state.copy(
