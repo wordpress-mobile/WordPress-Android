@@ -1,4 +1,4 @@
-package org.wordpress.android.util
+package org.wordpress.android.util.extensions
 
 import androidx.annotation.IdRes
 import com.google.android.material.appbar.AppBarLayout

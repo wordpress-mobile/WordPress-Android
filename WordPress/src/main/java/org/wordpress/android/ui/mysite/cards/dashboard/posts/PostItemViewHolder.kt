@@ -10,8 +10,8 @@ import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
-import org.wordpress.android.util.setVisible
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.extensions.viewBinding
 
 class PostItemViewHolder(
     parent: ViewGroup,

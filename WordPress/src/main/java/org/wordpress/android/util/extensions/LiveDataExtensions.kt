@@ -1,4 +1,4 @@
-package org.wordpress.android.util
+package org.wordpress.android.util.extensions
 
 /*
  * Copyright (C) 2017 The Android Open Source Project
