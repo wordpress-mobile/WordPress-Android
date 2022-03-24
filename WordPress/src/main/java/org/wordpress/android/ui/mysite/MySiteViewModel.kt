@@ -44,6 +44,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
+import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -138,6 +139,7 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
+    private val _tabsUiState = MutableLiveData<TabsUiState>()
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -146,11 +148,11 @@ class MySiteViewModel @Inject constructor(
     val isMySiteTabsEnabled: Boolean
         get() = mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
 
-    val tabTitles: List<UiString>
+    val orderedTabTypes: List<MySiteTabType>
         get() = if (isMySiteTabsEnabled) {
-            listOf(UiStringRes(R.string.my_site_menu_tab_title), UiStringRes(R.string.my_site_dashboard_tab_title))
+            listOf(MySiteTabType.SITE_MENU, MySiteTabType.DASHBOARD)
         } else {
-            listOf(UiStringRes(R.string.my_site_menu_tab_title))
+            listOf(MySiteTabType.ALL)
         }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
@@ -190,39 +192,30 @@ class MySiteViewModel @Inject constructor(
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
             }.addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
 
-    val uiModel: LiveData<UiModel> = state.map { (
-            currentAvatarUrl,
-            site,
-            showSiteIconProgressBar,
-            isDomainCreditAvailable,
-            scanAvailable,
-            backupAvailable,
-            activeTask,
-            quickStartCategories,
-            pinnedDynamicCard,
-            visibleDynamicCards,
-            cardsUpdate
-    ) ->
-        val state = if (site != null) {
-            cardsUpdate?.checkAndShowSnackbarError()
-            val state = buildSiteSelectedStateAndScroll(
-                    site,
-                    showSiteIconProgressBar,
-                    activeTask,
-                    isDomainCreditAvailable,
-                    quickStartCategories,
-                    pinnedDynamicCard,
-                    visibleDynamicCards,
-                    backupAvailable,
-                    scanAvailable,
-                    cardsUpdate
-            )
-            trackCardsAndItemsShownIfNeeded(state)
-            state
-        } else {
-            buildNoSiteState()
+    val uiModel: LiveData<UiModel> = merge(_tabsUiState, state) { tabsUiState, mySiteUiState ->
+        with(requireNotNull(mySiteUiState)) {
+            val state = if (site != null) {
+                cardsUpdate?.checkAndShowSnackbarError()
+                val state = buildSiteSelectedStateAndScroll(
+                        tabsUiState,
+                        site,
+                        showSiteIconProgressBar,
+                        activeTask,
+                        isDomainCreditAvailable,
+                        quickStartCategories,
+                        pinnedDynamicCard,
+                        visibleDynamicCards,
+                        backupAvailable,
+                        scanAvailable,
+                        cardsUpdate
+                )
+                trackCardsAndItemsShownIfNeeded(state)
+                state
+            } else {
+                buildNoSiteState()
+            }
+            UiModel(currentAvatarUrl.orEmpty(), state)
         }
-        UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
@@ -234,6 +227,7 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("LongParameterList")
     private fun buildSiteSelectedStateAndScroll(
+        tabsUiState: TabsUiState?,
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
@@ -270,7 +264,15 @@ class MySiteViewModel @Inject constructor(
         )
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-                showTabs = isMySiteTabsEnabled,
+                tabsUiState = tabsUiState ?: TabsUiState(
+                        showTabs = isMySiteTabsEnabled,
+                        tabUiStates = orderedTabTypes.map {
+                            TabUiState(
+                                    label = UiStringRes(it.stringResId),
+                                    showQuickStartFocusPoint = false
+                            )
+                        }
+                ),
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
@@ -412,7 +414,10 @@ class MySiteViewModel @Inject constructor(
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
                 displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
-        return NoSites(shouldShowImage = shouldShowImage)
+        return NoSites(
+                tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
+                shouldShowImage = shouldShowImage
+        )
     }
 
     private fun orderForDisplay(
@@ -926,16 +931,29 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class State {
-        abstract val showTabs: Boolean
+        abstract val tabsUiState: TabsUiState
 
         data class SiteSelected(
-            override val showTabs: Boolean,
+            override val tabsUiState: TabsUiState,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
         ) : State()
 
-        data class NoSites(override val showTabs: Boolean = false, val shouldShowImage: Boolean) : State()
+        data class NoSites(
+            override val tabsUiState: TabsUiState,
+            val shouldShowImage: Boolean
+        ) : State()
+    }
+
+    data class TabsUiState(
+        val showTabs: Boolean = false,
+        val tabUiStates: List<TabUiState>
+    ) {
+        data class TabUiState(
+            val label: UiString,
+            val showQuickStartFocusPoint: Boolean = false
+        )
     }
 
     data class TextInputDialogModel(

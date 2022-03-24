@@ -56,7 +56,7 @@ import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -780,7 +780,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
                     return true;
                 }
             });
-            ViewUtilsKt.redirectContextClickToLongPressListener(mImageView);
+            ViewExtensionsKt.redirectContextClickToLongPressListener(mImageView);
         }
     }
 

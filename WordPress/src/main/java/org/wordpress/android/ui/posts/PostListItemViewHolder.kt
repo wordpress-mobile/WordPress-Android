@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.expandTouchTargetArea
-import org.wordpress.android.util.getDrawableFromAttribute
+import org.wordpress.android.util.extensions.expandTouchTargetArea
+import org.wordpress.android.util.extensions.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction

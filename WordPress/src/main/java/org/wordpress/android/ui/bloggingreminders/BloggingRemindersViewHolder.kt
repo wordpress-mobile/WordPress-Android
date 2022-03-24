@@ -32,7 +32,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Tip
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersItem.Title
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 sealed class BloggingRemindersViewHolder<T : ViewBinding>(protected val binding: T) :
         RecyclerView.ViewHolder(binding.root) {
