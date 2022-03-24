@@ -104,7 +104,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             updateCollapsibleToolbarTitle(currentOffset)
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
-            animateSiteInfoCard(percentage)
+            fadeSiteInfoHeader(percentage)
             avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
                 val maxSize = avatar.maxHeight
@@ -126,7 +126,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
     }
 
-    private fun MySiteFragmentBinding.animateSiteInfoCard(percentage: Int) {
+    private fun MySiteFragmentBinding.fadeSiteInfoHeader(percentage: Int) {
         siteInfo.siteInfoCard.alpha = percentage.toFloat() / 100
     }
 
