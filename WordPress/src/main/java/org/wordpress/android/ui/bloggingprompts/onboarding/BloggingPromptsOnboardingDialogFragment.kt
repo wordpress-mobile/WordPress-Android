@@ -2,14 +2,14 @@ package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.button.MaterialButton
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
 import org.wordpress.android.util.extensions.exhaustive
 import javax.inject.Inject
@@ -25,16 +25,13 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
         fun newInstance(): BloggingPromptsOnboardingDialogFragment = BloggingPromptsOnboardingDialogFragment()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = BloggingPromptsOnboardingDialogFragmentBinding.inflate(inflater).root
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = BloggingPromptsOnboardingDialogFragmentBinding.bind(view)
-        setupTryNow(binding.tryNow)
+        setupTryNowButton()
+        setupRemindMeButton()
+        setupHeaderTitle()
+        setupHeaderIcon()
+        setupContent()
         setupActionObserver()
         viewModel.start()
     }
@@ -44,20 +41,39 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onPrimaryButtonClick() = viewModel.onTryNow()
-
-    override fun onSecondaryButtonClick() {
+    private fun setupTryNowButton() {
+        setPrimaryButtonListener { viewModel.onTryNowClick() }
+        setPrimaryButtonText(R.string.blogging_prompts_onboarding_try_it_now)
 
     }
 
-    private fun setupTryNow(tryNow: MaterialButton) {
-        tryNow.setOnClickListener { viewModel.onTryNow() }
+    private fun setupRemindMeButton() {
+        setPrimaryButtonListener { viewModel.onRemindMeClick() }
+        setPrimaryButtonText(R.string.blogging_prompts_onboarding_remind_me)
+    }
+
+    private fun setupHeaderTitle() {
+        setHeaderTitle(R.string.blogging_prompts_onboarding_header_title)
+    }
+
+    private fun setupHeaderIcon() {
+        setHeaderIcon(R.drawable.ic_story_icon_24dp)
+    }
+
+    private fun setupContent() {
+        setContent {
+            
+        }
     }
 
     private fun setupActionObserver() {
         viewModel.action.observe(this, { action ->
             when (action) {
                 is OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
+                is OpenSitePicker -> { /*TODO*/
+                }
+                is OpenRemindersIntro -> { /*TODO*/
+                }
             }.exhaustive
         })
     }

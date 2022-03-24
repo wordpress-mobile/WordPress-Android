@@ -1,22 +1,22 @@
 package org.wordpress.android.ui.featureintroduction
 
 import android.app.Dialog
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.databinding.FeatureIntroductionDialogFragmentBinding
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
-    abstract fun onPrimaryButtonClick()
-    abstract fun onSecondaryButtonClick()
-    abstract val headerTitle: String
-    abstract val headerIcon: Drawable
+
+    private lateinit var binding: FeatureIntroductionDialogFragmentBinding
 
     override fun getTheme(): Int {
         return R.style.FeatureIntroductionDialogFragment
@@ -36,18 +36,34 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FeatureIntroductionDialogFragmentBinding.bind(view)
-        setupPrimaryButton(binding.primaryButton)
-        setupSecondaryButton(binding.secondaryButton)
-        setupHeaderTitle(binding.headerTitle)
-        setupHeaderIcon(binding.headerIcon)
+        binding = FeatureIntroductionDialogFragmentBinding.bind(view)
     }
 
-    private fun setupPrimaryButton(primaryButton: MaterialButton) {
-        primaryButton.setOnClickListener { onPrimaryButtonClick() }
+    fun setPrimaryButtonListener(listener: () -> Unit) {
+        binding.primaryButton.setOnClickListener { listener() }
     }
 
-    private fun setupSecondaryButton(secondaryButton: MaterialButton) {
-        secondaryButton.setOnClickListener { onSecondaryButtonClick() }
+    fun setPrimaryButtonText(@StringRes textRes: Int) {
+        binding.primaryButton.text = getString(textRes)
+    }
+
+    fun setSecondaryButtonListener(listener: () -> Unit) {
+        binding.secondaryButton.setOnClickListener { listener() }
+    }
+
+    fun setSecondaryButtonText(@StringRes textRes: Int) {
+        binding.secondaryButton.text = getString(textRes)
+    }
+
+    fun setHeaderTitle(@StringRes headerTitleRes: Int) {
+        binding.headerTitle.text = getString(headerTitleRes)
+    }
+
+    fun setHeaderIcon(@DrawableRes headerIconRes: Int) {
+        binding.headerIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, headerIconRes, context?.theme))
+    }
+
+    fun setContent(content: @Composable () -> Unit) {
+        binding.content.setContent(content)
     }
 }

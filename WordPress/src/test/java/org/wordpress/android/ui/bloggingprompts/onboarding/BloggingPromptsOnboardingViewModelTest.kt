@@ -34,7 +34,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val bloggingPrompt: BloggingPrompt = mock()
         whenever(getBloggingPromptUseCase.execute()).thenReturn(flow { emit(bloggingPrompt) })
         bloggingPromptsOnboardingViewModel.start()
-        bloggingPromptsOnboardingViewModel.onTryNow()
+        bloggingPromptsOnboardingViewModel.onTryNowClick()
         verify(actionObserver).onChanged(OpenEditor(bloggingPrompt))
     }
 }

@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:paddingEnd="@dimen/dialog_fragment_content_margin"
-        android:paddingStart="@dimen/dialog_fragment_content_margin"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@+id/blogging_prompts_onboading_button_container"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,6 +23,8 @@
                 android:id="@+id/header_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
                 app:layout_constraintBottom_toTopOf="@+id/content_container"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -32,13 +34,24 @@
                     android:id="@+id/header_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     android:alpha="@dimen/material_emphasis_medium"
                     android:contentDescription="@null"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/ic_add_outline_grey_dark_24dp" />
+
+                <TextView
+                    android:id="@+id/header_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/header_icon"
+                    tools:text="Header title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -54,7 +67,11 @@
                 <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/content"
                     android:layout_width="0dp"
-                    android:layout_height="0dp" />
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
