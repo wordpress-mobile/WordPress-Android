@@ -26,13 +26,13 @@ import org.wordpress.android.ui.uploads.UploadStarter
 private const val DEFAULT_PHOTON_DIMENSIONS = -9
 private val DEFAULT_AUTHOR_FILTER = AuthorFilterSelection.EVERYONE
 
+@InternalCoroutinesApi
 class PostListViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var uploadStarter: UploadStarter
 
     private lateinit var viewModel: PostListViewModel
 
-    @UseExperimental(InternalCoroutinesApi::class)
     @Before
     fun setUp() {
         val listStore = mock<ListStore>()

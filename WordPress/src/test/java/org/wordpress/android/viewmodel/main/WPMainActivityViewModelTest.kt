@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -42,6 +43,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 
 @RunWith(MockitoJUnitRunner::class)
+@InternalCoroutinesApi
 class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
 

@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.store.XPostsStore
 import org.wordpress.android.test
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
+@InternalCoroutinesApi
 class XPostsSuggestionSourceTest : BaseUnitTest() {
     @Mock lateinit var mockXPostsStore: XPostsStore
     @Mock lateinit var mockSite: SiteModel

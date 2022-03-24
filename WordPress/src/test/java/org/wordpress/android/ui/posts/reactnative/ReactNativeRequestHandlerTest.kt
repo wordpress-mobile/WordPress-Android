@@ -8,6 +8,7 @@ import com.android.volley.VolleyError
 import com.google.gson.JsonElement
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
@@ -27,6 +28,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
 @Config(application = TestApplication::class, sdk = [VERSION_CODES.N])
 @RunWith(RobolectricTestRunner::class)
+@InternalCoroutinesApi
 class ReactNativeRequestHandlerTest {
     private val reactNativeStore = mock<ReactNativeStore>()
     private val site = mock<SiteModel>()

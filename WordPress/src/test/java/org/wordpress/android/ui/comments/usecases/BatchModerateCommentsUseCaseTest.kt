@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.comments.utils.trashedComment
 import org.wordpress.android.usecase.UseCaseResult
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
     @Rule @JvmField val coroutineScopeRule = MainCoroutineScopeRule()

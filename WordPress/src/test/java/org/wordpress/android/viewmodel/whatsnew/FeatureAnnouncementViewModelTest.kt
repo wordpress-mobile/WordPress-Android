@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -24,6 +25,7 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@InternalCoroutinesApi
 class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: FeatureAnnouncementViewModel
     @Mock lateinit var onDialogClosedObserver: Observer<Unit>
