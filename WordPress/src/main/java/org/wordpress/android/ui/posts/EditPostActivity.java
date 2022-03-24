@@ -2315,6 +2315,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean enableUnsupportedBlockEditor = mSite.isWPCom() || mIsJetpackSsoEnabled;
         boolean unsupportedBlockEditorSwitch = mSite.isJetpackConnected() && !mIsJetpackSsoEnabled;
+        boolean canUploadMedia = WPMediaUtils.currentUserCanUploadMedia(mSite);
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
         boolean isAudioBlockMediaUploadEnabled = !isFreeWPCom;
@@ -2343,6 +2344,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 enableXPosts,
                 enableUnsupportedBlockEditor,
                 unsupportedBlockEditorSwitch,
+                canUploadMedia,
                 isAudioBlockMediaUploadEnabled,
                 enableReusableBlock,
                 wpcomLocaleSlug,
