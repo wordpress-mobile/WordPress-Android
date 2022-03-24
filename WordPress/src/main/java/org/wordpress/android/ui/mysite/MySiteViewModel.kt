@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
+import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -286,11 +287,19 @@ class MySiteViewModel @Inject constructor(
                             )
                         }
                 ),
+                siteInfoToolbarView = getToolBarUiState(),
                 siteInfoHeader = siteInfo,
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
+    }
+
+    private fun getToolBarUiState(): SiteInfoToolbarView {
+        return if (isMySiteTabsEnabled)
+            SiteInfoToolbarView(R.dimen.app_bar_with_site_info_tabs_height, R.dimen.app_bar_with_site_info_tabs_height)
+        else
+            SiteInfoToolbarView(R.dimen.app_bar_with_site_info_height, R.dimen.toolbar_bottom_margin_with_no_tabs)
     }
 
     @Suppress("LongParameterList")
@@ -420,6 +429,10 @@ class MySiteViewModel @Inject constructor(
                 displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
+                siteInfoToolbarView = SiteInfoToolbarView(
+                        R.dimen.app_bar_with_no_site_info_height,
+                        R.dimen.toolbar_bottom_margin_with_no_tabs
+                ),
                 shouldShowImage = shouldShowImage
         )
     }
@@ -933,9 +946,11 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val tabsUiState: TabsUiState
+        abstract val siteInfoToolbarView: SiteInfoToolbarView
 
         data class SiteSelected(
             override val tabsUiState: TabsUiState,
+            override val siteInfoToolbarView: SiteInfoToolbarView,
             val siteInfoHeader: SiteInfoHeaderCard,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
@@ -944,6 +959,7 @@ class MySiteViewModel @Inject constructor(
 
         data class NoSites(
             override val tabsUiState: TabsUiState,
+            override val siteInfoToolbarView: SiteInfoToolbarView,
             val shouldShowImage: Boolean
         ) : State()
     }
@@ -957,6 +973,11 @@ class MySiteViewModel @Inject constructor(
             val showQuickStartFocusPoint: Boolean = false
         )
     }
+
+    data class SiteInfoToolbarView(
+        @DimenRes val appBarHeight: Int,
+        @DimenRes val toolbarBottomMargin: Int
+    )
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,

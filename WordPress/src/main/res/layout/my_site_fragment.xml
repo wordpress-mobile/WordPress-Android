@@ -24,7 +24,7 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar_main"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="@dimen/toolbar_height"
                 app:layout_collapseMode="pin"
                 app:theme="@style/WordPress.ActionBar"/>
 
@@ -32,8 +32,9 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:visibility="gone">
+                android:layout_marginTop="@dimen/toolbar_height"
+                tools:visibility="gone"
+                android:visibility="visible">
 
                 <include
                     android:id="@+id/site_info"

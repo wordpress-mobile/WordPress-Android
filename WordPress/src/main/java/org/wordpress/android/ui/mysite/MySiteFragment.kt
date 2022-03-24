@@ -175,7 +175,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.setVisible(false)
         }
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
-        showAppbar()
+        updateSiteInfoToolbarView(state.siteInfoToolbarView.appBarHeight, state.siteInfoToolbarView.toolbarBottomMargin)
     }
 
     private fun MySiteInfoCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
@@ -203,28 +203,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
     }
 
-    private fun MySiteFragmentBinding.showAppbar() {
-        header.setVisible(true)
-        if (viewModel.isMySiteTabsEnabled) {
-            showSiteInfoToolbarWithTabs()
-        } else {
-            showSiteInfoToolbarWithoutTabs()
-        }
-    }
-
-    private fun MySiteFragmentBinding.showSiteInfoToolbarWithTabs() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_tabs_height).toInt()
-        appbarMain.layoutParams.height = newHeight
-        updateToolbarBottomMargin(newHeight)
-        tabLayout.setVisible(true)
-        appbarMain.requestLayout()
-    }
-
-    private fun MySiteFragmentBinding.showSiteInfoToolbarWithoutTabs() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_height).toInt()
-        appbarMain.layoutParams.height = newHeight
-        updateToolbarBottomMargin(0)
-        tabLayout.setVisible(false)
+    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(appBarHeightDimen: Int, toolbarBottomMarginDimen: Int) {
+        val appBarHeight = resources.getDimension(appBarHeightDimen).toInt()
+        appbarMain.layoutParams.height = appBarHeight
+        val toolbarBottomMargin = resources.getDimension(toolbarBottomMarginDimen).toInt()
+        updateToolbarBottomMargin(toolbarBottomMargin)
         appbarMain.requestLayout()
     }
 
@@ -242,15 +225,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
-        hideSiteInfoToolbarView()
-    }
-
-    private fun MySiteFragmentBinding.hideSiteInfoToolbarView() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_no_site_info_height).toInt()
-        appbarMain.setExpanded(false, true)
-        appbarMain.layoutParams.height = newHeight
-        updateToolbarBottomMargin(0)
-        appbarMain.requestLayout()
+        updateSiteInfoToolbarView(state.siteInfoToolbarView.appBarHeight, state.siteInfoToolbarView.toolbarBottomMargin)
     }
 
     private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
