@@ -2296,40 +2296,55 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
-        String postType = mIsPage ? "page" : "post";
-        int featuredImageId = (int) mEditPostRepository.getFeaturedImageId();
-        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
-        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+        boolean enableContactInfoBlock = SiteUtils.supportsContactInfoFeature(mSite);
+        boolean enableLayoutGridBlock = SiteUtils.supportsLayoutGridFeature(mSite);
+        boolean enableTiledGalleryBlock = SiteUtils.supportsTiledGalleryFeature(mSite);
+        boolean enableFacebookEmbed =
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION);
+        boolean enableInstagramEmbed =
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION);
+        boolean enableLoomEmbed =
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION);
+        boolean enableSmartframeEmbed =
+                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION);
+        boolean enableMediaFilesCollectionBlocks = SiteUtils.supportsStoriesFeature(mSite);
+        boolean enableMentions = mSite.isUsingWpComRestApi();
 
         // If this.mIsXPostsCapable has not been set, default to allowing xPosts
         boolean enableXPosts = mIsXPostsCapable == null || mIsXPostsCapable;
 
-        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
-
-        boolean isUnsupportedBlockEditorEnabled =
-                mSite.isWPCom() || mIsJetpackSsoEnabled;
-
+        boolean enableUnsupportedBlockEditor = mSite.isWPCom() || mIsJetpackSsoEnabled;
         boolean unsupportedBlockEditorSwitch = mSite.isJetpackConnected() && !mIsJetpackSsoEnabled;
 
         boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
-        boolean isWPComSite = mSite.isWPCom() || mSite.isWPComAtomic();
+        boolean isAudioBlockMediaUploadEnabled = !isFreeWPCom;
+
+        boolean enableReusableBlock = mSite.isWPCom() || mSite.isWPComAtomic();
+
+        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
+        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+
+        String postType = mIsPage ? "page" : "post";
+        int featuredImageId = (int) mEditPostRepository.getFeaturedImageId();
+
+        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
         return new GutenbergPropsBuilder(
-                SiteUtils.supportsContactInfoFeature(mSite),
-                SiteUtils.supportsLayoutGridFeature(mSite),
-                SiteUtils.supportsTiledGalleryFeature(mSite),
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION),
-                SiteUtils.supportsStoriesFeature(mSite),
-                mSite.isUsingWpComRestApi(),
+                enableContactInfoBlock,
+                enableLayoutGridBlock,
+                enableTiledGalleryBlock,
+                enableFacebookEmbed,
+                enableInstagramEmbed,
+                enableLoomEmbed,
+                enableSmartframeEmbed,
+                enableMediaFilesCollectionBlocks,
+                enableMentions,
                 enableXPosts,
-                isUnsupportedBlockEditorEnabled,
+                enableUnsupportedBlockEditor,
                 unsupportedBlockEditorSwitch,
-                !isFreeWPCom,
-                isWPComSite,
+                isAudioBlockMediaUploadEnabled,
+                enableReusableBlock,
                 wpcomLocaleSlug,
                 postType,
                 featuredImageId,
