@@ -297,7 +297,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun getToolBarUiState(): SiteInfoToolbarView {
         return if (isMySiteTabsEnabled) {
-            SiteInfoToolbarView(R.dimen.app_bar_with_site_info_tabs_height, R.dimen.app_bar_with_site_info_tabs_height)
+            SiteInfoToolbarView(R.dimen.app_bar_with_site_info_tabs_height, R.dimen.toolbar_bottom_margin_with_tabs)
         } else {
             SiteInfoToolbarView(R.dimen.app_bar_with_site_info_height, R.dimen.toolbar_bottom_margin_with_no_tabs)
         }
