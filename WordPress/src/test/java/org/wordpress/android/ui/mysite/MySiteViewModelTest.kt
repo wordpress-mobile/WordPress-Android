@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
@@ -45,6 +46,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -114,6 +116,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -155,6 +158,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -275,6 +279,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -305,7 +310,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteItemsTracker,
                 domainRegistrationCardShownTracker,
                 buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig
+                mySiteDashboardTabsFeatureConfig,
+                bloggingPromptsFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1203,6 +1209,34 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
     }
 
+    /* DASHBOARD BLOGGING PROMPT CARD */
+
+    @Test
+    fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+           it.bloggingPromptCardBuilderParams.bloggingPrompt != null
+
+        })
+    }
+
+    @Test
+    fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+            it.bloggingPromptCardBuilderParams.bloggingPrompt == null
+
+        })
+    }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test
@@ -1996,10 +2030,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         return DashboardCards(
                 cards = mutableListOf<DashboardCard>().apply {
                     if (params.showErrorCard) {
-                        initErrorCard(mockInvocation)
+                        add(initErrorCard(mockInvocation))
                     } else {
-                        initPostCard(mockInvocation)
-                        initTodaysStatsCard(mockInvocation)
+                        add(initPostCard(mockInvocation))
+                        add(initTodaysStatsCard(mockInvocation))
+                        add(initBloggingPromptCard())
                     }
                 }
         )
@@ -2018,6 +2053,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                         label = UiStringRes(R.string.my_site_todays_stats_card_footer_link_go_to_stats),
                         onClick = onTodaysStatsCardFooterLinkClick
                 )
+        )
+    }
+
+    private fun initBloggingPromptCard(): BloggingPromptCardWithData {
+        return BloggingPromptCardWithData(
+                prompt = UiStringText(mock()),
+                answeredUsers = listOf(mock()),
+                numberOfAnswers = 5,
+                isAnswered = false
         )
     }
 
