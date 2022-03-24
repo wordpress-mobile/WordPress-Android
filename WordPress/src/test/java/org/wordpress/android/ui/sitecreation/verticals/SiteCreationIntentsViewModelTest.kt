@@ -45,6 +45,20 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
+    fun `when the user scroll beyond a threshold the title becomes visible`() {
+        viewModel.initializeFromResources(resources)
+        viewModel.onAppBarOffsetChanged(9, 10)
+        assertThat(viewModel.uiState.value?.isAppBarTitleVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `when the user scroll below a threshold the title remains hidden`() {
+        viewModel.initializeFromResources(resources)
+        viewModel.onAppBarOffsetChanged(11, 10)
+        assertThat(viewModel.uiState.value?.isAppBarTitleVisible).isEqualTo(false)
+    }
+
+    @Test
     fun `when the search input is focused an analytics event is emitted and the ui is updated`() {
         viewModel.initializeFromResources(resources)
         viewModel.onSearchInputFocused()
