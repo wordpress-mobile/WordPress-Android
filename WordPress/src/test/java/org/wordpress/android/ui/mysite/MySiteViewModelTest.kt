@@ -1994,10 +1994,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         return DashboardCards(
                 cards = mutableListOf<DashboardCard>().apply {
                     if (params.showErrorCard) {
-                        initErrorCard(mockInvocation)
+                        add(initErrorCard(mockInvocation))
                     } else {
-                        initPostCard(mockInvocation)
-                        initTodaysStatsCard(mockInvocation)
+                        add(initPostCard(mockInvocation))
+                        add(initTodaysStatsCard(mockInvocation))
                     }
                 }
         )
