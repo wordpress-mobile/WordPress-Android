@@ -82,3 +82,8 @@
 /tracker
 
 /coupons
+
+/admin/notes
+/admin/notes/<note_id>
+/admin/notes/delete/<note_id>
+/admin/notes/delete/all
