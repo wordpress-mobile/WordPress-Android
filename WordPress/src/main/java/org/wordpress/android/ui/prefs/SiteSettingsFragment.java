@@ -86,8 +86,7 @@ import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.ContextUtilsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -96,11 +95,12 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
@@ -184,6 +184,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
 
@@ -911,7 +912,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // customize list dividers
-        prefList.setDivider(ContextUtilsKt.getDrawableFromAttribute(getActivity(), android.R.attr.listDivider));
+        prefList.setDivider(ContextExtensionsKt.getDrawableFromAttribute(getActivity(), android.R.attr.listDivider));
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
@@ -1209,6 +1210,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mBloggingRemindersFeatureConfig.isEnabled()) {
             removeBloggingRemindersSettings();
         } else {
+            if (mBloggingPromptsFeatureConfig.isEnabled()) {
+                mBloggingRemindersPref.setTitle(R.string.site_settings_blogging_reminders_and_prompts_title);
+            }
+
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
                     .get(BloggingRemindersViewModel.class);
             BloggingReminderUtils.observeBottomSheet(
@@ -1801,7 +1806,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             Toast.makeText(view1.getContext(), R.string.add, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(button);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(button);
 
         return view;
     }
@@ -1935,7 +1940,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * This removes all preferences from the General preference group, except for Blogging Reminders – in practice it
      * is removed as well, but then added back.
-     *
+     * <p>
      * In the future, we should consider either moving the Blogging Reminders preference to its own group or
      * replace this approach with something more scalable and efficient.
      */

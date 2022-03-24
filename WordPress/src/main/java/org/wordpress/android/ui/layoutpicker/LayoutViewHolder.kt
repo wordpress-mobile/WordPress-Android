@@ -9,7 +9,7 @@ import org.wordpress.android.databinding.ModalLayoutPickerLayoutsCardBinding
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 
 /**
  * Renders the Layout card

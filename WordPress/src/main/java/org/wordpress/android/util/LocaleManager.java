@@ -192,14 +192,10 @@ public class LocaleManager {
             baseLocale = Locale.getDefault();
         } else {
             Configuration config = context.getResources().getConfiguration();
-            baseLocale = Build.VERSION.SDK_INT >= 24 ? config.getLocales().get(0) : config.locale;
+            baseLocale = config.getLocales().get(0);
         }
 
-        if (Build.VERSION.SDK_INT >= 24) {
-            return languageLocale(baseLocale.getLanguage());
-        } else {
-            return baseLocale;
-        }
+        return languageLocale(baseLocale.getLanguage());
     }
 
     /**

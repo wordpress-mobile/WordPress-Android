@@ -12,7 +12,7 @@ import org.wordpress.android.databinding.JetpackListButtonSecondaryItemBinding
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.widgets.FlowLayout.LayoutParams
 
 sealed class JetpackButtonViewHolder<T : ViewBinding>(

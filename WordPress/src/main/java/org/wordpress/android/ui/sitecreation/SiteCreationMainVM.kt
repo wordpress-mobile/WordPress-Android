@@ -34,6 +34,7 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
+    val siteIntent: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: String? = null
@@ -95,6 +96,15 @@ class SiteCreationMainVM @Inject constructor(
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
+    fun onSiteIntentSelected(intent: String) {
+        siteCreationState = siteCreationState.copy(siteIntent = intent)
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteIntentSkipped() {
+        wizardManager.showNextStep()
+    }
+
     fun onSiteDesignSelected(siteDesign: String) {
         siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
         wizardManager.showNextStep()
@@ -139,7 +149,7 @@ class SiteCreationMainVM @Inject constructor(
         val stepCount = wizardManager.stepsCount
         val firstStep = stepPosition == 1
         val lastStep = stepPosition == stepCount
-        val singleInBetweenStepDomains = wizardManager.stepsCount == 3 && step.name == DOMAINS.name
+        val singleInBetweenStepDomains = step.name == DOMAINS.name
 
         return when {
             firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)

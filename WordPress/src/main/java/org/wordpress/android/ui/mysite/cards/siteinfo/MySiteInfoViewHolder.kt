@@ -8,7 +8,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class MySiteInfoViewHolder(
     parent: ViewGroup,

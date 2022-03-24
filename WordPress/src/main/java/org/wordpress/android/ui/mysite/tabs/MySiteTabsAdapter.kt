@@ -2,19 +2,12 @@ package org.wordpress.android.ui.mysite.tabs
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import org.wordpress.android.ui.utils.UiString
 
 class MySiteTabsAdapter(
     parent: Fragment,
-    private val tabTitles: List<UiString>
+    private val orderedTabTypes: List<MySiteTabType>
 ) : FragmentStateAdapter(parent) {
-    override fun getItemCount(): Int = tabTitles.size
+    override fun getItemCount(): Int = orderedTabTypes.size
 
-    override fun createFragment(position: Int): Fragment {
-        return if (position == 0) {
-            MySiteMenuTabFragment.newInstance()
-        } else {
-            MySiteDashboardTabFragment.newInstance()
-        }
-    }
+    override fun createFragment(position: Int) = MySiteTabFragment.newInstance(orderedTabTypes[position])
 }

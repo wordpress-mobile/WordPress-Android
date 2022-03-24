@@ -1,0 +1,9 @@
+19.4:
+- Tema/varsayılan/özel renk paletleri
+- Kayıt/oturum açma sırasında e-postayı doğrularken e-posta uygulaması seçimi
+- Üst yorum silindiğinde artık iç içe yorum görünmez
+- Yakalama ortasındaki yeni yönlendirmeden sonra görüntüler ayarlanır
+- Sitem simgesi düzenlemeleri için ilerleme çubuğu düzeltmesi
+- Varsayılan Tek Bakışta listesinde düzenlemeler
+- Klavye artık oturum açma hata mesajını örtmez
+- Artık çıkış düğmesine yalnızca bir kez basmak yeterlidir

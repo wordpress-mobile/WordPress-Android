@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-25 09:54:07+0000
+Translation-Revision-Date: 2022-03-10 09:54:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">החיפוש שלך כולל תווים שלא נתמכים בדומיינים של WordPress.com. ניתן להשתמש רק בתווים אלפאנומריים.</string>
+    <string name="login_select_email_client">איזו אפליקציית אימייל נמצאת אצלך בשימוש?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">הייתה בעיה בתקשורת עם האתר הזה. הוחזר קוד שגיאה של HTTP מסוג 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">נראה שקריאות XML-RPC חסומות באתר הזה (קוד שגיאה 401). אם הניסיון להתחברות נכשל, יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">לא ניתן לקרוא את אתר WordPress בכתובת URL זו. יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
+    <string name="login_error_xml_rpc_services_disabled">שירותי XML-RPC באתר זה מנותקים.</string>
+    <string name="my_site_menu_tab_title">תפריט</string>
+    <string name="my_site_dashboard_tab_title">לוח בקרה</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">החיפוש שלך כולל תווים שלא נתמכים בדומיינים של WordPress.com. התווים הבאים מותרים: A–Z‏, a–z,‏ 0–9.</string>
     <string name="my_site_todays_stat_card_title">הנתונים הסטטיסטיים של היום</string>
     <string name="my_site_error_within_card_subtitle">יש לבדוק את החיבור לאינטרנט ולרענן את העמוד.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">מעבר אל נתונים סטטיסטיים</string>

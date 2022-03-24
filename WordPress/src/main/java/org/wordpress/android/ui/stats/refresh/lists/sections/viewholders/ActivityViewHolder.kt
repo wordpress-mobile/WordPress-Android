@@ -14,7 +14,7 @@ import org.wordpress.android.databinding.StatsBlockActivityItemBinding
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem.Box
 import org.wordpress.android.util.ContentDescriptionListAnnouncer
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 private const val SIZE_PADDING = 32
 private const val GAP = 8

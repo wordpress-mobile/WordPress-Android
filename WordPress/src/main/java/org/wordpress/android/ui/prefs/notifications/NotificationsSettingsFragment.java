@@ -59,6 +59,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -71,7 +72,7 @@ import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -183,6 +184,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        boolean isLoggedIn = mAccountStore.hasAccessToken();
+        if (!isLoggedIn) {
+            // Not logged in users can start Notification Settings from App info > Notifications menu.
+            // If there isn't a logged in user, just show the entry screen.
+            Intent intent = new Intent(getContext(), WPLaunchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            getActivity().finish();
+            return;
+        }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDeviceId = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_SERVER_ID, "");

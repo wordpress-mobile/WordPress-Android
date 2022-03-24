@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEGATIVE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.NEUTRAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class ValueViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,

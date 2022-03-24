@@ -8,7 +8,7 @@ import org.wordpress.android.databinding.DebugCookieItemBinding
 import org.wordpress.android.ui.debug.cookies.DebugCookiesAdapter.DebugCookieItem
 import org.wordpress.android.ui.debug.cookies.DebugCookiesAdapter.DebugCookieItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class DebugCookiesAdapter : ListAdapter<DebugCookieItem, DebugCookieItemViewHolder>(DebugCookiesDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =

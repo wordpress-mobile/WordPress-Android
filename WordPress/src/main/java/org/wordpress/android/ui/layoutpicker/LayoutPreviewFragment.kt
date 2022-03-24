@@ -29,7 +29,7 @@ import org.wordpress.android.ui.layoutpicker.PreviewUiState.Loading
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.skip
 import javax.inject.Inject
 

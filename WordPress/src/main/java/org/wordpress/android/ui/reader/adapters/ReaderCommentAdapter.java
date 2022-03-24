@@ -49,7 +49,7 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -398,8 +398,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
+        String renderingError = commentHolder.mTxtText.getResources().getString(R.string.comment_unable_to_show_error);
         CommentUtils.displayHtmlComment(commentHolder.mTxtText, comment.getText(), maxImageWidth,
-                commentHolder.mTxtText.getResources().getString(R.string.comment_unable_to_show_error));
+                commentHolder.mTxtText.getLineHeight(), renderingError);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {

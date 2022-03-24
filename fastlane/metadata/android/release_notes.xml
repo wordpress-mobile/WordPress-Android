@@ -1,183 +1,190 @@
 <ar>
-19.3:
-- لا يوجد زر بريد إلكتروني في التسجيل عندما يكون تطبيق البريد الإلكتروني غير متاح
-- التنبيهات في محرِّر التعليقات الجديد
-- المنطقة الزمنية الصحيحة للمواقع التي تم إنشاؤها في التطبيق
-- إصلاحات أخطاء طريقة عرض "موقعي" الفارغة ومعاينة الصفحة/الموقع
-- تحرير تعليقات القارئ خاصة بالمسؤولين/المحرِّرين
-- لا تؤثر الذاكرة المنخفضة في مكوِّنات قصة المحرِّر
-- نص خطأ أفضل لعناوين URL الموقع الجديد باستخدام أحرف غير إنجليزية
+19.4:
+- لوحات ألوان القالب ولوحات الألوان الافتراضية ولوحات الألوان المخصصة
+- رسائل خطأ خاصة بتسجيل الدخول مفيدة على المواقع المُستضافة ذاتيًا
+- تحديد تطبيق البريد الإلكتروني عند التحقُّق من البريد الإلكتروني عند التسجيل/تسجيل الدخول
+- لا توجد تعليقات قارئ متداخلة إذا تم حذف التعليق الأصلي
+- تظهر الصور بعد تغيير اتجاه منتصف الالتقاط
+- إصلاح خاص بشريط التقدم لعمليات تحرير أيقونة موقعي
+- قائمة مُعاد تنظيمها بالرؤى الافتراضية
 </ar>
 <de-DE>
-19.3:
-– Benachrichtigungen im neuen Kommentar-Editor
-– Korrekte Zeitzone für in der App erstellte Websites
-– Bearbeitung von Reader-Kommentaren durch Administratoren und Redakteure
-– Keine Auswirkung von geringem Speicherplatz auf Story-Blocks im Editor
-– Fehlermeldung bei neuen Website-URLs mit nicht-englischen Zeichen
-– Ausgewählte Fehlerkorrekturen und Designverbesserungen
+19.4:
+- Theme-/Standard- und individuelle Farbpaletten
+- Hilfreiche Fehlermeldungen bei der Anmeldung auf selbst gehosteten Websites
+- E-Mail-App-Auswahl bei E-Mail-Verifizierung für Registrierung/Anmeldung
+- Keine verschachtelten Reader-Kommentare, wenn der übergeordnete Kommentar gelöscht wird
+- Bilder werden nach Neuausrichtung der mittleren Aufnahme angezeigt
+- Problem der Fortschrittsleiste bei Bearbeitungen des Website-Icons behoben
+- Liste der Standardeinsichten umstrukturiert
 </de-DE>
 <en-US>
-19.3:
-- No email button in signup when email app is unavailable
-- Notifications in new comment editor
-- Correct time zone for sites created in app
-- Bug fixes for empty “My Site” view and Page/Site preview
-- Reader comment editing for Admins/Editors
-- Low memory doesn’t affect editor story blocks
-- Better error text for new site URLs with non-English characters
+19.4:
+- Theme, default and custom color palettes
+- Helpful login error messages on self-hosted sites
+- Email app selection when verifying email at signup/login
+- No nested Reader comments if parent comment is deleted
+- Images display after changing orientation mid-capture
+- Fix for progress bar for My Site icon edits
+- Reorganized list of default Insights
 </en-US>
 <es-ES>
-19.3:
-- Avisos en el nuevo editor de comentarios
-- Corrección de la zona horaria de los sitios creados en la aplicación
-- Edición de comentarios del lector para los administradores/editores
-- La memoria baja no afecta a los bloques de historias del editor
-- Texto de error para las nuevas URL de sitios con caracteres no ingleses
-- Corrección de varios fallos y mejoras de diseño
+19.4:
+- Paletas de color del tema/por defecto/personalizadas
+- Mejor texto de error de acceso
+- Selección de la aplicación de verificación del correo electrónico
+- Ningún comentario anidado si se borra el comentario principal
+- Ajuste de las imágenes después de la reorientación a mitad de la captura
+- Corrección de la barra de progreso para las ediciones de iconos de «Mi sitio»
+- Reorganización de la lista por defecto de información
 </es-ES>
 <fr-CA>
-19,3:
-- Les notifications s’affichent dans le nouvel éditeur de commentaires
-- Fuseau horaire corrigé pour les sites créés dans l’appli
-- Éditeur de commentaires dans le lecteur pour les administrateurs/rédacteurs
-- Une faible mémoire n’affecte pas l’éditeur du bloc Story
-- Texte d’erreur pour les URL de nouveaux sites comportant des caractères non anglais
-- Corrections de bogues et améliorations du design
+19.4 :
+- Palettes de couleurs thématiques/par défaut/personnalisées
+- Amélioration des messages d’erreur de connexion
+- Sélection de l’application pour la vérification de l’adresse e-mail
+- Aucune imbrication des commentaires possible si le commentaire parent a été supprimé
+- Ajustement des images après leur réorientation à mi-capture
+- Amélioration de la barre de progression pour les modifications apportées à l’icône du site
+- Réorganisation de la liste non personnalisée des tendances
 </fr-CA>
 <fr-FR>
-19,3:
-- Les notifications s’affichent dans le nouvel éditeur de commentaires
-- Fuseau horaire corrigé pour les sites créés dans l’appli
-- Éditeur de commentaires dans le lecteur pour les administrateurs/rédacteurs
-- Une faible mémoire n’affecte pas l’éditeur du bloc Story
-- Texte d’erreur pour les URL de nouveaux sites comportant des caractères non anglais
-- Corrections de bogues et améliorations du design
+19.4 :
+- Palettes de couleurs thématiques/par défaut/personnalisées
+- Amélioration des messages d’erreur de connexion
+- Sélection de l’application pour la vérification de l’adresse e-mail
+- Aucune imbrication des commentaires possible si le commentaire parent a été supprimé
+- Ajustement des images après leur réorientation à mi-capture
+- Amélioration de la barre de progression pour les modifications apportées à l’icône du site
+- Réorganisation de la liste non personnalisée des tendances
 </fr-FR>
 <iw-IL>
-19.3:
-- אין כפתור אימייל בזמן ההרשמה כשאפליקציית אימייל לא זמינה
-- הודעות בעורך התגובות החדש
-- אזור זמן נכון לאתרים שנוצרו באפליקציה
-- תיקוני באגים לתצוגה ריקה של 'האתר שלי' ולתצוגה מקדימה ריקה של עמוד/אתר
-- עריכת תגובות ב-Reader למנהלי מערכת/עורכים
-- מחסור בזיכרון לא משפיע על בלוקים של סטורי של עורכים
-- טקסט שגיאה משופר לכתובות URL של אתרים חדשים עם תווים שאינם באנגלית
+19.4:
+- Theme, default and custom color palettes
+- Helpful login error messages on self-hosted sites
+- Email app selection when verifying email at signup/login
+- No nested Reader comments if parent comment is deleted
+- Images display after changing orientation mid-capture
+- Fix for progress bar for My Site icon edits
+- Reorganized list of default Insights
 </iw-IL>
 <id>
-19.3:
-- Tidak ada tombol email saat pendaftaran jika aplikasi email tidak tersedia
-- Pemberitahuan di editor komentar baru
-- Zona waktu yang tepat untuk situs yang dibuat dalam aplikasi
-- Perbaikan bug untuk pratinjau “Situs Saya” and pratinjau Halaman/Situs yang kosong
- - Penyuntingan komentar pembaca untuk Admin/Editor
-- Memori rendah tidak memengaruhi blok cerita editor
-- Perbaikan teks error untuk URL situs baru dengan karakter bukan bahasa Inggris
+19.4:
+- Palet warna tema, default, dan khusus
+- Teks eror login yang lebih baik untuk situs yang dihosting sendiri
+- Pemilihan aplikasi e-mail untuk verifikasi saat mendaftar/login
+- Komentar Reader bertingkat dihilangkan jika komentar induk dihapus
+- Penyajian gambar setelah mengubah orientasi mid-capture
+- Perbaikan indikator progres untuk pengeditan ikon Situs Saya
+- Daftar Wawasan default yang ditata ulang
 </id>
 <it-IT>
-19.3:
-- Nessun pulsante per le e-mail nell'iscrizione se l'app delle e-mail non è disponibile
-- Notifiche nel nuovo editor dei commenti
-- Fuso orario corretto per siti creati nell'app
-- Correzioni di bug per la visualizzazione vuota "Il mio sito" e l'anteprima di Pagina/Sito
-- Modifica dei commenti del lettore per Amministratori/Editor
-- La scarsa memoria non influisce sui blocchi Storia dell'editor
-- Testo dell'errore migliorato per nuovi URL del sito con caratteri non inglesi
+19.4:
+- Colori temi/default/personali
+- Messaggi utili
+- Scelta app in verifica e-mail a signup/login
+- No nidificato se principale eliminato
+- Riorientamento immagini
+- Fix barra per cambi a Il mio sito
+- Panoramica riorganizzata
 </it-IT>
 <ja-JP>
-19.3:
-- メールアプリが利用できない場合の登録でメールボタンを表示しない
-- 新しいコメントエディターでの通知
-- アプリで作成したサイトのタイムゾーンを訂正
-- 「参加サイト」の空白表示とページ/サイトのプレビューのバグを修正
-- Reader の管理者 / 編集者向けのコメント編集機能
-- 低メモリでもエディターのストーリーブロックへの影響なし
-- 新規サイトの URL に英字以外が含まれる場合のエラーテキストを改善
+19.4:
+- テーマ / デフォルト / カスタムカラーパレット
+- インストール型のサイトでのわかりやすいログインエラーメッセージ
+- 登録またはログイン時のメール認証におけるメールアプリ選択
+- 親コメントが削除された場合ネストされた読者コメントの表示なし
+- キャプチャ中の向き変更後の画像表示
+- 「参加サイト」アイコン編集用の進捗バーの修正
+- デフォルトの「統計概要」リストの再編成
 </ja-JP>
 <ko-KR>
-19.3:
-- 이메일 앱 사용 불가 시 가입에 이메일 버튼 없음
-- 새 댓글 편집기의 알림
-- 앱에서 생성된 사이트의 시간대 수정
-- 빈 "내 사이트" 보기 및 페이지/사이트 미리보기에 대한 버그 수정
-- 관리자/편집기의 독자 댓글 편집
-- 메모리 부족 영향을 받지 않는 편집기 스토리 블록
-- 영어 외 문자가 포함된 새 사이트 URL에 대한 향상된 오류 텍스트
+19.4:
+- 테마, 기본 및 사용자 정의 색상 팔레트
+- 도움이 되는 독립 호스트 사이트의 로그인 오류 메시지
+- 가입/로그인 시 이메일을 확인할 때 이메일 앱 선택
+- 상위 댓글이 삭제되는 경우 중첩된 독자 댓글 없음
+- 캡처 중간 방향 변경 후 이미지 표시
+- 내 사이트 아이콘 편집 진행률 표시줄 수정
+- 재구성한 기본 인사이트 목록
 </ko-KR>
 <nl-NL>
-19.3:
-- Geen e-mailknop bij aanmelding wanneer de e-mailapp niet beschikbaar is
-- Meldingen in nieuwe reactie editor
-- Juiste tijdzone voor sites die in de app zijn gemaakt
-- Bugfixes voor lege "Mijn site" weergave en pagina/site voorbeeld
-- Reader reactie bewerking voor beheerders/redacteuren
-- Weinig geheugen heeft geen invloed op de editor verhaal blokken
-- Betere fouttekst voor nieuwe site URL's met niet-Engelse karakters
+19.4:
+- Thema, standaard en aangepaste kleurenpaletten
+- Behulpzame login foutberichten op zelf gehoste sites
+- E-mail app selectie bij het verifiëren van e-mail bij aanmelden/login
+- Geen geneste reader reacties als hoofd reactie is verwijderd
+- Afbeeldingen worden weergegeven na het wijzigen van oriëntatie mid-capture
+- Oplossing voor voortgangsbalk voor Mijn site pictogram bewerkingen
+- Gereorganiseerde lijst van standaard Insights
 </nl-NL>
 <pt-BR>
-19.3:
-- Notificações no novo editor de comentários
-- Fuso horário correto nos sites criados no app
-- Edição de comentários no editor para administradores/editores
-- Pouca memória não afeta os blocos de story do editor
-- Texto do erro para novas URLs de sites com caracteres que não fazem parte da língua inglesa
-- Correções de bugs e melhorias no design variadas
+19.4:
+- Paletas de cores personalizadas, padrão e de tema
+- Mensagens de erro de login úteis em sites auto-hospedados
+- Seleção do aplicativo de e-mail ao verificar o e-mail no login
+- Nenhum comentário aninhado do Leitor se o comentário principal for excluído
+- Exibição de imagens após alterar a orientação no meio da captura
+- Correção da barra de progresso para edições do ícone Meu site
+- Reorganização da lista de informações padrão
 </pt-BR>
 <ru-RU>
-19.3:
-- Уведомления в новом редакторе комментариев
-- Правильный часовой пояс для сайтов, созданных в приложении
-- Редактирование комментариев в Чтиве для администраторов/редакторов
-- Недостаток памяти не влияет на редактирование блоков истории.
-- Текст ошибки для новых URL-адресов сайтов с неанглийскими символами.
-- Различные исправления ошибок и улучшения дизайна
+19.4:
+— Палитры темы и пользовательских цветов, палитры по умолчанию
+— Полезные сообщения об ошибках при входе в систему на автономных сайтах
+— Выбор приложения при проверке адреса эл. почты при регистрации/входе в систему
+— В случае удаления родительского комментария вложенные комментарии в Читалке удаляются
+— Отображение изображений после смены ориентации в процессе захвата
+— Исправлена шкала хода выполнения для правок значка "Мой сайт"
+— Переупорядочен список обзоров по умолчанию
 </ru-RU>
 <sv-SE>
-19.3:
-- Vid registrering visas inte e-postknappen om app för e-post saknas
-- Aviseringar i den nya kommentarsredigeraren
-- Webbplatser som skapas i appen får rätt tidszon
-- Rättat fel vid tom vy "Min webbplats" och förhandsvisning av sida/webbplats
-- Admin/redaktör kan redigera kommentarer i läsaren
-- Berättelseblock påverkas inte av låg minnestillgång
-- Bättre felbeskrivning vid försök att skapa webbplats-URL med tecken utanför engelska alfabetet
+19.4:
+- Färgpaletter: teman/standardpaletter/anpassad palett
+- Bättre beskrivningar vid inloggningsfel för webbplats på webbhotell
+- Val av app för e-postvalidering vid registrering/inloggning
+- Svarskommentarer till en raderad kommentar visas inte
+- Bilder är synliga även om enheten roterats under pågående bildhämtning
+- Korrigering av förloppsindikatorn vid redigering av ikonen för Min webbplats
+- Ändrad standardordning i listan över insikter
 </sv-SE>
 <tr-TR>
-19.3:
-- E-posta uygulaması kullanılamadığında kayıt sırasında artık e-posta düğmesi yoktur
-- Yeni yorum düzenleyicide bildirimler
-- Uygulamada oluşturulan siteler için doğru saat dilimi 
-- Boş "Sitem" görünümü ve Sayfa/Site önizlemesi için hata düzeltmeleri
-- Yöneticiler/Editörler için okuyucu yorumlarını düzenleme olanağı
-- Düşük bellek, düzenleyici hikaye bloklarını etkilemez
-- İngilizce olmayan karakterlere sahip yeni site URL'leri için daha iyi hata metni
+19.4:
+- Tema, varsayılan ve özel renk paletleri
+- Barındırılan sitelerde faydalı oturum açma hata mesajları
+- Kayıt/giriş sırasında e-postayı doğrularken e-posta uygulaması seçimi
+- Üst yorum silinirse iç içe Okuyucu yorumu yok
+- Görseller, yakalamanın ortasında yön değiştirildikten sonra görüntülenir
+- Sitem simgesi düzenlemeleri için ilerleme çubuğu düzeltmesi
+- Varsayılan Öngörülerin yeniden düzenlenmiş listesi
 </tr-TR>
 <vi>
-19.3:
-- Thông báo trong trình soạn thảo bình luận
-- Sửa đúng múi giờ cho blog tạo bằng app
-- Sửa bình luận cho Admins/Editors
-- Bộ nhớ thấp không ảnh hưởng khối story
-- Báo lỗi khi tạo blog URL ký tự lạ
-- Sửa lỗi và cải thiện thiết kế
+19.4:
+- Chủ đề/mặc định/tùy chọn mẫu màu
+- Thông báo lỗi khi  đăng nhập
+- Chọn app xác thực email
+- Xóa bình luận con khi bình luận mẹ xóa
+- Xoay ảnh
+- Sửa thanh tiến trình tải biểu tượng blog
+- Xếp lại thống kê
 </vi>
 <zh-CN>
-19.3：
-- 电子邮件应用不可用时，注册时无电子邮件按钮
-- 新评论编辑器中的通知
-- 在应用中创建的站点的正确时区
-- 对于“我的站点”视图和页面/站点预览的错误修复
-- 面向管理员/编辑的阅读器评论编辑
-- 低内存不会影响编辑器故事区块
-- 新站点 URL 中包含非英文字符时显示的错误文本更美观
+19.4：
+- 主题、默认和自定义调色盘
+- 自托管站点的有用的登录错误信息
+- 当在注册/登录验证电子邮件时的电子邮件应用程序选择
+- 如果父级评论被删除，则没有嵌套读者评论
+- 更改转向中期捕获后显示的图像
+- “我的站点”图标编辑的进度条修复
+- 重新组织的默认数据分析列表
 </zh-CN>
 <zh-TW>
-19.3：
-- 電子郵件應用程式無法使用時，註冊畫面不會顯示電子郵件按鈕
-- 新留言編輯器中的通知功能
-- 修正在應用程式中建立之網站的時區
-- 修正「我的網站」檢視畫面和頁面/網站預覽空白的錯誤
-- 管理員/編輯者的閱讀器留言編輯功能
-- 記憶體不足不會再影響編輯器動態區塊
-- 改善新網站 URL 包含非英文字元時顯示的錯誤文字
+19.4：
+- 佈景主題、預設和自訂調色盤
+- 實用的自助託管網站登入錯誤訊息
+- 註冊/登入驗證電子郵件時的電子郵件應用程式選項
+- 如上層留言遭刪除，則無閱讀器留言
+- 在變更中途擷取方向後顯示圖片
+- 修正「我的網站」圖示編輯的進度列
+- 重新排列預設洞察報告清單
 </zh-TW>

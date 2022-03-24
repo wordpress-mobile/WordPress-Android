@@ -1398,8 +1398,25 @@
         <item name="android:windowAnimationStyle">@style/FullScreenDialogFragmentAnimation</item>
     </style>
 
+    <style name="BloggingPromptsOnboardingFragmentAnimation" parent="@android:style/Theme.Panel">
+        <item name="android:windowEnterAnimation">@anim/full_screen_dialog_fragment_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/full_screen_dialog_fragment_slide_down</item>
+    </style>
+
+    <style name="BloggingPromptsOnboardingDialogFragment" parent="WordPress.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">
+            @style/BloggingPromptsOnboardingFragmentAnimation
+        </item>
+    </style>
+
     <style name="WordPress.FullscreenDialog">
         <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="WordPress.FullscreenDialog.NoTitle" parent="WordPress.FullscreenDialog">
+        <item name="windowNoTitle">true</item>
     </style>
 
     <!-- Overload of Aztec theme -->

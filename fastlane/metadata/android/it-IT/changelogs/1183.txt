@@ -1,0 +1,8 @@
+19.4:
+- Colori temi/default/personali
+- Messaggi utili
+- Scelta app in verifica e-mail a signup/login
+- No nidificato se principale eliminato
+- Riorientamento immagini
+- Fix barra per cambi a Il mio sito
+- Panoramica riorganizzata

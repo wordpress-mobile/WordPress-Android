@@ -136,7 +136,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     fun `date selection selected`() = test {
         val model = initEmptyStore()
         val daySelectionScreen = listOf<BloggingRemindersItem>()
-        whenever(daySelectionBuilder.buildSelection(eq(model), any(), any())).thenReturn(daySelectionScreen)
+        whenever(daySelectionBuilder.buildSelection(eq(model), any(), any(), any())).thenReturn(daySelectionScreen)
         whenever(bloggingRemindersStore.hasModifiedBloggingReminders(siteId)).thenReturn(true)
 
         viewModel.onBlogSettingsItemClicked(siteId)
@@ -463,7 +463,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                                     }
                     )
             )
-        }.whenever(daySelectionBuilder).buildSelection(any(), any(), any())
+        }.whenever(daySelectionBuilder).buildSelection(any(), any(), any(), any())
 
         doAnswer {
             val model = it.getArgument<BloggingRemindersUiModel>(0)
