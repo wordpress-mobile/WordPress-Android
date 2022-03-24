@@ -124,12 +124,12 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
-import org.wordpress.android.util.isDarkTheme
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.isDarkTheme
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent

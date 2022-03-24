@@ -8,7 +8,7 @@ import org.wordpress.android.databinding.QuickActionsCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class QuickActionsViewHolder(
     parent: ViewGroup,

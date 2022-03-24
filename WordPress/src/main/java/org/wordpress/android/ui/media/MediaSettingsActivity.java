@@ -74,7 +74,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -86,7 +86,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -325,7 +325,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
                 Toast.makeText(view.getContext(), R.string.button_preview, Toast.LENGTH_SHORT).show();
                 return true;
             });
-            ViewUtilsKt.redirectContextClickToLongPressListener(mFabView);
+            ViewExtensionsKt.redirectContextClickToLongPressListener(mFabView);
         }
     }
 

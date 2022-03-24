@@ -1,9 +1,9 @@
 ext {
-    wordPressUtilsVersion = '2.4.0'
-    wordPressLoginVersion = '0.12.0'
-    gutenbergMobileVersion = 'v1.73.0-alpha1'
-    storiesVersion = 'trunk-2f8aaff7fb03bdbd0e2efbe111626bf3c6a7aa44'
-    aboutAutomatticVersion = '0.0.4'
+    wordPressUtilsVersion = 'trunk-39557b2153d1b0c0e7e3fd3a4fa32e6099bf50a2'
+    wordPressLoginVersion = 'trunk-d4f9830a9e2d2cbf7e1edec2886af687363b0980'
+    gutenbergMobileVersion = 'v1.73.0-alpha4'
+    storiesVersion = 'trunk-0b727f84440048e39d5e4835e2a84c67d043d225'
+    aboutAutomatticVersion = 'trunk-99c45a25f4493f1ff19f1b88f718438dc7b3297a'
 
     minSdkVersion = 24
     compileSdkVersion = 31
@@ -13,7 +13,7 @@ ext {
     androidxWorkVersion = "2.7.0"
 
     daggerVersion = '2.41'
-    fluxCVersion = '1.38.0'
+    fluxCVersion = 'trunk-7035f6772f4e0cb4980da0556a5762ea7904eb24'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
@@ -58,7 +58,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"

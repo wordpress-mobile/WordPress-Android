@@ -5,10 +5,10 @@
     <string name="widgets_enabled" translatable="false">true</string>
 
     <!-- account setup -->
-    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
-    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
+    <string name="xmlrpc_missing_method_error" tools:ignore="UnusedResources">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_post_blocked_error" tools:ignore="UnusedResources">Couldn\'t connect. Your host is blocking POST requests, and the app needs
         that in order to communicate with your site. Contact your host to solve this problem.</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
+    <string name="xmlrpc_endpoint_forbidden_error" tools:ignore="UnusedResources">Couldn\'t connect. We received a 403 error when trying to access your
         site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="no_network_title">No network available</string>
@@ -545,7 +545,7 @@
     <string name="uploading_media">Uploading media…</string>
 
     <!-- new account view -->
-    <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
+    <string name="no_site_error" tools:ignore="UnusedResources">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -1059,7 +1059,7 @@
     <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time.</string>
     <string name="install_jetpack_continue">Set up</string>
     <string name="install_jetpack_retry">Retry</string>
-    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="login_to_to_connect_jetpack" tools:ignore="UnusedResources">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
@@ -1384,10 +1384,10 @@
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
 
     <!-- HTTP Authentication -->
-    <string name="httpuser">HTTP username</string>
-    <string name="httppassword">HTTP password</string>
+    <string name="httpuser" tools:ignore="UnusedResources">HTTP username</string>
+    <string name="httppassword" tools:ignore="UnusedResources">HTTP password</string>
     <string name="settings">Settings</string>
-    <string name="http_authorization_required">Authorization required</string>
+    <string name="http_authorization_required" tools:ignore="UnusedResources">Authorization required</string>
 
     <!-- post scheduling and password -->
     <string name="submit_for_review">Submit</string>
@@ -1701,11 +1701,11 @@
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
-    <string name="link_dialog_title">Insert link</string>
-    <string name="link_dialog_button_remove_link">Remove Link</string>
-    <string name="link_dialog_edit_hint">http(s)://</string>
-    <string name="link_dialog_button_ok">OK</string>
-    <string name="link_dialog_button_cancel">Cancel</string>
+    <string name="link_dialog_title" tools:ignore="UnusedResources">Insert link</string>
+    <string name="link_dialog_button_remove_link" tools:ignore="UnusedResources">Remove Link</string>
+    <string name="link_dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
+    <string name="link_dialog_button_ok" tools:ignore="UnusedResources">OK</string>
+    <string name="link_dialog_button_cancel" tools:ignore="UnusedResources">Cancel</string>
 
     <!-- History -->
     <string name="description_user">User avatar</string>
@@ -1836,7 +1836,7 @@
 
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
-    <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+    <string name="error_fetch_my_profile" tools:ignore="UnusedResources">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
     <string name="error_disabled_apis">Could not fetch settings: Some APIs are unavailable for this OAuth app ID + account combination.</string>
     <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
@@ -1950,7 +1950,7 @@
     <string name="reader_following_display_name">Following</string>
 
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
-    <string name="timespan_now">now</string>
+    <string name="timespan_now" tools:ignore="UnusedResources">now</string>
 
     <!-- title shown for untitled posts and blogs -->
     <string name="reader_untitled_post">(Untitled)</string>
@@ -2141,21 +2141,21 @@
 
     <!-- NUX strings -->
     <string name="invalid_email_message">Your email address isn\'t valid</string>
-    <string name="email_invalid">Enter a valid email address</string>
+    <string name="email_invalid" tools:ignore="UnusedResources">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
-    <string name="verification_code">Verification code</string>
-    <string name="auth_required">Log in again to continue.</string>
+    <string name="verification_code" tools:ignore="UnusedResources">Verification code</string>
+    <string name="auth_required" tools:ignore="UnusedResources">Log in again to continue.</string>
     <string name="logging_in">Logging in</string>
-    <string name="reset_your_password">Reset your password</string>
-    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
-    <string name="checking_email">Checking email</string>
+    <string name="reset_your_password" tools:ignore="UnusedResources">Reset your password</string>
+    <string name="magic_link_unavailable_error_message" tools:ignore="UnusedResources">Currently unavailable. Please enter your password</string>
+    <string name="checking_email" tools:ignore="UnusedResources">Checking email</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
-    <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
-    <string name="duplicate_site_detected">A duplicate site has been detected.</string>
-    <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
+    <string name="cannot_add_duplicate_site" tools:ignore="UnusedResources">This site already exists in the app, you can\'t add it.</string>
+    <string name="duplicate_site_detected" tools:ignore="UnusedResources">A duplicate site has been detected.</string>
+    <string name="error_user_username_instead_of_email" tools:ignore="UnusedResources">Please log in using your WordPress.com username instead of your email address.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -2167,7 +2167,7 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
-    <string name="contact_fragment_title" translatable="false">@string/contact_support</string>
+    <string name="contact_fragment_title" translatable="false" tools:ignore="UnusedResources">@string/contact_support</string>
 
     <!-- Contact us -->
     <string name="support_ticket_subject">WordPress for Android Support</string>
@@ -2749,7 +2749,7 @@
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
-    <string name="log_in">Log In</string>
+    <string name="log_in" tools:ignore="UnusedResources">Log In</string>
     <string name="login_prologue_title_first">Welcome to the world\’s most popular website builder.</string>
     <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
     <string name="login_prologue_title_third">See comments and notifications in real time.</string>
@@ -2772,56 +2772,56 @@
     <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
     <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
     <string name="login_prologue_fifth_caption_three">Museums in London</string>
-    <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="send_link_by_email">Send link by email</string>
-    <string name="create_account">Create account</string>
-    <string name="or_type_your_password">Or type your password</string>
-    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
-    <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
-    <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
-    <string name="get_started">Get Started</string>
+    <string name="invalid_verification_code" tools:ignore="UnusedResources">Invalid verification code</string>
+    <string name="send_link_by_email" tools:ignore="UnusedResources">Send link by email</string>
+    <string name="create_account" tools:ignore="UnusedResources">Create account</string>
+    <string name="or_type_your_password" tools:ignore="UnusedResources">Or type your password</string>
+    <string name="enter_email_wordpress_com" tools:ignore="UnusedResources">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_to_continue_wordpress_com" tools:ignore="UnusedResources">Enter your email address to log in or create a WordPress.com account.</string>
+    <string name="enter_email_for_site" tools:ignore="UnusedResources">Log in with WordPress.com to connect to %1$s</string>
+    <string name="get_started" tools:ignore="UnusedResources">Get Started</string>
     <string name="next">Next</string>
-    <string name="check_email">Check email</string>
-    <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
-    <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
-    <string name="login_text_otp">Text me a code instead</string>
-    <string name="login_text_otp_another">Text me another code instead</string>
-    <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address.</string>
-    <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="login_magic_links_label">We\'ll email you a link that\'ll log you in instantly, no password needed.</string>
-    <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
-    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
-    <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
-    <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
-    <string name="login_get_link_by_email">Get a login link by email</string>
-    <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
-    <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
+    <string name="check_email" tools:ignore="UnusedResources">Check email</string>
+    <string name="enter_verification_code" tools:ignore="UnusedResources">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="enter_verification_code_sms" tools:ignore="UnusedResources">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
+    <string name="login_text_otp" tools:ignore="UnusedResources">Text me a code instead</string>
+    <string name="login_text_otp_another" tools:ignore="UnusedResources">Text me another code instead</string>
+    <string name="requesting_otp" tools:ignore="UnusedResources">Requesting a verification code via SMS.</string>
+    <string name="email_not_registered_wpcom" tools:ignore="UnusedResources">Hmm, we can\'t find a WordPress.com account connected to this email address.</string>
+    <string name="password_incorrect" tools:ignore="UnusedResources">It looks like this password is incorrect. Please double check your information and try again.</string>
+    <string name="login_magic_links_label" tools:ignore="UnusedResources">We\'ll email you a link that\'ll log you in instantly, no password needed.</string>
+    <string name="login_magic_links_sent_label" tools:ignore="UnusedResources">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources">Requesting log-in email</string>
+    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources">Not seeing the email? Check your Spam or Junk Mail folder.</string>
+    <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
+    <string name="login_get_link_by_email" tools:ignore="UnusedResources">Get a login link by email</string>
+    <string name="enter_wpcom_password" tools:ignore="UnusedResources">Enter your WordPress.com password.</string>
+    <string name="enter_wpcom_password_google" tools:ignore="UnusedResources">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="connect_more">Connect another site</string>
     <string name="connect_site">Connect a site</string>
     <string name="login_continue" tools:ignore="UnusedResources">Continue</string>
     <string name="login_done">Done</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
-    <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
-    <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
-    <string name="login_site_address">Site address</string>
-    <string name="login_site_address_help_title">What\'s my site address?</string>
-    <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
-    <string name="login_site_address_more_help">Need more help?</string>
-    <string name="login_find_your_site_adress">Find your site address</string>
-    <string name="login_find_your_connected_email">Find your connected email</string>
-    <string name="login_checking_site_address">Checking site address</string>
-    <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
-    <string name="login_error_xml_rpc_services_disabled">XML-RPC services are disabled on this site.</string>
-    <string name="login_error_xml_rpc_cannot_read_site">Unable to read the WordPress site at that URL. Tap on help icon to view the FAQ.</string>
-    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC calls seem blocked on this site (error code 401). If attempt to login fails tap on help icon to view the FAQ.</string>
-    <string name="login_error_xml_rpc_auth_error_communicating">There was a problem communicating with the site. An HTTP error code 401 was returned.</string>
-    <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
-    <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
-    <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
-    <string name="login_empty_username">Please enter a username</string>
-    <string name="login_empty_password">Please enter a password</string>
-    <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="enter_site_address" tools:ignore="UnusedResources">Enter the address of the WordPress site you\'d like to connect.</string>
+    <string name="enter_site_address_share_intent" tools:ignore="UnusedResources">Enter the address of your WordPress site you\'d like to share the content to.</string>
+    <string name="login_site_address" tools:ignore="UnusedResources">Site address</string>
+    <string name="login_site_address_help_title" tools:ignore="UnusedResources">What\'s my site address?</string>
+    <string name="login_site_address_help_content" tools:ignore="UnusedResources">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
+    <string name="login_site_address_more_help" tools:ignore="UnusedResources">Need more help?</string>
+    <string name="login_find_your_site_adress" tools:ignore="UnusedResources">Find your site address</string>
+    <string name="login_find_your_connected_email" tools:ignore="UnusedResources">Find your connected email</string>
+    <string name="login_checking_site_address" tools:ignore="UnusedResources">Checking site address</string>
+    <string name="login_error_while_adding_site" tools:ignore="UnusedResources">Error while adding site. Error code: %s</string>
+    <string name="login_error_xml_rpc_services_disabled" tools:ignore="UnusedResources">XML-RPC services are disabled on this site.</string>
+    <string name="login_error_xml_rpc_cannot_read_site" tools:ignore="UnusedResources">Unable to read the WordPress site at that URL. Tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required" tools:ignore="UnusedResources">XML-RPC calls seem blocked on this site (error code 401). If attempt to login fails tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_auth_error_communicating" tools:ignore="UnusedResources">There was a problem communicating with the site. An HTTP error code 401 was returned.</string>
+    <string name="login_log_in_for_deeplink" tools:ignore="UnusedResources">Log in to WordPress.com to access the post.</string>
+    <string name="login_log_in_for_share_intent" tools:ignore="UnusedResources">Log in to WordPress.com to share the content.</string>
+    <string name="login_invalid_site_url" tools:ignore="UnusedResources">Please enter a complete website address, like example.com.</string>
+    <string name="login_empty_username" tools:ignore="UnusedResources">Please enter a username</string>
+    <string name="login_empty_password" tools:ignore="UnusedResources">Please enter a password</string>
+    <string name="login_empty_2fa" tools:ignore="UnusedResources">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_select_email_client">Which email app do you use?</string>
     <string name="login_epilogue_mysites_one">My site</string>
@@ -2829,23 +2829,23 @@
     <string name="login_epilogue_mysites_heading">Choose a site to open</string>
     <string name="login_epilogue_mysites_subheading">You can switch sites any time.</string>
     <string name="login_epilogue_create_new_site_button">Create a new site</string>
-    <string name="continue_google_button_suffix">Continue with Google</string>
-    <string name="continue_site_credentials">Continue with store credentials</string>
-    <string name="login_or">or</string>
+    <string name="continue_google_button_suffix" tools:ignore="UnusedResources">Continue with Google</string>
+    <string name="continue_site_credentials" tools:ignore="UnusedResources">Continue with store credentials</string>
+    <string name="login_or" tools:ignore="UnusedResources">or</string>
     <string name="login_error_button">Close</string>
-    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
-    <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
-    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
-    <string name="login_error_generic_start">Google login could not be started.</string>
-    <string name="login_error_suffix">\nMaybe try a different account?</string>
-    <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
+    <string name="login_error_email_not_found_v2" tools:ignore="UnusedResources">There\'s no WordPress.com account matching this Google account.</string>
+    <string name="login_error_generic" tools:ignore="UnusedResources">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_sms_throttled" tools:ignore="UnusedResources">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
+    <string name="login_error_generic_start" tools:ignore="UnusedResources">Google login could not be started.</string>
+    <string name="login_error_suffix" tools:ignore="UnusedResources">\nMaybe try a different account?</string>
+    <string name="enter_wpcom_or_jetpack_site" tools:ignore="UnusedResources">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <string name="enter_credentials_for_site" tools:ignore="UnusedResources">Log in with your %1$s site credentials</string>
-    <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
-    <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b&gt;SSL Certificate&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
-    <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
+    <string name="enter_account_info_for_site" tools:ignore="UnusedResources">Enter your account information for %1$s.</string>
+    <string name="login_site_credentials_magic_link_label" tools:ignore="UnusedResources">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="login_discovery_error_xmlrpc" tools:ignore="UnusedResources">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_http_auth" tools:ignore="UnusedResources">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_ssl" tools:ignore="UnusedResources">We were unable to access your site because of a problem with the &lt;b&gt;SSL Certificate&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
+    <string name="login_discovery_error_generic" tools:ignore="UnusedResources">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_not_a_jetpack_site">To use this app for %1$s you\'ll need to have the Jetpack plugin installed and connected to your WordPress.com account.</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="login_empty_view_avatar_content_description">Your profile photo</string>
@@ -2854,15 +2854,15 @@
     <string name="login_empty_view_try_another_account">Try with another account</string>
 
     <!-- Screen titles -->
-    <string name="email_address_login_title">Email address login</string>
-    <string name="site_address_login_title">Site address login</string>
-    <string name="magic_link_login_title">Magic link login</string>
-    <string name="magic_link_sent_login_title">Magic link sent</string>
-    <string name="selfhosted_site_login_title">Login credentials</string>
-    <string name="verification_2fa_screen_title">Code verification</string>
+    <string name="email_address_login_title" tools:ignore="UnusedResources">Email address login</string>
+    <string name="site_address_login_title" tools:ignore="UnusedResources">Site address login</string>
+    <string name="magic_link_login_title" tools:ignore="UnusedResources">Magic link login</string>
+    <string name="magic_link_sent_login_title" tools:ignore="UnusedResources">Magic link sent</string>
+    <string name="selfhosted_site_login_title" tools:ignore="UnusedResources">Login credentials</string>
+    <string name="verification_2fa_screen_title" tools:ignore="UnusedResources">Code verification</string>
 
     <!-- Signup -->
-    <string name="sign_up_label">Sign Up</string>
+    <string name="sign_up_label" tools:ignore="UnusedResources">Sign Up</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
     <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
@@ -2872,21 +2872,21 @@
     <string name="signup_epilogue_hint_password">Password (optional)</string>
     <string name="signup_epilogue_hint_password_detail">You can always log in with a link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_username">Username</string>
-    <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
-    <string name="signup_magic_link_error_button_negative">Close</string>
-    <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
-    <string name="signup_magic_link_progress">Sending email</string>
-    <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_magic_link_error" tools:ignore="UnusedResources">There was some trouble sending the email. You can retry now or close and try again later.</string>
+    <string name="signup_magic_link_error_button_negative" tools:ignore="UnusedResources">Close</string>
+    <string name="signup_magic_link_error_button_positive" tools:ignore="UnusedResources">Retry</string>
+    <string name="signup_magic_link_message" tools:ignore="UnusedResources">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
+    <string name="signup_magic_link_progress" tools:ignore="UnusedResources">Sending email</string>
+    <string name="signup_confirmation_message" tools:ignore="UnusedResources">We’ll use this email address to create your new WordPress.com account.</string>
+    <string name="continue_terms_of_service_text" tools:ignore="UnusedResources">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="continue_with_google_terms_of_service_text" tools:ignore="UnusedResources">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account…</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
-    <string name="signup_with_google_progress">Signing up with Google…</string>
+    <string name="signup_with_google_progress" tools:ignore="UnusedResources">Signing up with Google…</string>
     <string name="content_description_add_avatar">Add avatar</string>
     <!-- Screen titles -->
-    <string name="signup_magic_link_title">Magic link sent</string>
-    <string name="signup_confirmation_title">Signup confirmation</string>
+    <string name="signup_magic_link_title" tools:ignore="UnusedResources">Magic link sent</string>
+    <string name="signup_confirmation_title" tools:ignore="UnusedResources">Signup confirmation</string>
 
     <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
@@ -2908,7 +2908,7 @@
     <string name="settings_username_changer_toast_content">Your new username is %1$s</string>
     <string name="settings_username_changer_snackbar_cancel">This action can\'t be canceled. Username might have been already updated.</string>
 
-    <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
+    <string name="google_error_timeout" tools:ignore="UnusedResources">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
     <!-- Post-Signup Interstitial -->
     <string name="post_signup_interstitial_title">Welcome to WordPress</string>
@@ -2932,22 +2932,22 @@
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string content_override="true" name="login_notification_channel_id" translatable="false">@string/notification_channel_normal_id</string>
+    <string name="login_notification_channel_id" content_override="true" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
 
     <!-- Login notifications -->
-    <string name="notification_login_title_success">Logged in!</string>
-    <string name="notification_logged_in">Tap to continue.</string>
-    <string name="notification_login_title_in_progress">Login in progress…</string>
-    <string name="notification_logging_in">Please wait while logging in.</string>
-    <string name="notification_login_title_stopped">Login stopped</string>
-    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
-    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
-    <string name="notification_login_failed">An error has occurred.</string>
-    <string name="notification_wpcom_username_needed">Please log in with your username and password.</string>
+    <string name="notification_login_title_success" tools:ignore="UnusedResources">Logged in!</string>
+    <string name="notification_logged_in" tools:ignore="UnusedResources">Tap to continue.</string>
+    <string name="notification_login_title_in_progress" tools:ignore="UnusedResources">Login in progress…</string>
+    <string name="notification_logging_in" tools:ignore="UnusedResources">Please wait while logging in.</string>
+    <string name="notification_login_title_stopped" tools:ignore="UnusedResources">Login stopped</string>
+    <string name="notification_error_wrong_password" tools:ignore="UnusedResources">Please double check your password to continue.</string>
+    <string name="notification_2fa_needed" tools:ignore="UnusedResources">Please provide an authentication code to continue.</string>
+    <string name="notification_login_failed" tools:ignore="UnusedResources">An error has occurred.</string>
+    <string name="notification_wpcom_username_needed" tools:ignore="UnusedResources">Please log in with your username and password.</string>
     <string name="change_photo">Change photo</string>
 
     <!-- Content description for accessibility  -->
@@ -3331,62 +3331,62 @@
     <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
     <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
     <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
-    <string name="capture_button_alt">Capture</string>
-    <string name="flip_button_alt">Flip camera</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="stickers_button_alt">Stickers</string>
-    <string name="text_button_alt">Text</string>
-    <string name="sound_button_alt">Sound</string>
-    <string name="label_control_flip_camera">Flip</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_saving">Saving</string>
-    <string name="label_control_saved">Saved</string>
-    <string name="label_control_retry">Retry</string>
-    <string name="label_snackbar_loop_frame_saved">Saved to photos</string>
-    <string name="label_snackbar_share">SHARE</string>
-    <string name="label_share_to">Share to</string>
+    <string name="capture_button_alt" tools:ignore="UnusedResources">Capture</string>
+    <string name="flip_button_alt" tools:ignore="UnusedResources">Flip camera</string>
+    <string name="flash_button_alt" tools:ignore="UnusedResources">Flash</string>
+    <string name="stickers_button_alt" tools:ignore="UnusedResources">Stickers</string>
+    <string name="text_button_alt" tools:ignore="UnusedResources">Text</string>
+    <string name="sound_button_alt" tools:ignore="UnusedResources">Sound</string>
+    <string name="label_control_flip_camera" tools:ignore="UnusedResources">Flip</string>
+    <string name="label_control_flash" tools:ignore="UnusedResources">Flash</string>
+    <string name="label_control_saving" tools:ignore="UnusedResources">Saving</string>
+    <string name="label_control_saved" tools:ignore="UnusedResources">Saved</string>
+    <string name="label_control_retry" tools:ignore="UnusedResources">Retry</string>
+    <string name="label_snackbar_loop_frame_saved" tools:ignore="UnusedResources">Saved to photos</string>
+    <string name="label_snackbar_share" tools:ignore="UnusedResources">SHARE</string>
+    <string name="label_share_to" tools:ignore="UnusedResources">Share to</string>
     <string name="label_close_button">Close</string>
-    <string name="label_saved_icon">Saved</string>
-    <string name="label_retry_icon">Retry</string>
-    <string name="label_frame_image">Slide</string>
-    <string name="label_frame_unselected_border">unselected</string>
-    <string name="label_frame_selected_border">selected</string>
-    <string name="label_frame_errored">errored</string>
-    <string name="label_text_alignment_button">Change text alignment</string>
-    <string name="label_text_color_button">Change text color</string>
-    <string name="dialog_discard_page_title">Delete story slide?</string>
-    <string name="dialog_discard_page_message">This slide will be removed from your story.</string>
-    <string name="dialog_discard_errored_page_message">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
-    <string name="dialog_discard_page_ok_button">Delete</string>
-    <string name="dialog_discard_story_title">Discard story post?</string>
-    <string name="dialog_discard_story_message">Your story post will not be saved as a draft.</string>
-    <string name="dialog_discard_story_ok_button">Discard</string>
-    <string name="pref_camera_selection" translatable="false">pref_camera_selection</string>
-    <string name="pref_flash_mode_selection" translatable="false">pref_flash_mode_selection</string>
-    <string name="story_saving_untitled">Untitled</string>
-    <string name="story_saving_title">Saving "%1$s"…</string>
-    <string name="story_saving_title_several">several stories</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1 slide remaining</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d slides remaining</string>
+    <string name="label_saved_icon" tools:ignore="UnusedResources">Saved</string>
+    <string name="label_retry_icon" tools:ignore="UnusedResources">Retry</string>
+    <string name="label_frame_image" tools:ignore="UnusedResources">Slide</string>
+    <string name="label_frame_unselected_border" tools:ignore="UnusedResources">unselected</string>
+    <string name="label_frame_selected_border" tools:ignore="UnusedResources">selected</string>
+    <string name="label_frame_errored" tools:ignore="UnusedResources">errored</string>
+    <string name="label_text_alignment_button" tools:ignore="UnusedResources">Change text alignment</string>
+    <string name="label_text_color_button" tools:ignore="UnusedResources">Change text color</string>
+    <string name="dialog_discard_page_title" tools:ignore="UnusedResources">Delete story slide?</string>
+    <string name="dialog_discard_page_message" tools:ignore="UnusedResources">This slide will be removed from your story.</string>
+    <string name="dialog_discard_errored_page_message" tools:ignore="UnusedResources">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
+    <string name="dialog_discard_page_ok_button" tools:ignore="UnusedResources">Delete</string>
+    <string name="dialog_discard_story_title" tools:ignore="UnusedResources">Discard story post?</string>
+    <string name="dialog_discard_story_message" tools:ignore="UnusedResources">Your story post will not be saved as a draft.</string>
+    <string name="dialog_discard_story_ok_button" tools:ignore="UnusedResources">Discard</string>
+    <string name="pref_camera_selection" translatable="false" tools:ignore="UnusedResources">pref_camera_selection</string>
+    <string name="pref_flash_mode_selection" translatable="false" tools:ignore="UnusedResources">pref_flash_mode_selection</string>
+    <string name="story_saving_untitled" tools:ignore="UnusedResources">Untitled</string>
+    <string name="story_saving_title" tools:ignore="UnusedResources">Saving "%1$s"…</string>
+    <string name="story_saving_title_several" tools:ignore="UnusedResources">several stories</string>
+    <string name="story_saving_subtitle_frames_remaining_singular" tools:ignore="UnusedResources">1 slide remaining</string>
+    <string name="story_saving_subtitle_frames_remaining_plural" tools:ignore="UnusedResources">%1$d slides remaining</string>
     <string name="story_saving_snackbar_started">Uploading "%1$s"…</string>
-    <string name="story_saving_snackbar_finished_successfully">"%1$s" published</string>
+    <string name="story_saving_snackbar_finished_successfully" tools:ignore="UnusedResources">"%1$s" published</string>
     <string name="story_saving_snackbar_finished_with_error">Unable to upload "%1$s"</string>
-    <string name="story_saving_failed_title">Unable to upload "%1$s"</string>
-    <string name="story_saving_failed_message_singular">1 slide requires action</string>
-    <string name="story_saving_failed_message_plural">%1$d slides require action</string>
+    <string name="story_saving_failed_title" tools:ignore="UnusedResources">Unable to upload "%1$s"</string>
+    <string name="story_saving_failed_message_singular" tools:ignore="UnusedResources">1 slide requires action</string>
+    <string name="story_saving_failed_message_plural" tools:ignore="UnusedResources">%1$d slides require action</string>
     <string name="story_saving_failed_quick_action_manage">Manage</string>
-    <string name="dialog_story_saving_error_title_singular">Unable to save 1 slide</string>
-    <string name="dialog_story_saving_error_title_plural">Unable to save %1$d slides</string>
-    <string name="dialog_story_saving_error_message">Retry saving or delete the slides, then try publishing your story again.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Insufficient device storage</string>
-    <string name="dialog_insufficient_device_storage_error_message">We need to save the story on your device before it can be published. Review your storage settings and remove files to free up space.</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">View Storage</string>
-    <string name="toast_story_page_not_found">Couldn\'t find Story slide</string>
-    <string name="toast_capture_operation_in_progress">Operation in progress, try again</string>
-    <string name="toast_error_saving_image">Error saving image</string>
-    <string name="toast_error_saving_video">Video could not be saved</string>
-    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
-    <string name="toast_error_playing_video">An error occurred while playing your video</string>
+    <string name="dialog_story_saving_error_title_singular" tools:ignore="UnusedResources">Unable to save 1 slide</string>
+    <string name="dialog_story_saving_error_title_plural" tools:ignore="UnusedResources">Unable to save %1$d slides</string>
+    <string name="dialog_story_saving_error_message" tools:ignore="UnusedResources">Retry saving or delete the slides, then try publishing your story again.</string>
+    <string name="dialog_insufficient_device_storage_error_title" tools:ignore="UnusedResources">Insufficient device storage</string>
+    <string name="dialog_insufficient_device_storage_error_message" tools:ignore="UnusedResources">We need to save the story on your device before it can be published. Review your storage settings and remove files to free up space.</string>
+    <string name="dialog_insufficient_device_storage_error_ok_button" tools:ignore="UnusedResources">View Storage</string>
+    <string name="toast_story_page_not_found" tools:ignore="UnusedResources">Couldn\'t find Story slide</string>
+    <string name="toast_capture_operation_in_progress" tools:ignore="UnusedResources">Operation in progress, try again</string>
+    <string name="toast_error_saving_image" tools:ignore="UnusedResources">Error saving image</string>
+    <string name="toast_error_saving_video" tools:ignore="UnusedResources">Video could not be saved</string>
+    <string name="camera_error" tools:ignore="UnusedResources">This device doesn\'t support Camera2 API.</string>
+    <string name="toast_error_playing_video" tools:ignore="UnusedResources">An error occurred while playing your video</string>
 
     <!-- Intro to Stories screen -->
     <string name="stories_intro_main_title">Introducing Story Posts</string>
@@ -3764,21 +3764,21 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">You can edit this block using the web version of the editor.</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">You can rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it above or below other blocks.</string>
     <!--/Autogenerated:Gutenberg Native-->
-    <string name="toast_capture_operation_permission_needed">You need to grant the app audio recording permission in order to record video</string>
-    <string name="typeface_label_nunito">Casual</string>
-    <string name="typeface_label_libre_baskerville">Classic</string>
-    <string name="typeface_label_oswald">Strong</string>
-    <string name="typeface_label_pacifico">Playful</string>
-    <string name="typeface_label_space_mono">Modern</string>
-    <string name="typeface_label_shrikhand">Bold</string>
-    <string name="delete_button_alt">Delete</string>
-    <string name="label_next_button">Next</string>
+    <string name="toast_capture_operation_permission_needed" tools:ignore="UnusedResources">You need to grant the app audio recording permission in order to record video</string>
+    <string name="typeface_label_nunito" tools:ignore="UnusedResources">Casual</string>
+    <string name="typeface_label_libre_baskerville" tools:ignore="UnusedResources">Classic</string>
+    <string name="typeface_label_oswald" tools:ignore="UnusedResources">Strong</string>
+    <string name="typeface_label_pacifico" tools:ignore="UnusedResources">Playful</string>
+    <string name="typeface_label_space_mono" tools:ignore="UnusedResources">Modern</string>
+    <string name="typeface_label_shrikhand" tools:ignore="UnusedResources">Bold</string>
+    <string name="delete_button_alt" tools:ignore="UnusedResources">Delete</string>
+    <string name="label_next_button" tools:ignore="UnusedResources">Next</string>
     <string name="label_done_button">Done</string>
-    <string name="dialog_discard_story_title_edit">Discard changes?</string>
-    <string name="dialog_discard_story_message_edit">Any changes made will not be saved.</string>
-    <string name="dialog_discard_story_ok_button_edit">Discard</string>
-    <string name="color_picker_label_text">Text</string>
-    <string name="color_picker_label_background">Background</string>
+    <string name="dialog_discard_story_title_edit" tools:ignore="UnusedResources">Discard changes?</string>
+    <string name="dialog_discard_story_message_edit" tools:ignore="UnusedResources">Any changes made will not be saved.</string>
+    <string name="dialog_discard_story_ok_button_edit" tools:ignore="UnusedResources">Discard</string>
+    <string name="color_picker_label_text" tools:ignore="UnusedResources">Text</string>
+    <string name="color_picker_label_background" tools:ignore="UnusedResources">Background</string>
 
     <!-- Jetpack backup download -->
     <string name="backup_download">Backup Download</string>
@@ -3825,7 +3825,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="backup_download_complete_failed_icon_content_description">Cloud with X icon</string>
 
     <string name="jetpack_icon_content_description">icon</string>
-    <string name="label_control_upload">Upload</string>
+    <string name="label_control_upload" tools:ignore="UnusedResources">Upload</string>
 
     <!-- Jetpack restore -->
     <string name="restore">Restore</string>
@@ -3955,33 +3955,33 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- About -->
     <string name="about_blog">Blog</string>
-    <string name="about_automattic_main_page_title">About %1$s</string>
-    <string name="about_automattic_legal_page_title">Legal and More</string>
-    <string name="about_automattic_acknowledgements_page_title">Acknowledgements</string>
-    <string name="about_automattic_version_label">Version %1$s</string>
-    <string name="about_automattic_share_with_friends_item_title">Share with Friends</string>
-    <string name="about_automattic_rate_us_item_title">Rate Us</string>
-    <string name="about_automattic_instagram_item_title">Instagram</string>
-    <string name="about_automattic_twitter_item_title">Twitter</string>
-    <string name="about_automattic_legal_and_more_item_title">Legal and More</string>
-    <string name="about_automattic_family_item_title">Automattic Family</string>
-    <string name="about_automattic_work_with_us_item_title">Work With Us</string>
-    <string name="about_automattic_work_with_us_item_subtitle">Work from Anywhere</string>
-    <string name="about_automattic_terms_of_service_item_title">Terms of Service</string>
-    <string name="about_automattic_privacy_policy_item_title">Privacy Policy</string>
-    <string name="about_automattic_california_privacy_notice_item_title">California Privacy Notice</string>
-    <string name="about_automattic_source_code_item_title">Source Code</string>
-    <string name="about_automattic_acknowledgements_item_title">Acknowledgements</string>
-    <string name="about_automattic_dayone">Day One</string>
-    <string name="about_automattic_jetpack">Jetpack</string>
-    <string name="about_automattic_pocketcasts">Pocket Casts</string>
-    <string name="about_automattic_simplenote">Simplenote</string>
-    <string name="about_automattic_tumblr">Tumblr</string>
-    <string name="about_automattic_woocommerce">WooCommerce</string>
-    <string name="about_automattic_wordpress">WordPress</string>
-    <string name="about_automattic_logo_description">Automattic logo</string>
-    <string name="about_automattic_back_icon_description">Back icon</string>
-    <string name="about_automattic_app_icon_description">App icon</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources">About %1$s</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources">Legal and More</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources">Acknowledgements</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources">Version %1$s</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources">Share with Friends</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources">Rate Us</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources">Instagram</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources">Twitter</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources">Legal and More</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources">Automattic Family</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources">Work With Us</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources">Work from Anywhere</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources">Terms of Service</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources">Privacy Policy</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources">California Privacy Notice</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources">Source Code</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources">Acknowledgements</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources">Day One</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources">Jetpack</string>
+    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources">Pocket Casts</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources">Simplenote</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources">Tumblr</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources">WooCommerce</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources">WordPress</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources">Automattic logo</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources">Back icon</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources">App icon</string>
 
     <!-- Blogging prompts -->
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>

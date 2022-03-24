@@ -14,7 +14,7 @@ import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import java.util.Locale
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
