@@ -39,7 +39,6 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
 import java.util.Locale
 
-@Suppress("MultiLineIfElse")
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(pageItem: PageItem)
@@ -80,10 +79,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 marginLayoutParams.leftMargin = indentWidth
                 pageItemContainer.layoutParams = marginLayoutParams
 
-                pageTitle.text = if (page.title.isEmpty())
+                pageTitle.text = if (page.title.isEmpty()) {
                     parent.context.getString(R.string.untitled_in_parentheses)
-                else
+                } else {
                     page.title
+                }
 
                 showSubtitle(page.date, page.author, page.subtitle, page.icon)
 
@@ -248,10 +248,11 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
         override fun onBind(pageItem: PageItem) {
             (pageItem as ParentPage).apply {
-                pageTitle.text = if (pageItem.title.isEmpty())
+                pageTitle.text = if (pageItem.title.isEmpty()) {
                     parent.context.getString(R.string.untitled_in_parentheses)
-                else
+                } else {
                     pageItem.title
+                }
                 radioButton.isChecked = pageItem.isSelected
                 itemView.setOnClickListener {
                     onParentSelected(pageItem)
