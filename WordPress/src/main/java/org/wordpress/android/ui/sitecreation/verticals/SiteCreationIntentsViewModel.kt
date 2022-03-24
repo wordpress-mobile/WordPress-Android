@@ -25,7 +25,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
 
-    private var isStarted = false
+    private var isInitialized = false
 
     private val _uiState: MutableLiveData<IntentsUiState> = MutableLiveData()
     val uiState: LiveData<IntentsUiState> = _uiState
@@ -40,8 +40,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     val onIntentSelected: LiveData<String> = _onIntentSelected
 
     fun start() {
-        if (isStarted) return
-        isStarted = true
+        if (isInitialized) return
         analyticsTracker.trackSiteIntentQuestionViewed()
     }
 
@@ -67,6 +66,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     fun initializeFromResources(resources: Resources) {
+        if (isInitialized) return
         val slugsArray = resources.getStringArray(R.array.site_creation_intents_slugs)
         val verticalArray = resources.getStringArray(R.array.site_creation_intents_strings)
         val emojiArray = resources.getStringArray(R.array.site_creation_intents_emojis)
@@ -84,6 +84,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _uiState.value = IntentsUiState(
                 content = DefaultItems(items = newItems)
         )
+        isInitialized = true
     }
 
     private fun intentSelected(slug: String, vertical: String) {
