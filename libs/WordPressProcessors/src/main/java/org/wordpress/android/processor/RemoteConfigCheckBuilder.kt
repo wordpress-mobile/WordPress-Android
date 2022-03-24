@@ -11,7 +11,6 @@ import com.squareup.kotlinpoet.TypeSpec
 import java.util.Locale
 
 class RemoteConfigCheckBuilder(private val remoteFeatures: List<TypeName>) {
-    @ExperimentalStdlibApi
     fun getContent(): FileSpec {
         val remoteFeaturesWithNames = remoteFeatures.map {
             it.toString()

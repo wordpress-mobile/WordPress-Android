@@ -71,7 +71,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             const val FEATURED_IMAGE_THUMBNAIL_SIZE_DP = 40
         }
 
-        @ExperimentalStdlibApi
         override fun onBind(pageItem: PageItem) {
             (pageItem as Page).let { page ->
                 val indentWidth = DisplayUtils.dpToPx(parent.context, 16 * page.indent)
@@ -187,7 +186,6 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
             }
         }
 
-        @ExperimentalStdlibApi
         private fun showSubtitle(inputDate: Date, author: String?, subtitle: Int?, icon: Int?) {
             val date = if (inputDate == Date(0)) Date() else inputDate
             val stringDate = DateTimeUtils.javaDateToTimeSpan(date, parent.context)

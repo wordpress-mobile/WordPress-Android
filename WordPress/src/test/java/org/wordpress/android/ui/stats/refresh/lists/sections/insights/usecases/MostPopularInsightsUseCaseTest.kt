@@ -44,7 +44,6 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     private val hour = 20
     private val highestHourPercent = 25.5
     private val hourString = "8:00 PM"
-    @ExperimentalStdlibApi
     @InternalCoroutinesApi
     @Before
     fun setUp() {
