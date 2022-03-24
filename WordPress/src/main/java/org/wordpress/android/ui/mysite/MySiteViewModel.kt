@@ -347,7 +347,8 @@ class MySiteViewModel @Inject constructor(
                                 if (bloggingPromptsFeatureConfig.isEnabled()) {
                                     BloggingPrompt(
                                             "Test Prompt",
-                                            19
+                                            19,
+                                            ""
                                     )
                                 } else null
                         )
