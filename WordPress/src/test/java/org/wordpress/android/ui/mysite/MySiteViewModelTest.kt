@@ -1219,8 +1219,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
 
         verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
-           it.bloggingPromptCardBuilderParams.bloggingPrompt != null
-
+            it.bloggingPromptCardBuilderParams.bloggingPrompt != null
         })
     }
 
@@ -1233,7 +1232,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
             it.bloggingPromptCardBuilderParams.bloggingPrompt == null
-
         })
     }
 
