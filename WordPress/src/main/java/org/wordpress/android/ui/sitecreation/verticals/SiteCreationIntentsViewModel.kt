@@ -107,7 +107,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
-    fun onInputFocused() {
+    fun onSearchInputFocused() {
         uiState.value?.let { state ->
             if (!state.isHeaderVisible) return
             analyticsTracker.trackSiteIntentQuestionSearchFocused()
