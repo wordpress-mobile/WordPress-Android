@@ -85,6 +85,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -131,7 +132,8 @@ class MySiteViewModel @Inject constructor(
     private val siteItemsTracker: SiteItemsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -340,7 +342,13 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                BloggingPrompt("Test Prompt", 19)
+                                // TODO @klymyam fetch the actual blogging prompt
+                                if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                    BloggingPrompt(
+                                            "Test Prompt",
+                                            19
+                                    )
+                                } else null
                         )
                 )
         )

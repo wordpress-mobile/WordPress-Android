@@ -79,6 +79,6 @@ sealed class MySiteCardAndItemBuilderParams {
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(
-        val bloggingPrompt: BloggingPrompt
+        val bloggingPrompt: BloggingPrompt?
     ) : MySiteCardAndItemBuilderParams()
 }

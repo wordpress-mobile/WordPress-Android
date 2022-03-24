@@ -6,7 +6,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 class BloggingPromptCardBuilder @Inject constructor() {
-    fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt.let {
+    fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
         BloggingPromptCardWithData(
                 prompt = UiStringText(it.text),
                 answeredUsers = emptyList(),
