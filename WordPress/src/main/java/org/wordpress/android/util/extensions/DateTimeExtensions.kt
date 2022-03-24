@@ -1,4 +1,4 @@
-package org.wordpress.android.util
+package org.wordpress.android.util.extensions
 
 import java.text.DateFormat
 import java.util.Date

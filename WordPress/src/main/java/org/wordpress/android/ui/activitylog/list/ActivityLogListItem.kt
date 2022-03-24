@@ -10,7 +10,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LOADING
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.NOTICE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
-import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.util.extensions.toFormattedDateString
 import java.util.Date
 
 sealed class ActivityLogListItem(val type: ViewType) {

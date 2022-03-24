@@ -10,7 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.PrepublishingStoryTitleListItemBinding
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.focusAndShowKeyboard
+import org.wordpress.android.util.extensions.focusAndShowKeyboard
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 

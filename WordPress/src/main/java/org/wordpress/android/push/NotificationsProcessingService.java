@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -262,7 +261,7 @@ public class NotificationsProcessingService extends Service {
                     return;
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
+                if (mActionType.equals(ARG_ACTION_REPLY)) {
                     // we don't need showing the infinite progress bar in case of REPLY on Android N,
                     // because we've got inline-reply there with its own spinner to show progress
                     // no op

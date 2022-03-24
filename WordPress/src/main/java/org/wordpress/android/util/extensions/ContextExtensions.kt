@@ -1,8 +1,9 @@
-package org.wordpress.android.util
+package org.wordpress.android.util.extensions
 
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
@@ -11,6 +12,10 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.os.ConfigurationCompat
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import org.wordpress.android.util.AppLog
+import java.io.IOException
 import java.util.Locale
 
 @ColorRes
@@ -49,3 +54,38 @@ val Context.currentLocale: Locale
  */
 val Context.clipboardManager: ClipboardManager?
     get() = ContextCompat.getSystemService(this, ClipboardManager::class.java)
+
+fun Context.getDrawableFromAttribute(attributeId: Int): Drawable? {
+    val styledAttributes = this.obtainStyledAttributes(intArrayOf(attributeId))
+    val styledDrawable = styledAttributes.getDrawable(0)
+    styledAttributes.recycle()
+    return styledDrawable
+}
+
+/**
+ * Reads an asset file as string
+ * @param assetFilename the asset filename
+ * @return the content of the asset file
+ */
+fun Context.getStringFromAsset(assetFilename: String): String? = try {
+    assets.open(assetFilename).bufferedReader().use { it.readText() }
+} catch (ioException: IOException) {
+    AppLog.e(AppLog.T.UTILS, "Error reading string from asset file: $assetFilename")
+    null
+}
+
+/**
+ * Parses Json from an asset file
+ * @param assetFilename the asset filename
+ * @param modelClass the model class
+ * @return the parsed model
+ */
+inline fun <reified T : Any> Context.parseJsonFromAsset(assetFilename: String, modelClass: Class<T>): T? =
+        getStringFromAsset(assetFilename)?.let {
+            try {
+                Gson().fromJson(it, modelClass)
+            } catch (e: JsonSyntaxException) {
+                AppLog.e(AppLog.T.UTILS, "Error parsing Json from asset file: $assetFilename")
+                null
+            }
+        }

@@ -10,7 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.ThreatContextLinesListContextLineItemBinding
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState.ThreatContextLineItemState
 import org.wordpress.android.ui.utils.PaddingBackgroundColorSpan
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class ThreatContextLineViewHolder(
     parent: ViewGroup,
