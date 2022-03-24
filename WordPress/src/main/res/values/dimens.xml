@@ -510,8 +510,6 @@
 
 
     <!--site creation-->
-    <dimen name="site_creation_segments_icon_size">24dp</dimen>
-    <dimen name="site_creation_segments_list_divider_start_margin">72dp</dimen>
     <dimen name="site_creation_segments_content_padding_vertical">16dp</dimen>
     <dimen name="site_creation_segments_content_padding_horizontal">16dp</dimen>
     <dimen name="site_creation_verticals_search_progress_size">24dp</dimen>
