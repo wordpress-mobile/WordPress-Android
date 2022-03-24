@@ -44,7 +44,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -114,8 +113,8 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
@@ -1211,7 +1210,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
 
         initSelectedSite()
@@ -1223,7 +1221,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
 
         initSelectedSite()

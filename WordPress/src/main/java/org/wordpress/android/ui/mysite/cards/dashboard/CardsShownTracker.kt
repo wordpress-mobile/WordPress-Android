@@ -67,7 +67,9 @@ class CardsShownTracker @Inject constructor(
                         card.postCardType.toSubtypeValue().label
                 )
         )
-        is BloggingPromptCardWithData -> {}
+        is BloggingPromptCardWithData -> {
+            // TODO @klymyam add tracking for blogging prompt card
+        }
     }
 
     private fun trackCardShown(pair: Pair<String, String>) {
