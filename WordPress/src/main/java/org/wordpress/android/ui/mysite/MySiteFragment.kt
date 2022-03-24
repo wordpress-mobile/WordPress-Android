@@ -119,8 +119,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
-        if (currentOffset == 0) collapsingToolbar.title = siteTitle
-        else collapsingToolbar.title = null
+        if (currentOffset == 0) {
+            collapsingToolbar.title = siteTitle
+        } else {
+            collapsingToolbar.title = null
+        }
     }
 
     private fun MySiteFragmentBinding.animateSiteInfoCard(percentage: Int) {
@@ -202,8 +205,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.showAppbar() {
         header.setVisible(true)
-        if (viewModel.isMySiteTabsEnabled) showSiteInfoToolbarWithTabs()
-        else showSiteInfoToolbarWithoutTabs()
+        if (viewModel.isMySiteTabsEnabled) {
+            showSiteInfoToolbarWithTabs()
+        } else {
+            showSiteInfoToolbarWithoutTabs()
+        }
     }
 
     private fun MySiteFragmentBinding.showSiteInfoToolbarWithTabs() {
