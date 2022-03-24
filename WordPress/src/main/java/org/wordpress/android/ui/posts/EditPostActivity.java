@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.posts;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -3069,13 +3067,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            requestTemporaryPermissions(dragEvent);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private void requestTemporaryPermissions(DragEvent dragEvent) {
         requestDragAndDropPermissions(dragEvent);
     }
 
