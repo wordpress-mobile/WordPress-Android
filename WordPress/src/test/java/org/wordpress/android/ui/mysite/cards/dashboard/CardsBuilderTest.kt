@@ -28,24 +28,20 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest : BaseUnitTest() {
     @Mock lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
     @Mock lateinit var postCardBuilder: PostCardBuilder
     @Mock lateinit var bloggingPromptCardsBuilder: BloggingPromptCardBuilder
-    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
     fun setUp() {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         cardsBuilder = CardsBuilder(
                 todaysStatsCardBuilder,
                 postCardBuilder,
-                bloggingPromptCardsBuilder,
-                bloggingPromptsFeatureConfig
+                bloggingPromptCardsBuilder
         )
     }
 
@@ -83,23 +79,13 @@ class CardsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given no blogging prompt, when cards are built, then blogging prompt card is not built`() {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         val cards = buildDashboardCards(hasBlogginPrompt = false)
 
         assertThat(cards.findBloggingPromptCard()).isNull()
     }
 
     @Test
-    fun `given blogging prompt and BP FF off, when cards are built, then blogging prompt card is not build`() {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
-        val cards = buildDashboardCards(hasBlogginPrompt = true)
-
-        assertThat(cards.findBloggingPromptCard()).isNull()
-    }
-
-    @Test
     fun `given blogging prompt, when cards are built, then blogging prompt card is built`() {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         val cards = buildDashboardCards(hasBlogginPrompt = true)
 
         assertThat(cards.findBloggingPromptCard()).isNotNull
