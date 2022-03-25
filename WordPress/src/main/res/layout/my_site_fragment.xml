@@ -38,7 +38,7 @@
 
                 <include
                     android:id="@+id/site_info"
-                    layout="@layout/my_site_info_card"
+                    layout="@layout/my_site_info_header_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"

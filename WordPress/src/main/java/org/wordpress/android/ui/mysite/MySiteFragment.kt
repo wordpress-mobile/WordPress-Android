@@ -20,7 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
-import org.wordpress.android.databinding.MySiteInfoCardBinding
+import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
@@ -179,7 +179,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
-    private fun MySiteInfoCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
+    private fun MySiteInfoHeaderCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
         siteTitle = siteInfoHeader.title
         if (siteInfoHeader.iconState is IconState.Visible) {
             mySiteBlavatar.visibility = View.VISIBLE
