@@ -267,7 +267,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onTooltipTapped(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -276,7 +276,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
         viewModel.onFabClicked(initSite(hasFullAccessToContent = false))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -285,7 +285,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
         viewModel.onFabClicked(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -293,7 +293,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onFabLongPressed(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -302,7 +302,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = PUBLISH_POST
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isTrue()
+        assertThat(fabUiState?.isFocusPointVisible).isTrue
     }
 
     @Test
@@ -311,7 +311,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = UPDATE_SITE_TITLE
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isFalse()
+        assertThat(fabUiState?.isFocusPointVisible).isFalse
     }
 
     @Test
@@ -320,7 +320,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = null
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isFalse()
+        assertThat(fabUiState?.isFocusPointVisible).isFalse
     }
 
     @Test
@@ -354,7 +354,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet does not show quick start focus point by default`() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
         )
@@ -365,7 +365,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         activeTask.value = PUBLISH_POST
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
         )
@@ -398,7 +398,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         activeTask.value = PUBLISH_POST
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
         )
@@ -426,7 +426,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
     }
 
     @Test
@@ -435,7 +435,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
     }
 
     @Test
