@@ -149,6 +149,7 @@ Language: eu_ES
     <string name="me_btn_app_settings">App-aren ezarpenak</string>
     <string name="editor_remove_failed_uploads">Ezabatu huts egin duten kargak</string>
     <string name="site_settings_advanced_header">Aurreratua</string>
+    <string name="button_skip">Saltatu</string>
     <string name="post_format_status">Egoera</string>
     <string name="post_format_video">Bideoa</string>
     <string name="alignment_center">Erdira</string>
