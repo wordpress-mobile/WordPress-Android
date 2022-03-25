@@ -16,20 +16,38 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsBuilderTest : BaseUnitTest() {
+    @Mock lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
     @Mock lateinit var postCardBuilder: PostCardBuilder
     private lateinit var cardsBuilder: CardsBuilder
 
     @Before
     fun setUp() {
-        cardsBuilder = CardsBuilder(postCardBuilder)
+        cardsBuilder = CardsBuilder(todaysStatsCardBuilder, postCardBuilder)
+    }
+
+    @Test
+    fun `given no stats, when cards are built, then todays stat card is not built`() {
+        val cards = buildDashboardCards(hasTodaysStats = false)
+
+        assertThat(cards.findTodaysStatsCard()).isNull()
+    }
+
+    @Test
+    fun `given stats, when cards are built, then todays stat card is built`() {
+        val cards = buildDashboardCards(hasTodaysStats = true)
+
+        assertThat(cards.findTodaysStatsCard()).isNotNull
     }
 
     /* POST CARD */
@@ -64,9 +82,14 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findErrorCard()).isNotNull
     }
 
+    private fun DashboardCards.findTodaysStatsCard() =
+            this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
+
     private fun DashboardCards.findPostCard() = this.cards.find { it is PostCard } as? PostCard
 
     private fun DashboardCards.findErrorCard() = this.cards.find { it is ErrorCard } as? ErrorCard
+
+    private val todaysStatsCard = mock<TodaysStatsCardWithData>()
 
     private fun createPostCards() = listOf(
             PostCardWithPostItems(
@@ -78,14 +101,17 @@ class CardsBuilderTest : BaseUnitTest() {
     )
 
     private fun buildDashboardCards(
+        hasTodaysStats: Boolean = false,
         hasPosts: Boolean = false,
         showErrorCard: Boolean = false
     ): DashboardCards {
+        doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
         doAnswer { if (hasPosts) createPostCards() else emptyList() }.whenever(postCardBuilder).build(any())
         return cardsBuilder.build(
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         showErrorCard = showErrorCard,
                         onErrorRetryClick = { },
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock())
                 )
         )

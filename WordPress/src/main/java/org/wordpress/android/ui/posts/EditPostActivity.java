@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.posts;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -184,7 +182,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -298,6 +296,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
+    private static final String STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1047,6 +1046,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mEditorFragment != null) {
             getSupportFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
         }
+
+        // We must save the media capture path when the activity is destroyed to handle orientation changes during
+        // photo capture (see: https://github.com/wordpress-mobile/WordPress-Android/issues/11296)
+        outState.putString(STATE_KEY_MEDIA_CAPTURE_PATH, mMediaCapturePath);
     }
 
     @Override
@@ -1057,6 +1060,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
             mEditorPhotoPicker.showPhotoPicker(mSite);
         }
+
+        // Restore media capture path for orientation changes during photo capture
+        mMediaCapturePath = savedInstanceState.getString(STATE_KEY_MEDIA_CAPTURE_PATH, "");
     }
 
     @Override
@@ -1933,8 +1939,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onHistoryItemClicked(@NonNull Revision revision, @NonNull List<Revision> revisions) {
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
+        final long postId = mEditPostRepository.getRemotePostId();
+        ActivityLauncher.viewHistoryDetailForResult(
+                this, mRevision, getRevisionsIds(revisions), postId, mSite.getSiteId()
+        );
+    }
 
-        ActivityLauncher.viewHistoryDetailForResult(this, mRevision, revisions);
+    private long[] getRevisionsIds(@NonNull final List<Revision> revisions) {
+        final long[] idsArray = new long[revisions.size()];
+        for (int i = 0; i < revisions.size(); i++) {
+            final Revision current = revisions.get(i);
+            idsArray[i] = current.getRevisionId();
+        }
+        return idsArray;
     }
 
     private void loadRevision() {
@@ -3050,13 +3067,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            requestTemporaryPermissions(dragEvent);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private void requestTemporaryPermissions(DragEvent dragEvent) {
         requestDragAndDropPermissions(dragEvent);
     }
 

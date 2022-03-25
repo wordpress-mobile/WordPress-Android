@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-09 09:58:12+0000
+Translation-Revision-Date: 2022-03-11 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="login_select_email_client">Hangi e-posta uygulamasını kullanıyorsunuz?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Siteyle iletişimde bir sorun oluştu. Bir HTTP hata kodu 401 döndürüldü.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Bu sitede XML-RPC çağrıları engellenmiş görünüyor (hata kodu 401). Oturum açma girişimi başarısız olursa, SSS\'yi görüntülemek için yardım simgesine dokunun.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Bu URL\'deki WordPress sitesi okunamıyor. SSS\'yi görüntülemek için yardım simgesine dokunun.</string>
+    <string name="login_error_xml_rpc_services_disabled">XML-RPC servisleri bu site için kapalı.</string>
+    <string name="my_site_menu_tab_title">Menü</string>
+    <string name="my_site_dashboard_tab_title">Başlangıç</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Aramanız, WordPress.com alan adlarında desteklenmeyen karakterler içeriyor. Aşağıdaki karakterlere izin verilir: A–Z, a–z, 0–9.</string>
+    <string name="my_site_error_within_card_subtitle">İnternet bağlantınızı kontrol edin ve sayfayı yenileyin.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">İstatistiklere Git</string>
+    <string name="my_site_todays_stat_card_title">Bugünün istatistikleri</string>
+    <string name="error_edit_notification">Bildirim içeriği güncellenirken bir hata oluştu</string>
+    <string name="reader_comment_menu_edit">Düzenle</string>
     <string name="comment_moderation_error">Yorumlar kontrol edilemedi</string>
     <string name="reader_comment_menu_trash">Çöpe taşı</string>
     <string name="reader_comment_menu_spam">İstenmeyen olarak işaretle</string>

@@ -202,6 +202,9 @@ public class ReaderCommentActions {
         RestRequest.Listener listener = jsonObject -> {
             ReaderComment newComment = ReaderComment.fromJson(jsonObject, comment.blogId);
             ReaderCommentTable.addOrUpdateComment(newComment);
+            if (CommentStatus.fromString(newComment.getStatus()) != CommentStatus.APPROVED) {
+                ReaderPostTable.decrementNumCommentsForPost(comment.blogId, comment.postId);
+            }
             EventBus.getDefault().post(new ReaderEvents.CommentModerated(true, comment.commentId));
         };
         RestRequest.ErrorListener errorListener = volleyError -> {

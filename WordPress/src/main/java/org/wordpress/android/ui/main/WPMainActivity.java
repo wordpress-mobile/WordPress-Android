@@ -127,11 +127,12 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -225,6 +226,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
+    @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -378,7 +380,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     this,
                     getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                     getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                    mBuildConfigWrapper.isJetpackApp()
+                    mBuildConfigWrapper.isSiteCreationEnabled()
             );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
@@ -528,7 +530,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return true;
         });
 
-        ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
             mViewModel.onTooltipTapped(getSelectedSite());
@@ -975,7 +977,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
-                    mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
+                    // Added today's stats feature config to check if my site tab is accessed more often in AB testing
+                    mAnalyticsTrackerWrapper.track(
+                            AnalyticsTracker.Stat.MY_SITE_ACCESSED,
+                            getSelectedSite(),
+                            mTodaysStatsCardFeatureConfig
+                    );
                 }
                 break;
             case READER:
@@ -1272,7 +1279,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 this,
                                 true,
                                 getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS),
-                                mBuildConfigWrapper.isJetpackApp()
+                                mBuildConfigWrapper.isSiteCreationEnabled()
                         );
                     }
                 }

@@ -387,7 +387,6 @@ public class SiteUtils {
     @NonNull
     public static FetchSitesPayload getFetchSitesPayload() {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
-        if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
-        return new FetchSitesPayload(siteFilters);
+        return new FetchSitesPayload(siteFilters, !BuildConfig.IS_JETPACK_APP);
     }
 }

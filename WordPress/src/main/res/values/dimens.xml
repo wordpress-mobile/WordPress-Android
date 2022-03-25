@@ -184,7 +184,6 @@
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
-    <dimen name="avatar_sz_login">40dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
@@ -223,9 +222,6 @@
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
-
-    <!-- max size for images in Reader comments -->
-    <dimen name="reader_comment_max_image_size">160dp</dimen>
 
     <dimen name="reader_comments_actions_height">24dp</dimen>
     <dimen name="reader_comments_content_line_height">24dp</dimen>
@@ -317,6 +313,11 @@
     <dimen name="my_site_card_row_top_padding">12dp</dimen>
     <dimen name="my_site_card_footer_link_padding">16dp</dimen>
     <dimen name="my_site_card_footer_link_padding_top">8dp</dimen>
+
+    <!-- my site today's stats card item -->
+    <dimen name="my_site_todays_stats_card_title_line_spacing_extra">10sp</dimen>
+    <dimen name="my_site_todays_stats_card_stat_title_line_spacing_extra">8sp</dimen>
+    <dimen name="my_site_today_stats_card_stat_title_min_width">80dp</dimen>
 
     <!-- my site post card item -->
     <dimen name="my_site_post_item_image_corner_radius">2dp</dimen>
@@ -600,8 +601,10 @@
     <dimen name="unelevated_card_elevation">0dp</dimen>
     <dimen name="unelevated_card_stroke_width">1dp</dimen>
 
+    <!-- dialog fragment -->
+    <dimen name="dialog_fragment_content_margin">40dp</dimen>
+
     <!-- feature announcement-->
-    <dimen name="feature_announcement_content_margin">40dp</dimen>
     <dimen name="feature_announcement_icon_size">48dp</dimen>
     <dimen name="feature_announcement_top_margin">64dp</dimen>
 
@@ -648,6 +651,9 @@
     <dimen name="hpp_button_max_width">244dp</dimen>
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 
+    <!-- Site Intent Question -->
+    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
+
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
@@ -667,7 +673,7 @@
     <dimen name="edit_with_chips_hint_label_default_alpha" format="float" type="dimen">0.6</dimen>
 
     <!-- Hack to make snackbar padding smaller -->
-    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
+    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="UnusedResources,MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
 

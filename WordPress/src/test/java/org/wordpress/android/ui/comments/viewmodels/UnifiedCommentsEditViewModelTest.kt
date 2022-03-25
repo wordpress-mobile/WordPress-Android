@@ -15,6 +15,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
@@ -22,6 +23,7 @@ import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_E
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
+import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.test
 import org.wordpress.android.ui.comments.unified.CommentEssentials
@@ -51,6 +53,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock private lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
     @Mock lateinit var getCommentUseCase: GetCommentUseCase
     @Mock lateinit var notificationActionsWrapper: NotificationsActionsWrapper
+    @Mock lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
@@ -60,13 +63,16 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     private val site = SiteModel().apply {
         id = LOCAL_SITE_ID
+        siteId = REMOTE_SITE_ID
     }
 
     private val localCommentId = 1000
     private val remoteCommentId = 4321L
+    private val postId = 678L
     private val siteCommentIdentifier = SiteCommentIdentifier(localCommentId, remoteCommentId)
     private val noteId = "noteId"
     private val notificationCommentIdentifier = NotificationCommentIdentifier(noteId, remoteCommentId)
+    private val readerCommentIdentifier = ReaderCommentIdentifier(REMOTE_SITE_ID, postId, remoteCommentId)
 
     @Before
     fun setup() = test {
@@ -74,6 +80,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 .thenReturn(true)
         whenever(getCommentUseCase.execute(site, remoteCommentId))
                 .thenReturn(COMMENT_ENTITY)
+
+        whenever(readerCommentTableWrapper.getComment(REMOTE_SITE_ID, postId, remoteCommentId))
+                .thenReturn(READER_COMMENT_ENTITY)
 
         viewModel = UnifiedCommentsEditViewModel(
                 mainDispatcher = TEST_DISPATCHER,
@@ -83,7 +92,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 networkUtilsWrapper = networkUtilsWrapper,
                 localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
                 getCommentUseCase = getCommentUseCase,
-                notificationActionsWrapper = notificationActionsWrapper
+                notificationActionsWrapper = notificationActionsWrapper,
+                readerCommentTableWrapper = readerCommentTableWrapper
         )
 
         setupObservers()
@@ -218,6 +228,12 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should ENABLE edit name for ReaderCommentIdentifier`() {
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditName).isTrue
+    }
+
+    @Test
     fun `Should DISABLE edit name for NotificationCommentIdentifier`() {
         viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
         assertThat(uiState.first().inputSettings.enableEditName).isFalse
@@ -226,6 +242,12 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `Should ENABLE edit URL for SiteCommentIdentifier`() {
         viewModel.start(site, SiteCommentIdentifier(0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
+    }
+
+    @Test
+    fun `Should ENABLE edit URL for ReaderCommentIdentifier`() {
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
         assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
     }
 
@@ -242,6 +264,12 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should ENABLE edit email for ReaderCommentIdentifier`() {
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditEmail).isTrue
+    }
+
+    @Test
     fun `Should DISABLE edit email for NotificationCommentIdentifier`() {
         viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
         assertThat(uiState.first().inputSettings.enableEditEmail).isFalse
@@ -250,6 +278,12 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Test
     fun `Should ENABLE edit comment content for SiteCommentIdentifier`() {
         viewModel.start(site, SiteCommentIdentifier(0, 0L))
+        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
+    }
+
+    @Test
+    fun `Should ENABLE edit comment content for ReaderCommentIdentifier`() {
+        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
         assertThat(uiState.first().inputSettings.enableEditComment).isTrue
     }
 
@@ -282,6 +316,28 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should NOT update notification entity on save if ReaderCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, readerCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(notificationActionsWrapper, times(0)).downloadNoteAndUpdateDB(noteId)
+    }
+
+    @Test
+    fun `Should update local reader entity on save if ReaderCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, readerCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(readerCommentTableWrapper).addOrUpdateComment(any())
+    }
+
+    @Test
     fun `Should trigger DONE action on save if NotificationCommentIdentifier and notification entity update success`() {
         test {
             whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
@@ -297,6 +353,19 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should trigger DONE action on save if ReaderCommentIdentifier and reader entity updated`() {
+        test {
+            whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                    .thenReturn(listOf(COMMENT_ENTITY))
+            whenever(commentsStore.updateEditComment(eq(site), any()))
+                    .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+            viewModel.start(site, readerCommentIdentifier)
+            viewModel.onActionMenuClicked()
+            assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+        }
+    }
+
+    @Test
     fun `Should call requestCommentsUpdate() on save if NotificationCommentIdentifier`() = test {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
                 .thenReturn(listOf(COMMENT_ENTITY))
@@ -305,6 +374,17 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(notificationActionsWrapper.downloadNoteAndUpdateDB(noteId))
                 .thenReturn(true)
         viewModel.start(site, notificationCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
+    }
+
+    @Test
+    fun `Should call requestCommentsUpdate() on save if ReaderCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, readerCommentIdentifier)
         viewModel.onActionMenuClicked()
         verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
     }
@@ -361,6 +441,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     companion object {
         private const val LOCAL_SITE_ID = 123
+        private const val REMOTE_SITE_ID = 456L
 
         private val COMMENT_ENTITY = CommentEntity(
                 id = 1000,
@@ -368,7 +449,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 remotePostId = 0,
                 remoteParentCommentId = 0,
                 localSiteId = LOCAL_SITE_ID,
-                remoteSiteId = 0,
+                remoteSiteId = REMOTE_SITE_ID,
                 authorUrl = "authorUrl",
                 authorName = "authorName",
                 authorEmail = "authorEmail",
@@ -383,6 +464,14 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 parentId = 0,
                 iLike = false
         )
+
+        private val READER_COMMENT_ENTITY = ReaderComment().apply {
+            blogId = REMOTE_SITE_ID
+            authorUrl = "authorUrl"
+            authorName = "authorName"
+            authorEmail = "authorEmail"
+            text = "content"
+        }
 
         private val COMMENT_ESSENTIALS = CommentEssentials(
                 commentId = COMMENT_ENTITY.id,

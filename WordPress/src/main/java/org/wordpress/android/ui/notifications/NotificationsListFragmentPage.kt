@@ -358,10 +358,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             else -> titleResId = R.string.notifications_empty_list
         }
-        if (BuildConfig.IS_JETPACK_APP) {
-            showEmptyView(titleResId)
-        } else {
+        if (BuildConfig.ENABLE_READER) {
             showEmptyView(titleResId, descriptionResId, buttonResId)
+        } else {
+            showEmptyView(titleResId)
         }
         actionableEmptyView.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }

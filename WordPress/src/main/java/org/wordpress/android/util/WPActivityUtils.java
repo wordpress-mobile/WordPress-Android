@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +25,10 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.extensions.DialogExtensionsKt;
+import org.wordpress.android.util.extensions.WindowExtensionsKt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WPActivityUtils {
@@ -138,20 +143,64 @@ public class WPActivityUtils {
         if (context == null) {
             return false;
         }
-
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
-        PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        return !emailApps.isEmpty();
+        return !queryEmailApps(context, false).isEmpty();
     }
 
-    public static void openEmailClient(Context context) {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    public static void openEmailClientChooser(Context context, String title) {
+        if (context == null) {
+            return;
+        }
+        List<Intent> appIntents = new ArrayList();
+        for (ResolveInfo resolveInfo : queryEmailApps(context, true)) {
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage(resolveInfo.activityInfo.packageName);
+            appIntents.add(intent);
+        }
+        Intent emailAppIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
+        emailAppIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent[] appIntentsArray = appIntents.toArray(new Intent[appIntents.size()]);
+        Intent chooserIntent = Intent.createChooser(emailAppIntent, title);
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, appIntentsArray);
+        context.startActivity(chooserIntent);
+    }
+
+    private static List<ResolveInfo> queryEmailApps(@NonNull Context context, Boolean excludeCategoryEmailApps) {
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> intentsInfoList = new ArrayList();
+
+        // Get all apps with category email
+        Intent emailAppIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_EMAIL);
+        List<ResolveInfo> emailAppIntentInfo =
+                packageManager.queryIntentActivities(emailAppIntent, PackageManager.MATCH_ALL);
+        if (!excludeCategoryEmailApps) {
+            intentsInfoList.addAll(emailAppIntentInfo);
+        }
+
+        // Get all apps that are able to send emails
+        Intent sendEmailAppIntent = new Intent(Intent.ACTION_SENDTO);
+        sendEmailAppIntent.setData(Uri.parse("mailto:"));
+        List<ResolveInfo> sendEmailAppIntentInfo =
+                packageManager.queryIntentActivities(sendEmailAppIntent, PackageManager.MATCH_ALL);
+
+        addNewIntents(intentsInfoList, emailAppIntentInfo, sendEmailAppIntentInfo);
+        return intentsInfoList;
+    }
+
+    private static void addNewIntents(List<ResolveInfo> list, List<ResolveInfo> existing, List<ResolveInfo> intents) {
+        for (ResolveInfo intent : intents) {
+            if (!intentExistsInList(intent, existing) && !intentExistsInList(intent, list)) {
+                list.add(intent);
+            }
+        }
+    }
+
+    private static boolean intentExistsInList(ResolveInfo intent, List<ResolveInfo> list) {
+        for (ResolveInfo item : list) {
+            if (intent.activityInfo.applicationInfo.processName
+                    .equals(item.activityInfo.applicationInfo.processName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void disableReaderDeeplinks(Context context) {

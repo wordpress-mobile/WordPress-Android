@@ -10,6 +10,7 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
@@ -46,7 +47,8 @@ import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
@@ -62,6 +64,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -246,6 +249,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteCreationIntentsViewModel.class)
+    abstract ViewModel siteCreationIntentsViewModel(SiteCreationIntentsViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -567,6 +575,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(CategoryDetailViewModel.class)
+    abstract ViewModel categoryDetailViewModel(CategoryDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(UnifiedCommentActivityViewModel.class)
     abstract ViewModel unifiedCommentActivityViewModel(UnifiedCommentActivityViewModel viewModel);
 
@@ -584,4 +597,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ConversationNotificationsViewModel.class)
     abstract ViewModel conversationNotificationsViewModel(ConversationNotificationsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
+    abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
 }

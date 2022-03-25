@@ -8,7 +8,7 @@ import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class BloggingLikersTextViewHolder(
     parent: ViewGroup,

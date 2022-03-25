@@ -18,6 +18,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -30,6 +31,7 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val LOCAL_SITE_ID = 1
 private const val SEGMENT_ID = 1L
+private const val VERTICAL = "Test Vertical"
 private const val DOMAIN = "test.domain.com"
 private const val STEP_COUNT = 20
 private const val FIRST_STEP_INDEX = 1
@@ -102,6 +104,19 @@ class SiteCreationMainVMTest {
     }
 
     @Test
+    fun onSiteIntentSkippedPropagatedToWizardManager() {
+        viewModel.onSiteIntentSkipped()
+        verify(wizardManager).showNextStep()
+    }
+
+    @Test
+    fun onSiteIntentSelectedPropagatedToWizardManager() {
+        viewModel.onSiteIntentSelected(VERTICAL)
+        assertThat(currentWizardState(viewModel).siteIntent).isEqualTo(VERTICAL)
+        verify(wizardManager).showNextStep()
+    }
+
+    @Test
     fun backNotSuppressedWhenNotLastStep() {
         whenever(wizardManager.isLastStep()).thenReturn(false)
         viewModel.onBackPressed()
@@ -151,6 +166,13 @@ class SiteCreationMainVMTest {
     }
 
     @Test
+    fun titleForDomainStepIsChooseADomain() {
+        whenever(siteCreationStep.name).thenReturn(SiteCreationStep.DOMAINS.name)
+        assertThat(viewModel.screenTitleForWizardStep(siteCreationStep))
+                .isEqualTo(ScreenTitleGeneral(R.string.new_site_creation_domain_header_title))
+    }
+
+    @Test
     fun titlesForOtherThanFirstAndLastStepIsStepCount() {
         (FIRST_STEP_INDEX + 1 until LAST_STEP_INDEX).forEach { stepIndex ->
             whenever(wizardManager.stepPosition(siteCreationStep)).thenReturn(stepIndex)
@@ -170,7 +192,7 @@ class SiteCreationMainVMTest {
     fun siteCreationStateRestored() {
         /* we need to model a real use case of data only existing for steps the user has visited (Segment only in
         this case). Otherwise, subsequent steps' state will be cleared and make the test fail. (issue #10189)*/
-        val expectedState = SiteCreationState(SEGMENT_ID)
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
         whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
                 .thenReturn(expectedState)
 

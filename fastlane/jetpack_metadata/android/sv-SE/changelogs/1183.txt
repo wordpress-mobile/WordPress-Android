@@ -1,0 +1,8 @@
+19.4:
+- Temafärgpaletter/standardfärgpaletter/anpassade färgpaletter
+- Val av app för e-postverifiering
+- Inga inbäddade kommentarer om den överordnade kommentaren är borttagen
+- Bilder justeras efter omorientering vid tagning
+- Förloppsindikatorn för redigeringar av ikonen Min webbplats har åtgärdats
+- Standardlistan för Insikter har arrangerats om
+- Tangentbordet döljer inte längre inloggningsfel

@@ -17,8 +17,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REF
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -29,6 +29,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -38,10 +39,12 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActio
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
+import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
@@ -52,12 +55,14 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -65,7 +70,9 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -76,9 +83,10 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -114,12 +122,14 @@ class MySiteViewModel @Inject constructor(
     private val snackbarSequencer: SnackbarSequencer,
     private val cardsBuilder: CardsBuilder,
     private val dynamicCardsBuilder: DynamicCardsBuilder,
-    private val landOnTheEditorABExperiment: LandOnTheEditorABExperiment,
+    private val landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteSourceManager: MySiteSourceManager,
     private val cardsTracker: CardsTracker,
     private val siteItemsTracker: SiteItemsTracker,
-    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -129,10 +139,21 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
+    private val _tabsUiState = MutableLiveData<TabsUiState>()
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
     private var isSiteSelected = false
+
+    val isMySiteTabsEnabled: Boolean
+        get() = mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
+
+    val orderedTabTypes: List<MySiteTabType>
+        get() = if (isMySiteTabsEnabled) {
+            listOf(MySiteTabType.SITE_MENU, MySiteTabType.DASHBOARD)
+        } else {
+            listOf(MySiteTabType.ALL)
+        }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -171,39 +192,30 @@ class MySiteViewModel @Inject constructor(
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
             }.addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
 
-    val uiModel: LiveData<UiModel> = state.map { (
-            currentAvatarUrl,
-            site,
-            showSiteIconProgressBar,
-            isDomainCreditAvailable,
-            scanAvailable,
-            backupAvailable,
-            activeTask,
-            quickStartCategories,
-            pinnedDynamicCard,
-            visibleDynamicCards,
-            cardsUpdate
-    ) ->
-        val state = if (site != null) {
-            cardsUpdate?.checkAndShowSnackbarError()
-            val state = buildSiteSelectedStateAndScroll(
-                    site,
-                    showSiteIconProgressBar,
-                    activeTask,
-                    isDomainCreditAvailable,
-                    quickStartCategories,
-                    pinnedDynamicCard,
-                    visibleDynamicCards,
-                    backupAvailable,
-                    scanAvailable,
-                    cardsUpdate
-            )
-            trackCardsAndItemsShownIfNeeded(state)
-            state
-        } else {
-            buildNoSiteState()
+    val uiModel: LiveData<UiModel> = merge(_tabsUiState, state) { tabsUiState, mySiteUiState ->
+        with(requireNotNull(mySiteUiState)) {
+            val state = if (site != null) {
+                cardsUpdate?.checkAndShowSnackbarError()
+                val state = buildSiteSelectedStateAndScroll(
+                        tabsUiState,
+                        site,
+                        showSiteIconProgressBar,
+                        activeTask,
+                        isDomainCreditAvailable,
+                        quickStartCategories,
+                        pinnedDynamicCard,
+                        visibleDynamicCards,
+                        backupAvailable,
+                        scanAvailable,
+                        cardsUpdate
+                )
+                trackCardsAndItemsShownIfNeeded(state)
+                state
+            } else {
+                buildNoSiteState()
+            }
+            UiModel(currentAvatarUrl.orEmpty(), state)
         }
-        UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
     private fun CardsUpdate.checkAndShowSnackbarError() {
@@ -215,6 +227,7 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("LongParameterList")
     private fun buildSiteSelectedStateAndScroll(
+        tabsUiState: TabsUiState?,
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
         activeTask: QuickStartTask?,
@@ -238,11 +251,32 @@ class MySiteViewModel @Inject constructor(
                 scanAvailable,
                 cardsUpdate
         )
+
         scrollToQuickStartTaskIfNecessary(
                 activeTask,
-                siteItems.indexOfFirst { it.activeQuickStartItem }
+                if (isMySiteTabsEnabled) {
+                    (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
+                            .indexOfFirst { it.activeQuickStartItem }
+                } else {
+                    (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
+                            .indexOfFirst { it.activeQuickStartItem }
+                }
         )
-        return SiteSelected(siteItems)
+        // It is okay to use !! here because we are explicitly creating the lists
+        return SiteSelected(
+                tabsUiState = tabsUiState ?: TabsUiState(
+                        showTabs = isMySiteTabsEnabled,
+                        tabUiStates = orderedTabTypes.map {
+                            TabUiState(
+                                    label = UiStringRes(it.stringResId),
+                                    showQuickStartFocusPoint = false
+                            )
+                        }
+                ),
+                cardAndItems = siteItems[MySiteTabType.ALL]!!,
+                siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
+                dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
+        )
     }
 
     @Suppress("LongParameterList")
@@ -257,7 +291,7 @@ class MySiteViewModel @Inject constructor(
         backupAvailable: Boolean,
         scanAvailable: Boolean,
         cardsUpdate: CardsUpdate?
-    ): List<MySiteCardAndItem> {
+    ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = cardsUpdate?.showStaleMessage ?: false
@@ -293,6 +327,12 @@ class MySiteViewModel @Inject constructor(
                 DashboardCardsBuilderParams(
                         showErrorCard = cardsUpdate?.showErrorCard == true,
                         onErrorRetryClick = this::onDashboardErrorRetry,
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(
+                                todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
+                                        as? TodaysStatsCardModel,
+                                onTodaysStatsCardClick = this::onTodaysStatsCardClick,
+                                onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
+                        ),
                         postCardBuilderParams = PostCardBuilderParams(
                                 posts = cardsUpdate?.cards?.firstOrNull { it is PostsCardModel } as? PostsCardModel,
                                 onPostItemClick = this::onPostItemClick,
@@ -317,13 +357,67 @@ class MySiteViewModel @Inject constructor(
                         onClick = this::onItemClick
                 )
         )
-        return orderForDisplay(infoItem, cardsResult, dynamicCards, siteItems)
+
+        return mapOf(
+                MySiteTabType.ALL to orderForDisplay(
+                        infoItem,
+                        cardsResult,
+                        dynamicCards,
+                        siteItems
+                ),
+                MySiteTabType.SITE_MENU to orderForDisplay(
+                        infoItem,
+                        cardsResult.filterNot {
+                            getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
+                        },
+                        dynamicCards,
+                        siteItems
+                ),
+                MySiteTabType.DASHBOARD to orderForDisplay(
+                        infoItem,
+                        cardsResult.filterNot {
+                            getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
+                        },
+                        listOf(),
+                        listOf()
+                )
+        )
+    }
+
+    private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
+        MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
+            add(Type.DASHBOARD_CARDS)
+            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.DASHBOARD) add(Type.QUICK_START_CARD)
+        }
+        MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
+            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.SITE_MENU) add(Type.QUICK_START_CARD)
+        }
+        MySiteTabType.ALL -> emptyList()
+    }
+
+    private fun onTodaysStatsCardFooterLinkClick() {
+        cardsTracker.trackTodaysStatsCardFooterLinkClicked()
+        navigateToTodaysStats()
+    }
+
+    private fun onTodaysStatsCardClick() {
+        cardsTracker.trackTodaysStatsCardClicked()
+        navigateToTodaysStats()
+    }
+
+    private fun navigateToTodaysStats() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
     }
 
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
-        val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
-        return NoSites(shouldShowImage)
+        val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
+                displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+        return NoSites(
+                tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
+                shouldShowImage = shouldShowImage
+        )
     }
 
     private fun orderForDisplay(
@@ -610,13 +704,10 @@ class MySiteViewModel @Inject constructor(
         analyticsTrackerWrapper.track(stat)
         val imageUri = Uri.parse(iconUrl)?.let { UriWrapper(it) }
         if (imageUri != null) {
-            selectedSiteRepository.showSiteIconProgressBar(true)
             launch(bgDispatcher) {
                 val fetchMedia = wpMediaUtilsWrapper.fetchMediaToUriWrapper(imageUri)
                 if (fetchMedia != null) {
                     _onNavigation.postValue(Event(SiteNavigationAction.OpenCropActivity(fetchMedia)))
-                } else {
-                    selectedSiteRepository.showSiteIconProgressBar(false)
                 }
             }
         }
@@ -720,14 +811,14 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun performFirstStepAfterSiteCreation(siteLocalId: Int) {
-        if (landOnTheEditorABExperiment.getVariation() is Control) {
-            checkAndStartQuickStart(siteLocalId)
-        } else {
+        if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor()
+        } else {
+            checkAndStartQuickStart(siteLocalId)
         }
     }
 
-    fun checkAndStartLandOnTheEditor() {
+    private fun checkAndStartLandOnTheEditor() {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
@@ -840,8 +931,29 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class State {
-        data class SiteSelected(val cardAndItems: List<MySiteCardAndItem>) : State()
-        data class NoSites(val shouldShowImage: Boolean) : State()
+        abstract val tabsUiState: TabsUiState
+
+        data class SiteSelected(
+            override val tabsUiState: TabsUiState,
+            val cardAndItems: List<MySiteCardAndItem>,
+            val siteMenuCardsAndItems: List<MySiteCardAndItem>,
+            val dashboardCardsAndItems: List<MySiteCardAndItem>
+        ) : State()
+
+        data class NoSites(
+            override val tabsUiState: TabsUiState,
+            val shouldShowImage: Boolean
+        ) : State()
+    }
+
+    data class TabsUiState(
+        val showTabs: Boolean = false,
+        val tabUiStates: List<TabUiState>
+    ) {
+        data class TabUiState(
+            val label: UiString,
+            val showQuickStartFocusPoint: Boolean = false
+        )
     }
 
     data class TextInputDialogModel(

@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-03 18:08:49+0000
+Translation-Revision-Date: 2022-03-11 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="login_select_email_client">Quale app per e-mail utilizzi?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Si è verificato un problema durante la comunicazione con il sito. È stato restituito un codice di errore HTTP .</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Le chiamate XML-RPC sembrano bloccate su questo sito (codice di errore 401). Se il tentativo di accesso fallisce, tocca l\'icona della guida per visualizzare le FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Impossibile leggere il sito WordPress associato a questo URL. Tocca l\'icona della guida per visualizzare le domande frequenti.</string>
+    <string name="login_error_xml_rpc_services_disabled">Il servizio XML-RPC è disattivato su questo sito.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Bacheca</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">La tua ricerca include caratteri non supportati nei domini WordPress.com. Sono consentiti i seguenti caratteri: A–Z, a–z, 0–9.</string>
+    <string name="my_site_error_within_card_subtitle">Controlla la tua connessione a Internet e ricarica la pagina.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Vai alle statistiche</string>
+    <string name="my_site_todays_stat_card_title">Statistiche odierne</string>
+    <string name="error_edit_notification">Si è verificato un errore nell\'aggiornamento del contenuto della notifica</string>
+    <string name="reader_comment_menu_edit">Modifica</string>
+    <string name="reader_comment_menu_trash">Sposta nel cestino</string>
+    <string name="reader_comment_menu_spam">Contrassegna come spam</string>
+    <string name="comment_moderation_error">Moderazione dei commenti non riuscita</string>
+    <string name="reader_comment_menu_unapprove">Rimuovi approvazione</string>
     <string name="gutenberg_native_tiled_gallery_settings">Impostazioni galleria affiancata</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Naviga fino alla schermata di selezione del layout</string>
     <string name="gutenberg_native_gallery_style">Stile della galleria</string>
@@ -182,6 +199,7 @@ Language: it
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">I blocchi ti consentono di concentrarti sulla scrittura dei contenuti, perché tutti gli strumenti di formattazione di cui hai bisogno sono già lì per aiutarti a trasmettere il tuo messaggio.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Organizza i tuoi contenuti in colonne, aggiungi pulsanti di inviti all\'azione e sovrapponi il testo alle immagini.</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s di %2$s completati</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">Aggiungi un nuovo blocco in qualsiasi momento toccando l\'icona + sulla barra degli strumenti nella parte inferiore sinistra.</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Scopri le nozioni di base grazie a una rapida guida dettagliata.</string>
     <string name="comment_batch_moderation_error">Non è stato possibile moderare uno o più commenti</string>
     <string name="create_site_notification_create_site_action">Crea il sito</string>
@@ -251,6 +269,8 @@ Language: it
     <string name="storage_utils_dialog_ok_button">Visualizza archiviazione</string>
     <string name="storage_utils_dialog_message">Dobbiamo salvare il contenuto sul tuo dispositivo prima di poterlo pubblicare. Rivedi le impostazioni di archiviazione e rimuovi file per liberare spazio.</string>
     <string name="storage_utils_dialog_title">Spazio di archiviazione sul dispositivo insufficiente</string>
+    <string name="gutenberg_native_y_axis_position">Posizione asse Y</string>
+    <string name="gutenberg_native_x_axis_position">Posizione asse X</string>
     <string name="gutenberg_native_type_a_url">Digita un URL</string>
     <string name="gutenberg_native_slash_inserter_results">Risultati dello strumento per l\'inserimento della barra</string>
     <string name="gutenberg_native_s_has_url_set">%s ha un URL impostato</string>
@@ -317,6 +337,7 @@ Language: it
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s trasformato in %2$s</string>
     <string name="like_faces_error_loading_message">Errore durante il caricamento di dati simili. %s.</string>
     <string name="like_title_plural">%d Mi piace</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Descrivi lo scopo dell\'immagine. Lascia vuoto, se l\'immagine è semplicemente decorativa.</string>
     <string name="suggestion">Suggerimento:</string>
     <string name="like_title_singular">1 Mi piace</string>
     <string name="gutenberg_native_use_icon_button">Usa pulsante icona</string>
@@ -330,6 +351,7 @@ Language: it
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Tocca due volte per modificare il testo del segnaposto</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Tocca due volte per modificare il testo dell\'etichetta</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Tocca due volte per modificare il testo del pulsante</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">tocca due volte per modificare l\'unità</string>
     <string name="gutenberg_native_outside">Fuori</string>
     <string name="gutenberg_native_current_placeholder_text_is">Il testo del segnaposto attuale è</string>
     <string name="gutenberg_native_clear_search">Cancella ricerca</string>
@@ -714,6 +736,7 @@ Language: it
     <string name="media_loading_failed">Caricamento dei file multimediali non riuscito</string>
     <string name="reader_discover_recommended_blogs_header">Siti da seguire</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' non è pienamente supportato</string>
     <string name="gutenberg_native_choose_images">Scegli immagini</string>
     <string name="gutenberg_native_help_button">Pulsante di assistenza</string>
     <string name="gutenberg_native_edit_using_web_editor">Modifica utilizzando l\'editor web</string>

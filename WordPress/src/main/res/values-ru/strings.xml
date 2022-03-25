@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-07 18:37:21+0000
+Translation-Revision-Date: 2022-03-10 15:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="login_select_email_client">Каким приложением электронной почты вы пользуетесь?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Возникла проблема при подключении к сайту. Получен код ошибки HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Вызовы XML-RPC на этом сайте заблокированы (код ошибки 401). Если войти не удалось, нажмите на значок справки, чтобы открыть часто задаваемые вопросы.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Не удалось найти веб-сайт WordPress по этому URL-адресу. Нажмите на значок справки, чтобы открыть часто задаваемые вопросы.</string>
+    <string name="login_error_xml_rpc_services_disabled">Сервисы XML-RPC на этом сайте отключены.</string>
+    <string name="my_site_menu_tab_title">Меню</string>
+    <string name="my_site_dashboard_tab_title">Консоль</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Ваш поиск включает символы, которые не поддерживаются в доменах WordPress.com. Допускаются только буквенно-цифровые символы: A–Z, a–z, 0–9.</string>
+    <string name="my_site_error_within_card_subtitle">Проверьте подключение к Интернету и обновите страницу.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Перейти к статистике</string>
+    <string name="my_site_todays_stat_card_title">Статистика за сегодня</string>
+    <string name="error_edit_notification">Произошла ошибка при обновлении содержимого уведомления</string>
+    <string name="reader_comment_menu_edit">Редактировать</string>
     <string name="comment_moderation_error">Ошибка модерации комментариев</string>
     <string name="reader_comment_menu_trash">Переместить в корзину</string>
     <string name="reader_comment_menu_spam">Пометить как спам</string>

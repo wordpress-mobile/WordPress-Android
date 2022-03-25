@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,

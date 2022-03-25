@@ -46,7 +46,9 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.UserSuggestion;
@@ -58,6 +60,8 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListen
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -82,7 +86,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
@@ -141,6 +145,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderTracker mReaderTracker;
+    @Inject SiteStore mSiteStore;
 
     private ReaderCommentListViewModel mViewModel;
     private ConversationNotificationsViewModel mConversationViewModel;
@@ -219,7 +224,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -280,7 +285,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(buttonExpand);
 
         // reattach listeners to collapsible reply dialog
         CollapseFullScreenDialogFragment fragment =
@@ -534,8 +539,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     private void performCommentAction(ReaderComment comment, ReaderCommentMenuActionType action) {
         switch (action) {
             case APPROVE:
+                break;
             case EDIT:
-                break; // not implemented yet
+                openCommentEditor(comment);
+                break;
             case UNAPPROVE:
                 moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unapproved,
                         Stat.COMMENT_UNAPPROVED);
@@ -552,6 +559,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             case DIVIDER_NO_ACTION:
                 break;
         }
+    }
+
+    private void openCommentEditor(ReaderComment comment) {
+        SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
+        final Intent intent = UnifiedCommentsEditActivity.createIntent(this,
+                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId), postSite);
+        startActivity(intent);
     }
 
     private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage, Stat tracker) {

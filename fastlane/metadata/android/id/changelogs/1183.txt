@@ -1,0 +1,8 @@
+19.4:
+- Palet warna tema, default, dan khusus
+- Teks eror login yang lebih baik untuk situs yang dihosting sendiri
+- Pemilihan aplikasi e-mail untuk verifikasi saat mendaftar/login
+- Komentar Reader bertingkat dihilangkan jika komentar induk dihapus
+- Penyajian gambar setelah mengubah orientasi mid-capture
+- Perbaikan indikator progres untuk pengeditan ikon Situs Saya
+- Daftar Wawasan default yang ditata ulang

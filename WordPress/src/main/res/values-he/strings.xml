@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-05 21:57:27+0000
+Translation-Revision-Date: 2022-03-10 09:54:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="login_select_email_client">איזו אפליקציית אימייל נמצאת אצלך בשימוש?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">הייתה בעיה בתקשורת עם האתר הזה. הוחזר קוד שגיאה של HTTP מסוג 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">נראה שקריאות XML-RPC חסומות באתר הזה (קוד שגיאה 401). אם הניסיון להתחברות נכשל, יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">לא ניתן לקרוא את אתר WordPress בכתובת URL זו. יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
+    <string name="login_error_xml_rpc_services_disabled">שירותי XML-RPC באתר זה מנותקים.</string>
+    <string name="my_site_menu_tab_title">תפריט</string>
+    <string name="my_site_dashboard_tab_title">לוח בקרה</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">החיפוש שלך כולל תווים שלא נתמכים בדומיינים של WordPress.com. התווים הבאים מותרים: A–Z‏, a–z,‏ 0–9.</string>
+    <string name="my_site_todays_stat_card_title">הנתונים הסטטיסטיים של היום</string>
+    <string name="my_site_error_within_card_subtitle">יש לבדוק את החיבור לאינטרנט ולרענן את העמוד.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">מעבר אל נתונים סטטיסטיים</string>
+    <string name="error_edit_notification">אירעה שגיאה בעת העדכון של תוכן ההודעות</string>
+    <string name="reader_comment_menu_edit">לערוך</string>
+    <string name="comment_moderation_error">אישור התגובות נכשל</string>
+    <string name="reader_comment_menu_trash">להעביר לפח</string>
+    <string name="reader_comment_menu_spam">לסמן כתגובת זבל</string>
+    <string name="reader_comment_menu_unapprove">ביטול האישור</string>
     <string name="gutenberg_native_tiled_gallery_settings">הגדרות גלריה פרושה</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">מנתב למסך של בחירת הפריסה</string>
     <string name="gutenberg_native_gallery_style">סגנון גלריה</string>
@@ -182,6 +199,7 @@ Language: he_IL
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">הבלוקים מאפשרים לך להתמקד בכתיבת התוכן ולדעת שכל כלי העיצוב שנדרשים לך נמצאים בהישג יד כדי לעזור לך להעביר את המסר.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">אפשר לארגן את התוכן בטורים, להוסיף כפתורים של קריאה לפעולה ולהוסיף שכבה של טקסט על תמונות.</string>
     <string name="quick_start_sites_type_tasks_completed">הושלמו ⁦%1$s⁩ מתוך ⁦%2$s⁩</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">ניתן להוסיף בלוק חדש בכל עת על ידי הקשה על הסמל \'+\' בסרגל הכלים שנמצא בפינה השמאלית התחתונה.</string>
     <string name="quick_start_dialog_need_help_manage_site_message">כדאי ללמוד את השלבים הבסיסיים באמצעות סקירה זריזה.</string>
     <string name="comment_batch_moderation_error">לא ניתן היה לאשר תגובה אחת או יותר</string>
     <string name="create_site_notification_create_site_action">יצירת אתר</string>
@@ -251,6 +269,8 @@ Language: he_IL
     <string name="storage_utils_dialog_ok_button">להציג את שטח האחסון</string>
     <string name="storage_utils_dialog_message">אנחנו צריכים לשמור את התוכן במכשיר שלך לפני שנוכל לפרסם אותו. יש לבדוק את הגדרות האחסון שלך כדי להסיר קבצים ולפנות שטח אחסון.</string>
     <string name="storage_utils_dialog_title">אין מספיק שטח אחסון במכשיר</string>
+    <string name="gutenberg_native_y_axis_position">מיקום על ציר Y</string>
+    <string name="gutenberg_native_x_axis_position">מיקום על ציר X</string>
     <string name="gutenberg_native_type_a_url">יש להקליד כתובת URL</string>
     <string name="gutenberg_native_slash_inserter_results">תוצאות להוספה של קו נטוי</string>
     <string name="gutenberg_native_s_has_url_set">ב-%s הוגדרה כתובת URL</string>
@@ -317,6 +337,7 @@ Language: he_IL
     <string name="gutenberg_native_1_s_transformed_to_2_s">⁦%1$s⁩ שונה אל ⁦%2$s⁩</string>
     <string name="like_faces_error_loading_message">שגיאה בטעינה של נתוני הלייקים. %s.</string>
     <string name="like_title_plural">%d לייקים</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">לתאר את מטרת התמונה. יש להשאיר את השדה ריק אם התמונה נוספה לצורך דקורטיבי בלבד.</string>
     <string name="like_title_singular">לייק אחד</string>
     <string name="suggestion">הצעה:</string>
     <string name="gutenberg_native_use_icon_button">הכפתור \'להשתמש בסמל\'</string>
@@ -330,6 +351,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">יש להקיש פעמיים כדי לערוך את הטקסט של מציין המיקום</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">יש להקיש פעמיים כדי לערוך את הטקסט של התווית</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">יש להקיש פעמיים כדי לערוך את הטקסט של הכפתור</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">יש להקיש פעמיים כדי לשנות את היחידה</string>
     <string name="gutenberg_native_outside">חיצוני</string>
     <string name="gutenberg_native_current_placeholder_text_is">הטקסט הנוכחי של מציין מיקום הוא</string>
     <string name="gutenberg_native_clear_search">לנקות את החיפוש</string>
@@ -714,6 +736,7 @@ Language: he_IL
     <string name="media_loading_failed">העלאת מדיה נכשלה</string>
     <string name="reader_discover_recommended_blogs_header">אתרים למעקב</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">אנחנו מקדישים מאמץ רב כדי להוסיף עוד בלוקים בכל גרסה.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' לא נתמך באופן מלא</string>
     <string name="gutenberg_native_help_button">כפתור עזרה</string>
     <string name="gutenberg_native_edit_using_web_editor">לערוך באמצעות עורך אינטרנט</string>
     <string name="gutenberg_native_choose_images">לבחור תמונות</string>
@@ -2952,6 +2975,7 @@ Language: he_IL
     <string name="reader_likes_multi">%,d אנשים אוהבים את זה</string>
     <string name="comment_spammed">התגובה סומנה כתגובת זבל</string>
     <string name="cant_share_no_visible_blog">אינך יכול לשתף ב-WordPress ללא אתר גלוי</string>
+    <string name="comment_unapproved">התגובה לא מאושרת</string>
     <string name="reader_likes_you_and_one">אתה ועוד אחד אוהבים את זה</string>
     <string name="pick_photo">בחר תמונה</string>
     <string name="pick_video">בחר וידאו</string>

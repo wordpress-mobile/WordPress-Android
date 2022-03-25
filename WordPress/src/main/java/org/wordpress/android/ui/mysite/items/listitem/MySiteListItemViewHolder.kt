@@ -5,7 +5,7 @@ import org.wordpress.android.databinding.MySiteItemBlockBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class MySiteListItemViewHolder(
     parent: ViewGroup,

@@ -116,6 +116,7 @@
     <string name="status_and_visibility">Status &amp; Visibility</string>
 
     <string name="button_not_now">Not now</string>
+    <string name="button_skip">Skip</string>
 
     <string name="at_username">\@%s</string>
 
@@ -452,6 +453,7 @@
     <string name="reader_comment_menu_unapprove">Unapprove</string>
     <string name="reader_comment_menu_spam">Mark as Spam</string>
     <string name="reader_comment_menu_trash">Move to Trash</string>
+    <string name="reader_comment_menu_edit">Edit</string>
     <string name="reader_comment_menu_share" translatable="false">@string/share_desc</string>
 
 
@@ -550,6 +552,7 @@
     <string name="add_new_category">Add new category</string>
     <string name="category_name">Category name</string>
     <string name="category_parent">Parent category (optional):</string>
+    <string name="adding_cat">Adding category</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
@@ -1841,6 +1844,7 @@
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
+    <string name="error_edit_notification">An error occurred while updating the notification content</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
     <string name="error_save_empty_draft">Can\'t save an empty draft</string>
@@ -2211,8 +2215,18 @@
     <string name="my_site_quick_actions_title">Quick Links</string>
 
     <!-- My Site - Dashboard -->
+    <string name="my_site_dashboard_tab_title">Home</string>
+    <string name="my_site_menu_tab_title">Site Menu</string>
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
     <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
+
+    <!-- My Site - Today's Stats Card -->
+    <string name="my_site_todays_stat_card_title">Today\'s Stats</string>
+    <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
+    <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
+    <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
+
 
     <!-- My Site - Post Card -->
     <string name="my_site_post_card_draft_title">Work on a draft post</string>
@@ -2229,6 +2243,7 @@
     <!-- My Site - Error Card -->
     <string name="my_site_error_card_title">Some data hasn\'t loaded</string>
     <string name="my_site_error_card_subtitle">We\'re having trouble loading your site\'s data at the moment.</string>
+    <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2795,6 +2810,10 @@
     <string name="login_find_your_connected_email">Find your connected email</string>
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
+    <string name="login_error_xml_rpc_services_disabled">XML-RPC services are disabled on this site.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Unable to read the WordPress site at that URL. Tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC calls seem blocked on this site (error code 401). If attempt to login fails tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">There was a problem communicating with the site. An HTTP error code 401 was returned.</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
@@ -2802,6 +2821,7 @@
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
+    <string name="login_select_email_client">Which email app do you use?</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_epilogue_mysites_heading">Choose a site to open</string>
@@ -2901,11 +2921,13 @@
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="notification_channel_reminder_title">Reminder</string>
+    <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
     <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
+    <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
     <string content_override="true" name="login_notification_channel_id" translatable="false">@string/notification_channel_normal_id</string>
@@ -3168,7 +3190,10 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_intents_header_title">What’s your website about?</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
@@ -3256,7 +3281,6 @@
     <string name="hpp_title">Choose a design</string>
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
     <string name="hpp_choose_button">Choose</string>
-    <string name="hpp_skip_button">Skip</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
@@ -3502,7 +3526,7 @@
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert audio file. Please tap for options.</string>
     <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">Failed to insert media.</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">Failed to insert media.\nTap for more info.</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to save files.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to upload files.\nPlease tap for options.</string>
     <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Featured Image</string>
@@ -3515,6 +3539,7 @@
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
     <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">Gallery style</string>
     <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">Get support</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Give it a try by adding a few blocks to your post or page!</string>
     <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Go back</string>
     <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Gradient Type</string>
@@ -3668,6 +3693,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Text color</string>
     <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Text formatting controls are located within the toolbar positioned above the keyboard while editing a text block</string>
     <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">The basics</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">This color combination may be hard for people to read. Try using a darker background color and/or a brighter text color.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">This color combination may be hard for people to read. Try using a brighter background color and/or a darker text color.</string>
     <string name="gutenberg_native_three" tools:ignore="UnusedResources">Three</string>
     <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">Tiled gallery settings</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">To remove a block, select the block and click the three dots in the bottom right of the block to view the settings. From there, choose the option to remove the block.</string>

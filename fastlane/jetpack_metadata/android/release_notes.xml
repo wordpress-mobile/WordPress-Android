@@ -1,152 +1,182 @@
 <en-US>
-- Justify buttons properly in the Buttons block.
-- See block names in Hebrew and Indonesian.
-- See translated featured image and Cover block color settings.
-- No longer see the help button in the unsupported block editor.
-- Be notified if text/background color combos are hard to read.
-- Run into fewer issues when changing the color of non-selected text.
+- Theme/default/custom color palettes
+- Email app choice when verifying email at signup/login
+- No nested comments if parent comment is deleted
+- Images adjust after new mid-capture orientation
+- Progress bar fix for My Site icon edits
+- Reorganized default Insights list
+- Keyboard won’t cover login error message
+- Logout button only has to be pressed once
 </en-US>
 <ar>
-19.1:
-- اضبط الأزرار بطريقة صحيحة في مكوِّن الأزرار.
-- اطلع على أسماء المكوِّن باللغة العبرية والإندونيسية.
-- اطلع على إعدادات لون الصورة البارزة المترجمة ومكوِّن الغلاف.
-- لم تعد ترى زر المساعدة في محرِّر المكوِّن غير المدعوم.
-- يتم إعلامك إذا كان من الصعب قراءة مجموعات ألوان النص/الخلفية.
-- واجه مشكلات أقل عند تغيير لون نص غير محدَّد.
+19.4:
+- لوحات ألوان القالب/الافتراضية/المخصصة
+- اختيار تطبيق البريد الإلكتروني عند التحقُّق من البريد الإلكتروني عند التسجيل/ تسجيل الدخول
+- لا توجد تعليقات متداخلة إذا تم حذف التعليق الأصلي
+- ضبط الصور بعد اتجاه منتصف الالتقاط الجديد
+- إصلاح خاص بشريط التقدم لعمليات تحرير أيقونة موقعي
+- قائمة بالرؤى الافتراضية مُعاد تنظيمها
+- لن تستر لوحة المفاتيح رسالة خطأ تسجيل الدخول
+- يتعيَّن الضغط على زر تسجيل الخروج مرة واحدة فقط
 </ar>
 <de-DE>
-19.1:
-– Buttons im Button-Block richtig ausrichten.
-– Blocknamen auf Hebräisch und Indonesisch anzeigen.
-– Übersetzte Farbeinstellungen für Beitragsbild und Cover-Block anzeigen.
-– Hilfe-Button im nicht unterstützten Block-Editor nicht mehr sichtbar.
-– Benachrichtigung, wenn Kombinationen aus Text-/Hintergrundfarbe schwer lesbar sind.
-– Probleme beim Wechseln der Farbe von nicht ausgewähltem Text reduziert.
+19.4:
+- Theme-/Standard-/individuelle Farbpaletten
+- App-Auswahl bei E-Mail-Verifizierung
+- Keine verschachtelten Kommentare bei Löschung des übergeordneten Kommentars
+- Bilder werden nach Neuausrichtung der mittleren Aufnahme angepasst
+- Problem der Fortschrittsleiste bei Bearbeitungen des Website-Icons behoben
+- Liste der Standardeinsichten umstrukturiert
+- Fehlermeldung bei Anmeldung wird auf der Tastatur nicht verborgen
+- Abmelde-Button muss nur einmal gedrückt werden
 </de-DE>
 <es-ES>
-19.1:
-- Justifica correctamente los botones en el bloque de botón.
-- Visualiza los nombres de los bloques en hebreo e indonesio.
-- Visualiza la traducción de la imagen destacada y los ajustes de color del bloque de fondo.
-- Ya no verás el botón de ayuda en el editor de bloques no compatible.
-- Se te notificará si las combinaciones de color entre texto y fondo son difíciles de leer.
-- Encontrarás menos problemas al cambiar el color del texto no seleccionado.
+19.4:
+- Paletas de color temáticas/por defecto/personalizadas
+- Selección de la aplicación de verificación del correo electrónico
+- Si el comentario padre se borra, no hay comentarios anidados
+- Las imágenes se ajustan tras hacer un cambio de orientación en mitad de la captura
+- Se ha corregido la barra de progreso para las ediciones de iconos de Mi Sitio
+- Se ha reorganizado la lista de Detalles por defecto
+- El teclado no tapa los mensajes de error de inicio de sesión
 </es-ES>
 <fr-FR>
-19.1 :
-- Justification de boutons correcte dans le bloc de boutons.
-- Affichage de noms de blocs en hébreu et indonésien.
-- Traduction des réglages de couleurs du bloc d'arrière-plan et de l'image mise en avant.
-- Disparition du bouton « aide » dans l’éditeur de blocs non pris en charge.
-- Notification en cas de mauvaise lisibilité de la combinaison de couleurs texte/arrière-plan choisie.
-- Moins de problèmes lors du changement de couleur d’un texte non sélectionné.
+19.4 :
+- Palettes colorées thématiques/par défaut/perso
+- Sélection de l’appli pour la vérification de l’adresse e-mail
+- Pas de commentaires imbriqués possibles si le parent a été supprimé
+- Ajustement des images après leur réorientation à mi-capture
+- Barre de progression améliorée pour les modifications de l’icône du site
+- Liste par défaut des tendances réorganisée
+- Plus de masquage des erreurs de connexion par le clavier
 </fr-FR>
 <iw-IL>
-19.1:
-- אפשר ליישר את הכפתור בצורה תקינה בבלוק הכפתורים.
-- אפשר להציג את שמות הבלוקים בעברית ובאינדונזית.
-- ניתן לראות הגדרות צבע מתורגמות בתמונה המרכזית ובבלוק הכיסוי.
-- הסרנו את כפתור העזרה בעורכי בלוקים שאינם נתמכים.
-- ניתן לקבל הודעה על שילובים קשים לקריאה בין צבע הטקסט וצבע הרקע.
-- יש פחות בעיות כאשר משנים צבע של טקסט שלא נבחר.
+19.4:
+- Theme/default/custom color palettes
+- Email app choice when verifying email at signup/login
+- No nested comments if parent comment is deleted
+- Images adjust after new mid-capture orientation
+- Progress bar fix for My Site icon edits
+- Reorganized default Insights list
+- Keyboard won’t cover login error message
+- Logout button only has to be pressed once
 </iw-IL>
 <id>
-19.1:
-- Tombol di blok Tombol kini dijajarkan dengan tepat.
-- Nama blok kini tersedia dalam bahasa Ibrani dan bahasa Indonesia.
-- Terjemahan untuk pengaturan warna blok gambar sorotan dan Sampul kini tersedia.
-- Tombol bantuan kini dihapus dari editor blok yang tidak didukung.
-- Dapatkan pemberitahuan jika kombinasi warna teks/latar belakang sulit dibaca.
-- Sebagian masalah saat mengganti warna dari teks yang tidak dipilih telah teratasi.
+19.4:
+- Palet warna kustom/asal/tema
+- Pilihan aplikasi email untuk verifikasi saat mendaftar/login
+- Tidak ada komentar cabang jika komentar induk dihapus
+- Penyesuaian gambar setelah reorientasi baru di tengah pemotretan
+- Bilah progres disempurnakan untuk menyunting ikon Situs saya
+- Susunan ulang daftar asal Wawasan
+- Keyboard tidak akan menutupi pesan error saat login
+- Tombol logout cukup ditekan satu kali saja
 </id>
 <it-IT>
-19.1:
-- Giustifica i pulsanti in modo corretto nel blocco Pulsanti.
-- Visualizza i nomi dei blocchi in ebraico e indonesiano.
-- Visualizza le impostazioni delle immagini in evidenza e dei colori del blocco Copertina tradotte.
-- Non è più visibile il pulsante di supporto nell'editor a blocchi non supportato.
-- Ricevi una notifica se le combinazioni di colori del testo/di sfondo non sono adatte alla lettura.
-- Incorri in meno problemi con la modifica del colore del testo non selezionato.
+19.4:
+- Palette di colori temi/predefinite/personalizzate
+- Selezione app di verifica e-mail
+- Nessun commento nidificato se il commento principale è eliminato
+- Modifica delle immagini dopo il nuovo orientamento a metà dell'acquisizione
+- Correzione barra di avanzamento per modifiche all'icona Il mio sito
+- Elenco Panoramica predefinita riorganizzato
+- La tastiera non coprirà il messaggio di errore di accesso
+- Il pulsante di disconnessione deve essere premuto una volta
 </it-IT>
 <ja-JP>
-19.1:
-- 「ボタン」ブロックのボタン配置の改善。
-- ヘブライ語とインドネシア語でのブロック名の表示。
-- 翻訳されたアイキャッチ画像と「カバー」ブロックの色設定の表示。
-- サポートされていないブロックエディターでのヘルプボタンの非表示。
-- テキストと背景色の組み合わせによって読みづらさが生じる場合の通知。
-- 選択されていないテキストの色を変更する際に生じる問題の削減。
+19.4:
+- テーマ / デフォルト / カスタムカラーパレット
+- 登録またはログイン時のメール認証におけるメールアプリ選択
+- 親コメントが削除された場合ネストされたコメントの表示なし
+- 新しいキャプチャ中の向き設定後の画像調整
+- 「参加サイト」アイコン編集用の進捗バーの修正
+- デフォルトの「統計概要」リストの再編成
+- キーボードによるログインエラーメッセージの覆い隠しの修正
+- 「ログアウト」ボタンを押すのは1度のみ
 </ja-JP>
 <ko-KR>
-19.1:
-- 버튼 블록에서 버튼 양쪽이 적절히 맞춰집니다.
-- 히브리어와 인도네시아어로 블록 이름이 표시됩니다.
-- 번역된 특성 이미지 및 커버 블록 색상 설정이 표시됩니다.
-- 지원되지 않는 블록 편집기에 더는 도움말 버튼이 표시되지 않습니다.
-- 텍스트/배경 색상 조합이 판독하기 어려우면 알림이 표시됩니다.
-- 선택하지 않은 텍스트 색상을 변경할 때 문제가 적게 발생합니다.
+19.4:
+- 테마/기본/사용자 정의 색상 팔레트
+- 가입/로그인 시 이메일을 확인할 때 이메일 앱 선택
+- 상위 댓글이 삭제되는 경우 중첩된 댓글 없음
+- 새로운 캡처 중간 방향 지정 후 이미지 조정
+- 내 사이트 아이콘 편집 진행률 표시줄 수정
+- 재구성한 기본 인사이트 목록
+- 키보드가 로그인 오류 메시지를 가리지 않음
+- 로그아웃 버튼을 한 번만 눌러야 함
 </ko-KR>
 <nl-NL>
-19.1:
-- Knoppen worden correct uitgelijnd in het knopblok.
-- Namen van blokken zijn nu beschikbaar in het Hebreeuws en Indonesisch.
-- De kleurinstellingen van uitgelichte afbeeldingen en omslagafbeeldingblokken zijn vertaald.
-- De help-knop is niet meer zichtbaar in de niet-ondersteunde blokeditor.
-- Krijg een melding als de combinatie van de achtergrondkleur en de tekstkleur lastig te lezen is.
-- Er zijn minder problemen bij het veranderen van de tekstkleur van niet-geselecteerde tekst.
+19.4:
+- Thema-/standaard/persoonlijke kleurpaletten
+- Kies een app voor e-mailverificatie
+- Geen geneste reacties als de bovenliggende reactie is verwijderd
+- Afbeeldingen passen zich aan als ze opnieuw worden georiënteerd tijdens het vastleggen
+- Probleem met de voortgangsbalk van het bewerken van het pictogram Mijn site opgelost
+- De Inzichtenlijst gereorganiseerd
+- Het toetsenbord bedekt de foutmelding niet meer
+- De knop voor het uitloggen hoeft maar één keer te worden ingedrukt
 </nl-NL>
 <pt-BR>
-19.1:
-- Justifique os botões de forma adequada no bloco de botões.
-- Veja os nomes de blocos em hebraico e indonésio.
-- Veja a tradução das configurações de cor do bloco de cobertura e imagem destacada.
-- Diga adeus ao botão de ajuda no editor de blocos incompatíveis.
-- Receba uma notificação se as combinações de cor de fundo e de texto dificultarem a leitura.
-- Tenha menos problemas na alteração da cor do texto não selecionado.
+19.4:
+- Paletas de cores personalizadas/padrão/de tema
+- Escolha do aplicativo de e-mail ao verificar o e-mail no login
+- Nenhum comentário aninhado se o comentário principal for excluído
+- Ajuste de imagens após nova orientação no meio da captura
+- Correção da barra de progresso para edições do ícone Meu site
+- Reorganização da lista de informações padrão
+- Correção da sobreposição do teclado em mensagens de erro de login
+- Botão de logout só precisa ser pressionado uma vez
 </pt-BR>
 <ru-RU>
-19.1:
-— Возможность корректного выравнивания кнопок в блоке кнопок.
-— Просмотр имён блоков на иврите и индонезийском языке.
-— Наличие перевода для избранного изображения и настроек цвета блока обложки.
-— Исчезновение кнопки справки в неподдерживаемом редакторе блоков.
-— Уведомления при неудачных сочетаниях цвета текста и фона, которые делают текст трудночитаемым.
-— Уменьшение числа проблем, приводящих к изменению цвета невыбранного текста.
+19.4:
+— Палитры темы и пользовательских цветов, палитры по умолчанию
+— Возможность выбора приложения для проверки адреса эл. почты
+— В случае удаления родительского комментария вложенные комментарии удаляются
+— Добавлена подстройка изображений после изменения ориентации в процессе захвата
+— Исправлена шкала хода выполнения для правок значка "Мой сайт"
+— Переупорядочен список обзоров по умолчанию
+— Ошибки при входе не скрываются клавиатурой
 </ru-RU>
 <sv-SE>
-19.1:
-- Justera knappar korrekt i blocket Knappar.
-- Se blocknamn på hebreiska och indonesiska.
-- Se översättning av utvald bild och färginställningarna för blocket Omslag.
-- Hjälpknappen visas inte längre i blockredigeraren som inte stöds.
-- Få notiser om kombinationer av text-/bakgrundsfärger gör det svårt att läsa texten.
-- Färre problem med att ändra färg på ej markerad text.
+19.4:
+- Temafärgpaletter/standardfärgpaletter/anpassade färgpaletter
+- Val av app för e-postverifiering
+- Inga inbäddade kommentarer om den överordnade kommentaren är borttagen
+- Bilder justeras efter omorientering vid tagning
+- Förloppsindikatorn för redigeringar av ikonen Min webbplats har åtgärdats
+- Standardlistan för Insikter har arrangerats om
+- Tangentbordet döljer inte längre inloggningsfel
 </sv-SE>
 <tr-TR>
-19.1:
-- Düğmeler blokundaki düğmeleri düzgün şekilde hizalayın.
-- İbranice ve Endonezyaca blok adlarına bakın.
-- Çevrilmiş öne çıkan görsel ve Kapak bloku renk ayarlarını görün.
-- Desteklenmeyen blok düzenleyicide artık yardım düğmesini göremezsiniz.
-- Metin/arka plan rengi kombinasyonlarının okunması zor olduğunda bildirim alın.
-- Seçilmeyen metnin rengini değiştirirken daha az sorunla karşılaşın.
+19.4:
+- Tema/varsayılan/özel renk paletleri
+- Kayıt/oturum açma sırasında e-postayı doğrularken e-posta uygulaması seçimi
+- Üst yorum silindiğinde artık iç içe yorum görünmez
+- Yakalama ortasındaki yeni yönlendirmeden sonra görüntüler ayarlanır
+- Sitem simgesi düzenlemeleri için ilerleme çubuğu düzeltmesi
+- Varsayılan Tek Bakışta listesinde düzenlemeler
+- Klavye artık oturum açma hata mesajını örtmez
+- Artık çıkış düğmesine yalnızca bir kez basmak yeterlidir
 </tr-TR>
 <zh-CN>
-19.1:
-- 在按钮区块里正确的对齐按钮。
-- 看区块的名字的希伯来和印度尼西亚的语言翻译。
-- 看特色图片区块和封面区块的设置的语言翻译。
-- 不再看到帮助按钮在不支持的区块编辑器。
-- 接收通告当文本和背景的颜色组合难以阅读。
-- 遇到比较少问题当要更改未选择的文本的颜色。
+19.4：
+- 主题/默认/自定义调色盘
+- 当在注册/登录步骤验证电子邮件时选择电子邮件应用
+- 如果父级评论被删除，则没有嵌套评论
+- 中期捕获转向后的图像调整
+-“我的站点”图标编辑的进度条修复
+- 重新组织的默认数据分析列表
+- 键盘无法掩盖登录错误
+- 注销按钮仅需按一次
 </zh-CN>
 <zh-TW>
-19.1:
-- 在按鈕區塊裏正確的對齊按鈕。
-- 看區塊的名字的希伯來和印度尼西亞的語言翻譯。
-- 看特色圖片區塊和封面區塊的設置的語言翻譯。
-- 不再看到幫助按鈕在不支持的區塊編輯器。
-- 接收通告當文本和背景的顔色組合難以閱讀。
-- 遇到比較少問題當要更改未選擇的文本的顔色。
+19.4：
+- 佈景主題/預設/自訂調色盤
+- 註冊/登入驗證電子郵件時的電子郵件應用程式選項
+- 如上層留言遭刪除，則無巢狀留言
+- 在新中途擷取定位後調整圖片
+- 修正「我的網站」圖示編輯的進度列
+- 重新排列預設洞察報告清單
+- 鍵盤無法覆蓋登入錯誤訊息
+- 登出按鈕只需按一次
 </zh-TW>

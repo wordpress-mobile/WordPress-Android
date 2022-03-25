@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-07 19:42:23+0000
+Translation-Revision-Date: 2022-03-07 21:34:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="login_select_email_client">Which email app do you use?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">There was a problem communicating with the site. An HTTP error code 401 was returned.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC calls seem blocked on this site (error code 401). If attempt to log in fails, tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Unable to read the WordPress site at that URL. Tap on help icon to view the FAQ.</string>
+    <string name="login_error_xml_rpc_services_disabled">XML-RPC services are disabled on this site.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Dashboard</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
+    <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
+    <string name="my_site_todays_stat_card_title">Today\'s Stats</string>
+    <string name="error_edit_notification">An error occurred while updating the notification content</string>
+    <string name="reader_comment_menu_edit">Edit</string>
     <string name="comment_moderation_error">Failed to moderate comments</string>
     <string name="reader_comment_menu_trash">Move to bin</string>
     <string name="reader_comment_menu_spam">Mark as spam</string>

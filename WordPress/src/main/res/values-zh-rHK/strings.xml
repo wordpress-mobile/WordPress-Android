@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-09 09:54:08+0000
+Translation-Revision-Date: 2022-03-10 22:14:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="login_select_email_client">你使用哪個電子郵件應用程式？</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">與網站通訊時發生問題。 已傳回 HTTP 錯誤代碼 401。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">這個網站似乎封鎖了 XML-RPC 呼叫 (錯誤代碼 401)。 如果嘗試登入失敗，請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_cannot_read_site">無法透過該 URL 讀取 WordPress 網站。 請點選說明圖示，查看常見問題集。</string>
+    <string name="login_error_xml_rpc_services_disabled">這個網站尚未開啟 XML-RPC 服務</string>
+    <string name="my_site_menu_tab_title">選單</string>
+    <string name="my_site_dashboard_tab_title">控制台</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">你的搜尋包含 WordPress.com 網域不支援的字元。 允許使用以下字元：A–Z、a–z、0–9。</string>
+    <string name="my_site_error_within_card_subtitle">請檢查你的網際網路連線並重新整理頁面。</string>
+    <string name="my_site_todays_stats_card_footer_link_go_to_stats">前往統計資料</string>
+    <string name="my_site_todays_stat_card_title">本日統計</string>
+    <string name="error_edit_notification">更新通知內容時發生錯誤</string>
+    <string name="reader_comment_menu_edit">編輯</string>
+    <string name="comment_moderation_error">無法審核留言</string>
+    <string name="reader_comment_menu_trash">移至垃圾桶</string>
+    <string name="reader_comment_menu_spam">標記為垃圾訊息</string>
+    <string name="reader_comment_menu_unapprove">取消核准</string>
     <string name="gutenberg_native_tiled_gallery_settings">並排圖庫設定</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen">導覽至版面配置選取畫面</string>
     <string name="gutenberg_native_gallery_style">圖庫樣式</string>
@@ -25,7 +42,6 @@ Language: zh_TW
     <string name="about_automattic_privacy_policy_item_title">隱私權政策</string>
     <string name="about_automattic_terms_of_service_item_title">服務條款</string>
     <string name="about_automattic_work_with_us_item_subtitle">隨時隨地都能處理工作</string>
-    <string name="about_automattic_work_with_us_item_title">與我們合作</string>
     <string name="about_automattic_family_item_title">Automattic 系列</string>
     <string name="about_automattic_legal_and_more_item_title">法律與其他</string>
     <string name="about_automattic_twitter_item_title">Twitter</string>
@@ -33,6 +49,7 @@ Language: zh_TW
     <string name="about_automattic_rate_us_item_title">為我們評分</string>
     <string name="about_automattic_share_with_friends_item_title">與朋友分享</string>
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor">你可以使用網頁版本的編輯器來編輯此區塊。</string>
+    <string name="about_automattic_work_with_us_item_title">加入我們</string>
     <string name="gutenberg_native_open_jetpack_security_settings">開啟 Jetpack Security 設定</string>
     <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the">注意：您必須允取登入 WordPress.com 方可在行動編輯器中編輯此區塊。</string>
     <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes">注意：版面配置可能會因佈景主題和螢幕尺寸而有所不同</string>
@@ -62,6 +79,7 @@ Language: zh_TW
     <string name="reader_comments_be_first_to_comment">成為第一位留言的人</string>
     <string name="reader_comments_view_all">查看所有留言</string>
     <string name="reader_comments_post_fetch_failure">取得文章的資料時發生錯誤</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
     <string name="reader_comments_fetch_failure">取得留言時發生錯誤</string>
     <string name="reader_btn_follow_conversation_settings">關注討論設定</string>
     <string name="gutenberg_native_from_clipboard">從剪貼簿</string>
@@ -143,6 +161,7 @@ Language: zh_TW
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>
+    <string name="domains_primary_site_address">%s</string>
     <string name="recommend_app_bad_format_response">收到無效回應</string>
     <string name="recommend_app_null_response">未收到回應</string>
     <string name="me_btn_share">向朋友推薦 WordPress</string>
@@ -180,6 +199,7 @@ Language: zh_TW
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">區塊可讓你專心撰寫內容，瞭解所有必要的格式工具一應俱全，協助你傳達自己的訊息。</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">在欄位中排列你的內容、新增「行動呼籲」按鈕，並在圖片中加上文字。</string>
     <string name="quick_start_sites_type_tasks_completed">已完成 %1$s 個，共 %2$s 個</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">點選左下角工具列的「+」號圖示，即可隨時新增區塊。</string>
     <string name="quick_start_dialog_need_help_manage_site_message">透過快速逐步解說瞭解基本知識。</string>
     <string name="comment_batch_moderation_error">無法審核一則或更多留言</string>
     <string name="create_site_notification_create_site_action">建立網站</string>
@@ -249,6 +269,8 @@ Language: zh_TW
     <string name="storage_utils_dialog_ok_button">檢視儲存空間</string>
     <string name="storage_utils_dialog_message">我們需先將內容儲存在你的裝置上，然後才能發表。  請檢視你的儲存空間設定，並移除一些檔案以釋放空間。</string>
     <string name="storage_utils_dialog_title">裝置儲存空間不足</string>
+    <string name="gutenberg_native_y_axis_position">Y 軸位置</string>
+    <string name="gutenberg_native_x_axis_position">X 軸位置</string>
     <string name="gutenberg_native_type_a_url">輸入 URL</string>
     <string name="gutenberg_native_slash_inserter_results">斜線插入工具結果</string>
     <string name="gutenberg_native_s_has_url_set">%s 有 URL 集</string>
@@ -315,6 +337,7 @@ Language: zh_TW
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s 已轉換為 %2$s</string>
     <string name="like_faces_error_loading_message">載入讚資料時發生錯誤。%s。</string>
     <string name="like_title_plural">%d 按讚數</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">請說明圖片用途。 如果圖片只是為了裝飾，請保留空白。</string>
     <string name="like_title_singular">1 個讚</string>
     <string name="suggestion">建議：</string>
     <string name="gutenberg_native_use_icon_button">使用圖示按鈕</string>
@@ -329,6 +352,7 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_edit_label_text">按兩下以編輯標籤文字</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">按兩下以編輯按鈕文字</string>
     <string name="gutenberg_native_outside">外部</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">點兩下即可變更單位</string>
     <string name="gutenberg_native_current_placeholder_text_is">目前的預留位置文字是</string>
     <string name="gutenberg_native_clear_search">清除搜尋</string>
     <string name="gutenberg_native_cancel_search">取消搜尋</string>
@@ -339,6 +363,7 @@ Language: zh_TW
     <string name="get_likes_no_network_error">沒有可用的網路。</string>
     <string name="comments_empty_list_filtered_unreplied">沒有尚未回覆的留言</string>
     <string name="comment_status_unreplied">尚未回覆</string>
+    <string name="gutenberg_native_add_link">新增連結</string>
     <string name="gutenberg_native_search_settings">搜尋設定</string>
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
@@ -711,6 +736,7 @@ Language: zh_TW
     <string name="media_loading_failed">媒體載入失敗</string>
     <string name="reader_discover_recommended_blogs_header">值得關注的網站</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我們正在努力開發，讓每次版本更新都可以新增更多區塊。</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">系統不完全支援「%s」</string>
     <string name="gutenberg_native_help_button">「協助」按鈕</string>
     <string name="gutenberg_native_edit_using_web_editor">使用網頁編輯器編輯</string>
     <string name="gutenberg_native_choose_images">選擇圖片</string>
@@ -854,7 +880,7 @@ Language: zh_TW
     <string name="signup_confirmation_title">註冊確認</string>
     <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
     <string name="enter_your_site_address">輸入你現有的網址</string>
-    <string name="gutenberg_native_convert_to_link">轉換為連結</string>
+    <string name="gutenberg_native_convert_to_link">轉換成連結</string>
     <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
     <string name="signup_confirmation_message">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
     <string name="signup_magic_link_message">我們已透過電子郵件傳送註冊連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
@@ -1372,6 +1398,7 @@ Language: zh_TW
     <string name="domain_registration_registering_domain_name_progress_dialog_message">正在註冊網域名稱…</string>
     <string name="domain_registration_state_picker_dialog_title">選取州/省</string>
     <string name="domain_registration_country_picker_dialog_title">選取國家</string>
+    <string name="domain_contact_information_register_domain_button">註冊網域</string>
     <string name="domain_contact_information_postal_code_hint">郵遞區號</string>
     <string name="domain_contact_information_state_hint">州</string>
     <string name="domain_contact_information_city_hint">城市</string>
@@ -1781,7 +1808,7 @@ Language: zh_TW
     <string name="my_site_icon_dialog_add_message">要新增網站圖示嗎？</string>
     <string name="my_site_icon_dialog_title">網站圖示</string>
     <string name="reader_followed_blog_notifications_this">此網站</string>
-    <string name="reader_followed_blog_notifications_action">啓用</string>
+    <string name="reader_followed_blog_notifications_action">啟用</string>
     <string name="reader_followed_blog_notifications">要啟用 %1$s%2$s%3$s 的通知？</string>
     <string name="reader_btn_notifications_on">開啟網站通知</string>
     <string name="reader_btn_notifications_off">關閉網站通知</string>
@@ -2948,6 +2975,7 @@ Language: zh_TW
     <string name="reader_likes_multi">%,d 人說這個讚</string>
     <string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
     <string name="comment_spammed">已將留言標記為垃圾</string>
+    <string name="comment_unapproved">留言未核准</string>
     <string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
     <string name="pick_photo">選取照片</string>
     <string name="pick_video">選取影片</string>

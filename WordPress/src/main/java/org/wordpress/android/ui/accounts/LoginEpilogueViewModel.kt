@@ -31,10 +31,10 @@ class LoginEpilogueViewModel @Inject constructor(
     }
 
     private fun handleNoSitesFound() {
-        if (buildConfigWrapper.isJetpackApp) {
+        if (buildConfigWrapper.isJetpackApp && !buildConfigWrapper.isSiteCreationEnabled) {
             _navigationEvents.postValue(Event(LoginNavigationEvents.ShowNoJetpackSites))
         } else {
-            if (appPrefsWrapper.shouldShowPostSignupInterstitial) {
+            if (appPrefsWrapper.shouldShowPostSignupInterstitial && buildConfigWrapper.isSignupEnabled) {
                 _navigationEvents.postValue(Event(LoginNavigationEvents.ShowPostSignupInterstitialScreen))
             }
             _navigationEvents.postValue(Event(LoginNavigationEvents.CloseWithResultOk))
@@ -43,5 +43,13 @@ class LoginEpilogueViewModel @Inject constructor(
 
     private fun handleSitesFound() {
         _navigationEvents.postValue(Event(LoginNavigationEvents.CloseWithResultOk))
+    }
+
+    fun onLoginEpilogueResume(doLoginUpdate: Boolean) {
+        if (!doLoginUpdate && !siteStore.hasSite()) handleNoSitesFound()
+    }
+
+    fun onLoginFinished(doLoginUpdate: Boolean) {
+        if (doLoginUpdate && !siteStore.hasSite()) handleNoSitesFound()
     }
 }

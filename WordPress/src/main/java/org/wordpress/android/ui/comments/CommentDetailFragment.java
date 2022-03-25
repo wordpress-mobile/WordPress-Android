@@ -94,7 +94,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -102,7 +102,7 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
@@ -327,7 +327,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Toast.makeText(view1.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
         mEditReply.initializeWithPrefix('@');
@@ -376,7 +376,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Toast.makeText(v.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(buttonExpand);
         setReplyUniqueId();
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()
@@ -689,7 +689,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    // TODO [RenanLukas] handle Reader CommentSource when it's ready
     @Nullable
     private CommentIdentifier mapCommentIdentifier() {
         switch (mCommentSource) {
@@ -761,9 +760,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(mComment.getDatePublished()),
                 WordPress.getContext()));
 
-        int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz,
-                getString(R.string.comment_unable_to_show_error));
+        String renderingError = getString(R.string.comment_unable_to_show_error);
+        mTxtContent.post(() -> CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(),
+                mTxtContent.getWidth(), mTxtContent.getLineHeight(), renderingError));
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
@@ -1210,7 +1209,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canEdit() {
-        return (mSite != null && canModerate());
+        return mSite != null && mSite.getHasCapabilityEditOthersPosts();
     }
 
     private boolean canLike() {

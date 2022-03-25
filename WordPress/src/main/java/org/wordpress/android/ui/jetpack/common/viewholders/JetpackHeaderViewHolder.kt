@@ -6,7 +6,7 @@ import org.wordpress.android.databinding.JetpackListHeaderItemBinding
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class JetpackHeaderViewHolder(
     private val uiHelpers: UiHelpers,

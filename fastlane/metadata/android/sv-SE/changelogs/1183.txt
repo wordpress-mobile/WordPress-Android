@@ -1,0 +1,8 @@
+19.4:
+- Färgpaletter: teman/standardpaletter/anpassad palett
+- Bättre beskrivningar vid inloggningsfel för webbplats på webbhotell
+- Val av app för e-postvalidering vid registrering/inloggning
+- Svarskommentarer till en raderad kommentar visas inte
+- Bilder är synliga även om enheten roterats under pågående bildhämtning
+- Korrigering av förloppsindikatorn vid redigering av ikonen för Min webbplats
+- Ändrad standardordning i listan över insikter
