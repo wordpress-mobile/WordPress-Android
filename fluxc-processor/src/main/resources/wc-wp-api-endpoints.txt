@@ -47,7 +47,6 @@
 /payments/connection_tokens
 /payments/orders/<id>/capture_terminal_payment
 /payments/accounts
-/payments/orders/<order_id>/create_customer
 /payments/charges/<charge_id>#String/
 
 /payments/terminal/locations/store
