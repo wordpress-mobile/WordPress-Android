@@ -167,7 +167,10 @@ public class AppPrefs {
         PINNED_DYNAMIC_CARD,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
-        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION
+        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
+
+        // Used to store the variant for the my site default tab experiment
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT
     }
 
     /**
@@ -1339,5 +1342,16 @@ public class AppPrefs {
             capabilities.add(JetpackCapability.Companion.fromString(item));
         }
         return capabilities;
+    }
+
+    public static void setMySiteDefaultTabExperimentVariant(String variant) {
+        setString(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT, variant);
+    }
+
+    public static String getMySiteDefaultTabExperimentVariant() {
+        return getString(
+                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT,
+                "nonexistent"
+        );
     }
 }
