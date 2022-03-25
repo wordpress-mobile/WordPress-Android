@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
+import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -30,7 +31,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
@@ -58,7 +59,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -119,7 +120,7 @@ class MySiteViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val siteInfoCardBuilder: SiteInfoCardBuilder,
+    private val siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder,
     private val homePageDataLoader: HomePageDataLoader,
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
@@ -265,7 +266,7 @@ class MySiteViewModel @Inject constructor(
                 activeTask = activeTask
         )
 
-        val siteInfo = siteInfoCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
+        val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
 
         if (activeTask != null) {
             scrollToQuickStartTask(
@@ -284,11 +285,26 @@ class MySiteViewModel @Inject constructor(
                             )
                         }
                 ),
-                siteInfo = siteInfo,
+                siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
+                siteInfoHeader = siteInfo,
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
         )
+    }
+
+    private fun getSiteInfoToolbarViewParams(): SiteInfoToolbarViewParams {
+        return if (isMySiteTabsEnabled) {
+            SiteInfoToolbarViewParams(
+                    R.dimen.app_bar_with_site_info_tabs_height,
+                    R.dimen.toolbar_bottom_margin_with_tabs
+            )
+        } else {
+            SiteInfoToolbarViewParams(
+                    R.dimen.app_bar_with_site_info_height,
+                    R.dimen.toolbar_bottom_margin_with_no_tabs
+            )
+        }
     }
 
     private fun getPositionOfQuickStartItem(siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>) =
@@ -427,6 +443,10 @@ class MySiteViewModel @Inject constructor(
                 displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
+                siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
+                        R.dimen.app_bar_with_no_site_info_height,
+                        R.dimen.toolbar_bottom_margin_with_no_tabs
+                ),
                 shouldShowImage = shouldShowImage
         )
     }
@@ -943,10 +963,12 @@ class MySiteViewModel @Inject constructor(
 
     sealed class State {
         abstract val tabsUiState: TabsUiState
+        abstract val siteInfoToolbarViewParams: SiteInfoToolbarViewParams
 
         data class SiteSelected(
             override val tabsUiState: TabsUiState,
-            val siteInfo: SiteInfoCard,
+            override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
+            val siteInfoHeader: SiteInfoHeaderCard,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
@@ -954,6 +976,7 @@ class MySiteViewModel @Inject constructor(
 
         data class NoSites(
             override val tabsUiState: TabsUiState,
+            override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
             val shouldShowImage: Boolean
         ) : State()
     }
@@ -967,6 +990,11 @@ class MySiteViewModel @Inject constructor(
             val showQuickStartFocusPoint: Boolean = false
         )
     }
+
+    data class SiteInfoToolbarViewParams(
+        @DimenRes val appBarHeight: Int,
+        @DimenRes val toolbarBottomMargin: Int
+    )
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,

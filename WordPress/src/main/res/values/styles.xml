@@ -473,7 +473,8 @@
     <style name="MySiteTitleLabel">
         <item name="android:ellipsize">end</item>
         <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:maxLines">2</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>

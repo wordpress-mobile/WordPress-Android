@@ -40,7 +40,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         POST_CARD_WITH_POST_ITEMS
     }
 
-    data class SiteInfoCard(
+    data class SiteInfoHeaderCard(
         val title: String,
         val url: String,
         val iconState: IconState,

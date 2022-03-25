@@ -20,12 +20,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
-import org.wordpress.android.databinding.MySiteInfoCardBinding
+import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
+import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
@@ -104,7 +105,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             updateCollapsibleToolbarTitle(currentOffset)
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
-            animateSiteInfoCard(percentage)
+            fadeSiteInfoHeader(percentage)
             avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
                 val maxSize = avatar.maxHeight
@@ -119,11 +120,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
-        if (currentOffset == 0) collapsingToolbar.title = siteTitle
-        else collapsingToolbar.title = null
+        if (currentOffset == 0) {
+            collapsingToolbar.title = siteTitle
+        } else {
+            collapsingToolbar.title = null
+        }
     }
 
-    private fun MySiteFragmentBinding.animateSiteInfoCard(percentage: Int) {
+    private fun MySiteFragmentBinding.fadeSiteInfoHeader(percentage: Int) {
         siteInfo.siteInfoCard.alpha = percentage.toFloat() / 100
     }
 
@@ -180,54 +184,40 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        siteInfo.loadMySiteDetails(state.siteInfo)
-        showAppbar()
+        siteInfo.loadMySiteDetails(state.siteInfoHeader)
+        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
-    private fun MySiteInfoCardBinding.loadMySiteDetails(site: SiteInfoCard) {
-        siteTitle = site.title
-        if (site.iconState is IconState.Visible) {
+    private fun MySiteInfoHeaderCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
+        siteTitle = siteInfoHeader.title
+        if (siteInfoHeader.iconState is IconState.Visible) {
             mySiteBlavatar.visibility = View.VISIBLE
-            imageManager.load(mySiteBlavatar, BLAVATAR, site.iconState.url ?: "")
+            imageManager.load(mySiteBlavatar, BLAVATAR, siteInfoHeader.iconState.url ?: "")
             mySiteIconProgress.visibility = View.GONE
-            mySiteBlavatar.setOnClickListener { site.onIconClick.click() }
-        } else if (site.iconState is IconState.Progress) {
+            mySiteBlavatar.setOnClickListener { siteInfoHeader.onIconClick.click() }
+        } else if (siteInfoHeader.iconState is IconState.Progress) {
             mySiteBlavatar.setOnClickListener(null)
             mySiteIconProgress.visibility = View.VISIBLE
             mySiteBlavatar.visibility = View.GONE
         }
-        quickStartIconFocusPoint.setVisibleOrGone(site.showIconFocusPoint)
-        if (site.onTitleClick != null) {
-            siteInfoContainer.title.setOnClickListener { site.onTitleClick.click() }
+        quickStartIconFocusPoint.setVisibleOrGone(siteInfoHeader.showIconFocusPoint)
+        if (siteInfoHeader.onTitleClick != null) {
+            siteInfoContainer.title.setOnClickListener { siteInfoHeader.onTitleClick.click() }
         } else {
             siteInfoContainer.title.setOnClickListener(null)
         }
-        siteInfoContainer.title.text = site.title
-        quickStartTitleFocusPoint.setVisibleOrGone(site.showTitleFocusPoint)
-        siteInfoContainer.subtitle.text = site.url
-        siteInfoContainer.subtitle.setOnClickListener { site.onUrlClick.click() }
-        switchSite.setOnClickListener { site.onSwitchSiteClick.click() }
+        siteInfoContainer.title.text = siteInfoHeader.title
+        quickStartTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showTitleFocusPoint)
+        siteInfoContainer.subtitle.text = siteInfoHeader.url
+        siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
+        switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
     }
 
-    private fun MySiteFragmentBinding.showAppbar() {
-        header.setVisible(true)
-        if (viewModel.isMySiteTabsEnabled) showSiteInfoToolbarWithTabs()
-        else showSiteInfoToolbarWithoutTabs()
-    }
-
-    private fun MySiteFragmentBinding.showSiteInfoToolbarWithTabs() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_tabs_height).toInt()
-        appbarMain.layoutParams.height = newHeight
-        updateToolbarBottomMargin(newHeight)
-        tabLayout.setVisible(true)
-        appbarMain.requestLayout()
-    }
-
-    private fun MySiteFragmentBinding.showSiteInfoToolbarWithoutTabs() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_site_info_height).toInt()
-        appbarMain.layoutParams.height = newHeight
-        updateToolbarBottomMargin(0)
-        tabLayout.setVisible(false)
+    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
+        val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
+        appbarMain.layoutParams.height = appBarHeight
+        val toolbarBottomMargin = resources.getDimension(siteInfoToolbarViewParams.toolbarBottomMargin).toInt()
+        updateToolbarBottomMargin(toolbarBottomMargin)
         appbarMain.requestLayout()
     }
 
@@ -245,15 +235,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
-        hideSiteInfoToolbarView()
-    }
-
-    private fun MySiteFragmentBinding.hideSiteInfoToolbarView() {
-        val newHeight = resources.getDimension(R.dimen.app_bar_with_no_site_info_height).toInt()
-        appbarMain.setExpanded(false, true)
-        appbarMain.layoutParams.height = newHeight
-        updateToolbarBottomMargin(0)
-        appbarMain.requestLayout()
+        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
     private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {

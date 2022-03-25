@@ -3,17 +3,17 @@ package org.wordpress.android.ui.mysite.cards.siteinfo
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoCard.IconState
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-class SiteInfoCardBuilder
+class SiteInfoHeaderCardBuilder
 @Inject constructor(private val resourceProvider: ResourceProvider) {
-    fun buildSiteInfoCard(params: SiteInfoCardBuilderParams): SiteInfoCard {
+    fun buildSiteInfoCard(params: SiteInfoCardBuilderParams): SiteInfoHeaderCard {
         val homeUrl = SiteUtils.getHomeURLOrHostName(params.site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(params.site)
         val siteIcon = if (!params.showSiteIconProgressBar && !params.site.iconUrl.isNullOrEmpty()) {
@@ -28,7 +28,7 @@ class SiteInfoCardBuilder
         } else {
             IconState.Visible()
         }
-        return SiteInfoCard(
+        return SiteInfoHeaderCard(
                 blogTitle,
                 homeUrl,
                 siteIcon,
