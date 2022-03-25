@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
@@ -112,6 +113,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
@@ -153,6 +155,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -273,6 +276,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -303,7 +307,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteItemsTracker,
                 domainRegistrationCardShownTracker,
                 buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig
+                mySiteDashboardTabsFeatureConfig,
+                bloggingPromptsFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1199,6 +1204,30 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
 
         verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
+    }
+
+    /* DASHBOARD BLOGGING PROMPT CARD */
+
+    @Test
+    fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+            it.bloggingPromptCardBuilderParams.bloggingPrompt != null
+        })
+    }
+
+    @Test
+    fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+            it.bloggingPromptCardBuilderParams.bloggingPrompt == null
+        })
     }
 
     /* DASHBOARD ERROR SNACKBAR */

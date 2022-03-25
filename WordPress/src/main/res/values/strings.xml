@@ -2247,6 +2247,11 @@
     <string name="my_site_error_card_subtitle">We\'re having trouble loading your site\'s data at the moment.</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
 
+    <!-- My Site - Blogging Prompt Card -->
+    <string name="my_site_blogging_prompt_card_title">Prompts</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">%d answers</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
