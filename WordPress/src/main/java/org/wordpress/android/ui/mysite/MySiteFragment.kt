@@ -26,6 +26,7 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
+import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState
 import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
@@ -175,7 +176,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.setVisible(false)
         }
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
-        updateSiteInfoToolbarView(state.siteInfoToolbarView.appBarHeight, state.siteInfoToolbarView.toolbarBottomMargin)
+        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
     private fun MySiteInfoCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
@@ -203,10 +204,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
     }
 
-    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(appBarHeightDimen: Int, toolbarBottomMarginDimen: Int) {
-        val appBarHeight = resources.getDimension(appBarHeightDimen).toInt()
+    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
+        val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
         appbarMain.layoutParams.height = appBarHeight
-        val toolbarBottomMargin = resources.getDimension(toolbarBottomMarginDimen).toInt()
+        val toolbarBottomMargin = resources.getDimension(siteInfoToolbarViewParams.toolbarBottomMargin).toInt()
         updateToolbarBottomMargin(toolbarBottomMargin)
         appbarMain.requestLayout()
     }
@@ -225,7 +226,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
-        updateSiteInfoToolbarView(state.siteInfoToolbarView.appBarHeight, state.siteInfoToolbarView.toolbarBottomMargin)
+        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
     private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
