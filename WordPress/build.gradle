@@ -382,8 +382,7 @@ dependencies {
 
     testImplementation "junit:junit:$jUnitVersion"
 
-    testImplementation 'org.robolectric:robolectric:4.4'
-    testImplementation 'org.robolectric:shadows-multidex:4.4'
+    testImplementation 'org.robolectric:robolectric:4.7.3'
 
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
