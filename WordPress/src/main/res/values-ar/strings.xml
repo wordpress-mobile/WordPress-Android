@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-11 18:54:08+0000
+Translation-Revision-Date: 2022-03-24 17:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">فشل في إدراج وسائط.\nانقر للحصول على مزيد من المعلومات.</string>
+    <string name="new_site_creation_intents_header_subtitle">اختيار موضوع من القائمة الواردة أدناه أو كتابة موضوعك الخاص</string>
+    <string name="new_site_creation_intents_header_title">ما الذي يدور موقعك حوله؟</string>
+    <string name="notification_channel_weekly_roundup_title">موجز أسبوعي</string>
+    <string name="my_site_dashboard_tab_title">الرئيسية</string>
+    <string name="adding_cat">إضافة تصنيف</string>
     <string name="login_select_email_client">ما تطبيق البريد الإلكتروني الذي تستخدمه؟</string>
     <string name="login_error_xml_rpc_auth_error_communicating">حدثت مشكلة في أثناء الاتصال بالموقع. تم إرجاع رمز خطأ HTTP رقم 401.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">تبدو استدعاءات XML-RPC محظورة على هذا الموقع (رمز الخطأ 401). إذا فشلت محاولة تسجيل الدخول، فانقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
     <string name="login_error_xml_rpc_cannot_read_site">يتعذر قراءة موقع WordPress على معرف URL ذلك. انقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
     <string name="login_error_xml_rpc_services_disabled">خدمات XML-RPC غير مفعلة في هذا الموقع.</string>
-    <string name="my_site_menu_tab_title">القائمة</string>
-    <string name="my_site_dashboard_tab_title">لوحة التحكم</string>
+    <string name="my_site_menu_tab_title">قائمة الموقع</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">يتضمن بحثك أحرف غير مدعومة في نطاقات ووردبريس.كوم. يُسمح بالأحرف الآتية: من A إلى Z، ومن a إلى z، ومن 0 إلى 9.</string>
     <string name="my_site_todays_stat_card_title">إحصاءات اليوم</string>
     <string name="my_site_error_within_card_subtitle">تحقَّق من اتصالك بالإنترنت وقم بتحديث الصفحة.</string>
@@ -317,6 +324,7 @@ Language: ar
     <string name="gutenberg_native_preview_page">معاينة الصفحة</string>
     <string name="gutenberg_native_preview_post">معاينة المقالة</string>
     <string name="gutenberg_native_retry">أعد المحاولة</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">واحد</string>
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_s_link">%s رابط</string>
@@ -699,7 +707,6 @@ Language: ar
     <string name="login_prologue_third_subtitle_one">أُعجب &lt;b&gt;Madison Ruiz&lt;/b&gt; بمقالتك</string>
     <string name="login_prologue_third_subtitle_two">لقد تلقيت &lt;b&gt;50 إعجاب&lt;/b&gt; على موقعك اليوم</string>
     <string name="login_prologue_third_subtitle_three">قام &lt;b&gt;Johan Brandt&lt;/b&gt; بالردّ على مقالتك</string>
-    <string name="hpp_skip_button">تخطي</string>
     <string name="hpp_choose_button">اختيار</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">تم فتح قائمة المكوّن القابلة للتمرير. حدد مكوّنًا.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">تم قفل قائمة المكوّن القابلة للتمرير.</string>
@@ -1204,7 +1211,6 @@ Language: ar
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أعلى من الصف %1$s إلى الصف %2$s</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أسفل من الصف %1$s إلى الصف %2$s</string>
     <string name="gutenberg_native_help_icon">أيقونة المساعدة</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
     <string name="gutenberg_native_link_inserted">تمّ إدراج الرابط</string>
     <string name="gutenberg_native_move_block_down">تحريك المكوّن لأسفل</string>
     <string name="gutenberg_native_image_caption_s">تسمية توضيحية للصورة. %s</string>
@@ -2545,6 +2551,7 @@ Language: ar
     <string name="comments_empty_list_filtered_trashed">لا توجد تعليقات موضوعة في سلة المهملات</string>
     <string name="comments_empty_list_filtered_pending">لا توجد تعليقات في قائمة الإنتظار</string>
     <string name="comments_empty_list_filtered_approved">لا توجد تعليقات تمّت الموافقة عليها</string>
+    <string name="button_skip">تخطي</string>
     <string name="xmlrpc_missing_method_error">تعذر الاتصال. طرق XML-RPC غير موجودة على الخادم.</string>
     <string name="post_format_status">الحالة</string>
     <string name="alignment_center">وسط</string>

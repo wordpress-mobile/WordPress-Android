@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-07 21:11:54+0000
+Translation-Revision-Date: 2022-03-22 15:31:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Această combinație de culori poate să nu fie lizibilă pentru toți cititorii. Încearcă să folosești o culoare de fundal mai luminoasă și/sau o culoare pentru text mai închisă.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Această combinație de culori poate să nu fie lizibilă pentru toți cititorii. Încearcă să folosești o culoare de fundal mai întunecată și/sau o culoare pentru text mai deschisă.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Inserarea media a eșuat.\nDă tap pentru mai multe informații.</string>
+    <string name="new_site_creation_intents_header_title">Despre ce este site-ul tău web?</string>
+    <string name="new_site_creation_intents_header_subtitle">Alege un subiect din lista de mai jos sau creează tu unul</string>
+    <string name="notification_channel_weekly_roundup_title">Rezumat săptămânal</string>
+    <string name="my_site_dashboard_tab_title">Prima pagină</string>
+    <string name="adding_cat">Se adaugă categorie</string>
     <string name="login_error_xml_rpc_auth_error_communicating">A fost o problemă la comunicarea cu site-ul. A fost returnat codul de eroare HTTP 401.</string>
     <string name="login_select_email_client">Ce aplicație pentru email folosești?</string>
     <string name="login_error_xml_rpc_cannot_read_site">Nu pot să găsesc un site WordPress la acel URL. Atinge iconul pentru ajutor ca să vezi Întrebări frecvente.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Apelările XML-RPC par a fi blocate pe acest site (cod eroare 401). Dacă încercarea de autentificare eșuează, atinge iconul pentru ajutor ca să vezi Întrebări frecvente.</string>
-    <string name="my_site_dashboard_tab_title">Panou control</string>
-    <string name="my_site_menu_tab_title">Meniu</string>
     <string name="login_error_xml_rpc_services_disabled">Serviciile XML-RPC sunt dezactivate pe acest site.</string>
+    <string name="my_site_menu_tab_title">Meniu site</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Căutarea ta include caractere care nu sunt acceptate în domeniile WordPress.com. Sunt permise următoarele caractere: A–Z, a–z, 0–9.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Mergi la statistici</string>
     <string name="my_site_todays_stat_card_title">Statistici pentru azi</string>
@@ -317,6 +324,7 @@ Language: ro
     <string name="gutenberg_native_preview_post">Previzualizează articolul</string>
     <string name="gutenberg_native_preview_page">Previzualizează pagina</string>
     <string name="gutenberg_native_retry">Reîncearcă</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Unu</string>
     <string name="gutenberg_native_no_preview_available">Nu este disponibilă nicio previzualizare</string>
     <string name="gutenberg_native_s_link">Legătură la %s</string>
@@ -701,7 +709,6 @@ Language: ro
     <string name="login_prologue_third_subtitle_two">Azi ai primit &lt;b&gt;50 de aprecieri&lt;/b&gt; pe site</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Meniul de blocuri care poate fi derulat este deschis. Selectează un bloc.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Meniul de blocuri care poate fi derulat este închis.</string>
-    <string name="hpp_skip_button">Sari</string>
     <string name="hpp_choose_button">Alege</string>
     <string name="hpp_subtitle">Alege aranjamentul preferat pentru prima pagină. Îl poți edita sau personaliza mai târziu.</string>
     <string name="hpp_title">Alege un design</string>
@@ -1207,7 +1214,6 @@ Language: ro
     <string name="gutenberg_native_image_caption_s">Text asociat imagine. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ascunde tastatura</string>
     <string name="gutenberg_native_help_icon">Icon pentru ajutor</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserarea elementului media a eșuat.\nTe rog atinge pentru opțiuni.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Atinge de două ori pentru a anula ultima modificare</string>
     <string name="gutenberg_native_link_text">Text legătură</string>
     <string name="gutenberg_native_link_inserted">Am inserat legătura</string>
@@ -2545,6 +2551,7 @@ Language: ro
     <string name="site_settings_advanced_header">Avansat</string>
     <string name="comments_empty_list_filtered_pending">Niciun comentariu în așteptare</string>
     <string name="comments_empty_list_filtered_approved">Niciun comentariu aprobat</string>
+    <string name="button_skip">Sari</string>
     <string name="xmlrpc_missing_method_error">Nu ne-am putut conecta. Metodele XML-RPC necesare lipsesc de pe server.</string>
     <string name="post_format_status">Stare</string>
     <string name="post_format_video">Video</string>
