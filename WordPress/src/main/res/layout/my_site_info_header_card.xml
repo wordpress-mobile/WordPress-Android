@@ -77,6 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:minHeight="@dimen/my_site_blavatar_sz"
+        android:paddingTop="@dimen/margin_small"
         app:layout_constraintBottom_toBottomOf="@+id/blavatar_container"
         app:layout_constraintEnd_toStartOf="@id/switch_site"
         app:layout_constraintStart_toEndOf="@id/blavatar_container"
