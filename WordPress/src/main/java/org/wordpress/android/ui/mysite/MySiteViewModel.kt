@@ -474,7 +474,10 @@ class MySiteViewModel @Inject constructor(
         quickStartTask: QuickStartTask,
         position: Int
     ) {
-        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderQuickStartTask(quickStartTask,position)) {
+        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderQuickStartTask(
+                        quickStartTask,
+                        position
+                )) {
             _activeTaskPosition.postValue(quickStartTask to position)
         }
     }

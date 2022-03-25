@@ -157,7 +157,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
             var quickStartScrollPosition = it
-            if(quickStartScrollPosition==-1) {
+            if (quickStartScrollPosition == -1) {
                 appbarMain.setExpanded(true, true)
                 quickStartScrollPosition = 0
             }
