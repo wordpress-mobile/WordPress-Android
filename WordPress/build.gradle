@@ -26,6 +26,7 @@ repositories {
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
             includeGroup "com.automattic"
             includeGroup "com.automattic.stories"
+            includeGroup "com.automattic.tracks"
         }
     }
     maven {
@@ -34,12 +35,8 @@ repositories {
             includeGroup "org.wordpress-mobile"
         }
     }
-    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-    def localRNUrl = "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
-    def remoteRNUrl ="https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
-    def reactNativeUrl = gradle.ext.includedBuildGutenbergMobilePath != null ? localRNUrl : remoteRNUrl
     maven {
-        url reactNativeUrl
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
         content {
             includeGroup "com.facebook.react"
         }
@@ -122,6 +119,7 @@ android {
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "false"
+        buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
@@ -371,7 +369,7 @@ dependencies {
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
-    implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
+    implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:3.4.0'

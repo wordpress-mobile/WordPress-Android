@@ -11,8 +11,6 @@ Language: he_IL
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">נראה שקריאות XML-RPC חסומות באתר הזה (קוד שגיאה 401). אם הניסיון להתחברות נכשל, יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
     <string name="login_error_xml_rpc_cannot_read_site">לא ניתן לקרוא את אתר WordPress בכתובת URL זו. יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
     <string name="login_error_xml_rpc_services_disabled">שירותי XML-RPC באתר זה מנותקים.</string>
-    <string name="my_site_menu_tab_title">תפריט</string>
-    <string name="my_site_dashboard_tab_title">לוח בקרה</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">החיפוש שלך כולל תווים שלא נתמכים בדומיינים של WordPress.com. התווים הבאים מותרים: A–Z‏, a–z,‏ 0–9.</string>
     <string name="my_site_todays_stat_card_title">הנתונים הסטטיסטיים של היום</string>
     <string name="my_site_error_within_card_subtitle">יש לבדוק את החיבור לאינטרנט ולרענן את העמוד.</string>
@@ -701,7 +699,6 @@ Language: he_IL
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;ישראלה ישראלה&lt;/b&gt; סימנה לייק בפוסט שלך</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">תפריט בלוק לגלילה פתוח. יש לבחור בלוק.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">תפריט בלוק לגלילה סגור.</string>
-    <string name="hpp_skip_button">לדלג</string>
     <string name="hpp_choose_button">לבחור</string>
     <string name="hpp_subtitle">יש לבחור את הפריסה המועדפת עליך לעמוד הבית. אפשר לערוך ולהתאימה אישית מאוחר יותר.</string>
     <string name="hpp_title">לבחור עיצוב</string>
@@ -1208,7 +1205,6 @@ Language: he_IL
     <string name="gutenberg_native_image_caption_s">כיתוב התמונה. %s</string>
     <string name="gutenberg_native_hide_keyboard">הסתרת מקלדת</string>
     <string name="gutenberg_native_help_icon">סמל עזרה</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">שילוב פירטי המדיה נכשל.\nיש להקיש לאפשרויות.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">יש להקיש פעמיים כדי לבטל את השינוי האחרון</string>
     <string name="gutenberg_native_link_text">טקסט לקישור</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">יש להקיש פעמיים כדי לשנות את ההגדרות</string>
@@ -2545,6 +2541,7 @@ Language: he_IL
     <string name="site_settings_advanced_header">אפשרויות מתקדמות</string>
     <string name="comments_empty_list_filtered_pending">אין תגובות שממתינות לאישור</string>
     <string name="comments_empty_list_filtered_approved">אין תגובות מאושרות</string>
+    <string name="button_skip">דילוג</string>
     <string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
     <string name="post_format_video">וידאו</string>
     <string name="alignment_center">מרכז</string>

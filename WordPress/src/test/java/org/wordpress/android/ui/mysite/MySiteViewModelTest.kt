@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
@@ -35,8 +36,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
-import org.wordpress.android.fluxc.model.experiments.Variation.Control
-import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
@@ -114,10 +113,11 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
-import org.wordpress.android.util.experiments.LandOnTheEditorABExperiment
 import org.wordpress.android.viewmodel.ContextProvider
 import java.util.Date
 
@@ -148,13 +148,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
-    @Mock lateinit var landOnTheEditorABExperiment: LandOnTheEditorABExperiment
+    @Mock lateinit var landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
     @Mock lateinit var siteItemsTracker: SiteItemsTracker
     @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -275,6 +276,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -298,14 +300,15 @@ class MySiteViewModelTest : BaseUnitTest() {
                 snackbarSequencer,
                 cardsBuilder,
                 dynamicCardsBuilder,
-                landOnTheEditorABExperiment,
+                landOnTheEditorFeatureConfig,
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
                 cardsTracker,
                 siteItemsTracker,
                 domainRegistrationCardShownTracker,
                 buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig
+                mySiteDashboardTabsFeatureConfig,
+                bloggingPromptsFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -371,21 +374,21 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given my site tabs feature flag not enabled, when site is selected, then tabs are not visible`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
 
-        assertThat((uiModels.last().state as SiteSelected).showTabs).isFalse
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
     }
 
     @Test
     fun `given my site tabs build config not enabled, when site is selected, then tabs are not visible`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = false)
 
-        assertThat((uiModels.last().state as SiteSelected).showTabs).isFalse
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
     }
 
     @Test
     fun `given my site tabs build config with flag enabled, when site is selected, then tabs are visible`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
 
-        assertThat((uiModels.last().state as SiteSelected).showTabs).isTrue
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue
     }
 
     @Test
@@ -454,7 +457,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected, then tabs are not visible`() {
         onSiteSelected.value = null
 
-        assertThat((uiModels.last().state as NoSites).showTabs).isFalse
+        assertThat((uiModels.last().state as NoSites).tabsUiState.showTabs).isFalse
     }
 
     @Test
@@ -1203,6 +1206,30 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
     }
 
+    /* DASHBOARD BLOGGING PROMPT CARD */
+
+    @Test
+    fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+            it.bloggingPromptCardBuilderParams.bloggingPrompt != null
+        })
+    }
+
+    @Test
+    fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+            it.bloggingPromptCardBuilderParams.bloggingPrompt == null
+        })
+    }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test
@@ -1621,8 +1648,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
-    fun `given the land on the editor experiment is running, then the home page editor is shown`() = test {
-        whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Treatment("experiment"))
+    fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
+        whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel.performFirstStepAfterSiteCreation(siteLocalId)
 
@@ -1631,8 +1658,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given the land on the editor experiment is not running, then the home page editor is not shown`() = test {
-        whenever(landOnTheEditorABExperiment.getVariation()).thenReturn(Control)
+    fun `given the land on the editor feature is not enabled, then the home page editor is not shown`() = test {
+        whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(false)
 
         viewModel.performFirstStepAfterSiteCreation(siteLocalId)
 
@@ -1996,10 +2023,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         return DashboardCards(
                 cards = mutableListOf<DashboardCard>().apply {
                     if (params.showErrorCard) {
-                        initErrorCard(mockInvocation)
+                        add(initErrorCard(mockInvocation))
                     } else {
-                        initPostCard(mockInvocation)
-                        initTodaysStatsCard(mockInvocation)
+                        add(initPostCard(mockInvocation))
+                        add(initTodaysStatsCard(mockInvocation))
                     }
                 }
         )
