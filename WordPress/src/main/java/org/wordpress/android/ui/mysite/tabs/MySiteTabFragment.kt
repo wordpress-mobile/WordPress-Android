@@ -587,7 +587,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onQuickStartFullScreenDialogDismiss()
     }
 
-    fun scrollTo(scrollTo: Int) {
+    fun handleScrollTo(scrollTo: Int) {
         (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
     }
 }

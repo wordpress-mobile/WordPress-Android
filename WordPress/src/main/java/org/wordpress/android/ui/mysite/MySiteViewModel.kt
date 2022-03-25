@@ -474,12 +474,12 @@ class MySiteViewModel @Inject constructor(
         quickStartTask: QuickStartTask,
         position: Int
     ) {
-        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderTask(quickStartTask,position)) {
+        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderQuickStartTask(quickStartTask,position)) {
             _activeTaskPosition.postValue(quickStartTask to position)
         }
     }
 
-    private fun isSiteHeaderTask(quickStartTask: QuickStartTask, position: Int): Boolean {
+    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask, position: Int): Boolean {
         return if (position == -1 && (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
         else position >= 0
     }

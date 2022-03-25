@@ -156,12 +156,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
 
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
-            var scrollTo = it
-            if(it==-1) {
+            var quickStartScrollPosition = it
+            if(quickStartScrollPosition==-1) {
                 appbarMain.setExpanded(true, true)
-                scrollTo = 0
+                quickStartScrollPosition = 0
             }
-            binding?.viewPager?.getCurrentFragment()?.scrollTo(scrollTo)
+            binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
         }
     }
 
