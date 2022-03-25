@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabExperimentVariant;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -1351,7 +1352,7 @@ public class AppPrefs {
     public static String getMySiteDefaultTabExperimentVariant() {
         return getString(
                 DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT,
-                "nonexistent"
+                MySiteTabExperimentVariant.NONEXISTENT.getLabel()
         );
     }
 }
