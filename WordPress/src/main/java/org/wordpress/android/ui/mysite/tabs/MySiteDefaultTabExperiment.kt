@@ -33,13 +33,6 @@ class MySiteDefaultTabExperiment @Inject constructor(
     private fun setExperimentVariant(variant: MySiteTabExperimentVariant) {
         appPrefsWrapper.setMySiteDefaultTabExperimentVariant(variant.label)
     }
-
-    fun getExperimentVariantForTracking() =
-            mapOf(DEFAULT_TAB_EXPERIMENT to appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
-
-    companion object {
-        private const val DEFAULT_TAB_EXPERIMENT = "default_tab_experiment"
-    }
 }
 enum class MySiteTabExperimentVariant(val label: String) {
     NONEXISTENT(MySiteTabExperimentVariant.VARIANT_NONEXISTENT),
