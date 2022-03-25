@@ -150,10 +150,8 @@ class StatsViewModel
                     feature = todaysStatsCardFeatureConfig
             )
 
-            initialSection?.let {
-                statsSectionManager.setSelectedSection(it)
-                trackSectionSelected(it)
-            }
+            initialSection?.let { statsSectionManager.setSelectedSection(it) }
+            trackSectionSelected(initialSection ?: INSIGHTS)
 
             val initialGranularity = initialSection?.toStatsGranularity()
             if (initialGranularity != null && initialSelectedPeriod != null) {
