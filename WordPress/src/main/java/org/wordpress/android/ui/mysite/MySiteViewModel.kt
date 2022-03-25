@@ -269,7 +269,7 @@ class MySiteViewModel @Inject constructor(
         val siteInfo = siteInfoHeaderCardBuilder.buildSiteInfoCard(siteInfoCardBuilderParams)
 
         if (activeTask != null) {
-            scrollToQuickStartTask(
+            scrollToQuickStartTaskIfNecessary(
                     activeTask,
                     getPositionOfQuickStartItem(siteItems)
             )
@@ -470,7 +470,7 @@ class MySiteViewModel @Inject constructor(
         }.toList()
     }
 
-    private fun scrollToQuickStartTask(
+    private fun scrollToQuickStartTaskIfNecessary(
         quickStartTask: QuickStartTask,
         position: Int
     ) {
