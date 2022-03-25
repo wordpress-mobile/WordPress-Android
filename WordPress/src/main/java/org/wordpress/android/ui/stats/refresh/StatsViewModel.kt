@@ -143,19 +143,22 @@ class StatsViewModel
         if (!isInitialized || restart) {
             isInitialized = true
 
-            initialSection?.let { statsSectionManager.setSelectedSection(it) }
-
-            val initialGranularity = initialSection?.toStatsGranularity()
-            if (initialGranularity != null && initialSelectedPeriod != null) {
-                selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
-            }
-
             // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
             analyticsTracker.track(
                     stat = AnalyticsTracker.Stat.STATS_ACCESSED,
                     site = statsSiteProvider.siteModel,
                     feature = todaysStatsCardFeatureConfig
             )
+
+            initialSection?.let {
+                statsSectionManager.setSelectedSection(it)
+                trackSectionSelected(it)
+            }
+
+            val initialGranularity = initialSection?.toStatsGranularity()
+            if (initialGranularity != null && initialSelectedPeriod != null) {
+                selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
+            }
 
             if (launchedFromWidget) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
@@ -227,6 +230,10 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
+        trackSectionSelected(statsSection)
+    }
+
+    private fun trackSectionSelected(statsSection: StatsSection) {
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
