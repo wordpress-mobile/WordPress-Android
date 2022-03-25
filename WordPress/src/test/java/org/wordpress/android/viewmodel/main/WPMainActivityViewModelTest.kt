@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -54,6 +56,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -90,6 +93,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
                 quickStartRepository,
+                mySiteDefaultTabExperiment,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -653,6 +657,15 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
+    }
+
+    @Test
+    fun `given my site default tab experiment, when requested, then check and set for variant is executed `() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.checkAndSetVariantForMySiteDefaultTabExperiment()
+
+        verify(mySiteDefaultTabExperiment, atLeastOnce()).checkAndSetVariantIfNeeded()
     }
 
     private fun startViewModelWithDefaultParameters(
