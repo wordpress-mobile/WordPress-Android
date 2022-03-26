@@ -19,7 +19,7 @@ import org.wordpress.android.util.config.MySiteDefaultTabExperimentFeatureConfig
 import org.wordpress.android.util.config.MySiteDefaultTabExperimentVariationDashboardFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
-class MySiteDefaultTabExperimentTest  : BaseUnitTest() {
+class MySiteDefaultTabExperimentTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var mySiteDefaultTabExperimentFeatureConfig: MySiteDefaultTabExperimentFeatureConfig
     @Mock lateinit var mySiteDefaultTabExperimentVariationDashboardFeatureConfig:
