@@ -1809,6 +1809,28 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
+    @Test
+    fun `given selected site with domain credit, when dashboard cards and items, then domain reg card does not exist`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
+        isDomainCreditAvailable.value = DomainCreditAvailable(true)
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site with domain credit, when site menu cards and items, then domain reg card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
+        isDomainCreditAvailable.value = DomainCreditAvailable(true)
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
