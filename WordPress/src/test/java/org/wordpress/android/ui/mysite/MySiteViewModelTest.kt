@@ -1810,7 +1810,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with domain credit, when dashboard cards and items, then domain reg card does not exist`() {
+    fun `given selected site with domain credit, when dashboard cards + items, then domain reg card does not exist`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
