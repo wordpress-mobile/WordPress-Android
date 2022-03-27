@@ -495,7 +495,7 @@ public class ReaderBlogActions {
                 blogUrl,
                 listener,
                 errorListener);
-        WordPress.sRequestQueue.add(request);
+        WordPress.requestQueue.add(request);
     }
 
     public static BlockedBlogResult blockBlogFromReaderLocal(final long blogId, final long feedId) {

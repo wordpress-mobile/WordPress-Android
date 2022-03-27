@@ -219,8 +219,8 @@ class AppInitializer @Inject constructor(
         encryptedLogging.start()
 
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
-        WordPress.sRequestQueue = requestQueue
-        WordPress.sImageLoader = imageLoader
+        WordPress.requestQueue = requestQueue
+        WordPress.imageLoader = imageLoader
         sOAuthAuthenticator = oAuthAuthenticator
 
         ProfilingUtils.start("App Startup")
@@ -717,10 +717,10 @@ class AppInitializer @Inject constructor(
 
         fun onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background")
-            if (WordPress.sAppIsInTheBackground) {
+            if (WordPress.appIsInTheBackground) {
                 return
             }
-            WordPress.sAppIsInTheBackground = true
+            WordPress.appIsInTheBackground = true
             val lastActivityString = AppPrefs.getLastActivityStr()
             val lastActivity = ActivityId.getActivityIdFromName(lastActivityString)
             val properties: MutableMap<String, Any?> = HashMap()
@@ -761,10 +761,10 @@ class AppInitializer @Inject constructor(
         fun onAppComesFromBackground() {
             readerTracker.setupTrackers()
             AppLog.i(T.UTILS, "App comes from background")
-            if (!WordPress.sAppIsInTheBackground) {
+            if (!WordPress.appIsInTheBackground) {
                 return
             }
-            WordPress.sAppIsInTheBackground = false
+            WordPress.appIsInTheBackground = false
 
             // https://developer.android.com/reference/android/net/ConnectivityManager.html
             // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if the broadcast
@@ -886,7 +886,7 @@ class AppInitializer @Inject constructor(
         val restClientUtils: RestClientUtils by lazy {
             RestClientUtils(
                     context,
-                    WordPress.sRequestQueue,
+                    WordPress.requestQueue,
                     sOAuthAuthenticator,
                     null
             )
@@ -895,7 +895,7 @@ class AppInitializer @Inject constructor(
         val restClientUtilsV1_1: RestClientUtils by lazy {
             RestClientUtils(
                     context,
-                    WordPress.sRequestQueue,
+                    WordPress.requestQueue,
                     sOAuthAuthenticator,
                     null,
                     RestClient.REST_CLIENT_VERSIONS.V1_1
@@ -905,7 +905,7 @@ class AppInitializer @Inject constructor(
         val restClientUtilsV1_2: RestClientUtils by lazy {
             RestClientUtils(
                     context,
-                    WordPress.sRequestQueue,
+                    WordPress.requestQueue,
                     sOAuthAuthenticator,
                     null,
                     RestClient.REST_CLIENT_VERSIONS.V1_2
@@ -915,7 +915,7 @@ class AppInitializer @Inject constructor(
         val restClientUtilsV1_3: RestClientUtils by lazy {
             RestClientUtils(
                     context,
-                    WordPress.sRequestQueue,
+                    WordPress.requestQueue,
                     sOAuthAuthenticator,
                     null,
                     RestClient.REST_CLIENT_VERSIONS.V1_3
@@ -925,7 +925,7 @@ class AppInitializer @Inject constructor(
         val restClientUtilsV2: RestClientUtils by lazy {
             RestClientUtils(
                     context,
-                    WordPress.sRequestQueue,
+                    WordPress.requestQueue,
                     sOAuthAuthenticator,
                     null,
                     RestClient.REST_CLIENT_VERSIONS.V2
@@ -935,7 +935,7 @@ class AppInitializer @Inject constructor(
         val restClientUtilsV0: RestClientUtils by lazy {
             RestClientUtils(
                     context,
-                    WordPress.sRequestQueue,
+                    WordPress.requestQueue,
                     sOAuthAuthenticator,
                     null,
                     RestClient.REST_CLIENT_VERSIONS.V0
