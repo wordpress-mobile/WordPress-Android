@@ -8,7 +8,7 @@ import org.wordpress.android.modules.DaggerAppComponentDebug;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-public class WordPressDebug extends WordPress {
+public class WordPressDebug extends WordPressApp {
     @Override
     public void onCreate() {
         super.onCreate();
