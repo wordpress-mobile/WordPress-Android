@@ -14,6 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabExperimentVariant
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.MySiteDefaultTabExperimentFeatureConfig
 import org.wordpress.android.util.config.MySiteDefaultTabExperimentVariationDashboardFeatureConfig
@@ -25,6 +26,7 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
     @Mock lateinit var mySiteDefaultTabExperimentVariationDashboardFeatureConfig:
             MySiteDefaultTabExperimentVariationDashboardFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
@@ -38,7 +40,8 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
                 mySiteDefaultTabExperimentFeatureConfig,
                 mySiteDefaultTabExperimentVariationDashboardFeatureConfig,
                 mySiteDashboardTabsFeatureConfig,
-                appPrefsWrapper
+                appPrefsWrapper,
+                analyticsTrackerWrapper
         )
     }
 
@@ -67,6 +70,7 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
         whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
                 .thenReturn(MySiteTabExperimentVariant.NONEXISTENT.label)
+
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
 
         verify(appPrefsWrapper, atLeastOnce()).setMySiteDefaultTabExperimentVariant(any())
@@ -82,5 +86,29 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
 
         verify(appPrefsWrapper, never()).setMySiteDefaultTabExperimentVariant(any())
+    }
+
+    @Test
+    fun `given experiment is running, when variant is not assigned, then experiment inject properties are set`() {
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+                .thenReturn(MySiteTabExperimentVariant.NONEXISTENT.label)
+
+        mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
+
+        verify(analyticsTrackerWrapper, atLeastOnce()).setInjectExperimentProperties(any())
+    }
+
+    @Test
+    fun `given experiment is running, when variant is already set, then experiment inject properties are not set`() {
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+                .thenReturn(MySiteTabExperimentVariant.DASHBOARD.label)
+
+        mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
+
+        verify(analyticsTrackerWrapper, never()).setInjectExperimentProperties(any())
     }
 }

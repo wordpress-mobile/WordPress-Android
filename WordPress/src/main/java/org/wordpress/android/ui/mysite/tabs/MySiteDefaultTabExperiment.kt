@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.tabs
 
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.MySiteDefaultTabExperimentFeatureConfig
 import org.wordpress.android.util.config.MySiteDefaultTabExperimentVariationDashboardFeatureConfig
@@ -11,7 +12,8 @@ class MySiteDefaultTabExperiment @Inject constructor(
     private val mySiteDefaultTabExperimentVariationDashboardFeatureConfig:
     MySiteDefaultTabExperimentVariationDashboardFeatureConfig,
     private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun checkAndSetVariantIfNeeded() {
         if (isExperimentRunning()) {
@@ -20,7 +22,14 @@ class MySiteDefaultTabExperiment @Inject constructor(
                     true -> setExperimentVariant(MySiteTabExperimentVariant.DASHBOARD)
                     false -> setExperimentVariant(MySiteTabExperimentVariant.SITE_MENU)
                 }
+                analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
             }
+        }
+    }
+
+    fun checkAndSetTrackingPropertiesIfNeeded() {
+        if (isExperimentRunning()) {
+            analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
         }
     }
 
@@ -32,6 +41,13 @@ class MySiteDefaultTabExperiment @Inject constructor(
 
     private fun setExperimentVariant(variant: MySiteTabExperimentVariant) {
         appPrefsWrapper.setMySiteDefaultTabExperimentVariant(variant.label)
+    }
+
+    private fun getVariantMapForTracking() =
+            mapOf(DEFAULT_TAB_EXPERIMENT to appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+
+    companion object {
+        private const val DEFAULT_TAB_EXPERIMENT = "default_tab_experiment"
     }
 }
 enum class MySiteTabExperimentVariant(val label: String) {
