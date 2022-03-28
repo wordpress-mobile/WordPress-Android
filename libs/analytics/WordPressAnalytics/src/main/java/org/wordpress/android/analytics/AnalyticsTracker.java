@@ -834,6 +834,7 @@ public final class AnalyticsTracker {
         MY_SITE_MENU_ITEM_TAPPED,
         MY_SITE_DASHBOARD_CARD_SHOWN,
         MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
