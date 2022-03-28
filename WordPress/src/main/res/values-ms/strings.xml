@@ -431,6 +431,7 @@ Language: ms
     <string name="start_over">Mula Semula</string>
     <string name="editor_remove_failed_uploads">Buangkan muatnaik yang gagal</string>
     <string name="site_settings_advanced_header">Lanjutan</string>
+    <string name="button_skip">Langkau</string>
     <string name="xmlrpc_missing_method_error">Tidak boleh berhubung. Kaedah XML-RPC yang diperlukan tiada pada pelayan.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>

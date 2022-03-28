@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-08 05:29:21+0000
+Translation-Revision-Date: 2022-03-22 13:39:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más claro y/o un color de texto más oscuro.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo al insertar los medios.\nToca para más información.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más oscuro y/o un color de texto más claro.</string>
+    <string name="new_site_creation_intents_header_title">¿De qué trata tu web?</string>
+    <string name="new_site_creation_intents_header_subtitle">Elige una temática de las listadas a continuación o escribe la tuya propia</string>
+    <string name="adding_cat">Añadir categorías</string>
+    <string name="my_site_dashboard_tab_title">Inicio</string>
+    <string name="notification_channel_weekly_roundup_title">Resumen semanal</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Ha habido un problema al comunicar con el sitio. Se ha devuelto un código de error HTTP 401.</string>
     <string name="login_select_email_client">¿Qué aplicación de correo electrónico usas?</string>
     <string name="login_error_xml_rpc_cannot_read_site">No se ha podido leer el sitio WordPress en esa URL. Toca en el icono de ayuda para ver las FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Las llamadas XML-RPC parecen bloqueadas en este sitio (código de error 401). Si el intento de acceso falla, toca en el icono de ayuda para ver las FAQ.</string>
-    <string name="my_site_dashboard_tab_title">Escritorio</string>
-    <string name="my_site_menu_tab_title">Menú</string>
     <string name="login_error_xml_rpc_services_disabled">Los servicios XML-RPC están desactivados en este sitio.</string>
+    <string name="my_site_menu_tab_title">Menú del sitio</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles en los dominios de WordPress.com. Se permiten los siguientes caracteres: A–Z, a–z, 0–9.</string>
     <string name="error_edit_notification">Ha ocurrido un error al actualizar el contenido del aviso</string>
     <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>
@@ -317,6 +324,7 @@ Language: es
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
     <string name="gutenberg_native_preview_post">Previsualizar la entrada</string>
     <string name="gutenberg_native_retry">Reintentar</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
@@ -701,7 +709,6 @@ Language: es
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Juan Gómez&lt;/b&gt; ha respondido en tu entrada</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
-    <string name="hpp_skip_button">Omitir</string>
     <string name="hpp_choose_button">Elegir</string>
     <string name="hpp_subtitle">Elige el diseño de página de inicio que prefieras. Puedes personalizarlo o cambiarlo más tarde.</string>
     <string name="hpp_title">Elige un diseño</string>
@@ -1208,7 +1215,6 @@ Language: es
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar el teclado</string>
     <string name="gutenberg_native_help_icon">Icono de ayuda</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Fallo al insertar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toca dos veces para deshacer el último cambio</string>
     <string name="gutenberg_native_link_text">Texto del enlace</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Toca dos veces para alternar los ajustes</string>
@@ -2545,6 +2551,7 @@ Language: es
     <string name="comments_empty_list_filtered_trashed">No hay comentarios en la papelera</string>
     <string name="comments_empty_list_filtered_pending">No hay comentarios pendientes</string>
     <string name="comments_empty_list_filtered_approved">No hay comentarios aprobados</string>
+    <string name="button_skip">Saltar</string>
     <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
     <string name="post_format_status">Estado</string>
     <string name="alignment_center">Centrado</string>
