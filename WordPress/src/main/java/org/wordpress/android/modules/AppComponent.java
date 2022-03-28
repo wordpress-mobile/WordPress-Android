@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
-import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressApp;
 import org.wordpress.android.fluxc.module.DatabaseModule;
 import org.wordpress.android.fluxc.module.OkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
@@ -153,8 +153,8 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
-import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
@@ -266,9 +266,9 @@ import dagger.android.support.AndroidSupportInjectionModule;
         LoginServiceModule.class,
         CrashLoggingModule.class
 })
-public interface AppComponent extends AndroidInjector<WordPress> {
+public interface AppComponent extends AndroidInjector<WordPressApp> {
     @Override
-    void inject(WordPress instance);
+    void inject(WordPressApp instance);
 
     void inject(WPMainActivity object);
 

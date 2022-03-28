@@ -35,7 +35,7 @@ public class WPNetworkImageViewTest extends InstrumentationTestCase {
             public void run() {
                 try {
                     // This call crash on old volley versions
-                    WordPress.sImageLoader.get("http;///hello/null/host", new ImageListener() {
+                    WordPress.imageLoader.get("http;///hello/null/host", new ImageListener() {
                         @Override
                         public void onResponse(ImageContainer imageContainer, boolean b) {
                         }

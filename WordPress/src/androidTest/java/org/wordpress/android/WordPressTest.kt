@@ -2,9 +2,9 @@ package org.wordpress.android
 
 import org.wordpress.android.modules.DaggerAppComponentTest
 
-class WordPressTest : WordPress() {
+class WordPressTest : WordPressApp() {
     override fun initDaggerComponent() {
-        mAppComponent = DaggerAppComponentTest.builder()
+        appComponent = DaggerAppComponentTest.builder()
                 .application(this)
                 .build()
     }

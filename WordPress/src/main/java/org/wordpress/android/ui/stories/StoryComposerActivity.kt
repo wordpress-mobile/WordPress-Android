@@ -153,7 +153,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMetadataProvider(this)
         setStoryDiscardListener(this)
         setStoriesAnalyticsListener(StoriesAnalyticsReceiver())
-        setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
+        setNotificationTrackerProvider((application as WordPress).storyNotificationTrackerProvider)
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
         setGenericAnnouncementDialogProvider(this)

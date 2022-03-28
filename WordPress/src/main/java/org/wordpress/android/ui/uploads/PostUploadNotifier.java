@@ -290,7 +290,7 @@ class PostUploadNotifier {
 
     void updateNotificationSuccessForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site,
                                           boolean isFirstTimePublish) {
-        if (!WordPress.sAppIsInTheBackground) {
+        if (!WordPress.Companion.getAppIsInTheBackground()) {
             // only produce success notifications for the user if the app is in the background
             return;
         }
@@ -393,7 +393,7 @@ class PostUploadNotifier {
             EventBus.getDefault().postSticky(new UploadService.UploadMediaSuccessEvent(mediaList, snackbarMessage));
         }
 
-        if (!WordPress.sAppIsInTheBackground) {
+        if (!WordPress.Companion.getAppIsInTheBackground()) {
             // only produce success notifications for the user if the app is in the background
             return;
         }

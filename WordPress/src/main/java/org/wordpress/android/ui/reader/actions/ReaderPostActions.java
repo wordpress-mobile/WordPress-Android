@@ -380,7 +380,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.sRequestQueue.add(request);
+        WordPress.requestQueue.add(request);
     }
 
     /*
