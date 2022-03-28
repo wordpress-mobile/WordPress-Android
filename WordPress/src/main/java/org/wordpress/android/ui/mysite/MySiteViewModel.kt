@@ -11,6 +11,7 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REFRESH
@@ -58,6 +59,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -143,7 +145,18 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
-    private val _tabsUiState = MutableLiveData<TabsUiState>()
+
+    private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
+            .switchMap { quickStartSiteMenuStep ->
+                val result = MutableLiveData<TabsUiState>()
+                /* We want to filter out tabs state livedata update when state is not set in uiModel.
+                   Without this check, tabs state livedata merge with state livedata may return a null state
+                   when building UiModel. */
+                uiModel.value?.state?.tabsUiState?.let {
+                    result.value = it.copy(tabUiStates = it.update(quickStartSiteMenuStep))
+                }
+                result
+            }
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -196,7 +209,7 @@ class MySiteViewModel @Inject constructor(
                 result.filter { it.siteId == null || it.state.site != null }.map { it.state }
             }.addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
 
-    val uiModel: LiveData<UiModel> = merge(_tabsUiState, state) { tabsUiState, mySiteUiState ->
+    val uiModel: LiveData<UiModel> = merge(tabsUiState, state) { tabsUiState, mySiteUiState ->
         with(requireNotNull(mySiteUiState)) {
             val state = if (site != null) {
                 cardsUpdate?.checkAndShowSnackbarError()
@@ -273,6 +286,7 @@ class MySiteViewModel @Inject constructor(
                         tabUiStates = orderedTabTypes.map {
                             TabUiState(
                                     label = UiStringRes(it.stringResId),
+                                    tabType = it,
                                     showQuickStartFocusPoint = false
                             )
                         }
@@ -465,6 +479,21 @@ class MySiteViewModel @Inject constructor(
             _activeTaskPosition.postValue(null)
         } else if (_activeTaskPosition.value?.first != quickStartTask && position >= 0) {
             _activeTaskPosition.postValue(quickStartTask to position)
+        }
+    }
+
+    fun onTabChanged(position: Int) {
+        quickStartRepository.quickStartTaskOrigin = orderedTabTypes[position]
+        if (position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU)) {
+            findUiStateForTab(MySiteTabType.SITE_MENU)?.pendingTask?.let { requestSiteMenuStepPendingTask(it) }
+        }
+    }
+
+    private fun requestSiteMenuStepPendingTask(pendingTask: QuickStartTask) {
+        quickStartRepository.clearSiteMenuStep()
+        launch {
+            delay(LIST_SCROLL_DELAY_MS)
+            quickStartRepository.setActiveTask(pendingTask)
         }
     }
 
@@ -940,6 +969,9 @@ class MySiteViewModel @Inject constructor(
         cardsTracker.resetShown()
     }
 
+    private fun findUiStateForTab(tabType: MySiteTabType) =
+            tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
@@ -967,8 +999,21 @@ class MySiteViewModel @Inject constructor(
     ) {
         data class TabUiState(
             val label: UiString,
-            val showQuickStartFocusPoint: Boolean = false
+            val tabType: MySiteTabType,
+            val showQuickStartFocusPoint: Boolean = false,
+            val pendingTask: QuickStartTask? = null
         )
+
+        fun update(quickStartSiteMenuStep: QuickStartSiteMenuStep?) = tabUiStates.map { tabUiState ->
+            if (tabUiState.tabType == MySiteTabType.SITE_MENU) {
+                tabUiState.copy(
+                        showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false,
+                        pendingTask = quickStartSiteMenuStep?.task
+                )
+            } else {
+                tabUiState
+            }
+        }
     }
 
     data class TextInputDialogModel(
@@ -994,5 +1039,6 @@ class MySiteViewModel @Inject constructor(
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
+        const val LIST_SCROLL_DELAY_MS = 500L
     }
 }

@@ -91,12 +91,14 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -191,6 +193,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
+    private val quickStartSiteMenuStep = MutableLiveData<QuickStartSiteMenuStep>()
     private val dynamicCards = MutableLiveData(
             DynamicCardsUpdate(
                     cards = listOf(
@@ -275,6 +278,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
+        whenever(quickStartRepository.onQuickStartSiteMenuStep).thenReturn(quickStartSiteMenuStep)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = MySiteViewModel(
@@ -1059,6 +1063,39 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
+    /* QUICK START SITE MENU STEP */
+
+    @Test
+    fun `when quick start menu step is triggered, then site menu tab has quick start focus point`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, QuickStartTask.VIEW_SITE)
+
+        assertThat((uiModels.last().state as SiteSelected).findSiteMenuTabUiState().showQuickStartFocusPoint).isTrue
+    }
+
+    @Test
+    fun `given site menu tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        val pendingTask = QuickStartTask.VIEW_SITE
+        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+
+        verify(quickStartRepository).clearSiteMenuStep()
+    }
+
+    @Test
+    fun `given site menu tab has qs focus point, when tab is changed, then site menu pending task is active`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        val pendingTask = QuickStartTask.VIEW_SITE
+        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+
+        verify(quickStartRepository).setActiveTask(pendingTask)
+    }
+
     /* DYNAMIC QUICK START CARD */
 
     @Test
@@ -1818,6 +1855,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findSiteInfoCard() =
             getLastItems().find { it is SiteInfoCard } as SiteInfoCard?
+
+    private fun SiteSelected.findSiteMenuTabUiState() =
+            tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.SITE_MENU }
 
     private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
 
