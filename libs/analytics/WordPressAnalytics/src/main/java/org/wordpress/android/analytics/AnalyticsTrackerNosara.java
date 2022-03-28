@@ -2164,6 +2164,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_dashboard_card_shown";
             case MY_SITE_DASHBOARD_CARD_ITEM_TAPPED:
                 return "my_site_dashboard_card_item_tapped";
+            case MY_SITE_TAB_TAPPED:
+                return "my_site_tab_tapped";
+            case MY_SITE_DASHBOARD_SHOWN:
+                return "my_site_dashboard_shown";
+            case MY_SITE_SITE_MENU_SHOWN:
+                return "my_site_site_menu_shown";
         }
         return null;
     }
