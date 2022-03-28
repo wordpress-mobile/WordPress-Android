@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabExperimentVariant
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -110,5 +111,29 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
 
         verify(analyticsTrackerWrapper, never()).setInjectExperimentProperties(any())
+    }
+
+    @Test
+    fun `given experiment is running, when variant is not assigned, then assignment is tracked`() {
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+                .thenReturn(MySiteTabExperimentVariant.NONEXISTENT.label)
+
+        mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
+
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
+    }
+
+    @Test
+    fun `given experiment is running, when variant is assigned, then assignment is not tracked`() {
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+                .thenReturn(MySiteTabExperimentVariant.DASHBOARD.label)
+
+        mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
+
+        verify(analyticsTrackerWrapper, never()).track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
     }
 }
