@@ -2247,6 +2247,11 @@
     <string name="my_site_error_card_subtitle">We\'re having trouble loading your site\'s data at the moment.</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
 
+    <!-- My Site - Blogging Prompt Card -->
+    <string name="my_site_blogging_prompt_card_title">Prompts</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">%d answers</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
@@ -3192,8 +3197,10 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
+    <string name="new_site_creation_intents_input_hint">Eg. Lifestyle, Poetry, Politics</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>

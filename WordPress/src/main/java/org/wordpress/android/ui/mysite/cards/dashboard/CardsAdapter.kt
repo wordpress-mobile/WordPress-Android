@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil.Callback
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
@@ -13,11 +14,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorWithinCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardViewHolder
-
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -36,6 +37,7 @@ class CardsAdapter(
                 PostCardViewHolder.PostCardWithoutPostItemsViewHolder(parent, imageManager, uiHelpers)
             DashboardCardType.POST_CARD_WITH_POST_ITEMS.ordinal ->
                 PostCardViewHolder.PostCardWithPostItemsViewHolder(parent, imageManager, uiHelpers)
+            DashboardCardType.BLOGGING_PROMPT_CARD.ordinal -> BloggingPromptCardViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -48,6 +50,7 @@ class CardsAdapter(
             is ErrorWithinCardViewHolder -> holder.bind(items[position] as ErrorWithinCard)
             is TodaysStatsCardViewHolder -> holder.bind(items[position] as TodaysStatsCardWithData)
             is PostCardViewHolder<*> -> holder.bind(items[position] as PostCard)
+            is BloggingPromptCardViewHolder -> holder.bind(items[position] as BloggingPromptCardWithData)
         }
     }
 
@@ -60,6 +63,7 @@ class CardsAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    @Suppress("ComplexMethod")
     class DashboardCardsDiffUtil(
         private val oldList: List<DashboardCard>,
         private val newList: List<DashboardCard>
@@ -74,6 +78,7 @@ class CardsAdapter(
                 oldItem is TodaysStatsCardWithData && newItem is TodaysStatsCardWithData -> true
                 oldItem is PostCardWithPostItems && newItem is PostCardWithPostItems -> true
                 oldItem is PostCardWithoutPostItems && newItem is PostCardWithoutPostItems -> true
+                oldItem is BloggingPromptCardWithData && newItem is BloggingPromptCardWithData -> true
                 else -> throw NotImplementedException("Diff not implemented yet")
             }
         }
