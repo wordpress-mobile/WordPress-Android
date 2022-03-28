@@ -146,14 +146,23 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.setupObservers() {
-        viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
+        viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView(state)
             }
-        })
-        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
+        }
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
+
+        viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
+            var quickStartScrollPosition = it
+            if (quickStartScrollPosition == -1) {
+                appbarMain.setExpanded(true, true)
+                quickStartScrollPosition = 0
+            }
+            binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
+        }
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =

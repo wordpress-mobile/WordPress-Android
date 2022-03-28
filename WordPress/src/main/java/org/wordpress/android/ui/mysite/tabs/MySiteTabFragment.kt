@@ -67,9 +67,9 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
@@ -181,9 +181,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView()
             }
-        })
-        viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
-            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
         })
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
             dialogViewModel.showDialog(requireActivity().supportFragmentManager,
@@ -588,5 +585,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onDismiss() {
         viewModel.onQuickStartFullScreenDialogDismiss()
+    }
+
+    fun handleScrollTo(scrollTo: Int) {
+        (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
     }
 }
