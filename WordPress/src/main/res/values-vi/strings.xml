@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-14 02:04:34+0000
+Translation-Revision-Date: 2022-03-24 04:01:15+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Màu phối này có thể gây khó đọc. Hãy thử sử dụng màu nền sáng hơn hoặc màu văn bản tối hơn.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Màu này có thể gây khó đọc cho mọi người. Thử dùng màu nền tối hơn hoặc chữ sáng hơn.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Không thể chèn media.\nNhấn để biết thêm thông tin.</string>
+    <string name="new_site_creation_intents_header_subtitle">Chọn một thẻ từ danh sách bên dưới hoặc tự nhập</string>
+    <string name="new_site_creation_intents_header_title">Nội dung blog của bạn là gì?</string>
+    <string name="notification_channel_weekly_roundup_title">Tóm Tắt Tuần</string>
+    <string name="my_site_dashboard_tab_title">Tổng quan</string>
+    <string name="adding_cat">Thêm chuyên mục</string>
     <string name="login_select_email_client">Bạn dùng ứng dụng email nào?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Xảy ra lỗi khi giao tiếp với blog. Mã lỗi HTTP 401.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC bị chặn trên blog này (mã lỗi 401). Nếu tiếp tục đăng nhập thất bại, nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Không thể đọc blog WordPress trên URL này. Nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
     <string name="login_error_xml_rpc_services_disabled">Dịch vụ XML-RPC bị chặn trên blog này.</string>
     <string name="my_site_menu_tab_title">Menu</string>
-    <string name="my_site_dashboard_tab_title">Tổng quan</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tên miền WordPress.com không chứa những ký tự này. Chỉ có chữ và số được cho phép.</string>
     <string name="my_site_error_within_card_subtitle">Kiểm tra kết nối mạng và thử lại.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Xem thống kê</string>
@@ -317,6 +324,7 @@ Language: vi_VN
     <string name="gutenberg_native_preview_post">Xem trước bài viết</string>
     <string name="gutenberg_native_preview_page">Xem trước trang</string>
     <string name="gutenberg_native_retry">Thử lại</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Một</string>
     <string name="gutenberg_native_no_preview_available">Không có bản xem trước</string>
     <string name="gutenberg_native_text_color">Màu chữ</string>
@@ -701,7 +709,6 @@ Language: vi_VN
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; thích bài viết của bạn</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Đã mở menu khối có thể cuộn. Chọn một khối.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Đã đóng menu khối có thể cuộn.</string>
-    <string name="hpp_skip_button">Bỏ qua</string>
     <string name="hpp_choose_button">Chọn</string>
     <string name="hpp_subtitle">Chọn bố cục trang chủ yêu thích. Bạn có thể sửa và tùy biến nó sau này.</string>
     <string name="hpp_title">Chọn một thiết kế</string>
@@ -1121,7 +1128,7 @@ Language: vi_VN
     <string name="reader_filter_empty_tags_list">Bạn có thể theo dõi các bài viết có cùng đề tài bằng cách thêm thẻ</string>
     <string name="reader_filter_empty_sites_list">Đọc bài viết mới nhất từ blog bạn theo dõi</string>
     <string name="reader_filter_main_title">Đang theo dõi</string>
-    <string name="reader_filter_cta">Lọc</string>
+    <string name="reader_filter_cta">Bộ lọc</string>
     <string name="gutenberg_native_video_caption_s">Chú thích video. %s</string>
     <string name="gutenberg_native_edit_video">Sửa video</string>
     <string name="gutenberg_native_edit_media">Sửa media</string>
@@ -1209,7 +1216,6 @@ Language: vi_VN
     <string name="gutenberg_native_image_caption_s">Chú thích ảnh. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ẩn bàn phím</string>
     <string name="gutenberg_native_help_icon">Biểu tượng trợ giúp</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Chèn media thất bại.\nNhấn để xem tùy chọn.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Nhấn hai lần để trở lại thay đổi cuối cùng</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Nhấn hai lần để chuyển đổi thiết lập</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Nhấn hai lần để chọn ảnh</string>
@@ -1518,7 +1524,7 @@ Language: vi_VN
     <string name="quick_start_dialog_explore_plans_message_short">Nhấn %1$s Gói dịch vụ %2$s để xem gói hiện tại của bạn và những gói khác.</string>
     <string name="quick_start_dialog_check_stats_message_short">Nhấn %1$s Thống Kê %2$s để xem hiệu suất blog.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
-    <string name="quick_start_dialog_publish_post_message">Đăng và chuyển và nháp.</string>
+    <string name="quick_start_dialog_publish_post_message">Tạo nháp và đăng một bài viết.</string>
     <string name="quick_start_dialog_explore_plans_title">Tìm hiểu các gói</string>
     <string name="quick_start_dialog_explore_plans_message">Học về marketing và công cụ SEO trong các gói nâng cấp.</string>
     <string name="quick_start_dialog_enable_sharing_title">Bật chia sẻ bài viết</string>
@@ -2545,6 +2551,7 @@ Language: vi_VN
     <string name="comments_empty_list_filtered_trashed">Thùng rác trống</string>
     <string name="comments_empty_list_filtered_pending">Không có bình luận đang chờ</string>
     <string name="comments_empty_list_filtered_approved">Không có bình luận đã duyệt</string>
+    <string name="button_skip">Bỏ qua</string>
     <string name="xmlrpc_missing_method_error">Không thể kết nối. Máy chủ này không có các phương thức XML-RPC cần thiết.</string>
     <string name="alignment_center">Giữa</string>
     <string name="post_format_video">Video</string>
@@ -2866,9 +2873,9 @@ Language: vi_VN
     <string name="error_refresh_unauthorized_posts">Bạn không có quyền xem hoặc sửa bài viết</string>
     <string name="error_refresh_unauthorized_pages">Bạn không có quyền xem hoặc sửa trang</string>
     <string name="more">Thêm</string>
-    <string name="older_month">1 tháng trước</string>
-    <string name="older_last_week">1 tuần trước</string>
-    <string name="older_two_days">2 ngày trước</string>
+    <string name="older_month">Cũ hơn một tháng</string>
+    <string name="older_last_week">Cũ hơn một tuần</string>
+    <string name="older_two_days">Cũ hơn 2 ngày</string>
     <string name="help_and_support">Trợ giúp</string>
     <string name="mnu_comment_liked">Đã thích</string>
     <string name="comment">Bình luận</string>

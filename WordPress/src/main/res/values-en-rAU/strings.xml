@@ -1273,6 +1273,7 @@ Language: en_AU
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comments_empty_list_filtered_pending">No pending comments</string>
     <string name="comments_empty_list_filtered_approved">No approved comments</string>
+    <string name="button_skip">Skip</string>
     <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>

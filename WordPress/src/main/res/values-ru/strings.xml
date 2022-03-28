@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-10 15:54:08+0000
+Translation-Revision-Date: 2022-03-24 15:54:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Это сочетание цветов может затруднить чтение. Попробуйте использовать более яркий цвет фона и/или более темный цвет текста.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Это сочетание цветов может затруднить чтение. Попробуйте использовать более темный цвет фона и/или более яркий цвет текста.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Не удалось вставить медиафайл.\nTap for more info.</string>
+    <string name="new_site_creation_intents_header_title">Чему посвящён ваш веб-сайт?</string>
+    <string name="notification_channel_weekly_roundup_title">За неделю</string>
+    <string name="my_site_dashboard_tab_title">Главная</string>
+    <string name="adding_cat">Добавление категории</string>
     <string name="login_select_email_client">Каким приложением электронной почты вы пользуетесь?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Возникла проблема при подключении к сайту. Получен код ошибки HTTP 401.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Вызовы XML-RPC на этом сайте заблокированы (код ошибки 401). Если войти не удалось, нажмите на значок справки, чтобы открыть часто задаваемые вопросы.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Не удалось найти веб-сайт WordPress по этому URL-адресу. Нажмите на значок справки, чтобы открыть часто задаваемые вопросы.</string>
     <string name="login_error_xml_rpc_services_disabled">Сервисы XML-RPC на этом сайте отключены.</string>
-    <string name="my_site_menu_tab_title">Меню</string>
-    <string name="my_site_dashboard_tab_title">Консоль</string>
+    <string name="my_site_menu_tab_title">Меню сайта</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Ваш поиск включает символы, которые не поддерживаются в доменах WordPress.com. Допускаются только буквенно-цифровые символы: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Проверьте подключение к Интернету и обновите страницу.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Перейти к статистике</string>
@@ -317,6 +323,7 @@ Language: ru
     <string name="gutenberg_native_preview_post">Предварительный просмотр записи</string>
     <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
     <string name="gutenberg_native_retry">Повторить</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Один</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
@@ -701,7 +708,6 @@ Language: ru
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Юля Петрова&lt;/b&gt; отмечает вашу запись как понравившуюся</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Прокручиваемое меню блоков открыто. Выберите блок.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Прокручиваемое меню блоков закрыто.</string>
-    <string name="hpp_skip_button">Пропустить</string>
     <string name="hpp_choose_button">Выбрать</string>
     <string name="hpp_subtitle">Выберите макет главной страницы. Его можно настроить или изменить позже.</string>
     <string name="hpp_title">Выбрать оформление</string>
@@ -1209,7 +1215,6 @@ Language: ru
     <string name="gutenberg_native_image_caption_s">Подпись к изображению. %s</string>
     <string name="gutenberg_native_hide_keyboard">Скрыть клавиатуру</string>
     <string name="gutenberg_native_help_icon">Значок справки</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Невозможно вставить медиафайл.\nНажмите для выбора вариантов.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Нажмите дважды для отмены последнего действия</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Нажмите дважды для переключения настройки</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Нажмите дважды для выбора изображения</string>
@@ -2545,6 +2550,7 @@ Language: ru
     <string name="comments_empty_list_filtered_trashed">Нет комментариев в корзине</string>
     <string name="comments_empty_list_filtered_pending">Нет комментариев на утверждении</string>
     <string name="comments_empty_list_filtered_approved">Нет одобренных комментариев</string>
+    <string name="button_skip">Пропустить</string>
     <string name="xmlrpc_missing_method_error">Не удалось подключиться. На сервере отсутствуют необходимые методы XML-RPC.</string>
     <string name="alignment_center">По центру</string>
     <string name="post_format_video">Видео</string>

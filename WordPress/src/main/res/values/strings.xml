@@ -2247,6 +2247,11 @@
     <string name="my_site_error_card_subtitle">We\'re having trouble loading your site\'s data at the moment.</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
 
+    <!-- My Site - Blogging Prompt Card -->
+    <string name="my_site_blogging_prompt_card_title">Prompts</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">%d answers</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
@@ -3077,6 +3082,7 @@
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
+    <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
 
     <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="quick_start_card_menu_unpin">Unpin this</string>
