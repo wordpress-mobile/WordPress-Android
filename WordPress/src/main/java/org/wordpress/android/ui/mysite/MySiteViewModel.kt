@@ -420,6 +420,7 @@ class MySiteViewModel @Inject constructor(
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (quickStartRepository.quickStartOrigin == QuickStartOrigin.SITE_MENU) add(Type.QUICK_START_CARD)
+            add(Type.DOMAIN_REGISTRATION_CARD)
         }
         MySiteTabType.ALL -> emptyList()
     }
