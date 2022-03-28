@@ -2,7 +2,7 @@
 
 19.6
 -----
-
+[**] Block Editor: Remove upload options for users without permission to upload media [https://github.com/WordPress/gutenberg/pull/39769]
 
 19.5
 -----
