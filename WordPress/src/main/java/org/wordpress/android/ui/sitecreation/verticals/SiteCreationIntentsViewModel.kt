@@ -88,7 +88,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     private fun intentSelected(slug: String, vertical: String) {
-        analyticsTracker.trackSiteIntentQuestionVerticalSelected(vertical, slug)
+        analyticsTracker.trackSiteIntentQuestionVerticalSelected(slug)
         _onIntentSelected.value = vertical
     }
 
