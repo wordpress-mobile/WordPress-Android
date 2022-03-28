@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -102,7 +104,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
-            updateCollapsibleToolbarTitle(currentOffset)
+            updateCollapsibleToolbar(currentOffset)
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
             fadeSiteInfoHeader(percentage)
@@ -119,12 +121,20 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         })
     }
 
-    private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
+    private fun MySiteFragmentBinding.updateCollapsibleToolbar(currentOffset: Int) {
         if (currentOffset == 0) {
             collapsingToolbar.title = siteTitle
+            siteInfo.siteInfoCard.setAllEnabled(false)
         } else {
             collapsingToolbar.title = null
+            siteInfo.siteInfoCard.setAllEnabled(true)
         }
+    }
+
+    // This function disables the viewgroup as well as the views in it by recursively calling the function.
+    fun View.setAllEnabled(enabled: Boolean) {
+        isEnabled = enabled
+        if (this is ViewGroup) children.forEach { child -> child.setAllEnabled(enabled) }
     }
 
     private fun MySiteFragmentBinding.fadeSiteInfoHeader(percentage: Int) {
