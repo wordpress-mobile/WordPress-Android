@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -54,6 +56,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -90,6 +93,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
                 quickStartRepository,
+                mySiteDefaultTabExperiment,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -263,7 +267,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onTooltipTapped(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -272,7 +276,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
         viewModel.onFabClicked(initSite(hasFullAccessToContent = false))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -281,7 +285,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
         viewModel.onFabClicked(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -289,7 +293,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onFabLongPressed(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -298,7 +302,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = PUBLISH_POST
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isTrue()
+        assertThat(fabUiState?.isFocusPointVisible).isTrue
     }
 
     @Test
@@ -307,7 +311,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = UPDATE_SITE_TITLE
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isFalse()
+        assertThat(fabUiState?.isFocusPointVisible).isFalse
     }
 
     @Test
@@ -316,7 +320,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = null
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isFalse()
+        assertThat(fabUiState?.isFocusPointVisible).isFalse
     }
 
     @Test
@@ -350,7 +354,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet does not show quick start focus point by default`() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
         )
@@ -361,7 +365,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         activeTask.value = PUBLISH_POST
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
         )
@@ -394,7 +398,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         activeTask.value = PUBLISH_POST
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
         )
@@ -422,7 +426,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
     }
 
     @Test
@@ -431,7 +435,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
     }
 
     @Test
@@ -653,6 +657,15 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
+    }
+
+    @Test
+    fun `given my site default tab experiment, when requested, then check and set for variant is executed `() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.checkAndSetVariantForMySiteDefaultTabExperiment()
+
+        verify(mySiteDefaultTabExperiment, atLeastOnce()).checkAndSetVariantIfNeeded()
     }
 
     private fun startViewModelWithDefaultParameters(
