@@ -142,6 +142,7 @@ class QuickStartRepository
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
         clearPendingTask()
+        clearSiteMenuStep()
         when {
             isSiteMenuStepRequiredForTask(task) -> requestSiteMenuStepForTask(task)
             task == QuickStartTask.UPDATE_SITE_TITLE -> {
