@@ -478,7 +478,7 @@ class MySiteViewModel @Inject constructor(
     private fun requestSiteMenuStepPendingTask(pendingTask: QuickStartTask) {
         quickStartRepository.clearSiteMenuStep()
         launch {
-            delay(TAB_TRANSITION_DELAY_MS)
+            delay(LIST_SCROLL_DELAY_MS)
             quickStartRepository.setActiveTask(pendingTask)
         }
     }
@@ -1025,6 +1025,6 @@ class MySiteViewModel @Inject constructor(
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
-        const val TAB_TRANSITION_DELAY_MS = 300L
+        const val LIST_SCROLL_DELAY_MS = 500L
     }
 }
