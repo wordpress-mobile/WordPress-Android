@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-08 14:24:22+0000
+Translation-Revision-Date: 2022-03-21 19:18:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të ndritshme dhe/ose një ngjyrë të errët teksti.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">S’u arrit të futej media.\nPrekeni për më tepër hollësi.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të errët dhe/ose një ngjyrë të ndritshme teksti.</string>
+    <string name="new_site_creation_intents_header_title">Për çfarë është sajti juaj?</string>
+    <string name="notification_channel_weekly_roundup_title">Përmbledhje Javore</string>
+    <string name="my_site_dashboard_tab_title">Kreu</string>
+    <string name="adding_cat">Shtim kategorish</string>
     <string name="login_select_email_client">Cilin aplikacion email përdorni?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Pati një problem komunikimi me sajtin. U kthye një kod gabimi HTTP 401.</string>
     <string name="login_error_xml_rpc_cannot_read_site">S’arrihet të lexohet sajti WordPress tek ajo URL. Prekni ikonën e ndihmës që të shihni PBR.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Duket se në këtë sajt bllokohen thirrjet XML-RPC (kod gabimi 401). Nëse dështon përpjekja për hyrje, prekni ikonën e ndihmës që të shihni PBR.</string>
     <string name="login_error_xml_rpc_services_disabled">Shërbimet XML-RPC janë të çaktivizuara për këtë sajt.</string>
-    <string name="my_site_menu_tab_title">Menu</string>
-    <string name="my_site_dashboard_tab_title">Pult</string>
+    <string name="my_site_menu_tab_title">Menu Sajti</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Kërkimi juaj përmban shenja të pambuluara në përkatësi WordPress.com. Lejohen shenjat vijuese: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrolloni lidhjen tuaj internet dhe rifreskoni faqen.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Shko te statistikat</string>
@@ -312,6 +318,7 @@ Language: sq_AL
     <string name="gutenberg_native_preview_post">Parashiheni postimin</string>
     <string name="gutenberg_native_preview_page">Parashiheni faqen</string>
     <string name="gutenberg_native_retry">Riprovoni</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Një</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_s_link">Lidhje %s</string>
@@ -692,7 +699,6 @@ Language: sq_AL
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Durim Cerova&lt;/b&gt; iu përgjigj postimit tuaj</string>
     <string name="login_prologue_third_subtitle_two">Sot në sajtin tuaj patët &lt;b&gt;50 pëlqeim&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Maqo Senko&lt;/b&gt; pëlqeu postimin tuaj</string>
-    <string name="hpp_skip_button">Anashkaloje</string>
     <string name="hpp_choose_button">Zgjidhni</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">U hap me blloqesh. Përzgjidhni një bllok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuja e blloqeve u mbyll.</string>
@@ -1201,7 +1207,6 @@ Language: sq_AL
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
     <string name="gutenberg_native_hide_keyboard">Fshihe tastierën</string>
     <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Që të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
     <string name="gutenberg_native_link_text">Tekst lidhjeje</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Që shfaqet/fshihet rregullimi, prekeni dyfish</string>
@@ -2538,6 +2543,7 @@ Language: sq_AL
     <string name="comments_empty_list_filtered_trashed">S’ka komente të shpënë në Hedhurina</string>
     <string name="comments_empty_list_filtered_pending">S’ka komente në pritje të shqyrtimit</string>
     <string name="comments_empty_list_filtered_approved">S’ka komente të miratuara</string>
+    <string name="button_skip">Anashkaloje</string>
     <string name="xmlrpc_missing_method_error">S’u lidh dot. Metodat e domosdoshme XML-RPC mungojnë te shërbyesi.</string>
     <string name="post_format_status">Gjendje</string>
     <string name="post_format_video">Video</string>

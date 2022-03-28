@@ -10,7 +10,7 @@ import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.DefaultItems
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
 
-    private var isStarted = false
+    private var isInitialized = false
 
     private val _uiState: MutableLiveData<IntentsUiState> = MutableLiveData()
     val uiState: LiveData<IntentsUiState> = _uiState
@@ -40,8 +40,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     val onIntentSelected: LiveData<String> = _onIntentSelected
 
     fun start() {
-        if (isStarted) return
-        isStarted = true
+        if (isInitialized) return
         analyticsTracker.trackSiteIntentQuestionViewed()
     }
 
@@ -55,11 +54,19 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _onBackButtonPressed.call()
     }
 
+    fun onContinuePressed() {
+        uiState.value?.let { state ->
+            analyticsTracker.trackSiteIntentQuestionContinuePressed(state.searchQuery.orEmpty())
+            _onIntentSelected.value = state.searchQuery
+        }
+    }
+
     fun updateUiState(uiState: IntentsUiState) {
         _uiState.value = uiState
     }
 
     fun initializeFromResources(resources: Resources) {
+        if (isInitialized) return
         val slugsArray = resources.getStringArray(R.array.site_creation_intents_slugs)
         val verticalArray = resources.getStringArray(R.array.site_creation_intents_strings)
         val emojiArray = resources.getStringArray(R.array.site_creation_intents_emojis)
@@ -74,21 +81,75 @@ class SiteCreationIntentsViewModel @Inject constructor(
             item.onItemTapped = { intentSelected(slug, vertical) }
             return@mapIndexed item
         }.filter { it.verticalSlug in defaultsArray }
-        _uiState.value = DefaultItems(items = newItems)
+        _uiState.value = IntentsUiState(
+                content = DefaultItems(items = newItems)
+        )
+        isInitialized = true
     }
 
     private fun intentSelected(slug: String, vertical: String) {
-        // TODO: determine what slugs (and ids) to use for the default intents
         analyticsTracker.trackSiteIntentQuestionVerticalSelected(vertical, slug)
         _onIntentSelected.value = vertical
     }
 
-    sealed class IntentsUiState(
-        val items: List<IntentListItemUiState>
+    /**
+     * Appbar scrolled event used to set the header and title visibility
+     * @param verticalOffset the scroll state vertical offset
+     * @param scrollThreshold the scroll threshold
+     */
+    fun onAppBarOffsetChanged(verticalOffset: Int, scrollThreshold: Int) {
+        val shouldAppBarTitleBeVisible = verticalOffset < scrollThreshold
+
+        uiState.value?.let { state ->
+            if (state.isAppBarTitleVisible == shouldAppBarTitleBeVisible || !state.isHeaderVisible) return
+            updateUiState(
+                    state.copy(isAppBarTitleVisible = shouldAppBarTitleBeVisible)
+            )
+        }
+    }
+
+    fun onSearchInputFocused() {
+        uiState.value?.let { state ->
+            if (!state.isHeaderVisible) return
+            analyticsTracker.trackSiteIntentQuestionSearchFocused()
+            updateUiState(
+                    state.copy(
+                            isAppBarTitleVisible = true,
+                            isHeaderVisible = false
+                    )
+            )
+        }
+    }
+
+    fun onSearchTextChanged(query: String) {
+        // TODO Implement search in issue #16053
+        uiState.value?.let { state ->
+            updateUiState(
+                    state.copy(
+                            isContinueButtonVisible = query.isNotEmpty(),
+                            searchQuery = query,
+                            content = IntentsUiState.Content.Empty
+                    )
+            )
+        }
+    }
+
+    data class IntentsUiState(
+        val isAppBarTitleVisible: Boolean = false,
+        val isHeaderVisible: Boolean = true,
+        val isContinueButtonVisible: Boolean = false,
+        val searchQuery: String? = null,
+        val content: Content
     ) {
-        class DefaultItems(items: List<IntentListItemUiState>) : IntentsUiState(
-                items = items
-        )
+        sealed class Content(
+            val items: List<IntentListItemUiState>
+        ) {
+            class DefaultItems(
+                items: List<IntentListItemUiState>
+            ) : Content(items = items)
+
+            object Empty : Content(emptyList())
+        }
     }
 
     sealed class IntentListItemUiState {

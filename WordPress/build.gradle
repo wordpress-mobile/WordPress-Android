@@ -35,12 +35,8 @@ repositories {
             includeGroup "org.wordpress-mobile"
         }
     }
-    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-    def localRNUrl = "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
-    def remoteRNUrl ="https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
-    def reactNativeUrl = gradle.ext.includedBuildGutenbergMobilePath != null ? localRNUrl : remoteRNUrl
     maven {
-        url reactNativeUrl
+        url "https://a8c-libs.s3.amazonaws.com/android/react-native-mirror"
         content {
             includeGroup "com.facebook.react"
         }
@@ -125,6 +121,8 @@ android {
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "false"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
+        buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT", "false"
+        buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"

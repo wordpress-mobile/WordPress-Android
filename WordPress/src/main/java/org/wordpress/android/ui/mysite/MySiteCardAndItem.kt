@@ -37,7 +37,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
         POST_CARD_WITHOUT_POST_ITEMS,
-        POST_CARD_WITH_POST_ITEMS
+        POST_CARD_WITH_POST_ITEMS,
+        BLOGGING_PROMPT_CARD
     }
 
     data class SiteInfoHeaderCard(
@@ -168,6 +169,21 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val label: UiString,
                         val onClick: (postCardType: PostCardType) -> Unit
                     )
+                }
+
+                sealed class BloggingPromptCard(
+                    override val dashboardCardType: DashboardCardType
+                ) : DashboardCard(dashboardCardType) {
+                    data class BloggingPromptCardWithData(
+                        val prompt: UiString,
+                        val answeredUsers: List<AnsweredUser>,
+                        val numberOfAnswers: Int,
+                        val isAnswered: Boolean
+                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD) {
+                        data class AnsweredUser(
+                            val avatarUrl: String?
+                        )
+                    }
                 }
             }
         }
