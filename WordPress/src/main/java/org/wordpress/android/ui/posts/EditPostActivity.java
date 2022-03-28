@@ -190,7 +190,6 @@ import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ListUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -2296,61 +2295,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
-        boolean enableContactInfoBlock = SiteUtils.supportsContactInfoFeature(mSite);
-        boolean enableLayoutGridBlock = SiteUtils.supportsLayoutGridFeature(mSite);
-        boolean enableTiledGalleryBlock = SiteUtils.supportsTiledGalleryFeature(mSite);
-        boolean enableFacebookEmbed =
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION);
-        boolean enableInstagramEmbed =
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION);
-        boolean enableLoomEmbed =
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION);
-        boolean enableSmartframeEmbed =
-                SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION);
-        boolean enableMediaFilesCollectionBlocks = SiteUtils.supportsStoriesFeature(mSite);
-        boolean enableMentions = mSite.isUsingWpComRestApi();
-
-        // If this.mIsXPostsCapable has not been set, default to allowing xPosts
-        boolean enableXPosts = mIsXPostsCapable == null || mIsXPostsCapable;
-
-        boolean enableUnsupportedBlockEditor = mSite.isWPCom() || mIsJetpackSsoEnabled;
-        boolean unsupportedBlockEditorSwitch = mSite.isJetpackConnected() && !mIsJetpackSsoEnabled;
-        boolean canUploadMedia = WPMediaUtils.currentUserCanUploadMedia(mSite);
-
-        boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
-        boolean isAudioBlockMediaUploadEnabled = !isFreeWPCom;
-
-        boolean enableReusableBlock = mSite.isWPCom() || mSite.isWPComAtomic();
-
-        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
-        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
-
-        String postType = mIsPage ? "page" : "post";
-        int featuredImageId = (int) mEditPostRepository.getFeaturedImageId();
-
-        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
-
-        return new GutenbergPropsBuilder(
-                enableContactInfoBlock,
-                enableLayoutGridBlock,
-                enableTiledGalleryBlock,
-                enableFacebookEmbed,
-                enableInstagramEmbed,
-                enableLoomEmbed,
-                enableSmartframeEmbed,
-                enableMediaFilesCollectionBlocks,
-                enableMentions,
-                enableXPosts,
-                enableUnsupportedBlockEditor,
-                unsupportedBlockEditorSwitch,
-                canUploadMedia,
-                isAudioBlockMediaUploadEnabled,
-                enableReusableBlock,
-                wpcomLocaleSlug,
-                postType,
-                featuredImageId,
-                themeBundle
+        return EditPostActivityHelper.INSTANCE.getGutenbergPropsBuilder(
+                mSite,
+                mIsPage,
+                mIsXPostsCapable,
+                mIsJetpackSsoEnabled,
+                mEditPostRepository,
+                mEditorThemeStore,
+                this
         );
     }
 
