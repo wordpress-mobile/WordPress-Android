@@ -34,6 +34,7 @@ ext {
     // testing
     jUnitVersion = '4.13'
     androidxTestVersion = '1.1.0'
+    androidxTestCoreVersion = '1.4.0'
     androidxArchCoreVersion = '2.0.0'
     assertJVersion = '3.11.1'
     espressoVersion = '3.1.0'
