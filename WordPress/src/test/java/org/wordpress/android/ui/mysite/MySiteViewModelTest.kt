@@ -98,6 +98,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.tabs.MySiteTabExperimentVariant
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
@@ -427,6 +428,45 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
 
         verify(domainRegistrationCardShownTracker, atLeastOnce()).resetShown()
+    }
+
+    /* SELECTED SITE - TABS ORDERING */
+
+    @Test
+    fun `given tabs not enabled, when site is selected, then default tab is all`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
+
+        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.ALL)
+    }
+
+    @Test
+    fun `given tabs enabled + dashboard default tab variant, when site is selected, then default tab is dashboard`() {
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+                .thenReturn(MySiteTabExperimentVariant.DASHBOARD.label)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.DASHBOARD)
+    }
+
+    @Test
+    fun `given tabs enabled + site menu default tab variant, when site is selected, then default tab is site menu`() {
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+                .thenReturn(MySiteTabExperimentVariant.SITE_MENU.label)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.SITE_MENU)
+    }
+
+    @Test
+    fun `given tabs enabled + nonexistent default tab variant, when site is selected, then default tab is site menu`() {
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+                .thenReturn(MySiteTabExperimentVariant.NONEXISTENT.label)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.SITE_MENU)
     }
 
     /* AVATAR */
