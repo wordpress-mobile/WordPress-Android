@@ -12,6 +12,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.FullItemsList
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -19,6 +20,7 @@ import kotlin.coroutines.CoroutineContext
 
 class SiteCreationIntentsViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
+    private val searchResultsProvider: VerticalsSearchResultsProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
     private val job = Job()
@@ -26,6 +28,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
         get() = bgDispatcher + job
 
     private var isInitialized = false
+
+    private lateinit var fullItemsList: FullItemsList
+    private lateinit var defaultItems: DefaultItems
 
     private val _uiState: MutableLiveData<IntentsUiState> = MutableLiveData()
     val uiState: LiveData<IntentsUiState> = _uiState
@@ -80,9 +85,11 @@ class SiteCreationIntentsViewModel @Inject constructor(
             val item = DefaultIntentItemUiState(slug, vertical, emoji)
             item.onItemTapped = { intentSelected(slug, vertical) }
             return@mapIndexed item
-        }.filter { it.verticalSlug in defaultsArray }
+        }
+        fullItemsList = FullItemsList(newItems)
+        defaultItems = DefaultItems(newItems.filter { it.verticalSlug in defaultsArray })
         _uiState.value = IntentsUiState(
-                content = DefaultItems(items = newItems)
+                content = defaultItems
         )
         isInitialized = true
     }
@@ -115,20 +122,21 @@ class SiteCreationIntentsViewModel @Inject constructor(
             updateUiState(
                     state.copy(
                             isAppBarTitleVisible = true,
-                            isHeaderVisible = false
+                            isHeaderVisible = false,
+                            content = fullItemsList
                     )
             )
         }
     }
 
     fun onSearchTextChanged(query: String) {
-        // TODO Implement search in issue #16053
+        val searchResults = searchResultsProvider.search(fullItemsList.items, query)
         uiState.value?.let { state ->
             updateUiState(
                     state.copy(
                             isContinueButtonVisible = query.isNotEmpty(),
                             searchQuery = query,
-                            content = IntentsUiState.Content.Empty
+                            content = IntentsUiState.Content.SearchResults(searchResults)
                     )
             )
         }
@@ -144,7 +152,15 @@ class SiteCreationIntentsViewModel @Inject constructor(
         sealed class Content(
             val items: List<IntentListItemUiState>
         ) {
+            class FullItemsList(
+                items: List<IntentListItemUiState>
+            ) : Content(items = items)
+
             class DefaultItems(
+                items: List<IntentListItemUiState>
+            ) : Content(items = items)
+
+            class SearchResults(
                 items: List<IntentListItemUiState>
             ) : Content(items = items)
 

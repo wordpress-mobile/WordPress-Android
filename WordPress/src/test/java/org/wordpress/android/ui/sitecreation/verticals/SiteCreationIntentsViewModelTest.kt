@@ -22,6 +22,7 @@ class SiteCreationIntentsViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var analyticsTracker: SiteCreationTracker
+    @Mock lateinit var searchResultsProvider: VerticalsSearchResultsProvider
     @Mock lateinit var dispatcher: CoroutineDispatcher
     @Mock private lateinit var resources: Resources
 
@@ -29,7 +30,7 @@ class SiteCreationIntentsViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = SiteCreationIntentsViewModel(analyticsTracker, dispatcher)
+        viewModel = SiteCreationIntentsViewModel(analyticsTracker, searchResultsProvider, dispatcher)
         whenever(resources.getStringArray(any())).thenReturn(emptyArray())
     }
 
