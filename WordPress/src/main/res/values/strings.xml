@@ -3254,6 +3254,7 @@
     <string name="site_creation_intent_personal">Personal</string>
     <string name="site_creation_intent_photography">Photography</string>
     <string name="site_creation_intent_politics">Politics</string>
+    <string name="site_creation_intent_real_estate">Real Estate</string>
     <string name="site_creation_intent_sports">Sports</string>
     <string name="site_creation_intent_technology">Technology</string>
     <string name="site_creation_intent_travel">Travel</string>
