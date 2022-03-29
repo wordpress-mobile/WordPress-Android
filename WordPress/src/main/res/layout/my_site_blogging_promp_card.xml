@@ -157,7 +157,7 @@
                 style="@style/MySiteCardAnsweredButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/share_action" />
+                android:text="@string/my_site_blogging_prompt_card_share" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
