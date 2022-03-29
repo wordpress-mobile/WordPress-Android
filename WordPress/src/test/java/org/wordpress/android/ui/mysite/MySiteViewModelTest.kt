@@ -440,30 +440,33 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard default tab variant, when site is selected, then default tab is dashboard`() {
-        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
-                .thenReturn(MySiteTabExperimentVariant.DASHBOARD.label)
-
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.DASHBOARD
+        )
 
         assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.DASHBOARD)
     }
 
     @Test
     fun `given tabs enabled + site menu default tab variant, when site is selected, then default tab is site menu`() {
-        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
-                .thenReturn(MySiteTabExperimentVariant.SITE_MENU.label)
-
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.SITE_MENU
+        )
 
         assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.SITE_MENU)
     }
 
     @Test
     fun `given tabs enabled + nonexistent default tab variant, when site is selected, then default tab is site menu`() {
-        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
-                .thenReturn(MySiteTabExperimentVariant.NONEXISTENT.label)
-
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.NONEXISTENT
+        )
 
         assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.SITE_MENU)
     }
