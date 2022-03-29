@@ -707,7 +707,7 @@ class CommentsStoreTest {
             id = 1,
             remoteCommentId = 10,
             remotePostId = 100,
-            remoteParentCommentId = 1_000,
+            authorId = 1_000,
             localSiteId = 10_000,
             remoteSiteId = 100_000,
             authorUrl = null,
