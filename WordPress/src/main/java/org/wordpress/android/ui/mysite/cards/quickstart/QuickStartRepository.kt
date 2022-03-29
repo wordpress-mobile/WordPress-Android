@@ -89,7 +89,6 @@ class QuickStartRepository
     val onQuickStartSiteMenuStep = _onQuickStartSiteMenuStep as LiveData<QuickStartSiteMenuStep?>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
-    val quickStartOrigin = if (isMySiteTabsEnabled) QuickStartOrigin.DASHBOARD else QuickStartOrigin.ALL
     var quickStartTaskOrigin = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
 
     private var pendingTask: QuickStartTask? = null
@@ -295,12 +294,6 @@ class QuickStartRepository
         QuickStartTask.ENABLE_POST_SHARING,
         QuickStartTask.EXPLORE_PLANS -> true
         else -> false
-    }
-
-    enum class QuickStartOrigin {
-        SITE_MENU,
-        DASHBOARD,
-        ALL
     }
 
     data class QuickStartSiteMenuStep(val isStarted: Boolean, val task: QuickStartTask? = null)
