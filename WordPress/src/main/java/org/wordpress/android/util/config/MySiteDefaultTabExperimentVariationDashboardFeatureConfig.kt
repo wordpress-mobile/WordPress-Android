@@ -20,6 +20,8 @@ class MySiteDefaultTabExperimentVariationDashboardFeatureConfig @Inject construc
         BuildConfig.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD,
         MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD
 ) {
+    fun isDashboardVariant(): Boolean = isEnabled()
+
     companion object {
         const val MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD = "my_site_default_tab_experiment_variant_dashboard"
     }

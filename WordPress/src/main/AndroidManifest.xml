@@ -604,7 +604,7 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/NoDisplay"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
