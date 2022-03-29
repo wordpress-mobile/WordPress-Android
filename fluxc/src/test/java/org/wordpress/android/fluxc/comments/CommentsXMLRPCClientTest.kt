@@ -352,7 +352,7 @@ class CommentsXMLRPCClientTest {
             id = 0,
             remoteCommentId = 34,
             remotePostId = 367,
-            remoteParentCommentId = 33,
+            authorId = 44,
             localSiteId = 0,
             remoteSiteId = 200,
             authorUrl = "",

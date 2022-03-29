@@ -635,7 +635,7 @@ class CommentsRestClientTest {
                 id = 0,
                 remoteCommentId = dto.ID,
                 remotePostId = dto.post.ID,
-                remoteParentCommentId = dto.author.ID,
+                authorId = dto.author.ID,
                 localSiteId = 10,
                 remoteSiteId = 200,
                 authorUrl = dto.author.URL,
