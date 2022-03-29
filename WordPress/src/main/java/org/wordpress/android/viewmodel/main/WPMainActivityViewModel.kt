@@ -113,7 +113,7 @@ class WPMainActivityViewModel @Inject constructor(
         get() = siteStore.sitesCount > ONE_SITE
 
     val firstSite: SiteModel?
-        get() = if (siteStore.hasSite()) { siteStore.sites.get(0) } else null
+        get() = if (siteStore.hasSite()) { siteStore.sites[0] } else null
 
     val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
