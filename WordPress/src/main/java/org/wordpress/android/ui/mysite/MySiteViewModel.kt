@@ -143,6 +143,7 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
+    private val _onShare = MutableLiveData<Event<String>>()
     private val _tabsUiState = MutableLiveData<TabsUiState>()
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
@@ -178,6 +179,7 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
+    val onShare = _onShare
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -344,14 +346,15 @@ class MySiteViewModel @Inject constructor(
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                                 // TODO @klymyam fetch the actual blogging prompt
-                                if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
                                     @Suppress("MagicNumber")
                                     BloggingPrompt(
                                             "Test Prompt",
                                             19,
                                             ""
                                     )
-                                } else null
+                                } else null,
+                                onShareClick = this::onBloggingPromptShareClick
                         )
                 )
         )
@@ -915,6 +918,10 @@ class MySiteViewModel @Inject constructor(
                 PostCardType.SCHEDULED -> Event(SiteNavigationAction.OpenScheduledPosts(site))
             }
         }
+    }
+
+    private fun onBloggingPromptShareClick(message: String) {
+        onShare.postValue(Event(message))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
