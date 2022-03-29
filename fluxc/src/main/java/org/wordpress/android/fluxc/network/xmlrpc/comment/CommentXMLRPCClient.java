@@ -222,8 +222,8 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         // Comment parameters
         Map<String, Object> commentParams = new HashMap<>(5);
         commentParams.put("content", comment.getContent());
-        if (comment.getRemoteParentCommentId() != 0) {
-            commentParams.put("comment_parent", comment.getRemoteParentCommentId());
+        if (comment.getParentId() != 0) {
+            commentParams.put("comment_parent", comment.getParentId());
         }
         if (comment.getAuthorName() != null) {
             commentParams.put("author", comment.getAuthorName());
@@ -234,7 +234,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         if (comment.getAuthorEmail() != null) {
             commentParams.put("author_email", comment.getAuthorEmail());
         }
-        newComment(site, post.getRemotePostId(), comment, comment.getRemoteParentCommentId(), commentParams);
+        newComment(site, post.getRemotePostId(), comment, comment.getParentId(), commentParams);
     }
 
     // Private methods
@@ -253,7 +253,7 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         RemoteCommentResponsePayload payload = new RemoteCommentResponsePayload(comment);
-                        comment.setRemoteParentCommentId(parentId);
+                        comment.setParentId(parentId);
                         if (response instanceof Integer) {
                             comment.setRemoteCommentId((int) response);
                         } else {
@@ -342,9 +342,9 @@ public class CommentXMLRPCClient extends BaseXMLRPCClient {
         comment.setUrl(XMLRPCUtils.safeGetMapValue(commentMap, "link", ""));
 
         // Parent
-        comment.setRemoteParentCommentId(XMLRPCUtils.safeGetMapValue(commentMap, "parent", 0L));
-        if (comment.getRemoteParentCommentId() > 0) {
-            comment.setParentId(comment.getRemoteParentCommentId());
+        comment.setParentId(XMLRPCUtils.safeGetMapValue(commentMap, "parent", 0L));
+        if (comment.getParentId() > 0) {
+            comment.setParentId(comment.getParentId());
             comment.setHasParent(true);
         } else {
             comment.setHasParent(false);
