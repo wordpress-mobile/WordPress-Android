@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-11 13:00:41+0000
+Translation-Revision-Date: 2022-03-21 14:48:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
@@ -11,8 +11,7 @@ Language: gl_ES
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">As chamadas XML-RPC parecen bloqueadas neste sitio (código de erro 401). Se o intento de acceso falla, toca na icona de axuda para ver as FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Non se puido ler o sitio WordPress nesa URL. Toca na icona de axuda para ver as FAQ.</string>
     <string name="login_error_xml_rpc_services_disabled">Os servizos XML-RPC están desactivados neste sitio.</string>
-    <string name="my_site_menu_tab_title">Menú</string>
-    <string name="my_site_dashboard_tab_title">Escritorio</string>
+    <string name="my_site_menu_tab_title">Menú do sitio</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">A túa busca inclúe caracteres non compatibles nos dominios de WordPress.com. Permítense os seguintes caracteres: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Comproba a túa conexión a Internet e actualiza a páxina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir ás estatísticas</string>
@@ -317,6 +316,7 @@ Language: gl_ES
     <string name="gutenberg_native_preview_post">Previsualizar a entrada</string>
     <string name="gutenberg_native_preview_page">Previsualizar a páxina</string>
     <string name="gutenberg_native_retry">Reintentar</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Un</string>
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_text_color">Cor do texto</string>
@@ -701,7 +701,6 @@ Language: gl_ES
     <string name="login_prologue_third_subtitle_one">A &lt;b&gt;Madison Ruíz&lt;/b&gt; gustoullea túa entrada</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Abriuse o menú de bloques desprazable. Selecciona un bloque.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Pechouse o menú de bloques desprazable.</string>
-    <string name="hpp_skip_button">Omitir</string>
     <string name="hpp_choose_button">Elixir</string>
     <string name="hpp_subtitle">Elixe o deseño de páxina de inicio que prefiras. Podes personalizalo ou cambialo máis tarde.</string>
     <string name="hpp_title">Elixe un deseño</string>
@@ -1209,7 +1208,6 @@ Language: gl_ES
     <string name="gutenberg_native_image_caption_s">Lenda da imaxe. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar o teclado</string>
     <string name="gutenberg_native_help_icon">Icona de axuda</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Erro ao inserir os medios.\nPor favor, toca para ver as opcións.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toca dúas veces para desfacer o último cambio</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Toca dúas veces para alternar os axustes</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Toca dúas veces para seleccionar unha imaxe</string>
@@ -2545,6 +2543,7 @@ Language: gl_ES
     <string name="comments_empty_list_filtered_trashed">Non hai comentarios no lixo</string>
     <string name="comments_empty_list_filtered_pending">Non hai comentarios pendentes</string>
     <string name="comments_empty_list_filtered_approved">Non hai comentarios aprobados</string>
+    <string name="button_skip">Omitir</string>
     <string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML-RPC requiridos non están no servidor.</string>
     <string name="alignment_center">Centro</string>
     <string name="post_format_video">Vídeo</string>

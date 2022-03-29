@@ -124,23 +124,10 @@ platform :android do
   #####################################################################################
   desc "Downloads translated promo strings from the translation system"
   lane :download_promo_strings do |options|
-    files = {
-      "play_store_screenshot_1" => {desc: "play_store_screenshot_1.txt"},
-      "play_store_screenshot_2" => {desc: "play_store_screenshot_2.txt"},
-      "play_store_screenshot_3" => {desc: "play_store_screenshot_3.txt"},
-      "play_store_screenshot_4" => {desc: "play_store_screenshot_4.txt"},
-      "play_store_screenshot_5" => {desc: "play_store_screenshot_5.txt"},
-      "play_store_screenshot_6" => {desc: "play_store_screenshot_6.txt"},
-      "play_store_screenshot_7" => {desc: "play_store_screenshot_7.txt"},
-
-      "enhanced_app_store_screenshot_1" => {desc: "play_store_screenshot_1.html"},
-      "enhanced_app_store_screenshot_2" => {desc: "play_store_screenshot_2.html"},
-      "enhanced_app_store_screenshot_3" => {desc: "play_store_screenshot_3.html"},
-      "enhanced_app_store_screenshot_4" => {desc: "play_store_screenshot_4.html"},
-      "enhanced_app_store_screenshot_5" => {desc: "play_store_screenshot_5.html"},
-      "enhanced_app_store_screenshot_6" => {desc: "play_store_screenshot_6.html"},
-      "enhanced_app_store_screenshot_7" => {desc: "play_store_screenshot_7.html"},
-    }
+    # "<key in .po file>" => { desc: "<name of txt file>" }
+    files = (1..9).map do |n|
+      ["play_store_screenshot_#{n}", { desc: "play_store_screenshot_#{n}.txt" }]
+    end.to_h
 
     locales = ALL_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
@@ -150,7 +137,8 @@ platform :android do
       target_files: files,
       locales: locales,
       source_locale: "en-US",
-      download_path: File.join(Dir.pwd, "/playstoreres/metadata"))
+      download_path: File.join(Dir.pwd, "/playstoreres/metadata")
+    )
   end
 
 

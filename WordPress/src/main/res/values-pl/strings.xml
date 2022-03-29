@@ -648,7 +648,6 @@ Language: pl
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpowiedział na twój wpis</string>
     <string name="login_prologue_third_subtitle_two">Twoja witryna otrzymała dziś &lt;b&gt;50 polubień&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; polubił(a) twój wpis</string>
-    <string name="hpp_skip_button">Pomiń</string>
     <string name="hpp_choose_button">Wybierz</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Otwarto przewijalne menu blokowe. Wybierz blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Zamknięto przewijalne menu blokowe. </string>
@@ -1150,7 +1149,6 @@ Language: pl
     <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
     <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
     <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
@@ -2491,6 +2489,7 @@ Language: pl
     <string name="comments_empty_list_filtered_trashed">Brak komentarzy w koszu</string>
     <string name="comments_empty_list_filtered_pending">Brak komentarzy oczekujących na moderację</string>
     <string name="comments_empty_list_filtered_approved">Brak zaakceptowanych komentarzy</string>
+    <string name="button_skip">Pomiń</string>
     <string name="xmlrpc_missing_method_error">Błąd połączenia. Brak wymaganych metod XML-RPC na serwerze.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Film</string>

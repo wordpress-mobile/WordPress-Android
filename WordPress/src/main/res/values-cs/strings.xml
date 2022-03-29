@@ -11,8 +11,6 @@ Language: cs_CZ
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Zdá se, že volání XML-RPC jsou na tomto webu blokována (kód chyby 401). Pokud se pokus o přihlášení nezdaří, klepněte na ikonu nápovědy pro zobrazení FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Nelze číst WordPress web na této adrese URL. Klepnutím na ikonu nápovědy zobrazíte FAQ.</string>
     <string name="login_error_xml_rpc_services_disabled">Služby publikačního protokolu XML-RPC nejsou na tomto webu povoleny.</string>
-    <string name="my_site_menu_tab_title">Menu</string>
-    <string name="my_site_dashboard_tab_title">Nástěnka</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Vaše vyhledávání obsahuje znaky, které nejsou podporovány v doménách WordPress.com. Jsou povoleny pouze alfanumerické znaky: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Zkontrolujte připojení k internetu a obnovte stránku.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Přejít na statistiky</string>
@@ -699,7 +697,6 @@ Language: cs_CZ
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; lajkoval váš příspěvek</string>
     <string name="login_prologue_third_subtitle_two">Dnes jste na svém webu obdrželi &lt;b&gt;50 lajků&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpověděl na váš příspěvek</string>
-    <string name="hpp_skip_button">Přeskočit</string>
     <string name="hpp_choose_button">Vybrat</string>
     <string name="hpp_subtitle">Vyberte si své oblíbené rozvržení domovské stránky. Později jej můžete upravit a přizpůsobit.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Nabídka rolovatelného bloku uzavřena.</string>
@@ -1204,7 +1201,6 @@ Language: cs_CZ
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Přesunout blok nahoru z řádku %1$s do řádku %2$s</string>
     <string name="gutenberg_native_navigate_up">Přejděte nahoru</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Poslední změnu vrátíte dvojitým klepnutím</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Vložení média se nezdařilo .\nKlepněte na nastavení.</string>
     <string name="gutenberg_native_help_icon">Ikona nápovědy</string>
     <string name="gutenberg_native_hide_keyboard">Skrýt klávesnici</string>
     <string name="gutenberg_native_image_caption_s">Titulek obrázku. %s</string>
@@ -2545,6 +2541,7 @@ Language: cs_CZ
     <string name="comments_empty_list_filtered_trashed">Žádné komentáře v koši</string>
     <string name="comments_empty_list_filtered_pending">Žádné komentáře nečekají na schválení</string>
     <string name="comments_empty_list_filtered_approved">Žádné schválené komentáře</string>
+    <string name="button_skip">Přeskočit</string>
     <string name="xmlrpc_missing_method_error">Nelze se připojit. Požadované metody XML-RPC chybí na serveru.</string>
     <string name="post_format_status">Aktualita</string>
     <string name="post_format_video">Video</string>
