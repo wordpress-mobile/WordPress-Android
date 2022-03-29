@@ -130,7 +130,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 .get(DynamicCardMenuViewModel::class.java)
     }
 
-    // todo: annmarie - if we keep this, then think about instance state
     private fun initTabType() {
         mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
             MySiteTabType.fromString(
