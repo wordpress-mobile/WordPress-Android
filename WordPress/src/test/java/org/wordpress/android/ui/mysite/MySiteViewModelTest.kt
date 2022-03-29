@@ -90,7 +90,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -1793,9 +1792,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with all qs origin, when all cards and items, then qs cards exists`() {
+    fun `given selected site with tabs disabled, when all cards and items, then qs card exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        initSelectedSite(quickStartOrigin = QuickStartOrigin.ALL)
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         val items = (uiModels.last().state as SiteSelected).cardAndItems
 
@@ -1824,10 +1823,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with dashboard qs origin, when dashboard cards and items, then qs card exists`() {
+    fun `given tabs enabled + dashboard default tab variant, when dashboard cards items, then qs card exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite(quickStartOrigin = QuickStartOrigin.DASHBOARD)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.DASHBOARD
+        )
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
@@ -1835,10 +1838,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with site menu qs origin, when dashboard cards and items, then qs card not exists`() {
+    fun `given tabs enabled + site menu default tab variant, when dashboard cards items, then qs card not exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite(quickStartOrigin = QuickStartOrigin.SITE_MENU)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.SITE_MENU
+        )
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
 
@@ -1868,10 +1875,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with dashboard qs origin, when site menu cards and items, then qs card not exists`() {
+    fun `given tabs enabled + dashboard default tab variant, when site menu cards + items, then qs card not exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite(quickStartOrigin = QuickStartOrigin.DASHBOARD)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.DASHBOARD
+        )
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
@@ -1879,10 +1890,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site with site menu qs origin, when site menu cards and items, then qs card exists`() {
+    fun `given tabs enabled + site menu default tab variant, when site menu cards and items, then qs card exists`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
-        initSelectedSite(quickStartOrigin = QuickStartOrigin.SITE_MENU)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.SITE_MENU
+        )
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
@@ -1966,7 +1981,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
-        quickStartOrigin: QuickStartOrigin = QuickStartOrigin.ALL
+        defaultTabExperimentVariant: MySiteTabExperimentVariant = MySiteTabExperimentVariant.NONEXISTENT
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -1977,7 +1992,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
-        whenever(quickStartRepository.quickStartOrigin).thenReturn(quickStartOrigin)
+        whenever(appPrefsWrapper.getMySiteDefaultTabExperimentVariant()).thenReturn(defaultTabExperimentVariant.label)
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         selectedSite.value = SelectedSite(site)
