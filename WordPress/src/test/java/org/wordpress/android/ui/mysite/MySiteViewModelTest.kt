@@ -101,6 +101,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -158,6 +159,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -312,7 +314,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 domainRegistrationCardShownTracker,
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
-                bloggingPromptsFeatureConfig
+                bloggingPromptsFeatureConfig,
+                appPrefsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

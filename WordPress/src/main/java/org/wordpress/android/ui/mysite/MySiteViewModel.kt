@@ -74,6 +74,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -135,7 +136,8 @@ class MySiteViewModel @Inject constructor(
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -167,7 +169,11 @@ class MySiteViewModel @Inject constructor(
 
     val orderedTabTypes: List<MySiteTabType>
         get() = if (isMySiteTabsEnabled) {
-            listOf(MySiteTabType.SITE_MENU, MySiteTabType.DASHBOARD)
+            if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
+                listOf(MySiteTabType.DASHBOARD, MySiteTabType.SITE_MENU)
+            } else {
+                listOf(MySiteTabType.SITE_MENU, MySiteTabType.DASHBOARD)
+            }
         } else {
             listOf(MySiteTabType.ALL)
         }
