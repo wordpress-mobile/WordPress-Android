@@ -30,6 +30,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -349,7 +350,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    ActivityLauncher.showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     finish();
                 }
             }
@@ -405,6 +406,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+    }
+
+    private void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
+        if (BuildConfig.IS_JETPACK_APP) {
+            ActivityLauncher.showSignInForResultJetpackOnly(activity);
+        } else {
+            ActivityLauncher.showSignInForResultWpComOnly(activity);
+        }
     }
 
     private boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -1352,7 +1361,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void handleSiteRemoved() {
         mViewModel.handleSiteRemoved();
         if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
-            ActivityLauncher.showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+            showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }
         if (mViewModel.getHasMultipleSites()) {

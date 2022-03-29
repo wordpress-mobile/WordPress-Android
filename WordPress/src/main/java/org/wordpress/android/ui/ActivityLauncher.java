@@ -1371,14 +1371,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
-        if (BuildConfig.IS_JETPACK_APP) {
-            ActivityLauncher.showSignInForResultJetpackOnly(activity);
-        } else {
-            ActivityLauncher.showSignInForResultWpComOnly(activity);
-        }
-    }
-
     public static void showSignInForResultWpComOnly(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
         WPCOM_LOGIN_ONLY.putInto(intent);
