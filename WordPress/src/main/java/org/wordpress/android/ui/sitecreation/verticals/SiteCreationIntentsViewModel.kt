@@ -134,7 +134,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         uiState.value?.let { state ->
             updateUiState(
                     state.copy(
-                            isContinueButtonVisible = query.isNotEmpty(),
+                            isContinueButtonVisible = query.isNotEmpty() && searchResults.isEmpty(),
                             searchQuery = query,
                             content = IntentsUiState.Content.SearchResults(searchResults)
                     )
