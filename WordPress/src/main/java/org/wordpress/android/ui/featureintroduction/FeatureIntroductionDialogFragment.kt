@@ -38,6 +38,7 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FeatureIntroductionDialogFragmentBinding.bind(view)
+        setupCloseButton()
     }
 
     override fun onDestroyView() {
@@ -71,5 +72,9 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
 
     fun setContent(content: @Composable () -> Unit) {
         binding.content.setContent(content)
+    }
+
+    private fun setupCloseButton() {
+        binding.closeButton.setOnClickListener { dismiss() }
     }
 }
