@@ -185,6 +185,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.setVisible(false)
         }
         siteInfo.loadMySiteDetails(state.siteInfoHeader)
+        siteInfo.siteInfoCard.visibility = View.VISIBLE
+        appbarMain.isLiftOnScroll = false
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
@@ -235,7 +237,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
+        siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
+        siteInfo.siteInfoCard.visibility = View.INVISIBLE
+        appbarMain.setExpanded(false,true)
+        appbarMain.isLiftOnScroll = true
     }
 
     private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
