@@ -65,8 +65,8 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     }
 
     private fun setupRemindMeButton() {
-        setPrimaryButtonListener { viewModel.onRemindMeClick() }
-        setPrimaryButtonText(R.string.blogging_prompts_onboarding_remind_me)
+        setSecondaryButtonListener { viewModel.onRemindMeClick() }
+        setSecondaryButtonText(R.string.blogging_prompts_onboarding_remind_me)
     }
 
     private fun setupHeaderTitle() {
