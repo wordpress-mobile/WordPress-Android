@@ -315,8 +315,8 @@ dependencies {
     // Provided by maven central
     implementation 'com.google.code.gson:gson:2.6.2'
 
-    implementation "androidx.core:core:$coreVersion"
-    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.core:core:$androidxCoreVersion"
+    implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
