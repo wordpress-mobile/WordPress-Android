@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-24 15:54:07+0000
+Translation-Revision-Date: 2022-03-25 16:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
-    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Cette combinaison de couleurs peut être difficile à lire pour certaines personnes. Essayez une couleur d’arrière-plan plus claire et/ou une couleur de texte plus foncée.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Cette combinaison de couleurs peut gêner la lecture chez certaines personnes. Essayez une couleur d’arrière-plan plus claire et/ou une couleur de texte plus foncée.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Cette combinaison de couleurs peut être difficile à lire pour certaines personnes. Essayez une couleur d’arrière-plan plus foncée et/ou une couleur de texte plus claire.</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Échec d’insertion du média.\nCliquez pour plus d’informations.</string>
-    <string name="new_site_creation_intents_header_subtitle">Choisir un sujet dans la liste ci-dessous ou saisir le vôtre</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Échec d’insertion du média.\nAppuyez pour plus d’informations.</string>
+    <string name="new_site_creation_intents_header_subtitle">Choisissez un thème dans la liste ci-dessous ou saisissez le vôtre</string>
     <string name="new_site_creation_intents_header_title">De quoi parle votre site Web ?</string>
     <string name="notification_channel_weekly_roundup_title">Résumé hebdomadaire</string>
     <string name="adding_cat">Ajout d’une catégorie</string>
@@ -323,6 +323,7 @@ Language: fr
     <string name="gutenberg_native_preview_post">Prévisualiser l&amp;rsquo;article</string>
     <string name="gutenberg_native_preview_page">Prévisualiser la page</string>
     <string name="gutenberg_native_retry">Recommencez</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Un</string>
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
     <string name="gutenberg_native_text_color">Couleur du texte</string>

@@ -67,9 +67,9 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
@@ -233,6 +233,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
+        viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -549,6 +550,19 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     private fun hideRefreshIndicatorIfNeeded() {
         swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+    }
+
+    private fun shareMessage(message: String) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message)
+
+        startActivity(
+                Intent.createChooser(
+                        shareIntent,
+                        resources.getString(R.string.my_site_blogging_prompt_card_share_chooser_title)
+                )
+        )
     }
 
     companion object {

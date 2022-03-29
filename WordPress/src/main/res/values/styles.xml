@@ -832,6 +832,17 @@
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
+    <!--My Site Card - Blogging Prompt-->
+
+    <style name="MySiteCardAnswerButton" parent="@style/MySiteCardFooterLinkItem">
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+    </style>
+
+    <style name="MySiteCardAnsweredButton" parent="@style/MySiteCardAnswerButton">
+        <item name="android:paddingStart">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_medium</item>
+    </style>
+
     <!--People Management Styles-->
     <style name="PersonAvatar">
         <item name="android:layout_width">@dimen/people_avatar_sz</item>
