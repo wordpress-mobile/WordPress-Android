@@ -2,7 +2,7 @@
 
 19.6
 -----
-
+* [*] My Site: Fixes an issue where a deleted site is displayed until the app restarts [https://github.com/wordpress-mobile/WordPress-Android/pull/16063]
 
 19.5
 -----

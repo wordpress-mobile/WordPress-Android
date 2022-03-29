@@ -350,11 +350,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    if (BuildConfig.IS_JETPACK_APP) {
-                        ActivityLauncher.showSignInForResultJetpackOnly(this);
-                    } else {
-                        ActivityLauncher.showSignInForResult(this);
-                    }
+                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     finish();
                 }
             }
@@ -410,6 +406,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+    }
+
+    private void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
+        if (BuildConfig.IS_JETPACK_APP) {
+            ActivityLauncher.showSignInForResultJetpackOnly(activity);
+        } else {
+            ActivityLauncher.showSignInForResultWpComOnly(activity);
+        }
     }
 
     private boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -1355,19 +1359,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void handleSiteRemoved() {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // Reset site selection
-            mSelectedSiteRepository.removeSite();
-            // Show the sign in screen
-            if (BuildConfig.IS_JETPACK_APP) {
-                ActivityLauncher.showSignInForResultJetpackOnly(this);
-            } else {
-                ActivityLauncher.showSignInForResult(this, true);
-            }
-        } else {
-            if (getSelectedSite() == null && mSiteStore.hasSite()) {
-                ActivityLauncher.showSitePickerForResult(this, mSiteStore.getSites().get(0));
-            }
+        mViewModel.handleSiteRemoved();
+        if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
+            showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+            return;
+        }
+        if (mViewModel.getHasMultipleSites()) {
+            ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
         }
     }
 
