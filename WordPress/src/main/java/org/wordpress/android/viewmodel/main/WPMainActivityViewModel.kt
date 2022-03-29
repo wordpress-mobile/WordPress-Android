@@ -24,6 +24,7 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
@@ -50,10 +51,11 @@ class WPMainActivityViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val quickStartRepository: QuickStartRepository,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
+    private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -238,6 +240,10 @@ class WPMainActivityViewModel @Inject constructor(
         appPrefsWrapper.setMainPageIndex(mySitePosition)
         delay(SWITCH_TO_MY_SITE_DELAY)
         _switchToMySite.value = Event(Unit)
+    }
+
+    fun checkAndSetVariantForMySiteDefaultTabExperiment() {
+        mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
     }
 
     fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
