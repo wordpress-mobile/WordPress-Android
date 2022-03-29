@@ -693,7 +693,6 @@ Language: pt_BR
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; curtiu seu post</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu de blocos aberto. Escolha um bloco.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu de blocos fechado.</string>
-    <string name="hpp_skip_button">Pular</string>
     <string name="hpp_choose_button">Escolher</string>
     <string name="hpp_subtitle">Escolha seu modelo preferido para a página inicial. Você poderá personalizar ou alterá-lo depois.</string>
     <string name="hpp_title">Escolha um design</string>
@@ -1201,7 +1200,6 @@ Language: pt_BR
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
     <string name="gutenberg_native_hide_keyboard">Esconder teclado</string>
     <string name="gutenberg_native_help_icon">Ícone de ajuda</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Falha ao inserir a mídia.\nToque para ver mais opções.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toque duas vezes para desfazer a última alteração</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Toque duas vezes para alternar as configurações</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Toque duas vezes para selecionar uma imagem</string>
@@ -2537,6 +2535,7 @@ Language: pt_BR
     <string name="comments_empty_list_filtered_trashed">Nenhum comentário na lixeira</string>
     <string name="comments_empty_list_filtered_pending">Nenhum comentário pendente</string>
     <string name="comments_empty_list_filtered_approved">Nenhum comentário aprovado</string>
+    <string name="button_skip">Pular</string>
     <string name="xmlrpc_missing_method_error">Não foi possível conectar. Alguns métodos XML-RPC necessários estão faltando no servidor.</string>
     <string name="alignment_center">Centro</string>
     <string name="post_format_video">Vídeo</string>

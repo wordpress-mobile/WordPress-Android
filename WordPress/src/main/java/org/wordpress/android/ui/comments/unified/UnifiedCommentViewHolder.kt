@@ -11,7 +11,7 @@ import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @Suppress("LongParameterList")

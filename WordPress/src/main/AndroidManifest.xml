@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="org.wordpress.android"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="auto">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto">
 
     <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
     <!-- Normal permissions, access automatically granted to app -->
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
+    <uses-permission
+        android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -1027,10 +1029,12 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <!-- Remove the default WorkManagerInitializer so we can use our own -->
+        <!-- Remove the default WorkManagerInitializer so we can use our own
+        Since WorkManager 2.6, App Startup is used internally within WorkManager.
+        To provide a custom initializer we need to remove the androidx.startup node.-->
         <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
     </application>

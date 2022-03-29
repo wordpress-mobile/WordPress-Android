@@ -1,7 +1,4 @@
-- Theme, default and custom color palettes
-- Helpful login error messages on self-hosted sites
-- Email app selection when verifying email at signup/login
-- No nested Reader comments if parent comment is deleted
-- Images display after changing orientation mid-capture
-- Fix for progress bar for My Site icon edits
-- Reorganized list of default Insights
+- We tweaked the upload error text in media upload blocks.
+- Animated GIFs now come with a GIF badge.
+- Block setting changes to ordered lists now appear in the editor.
+- You can disable Weekly Roundup notifications for all sites in App Info.

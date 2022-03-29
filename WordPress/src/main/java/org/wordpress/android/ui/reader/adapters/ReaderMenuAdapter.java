@@ -19,7 +19,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAc
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.ArrayList;
 import java.util.List;

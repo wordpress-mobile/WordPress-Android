@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-07 20:35:07+0000
+Translation-Revision-Date: 2022-03-22 13:09:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Denna färgkombination kan vara svår för människor att läsa. Försök använda en ljusare bakgrundsfärg och/eller en mörkare textfärg.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Denna färgkombination kan vara svår för människor att läsa. Försök använda en mörkare bakgrundsfärg och/eller en ljusare textfärg.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Misslyckades att infoga media.\nTryck för mer information.</string>
+    <string name="new_site_creation_intents_header_subtitle">Välj ett ämne från listan nedan eller skriv ditt eget</string>
+    <string name="new_site_creation_intents_header_title">Vad handlar din webbplats om?</string>
+    <string name="notification_channel_weekly_roundup_title">Veckosammanfattning</string>
+    <string name="my_site_dashboard_tab_title">Hem</string>
+    <string name="adding_cat">Lägger till kategori</string>
     <string name="login_select_email_client">Vilken e-postapp använder du?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Det uppstod ett problem med att kommunicera med webbplatsen. En HTTP-felkod 401 returnerades.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Anrop med XML-RPC verkar blockerade på denna webbplats (felkod 401). Om försöket att logga in misslyckas tryck på hjälpikonen för att se vanliga frågor.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Kunde inte läsa WordPress-webbplatsen på denna URL. Tryck på hjälpikonen för att se vanliga frågor.</string>
     <string name="login_error_xml_rpc_services_disabled">Tjänsten XML-RPC är inaktiverad på denna webbplats.</string>
-    <string name="my_site_menu_tab_title">Meny</string>
-    <string name="my_site_dashboard_tab_title">Adminpanel</string>
+    <string name="my_site_menu_tab_title">Webbplatsens meny</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökning innehåller tecken som inte stöds i WordPress.com-domäner. Följande tecken är tillåtna: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrollera din internetanslutning och ladda om sidan.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gå till statistiken</string>
@@ -317,6 +324,7 @@ Language: sv_SE
     <string name="gutenberg_native_preview_post">Förhandsgranska inlägg</string>
     <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
     <string name="gutenberg_native_retry">Försök igen</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Ett</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
@@ -701,7 +709,6 @@ Language: sv_SE
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Anna S&lt;/b&gt; gillade ditt inlägg</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Den rullningsbara blockmenyn har öppnats. Välj ett block.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Den rullningsbara blockmenyn har stängts.</string>
-    <string name="hpp_skip_button">Hoppa över</string>
     <string name="hpp_choose_button">Välj</string>
     <string name="hpp_subtitle">Välj favoritlayout på din startsida Du kan anpassa eller ändra det senare.</string>
     <string name="hpp_title">Välj en design</string>
@@ -1209,7 +1216,6 @@ Language: sv_SE
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
     <string name="gutenberg_native_hide_keyboard">Dölj tangentbordet</string>
     <string name="gutenberg_native_help_icon">Hjälpikon</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Kunde inte lägga in mediafil.\nTryck för att visa alternativ.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dubbeltryck för att ångra senaste ändring</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Dubbeltryck för att växla inställningens värde</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Dubbeltryck för att välja en bild</string>
@@ -2545,6 +2551,7 @@ Language: sv_SE
     <string name="comments_empty_list_filtered_trashed">Inga kastade kommentarer</string>
     <string name="comments_empty_list_filtered_pending">Inga väntande kommentarer</string>
     <string name="comments_empty_list_filtered_approved">Inga godkända kommentarer</string>
+    <string name="button_skip">Hoppa över</string>
     <string name="xmlrpc_missing_method_error">Kunde inte ansluta. Obligatoriska XML-RPC-metoder saknas på servern.</string>
     <string name="alignment_center">Centrerat</string>
     <string name="post_format_video">Videoklipp</string>

@@ -1,135 +1,182 @@
 <en-US>
-- Sign up through WordPress.com and create sites in Jetpack
-- Use the Reader in Jetpack
-- See notifications in new comment editor
-- Get a fix for the flickering Page/Site preview
-- Keep editor story blocks from closing when memory is low
+- Theme/default/custom color palettes
+- Email app choice when verifying email at signup/login
+- No nested comments if parent comment is deleted
+- Images adjust after new mid-capture orientation
+- Progress bar fix for My Site icon edits
+- Reorganized default Insights list
+- Keyboard won’t cover login error message
+- Logout button only has to be pressed once
 </en-US>
 <ar>
-19.3:
-- التسجيل من خلال ووردبريس.كوم وإنشاء مواقع في Jetpack
-- استخدام القارئ في Jetpack
-- الاطلاع على التنبيهات في محرِّر التعليقات الجديد
-- الحصول على إصلاح لصفحة الوميض/معاينة الموقع
-- منع مكوِّنات قصة المحرِّر من الإغلاق عندما تكون الذاكرة منخفضة
+19.4:
+- لوحات ألوان القالب/الافتراضية/المخصصة
+- اختيار تطبيق البريد الإلكتروني عند التحقُّق من البريد الإلكتروني عند التسجيل/ تسجيل الدخول
+- لا توجد تعليقات متداخلة إذا تم حذف التعليق الأصلي
+- ضبط الصور بعد اتجاه منتصف الالتقاط الجديد
+- إصلاح خاص بشريط التقدم لعمليات تحرير أيقونة موقعي
+- قائمة بالرؤى الافتراضية مُعاد تنظيمها
+- لن تستر لوحة المفاتيح رسالة خطأ تسجيل الدخول
+- يتعيَّن الضغط على زر تسجيل الخروج مرة واحدة فقط
 </ar>
 <de-DE>
-19.3:
-– Auf WordPress.com registrieren und Websites in Jetpack erstellen
-– Den Reader in Jetpack nutzen
-– Benachrichtigungen im neuen Kommentar-Editor anzeigen
-– Fehlerkorrektur für das Flimmern der Seiten-/Websitevorschau
-– Story-Blocks im Editor werden bei geringem Speicherplatz nicht mehr geschlossen
+19.4:
+- Theme-/Standard-/individuelle Farbpaletten
+- App-Auswahl bei E-Mail-Verifizierung
+- Keine verschachtelten Kommentare bei Löschung des übergeordneten Kommentars
+- Bilder werden nach Neuausrichtung der mittleren Aufnahme angepasst
+- Problem der Fortschrittsleiste bei Bearbeitungen des Website-Icons behoben
+- Liste der Standardeinsichten umstrukturiert
+- Fehlermeldung bei Anmeldung wird auf der Tastatur nicht verborgen
+- Abmelde-Button muss nur einmal gedrückt werden
 </de-DE>
 <es-ES>
-19.3:
-- Regístrate a través de WordPress.com y crea sitios en Jetpack.
-- Utiliza el Lector en Jetpack.
-- Consulta las notificaciones en el nuevo editor de comentarios.
-- Consigue una corrección para el parpadeo de la vista previa de página o sitio.
-- Evita que se cierren los bloques de historias del editor cuando haya poca memoria.
+19.4:
+- Paletas de color temáticas/por defecto/personalizadas
+- Selección de la aplicación de verificación del correo electrónico
+- Si el comentario padre se borra, no hay comentarios anidados
+- Las imágenes se ajustan tras hacer un cambio de orientación en mitad de la captura
+- Se ha corregido la barra de progreso para las ediciones de iconos de Mi Sitio
+- Se ha reorganizado la lista de Detalles por defecto
+- El teclado no tapa los mensajes de error de inicio de sesión
 </es-ES>
 <fr-FR>
-19,3 :
-- Inscrivez-vous WordPress.com et créez des sites dans Jetpack
-- Utilisez le lecteur dans Jetpack
-- Les notifications s’affichent dans le nouvel éditeur de commentaires
-- Correction du vacillement de l’aperçu des pages/du site
-- L’éditeur du bloc Story ne peut plus se fermer lorsque la mémoire est faible
+19.4 :
+- Palettes colorées thématiques/par défaut/perso
+- Sélection de l’appli pour la vérification de l’adresse e-mail
+- Pas de commentaires imbriqués possibles si le parent a été supprimé
+- Ajustement des images après leur réorientation à mi-capture
+- Barre de progression améliorée pour les modifications de l’icône du site
+- Liste par défaut des tendances réorganisée
+- Plus de masquage des erreurs de connexion par le clavier
 </fr-FR>
 <iw-IL>
-19.3:
-- להירשם דרך WordPress.com וליצור אתרים ב-Jetpack
-- להשתמש ב-Reader ב-Jetpack
-- להציג הודעות בעורך התגובות
-- לתקן את התצוגה המקדימה המהבהבת של עמודים/אתרים
-- למנוע סגירת בלוקים של סטורי של עורכים כשאין הרבה מקום בזיכרון
+19.4:
+- Theme/default/custom color palettes
+- Email app choice when verifying email at signup/login
+- No nested comments if parent comment is deleted
+- Images adjust after new mid-capture orientation
+- Progress bar fix for My Site icon edits
+- Reorganized default Insights list
+- Keyboard won’t cover login error message
+- Logout button only has to be pressed once
 </iw-IL>
 <id>
-19.3:
-- Daftar melalui WordPress.com dan buat situs di Jetpack
-- Gunakan Pembaca di Jetpack
-- Lihat pemberitahuan di editor komentar baru
-- Perbaiki efek pratinjau Halaman/Situs yang mengganggu
-- Jaga blok cerita editor tetap terbuka saat memori rendah
+19.4:
+- Palet warna kustom/asal/tema
+- Pilihan aplikasi email untuk verifikasi saat mendaftar/login
+- Tidak ada komentar cabang jika komentar induk dihapus
+- Penyesuaian gambar setelah reorientasi baru di tengah pemotretan
+- Bilah progres disempurnakan untuk menyunting ikon Situs saya
+- Susunan ulang daftar asal Wawasan
+- Keyboard tidak akan menutupi pesan error saat login
+- Tombol logout cukup ditekan satu kali saja
 </id>
 <it-IT>
-19.3:
-- Iscriviti tramite WordPress.com e crea siti in Jetpack
-- Usa il Reader in Jetpack
-- Visualizza le notifiche nel nuovo editor dei commenti
-- Ottieni una correzione allo sfarfallio dell'anteprima di Pagina/Sito
-- Impedisci la chiusura dei blocchi Storia dell'editor quando la memoria non è sufficiente
+19.4:
+- Palette di colori temi/predefinite/personalizzate
+- Selezione app di verifica e-mail
+- Nessun commento nidificato se il commento principale è eliminato
+- Modifica delle immagini dopo il nuovo orientamento a metà dell'acquisizione
+- Correzione barra di avanzamento per modifiche all'icona Il mio sito
+- Elenco Panoramica predefinita riorganizzato
+- La tastiera non coprirà il messaggio di errore di accesso
+- Il pulsante di disconnessione deve essere premuto una volta
 </it-IT>
 <ja-JP>
-19.3:
-- WordPress.com から登録して Jetpack でサイトを作成
-- Jetpack で Reader を使用
-- 新しいコメントエディターで通知を確認
-- ページまたはサイトのプレビューでのちらつきを修正
-- メモリ不足でエディターのストーリーブロックが閉じる問題を修正
+19.4:
+- テーマ / デフォルト / カスタムカラーパレット
+- 登録またはログイン時のメール認証におけるメールアプリ選択
+- 親コメントが削除された場合ネストされたコメントの表示なし
+- 新しいキャプチャ中の向き設定後の画像調整
+- 「参加サイト」アイコン編集用の進捗バーの修正
+- デフォルトの「統計概要」リストの再編成
+- キーボードによるログインエラーメッセージの覆い隠しの修正
+- 「ログアウト」ボタンを押すのは1度のみ
 </ja-JP>
 <ko-KR>
-19.3:
-- 워드프레스닷컴을 통해 가입하고 젯팩에서 사이트 생성
-- 젯팩에서 리더 사용
-- 새 댓글 편집기에 알림 표시
-- 페이지/사이트 미리보기 명멸 문제 해결
-- 메모리 부족 시 편집기 스토리 블록 종료 방지
+19.4:
+- 테마/기본/사용자 정의 색상 팔레트
+- 가입/로그인 시 이메일을 확인할 때 이메일 앱 선택
+- 상위 댓글이 삭제되는 경우 중첩된 댓글 없음
+- 새로운 캡처 중간 방향 지정 후 이미지 조정
+- 내 사이트 아이콘 편집 진행률 표시줄 수정
+- 재구성한 기본 인사이트 목록
+- 키보드가 로그인 오류 메시지를 가리지 않음
+- 로그아웃 버튼을 한 번만 눌러야 함
 </ko-KR>
 <nl-NL>
-19.3:
-- Meld je aan via WordPress.com en maak in Jetpack een site aan
-- Gebruik de Reader in Jetpack
-- Zie meldingen in de nieuwe opmerkingseditor
-- Los het knipperen van de voorbeeldweergave van een pagina of site op
-- Stop het sluiten van verhaalblokken in de editor bij een laag geheugen
+19.4:
+- Thema-/standaard/persoonlijke kleurpaletten
+- Kies een app voor e-mailverificatie
+- Geen geneste reacties als de bovenliggende reactie is verwijderd
+- Afbeeldingen passen zich aan als ze opnieuw worden georiënteerd tijdens het vastleggen
+- Probleem met de voortgangsbalk van het bewerken van het pictogram Mijn site opgelost
+- De Inzichtenlijst gereorganiseerd
+- Het toetsenbord bedekt de foutmelding niet meer
+- De knop voor het uitloggen hoeft maar één keer te worden ingedrukt
 </nl-NL>
 <pt-BR>
-19.3:
-- Inscreva-se no WordPress.com e crie sites no Jetpack
-- Use o leitor no Jetpack
-- Veja as notificações no novo editor de comentários
-- Corrija a oscilação na visualização da página/site
-- Evite que os blocos de story do editor fechem quando há pouca memória
+19.4:
+- Paletas de cores personalizadas/padrão/de tema
+- Escolha do aplicativo de e-mail ao verificar o e-mail no login
+- Nenhum comentário aninhado se o comentário principal for excluído
+- Ajuste de imagens após nova orientação no meio da captura
+- Correção da barra de progresso para edições do ícone Meu site
+- Reorganização da lista de informações padrão
+- Correção da sobreposição do teclado em mensagens de erro de login
+- Botão de logout só precisa ser pressionado uma vez
 </pt-BR>
 <ru-RU>
-19.3:
-— Регистрация через WordPress.com и создание сайтов в приложении Jetpack
-— Использование Обозревателя в приложении Jetpack
-— Просмотр уведомлений в новом редакторе комментариев
-— Исправленный эффект мерцания на странице предварительного просмотра
-— Блоки с историей редактора не закрываются при недостаточном объеме памяти
+19.4:
+— Палитры темы и пользовательских цветов, палитры по умолчанию
+— Возможность выбора приложения для проверки адреса эл. почты
+— В случае удаления родительского комментария вложенные комментарии удаляются
+— Добавлена подстройка изображений после изменения ориентации в процессе захвата
+— Исправлена шкала хода выполнения для правок значка "Мой сайт"
+— Переупорядочен список обзоров по умолчанию
+— Ошибки при входе не скрываются клавиатурой
 </ru-RU>
 <sv-SE>
-19.3:
-- Registrera dig via WordPress.com och skapa webbplatser med Jetpack
-- Använd läsaren i Jetpack
-- Se notiser i den nya kommentarsredigeraren
-- Få en korrigering av den flimrande sid-/webbplatsförhandsgranskningen
-- Se till att redigerarens berättelseblock inte stängs vid lågt minne
+19.4:
+- Temafärgpaletter/standardfärgpaletter/anpassade färgpaletter
+- Val av app för e-postverifiering
+- Inga inbäddade kommentarer om den överordnade kommentaren är borttagen
+- Bilder justeras efter omorientering vid tagning
+- Förloppsindikatorn för redigeringar av ikonen Min webbplats har åtgärdats
+- Standardlistan för Insikter har arrangerats om
+- Tangentbordet döljer inte längre inloggningsfel
 </sv-SE>
 <tr-TR>
-19.3:
-- - WordPress.com üzerinden kaydolun ve Jetpack'te siteler oluşturun
-- Jetpack'te Okuyucuyu kullanın
-- Yeni yorum düzenleyicide bildirimleri görün
-- Titreyen Sayfa/Site önizlemesi için bir düzeltme alın
-- Bellek azaldığında düzenleyici hikaye bloklarının kapanmasını önleyin
+19.4:
+- Tema/varsayılan/özel renk paletleri
+- Kayıt/oturum açma sırasında e-postayı doğrularken e-posta uygulaması seçimi
+- Üst yorum silindiğinde artık iç içe yorum görünmez
+- Yakalama ortasındaki yeni yönlendirmeden sonra görüntüler ayarlanır
+- Sitem simgesi düzenlemeleri için ilerleme çubuğu düzeltmesi
+- Varsayılan Tek Bakışta listesinde düzenlemeler
+- Klavye artık oturum açma hata mesajını örtmez
+- Artık çıkış düğmesine yalnızca bir kez basmak yeterlidir
 </tr-TR>
 <zh-CN>
-19.3：
-- 通过 WordPress.com 注册并在 Jetpack 中创建站点
-- 在 Jetpack 中使用阅读器
-- 在新的评论编辑器中查看通知
-- 修复了页面/站点预览闪烁的问题
-- 防止内存不足时编辑器故事区块关闭
+19.4：
+- 主题/默认/自定义调色盘
+- 当在注册/登录步骤验证电子邮件时选择电子邮件应用
+- 如果父级评论被删除，则没有嵌套评论
+- 中期捕获转向后的图像调整
+-“我的站点”图标编辑的进度条修复
+- 重新组织的默认数据分析列表
+- 键盘无法掩盖登录错误
+- 注销按钮仅需按一次
 </zh-CN>
 <zh-TW>
-19.3：
-- 透過 WordPress.com 登入並在 Jetpack 中建立網站
-- 在 Jetpack 中使用閱讀器
-- 在新的留言編輯器中查看通知
-- 修正頁面/網站預覽的閃爍問題
-- 防止編輯器動態區塊在記憶體不足時關閉
+19.4：
+- 佈景主題/預設/自訂調色盤
+- 註冊/登入驗證電子郵件時的電子郵件應用程式選項
+- 如上層留言遭刪除，則無巢狀留言
+- 在新中途擷取定位後調整圖片
+- 修正「我的網站」圖示編輯的進度列
+- 重新排列預設洞察報告清單
+- 鍵盤無法覆蓋登入錯誤訊息
+- 登出按鈕只需按一次
 </zh-TW>

@@ -172,8 +172,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (savedInstanceState == null) {
+            mParentViewModel.checkAndSetVariantForMySiteDefaultTabExperiment();
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EPILOGUE_VIEWED);
             mUnifiedLoginTracker.track(Step.SUCCESS);
         }

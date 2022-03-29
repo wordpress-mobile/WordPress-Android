@@ -16,7 +16,8 @@ class CardsTracker @Inject constructor(
     enum class Type(val label: String) {
         ERROR("error"),
         STATS("stats"),
-        POST("post")
+        POST("post"),
+        BLOGGING_PROMPT("blogging_prompt")
     }
 
     enum class StatsSubtype(val label: String) {
@@ -89,6 +90,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.POST_CARD_ERROR -> Type.ERROR
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
+        DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
     }
 }
 

@@ -184,7 +184,6 @@
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
-    <dimen name="avatar_sz_login">40dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
@@ -511,8 +510,6 @@
 
 
     <!--site creation-->
-    <dimen name="site_creation_segments_icon_size">24dp</dimen>
-    <dimen name="site_creation_segments_list_divider_start_margin">72dp</dimen>
     <dimen name="site_creation_segments_content_padding_vertical">16dp</dimen>
     <dimen name="site_creation_segments_content_padding_horizontal">16dp</dimen>
     <dimen name="site_creation_verticals_search_progress_size">24dp</dimen>
@@ -602,8 +599,10 @@
     <dimen name="unelevated_card_elevation">0dp</dimen>
     <dimen name="unelevated_card_stroke_width">1dp</dimen>
 
+    <!-- dialog fragment -->
+    <dimen name="dialog_fragment_content_margin">40dp</dimen>
+
     <!-- feature announcement-->
-    <dimen name="feature_announcement_content_margin">40dp</dimen>
     <dimen name="feature_announcement_icon_size">48dp</dimen>
     <dimen name="feature_announcement_top_margin">64dp</dimen>
 
@@ -651,7 +650,9 @@
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 
     <!-- Site Intent Question -->
-    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
+    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_large</dimen>
+    <dimen name="siq_header_scroll_snap_threshold">-96dp</dimen>
+    <dimen name="siq_bottom_shadow_height">@dimen/margin_medium</dimen>
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
@@ -672,7 +673,7 @@
     <dimen name="edit_with_chips_hint_label_default_alpha" format="float" type="dimen">0.6</dimen>
 
     <!-- Hack to make snackbar padding smaller -->
-    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
+    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="UnusedResources,MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
 

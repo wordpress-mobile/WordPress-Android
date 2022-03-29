@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.databinding.ReaderInterestItemBinding
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class ReaderInterestViewHolder(
     private val uiHelpers: UiHelpers,

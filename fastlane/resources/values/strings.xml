@@ -116,6 +116,7 @@
     <string name="status_and_visibility">Status &amp; Visibility</string>
 
     <string name="button_not_now">Not now</string>
+    <string name="button_skip">Skip</string>
 
     <string name="at_username">\@%s</string>
 
@@ -551,6 +552,7 @@
     <string name="add_new_category">Add new category</string>
     <string name="category_name">Category name</string>
     <string name="category_parent">Parent category (optional):</string>
+    <string name="adding_cat">Adding category</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
@@ -2213,8 +2215,8 @@
     <string name="my_site_quick_actions_title">Quick Links</string>
 
     <!-- My Site - Dashboard -->
-    <string name="my_site_dashboard_tab_title">Dashboard</string>
-    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="my_site_dashboard_tab_title">Home</string>
+    <string name="my_site_menu_tab_title">Site Menu</string>
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
     <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
 
@@ -2919,11 +2921,13 @@
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="notification_channel_reminder_title">Reminder</string>
+    <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
     <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
+    <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
     <string content_override="true" name="login_notification_channel_id" translatable="false">@string/notification_channel_normal_id</string>
@@ -3186,6 +3190,8 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_intents_header_title">What’s your website about?</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -3275,7 +3281,6 @@
     <string name="hpp_title">Choose a design</string>
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
     <string name="hpp_choose_button">Choose</string>
-    <string name="hpp_skip_button">Skip</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
@@ -3521,7 +3526,7 @@
     <string name="gutenberg_native_failed_to_insert_audio_file" tools:ignore="UnusedResources">Failed to insert audio file.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert audio file. Please tap for options.</string>
     <string name="gutenberg_native_failed_to_insert_media" tools:ignore="UnusedResources">Failed to insert media.</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources">Failed to insert media.\nTap for more info.</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to save files.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to upload files.\nPlease tap for options.</string>
     <string name="gutenberg_native_featured_image" tools:ignore="UnusedResources">Featured Image</string>
@@ -3534,6 +3539,7 @@
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
     <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources">Gallery style</string>
     <string name="gutenberg_native_get_support" tools:ignore="UnusedResources">Get support</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources">GIF</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources">Give it a try by adding a few blocks to your post or page!</string>
     <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Go back</string>
     <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Gradient Type</string>
@@ -3687,6 +3693,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_text_color" tools:ignore="UnusedResources">Text color</string>
     <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources">Text formatting controls are located within the toolbar positioned above the keyboard while editing a text block</string>
     <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources">The basics</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources">This color combination may be hard for people to read. Try using a darker background color and/or a brighter text color.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources">This color combination may be hard for people to read. Try using a brighter background color and/or a darker text color.</string>
     <string name="gutenberg_native_three" tools:ignore="UnusedResources">Three</string>
     <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources">Tiled gallery settings</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources">To remove a block, select the block and click the three dots in the bottom right of the block to view the settings. From there, choose the option to remove the block.</string>

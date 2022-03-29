@@ -1,0 +1,9 @@
+19.4:
+- Palette di colori temi/predefinite/personalizzate
+- Selezione app di verifica e-mail
+- Nessun commento nidificato se il commento principale è eliminato
+- Modifica delle immagini dopo il nuovo orientamento a metà dell'acquisizione
+- Correzione barra di avanzamento per modifiche all'icona Il mio sito
+- Elenco Panoramica predefinita riorganizzato
+- La tastiera non coprirà il messaggio di errore di accesso
+- Il pulsante di disconnessione deve essere premuto una volta

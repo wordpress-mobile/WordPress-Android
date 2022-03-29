@@ -1,0 +1,9 @@
+19.4:
+- Palet warna kustom/asal/tema
+- Pilihan aplikasi email untuk verifikasi saat mendaftar/login
+- Tidak ada komentar cabang jika komentar induk dihapus
+- Penyesuaian gambar setelah reorientasi baru di tengah pemotretan
+- Bilah progres disempurnakan untuk menyunting ikon Situs saya
+- Susunan ulang daftar asal Wawasan
+- Keyboard tidak akan menutupi pesan error saat login
+- Tombol logout cukup ditekan satu kali saja
