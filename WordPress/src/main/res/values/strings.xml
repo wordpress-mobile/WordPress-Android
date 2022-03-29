@@ -3991,6 +3991,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Blogging prompts -->
     <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
+    <string name="blogging_prompts_onboarding_body_top">The best way to become a better writer is to build a writing habit and share with others — that’s where Prompts come in!</string>
+    <string name="blogging_prompts_onboarding_body_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
 </resources>
