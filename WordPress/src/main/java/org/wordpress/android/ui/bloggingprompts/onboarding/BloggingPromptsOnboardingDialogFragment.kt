@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
@@ -74,7 +75,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     }
 
     private fun setupHeaderIcon() {
-        setHeaderIcon(R.drawable.ic_story_icon_24dp)
+        setHeaderIcon(R.drawable.ic_outline_lightbulb_orange_gradient_40dp)
     }
 
     private fun setupContent(readyState: Ready) {
@@ -83,10 +84,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     .fillMaxWidth()
                     .wrapContentHeight()) {
                 Text(
+                    modifier = Modifier.padding(bottom = 24.dp),
                     text = stringResource(R.string.blogging_prompts_onboarding_body_top),
                     fontFamily = FontFamily.Serif,
                     fontSize = 16.sp,
-                    color = colorResource(R.color.black)
+                    color = colorResource(R.color.black),
                 )
                 AndroidView(
                     modifier = Modifier
@@ -107,6 +109,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     }
                 )
                 Text(
+                    modifier = Modifier.padding(top = 24.dp),
                     text = getString(R.string.blogging_prompts_onboarding_body_bottom),
                     fontFamily = FontFamily.Serif,
                     fontSize = 16.sp,
