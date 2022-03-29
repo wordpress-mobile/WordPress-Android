@@ -14,7 +14,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REFRESH
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -67,6 +66,7 @@ import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType.ALL
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -145,6 +145,7 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
+    private val _onTrackWithCurrentTab = MutableLiveData<Event<MySiteTrackWithCurrentTabSource>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -191,6 +192,7 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
+    val onTrackWithCurrentTab = _onTrackWithCurrentTab as LiveData<Event<MySiteTrackWithCurrentTabSource>>
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -624,14 +626,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_STATS_TAPPED)
+        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_STATS_TAPPED)))
         quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_PAGES_TAPPED)
+        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_PAGES_TAPPED)))
         quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
@@ -639,13 +641,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionPostsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_POSTS_TAPPED)
+        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_POSTS_TAPPED)))
         _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
     }
 
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_MEDIA_TAPPED)
+        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_MEDIA_TAPPED)))
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
@@ -656,7 +658,9 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh(isPullToRefresh: Boolean = false) {
-        if (isPullToRefresh) analyticsTrackerWrapper.track(MY_SITE_PULL_TO_REFRESH)
+        if (isPullToRefresh) {
+            _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.MY_SITE_PULL_TO_REFRESH)))
+        }
         mySiteSourceManager.refresh()
     }
 
@@ -959,6 +963,18 @@ class MySiteViewModel @Inject constructor(
         setVisible()
     }
 
+    fun trackWithCurrentTab(event: MySiteTrackWithCurrentTabSource) {
+        if (event.currentTab == ALL) {
+            analyticsTrackerWrapper.track(event.stat, event.properties ?: emptyMap())
+        } else {
+            val props: MutableMap<String, Any> = mutableMapOf(event.key to event.currentTab.label)
+            if (!event.properties.isNullOrEmpty()) {
+                props.putAll(event.properties)
+            }
+            analyticsTrackerWrapper.track(event.stat, props)
+        }
+    }
+
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
@@ -1032,6 +1048,13 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    data class MySiteTrackWithCurrentTabSource(
+        val stat: Stat,
+        val properties: HashMap<String, *>? = null,
+        val key: String = TAB_SOURCE,
+        val currentTab: MySiteTabType = ALL
+    )
+
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
@@ -1041,5 +1064,6 @@ class MySiteViewModel @Inject constructor(
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         const val LIST_SCROLL_DELAY_MS = 500L
+        const val TAB_SOURCE = "tab_source"
     }
 }
