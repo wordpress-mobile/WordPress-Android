@@ -178,7 +178,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val prompt: UiString,
                         val answeredUsers: List<AnsweredUser>,
                         val numberOfAnswers: Int,
-                        val isAnswered: Boolean
+                        val isAnswered: Boolean,
+                        val onShareClick: (String) -> Unit
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD) {
                         data class AnsweredUser(
                             val avatarUrl: String?
