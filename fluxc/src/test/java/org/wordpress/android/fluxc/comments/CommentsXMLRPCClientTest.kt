@@ -215,7 +215,7 @@ class CommentsXMLRPCClientTest {
                   <value>
                   <struct>
               <member><name>date_created_gmt</name><value><dateTime.iso8601>20210727T20:33:41</dateTime.iso8601></value></member>
-              <member><name>user_id</name><value><string>1</string></value></member>
+              <member><name>user_id</name><value><string>44</string></value></member>
               <member><name>comment_id</name><value><string>34</string></value></member>
               <member><name>parent</name><value><string>33</string></value></member>
               <member><name>status</name><value><string>approve</string></value></member>
