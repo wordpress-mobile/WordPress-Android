@@ -16,7 +16,8 @@ import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
 
-    private lateinit var binding: FeatureIntroductionDialogFragmentBinding
+    private var _binding: FeatureIntroductionDialogFragmentBinding? = null
+    private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")
 
     override fun getTheme(): Int {
         return R.style.FeatureIntroductionDialogFragment
@@ -36,7 +37,12 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FeatureIntroductionDialogFragmentBinding.bind(view)
+        _binding = FeatureIntroductionDialogFragmentBinding.bind(view)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun setPrimaryButtonListener(listener: () -> Unit) {
