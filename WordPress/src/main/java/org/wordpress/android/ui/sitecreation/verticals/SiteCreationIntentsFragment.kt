@@ -70,7 +70,7 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
-        recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
+        recyclerView.adapter = SiteCreationIntentsAdapter()
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {

@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentListItemUiState.DefaultIntentItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.FullItemsList
@@ -82,7 +81,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         val newItems = slugsArray.mapIndexed { index, slug ->
             val vertical = verticalArray[index]
             val emoji = emojiArray[index]
-            val item = DefaultIntentItemUiState(slug, vertical, emoji)
+            val item = IntentListItemUiState(slug, vertical, emoji)
             item.onItemTapped = { intentSelected(slug, vertical) }
             return@mapIndexed item
         }
@@ -168,13 +167,11 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
-    sealed class IntentListItemUiState {
+    data class IntentListItemUiState(
+        val verticalSlug: String,
+        val verticalText: String,
+        val emoji: String
+    ) {
         var onItemTapped: (() -> Unit)? = null
-
-        data class DefaultIntentItemUiState(
-            val verticalSlug: String,
-            val verticalText: String,
-            val emoji: String
-        ) : IntentListItemUiState()
     }
 }
