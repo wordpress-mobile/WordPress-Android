@@ -718,6 +718,7 @@ Language: el_GR
     <string name="site_settings_advanced_header">Προχωρημένες</string>
     <string name="comments_empty_list_filtered_pending">Δεν υπάρχουν Εκκρεμή σχόλια</string>
     <string name="comments_empty_list_filtered_approved">Δεν υπάρχουν Εγκεκριμένα σχόλια</string>
+    <string name="button_skip">Παράβλεψη</string>
     <string name="xmlrpc_missing_method_error">Αδυναμία σύνδεσης. Οι απαιτούμενες μέθοδοι XML-RPC απουσιάζουν από το διακομιστή.</string>
     <string name="post_format_status">Κατάσταση</string>
     <string name="post_format_video">Βίντεο</string>

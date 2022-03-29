@@ -84,6 +84,7 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -189,6 +190,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject DebugCookieManager mDebugCookieManager;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -373,6 +375,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mExPlat.forceRefresh();
 
         mDebugCookieManager.sync();
+
+        initAnalyticsExperimentPropertiesIfNeeded();
     }
 
     protected void initWorkManager() {
@@ -877,6 +881,11 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
     public StoryNotificationTrackerProvider getStoryNotificationTrackerProvider() {
         return mStoryNotificationTrackerProvider;
+    }
+
+    /* If default tab experiment is running, pass along to tracker */
+    private void initAnalyticsExperimentPropertiesIfNeeded() {
+        mMySiteDefaultTabExperiment.checkAndSetTrackingPropertiesIfNeeded();
     }
 
     @Override public AndroidInjector<Object> androidInjector() {

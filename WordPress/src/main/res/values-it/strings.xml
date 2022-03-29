@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-11 15:54:08+0000
+Translation-Revision-Date: 2022-03-25 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più brillante e/o un colore di testo più scuro.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più scuro e/o un colore di testo più brillante.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Impossibile inserire elementi multimediali.\nTocca per ulteriori informazioni.</string>
+    <string name="new_site_creation_intents_header_subtitle">Scegli un argomento dall\'elenco sottostante o digitane uno tuo</string>
+    <string name="new_site_creation_intents_header_title">Qual è l\'argomento del tuo sito web?</string>
+    <string name="notification_channel_weekly_roundup_title">Resoconto settimanale</string>
+    <string name="adding_cat">Aggiunta della categoria</string>
     <string name="login_select_email_client">Quale app per e-mail utilizzi?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Si è verificato un problema durante la comunicazione con il sito. È stato restituito un codice di errore HTTP .</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Le chiamate XML-RPC sembrano bloccate su questo sito (codice di errore 401). Se il tentativo di accesso fallisce, tocca l\'icona della guida per visualizzare le FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Impossibile leggere il sito WordPress associato a questo URL. Tocca l\'icona della guida per visualizzare le domande frequenti.</string>
     <string name="login_error_xml_rpc_services_disabled">Il servizio XML-RPC è disattivato su questo sito.</string>
-    <string name="my_site_menu_tab_title">Menu</string>
-    <string name="my_site_dashboard_tab_title">Bacheca</string>
+    <string name="my_site_menu_tab_title">Menu del sito</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">La tua ricerca include caratteri non supportati nei domini WordPress.com. Sono consentiti i seguenti caratteri: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controlla la tua connessione a Internet e ricarica la pagina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Vai alle statistiche</string>
@@ -701,7 +707,6 @@ Language: it
     <string name="login_prologue_third_subtitle_two">Oggi hai ricevuto &lt;b&gt;50 Mi piace&lt;/b&gt; al tuo sito</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu del blocco a scorrimento aperto. Seleziona un blocco.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu del blocco a scorrimento chiuso.</string>
-    <string name="hpp_skip_button">Salta</string>
     <string name="hpp_choose_button">Scegli</string>
     <string name="hpp_subtitle">Scegli il layout che preferisci per la tua homepage. Puoi modificarlo e personalizzarlo in seguito.</string>
     <string name="hpp_title">Scegli un design</string>
@@ -1209,7 +1214,6 @@ Language: it
     <string name="gutenberg_native_double_tap_to_undo_last_change">Tocca due volte per annullare l\'ultima modifica</string>
     <string name="gutenberg_native_move_block_down">Sposta il blocco verso il basso</string>
     <string name="gutenberg_native_help_icon">Icona della guida</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserimento media non riuscito.\nTocca per ulteriori opzioni.</string>
     <string name="gutenberg_native_link_text">Testo del link</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Tocca due volte per attivare/disattivare l\'impostazione</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Tocca due volte per selezionare un\'immagine</string>
@@ -2545,6 +2549,7 @@ Language: it
     <string name="site_settings_advanced_header">Avanzato</string>
     <string name="comments_empty_list_filtered_pending">Nessun commento in sospeso</string>
     <string name="comments_empty_list_filtered_approved">Nessun commento approvato</string>
+    <string name="button_skip">Salta</string>
     <string name="xmlrpc_missing_method_error">Non è possibile connettersi. Sul server mancano i necessari metodi XML-RPC</string>
     <string name="post_format_status">Stato</string>
     <string name="post_format_video">Video</string>

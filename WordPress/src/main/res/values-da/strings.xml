@@ -44,6 +44,7 @@ Language: da_DK
     <string name="site_settings_export_content_title">Eksporter indhold</string>
     <string name="contact_support">Kontakt support</string>
     <string name="site_settings_advanced_header">Avanceret</string>
+    <string name="button_skip">Spring over</string>
     <string name="alignment_center">Centreret</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>

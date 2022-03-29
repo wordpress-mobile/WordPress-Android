@@ -994,6 +994,7 @@ Language: sk
     <string name="comments_empty_list_filtered_trashed">Žiadne komentáre v koši</string>
     <string name="comments_empty_list_filtered_pending">Žiadne čakajúce komentáre</string>
     <string name="comments_empty_list_filtered_approved">Žiadne schválené komentáre</string>
+    <string name="button_skip">Preskočiť</string>
     <string name="xmlrpc_missing_method_error">Nepodarilo sa pripojiť. Vyžadované metódy XML-RPC chýbajú na tomto serveri. </string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Na stred</string>

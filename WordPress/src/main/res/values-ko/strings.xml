@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-10 17:54:08+0000
+Translation-Revision-Date: 2022-03-24 11:54:15+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 밝은 배경 색상 및/또는 더 어두운 텍스트 색상을 사용해 보세요.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 어두운 배경 색상 및/또는 더 밝은 텍스트 색상을 사용해 보세요.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">미디어를 삽입하지 못했습니다.\n자세히 알아보려면 누르세요.</string>
+    <string name="new_site_creation_intents_header_subtitle">아래 목록에 있는 주제 선택 또는 원하는 주제 입력</string>
+    <string name="new_site_creation_intents_header_title">웹사이트의 주제가 무엇인가요?</string>
+    <string name="notification_channel_weekly_roundup_title">주간 총정리</string>
+    <string name="my_site_dashboard_tab_title">홈</string>
+    <string name="adding_cat">카테고리 추가하기</string>
     <string name="login_select_email_client">어떤 이메일 앱을 사용하시나요?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">사이트와 통신하는 중 문제가 발생했습니다. HTTP 오류 코드 401이 반환되었습니다.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_cannot_read_site">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_services_disabled">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
-    <string name="my_site_menu_tab_title">메뉴</string>
-    <string name="my_site_dashboard_tab_title">알림판</string>
+    <string name="my_site_menu_tab_title">사이트 메뉴</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">통계로 이동</string>
@@ -701,7 +708,6 @@ Language: ko_KR
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;메디슨 루이즈&lt;/b&gt;가 글을 좋아합니다</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">스크롤 할 수 있는 블록 메뉴가 열렸습니다. 블록을 선택하세요.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">스크롤 할 수 있는 블록 메뉴를 닫았습니다.</string>
-    <string name="hpp_skip_button">건너뛰기</string>
     <string name="hpp_choose_button">선택하기</string>
     <string name="hpp_subtitle">좋아하는 홈페이지 레이아웃을 고르세요. 사용자 정의하거나 나중에 바꿀 수 있습니다.</string>
     <string name="hpp_title">디자인 선택하기</string>
@@ -1209,7 +1215,6 @@ Language: ko_KR
     <string name="gutenberg_native_image_caption_s">이미지 캡션. %s</string>
     <string name="gutenberg_native_hide_keyboard">키보드 숨기기</string>
     <string name="gutenberg_native_help_icon">도움말 아이콘</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">마지막 변경을 취소하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">설정을 전환하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">이미지를 선택하려면 두 번 탭하세요.</string>
@@ -2545,6 +2550,7 @@ Language: ko_KR
     <string name="comments_empty_list_filtered_trashed">삭제된 댓글 없음</string>
     <string name="comments_empty_list_filtered_pending">대기중인 댓글 없음</string>
     <string name="comments_empty_list_filtered_approved">승인한 댓글 없음</string>
+    <string name="button_skip">넘어가기</string>
     <string name="xmlrpc_missing_method_error">연결할 수 없습니다. 필수 XML-RPC 함수가 서버에 없습니다.</string>
     <string name="alignment_center">가운데</string>
     <string name="post_format_video">비디오</string>

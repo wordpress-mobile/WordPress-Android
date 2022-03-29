@@ -1263,6 +1263,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     // We'll handle it in onAccountChanged so we know we have
                     // updated account info.
                     AppPrefs.setShouldTrackMagicLinkSignup(true);
+                    mViewModel.checkAndSetVariantForMySiteDefaultTabExperiment();
                     mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
