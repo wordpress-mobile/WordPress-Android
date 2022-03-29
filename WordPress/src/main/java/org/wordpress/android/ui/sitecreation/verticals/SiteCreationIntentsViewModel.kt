@@ -93,7 +93,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         isInitialized = true
     }
 
-    private fun intentSelected(slug: String, vertical: String) {
+    fun intentSelected(slug: String, vertical: String) {
         analyticsTracker.trackSiteIntentQuestionVerticalSelected(slug)
         _onIntentSelected.value = vertical
     }
