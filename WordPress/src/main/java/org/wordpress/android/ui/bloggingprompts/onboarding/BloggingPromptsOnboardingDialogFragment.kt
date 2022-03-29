@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,10 +17,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
+import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
@@ -87,8 +88,8 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     modifier = Modifier.padding(bottom = 24.dp),
                     text = stringResource(R.string.blogging_prompts_onboarding_body_top),
                     fontFamily = FontFamily.Serif,
-                    fontSize = 16.sp,
-                    color = colorResource(R.color.black),
+                    style = MaterialTheme.typography.subtitle1,
+                        color = colorResource(id = attr.wpColorOnSurfaceMedium)
                 )
                 AndroidView(
                     modifier = Modifier
@@ -102,7 +103,10 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                                 prompt = readyState.prompt,
                                 answeredUsers = readyState.answeredUsers,
                                 numberOfAnswers = readyState.numberOfAnswers,
-                                isAnswered = readyState.isAnswered
+                                isAnswered = readyState.isAnswered,
+                                onShareClick = {
+                                    // no op
+                                }
                             )
                         )
                         cardView
@@ -112,8 +116,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     modifier = Modifier.padding(top = 24.dp),
                     text = getString(R.string.blogging_prompts_onboarding_body_bottom),
                     fontFamily = FontFamily.Serif,
-                    fontSize = 16.sp,
-                    color = colorResource(R.color.black)
+                    style = MaterialTheme.typography.subtitle1
                 )
             }
         }

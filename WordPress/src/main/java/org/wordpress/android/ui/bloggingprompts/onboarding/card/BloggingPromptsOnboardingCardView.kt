@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import org.wordpress.android.R
-import org.wordpress.android.databinding.MySiteBloggingPromptCardBinding
+import org.wordpress.android.databinding.MySiteBloggingPrompCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.getText
@@ -17,7 +17,7 @@ class BloggingPromptsOnboardingCardView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private var binding: MySiteBloggingPromptCardBinding = MySiteBloggingPromptCardBinding.inflate(
+    private var binding: MySiteBloggingPrompCardBinding = MySiteBloggingPrompCardBinding.inflate(
             LayoutInflater.from(context)
     )
 
