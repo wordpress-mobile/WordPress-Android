@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import com.wordpress.stories.compose.frame.FrameSaveNotifier;
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
