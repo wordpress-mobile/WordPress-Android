@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-22 13:39:29+0000
+Translation-Revision-Date: 2022-03-26 05:08:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
@@ -1495,12 +1495,12 @@ Language: es
     <string name="app_rating_rate_now">Valorar ahora</string>
     <string name="app_rating_rate_later">Más tarde</string>
     <string name="app_rating_message">¡Qué gusto verte de nuevo! Si estás trabajando con la aplicación nos encantaría que nos puntuases en la Google Play Store.</string>
-    <string name="app_rating_title">¿Estás disfrutando de WordPress?</string>
     <string name="stats_site_not_loaded_yet">El sitio no se ha cargado todavía</string>
     <string name="editor_post_converted_back_to_draft">Entrada devuelta a borrador</string>
     <string name="stats_more_posts">Más entradas</string>
     <string name="stats_insights_posting_activity">Actividad de publicación</string>
     <string name="stats_fewer_posts">Menos entradas</string>
+    <string name="app_rating_title">¿Disfrutas de WordPress?</string>
     <string name="new_site_creation_preview_back_pressed_warning">Puedes perder lo que llevas hecho. ¿Estás seguro de que quieres salir?</string>
     <string name="plans_loading_error_with_cache_button">Ver los planes</string>
     <string name="plans_loading_error_with_cache_subtitle">Se requiere una conexión a Internet para ver los planes, así que los detalles podrían estar desactualizados.</string>
@@ -2412,7 +2412,7 @@ Language: es
     <string name="retry">Reintentar</string>
     <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con tu sitio. Ponte en contacto con tu proveedor para solucionar este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Tu alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con tu sitio. Ponte en contacto con tu alojamiento para solucionar este problema.</string>
-    <string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
+    <string name="reader_hint_search_followed_sites">Buscar en los sitios seguidos</string>
     <string name="pending_draft_one_generic">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
     <string name="pending_draft_one_month">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
     <string name="pending_draft_one_week_2">«%1$s» se ha guardado como borrador. ¡Acuérdate de publicarla!</string>
@@ -2503,12 +2503,12 @@ Language: es
     <string name="preview_screen_links_disabled">Los enlaces están desactivados en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="user_remove_confirmation_message">Si eliminas %1$s, ese usuario ya no será capaz de acceder a este sitio, pero cualquier contenido que fuera creado por %1$s permanecerá en el sitio.\n\n¿Aún te gustaría eliminar este usuario?</string>
-    <string name="person_removed">\@%1$s eliminado correctamente.</string>
+    <string name="person_removed">%1$s eliminado correctamente</string>
     <string name="person_remove_confirmation_title">Eliminar %1$s</string>
     <string name="reader_empty_posts_in_custom_list">Los sitios de esta lista no han publicado nada últimamente.</string>
     <string name="people">Gente</string>
     <string name="role">Perfil</string>
-    <string name="error_remove_user">No se pudo eliminar el usuario</string>
+    <string name="error_remove_user">No se ha podido eliminar el usuario</string>
     <string name="error_update_role">No se ha podido actualizar el rol del usuario</string>
     <string name="error_fetch_viewers_list">No se pudieron recuperar los espectadores del sitio</string>
     <string name="error_updating_gravatar">Error al subir tu Gravatar</string>
@@ -2538,7 +2538,7 @@ Language: es
     <string name="error_deleting_site_summary">Hubo un error al eliminar tu sitio. Por favor, contacta con el soporte para más asistencia.</string>
     <string name="error_deleting_site">Error borrando sitio</string>
     <string name="site_settings_export_content_title">Exportar contenido</string>
-    <string name="confirm_delete_site_prompt">Por favor, escribe: %1$s en el campo de abajo para confirmar. Tu sitio desaparecerá para siempre.</string>
+    <string name="confirm_delete_site_prompt">Por favor, escribe %1$s en el siguiente campo para confirmar. Entonces, tu sitio desaparecerá para siempre.</string>
     <string name="confirm_delete_site">Confirmar borrado del sitio</string>
     <string name="contact_support">Contactar con el soporte</string>
     <string name="start_over_text">Si quieres un sitio, pero no quieres ninguna de las entradas y las páginas que tiene ahora, nuestro equipo de soporte puede borrar sus mensajes, páginas, archivos multimedia y tus comentarios.\n\nEsto mantendrá su sitio y la URL activos, pero tendrás un nuevo comienzo en la creación de contenidos. Sólo tienes que contactar con nosotros para limpiar tu contenido actual..</string>
@@ -2552,7 +2552,7 @@ Language: es
     <string name="comments_empty_list_filtered_pending">No hay comentarios pendientes</string>
     <string name="comments_empty_list_filtered_approved">No hay comentarios aprobados</string>
     <string name="button_skip">Saltar</string>
-    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
+    <string name="xmlrpc_missing_method_error">No se ha podido conectar. Los métodos XML-RPC necesarios faltan en el servidor.</string>
     <string name="post_format_status">Estado</string>
     <string name="alignment_center">Centrado</string>
     <string name="post_format_video">Vídeo</string>
@@ -2835,10 +2835,10 @@ Language: es
     <string name="media_fetching">Recuperando medios…</string>
     <string name="reader_empty_posts_request_failed">No se pudieron recuperar las entradas</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
-    <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
     <string name="post_uploading">Subiendo entrada</string>
     <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="error_copy_to_clipboard">Ha ocurrido un error al copiar el texto en el portapapeles</string>
+    <string name="logs_copied_to_clipboard">Los registros de la aplicación han sido copiados al portapapeles</string>
     <string name="themes_fetching">Obteniendo temas…</string>
     <string name="stats_followers_months">%1$d meses</string>
     <string name="stats_followers_a_year">Un año</string>
@@ -2915,15 +2915,15 @@ Language: es
     <string name="error_load_comment">No se pudo cargar el comentario</string>
     <string name="error_downloading_image">Error al descargar la imagen</string>
     <string name="sdcard_message">Se necesita una tarjeta SD montada para subir medios</string>
-    <string name="no_network_message">No hay ninguna conexión de red disponible</string>
     <string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
-    <string name="blog_not_found">Ha ocurrido un error mientras se accedía a este blog</string>
     <string name="error_refresh_comments">No se pudieron actualizar los comentarios</string>
     <string name="error_deleting_post">Ocurrió un error al eliminar la entrada</string>
     <string name="adding_cat_success">Categoría añadida correctamente</string>
     <string name="email_invalid">Introduce una dirección de correo electrónico válida</string>
     <string name="username_or_password_incorrect">El nombre de usuario o contraseña que has introducido son incorrectos</string>
     <string name="notifications_empty_list">Sin avisos</string>
+    <string name="no_network_message">No hay ninguna red disponible</string>
+    <string name="blog_not_found">Ha ocurrido un error al acceder a este blog</string>
     <string name="connection_error">Error de conexión</string>
     <string name="cancel_edit">Cancelar edición</string>
     <string name="comment_status_approved">Aprobado</string>
@@ -3037,7 +3037,7 @@ Language: es
     <string name="httpuser">Usuario HTTP</string>
     <string name="httppassword">Contraseña HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>
-    <string name="incorrect_credentials">Nombre de usuario o contraseña incorrecta</string>
+    <string name="incorrect_credentials">Nombre de usuario o contraseña incorrectos.</string>
     <string name="username">Nombre de usuario</string>
     <string name="password">Contraseña</string>
     <string name="log_in">Acceder</string>
