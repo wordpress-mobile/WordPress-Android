@@ -136,7 +136,7 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -176,15 +176,16 @@ class MySiteViewModel @Inject constructor(
             listOf(MySiteTabType.ALL)
         }
 
-    private val defaultABExperimentTab = if (isMySiteTabsEnabled) {
-        if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
-            MySiteTabType.DASHBOARD
+    private val defaultABExperimentTab: MySiteTabType
+        get() = if (isMySiteTabsEnabled) {
+            if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
+                MySiteTabType.DASHBOARD
+            } else {
+                MySiteTabType.SITE_MENU
+            }
         } else {
-            MySiteTabType.SITE_MENU
+            MySiteTabType.ALL
         }
-    } else {
-        MySiteTabType.ALL
-    }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),

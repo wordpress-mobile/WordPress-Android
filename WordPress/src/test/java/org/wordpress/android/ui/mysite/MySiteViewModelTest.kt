@@ -79,6 +79,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
+import org.wordpress.android.ui.mysite.MySiteViewModel.TabNavigation
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -170,6 +171,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -328,6 +330,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         dynamicCardMenu = mutableListOf()
         showSwipeRefreshLayout = mutableListOf()
         shareRequests = mutableListOf()
+        tabNavigation = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -366,6 +369,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onShare.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 shareRequests.add(it)
+            }
+        }
+        viewModel.selectTab.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                tabNavigation.add(it)
             }
         }
         site = SiteModel()
@@ -441,10 +449,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* SELECTED SITE - TABS ORDERING */
 
     @Test
-    fun `given tabs not enabled, when site is selected, then default tab is all`() {
+    fun `given tabs not enabled, when site is selected, then default tab is not set`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
 
-        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.ALL)
+        assertThat(tabNavigation).isEmpty()
     }
 
     @Test
@@ -455,7 +463,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 defaultTabExperimentVariant = MySiteTabExperimentVariant.DASHBOARD
         )
 
-        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.DASHBOARD)
+        assertThat(tabNavigation)
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD), false))
     }
 
     @Test
@@ -466,7 +475,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 defaultTabExperimentVariant = MySiteTabExperimentVariant.SITE_MENU
         )
 
-        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.SITE_MENU)
+        assertThat(tabNavigation)
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     @Test
@@ -477,7 +487,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 defaultTabExperimentVariant = MySiteTabExperimentVariant.NONEXISTENT
         )
 
-        assertThat(viewModel.orderedTabTypes.first()).isEqualTo(MySiteTabType.SITE_MENU)
+        assertThat(tabNavigation)
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* AVATAR */
