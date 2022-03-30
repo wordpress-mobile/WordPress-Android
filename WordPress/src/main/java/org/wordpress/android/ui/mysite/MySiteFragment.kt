@@ -194,8 +194,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        if (state.siteInfoHeaderState.hasUpdates)
+        if (state.siteInfoHeaderState.hasUpdates) {
             siteInfo.loadMySiteDetails(state.siteInfoHeaderState.siteInfoHeader)
+        }
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
