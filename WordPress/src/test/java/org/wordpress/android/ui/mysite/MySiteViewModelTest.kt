@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
@@ -43,6 +44,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
@@ -90,12 +92,14 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -112,6 +116,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
@@ -153,6 +158,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -161,6 +167,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dynamicCardMenu: MutableList<DynamicCardMenuModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
+    private lateinit var shareRequests: MutableList<String>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -188,6 +195,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
+    private val quickStartSiteMenuStep = MutableLiveData<QuickStartSiteMenuStep>()
     private val dynamicCards = MutableLiveData(
             DynamicCardsUpdate(
                     cards = listOf(
@@ -204,6 +212,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onTodaysStatsCardClick: (() -> Unit) = {}
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
+    private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -272,7 +281,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
+        whenever(quickStartRepository.onQuickStartSiteMenuStep).thenReturn(quickStartSiteMenuStep)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -303,7 +314,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteItemsTracker,
                 domainRegistrationCardShownTracker,
                 buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig
+                mySiteDashboardTabsFeatureConfig,
+                bloggingPromptsFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -312,6 +324,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         navigationActions = mutableListOf()
         dynamicCardMenu = mutableListOf()
         showSwipeRefreshLayout = mutableListOf()
+        shareRequests = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -345,6 +358,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onShowSwipeRefreshLayout.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 showSwipeRefreshLayout.add(it)
+            }
+        }
+        viewModel.onShare.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                shareRequests.add(it)
             }
         }
         site = SiteModel()
@@ -1054,6 +1072,39 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
+    /* QUICK START SITE MENU STEP */
+
+    @Test
+    fun `when quick start menu step is triggered, then site menu tab has quick start focus point`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, QuickStartTask.VIEW_SITE)
+
+        assertThat((uiModels.last().state as SiteSelected).findSiteMenuTabUiState().showQuickStartFocusPoint).isTrue
+    }
+
+    @Test
+    fun `given site menu tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        val pendingTask = QuickStartTask.VIEW_SITE
+        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+
+        verify(quickStartRepository).clearSiteMenuStep()
+    }
+
+    @Test
+    fun `given site menu tab has qs focus point, when tab is changed, then site menu pending task is active`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        val pendingTask = QuickStartTask.VIEW_SITE
+        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+
+        verify(quickStartRepository).setActiveTask(pendingTask)
+    }
+
     /* DYNAMIC QUICK START CARD */
 
     @Test
@@ -1199,6 +1250,41 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
 
         verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
+    }
+
+    /* DASHBOARD BLOGGING PROMPT CARD */
+
+    @Test
+    fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+            it.bloggingPromptCardBuilderParams.bloggingPrompt != null
+        })
+    }
+
+    @Test
+    fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+
+        initSelectedSite()
+
+        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+            it.bloggingPromptCardBuilderParams.bloggingPrompt == null
+        })
+    }
+
+    @Test
+    fun `given blogging prompt card, when share button is clicked, share action is called`() = test {
+        initSelectedSite()
+
+        val expectedShareMessage = "Test prompt"
+
+        requireNotNull(onBloggingPromptShareClicked).invoke(expectedShareMessage)
+
+        assertThat(shareRequests.last()).isEqualTo(expectedShareMessage)
     }
 
     /* DASHBOARD ERROR SNACKBAR */
@@ -1780,6 +1866,54 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
+    @Test
+    fun `given selected site with domain credit, when dashboard cards + items, then domain reg card does not exist`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
+        isDomainCreditAvailable.value = DomainCreditAvailable(true)
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given selected site with domain credit, when site menu cards and items, then domain reg card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        initSelectedSite()
+        isDomainCreditAvailable.value = DomainCreditAvailable(true)
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given site menu tab is selected, when tab is changed, then site menu events are tracked`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(
+                Stat.MY_SITE_TAB_TAPPED,
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.label)
+        )
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_SITE_MENU_SHOWN)
+    }
+
+    @Test
+    fun `given dashboard tab is selected, when tab is changed, then dashboard events are tracked`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
+
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(
+                Stat.MY_SITE_TAB_TAPPED,
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.label)
+        )
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -1789,6 +1923,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findSiteInfoCard() =
             getLastItems().find { it is SiteInfoCard } as SiteInfoCard?
+
+    private fun SiteSelected.findSiteMenuTabUiState() =
+            tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.SITE_MENU }
 
     private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
 
@@ -1998,6 +2135,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     } else {
                         add(initPostCard(mockInvocation))
                         add(initTodaysStatsCard(mockInvocation))
+                        add(initBloggingPromptCard(mockInvocation))
                     }
                 }
         )
@@ -2048,6 +2186,18 @@ class MySiteViewModelTest : BaseUnitTest() {
                         label = UiStringRes(0),
                         onClick = onPostCardFooterLinkClick as ((postCardType: PostCardType) -> Unit)
                 )
+        )
+    }
+
+    private fun initBloggingPromptCard(mockInvocation: InvocationOnMock): BloggingPromptCardWithData {
+        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
+        return BloggingPromptCardWithData(
+                prompt = UiStringText("Test prompt"),
+                answeredUsers = emptyList(),
+                numberOfAnswers = 5,
+                isAnswered = false,
+                onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit)
         )
     }
 
