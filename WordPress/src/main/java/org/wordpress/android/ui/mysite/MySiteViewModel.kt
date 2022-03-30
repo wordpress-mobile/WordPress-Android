@@ -1011,7 +1011,8 @@ class MySiteViewModel @Inject constructor(
             tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
 
     private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
-        return (uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader != nextSiteInfoHeaderCard
+        return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
+                nextSiteInfoHeaderCard)?: false)
     }
 
     data class UiModel(

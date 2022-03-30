@@ -1871,6 +1871,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
     }
 
+    @Test
+    fun `given selected site, when site menu cards and items, then site info header has updates`() {
+        initSelectedSite()
+
+        val siteInfoHeaderCard = (uiModels.last().state as SiteSelected).siteInfoHeaderState.hasUpdates
+
+        assertThat(siteInfoHeaderCard).isTrue
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
