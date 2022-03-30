@@ -67,9 +67,9 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
@@ -381,7 +381,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         super.onPause()
         activity?.let {
             if (!it.isChangingConfigurations) {
-                viewModel.clearActiveQuickStartTask()
                 viewModel.dismissQuickStartNotice()
             }
         }
