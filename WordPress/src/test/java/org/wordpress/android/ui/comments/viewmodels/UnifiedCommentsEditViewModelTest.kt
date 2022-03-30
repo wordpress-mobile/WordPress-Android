@@ -222,75 +222,63 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should ENABLE edit name for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditName).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit name for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditName).isTrue
-    }
-
-    @Test
-    fun `Should DISABLE edit name for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
+    fun `Should DISABLE edit name for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
         assertThat(uiState.first().inputSettings.enableEditName).isFalse
     }
 
     @Test
-    fun `Should ENABLE edit URL for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
+    fun `Should ENABLE edit name for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
+
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditName).isTrue
     }
 
     @Test
-    fun `Should ENABLE edit URL for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
+    fun `Should DISABLE edit URL for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditUrl).isFalse
     }
 
     @Test
-    fun `Should DISABLE edit URL for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
-        assertThat(uiState.first().inputSettings.enableEditUrl).isFalse
+    fun `Should ENABLE edit URL for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
+
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditUrl).isTrue
     }
 
     @Test
-    fun `Should ENABLE edit email for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditEmail).isTrue
+    fun `Should DISABLE edit email for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditEmail).isFalse
     }
 
     @Test
-    fun `Should ENABLE edit email for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditEmail).isTrue
+    fun `Should ENABLE edit email for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
+
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditEmail).isTrue
     }
 
     @Test
-    fun `Should DISABLE edit email for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
-        assertThat(uiState.first().inputSettings.enableEditEmail).isFalse
+    fun `Should ENABLE edit comment content for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditComment).isTrue
     }
 
     @Test
-    fun `Should ENABLE edit comment content for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
-    }
+    fun `Should ENABLE edit comment content for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
 
-    @Test
-    fun `Should ENABLE edit comment content for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit comment content for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
-        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditComment).isTrue
     }
 
     @Test
@@ -447,7 +435,29 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 id = 1000,
                 remoteCommentId = 0,
                 remotePostId = 0,
-                remoteParentCommentId = 0,
+                authorId = 4,
+                localSiteId = LOCAL_SITE_ID,
+                remoteSiteId = REMOTE_SITE_ID,
+                authorUrl = "authorUrl",
+                authorName = "authorName",
+                authorEmail = "authorEmail",
+                authorProfileImageUrl = null,
+                postTitle = null,
+                status = null,
+                datePublished = null,
+                publishedTimestamp = 0,
+                content = "content",
+                url = null,
+                hasParent = false,
+                parentId = 0,
+                iLike = false
+        )
+
+        private val UNREGISTERED_COMMENT_ENTITY = CommentEntity(
+                id = 1000,
+                remoteCommentId = 0,
+                remotePostId = 0,
+                authorId = 0,
                 localSiteId = LOCAL_SITE_ID,
                 remoteSiteId = REMOTE_SITE_ID,
                 authorUrl = "authorUrl",

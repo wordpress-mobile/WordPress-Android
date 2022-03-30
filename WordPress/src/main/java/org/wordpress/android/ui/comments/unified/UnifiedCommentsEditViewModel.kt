@@ -159,7 +159,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 originalComment = CommentEssentials(),
                 editedComment = CommentEssentials(),
                 editErrorStrings = EditErrorStrings(),
-                inputSettings = mapInputSettings()
+                inputSettings = mapInputSettings(CommentEssentials())
         )
 
         withContext(mainDispatcher) {
@@ -216,7 +216,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                                 originalComment = commentEssentials,
                                 editedComment = commentEssentials,
                                 editErrorStrings = EditErrorStrings(),
-                                inputSettings = mapInputSettings()
+                                inputSettings = mapInputSettings(commentEssentials)
                         )
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
@@ -237,7 +237,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                     userName = commentEntity.authorName ?: "",
                     commentText = commentEntity.content ?: "",
                     userUrl = commentEntity.authorUrl ?: "",
-                    userEmail = commentEntity.authorEmail ?: ""
+                    userEmail = commentEntity.authorEmail ?: "",
+                    isFromRegisteredUsed = commentEntity.authorId > 0
             )
         } else {
             CommentEssentials()
@@ -364,10 +365,10 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
-    private fun mapInputSettings() = InputSettings(
-            enableEditName = commentIdentifier !is NotificationCommentIdentifier,
-            enableEditUrl = commentIdentifier !is NotificationCommentIdentifier,
-            enableEditEmail = commentIdentifier !is NotificationCommentIdentifier,
+    private fun mapInputSettings(commentEssentials: CommentEssentials) = InputSettings(
+            enableEditName = !commentEssentials.isFromRegisteredUsed,
+            enableEditUrl = !commentEssentials.isFromRegisteredUsed,
+            enableEditEmail = !commentEssentials.isFromRegisteredUsed,
             enableEditComment = true
     )
 

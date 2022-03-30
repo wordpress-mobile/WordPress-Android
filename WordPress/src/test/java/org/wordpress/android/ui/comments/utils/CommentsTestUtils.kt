@@ -25,7 +25,7 @@ fun generateMockComments(numComments: Int): List<CommentEntity> {
                         id = i.toLong(),
                         remoteCommentId = i.toLong(),
                         remotePostId = i.toLong() * 2,
-                        remoteParentCommentId = i.toLong() * 2,
+                        authorId = i.toLong() * 3,
                         localSiteId = 5,
                         remoteSiteId = 95,
                         authorUrl = "http://author$i.org",
