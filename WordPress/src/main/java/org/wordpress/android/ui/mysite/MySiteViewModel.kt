@@ -138,6 +138,7 @@ class MySiteViewModel @Inject constructor(
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
+    private var isDefaultTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -241,6 +242,7 @@ class MySiteViewModel @Inject constructor(
                         scanAvailable,
                         cardsUpdate
                 )
+                selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
                 state
             } else {
@@ -872,6 +874,11 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    fun onCreateSiteResult() {
+        isDefaultTabSet = false
+        selectDefaultTabIfNeeded()
+    }
+
     fun performFirstStepAfterSiteCreation(siteLocalId: Int) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor()
@@ -978,6 +985,15 @@ class MySiteViewModel @Inject constructor(
     fun setActionableEmptyViewVisible(isVisible: Boolean, setVisible: () -> Unit) {
         if (!isVisible) analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_DISPLAYED)
         setVisible()
+    }
+
+    private fun selectDefaultTabIfNeeded() {
+        if (!isMySiteTabsEnabled || isDefaultTabSet) return
+        val index = orderedTabTypes.indexOf(defaultTab)
+        if (index != -1) {
+            _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
+            isDefaultTabSet = true
+        }
     }
 
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
