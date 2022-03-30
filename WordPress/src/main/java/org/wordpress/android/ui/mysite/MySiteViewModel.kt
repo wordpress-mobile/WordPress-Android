@@ -169,14 +169,20 @@ class MySiteViewModel @Inject constructor(
 
     val orderedTabTypes: List<MySiteTabType>
         get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
-                listOf(MySiteTabType.DASHBOARD, MySiteTabType.SITE_MENU)
-            } else {
-                listOf(MySiteTabType.SITE_MENU, MySiteTabType.DASHBOARD)
-            }
+            listOf(MySiteTabType.DASHBOARD, MySiteTabType.SITE_MENU)
         } else {
             listOf(MySiteTabType.ALL)
         }
+
+    private val defaultTab = if (isMySiteTabsEnabled) {
+        if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
+            MySiteTabType.DASHBOARD
+        } else {
+            MySiteTabType.SITE_MENU
+        }
+    } else {
+        MySiteTabType.ALL
+    }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
             _activeTaskPosition.distinctUntilChanged(),
@@ -424,10 +430,10 @@ class MySiteViewModel @Inject constructor(
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
-            if (orderedTabTypes.first() == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
+            if (defaultTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (orderedTabTypes.first() == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
+            if (defaultTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
             add(Type.DOMAIN_REGISTRATION_CARD)
         }
         MySiteTabType.ALL -> emptyList()
