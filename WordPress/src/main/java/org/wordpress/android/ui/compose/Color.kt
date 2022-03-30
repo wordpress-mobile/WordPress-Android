@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package org.wordpress.android.ui.compose
 
 import androidx.compose.ui.graphics.Color
