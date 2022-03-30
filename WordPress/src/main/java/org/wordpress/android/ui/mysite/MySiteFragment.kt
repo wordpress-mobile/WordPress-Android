@@ -138,6 +138,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
         })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
+        viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
+            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
+        }
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =

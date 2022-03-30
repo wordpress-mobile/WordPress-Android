@@ -147,6 +147,7 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
     private val _onShare = MutableLiveData<Event<String>>()
+    private val _selectTab = MutableLiveData<Event<TabNavigation>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -204,6 +205,7 @@ class MySiteViewModel @Inject constructor(
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
     val onShare = _onShare
+    val selectTab: LiveData<Event<TabNavigation>> = _selectTab
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -1045,6 +1047,8 @@ class MySiteViewModel @Inject constructor(
             }
         }
     }
+
+    data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
