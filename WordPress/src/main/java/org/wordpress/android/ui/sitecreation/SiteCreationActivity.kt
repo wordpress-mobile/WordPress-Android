@@ -37,6 +37,7 @@ import org.wordpress.android.ui.sitecreation.verticals.IntentsScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
@@ -127,6 +128,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onIntentSelected(intent: String) {
         mainViewModel.onSiteIntentSelected(intent)
+        ActivityUtils.hideKeyboard(this)
     }
 
     override fun onDomainSelected(domain: String) {

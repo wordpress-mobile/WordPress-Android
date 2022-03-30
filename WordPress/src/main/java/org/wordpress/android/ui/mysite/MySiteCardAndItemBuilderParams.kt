@@ -79,6 +79,7 @@ sealed class MySiteCardAndItemBuilderParams {
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(
-        val bloggingPrompt: BloggingPrompt?
+        val bloggingPrompt: BloggingPrompt?,
+        val onShareClick: (message: String) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 }
