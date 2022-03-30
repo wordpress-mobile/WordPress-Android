@@ -77,6 +77,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabil
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
+import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -170,6 +171,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
@@ -187,6 +189,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
     private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
     private val selectedSite = MediatorLiveData<SelectedSite>()
+
 
     private val jetpackCapabilities = MutableLiveData(
             JetpackCapabilities(
@@ -328,6 +331,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         dynamicCardMenu = mutableListOf()
         showSwipeRefreshLayout = mutableListOf()
         shareRequests = mutableListOf()
+        trackWithTabSource = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -368,6 +372,13 @@ class MySiteViewModelTest : BaseUnitTest() {
                 shareRequests.add(it)
             }
         }
+
+        viewModel.onTrackWithTabSource.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                trackWithTabSource.add(it)
+            }
+        }
+
         site = SiteModel()
         site.id = siteLocalId
         site.url = siteUrl
@@ -1681,15 +1692,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given refresh, when invoked as PTR, then pull-to-refresh request is tracked`() {
-        initSelectedSite()
-
-        viewModel.refresh(isPullToRefresh = true)
-
-        verify(analyticsTrackerWrapper).track(Stat.MY_SITE_PULL_TO_REFRESH)
-    }
-
-    @Test
     fun `given refresh, when not invoked as PTR, then pull-to-refresh request is not tracked`() {
         initSelectedSite()
 
@@ -1915,6 +1917,110 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.label)
         )
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
+    }
+
+    /* TRACK WITH TAB SOURCE */
+    @Test
+    fun `given tabs are enabled, when pull to refresh invoked, then track with tab source is requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        viewModel.refresh(true)
+
+        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.MY_SITE_PULL_TO_REFRESH)
+    }
+
+    @Test
+    fun `given tabs are disabled, when pull to refresh invoked, then track with tab source is not requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+
+        viewModel.refresh(true)
+
+        assertThat(trackWithTabSource).isEmpty()
+    }
+
+    @Test
+    fun `given tabs are disabled, when pull to refresh invoked, then pull-to-refresh is tracked`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+
+        viewModel.refresh(true)
+
+        assertThat(analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH))
+    }
+
+    @Test
+    fun `given tabs are enabled, when quick link stats tapped, then track with tab source is requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        requireNotNull(quickActionsStatsClickAction).invoke()
+
+        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_STATS_TAPPED)
+    }
+
+    @Test
+    fun `given tabs are enabled, when quick link pages tapped, then track with tab source is requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        requireNotNull(quickActionsPagesClickAction).invoke()
+
+        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_PAGES_TAPPED)
+    }
+
+    @Test
+    fun `given tabs are enabled, when quick link posts tapped, then track with tab source is requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        requireNotNull(quickActionsPostsClickAction).invoke()
+
+        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_POSTS_TAPPED)
+    }
+
+    @Test
+    fun `given tabs are enabled, when quick link media tapped, then track with tab source is requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        requireNotNull(quickActionsMediaClickAction).invoke()
+
+        assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_MEDIA_TAPPED)
+    }
+
+    @Test
+    fun `given tabs are disabled, when quick link stats tapped, then track with tab source is not requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+
+        requireNotNull(quickActionsStatsClickAction).invoke()
+
+        assertThat(trackWithTabSource).isEmpty()
+        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_STATS_TAPPED))
+    }
+
+    @Test
+    fun `given tabs are disabled, when quick link pages tapped, then track with tab source is not requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+
+        requireNotNull(quickActionsPagesClickAction).invoke()
+
+        assertThat(trackWithTabSource).isEmpty()
+        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_PAGES_TAPPED))
+    }
+
+    @Test
+    fun `given tabs are disabled, when quick link posts tapped, then track with tab source is not requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+
+        requireNotNull(quickActionsPostsClickAction).invoke()
+
+        assertThat(trackWithTabSource).isEmpty()
+        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_POSTS_TAPPED))
+    }
+
+    @Test
+    fun `given tabs are disabled, when quick link media tapped, then track with tab source is not requested`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+
+        requireNotNull(quickActionsMediaClickAction).invoke()
+
+        assertThat(trackWithTabSource).isEmpty()
+        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_MEDIA_TAPPED))
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
