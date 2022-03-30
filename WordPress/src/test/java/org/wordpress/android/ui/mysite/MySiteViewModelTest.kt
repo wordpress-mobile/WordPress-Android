@@ -1888,6 +1888,32 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(items.filterIsInstance(DomainRegistrationCard::class.java)).isNotEmpty
     }
 
+    @Test
+    fun `given site menu tab is selected, when tab is changed, then site menu events are tracked`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(
+                Stat.MY_SITE_TAB_TAPPED,
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.label)
+        )
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_SITE_MENU_SHOWN)
+    }
+
+    @Test
+    fun `given dashboard tab is selected, when tab is changed, then dashboard events are tracked`() {
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
+
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(
+                Stat.MY_SITE_TAB_TAPPED,
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.label)
+        )
+        verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
