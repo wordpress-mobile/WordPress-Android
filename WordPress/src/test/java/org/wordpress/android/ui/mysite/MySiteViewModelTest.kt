@@ -446,7 +446,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(domainRegistrationCardShownTracker, atLeastOnce()).resetShown()
     }
 
-    /* SELECTED SITE - TABS ORDERING */
+    /* SELECTED SITE - DEFAULT TAB */
 
     @Test
     fun `given tabs not enabled, when site is selected, then default tab is not set`() {
@@ -489,6 +489,25 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(tabNavigation)
                 .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
+    }
+
+    /* CREATE SITE - DEFAULT TAB */
+
+    @Test
+    fun `given tabs enabled, when site is created, then default tab is set`() {
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                defaultTabExperimentVariant = MySiteTabExperimentVariant.SITE_MENU
+        )
+
+        viewModel.onCreateSiteResult()
+
+        assertThat(tabNavigation).size().isEqualTo(2)
+        /* First time default tab is set when My Site screen is shown and site is selected.
+           When site is created then again it sets the default tab. */
+        assertThat(tabNavigation.last())
+                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* AVATAR */
