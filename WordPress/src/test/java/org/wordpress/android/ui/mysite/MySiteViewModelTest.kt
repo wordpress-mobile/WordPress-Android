@@ -55,12 +55,12 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
@@ -92,6 +92,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -101,6 +102,8 @@ import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabExperimentVariant
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType.DASHBOARD
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType.SITE_MENU
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -146,6 +149,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
+    @Mock lateinit var siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
     @Mock lateinit var homePageDataLoader: HomePageDataLoader
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
     @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
@@ -181,7 +185,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val postId = 100
     private val localHomepageId = 1
     private lateinit var site: SiteModel
-    private lateinit var siteInfoCard: SiteInfoCard
+    private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onSiteSelected = MutableLiveData<Int>()
@@ -305,6 +309,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartCardBuilder,
+                siteInfoHeaderCardBuilder,
                 homePageDataLoader,
                 quickStartDynamicCardsFeatureConfig,
                 quickStartUtilsWrapper,
@@ -429,7 +434,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
-        assertThat(getLastItems().first()).isInstanceOf(SiteInfoCard::class.java)
+        assertThat(getSiteInfoHeaderCard()).isInstanceOf(SiteInfoHeaderCard::class.java)
     }
 
     @Test
@@ -464,7 +469,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(DASHBOARD), false))
     }
 
     @Test
@@ -476,7 +481,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
     }
 
     @Test
@@ -488,7 +493,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
     }
 
     /* CREATE SITE - DEFAULT TAB */
@@ -507,7 +512,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         /* First time default tab is set when My Site screen is shown and site is selected.
            When site is created then again it sets the default tab. */
         assertThat(tabNavigation.last())
-                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
+                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
     }
 
     /* AVATAR */
@@ -654,7 +659,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `site info card title click shows snackbar message when network not available`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -667,7 +672,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityManageOptions = false
         site.origin = SiteModel.ORIGIN_WPCOM_REST
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -682,7 +687,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityManageOptions = true
         site.origin = SiteModel.ORIGIN_XMLRPC
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -696,7 +701,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.origin = SiteModel.ORIGIN_WPCOM_REST
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.TITLE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.TITLE_CLICK)
 
         assertThat(snackbars).isEmpty()
         assertThat(textInputDialogModels.last()).isEqualTo(
@@ -717,7 +722,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityUploadFiles = true
         site.iconUrl = siteIcon
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.ICON_CLICK)
 
         assertThat(dialogModels.last()).isEqualTo(ChangeSiteIconDialogModel)
     }
@@ -728,7 +733,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityUploadFiles = true
         site.iconUrl = null
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.ICON_CLICK)
 
         assertThat(dialogModels.last()).isEqualTo(AddSiteIconDialogModel)
     }
@@ -740,7 +745,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 site.hasCapabilityUploadFiles = false
                 site.setIsWPCom(false)
 
-                invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
+                invokeSiteInfoCardAction(SiteInfoHeaderCardAction.ICON_CLICK)
 
                 assertThat(dialogModels).isEmpty()
                 assertThat(snackbars).containsOnly(
@@ -755,7 +760,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsWPCom(true)
         site.iconUrl = siteIcon
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -770,7 +775,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsWPCom(true)
         site.iconUrl = null
 
-        invokeSiteInfoCardAction(SiteInfoCardAction.ICON_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
         assertThat(snackbars).containsOnly(
@@ -801,14 +806,14 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `site info card url click opens site`() = test {
-        invokeSiteInfoCardAction(SiteInfoCardAction.URL_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
     }
 
     @Test
     fun `site info card switch click opens site picker`() = test {
-        invokeSiteInfoCardAction(SiteInfoCardAction.SWITCH_SITE_CLICK)
+        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.SWITCH_SITE_CLICK)
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSitePicker(site))
     }
@@ -1335,7 +1340,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+        verify(cardsBuilder).build(any(), any(), any(), argWhere {
             it.bloggingPromptCardBuilderParams.bloggingPrompt != null
         })
     }
@@ -1346,7 +1351,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        verify(cardsBuilder).build(any(), any(), any(), any(), argWhere {
+        verify(cardsBuilder).build(any(), any(), any(), argWhere {
             it.bloggingPromptCardBuilderParams.bloggingPrompt == null
         })
     }
@@ -1806,7 +1811,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(showStaleMessage = true)
         cardsUpdate.value = cardsUpdate.value?.copy(showStaleMessage = true)
 
-        val siteInfoCardIndex = getLastItems().indexOfFirst { it is SiteInfoCard }
+        val siteInfoCardIndex = getLastItems().indexOfFirst { it is SiteInfoHeaderCard }
         val infoItemIndex = getLastItems().indexOfFirst { it is InfoItem }
 
         assertThat(infoItemIndex).isEqualTo(siteInfoCardIndex + 1)
@@ -1833,6 +1838,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(dynamicCardIndex).isLessThan(dashboardCardsIndex)
     }
 
+    /* STATE LISTS */
     /* STATE LISTS */
     @Test
     fun `given site select exists, then cardAndItem lists are not empty`() {
@@ -2012,9 +2018,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findDomainRegistrationCard() =
             getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
-    private fun findSiteInfoCard() =
-            getLastItems().find { it is SiteInfoCard } as SiteInfoCard?
-
     private fun SiteSelected.findSiteMenuTabUiState() =
             tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.SITE_MENU }
 
@@ -2024,19 +2027,21 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun getSiteMenuTabLastItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
-    private suspend fun invokeSiteInfoCardAction(action: SiteInfoCardAction) {
+    private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeader
+
+    private suspend fun invokeSiteInfoCardAction(action: SiteInfoHeaderCardAction) {
         onSiteChange.value = site
         onSiteSelected.value = siteLocalId
         selectedSite.value = SelectedSite(site)
         while (uiModels.last().state is NoSites) {
             delay(100)
         }
-        val siteInfoCard = findSiteInfoCard()!!
+        val siteInfoCard = getSiteInfoHeaderCard()
         when (action) {
-            SiteInfoCardAction.TITLE_CLICK -> siteInfoCard.onTitleClick!!.click()
-            SiteInfoCardAction.ICON_CLICK -> siteInfoCard.onIconClick.click()
-            SiteInfoCardAction.URL_CLICK -> siteInfoCard.onUrlClick.click()
-            SiteInfoCardAction.SWITCH_SITE_CLICK -> siteInfoCard.onSwitchSiteClick.click()
+            SiteInfoHeaderCardAction.TITLE_CLICK -> siteInfoCard.onTitleClick!!.click()
+            SiteInfoHeaderCardAction.ICON_CLICK -> siteInfoCard.onIconClick.click()
+            SiteInfoHeaderCardAction.URL_CLICK -> siteInfoCard.onUrlClick.click()
+            SiteInfoHeaderCardAction.SWITCH_SITE_CLICK -> siteInfoCard.onSwitchSiteClick.click()
         }
     }
 
@@ -2077,20 +2082,18 @@ class MySiteViewModelTest : BaseUnitTest() {
         selectedSite.value = SelectedSite(site)
     }
 
-    private enum class SiteInfoCardAction {
+    private enum class SiteInfoHeaderCardAction {
         TITLE_CLICK, ICON_CLICK, URL_CLICK, SWITCH_SITE_CLICK
     }
 
     private fun setUpCardsBuilder() {
         doAnswer {
-            siteInfoCard = initSiteInfoCard(it)
             val quickActionsCard = initQuickActionsCard(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
             if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
                 listOf(
-                        siteInfoCard,
                         quickActionsCard,
                         domainRegistrationCard,
                         quickStartCard,
@@ -2098,19 +2101,22 @@ class MySiteViewModelTest : BaseUnitTest() {
                 )
             } else {
                 listOf<MySiteCardAndItem>(
-                        siteInfoCard,
                         quickActionsCard,
                         domainRegistrationCard,
                         quickStartCard
                 )
             }
         }.whenever(cardsBuilder).build(
-                siteInfoCardBuilderParams = any(),
                 quickActionsCardBuilderParams = any(),
                 domainRegistrationCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
                 dashboardCardsBuilderParams = any()
         )
+
+        doAnswer {
+            siteInfoHeader = initSiteInfoCard(it)
+            siteInfoHeader
+        }.whenever(siteInfoHeaderCardBuilder).buildSiteInfoCard(any())
     }
 
     private fun setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled: Boolean) {
@@ -2134,9 +2140,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
     }
 
-    private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
+    private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoHeaderCard {
         val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()).first()
-        return SiteInfoCard(
+        return SiteInfoHeaderCard(
                 title = siteName,
                 url = siteUrl,
                 iconState = IconState.Visible(siteIcon),

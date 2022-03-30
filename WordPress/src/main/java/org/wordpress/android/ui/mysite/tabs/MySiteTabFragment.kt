@@ -182,9 +182,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 is State.NoSites -> loadEmptyView()
             }
         })
-        viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
-            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
-        })
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
             dialogViewModel.showDialog(requireActivity().supportFragmentManager,
                     BasicDialogModel(
@@ -603,5 +600,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onDismiss() {
         viewModel.onQuickStartFullScreenDialogDismiss()
+    }
+
+    fun handleScrollTo(scrollTo: Int) {
+        (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
     }
 }
