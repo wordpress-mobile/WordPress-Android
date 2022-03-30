@@ -8,6 +8,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="@dimen/margin_medium_large"
+    android:maxWidth="@dimen/my_site_content_area"
+    android:id="@+id/site_info_card"
     tools:ignore="RtlSymmetry">
 
     <com.google.android.material.card.MaterialCardView
@@ -75,10 +77,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:minHeight="@dimen/my_site_blavatar_sz"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingTop="@dimen/margin_small"
+        app:layout_constraintBottom_toBottomOf="@+id/blavatar_container"
         app:layout_constraintEnd_toStartOf="@id/switch_site"
         app:layout_constraintStart_toEndOf="@id/blavatar_container"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/blavatar_container" />
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
         android:id="@+id/quick_start_title_focus_point"
@@ -96,14 +99,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_extra_large"
         android:background="@drawable/ripple_oval"
         android:contentDescription="@string/my_site_btn_switch_site"
         android:padding="@dimen/margin_large"
         android:src="@drawable/ic_chevron_down_white_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/site_info_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/site_info_container"
         app:tint="?attr/wpColorOnSurfaceMedium" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
