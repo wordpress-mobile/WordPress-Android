@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -168,16 +169,38 @@ public class UploadSqlUtils {
     }
 
     public static @NonNull List<PostModel> getPostModelsForPostUploadModels(List<PostUploadModel> postUploadModels) {
+        // The maximum value of a host parameter number is SQLITE_MAX_VARIABLE_NUMBER, which defaults to 999 for
+        // SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
+        // @see https://www.sqlite.org/limits.html
         if (postUploadModels.size() > 0) {
-            Set<Integer> postIdSet = new HashSet<>();
-            for (PostUploadModel postUploadModel : postUploadModels) {
-                postIdSet.add(postUploadModel.getId());
+            List<List<PostUploadModel>> batches = getBatches(postUploadModels, 999);
+            List<PostModel> postModelList = new ArrayList<>();
+
+            for (List<PostUploadModel> batch : batches) {
+                Set<Integer> postIdSet = new HashSet<>();
+
+                for (PostUploadModel postUploadModel : batch) {
+                    postIdSet.add(postUploadModel.getId());
+                }
+                postModelList.addAll(
+                        WellSql.select(PostModel.class)
+                               .where()
+                               .isIn(PostModelTable.ID, postIdSet)
+                               .endWhere()
+                               .getAsModel()
+                );
             }
-            return WellSql.select(PostModel.class).where()
-                    .isIn(PostModelTable.ID, postIdSet)
-                    .endWhere().getAsModel();
+            return postModelList;
         }
         return Collections.emptyList();
+    }
+
+    public static <T> List<List<T>> getBatches(List<T> collection, int batchSize) {
+        List<List<T>> batches = new ArrayList<>();
+        for (int i = 0; i < collection.size(); i += batchSize) {
+            batches.add(collection.subList(i, Math.min(i + batchSize, collection.size())));
+        }
+        return batches;
     }
 
     public static int deletePostUploadModelWithLocalId(int localPostId) {

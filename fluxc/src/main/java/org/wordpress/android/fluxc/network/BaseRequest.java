@@ -19,6 +19,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import org.wordpress.android.fluxc.FluxCError;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.AppLog;
@@ -27,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
+
+import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.METHOD_NOT_ALLOWED;
+import static org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest.XmlRpcErrorType.NOT_SET;
 
 public abstract class BaseRequest<T> extends Request<T> {
     public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
@@ -62,6 +67,7 @@ public abstract class BaseRequest<T> extends Request<T> {
         public GenericErrorType type;
         public String message;
         public VolleyError volleyError;
+        public XmlRpcErrorType xmlRpcErrorType = NOT_SET;
 
         public BaseNetworkError(@NonNull BaseNetworkError error) {
             this.message = error.message;
@@ -80,13 +86,31 @@ public abstract class BaseRequest<T> extends Request<T> {
             this.type = error;
             this.volleyError = volleyError;
         }
+        public BaseNetworkError(@NonNull GenericErrorType error,
+                                @NonNull VolleyError volleyError,
+                                @NonNull XmlRpcErrorType xmlRpcErrorType) {
+            this.message = "";
+            this.type = error;
+            this.volleyError = volleyError;
+            this.xmlRpcErrorType = xmlRpcErrorType;
+        }
         public BaseNetworkError(@NonNull VolleyError volleyError) {
             this.type = GenericErrorType.UNKNOWN;
             this.message = "";
             this.volleyError = volleyError;
         }
+        public BaseNetworkError(@NonNull VolleyError volleyError, @NonNull XmlRpcErrorType xmlRpcErrorType) {
+            this.type = GenericErrorType.UNKNOWN;
+            this.message = "";
+            this.volleyError = volleyError;
+            this.xmlRpcErrorType = xmlRpcErrorType;
+        }
         public BaseNetworkError(@NonNull GenericErrorType error) {
             this.type = error;
+        }
+        public BaseNetworkError(@NonNull GenericErrorType error, @NonNull XmlRpcErrorType xmlRpcErrorType) {
+            this.type = error;
+            this.xmlRpcErrorType = xmlRpcErrorType;
         }
         public boolean isGeneric() {
             return type != null;
@@ -309,6 +333,10 @@ public abstract class BaseRequest<T> extends Request<T> {
         switch (volleyError.networkResponse.statusCode) {
             case 404:
                 return new BaseNetworkError(GenericErrorType.NOT_FOUND, volleyError.getMessage(), volleyError);
+            case 405:
+                return this instanceof XMLRPCRequest
+                        ? new BaseNetworkError(volleyError, METHOD_NOT_ALLOWED)
+                        : new BaseNetworkError(volleyError);
             case 451:
                 return new BaseNetworkError(GenericErrorType.CENSORED, volleyError.getMessage(), volleyError);
             case 500:
