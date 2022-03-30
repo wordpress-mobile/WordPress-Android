@@ -20,7 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsHomepageDialogBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 

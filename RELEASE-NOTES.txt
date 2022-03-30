@@ -1,8 +1,15 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.6
+-----
+* [*] My Site: Fixes an issue where a deleted site is displayed until the app restarts [https://github.com/wordpress-mobile/WordPress-Android/pull/16063]
+
 19.5
 -----
 * [*] Notification: Adds Weekly Roundup switch to App info -> Notification menu to disable them for all sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/16118]
+* [*] Block Editor: Add GIF badge for animated GIFs uploaded to Image blocks [https://github.com/WordPress/gutenberg/pull/38996]
+* [*] Block Editor: Small refinement to media upload errors, including centering and tweaking copy. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4597]
+* [*] Block Editor: Fix issue with list's starting index and the order [https://github.com/WordPress/gutenberg/pull/39354]
 
 19.4
 -----

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <string-array name="site_creation_intents_slugs">
+        <item>art</item>
+        <item>automotive</item>
+        <item>beauty</item>
+        <item>books</item>
+        <item>business</item>
+        <item>community_nonprofit</item>
+        <item>education</item>
+        <item>diy</item>
+        <item>fashion</item>
+        <item>finance</item>
+        <item>film_television</item>
+        <item>fitness_exercise</item>
+        <item>food</item>
+        <item>gaming</item>
+        <item>health</item>
+        <item>interior_design</item>
+        <item>lifestyle</item>
+        <item>local_services</item>
+        <item>music</item>
+        <item>news</item>
+        <item>parenting</item>
+        <item>people</item>
+        <item>personal</item>
+        <item>photography</item>
+        <item>politics</item>
+        <item>real_estate</item>
+        <item>sports</item>
+        <item>technology</item>
+        <item>travel</item>
+        <item>writing_poetry</item>
+    </string-array>
+    <string-array name="site_creation_intents_strings">
+        <item>@string/site_creation_intent_art</item>
+        <item>@string/site_creation_intent_automotive</item>
+        <item>@string/site_creation_intent_beauty</item>
+        <item>@string/site_creation_intent_books</item>
+        <item>@string/site_creation_intent_business</item>
+        <item>@string/site_creation_intent_community_nonprofit</item>
+        <item>@string/site_creation_intent_education</item>
+        <item>@string/site_creation_intent_diy</item>
+        <item>@string/site_creation_intent_fashion</item>
+        <item>@string/site_creation_intent_finance</item>
+        <item>@string/site_creation_intent_film_television</item>
+        <item>@string/site_creation_intent_fitness_exercise</item>
+        <item>@string/site_creation_intent_food</item>
+        <item>@string/site_creation_intent_gaming</item>
+        <item>@string/site_creation_intent_health</item>
+        <item>@string/site_creation_intent_interior_design</item>
+        <item>@string/site_creation_intent_lifestyle</item>
+        <item>@string/site_creation_intent_local_services</item>
+        <item>@string/site_creation_intent_music</item>
+        <item>@string/site_creation_intent_news</item>
+        <item>@string/site_creation_intent_parenting</item>
+        <item>@string/site_creation_intent_people</item>
+        <item>@string/site_creation_intent_personal</item>
+        <item>@string/site_creation_intent_photography</item>
+        <item>@string/site_creation_intent_politics</item>
+        <item>@string/site_creation_intent_real_estate</item>
+        <item>@string/site_creation_intent_sports</item>
+        <item>@string/site_creation_intent_technology</item>
+        <item>@string/site_creation_intent_travel</item>
+        <item>@string/site_creation_intent_writing_poetry</item>
+    </string-array>
+    <string-array name="site_creation_intents_emojis">
+        <item>&#127912;</item><!-- 🎨 Art -->
+        <item>&#128663;</item><!-- 🚗 Automotive -->
+        <item>&#128133;</item><!-- 💅 Beauty -->
+        <item>&#128218;</item><!-- 📚 Books -->
+        <item>&#128188;</item><!-- 💼 Business -->
+        <item>&#129309;</item><!-- 🤝 Community & Non-Profit -->
+        <item>&#127979;</item><!-- 🏫 Education -->
+        <item>&#128296;</item><!-- 🔨 DIY -->
+        <item>&#128096;</item><!-- 👠 Fashion -->
+        <item>&#128176;</item><!-- 💰 Finance -->
+        <item>&#127909;</item><!-- 🎥 Film & Television -->
+        <item>&#128170;</item><!-- 💪 Fitness & Exercise -->
+        <item>&#127828;</item><!-- 🍔 Food -->
+        <item>&#127918;</item><!-- 🎮 Gaming -->
+        <item>&#10084;</item><!-- ❤️ Health -->
+        <item>&#128715;</item><!-- 🛋️ Interior Design -->
+        <item>&#9749;</item><!-- ☕ Lifestyle -->
+        <item>&#128205;</item><!-- 📍Local Services -->
+        <item>&#127925;</item><!-- 🎵 Music -->
+        <item>&#128478;</item><!-- 🗞️ News -->
+        <item>&#128118;</item><!-- 👶 Parenting -->
+        <item>&#129489;&#8205;&#129309;&#8205;&#129489;</item><!-- 🧑‍🤝‍🧑 People -->
+        <item>&#9997;&#65039;</item><!-- ✍️ Personal -->
+        <item>&#128247;</item><!-- 📷 Photography -->
+        <item>&#128499;</item><!-- 🗳️ Politics -->
+        <item>&#127968;</item><!-- 🏠 Real Estate -->
+        <item>&#9917;</item><!-- ⚽ Sports -->
+        <item>&#128187;</item><!-- 💻 Technology -->
+        <item>&#9992;</item><!-- ✈️ Travel -->
+        <item>&#128211;</item><!-- 📓 Writing & Poetry -->
+    </string-array>
+    <string-array name="site_creation_intents_defaults">
+        <item>food</item>
+        <item>news</item>
+        <item>lifestyle</item>
+        <item>personal</item>
+        <item>photography</item>
+        <item>travel</item>
+    </string-array>
+</resources>

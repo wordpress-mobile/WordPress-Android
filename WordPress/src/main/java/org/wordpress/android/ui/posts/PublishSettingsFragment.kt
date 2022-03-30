@@ -125,7 +125,7 @@ abstract class PublishSettingsFragment : Fragment() {
                         it,
                         notification.id,
                         notificationIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
+                        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
 
                 val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager

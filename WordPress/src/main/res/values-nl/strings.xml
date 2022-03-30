@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-02 22:26:55+0000
+Translation-Revision-Date: 2022-03-18 11:42:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="login_select_email_client">Welke e-mail app gebruik je?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Er is een probleem opgetreden bij de communicatie met de site. Er is een HTTP foutcode 401 teruggestuurd.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC aanroepen lijken geblokkeerd op deze site (foutcode 401). Als de poging om in te loggen mislukt, tik je op het hulppictogram om de veelgestelde vragen te bekijken.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Kan de WordPress site niet lezen op die URL. Tik op het hulppictogram om de veelgestelde vragen te bekijken.</string>
+    <string name="login_error_xml_rpc_services_disabled">XML-RPC diensten zijn uitgeschakeld op deze site.</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Je zoekopdracht bevat karakters die niet worden ondersteund in WordPress.com domeinen. De volgende tekens zijn toegestaan: A-Z, a-z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controleer je internetverbinding en vernieuw de pagina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ga naar de statistieken</string>
     <string name="my_site_todays_stat_card_title">Statistieken van vandaag</string>
@@ -693,7 +699,6 @@ Language: nl
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked je bericht</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrolbaar blokmenu geopend. Selecteer een blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrolbaar blokmenu gesloten.</string>
-    <string name="hpp_skip_button">Overslaan</string>
     <string name="hpp_choose_button">Kies</string>
     <string name="hpp_subtitle">Kies je favoriete homepage lay-out. Je kan deze bewerken of later altijd nog aanpassen.</string>
     <string name="hpp_title">Kies een ontwerp</string>
@@ -1201,7 +1206,6 @@ Language: nl
     <string name="gutenberg_native_image_caption_s">Afbeelding vastleggen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Toetsenbord verbergen</string>
     <string name="gutenberg_native_help_icon">Help-pictogram</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Invoegen van media mislukt.\nTik voor opties.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Twee keer tikken om de laatste wijziging ongedaan te maken</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Twee keer tikken om instelling in/uit te schakelen</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Twee keer tikken om een afbeelding te selecteren</string>
@@ -2537,6 +2541,7 @@ Language: nl
     <string name="comments_empty_list_filtered_trashed">Geen verwijderde reacties</string>
     <string name="comments_empty_list_filtered_pending">Geen reacties in behandeling</string>
     <string name="comments_empty_list_filtered_approved">Geen goedgekeurde reacties</string>
+    <string name="button_skip">Overslaan</string>
     <string name="xmlrpc_missing_method_error">Kon geen verbinding maken. Vereiste XML-RPC-methoden ontbreken op de server.</string>
     <string name="alignment_center">Midden</string>
     <string name="post_format_video">Video</string>

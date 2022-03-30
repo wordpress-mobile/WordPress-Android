@@ -32,7 +32,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.WpEditTextWithChipsOutlinedBinding
 import org.wordpress.android.util.RtlUtils
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import java.util.LinkedHashMap
 
 /**

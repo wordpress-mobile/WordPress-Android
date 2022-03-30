@@ -22,7 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 private const val Y_BUFFER = 10
 

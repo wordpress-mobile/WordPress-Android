@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-11 23:44:12+0000
+Translation-Revision-Date: 2022-03-24 11:54:15+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih terang dan/atau warna teks yang lebih gelap.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih gelap dan/atau warna teks yang lebih terang.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Gagal menyisipkan media.\nKetuk untuk info selengkapnya.</string>
+    <string name="new_site_creation_intents_header_subtitle">Ketikkan topik Anda atau pilih dari daftar di bawah</string>
+    <string name="new_site_creation_intents_header_title">Apa isi situs Anda?</string>
+    <string name="notification_channel_weekly_roundup_title">Ringkasan Mingguan</string>
+    <string name="my_site_dashboard_tab_title">Beranda</string>
+    <string name="adding_cat">Menambahkan kategori</string>
     <string name="login_select_email_client">Aplikasi email apa yang Anda gunakan?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Ada kendala saat berkomunikasi dengan situs. Kode error HTTP 401 dikembalikan.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Panggilan XML-RPC tampaknya diblok di situs ini (kode error 401). Jika upaya login gagal, ketuk ikon bantuan untuk melihat FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Tidak dapat membaca situs WordPress dalam URL tersebut. Ketuk ikon bantuan untuk melihat FAQ.</string>
     <string name="login_error_xml_rpc_services_disabled">Layanan XML-RPC tidak tersedia di situs ini.</string>
-    <string name="my_site_menu_tab_title">Menu</string>
-    <string name="my_site_dashboard_tab_title">Dasbor</string>
+    <string name="my_site_menu_tab_title">Menu Situs</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Pencarian Anda includes karakter yang tidak didukung di domain WordPress.com. Karakter berikut diperbolehkan: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Periksa koneksi internet Anda dan muat ulang halaman.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Buka statistik</string>
@@ -317,6 +324,7 @@ Language: id
     <string name="gutenberg_native_preview_post">Pratinjau pos</string>
     <string name="gutenberg_native_preview_page">Pratinjau halaman</string>
     <string name="gutenberg_native_retry">Coba lagi</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Satu.</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
     <string name="gutenberg_native_text_color">Warna teks</string>
@@ -701,7 +709,6 @@ Language: id
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; menyukai pos Anda</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu blok yang dapat digulir terbuka. Pilih blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu blok yang dapat digulir tertutup.</string>
-    <string name="hpp_skip_button">Lewati</string>
     <string name="hpp_choose_button">Pilih</string>
     <string name="hpp_subtitle">Pilih tata letak halaman beranda favorit Anda. Anda dapat menyunting dan menyesuaikannya nanti.</string>
     <string name="hpp_title">Pilih desain</string>
@@ -1209,7 +1216,6 @@ Language: id
     <string name="gutenberg_native_image_caption_s">Keterangan gambar. %s</string>
     <string name="gutenberg_native_hide_keyboard">Sembunyikan keyboard</string>
     <string name="gutenberg_native_help_icon">Ikon bantuan</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Gagal memasukkan media.\nKetuk untuk melihat pilihan.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Ketuk dua kali untuk mengurungkan perubahan terakhir</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ketuk dua kali untuk mengaktifkan/menonaktifkan pengaturan</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Ketuk dua kali untuk memilih gambar</string>
@@ -2545,6 +2551,7 @@ Language: id
     <string name="comments_empty_list_filtered_trashed">Tidak ada komentar yang dibuang</string>
     <string name="comments_empty_list_filtered_pending">Tidak komentar tertunda</string>
     <string name="comments_empty_list_filtered_approved">Tidak ada komentar yang disetujui</string>
+    <string name="button_skip">Lewati</string>
     <string name="xmlrpc_missing_method_error">Tidak dapat terhubung. Metode XML-RPC yang diperlukan tidak ditemukan di server.</string>
     <string name="alignment_center">Tengah</string>
     <string name="post_format_video">Video</string>

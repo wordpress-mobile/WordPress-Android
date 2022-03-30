@@ -127,7 +127,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -350,11 +350,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 if (mIsMagicLinkLogin) {
                     authTokenToSet = getAuthToken();
                 } else {
-                    if (BuildConfig.IS_JETPACK_APP) {
-                        ActivityLauncher.showSignInForResultJetpackOnly(this);
-                    } else {
-                        ActivityLauncher.showSignInForResult(this);
-                    }
+                    showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
                     finish();
                 }
             }
@@ -410,6 +406,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+    }
+
+    private void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
+        if (BuildConfig.IS_JETPACK_APP) {
+            ActivityLauncher.showSignInForResultJetpackOnly(activity);
+        } else {
+            ActivityLauncher.showSignInForResult(activity);
+        }
     }
 
     private boolean isGooglePlayServicesAvailable(Activity activity) {
@@ -530,7 +534,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return true;
         });
 
-        ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
             mViewModel.onTooltipTapped(getSelectedSite());
@@ -1263,6 +1267,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     // We'll handle it in onAccountChanged so we know we have
                     // updated account info.
                     AppPrefs.setShouldTrackMagicLinkSignup(true);
+                    mViewModel.checkAndSetVariantForMySiteDefaultTabExperiment();
                     mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                     if (mJetpackConnectSource != null) {
                         ActivityLauncher.continueJetpackConnect(this, mJetpackConnectSource, getSelectedSite());
@@ -1354,19 +1359,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void handleSiteRemoved() {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // Reset site selection
-            mSelectedSiteRepository.removeSite();
-            // Show the sign in screen
-            if (BuildConfig.IS_JETPACK_APP) {
-                ActivityLauncher.showSignInForResultJetpackOnly(this);
-            } else {
-                ActivityLauncher.showSignInForResult(this, true);
-            }
-        } else {
-            if (getSelectedSite() == null && mSiteStore.hasSite()) {
-                ActivityLauncher.showSitePickerForResult(this, mSiteStore.getSites().get(0));
-            }
+        mViewModel.handleSiteRemoved();
+        if (!mViewModel.isSignedInWPComOrHasWPOrgSite()) {
+            showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
+            return;
+        }
+        if (mViewModel.getHasMultipleSites()) {
+            ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
         }
     }
 

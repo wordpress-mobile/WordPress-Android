@@ -2,31 +2,44 @@ package org.wordpress.android.ui.mysite
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.NonNull
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.MySiteFragmentBinding
+import org.wordpress.android.databinding.MySiteInfoHeaderCardBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
+import org.wordpress.android.ui.mysite.MySiteViewModel.SiteInfoToolbarViewParams
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
+import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState
+import org.wordpress.android.ui.mysite.MySiteViewModel.TabsUiState.TabUiState
 import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabsAdapter
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
-import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.widgets.QuickStartFocusPoint
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -35,9 +48,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: MySiteViewModel
 
     private var binding: MySiteFragmentBinding? = null
+    private var siteTitle: String? = null
+    private var tabLayoutMediator: TabLayoutMediator? = null
+    private val isTabMediatorAttached: Boolean
+        get() = tabLayoutMediator?.isAttached == true
+
+    private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            viewModel.onTabChanged(position)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,14 +103,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 }
             }
         }
-        setupTabs(viewModel.tabTitles)
         val avatar = root.findViewById<ImageView>(R.id.avatar)
 
         appbarMain.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
+            updateCollapsibleToolbar(currentOffset)
+
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
+            fadeSiteInfoHeader(percentage)
             avatar?.let { avatar ->
                 val minSize = avatar.minimumHeight
                 val maxSize = avatar.maxHeight
@@ -99,28 +126,53 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         })
     }
 
-    private fun MySiteFragmentBinding.setupTabs(tabTitles: List<UiString>) {
-        val adapter = MySiteTabsAdapter(this@MySiteFragment, tabTitles)
-        viewPager.adapter = adapter
+    private fun MySiteFragmentBinding.updateCollapsibleToolbar(currentOffset: Int) {
+        if (currentOffset == 0) {
+            collapsingToolbar.title = siteTitle
+            siteInfo.siteInfoCard.visibility = View.INVISIBLE
+        } else {
+            collapsingToolbar.title = null
+            siteInfo.siteInfoCard.visibility = View.VISIBLE
+        }
+    }
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = uiHelpers.getTextOfUiString(requireContext(), tabTitles[position])
-        }.attach()
+    private fun MySiteFragmentBinding.fadeSiteInfoHeader(percentage: Int) {
+        siteInfo.siteInfoCard.alpha = percentage.toFloat() / 100
     }
 
     private fun MySiteFragmentBinding.setupContentViews() {
+        setupViewPager()
+        setupActionableEmptyView()
+    }
+
+    private fun MySiteFragmentBinding.setupViewPager() {
+        val adapter = MySiteTabsAdapter(this@MySiteFragment, viewModel.orderedTabTypes)
+        viewPager.adapter = adapter
+        viewPager.registerOnPageChangeCallback(viewPagerCallback)
+    }
+
+    private fun MySiteFragmentBinding.setupActionableEmptyView() {
         actionableEmptyView.button.setOnClickListener { viewModel.onAddSitePressed() }
     }
 
     private fun MySiteFragmentBinding.setupObservers() {
-        viewModel.uiModel.observe(viewLifecycleOwner, { uiModel ->
+        viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
             loadGravatar(uiModel.accountAvatarUrl)
             when (val state = uiModel.state) {
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView(state)
             }
-        })
-        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
+        }
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
+
+        viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
+            var quickStartScrollPosition = it
+            if (quickStartScrollPosition == -1) {
+                appbarMain.setExpanded(true, true)
+                quickStartScrollPosition = 0
+            }
+            binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
+        }
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
@@ -136,20 +188,87 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
 
     private fun MySiteFragmentBinding.loadData(state: State.SiteSelected) {
-        tabLayout.setVisible(state.showTabs)
+        tabLayout.setVisible(state.tabsUiState.showTabs)
+        updateTabs(state.tabsUiState)
         actionableEmptyView.setVisible(false)
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
+        siteInfo.loadMySiteDetails(state.siteInfoHeader)
+        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
+    }
+
+    private fun MySiteInfoHeaderCardBinding.loadMySiteDetails(siteInfoHeader: SiteInfoHeaderCard) {
+        siteTitle = siteInfoHeader.title
+        if (siteInfoHeader.iconState is IconState.Visible) {
+            mySiteBlavatar.visibility = View.VISIBLE
+            imageManager.load(mySiteBlavatar, BLAVATAR, siteInfoHeader.iconState.url ?: "")
+            mySiteIconProgress.visibility = View.GONE
+            mySiteBlavatar.setOnClickListener { siteInfoHeader.onIconClick.click() }
+        } else if (siteInfoHeader.iconState is IconState.Progress) {
+            mySiteBlavatar.setOnClickListener(null)
+            mySiteIconProgress.visibility = View.VISIBLE
+            mySiteBlavatar.visibility = View.GONE
+        }
+        quickStartIconFocusPoint.setVisibleOrGone(siteInfoHeader.showIconFocusPoint)
+        if (siteInfoHeader.onTitleClick != null) {
+            siteInfoContainer.title.setOnClickListener { siteInfoHeader.onTitleClick.click() }
+        } else {
+            siteInfoContainer.title.setOnClickListener(null)
+        }
+        siteInfoContainer.title.text = siteInfoHeader.title
+        quickStartTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showTitleFocusPoint)
+        siteInfoContainer.subtitle.text = siteInfoHeader.url
+        siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
+        switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
+    }
+
+    private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
+        val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
+        appbarMain.layoutParams.height = appBarHeight
+        val toolbarBottomMargin = resources.getDimension(siteInfoToolbarViewParams.toolbarBottomMargin).toInt()
+        updateToolbarBottomMargin(toolbarBottomMargin)
+        appbarMain.requestLayout()
+    }
+
+    private fun MySiteFragmentBinding.updateToolbarBottomMargin(appBarHeight: Int) {
+        val bottomMargin = (appBarHeight / resources.displayMetrics.density).toInt()
+        val layoutParams = (toolbarMain.layoutParams as? MarginLayoutParams)
+        layoutParams?.setMargins(0, 0, 0, bottomMargin)
+        toolbarMain.layoutParams = layoutParams
     }
 
     private fun MySiteFragmentBinding.loadEmptyView(state: State.NoSites) {
-        tabLayout.setVisible(state.showTabs)
+        tabLayout.setVisible(state.tabsUiState.showTabs)
         viewModel.setActionableEmptyViewVisible(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(true)
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
+        updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
+    }
+
+    private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
+        tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager, MySiteTabConfigurationStrategy(state.tabUiStates))
+        tabLayoutMediator?.attach()
+    }
+
+    private fun MySiteFragmentBinding.updateTabs(state: TabsUiState) {
+        if (!isTabMediatorAttached) attachTabLayoutMediator(state)
+        state.tabUiStates.forEachIndexed { index, tabUiState ->
+            val tab = tabLayout.getTabAt(index) as TabLayout.Tab
+            updateTab(tab, tabUiState)
+        }
+    }
+
+    private fun MySiteFragmentBinding.updateTab(tab: TabLayout.Tab, tabUiState: TabUiState) {
+        val customView = tab.customView ?: createTabCustomView(tab)
+        with(customView) {
+            val title = findViewById<TextView>(R.id.tab_label)
+            val quickStartFocusPoint = findViewById<QuickStartFocusPoint>(R.id.my_site_tab_quick_start_focus_point)
+            title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
+            quickStartFocusPoint?.setVisible(tabUiState.showQuickStartFocusPoint)
+        }
     }
 
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
@@ -177,9 +296,26 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun ViewPager2.getCurrentFragment() =
             this@MySiteFragment.childFragmentManager.findFragmentByTag("f$currentItem") as? MySiteTabFragment
 
+    private fun MySiteFragmentBinding.createTabCustomView(tab: TabLayout.Tab): View {
+        val customView = LayoutInflater.from(context)
+                .inflate(R.layout.my_site_tab_custom_view, tabLayout, false)
+        tab.customView = customView
+        return customView
+    }
+
+    private inner class MySiteTabConfigurationStrategy(
+        private val tabUiStates: List<TabUiState>
+    ) : TabLayoutMediator.TabConfigurationStrategy {
+        override fun onConfigureTab(@NonNull tab: TabLayout.Tab, position: Int) {
+            binding?.updateTab(tab, tabUiStates[position])
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        tabLayoutMediator?.detach()
+        tabLayoutMediator = null
     }
 
     companion object {

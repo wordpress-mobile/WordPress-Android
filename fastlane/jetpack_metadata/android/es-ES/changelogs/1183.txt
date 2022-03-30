@@ -1,0 +1,8 @@
+19.4:
+- Paletas de color temáticas/por defecto/personalizadas
+- Selección de la aplicación de verificación del correo electrónico
+- Si el comentario padre se borra, no hay comentarios anidados
+- Las imágenes se ajustan tras hacer un cambio de orientación en mitad de la captura
+- Se ha corregido la barra de progreso para las ediciones de iconos de Mi Sitio
+- Se ha reorganizado la lista de Detalles por defecto
+- El teclado no tapa los mensajes de error de inicio de sesión

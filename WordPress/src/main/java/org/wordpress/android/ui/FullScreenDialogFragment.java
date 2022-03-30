@@ -34,7 +34,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 /**
  * A {@link DialogFragment} implementing the full-screen dialog pattern defined in the

@@ -25,6 +25,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.extensions.DialogExtensionsKt;
+import org.wordpress.android.util.extensions.WindowExtensionsKt;
 
 import java.util.ArrayList;
 import java.util.List;

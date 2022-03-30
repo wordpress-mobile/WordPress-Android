@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/layoutPickerBackground"
+    android:animateLayoutChanges="true"
     android:fitsSystemWindows="false"
     android:focusableInTouchMode="true">
 
@@ -13,6 +15,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/layoutPickerBackground"
         android:fitsSystemWindows="false">
+
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -21,8 +24,8 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include
-                android:id="@+id/site_creation_header_item"
-                layout="@layout/site_creation_header_item"
+                android:id="@+id/site_creation_intents_header"
+                layout="@layout/site_creation_intents_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -56,5 +59,78 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_extra_large"
+            app:layout_constraintTop_toTopOf="parent"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
+                android:hint="@string/new_site_creation_intents_input_hint"
+                android:imeOptions="actionSearch|flagNoExtractUi"
+                android:importantForAutofill="noExcludeDescendants"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                tools:targetApi="o" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingVertical="@dimen/margin_extra_medium_large"
+            android:clipToPadding="false"
+            android:importantForAccessibility="no"
+            android:orientation="vertical"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/continue_button_container"
+            app:layout_constraintTop_toBottomOf="@id/input_container"
+            tools:listitem="@layout/site_creation_intents_item" />
+
+        <View
+            android:id="@+id/continue_button_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/siq_bottom_shadow_height"
+            android:background="@drawable/modal_layout_picker_bottom_shadow"
+            app:layout_constraintBottom_toTopOf="@id/continue_button_container" />
+
+        <FrameLayout
+            android:id="@+id/continue_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/layoutPickerBackground"
+            android:gravity="center"
+            android:paddingVertical="@dimen/picker_bottom_button_vertical_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view"
+            app:layout_constraintVertical_bias="1">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/continue_button"
+                style="@style/Widget.ModalLayoutPicker.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/mlp_bottom_button_horizontal_margin"
+                android:text="@string/continue_label" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

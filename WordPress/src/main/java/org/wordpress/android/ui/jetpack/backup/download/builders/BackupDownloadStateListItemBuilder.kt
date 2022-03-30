@@ -26,8 +26,8 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.util.toFormattedTimeString
+import org.wordpress.android.util.extensions.toFormattedDateString
+import org.wordpress.android.util.extensions.toFormattedTimeString
 import java.util.Date
 import javax.inject.Inject
 

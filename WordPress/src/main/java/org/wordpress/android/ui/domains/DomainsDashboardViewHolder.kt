@@ -22,7 +22,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 sealed class DomainsDashboardViewHolder<T : ViewBinding>(
     protected val binding: T
