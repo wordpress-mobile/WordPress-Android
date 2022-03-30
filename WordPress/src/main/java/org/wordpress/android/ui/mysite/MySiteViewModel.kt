@@ -146,6 +146,7 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
+    private val _onShare = MutableLiveData<Event<String>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -196,6 +197,7 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
+    val onShare = _onShare
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -363,14 +365,15 @@ class MySiteViewModel @Inject constructor(
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                                 // TODO @klymyam fetch the actual blogging prompt
-                                if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
                                     @Suppress("MagicNumber")
                                     BloggingPrompt(
                                             "Test Prompt",
                                             19,
                                             ""
                                     )
-                                } else null
+                                } else null,
+                                onShareClick = this::onBloggingPromptShareClick
                         )
                 )
         )
@@ -493,6 +496,7 @@ class MySiteViewModel @Inject constructor(
         if (position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU)) {
             findUiStateForTab(MySiteTabType.SITE_MENU)?.pendingTask?.let { requestSiteMenuStepPendingTask(it) }
         }
+        trackTabChanged(position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
     }
 
     private fun requestSiteMenuStepPendingTask(pendingTask: QuickStartTask) {
@@ -952,6 +956,10 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    private fun onBloggingPromptShareClick(message: String) {
+        onShare.postValue(Event(message))
+    }
+
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
     fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
@@ -973,6 +981,16 @@ class MySiteViewModel @Inject constructor(
     private fun resetShownTrackers() {
         domainRegistrationCardShownTracker.resetShown()
         cardsTracker.resetShown()
+    }
+
+    private fun trackTabChanged(isSiteMenu: Boolean) {
+        if (isSiteMenu) {
+            analyticsTrackerWrapper.track(Stat.MY_SITE_TAB_TAPPED, mapOf(MY_SITE_TAB to MySiteTabType.SITE_MENU.label))
+            analyticsTrackerWrapper.track(Stat.MY_SITE_SITE_MENU_SHOWN)
+        } else {
+            analyticsTrackerWrapper.track(Stat.MY_SITE_TAB_TAPPED, mapOf(MY_SITE_TAB to MySiteTabType.DASHBOARD.label))
+            analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_SHOWN)
+        }
     }
 
     private fun findUiStateForTab(tabType: MySiteTabType) =
@@ -1046,5 +1064,6 @@ class MySiteViewModel @Inject constructor(
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         const val LIST_SCROLL_DELAY_MS = 500L
+        const val MY_SITE_TAB = "tab"
     }
 }

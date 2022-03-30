@@ -233,6 +233,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
+        viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -548,6 +549,19 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     private fun hideRefreshIndicatorIfNeeded() {
         swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+    }
+
+    private fun shareMessage(message: String) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message)
+
+        startActivity(
+                Intent.createChooser(
+                        shareIntent,
+                        resources.getString(R.string.my_site_blogging_prompt_card_share_chooser_title)
+                )
+        )
     }
 
     companion object {
