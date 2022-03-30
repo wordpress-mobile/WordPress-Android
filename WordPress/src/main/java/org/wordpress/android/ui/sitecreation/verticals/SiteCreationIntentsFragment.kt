@@ -122,8 +122,8 @@ class SiteCreationIntentsFragment : Fragment() {
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
         continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
-        input.setOnFocusChangeListener { _, willFocus ->
-            if (willFocus) {
+        input.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
                 viewModel.onSearchInputFocused()
                 recyclerView.smoothScrollToPosition(0)
             }
