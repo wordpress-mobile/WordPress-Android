@@ -6,7 +6,7 @@ data class CommentEssentials(
     val commentText: String = "",
     val userUrl: String = "",
     val userEmail: String = "",
-    val isFromRegisteredUsed: Boolean = true,
+    val isFromRegisteredUsed: Boolean = true
 ) {
     /**
      * Checks if this instance of CommentEssentials is valid. An invalid instance should not be used to display data.
