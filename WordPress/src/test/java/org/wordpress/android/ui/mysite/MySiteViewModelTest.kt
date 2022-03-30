@@ -190,7 +190,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
     private val selectedSite = MediatorLiveData<SelectedSite>()
 
-
     private val jetpackCapabilities = MutableLiveData(
             JetpackCapabilities(
                     scanAvailable = false,
