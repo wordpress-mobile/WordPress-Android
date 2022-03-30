@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_EDITED
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
@@ -16,6 +17,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
@@ -33,6 +35,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.validateEmail
 import org.wordpress.android.util.validateUrl
 import org.wordpress.android.viewmodel.Event
@@ -51,7 +55,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
     private val getCommentUseCase: GetCommentUseCase,
     private val notificationActionsWrapper: NotificationsActionsWrapper,
-    private val readerCommentTableWrapper: ReaderCommentTableWrapper
+    private val readerCommentTableWrapper: ReaderCommentTableWrapper,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -250,6 +255,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         commentEntity?.run {
             val isCommentEntityUpdated = updateCommentEntity(this, editedCommentEssentials)
             if (isCommentEntityUpdated) {
+                analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
+                        COMMENT_EDITED,
+                        commentIdentifier.toCommentActionSource(),
+                        site
+                )
                 when (commentIdentifier) {
                     is NotificationCommentIdentifier -> {
                         updateNotificationEntity()
@@ -378,6 +388,20 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 this.userNameError,
                 this.userUrlError
         ).any { !it.isNullOrEmpty() }
+    }
+
+    private fun CommentIdentifier.toCommentActionSource(): AnalyticsCommentActionSource {
+        return when (this) {
+            is NotificationCommentIdentifier -> {
+                AnalyticsCommentActionSource.NOTIFICATIONS
+            }
+            is ReaderCommentIdentifier -> {
+                AnalyticsCommentActionSource.READER
+            }
+            is SiteCommentIdentifier -> {
+                AnalyticsCommentActionSource.SITE_COMMENTS
+            }
+        }
     }
 
     companion object {
