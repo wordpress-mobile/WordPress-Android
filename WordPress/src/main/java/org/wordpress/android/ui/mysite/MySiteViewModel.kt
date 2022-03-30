@@ -145,7 +145,7 @@ class MySiteViewModel @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
-    private val _onTrackWithCurrentTab = MutableLiveData<Event<MySiteTrackWithCurrentTabSource>>()
+    private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -192,7 +192,7 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
-    val onTrackWithCurrentTab = _onTrackWithCurrentTab as LiveData<Event<MySiteTrackWithCurrentTabSource>>
+    val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -626,14 +626,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_STATS_TAPPED)))
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_STATS_TAPPED)
         quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_PAGES_TAPPED)))
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
         quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
@@ -641,13 +641,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionPostsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_POSTS_TAPPED)))
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_POSTS_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
     }
 
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.QUICK_ACTION_MEDIA_TAPPED)))
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
@@ -658,9 +658,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh(isPullToRefresh: Boolean = false) {
-        if (isPullToRefresh) {
-            _onTrackWithCurrentTab.postValue(Event(MySiteTrackWithCurrentTabSource(Stat.MY_SITE_PULL_TO_REFRESH)))
-        }
+        if (isPullToRefresh) trackWithTabSourceIfNeeded(Stat.MY_SITE_PULL_TO_REFRESH)
         mySiteSourceManager.refresh()
     }
 
@@ -963,7 +961,7 @@ class MySiteViewModel @Inject constructor(
         setVisible()
     }
 
-    fun trackWithCurrentTab(event: MySiteTrackWithCurrentTabSource) {
+    fun trackWithTabSource(event: MySiteTrackWithTabSource) {
         if (event.currentTab == ALL) {
             analyticsTrackerWrapper.track(event.stat, event.properties ?: emptyMap())
         } else {
@@ -972,6 +970,14 @@ class MySiteViewModel @Inject constructor(
                 props.putAll(event.properties)
             }
             analyticsTrackerWrapper.track(event.stat, props)
+        }
+    }
+
+    private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
+        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+            _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
+        } else {
+            analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
         }
     }
 
@@ -1048,7 +1054,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    data class MySiteTrackWithCurrentTabSource(
+    data class MySiteTrackWithTabSource(
         val stat: Stat,
         val properties: HashMap<String, *>? = null,
         val key: String = TAB_SOURCE,
