@@ -509,7 +509,9 @@ class SiteSqlUtils
                 .endGroup().endWhere()
                 .getAsModel { cursor ->
                     val siteModel = SiteModel()
-                    siteModel.siteId = cursor.getInt(cursor.getColumnIndexOrThrow(SiteModelTable.SITE_ID)).toLong()
+                    siteModel.siteId = cursor.getInt(
+                            cursor.getColumnIndexOrThrow(SiteModelTable.SITE_ID)
+                    ).toLong()
                     siteModel.selfHostedSiteId = cursor.getLong(
                             cursor.getColumnIndexOrThrow(SiteModelTable.SELF_HOSTED_SITE_ID)
                     )
