@@ -56,7 +56,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val getCommentUseCase: GetCommentUseCase,
     private val notificationActionsWrapper: NotificationsActionsWrapper,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
