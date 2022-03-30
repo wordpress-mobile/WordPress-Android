@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.EditText;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matchers;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
-import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -90,7 +89,7 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow openMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
+    public LoginFlow openMagicLink() {
         // Magic Link Sent Screen – Should see "Check email" button
         // See LoginMagicLinkSentFragment
         waitForElementToBeDisplayed(R.id.login_open_email_client);
@@ -99,7 +98,7 @@ public class LoginFlow {
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("wordpress://magic-login?token=valid_token"))
                 .setPackage(getApplicationContext().getPackageName());
-        magicLinkActivityTestRule.launchActivity(intent);
+        ActivityScenario.launch(intent);
 
         return this;
     }

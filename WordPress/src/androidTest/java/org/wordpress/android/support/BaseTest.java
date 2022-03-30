@@ -4,8 +4,8 @@ import android.app.Instrumentation;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.accessibility.AccessibilityChecks;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.github.jknack.handlebars.Helper;
@@ -87,7 +87,8 @@ public class BaseTest {
     }
 
     @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+    public ActivityScenarioRule<WPLaunchActivity> mActivityTestRule
+            = new ActivityScenarioRule<>(WPLaunchActivity.class);
 
     private void logout() {
         MePage mePage = new MePage();
