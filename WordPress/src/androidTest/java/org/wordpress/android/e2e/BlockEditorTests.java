@@ -17,7 +17,7 @@ import java.time.Instant;
 
 public class BlockEditorTests extends BaseTest {
     @Rule
-    public ActivityScenarioRule<WPLaunchActivity> mActivityTestRule
+    public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
             = new ActivityScenarioRule<>(WPLaunchActivity.class);
 
     @Rule

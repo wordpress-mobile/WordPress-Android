@@ -87,7 +87,7 @@ public class BaseTest {
     }
 
     @Rule
-    public ActivityScenarioRule<WPLaunchActivity> mActivityTestRule
+    public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
             = new ActivityScenarioRule<>(WPLaunchActivity.class);
 
     private void logout() {

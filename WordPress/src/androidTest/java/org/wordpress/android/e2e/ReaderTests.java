@@ -17,7 +17,7 @@ import org.wordpress.android.ui.WPLaunchActivity;
 
 public class ReaderTests extends BaseTest {
     @Rule
-    public ActivityScenarioRule<WPLaunchActivity> mActivityTestRule
+    public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
             = new ActivityScenarioRule<>(WPLaunchActivity.class);
     @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
