@@ -55,20 +55,9 @@ public class BaseTest {
 
     public static final int WIREMOCK_PORT = 8080;
 
-    @Before
-    public void setup() {
-        mAppContext = ApplicationProvider.getApplicationContext();
-        mMockedAppComponent = DaggerAppComponentTest.builder()
-                                                    .application(mAppContext)
-                                                    .build();
-
-        Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
-                Matchers.allOf(matchesTypes(
-                        anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
-        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false)
-                           .setSuppressingResultMatcher(nonErrorLevelMatcher);
-    }
-
+    @Rule
+    public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
+            = new ActivityScenarioRule<>(WPLaunchActivity.class);
     @Rule
     public WireMockRule wireMockRule;
 
@@ -86,9 +75,19 @@ public class BaseTest {
                          .notifier(new AndroidNotifier()));
     }
 
-    @Rule
-    public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
-            = new ActivityScenarioRule<>(WPLaunchActivity.class);
+    @Before
+    public void setup() {
+        mAppContext = ApplicationProvider.getApplicationContext();
+        mMockedAppComponent = DaggerAppComponentTest.builder()
+                                                    .application(mAppContext)
+                                                    .build();
+
+        Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
+                Matchers.allOf(matchesTypes(
+                        anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
+        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false)
+                           .setSuppressingResultMatcher(nonErrorLevelMatcher);
+    }
 
     private void logout() {
         MePage mePage = new MePage();
