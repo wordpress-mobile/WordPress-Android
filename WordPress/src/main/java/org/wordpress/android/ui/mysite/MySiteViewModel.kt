@@ -138,7 +138,7 @@ class MySiteViewModel @Inject constructor(
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
-    private var isDefaultTabSet: Boolean = false
+    private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -176,7 +176,7 @@ class MySiteViewModel @Inject constructor(
             listOf(MySiteTabType.ALL)
         }
 
-    private val defaultTab = if (isMySiteTabsEnabled) {
+    private val defaultABExperimentTab = if (isMySiteTabsEnabled) {
         if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
             MySiteTabType.DASHBOARD
         } else {
@@ -434,10 +434,10 @@ class MySiteViewModel @Inject constructor(
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
-            if (defaultTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (defaultTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
             add(Type.DOMAIN_REGISTRATION_CARD)
         }
         MySiteTabType.ALL -> emptyList()
@@ -875,7 +875,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onCreateSiteResult() {
-        isDefaultTabSet = false
+        isDefaultABExperimentTabSet = false
         selectDefaultTabIfNeeded()
     }
 
@@ -988,11 +988,11 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun selectDefaultTabIfNeeded() {
-        if (!isMySiteTabsEnabled || isDefaultTabSet) return
-        val index = orderedTabTypes.indexOf(defaultTab)
+        if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
+        val index = orderedTabTypes.indexOf(defaultABExperimentTab)
         if (index != -1) {
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
-            isDefaultTabSet = true
+            isDefaultABExperimentTabSet = true
         }
     }
 
