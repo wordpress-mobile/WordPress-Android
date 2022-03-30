@@ -34,7 +34,7 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
-import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithCurrentTabSource
+import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
@@ -590,7 +590,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onQuickStartFullScreenDialogDismiss()
     }
 
-    fun onTrackWithCurrentTab(event: MySiteTrackWithCurrentTabSource) {
-        viewModel.trackWithCurrentTab(event = event.copy(currentTab = mySiteTabType))
+    fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
+        viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
 }

@@ -139,8 +139,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         })
         viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
 
-        viewModel.onTrackWithCurrentTab.observeEvent(viewLifecycleOwner) {
-            binding?.viewPager?.getCurrentFragment()?.onTrackWithCurrentTab(it)
+        viewModel.onTrackWithTabSource.observeEvent(viewLifecycleOwner) {
+            binding?.viewPager?.getCurrentFragment()?.onTrackWithTabSource(it)
         }
     }
 
