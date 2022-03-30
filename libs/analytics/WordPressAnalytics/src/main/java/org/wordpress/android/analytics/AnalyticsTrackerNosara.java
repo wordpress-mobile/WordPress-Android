@@ -1409,6 +1409,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_intent_question_vertical_selected";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED:
                 return "enhanced_site_creation_intent_question_search_focused";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT:
+                return "enhanced_site_creation_intent_question_experiment";
             case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
                 return "layout_picker_preview_mode_changed";
             case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:
@@ -2164,6 +2166,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_dashboard_card_shown";
             case MY_SITE_DASHBOARD_CARD_ITEM_TAPPED:
                 return "my_site_dashboard_card_item_tapped";
+            case MY_SITE_TAB_TAPPED:
+                return "my_site_tab_tapped";
+            case MY_SITE_DASHBOARD_SHOWN:
+                return "my_site_dashboard_shown";
+            case MY_SITE_SITE_MENU_SHOWN:
+                return "my_site_site_menu_shown";
             case MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED:
                 return "my_site_default_tab_experiment_variant_assigned";
         }

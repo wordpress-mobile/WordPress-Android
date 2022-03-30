@@ -6,7 +6,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -25,7 +24,6 @@ class MySiteAdapterDiffCallback(
         val oldItem = oldCardAndItems[oldItemPosition]
         val updatedItem = updatedCardAndItems[newItemPosition]
         return oldItem.type == updatedItem.type && when {
-            oldItem is SiteInfoCard && updatedItem is SiteInfoCard -> true
             oldItem is QuickActionsCard && updatedItem is QuickActionsCard -> true
             oldItem is DomainRegistrationCard && updatedItem is DomainRegistrationCard -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> true
