@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
+    private static AnalyticsInjectExperimentProperties mInjectExperimentProperties;
 
     public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
@@ -493,6 +495,7 @@ public final class AnalyticsTracker {
         ENHANCED_SITE_CREATION_INTENT_QUESTION_CONTINUE_PRESSED,
         ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED,
         ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT,
         LAYOUT_PICKER_PREVIEW_MODE_CHANGED,
         LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED,
         LAYOUT_PICKER_PREVIEW_MODE_BUTTON_TAPPED,
@@ -832,6 +835,10 @@ public final class AnalyticsTracker {
         MY_SITE_MENU_ITEM_TAPPED,
         MY_SITE_DASHBOARD_CARD_SHOWN,
         MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
+        MY_SITE_TAB_TAPPED,
+        MY_SITE_DASHBOARD_SHOWN,
+        MY_SITE_SITE_MENU_SHOWN,
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -863,6 +870,12 @@ public final class AnalyticsTracker {
         if (mHasUserOptedOut) {
             return;
         }
+
+        if (shouldInjectExperimentProperties()) {
+            trackWithExperimentProperties(stat, Collections.emptyMap());
+            return;
+        }
+
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
         }
@@ -872,8 +885,26 @@ public final class AnalyticsTracker {
         if (mHasUserOptedOut) {
             return;
         }
+
+        if (shouldInjectExperimentProperties()) {
+            trackWithExperimentProperties(stat, properties);
+            return;
+        }
+
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
+        }
+    }
+
+    private static void trackWithExperimentProperties(Stat stat, Map<String, ?> properties) {
+        Map<String, ?> props = mInjectExperimentProperties.injectProperties(properties);
+
+        for (Tracker tracker : TRACKERS) {
+            if (props.isEmpty()) {
+                tracker.track(stat);
+            } else {
+                tracker.track(stat, props);
+            }
         }
     }
 
@@ -920,5 +951,16 @@ public final class AnalyticsTracker {
         for (Tracker tracker : TRACKERS) {
             tracker.refreshMetadata(metadata);
         }
+    }
+
+    public static void setInjectExperimentProperties(AnalyticsInjectExperimentProperties injectExperimentProperties) {
+        mInjectExperimentProperties = (injectExperimentProperties != null)
+                ? injectExperimentProperties
+                : AnalyticsInjectExperimentProperties.emptyInstance();
+    }
+
+    private static boolean shouldInjectExperimentProperties() {
+        return mInjectExperimentProperties != null
+               && !mInjectExperimentProperties.getProperties().isEmpty();
     }
 }

@@ -180,6 +180,7 @@ Language: is
     <string name="me_btn_app_settings">Stillingar forrits</string>
     <string name="editor_remove_failed_uploads">Fjarlægja misheppnuð upphöl</string>
     <string name="site_settings_advanced_header">Ítarlegra</string>
+    <string name="button_skip">Sleppa</string>
     <string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML-RPC virkni vantar á netþjóninn.</string>
     <string name="alignment_center">Miðja</string>
     <string name="post_format_status">Staða</string>

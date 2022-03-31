@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-11 09:54:08+0000
+Translation-Revision-Date: 2022-03-25 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此颜色搭配可能不便于用户阅读。 不妨尝试使用较浅的背景颜色和/或较深的文本颜色。</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此颜色搭配可能不便于用户阅读。 不妨尝试使用较深的背景颜色和/或较浅的文本颜色。</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">未能插入媒体。\n点按获取更多信息。</string>
+    <string name="new_site_creation_intents_header_subtitle">请从以下列表中选择主题或输入自己的主题</string>
+    <string name="new_site_creation_intents_header_title">您的网站是关于什么的？</string>
+    <string name="notification_channel_weekly_roundup_title">每周综述</string>
+    <string name="my_site_dashboard_tab_title">首页</string>
+    <string name="adding_cat">添加分类</string>
     <string name="login_select_email_client">您使用哪款电子邮件应用程序？</string>
     <string name="login_error_xml_rpc_auth_error_communicating">与站点通信时出现问题。 返回了 HTTP 错误代码 401。</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 调用似乎已被该站点屏蔽（错误代码 401）。 如果尝试登录失败，可点击帮助图标查看常见问题解答。</string>
     <string name="login_error_xml_rpc_cannot_read_site">无法通过该 URL 读取 WordPress 站点。 点击帮助图标查看常见问题解答。</string>
     <string name="login_error_xml_rpc_services_disabled">本站点禁用 XML-RPC 服务。</string>
-    <string name="my_site_menu_tab_title">菜单</string>
-    <string name="my_site_dashboard_tab_title">仪表盘</string>
+    <string name="my_site_menu_tab_title">站点菜单</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 允许使用以下字符：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">请检查您网络连接并刷新页面。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">转至统计数据</string>
@@ -317,6 +324,7 @@ Language: zh_CN
     <string name="gutenberg_native_preview_post">预览文章</string>
     <string name="gutenberg_native_preview_page">预览页面</string>
     <string name="gutenberg_native_retry">重试</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">一</string>
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
     <string name="gutenberg_native_text_color">文字颜色</string>
@@ -701,7 +709,6 @@ Language: zh_CN
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; 喜欢了您的文章</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">滚动区块菜单打开。 选择区块。</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">滚动区块菜单关闭。</string>
-    <string name="hpp_skip_button">跳过</string>
     <string name="hpp_choose_button">选择</string>
     <string name="hpp_subtitle">选择您喜欢的主页布局。 您可以稍后对其进行编辑和自定义。</string>
     <string name="hpp_title">选择设计</string>
@@ -1209,7 +1216,6 @@ Language: zh_CN
     <string name="gutenberg_native_image_caption_s">图片说明。%s</string>
     <string name="gutenberg_native_hide_keyboard">隐藏键盘</string>
     <string name="gutenberg_native_help_icon">“帮助”图标</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">无法插入媒体。\n请轻按以查看选项。</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">轻按两下以撤销上次的更改</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">轻按两下以切换设置</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">轻按两下以选择图片</string>
@@ -2545,6 +2551,7 @@ Language: zh_CN
     <string name="comments_empty_list_filtered_trashed">无已移至回收站的评论</string>
     <string name="comments_empty_list_filtered_pending">无待审评论</string>
     <string name="comments_empty_list_filtered_approved">无已批准的评论</string>
+    <string name="button_skip">跳过</string>
     <string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML-RPC 方法。</string>
     <string name="alignment_center">居中</string>
     <string name="post_format_video">视频</string>

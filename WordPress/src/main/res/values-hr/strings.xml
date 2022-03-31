@@ -16,7 +16,6 @@ Language: hr
     <string name="delete_button_alt">Izbrisati</string>
     <string name="scan">Skeniraj</string>
     <string name="reader_discover_empty_title">Dobro došli!</string>
-    <string name="hpp_skip_button">Preskoči</string>
     <string name="hpp_choose_button">Odaberi</string>
     <string name="hpp_title">Odaberite dizajn</string>
     <string name="prepublishing_nudges_add_category_button">Dodaj Kategoriju</string>

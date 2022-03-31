@@ -28,7 +28,6 @@ Language: ku_TR
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; bersiv da şandiya te</string>
     <string name="login_prologue_third_subtitle_two">Te îro li ser malpera xwe &lt;b&gt;50 likes&lt;/b&gt; ecibandin sitend</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; şandiya te eciband</string>
-    <string name="hpp_skip_button">Derbas bibe</string>
     <string name="hpp_choose_button">Hilbijêre</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menuya biloka şemîtonkî vebû. Bilokekê hilbijêre.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuya biloka şemîtonkî hate girtin.</string>
@@ -516,7 +515,6 @@ Language: ku_TR
     <string name="gutenberg_native_image_caption_s">Sernivîsa wêneyê. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyê veşêre</string>
     <string name="gutenberg_native_help_icon">Îkona alîkariyê</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Tevlîkirina medyayê bi ser neket.\nJi bo vebijarkan, bitepîne.</string>
     <string name="gutenberg_native_move_block_down">Blokê bikişîne jêrê</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Ji bo guhertina dawî vegerînî, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_select">Ji bo bijartinê, ducar bitikîne</string>

@@ -163,7 +163,6 @@ Language: nb_NO
     <string name="reader_discover_no_posts_title">Ingen nylige innlegg</string>
     <string name="reader_discover_empty_title">Velkommen!</string>
     <string name="scan">Skann</string>
-    <string name="hpp_skip_button">Hopp over</string>
     <string name="hpp_choose_button">Velg</string>
     <string name="hpp_title">Velg en utforming</string>
     <string name="prepublishing_nudges_add_category_button">Legg til kategori</string>
@@ -560,7 +559,6 @@ Language: nb_NO
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
     <string name="gutenberg_native_help_icon">Hjelpeikon</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Mislyktes i å sette inn media.\nVennligst trykk for alternativer.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dobbelttrykk for å angre siste endring</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Dobbelttrykk for å veksle innstilling</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Dobbelttrykk for å velge et bilde</string>
@@ -1867,6 +1865,7 @@ Language: nb_NO
     <string name="comments_empty_list_filtered_trashed">Ingen forkastede kommentarer</string>
     <string name="comments_empty_list_filtered_pending">Ingen ventende kommentarer</string>
     <string name="comments_empty_list_filtered_approved">Ingen godkjente kommentarer</string>
+    <string name="button_skip">Hopp over</string>
     <string name="xmlrpc_missing_method_error">Klarte ikke å koble til. De påkrevde XML-RPC-metodene mangler på denne tjeneren.</string>
     <string name="alignment_center">Midten</string>
     <string name="post_format_video">Video</string>

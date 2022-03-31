@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-11 11:54:08+0000
+Translation-Revision-Date: 2022-03-25 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Bu renk birleşiminde insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Bu renk birleşimi insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Medya eklenemedi.\nDaha fazla bilgi için dokunun.</string>
+    <string name="new_site_creation_intents_header_subtitle">Aşağıdaki listeden bir konu seçin veya kendi konunuzu yazın</string>
+    <string name="new_site_creation_intents_header_title">Web siteniz ne hakkında?</string>
+    <string name="notification_channel_weekly_roundup_title">Haftalık Özet</string>
+    <string name="my_site_dashboard_tab_title">Başlangıç</string>
+    <string name="adding_cat">Kategori ekleniyor</string>
     <string name="login_select_email_client">Hangi e-posta uygulamasını kullanıyorsunuz?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Siteyle iletişimde bir sorun oluştu. Bir HTTP hata kodu 401 döndürüldü.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Bu sitede XML-RPC çağrıları engellenmiş görünüyor (hata kodu 401). Oturum açma girişimi başarısız olursa, SSS\'yi görüntülemek için yardım simgesine dokunun.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Bu URL\'deki WordPress sitesi okunamıyor. SSS\'yi görüntülemek için yardım simgesine dokunun.</string>
     <string name="login_error_xml_rpc_services_disabled">XML-RPC servisleri bu site için kapalı.</string>
-    <string name="my_site_menu_tab_title">Menü</string>
-    <string name="my_site_dashboard_tab_title">Başlangıç</string>
+    <string name="my_site_menu_tab_title">Site menüsü</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Aramanız, WordPress.com alan adlarında desteklenmeyen karakterler içeriyor. Aşağıdaki karakterlere izin verilir: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">İnternet bağlantınızı kontrol edin ve sayfayı yenileyin.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">İstatistiklere Git</string>
@@ -317,6 +324,7 @@ Language: tr
     <string name="gutenberg_native_preview_post">Yazıyı önizle</string>
     <string name="gutenberg_native_preview_page">Sayfayı önizle</string>
     <string name="gutenberg_native_retry">Tekrar dene</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Bir</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
@@ -701,7 +709,6 @@ Language: tr
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; yazınızı beğendi</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
-    <string name="hpp_skip_button">Atla</string>
     <string name="hpp_choose_button">Seç</string>
     <string name="hpp_subtitle">En sevdiğiniz ana sayfa düzenini seçin. Daha sonra özelleştirebilir ve değiştirebilirsiniz.</string>
     <string name="hpp_title">Bir tasarım seçin</string>
@@ -1209,7 +1216,6 @@ Language: tr
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyi gizle</string>
     <string name="gutenberg_native_help_icon">Yardım simgesi</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Son değişikliği geri almak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ayarı değiştirmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Bir görsel seçmek için çift dokunun</string>
@@ -2545,6 +2551,7 @@ Language: tr
     <string name="comments_empty_list_filtered_trashed">Çöpte yorum yok</string>
     <string name="comments_empty_list_filtered_pending">Bekleyen yorum yok</string>
     <string name="comments_empty_list_filtered_approved">Onaylı yorum yok</string>
+    <string name="button_skip">Atla</string>
     <string name="xmlrpc_missing_method_error">Bağlanılamadı. Sunucuda gerekli XML-RPC işlevleri eksik.</string>
     <string name="alignment_center">Ortala</string>
     <string name="post_format_video">Video</string>

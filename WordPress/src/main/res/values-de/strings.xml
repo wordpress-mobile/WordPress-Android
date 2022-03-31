@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-09 14:54:08+0000
+Translation-Revision-Date: 2022-03-23 07:26:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine hellere Hintergrundfarbe und/oder eine dunklere Textfarbe.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine dunklere Hintergrundfarbe und/oder eine hellere Textfarbe.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Das Einfügen des Mediums ist fehlgeschlagen.\nTippe für weitere Informationen.</string>
+    <string name="new_site_creation_intents_header_title">Worum wird es auf deiner Website gehen?</string>
+    <string name="new_site_creation_intents_header_subtitle">Wähle ein Thema aus der folgenden Liste oder gib ein eigenes Thema ein</string>
+    <string name="adding_cat">Kategorie wird hinzugefügt</string>
+    <string name="my_site_dashboard_tab_title">Startseite</string>
+    <string name="notification_channel_weekly_roundup_title">Wöchentliche Zusammenfassung</string>
     <string name="login_select_email_client">Welche E-Mail-Anwendung verwendest du?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Bei der Kommunikation mit der Website ist ein Problem aufgetreten. Es wurde ein HTTP-Fehlercode 401 zurückgegeben.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC-Anrufe sind auf dieser Website anscheinend blockiert (Fehlercode 401). Wenn der Anmeldeversuch fehlschlägt, tippe auf das Hilfe-Icon, um die FAQ anzuzeigen.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Unter dieser URL kann keine WordPress-Website gefunden werden. Tippe auf das Hilfe-Icon, um die FAQ anzuzeigen.</string>
-    <string name="my_site_dashboard_tab_title">Dashboard</string>
-    <string name="my_site_menu_tab_title">Menü</string>
     <string name="login_error_xml_rpc_services_disabled">Der XML-RPC-Service wurde auf dieser Website deaktiviert.</string>
+    <string name="my_site_menu_tab_title">Website-Menü</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Deine Suche beinhaltet Zeichen, die in Domains von WordPress.com nicht unterstützt werden. Die folgenden Zeichen sind erlaubt: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Überprüfe deine Internetverbindung und lade die Seite neu.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gehe zu den Statistiken</string>
@@ -151,7 +158,7 @@ Language: de
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Vorschauen für Einbettungen-Blöcke sind demnächst verfügbar</string>
     <string name="weekly_roundup">Wöchentliche Zusammenfassung</string>
     <string name="gutenberg_native_embed_options">Einbettungsoptionen</string>
-    <string name="gutenberg_native_double_tap_to_view_embed_options">Zum Anzeigen der Einbettungsoptionen zweimal tippen</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options">Zum Anzeigen der Einbettungsoptionen zweimal tippen.</string>
     <string name="quick_start_list_create_site_message">Website erstellt! Schließe eine weitere Aufgabe ab.</string>
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Dir und %1$s Blogger&lt;/a&gt; gefällt das.</string>
     <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s Blogger&lt;/a&gt; gefällt das.</string>
@@ -317,6 +324,7 @@ Language: de
     <string name="gutenberg_native_preview_page">Seitenvorschau</string>
     <string name="gutenberg_native_preview_post">Beitragsvorschau</string>
     <string name="gutenberg_native_retry">Erneut versuchen</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Eins</string>
     <string name="gutenberg_native_no_preview_available">Keine Vorschau verfügbar</string>
     <string name="gutenberg_native_s_link">%s Link</string>
@@ -701,7 +709,6 @@ Language: de
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; gefällt dein Beitrag</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollbares Block-Menü geöffnet. Wähle einen Block aus.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrollbares Block-Menü geschlossen.</string>
-    <string name="hpp_skip_button">Überspringen</string>
     <string name="hpp_choose_button">Auswählen</string>
     <string name="hpp_subtitle">Wähle ein Layout für deine Startseite aus, das dir gefällt. Du kannst es später bearbeiten und anpassen.</string>
     <string name="hpp_title">Wähle ein Design</string>
@@ -998,9 +1005,9 @@ Language: de
     <string name="photo_picker_video_title">Video auswählen</string>
     <string name="photo_picker_photo_or_video_title">Medien auswählen</string>
     <string name="site_picker_ask_site_select">Die Website konnte nicht ausgewählt werden. Bitte versuche es erneut.</string>
-    <string name="error_failed_to_load_into_file">Laden in die Datei fehlgeschlagen, bitte versuche es erneut. </string>
     <string name="feature_announcement_find_out_mode">Mehr erfahren</string>
     <string name="preview_image_thumbnail_description">Vorschau des Vorschaubilds</string>
+    <string name="error_failed_to_load_into_file">Laden in die Datei fehlgeschlagen, bitte versuche es erneut.</string>
     <string name="copy_text">Kopieren</string>
     <string name="button_insert">Einfügen</string>
     <string name="whats_new_in_version_title">Was ist neu?</string>
@@ -1209,7 +1216,6 @@ Language: de
     <string name="gutenberg_native_hide_keyboard">Tastatur ausblenden</string>
     <string name="gutenberg_native_help_icon">Hilfe-Icon</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Zum Rückgängigmachen der letzten Änderung zweimal tippen</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Das Einfügen von Medien ist fehlgeschlagen.\nFür Optionen bitte hier tippen.</string>
     <string name="gutenberg_native_link_text">Linktext</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Zum Umschalten der Einstellung zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Zum Auswählen eines Bilds zweimal tippen</string>
@@ -2545,6 +2551,7 @@ Language: de
     <string name="comments_empty_list_filtered_trashed">Keine gelöschten Kommentare</string>
     <string name="comments_empty_list_filtered_pending">Keine ausstehenden Kommentare</string>
     <string name="comments_empty_list_filtered_approved">Keine genehmigten Kommentare</string>
+    <string name="button_skip">Überspringen</string>
     <string name="xmlrpc_missing_method_error">Konnte nicht verbinden. Die benötigte XML-RPC Methoden sind nicht auf dem Server vorhanden.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>

@@ -222,28 +222,17 @@ REPOSITORY_NAME = 'WordPress-Android'
   lane :update_wordpress_appstore_strings do |options|
     metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata')
 
+    # <key in po file> => <path to txt file to read the content from>
     files = {
       release_note: File.join(metadata_folder, 'release_notes.txt'),
       release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
       play_store_promo: File.join(metadata_folder, 'short_description.txt'),
       play_store_desc: File.join(metadata_folder, 'full_description.txt'),
       play_store_app_title: File.join(metadata_folder, 'title.txt'),
-      play_store_screenshot_1: File.join(metadata_folder, 'screenshot_1.txt'),
-      play_store_screenshot_2: File.join(metadata_folder, 'screenshot_2.txt'),
-      play_store_screenshot_3: File.join(metadata_folder, 'screenshot_3.txt'),
-      play_store_screenshot_4: File.join(metadata_folder, 'screenshot_4.txt'),
-      play_store_screenshot_5: File.join(metadata_folder, 'screenshot_5.txt'),
-      play_store_screenshot_6: File.join(metadata_folder, 'screenshot_6.txt'),
-      play_store_screenshot_7: File.join(metadata_folder, 'screenshot_7.txt'),
-
-      enhanced_app_store_screenshot_1: File.join(metadata_folder, 'enhanced_screenshot_1.html'),
-      enhanced_app_store_screenshot_2: File.join(metadata_folder, 'enhanced_screenshot_2.html'),
-      enhanced_app_store_screenshot_3: File.join(metadata_folder, 'enhanced_screenshot_3.html'),
-      enhanced_app_store_screenshot_4: File.join(metadata_folder, 'enhanced_screenshot_4.html'),
-      enhanced_app_store_screenshot_5: File.join(metadata_folder, 'enhanced_screenshot_5.html'),
-      enhanced_app_store_screenshot_6: File.join(metadata_folder, 'enhanced_screenshot_6.html'),
-      enhanced_app_store_screenshot_7: File.join(metadata_folder, 'enhanced_screenshot_7.html'),
     }
+    files.merge!((1..9).map do |n|
+      [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
+    end.to_h)
 
     android_update_metadata_source(
       po_file_path: File.join(metadata_folder, 'PlayStoreStrings.po'),

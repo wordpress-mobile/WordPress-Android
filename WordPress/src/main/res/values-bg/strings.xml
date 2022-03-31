@@ -370,6 +370,7 @@ Language: bg
     <string name="me_btn_app_settings">Настройки на приложението</string>
     <string name="editor_remove_failed_uploads">Премахване на неуспешно качените файлове</string>
     <string name="site_settings_advanced_header">Разширени</string>
+    <string name="button_skip">Пропускане</string>
     <string name="xmlrpc_missing_method_error">Грешка при свързването. Задължителни XML-RPC методи липсват на този сървър.</string>
     <string name="post_format_status">Състояние</string>
     <string name="post_format_video">Видео клип</string>

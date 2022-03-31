@@ -132,7 +132,6 @@ Language: sr_RS
     <string name="reader_discover_no_posts_title">Нема недавних чланака</string>
     <string name="scan">Скенирај</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Јохан Брант&lt;/b&gt; је одговорио на ваш чланак</string>
-    <string name="hpp_skip_button">Прескочи</string>
     <string name="hpp_choose_button">Одабери</string>
     <string name="hpp_title">Одаберите дизајн</string>
     <string name="prepublishing_nudges_add_category_button">Додај категорију</string>
