@@ -1,9 +1,9 @@
-package org.wordpress.android.ui.reader.adapters
+package org.wordpress.android.ui.avatars
 
 import androidx.annotation.DimenRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.BLOGGERS_LIKING_TEXT
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.FACE
+import org.wordpress.android.ui.avatars.TrainOfFacesViewType.BLOGGERS_LIKING_TEXT
+import org.wordpress.android.ui.avatars.TrainOfFacesViewType.FACE
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @DimenRes const val FACE_ITEM_LEFT_OFFSET_DIMEN = R.dimen.margin_small_medium

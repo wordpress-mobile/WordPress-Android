@@ -66,6 +66,10 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.avatars.FACE_ITEM_LEFT_OFFSET_DIMEN
+import org.wordpress.android.ui.avatars.PostLikerItemDecorator
+import org.wordpress.android.ui.avatars.ReaderPostLikersAdapter
+import org.wordpress.android.ui.avatars.TrainOfFacesItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -79,10 +83,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter
-import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
-import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.DIRECT_OPERATION
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
@@ -94,7 +95,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
-import org.wordpress.android.ui.reader.viewholders.PostLikerItemDecorator
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetUiState
@@ -125,11 +125,11 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.isDarkTheme
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
-import org.wordpress.android.util.extensions.isDarkTheme
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -459,7 +459,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             layoutManager.onRestoreInstanceState(it)
         }
 
-        likeFacesRecycler.addItemDecoration(PostLikerItemDecorator(
+        likeFacesRecycler.addItemDecoration(
+                PostLikerItemDecorator(
                 RtlUtils.isRtl(activity),
                 contextProvider.getContext(),
                 FACE_ITEM_LEFT_OFFSET_DIMEN)

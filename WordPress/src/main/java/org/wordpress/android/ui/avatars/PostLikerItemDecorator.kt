@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.viewholders
+package org.wordpress.android.ui.avatars
 
 import android.content.Context
 import android.graphics.Rect

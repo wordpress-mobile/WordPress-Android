@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.viewholders
+package org.wordpress.android.ui.avatars
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewbinding.ViewBinding

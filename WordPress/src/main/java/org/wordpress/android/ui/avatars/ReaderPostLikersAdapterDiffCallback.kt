@@ -1,8 +1,8 @@
-package org.wordpress.android.ui.reader.adapters
+package org.wordpress.android.ui.avatars
 
 import androidx.recyclerview.widget.DiffUtil
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
+import org.wordpress.android.ui.avatars.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.ui.avatars.TrainOfFacesItem.FaceItem
 
 class ReaderPostLikersAdapterDiffCallback(
     private val oldItems: List<TrainOfFacesItem>,

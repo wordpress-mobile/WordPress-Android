@@ -1,9 +1,8 @@
-package org.wordpress.android.ui.reader.viewholders
+package org.wordpress.android.ui.avatars
 
 import android.view.ViewGroup
 import org.wordpress.android.databinding.LikerFaceItemBinding
-import org.wordpress.android.ui.reader.adapters.FACE_ITEM_AVATAR_SIZE_DIMEN
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
+import org.wordpress.android.ui.avatars.TrainOfFacesItem.FaceItem
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType

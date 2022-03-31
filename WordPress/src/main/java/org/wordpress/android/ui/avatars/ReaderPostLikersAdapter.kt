@@ -1,15 +1,12 @@
-package org.wordpress.android.ui.reader.adapters
+package org.wordpress.android.ui.avatars
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.BLOGGERS_LIKING_TEXT
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesViewType.FACE
-import org.wordpress.android.ui.reader.viewholders.BloggingLikersTextViewHolder
-import org.wordpress.android.ui.reader.viewholders.PostLikerViewHolder
-import org.wordpress.android.ui.reader.viewholders.TrainOfFacesViewHolder
+import org.wordpress.android.ui.avatars.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.ui.avatars.TrainOfFacesItem.FaceItem
+import org.wordpress.android.ui.avatars.TrainOfFacesViewType.BLOGGERS_LIKING_TEXT
+import org.wordpress.android.ui.avatars.TrainOfFacesViewType.FACE
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
