@@ -243,7 +243,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                     commentText = commentEntity.content ?: "",
                     userUrl = commentEntity.authorUrl ?: "",
                     userEmail = commentEntity.authorEmail ?: "",
-                    isFromRegisteredUsed = commentEntity.authorId > 0
+                    isFromRegisteredUser = commentEntity.authorId > 0
             )
         } else {
             CommentEssentials()
@@ -376,9 +376,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     private fun mapInputSettings(commentEssentials: CommentEssentials) = InputSettings(
-            enableEditName = !commentEssentials.isFromRegisteredUsed,
-            enableEditUrl = !commentEssentials.isFromRegisteredUsed,
-            enableEditEmail = !commentEssentials.isFromRegisteredUsed,
+            enableEditName = !commentEssentials.isFromRegisteredUser,
+            enableEditUrl = !commentEssentials.isFromRegisteredUser,
+            enableEditEmail = !commentEssentials.isFromRegisteredUser,
             enableEditComment = true
     )
 
