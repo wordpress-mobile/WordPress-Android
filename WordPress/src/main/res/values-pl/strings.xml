@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-15 07:06:31+0000
+Translation-Revision-Date: 2022-03-28 06:07:58+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -19,8 +19,8 @@ Language: pl
     <string name="about_automattic_dayone">Dzień pierwszy</string>
     <string name="about_automattic_source_code_item_title">Kod źródłowy</string>
     <string name="about_automattic_privacy_policy_item_title">Polityka prywatności</string>
-    <string name="about_automattic_terms_of_service_item_title">Warunki świadczenia usług</string>
     <string name="about_automattic_work_with_us_item_subtitle">Pracuj z dowolnego miejsca</string>
+    <string name="about_automattic_terms_of_service_item_title">Warunki usługi</string>
     <string name="about_automattic_work_with_us_item_title">Pracuj dla nas</string>
     <string name="about_automattic_family_item_title">Rodzina Automattic</string>
     <string name="about_automattic_legal_and_more_item_title">Sprawy prawne i więcej</string>

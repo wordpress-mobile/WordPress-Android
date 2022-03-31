@@ -57,6 +57,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private val isTabMediatorAttached: Boolean
         get() = tabLayoutMediator?.isAttached == true
 
+    private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            viewModel.onTabChanged(position)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSoftKeyboard()
@@ -102,7 +109,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
-            updateCollapsibleToolbarTitle(currentOffset)
+            updateCollapsibleToolbar(currentOffset)
 
             val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
             fadeSiteInfoHeader(percentage)
@@ -119,11 +126,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         })
     }
 
-    private fun MySiteFragmentBinding.updateCollapsibleToolbarTitle(currentOffset: Int) {
+    private fun MySiteFragmentBinding.updateCollapsibleToolbar(currentOffset: Int) {
         if (currentOffset == 0) {
             collapsingToolbar.title = siteTitle
+            siteInfo.siteInfoCard.visibility = View.INVISIBLE
         } else {
             collapsingToolbar.title = null
+            siteInfo.siteInfoCard.visibility = View.VISIBLE
         }
     }
 
@@ -139,6 +148,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     private fun MySiteFragmentBinding.setupViewPager() {
         val adapter = MySiteTabsAdapter(this@MySiteFragment, viewModel.orderedTabTypes)
         viewPager.adapter = adapter
+        viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
     private fun MySiteFragmentBinding.setupActionableEmptyView() {

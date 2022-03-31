@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-21 14:48:07+0000
+Translation-Revision-Date: 2022-03-26 21:48:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis clara e/ou unha cor de texto máis escura.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis escura e/ou unha cor de texto máis clara.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo ao inserir os medios.\nToca para máis información.</string>
+    <string name="new_site_creation_intents_header_subtitle">Elixe unha temática das listadas a continuación ou escribe a túa propia</string>
+    <string name="new_site_creation_intents_header_title">De que trata a túa web?</string>
+    <string name="notification_channel_weekly_roundup_title">Resumo semanal</string>
+    <string name="my_site_dashboard_tab_title">Inicio</string>
+    <string name="adding_cat">Engadir categorías</string>
     <string name="login_select_email_client">Que aplicación de correo electrónico usas?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Houbo un problema ao comunicar co sitio. Devolveuse un código de erro HTTP 401.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">As chamadas XML-RPC parecen bloqueadas neste sitio (código de erro 401). Se o intento de acceso falla, toca na icona de axuda para ver as FAQ.</string>
