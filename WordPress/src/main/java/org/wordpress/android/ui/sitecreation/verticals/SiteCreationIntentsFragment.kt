@@ -77,7 +77,6 @@ class SiteCreationIntentsFragment : Fragment() {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         if (!uiState.isHeaderVisible) input.requestFocus()
-        // More instantaneous alternative:
         siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
         updateContinueButtonVisibility(uiState.isContinueButtonVisible)
     }
