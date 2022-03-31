@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
@@ -14,7 +13,6 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val uiStateMapper: BloggingPromptsOnboardingUiStateMapper
 ) : ViewModel() {
-    private lateinit var bloggingPrompt: BloggingPrompt
 
     private val _uiState = MutableLiveData<BloggingPromptsOnboardingUiState>()
     val uiState: LiveData<BloggingPromptsOnboardingUiState> = _uiState
@@ -27,7 +25,8 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     }
 
     fun onTryNowClick() {
-        _action.value = OpenEditor(bloggingPrompt)
+        // TODO send BloggingPrompt with OpenEditor action when prompt store is ready
+        _action.value = OpenEditor
     }
 
     fun onRemindMeClick() {
