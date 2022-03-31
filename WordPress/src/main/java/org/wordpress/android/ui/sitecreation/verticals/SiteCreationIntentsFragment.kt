@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -79,8 +78,7 @@ class SiteCreationIntentsFragment : Fragment() {
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         if (!uiState.isHeaderVisible) input.requestFocus()
         // More instantaneous alternative:
-//        siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
-        animateHeaderVisibility(uiState.isHeaderVisible)
+        siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
         updateContinueButtonVisibility(uiState.isContinueButtonVisible)
     }
 
@@ -95,22 +93,6 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.updateContinueButtonVisibility(shouldBeVisible: Boolean) {
         continueButtonContainer.isVisible = shouldBeVisible
-    }
-
-    private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldBeVisible: Boolean) {
-        val headerLayout = siteCreationIntentsHeader.root
-        val toggleVisibility = Runnable { headerLayout.isVisible = shouldBeVisible }
-
-        when {
-            !shouldBeVisible && headerLayout.isVisible -> {
-                headerLayout.animate().alpha(0f).withEndAction(toggleVisibility)
-            }
-            shouldBeVisible && headerLayout.isGone -> {
-                // I don't think we ever encounter this transition in the current code
-                headerLayout.isVisible = shouldBeVisible
-                headerLayout.animate().alpha(1f)
-            }
-        }
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
