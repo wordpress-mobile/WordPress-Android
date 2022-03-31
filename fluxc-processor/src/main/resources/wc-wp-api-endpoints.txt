@@ -82,6 +82,7 @@
 
 /coupons
 /coupons/<id>
+/reports/coupons
 
 /admin/notes
 /admin/notes/<note_id>
