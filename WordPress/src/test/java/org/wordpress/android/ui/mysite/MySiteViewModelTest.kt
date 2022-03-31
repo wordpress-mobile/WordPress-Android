@@ -92,8 +92,8 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -408,6 +408,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given my site tabs build, when site is selected, then site header is visible`() {
+        initSelectedSite()
+
+        assertThat((uiModels.last().state as SiteSelected).siteInfoToolbarViewParams.headerVisible).isTrue
+    }
+
+    @Test
     fun `model is empty with no selected site`() {
         onSiteSelected.value = null
         currentAvatar.value = CurrentAvatarUrl("")
@@ -474,6 +481,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteSelected.value = null
 
         assertThat((uiModels.last().state as NoSites).tabsUiState.showTabs).isFalse
+    }
+
+    @Test
+    fun `given no selected site, then site info header is not visible `() {
+        onSiteSelected.value = null
+
+        assertThat((uiModels.last().state as NoSites).siteInfoToolbarViewParams.headerVisible).isFalse
     }
 
     @Test
