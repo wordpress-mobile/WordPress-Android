@@ -18,4 +18,3 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
 }
 
 private const val ANSWER_COUNT = 19
-

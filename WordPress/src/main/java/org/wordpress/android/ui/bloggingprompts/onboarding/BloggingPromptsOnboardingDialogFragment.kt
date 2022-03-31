@@ -73,8 +73,6 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             promptCard.promptContent.text = getString(readyState.promptRes)
             promptCard.numberOfAnswers.text = getString(readyState.answersRes, readyState.answersCount)
             contentBottom.text = getString(readyState.contentBottomRes)
-            contentNote.text = getString(readyState.contentNoteTitle)
-
             contentNote.text = buildSpannedString {
                 bold { append("${getString(readyState.contentNoteTitle)} ") }
                 append(getString(readyState.contentNoteContent))
