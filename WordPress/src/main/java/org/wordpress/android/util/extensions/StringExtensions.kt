@@ -1,10 +1,6 @@
 package org.wordpress.android.util.extensions
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.util.Locale
 
 /**
@@ -22,5 +18,3 @@ import java.util.Locale
 fun String.capitalizeWithLocaleWithoutLint(locale: Locale): String {
     return this.capitalize(locale)
 }
-
-fun String?.orEmpty(): String = this?.run { this } ?: ""
