@@ -92,7 +92,6 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.updateContinueButtonVisibility(shouldBeVisible: Boolean) {
         continueButtonContainer.isVisible = shouldBeVisible
-        continueButtonShadow.isVisible = shouldBeVisible
     }
 
     private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldBeVisible: Boolean) {
