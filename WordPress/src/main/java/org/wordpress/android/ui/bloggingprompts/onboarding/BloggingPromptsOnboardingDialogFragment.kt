@@ -76,7 +76,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             contentNote.text = getString(readyState.contentNoteTitle)
 
             contentNote.text = buildSpannedString {
-                bold { append(getString(readyState.contentNoteTitle)) }
+                bold { append("${getString(readyState.contentNoteTitle)} ") }
                 append(getString(readyState.contentNoteContent))
             }
         }
