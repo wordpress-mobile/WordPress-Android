@@ -78,6 +78,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -140,8 +141,10 @@ class MySiteViewModel @Inject constructor(
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
+    private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -151,6 +154,7 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
     private val _onShare = MutableLiveData<Event<String>>()
+    private val _selectTab = MutableLiveData<Event<TabNavigation>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -173,9 +177,20 @@ class MySiteViewModel @Inject constructor(
 
     val orderedTabTypes: List<MySiteTabType>
         get() = if (isMySiteTabsEnabled) {
-            listOf(MySiteTabType.SITE_MENU, MySiteTabType.DASHBOARD)
+            listOf(MySiteTabType.DASHBOARD, MySiteTabType.SITE_MENU)
         } else {
             listOf(MySiteTabType.ALL)
+        }
+
+    private val defaultABExperimentTab: MySiteTabType
+        get() = if (isMySiteTabsEnabled) {
+            if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
+                MySiteTabType.DASHBOARD
+            } else {
+                MySiteTabType.SITE_MENU
+            }
+        } else {
+            MySiteTabType.ALL
         }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
@@ -198,6 +213,7 @@ class MySiteViewModel @Inject constructor(
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
     val onShare = _onShare
+    val selectTab: LiveData<Event<TabNavigation>> = _selectTab
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -233,6 +249,7 @@ class MySiteViewModel @Inject constructor(
                         scanAvailable,
                         cardsUpdate
                 )
+                selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
                 state
             } else {
@@ -446,10 +463,10 @@ class MySiteViewModel @Inject constructor(
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
-            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.DASHBOARD) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.SITE_MENU) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
             add(Type.DOMAIN_REGISTRATION_CARD)
         }
         MySiteTabType.ALL -> emptyList()
@@ -896,6 +913,11 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    fun onCreateSiteResult() {
+        isDefaultABExperimentTabSet = false
+        selectDefaultTabIfNeeded()
+    }
+
     fun performFirstStepAfterSiteCreation(siteLocalId: Int) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor()
@@ -1004,6 +1026,15 @@ class MySiteViewModel @Inject constructor(
         setVisible()
     }
 
+    private fun selectDefaultTabIfNeeded() {
+        if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
+        val index = orderedTabTypes.indexOf(defaultABExperimentTab)
+        if (index != -1) {
+            _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
+            isDefaultABExperimentTabSet = true
+        }
+    }
+
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
@@ -1082,6 +1113,8 @@ class MySiteViewModel @Inject constructor(
         val headerVisible: Boolean = true,
         val appBarLiftOnScroll: Boolean = false
     )
+
+    data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
