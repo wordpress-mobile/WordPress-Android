@@ -12,8 +12,8 @@ import org.wordpress.android.ui.history.HistoryListItem.ViewType.FOOTER
 import org.wordpress.android.ui.history.HistoryListItem.ViewType.HEADER
 import org.wordpress.android.ui.history.HistoryListItem.ViewType.REVISION
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.util.toFormattedTimeString
+import org.wordpress.android.util.extensions.toFormattedDateString
+import org.wordpress.android.util.extensions.toFormattedTimeString
 import java.util.ArrayList
 import java.util.Date
 

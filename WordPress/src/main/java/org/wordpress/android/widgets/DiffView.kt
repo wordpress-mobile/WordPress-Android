@@ -11,7 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.ADD
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.DELETE
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class DiffView : MaterialTextView {
     constructor(context: Context) : super(context)

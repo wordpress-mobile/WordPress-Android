@@ -31,6 +31,7 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val LOCAL_SITE_ID = 1
 private const val SEGMENT_ID = 1L
+private const val VERTICAL = "Test Vertical"
 private const val DOMAIN = "test.domain.com"
 private const val STEP_COUNT = 20
 private const val FIRST_STEP_INDEX = 1
@@ -105,6 +106,13 @@ class SiteCreationMainVMTest {
     @Test
     fun onSiteIntentSkippedPropagatedToWizardManager() {
         viewModel.onSiteIntentSkipped()
+        verify(wizardManager).showNextStep()
+    }
+
+    @Test
+    fun onSiteIntentSelectedPropagatedToWizardManager() {
+        viewModel.onSiteIntentSelected(VERTICAL)
+        assertThat(currentWizardState(viewModel).siteIntent).isEqualTo(VERTICAL)
         verify(wizardManager).showNextStep()
     }
 
@@ -184,7 +192,7 @@ class SiteCreationMainVMTest {
     fun siteCreationStateRestored() {
         /* we need to model a real use case of data only existing for steps the user has visited (Segment only in
         this case). Otherwise, subsequent steps' state will be cleared and make the test fail. (issue #10189)*/
-        val expectedState = SiteCreationState(SEGMENT_ID)
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
         whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
                 .thenReturn(expectedState)
 

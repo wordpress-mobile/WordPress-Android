@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mlp
 
 import org.wordpress.android.util.BuildConfig
-import org.wordpress.android.util.parseJsonFromAsset
+import org.wordpress.android.util.extensions.parseJsonFromAsset
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 

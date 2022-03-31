@@ -26,7 +26,7 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreview
 import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject

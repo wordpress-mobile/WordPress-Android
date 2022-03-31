@@ -18,7 +18,6 @@ import org.wordpress.android.login.BuildConfig
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfigWrapper
@@ -27,8 +26,9 @@ import org.wordpress.android.util.LanguageUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.logInformation
-import org.wordpress.android.util.stateLogInformation
+import org.wordpress.android.util.extensions.currentLocale
+import org.wordpress.android.util.extensions.logInformation
+import org.wordpress.android.util.extensions.stateLogInformation
 import org.wordpress.android.util.validateEmail
 import zendesk.configurations.Configuration
 import zendesk.core.AnonymousIdentity

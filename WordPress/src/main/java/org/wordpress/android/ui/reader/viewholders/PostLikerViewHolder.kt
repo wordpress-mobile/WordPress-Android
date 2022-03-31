@@ -7,7 +7,7 @@ import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class PostLikerViewHolder(
     parent: ViewGroup,

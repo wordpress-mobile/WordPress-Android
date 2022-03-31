@@ -34,6 +34,7 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
+    val siteIntent: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: String? = null
@@ -93,6 +94,11 @@ class SiteCreationMainVM @Inject constructor(
         outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
         outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
+    }
+
+    fun onSiteIntentSelected(intent: String) {
+        siteCreationState = siteCreationState.copy(siteIntent = intent)
+        wizardManager.showNextStep()
     }
 
     fun onSiteIntentSkipped() {

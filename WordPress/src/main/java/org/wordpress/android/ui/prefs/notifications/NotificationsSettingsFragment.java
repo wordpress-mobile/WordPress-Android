@@ -72,7 +72,7 @@ import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;

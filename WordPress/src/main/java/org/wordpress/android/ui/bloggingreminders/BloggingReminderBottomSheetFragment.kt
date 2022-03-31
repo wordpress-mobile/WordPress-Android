@@ -17,7 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.RecyclerViewPrimaryButtonBottomSheetBinding
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.disableAnimation
+import org.wordpress.android.util.extensions.disableAnimation
 import javax.inject.Inject
 
 class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
