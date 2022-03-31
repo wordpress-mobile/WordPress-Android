@@ -95,7 +95,7 @@ class CommentsMapperTest {
         return mappedModel.id == commentModel.id &&
         mappedModel.remoteCommentId == commentModel.remoteCommentId &&
         mappedModel.remotePostId == commentModel.remotePostId &&
-        mappedModel.remoteParentCommentId == commentModel.remoteParentCommentId &&
+        mappedModel.authorId == commentModel.authorId &&
         mappedModel.localSiteId == commentModel.localSiteId &&
         mappedModel.remoteSiteId == commentModel.remoteSiteId &&
         mappedModel.authorUrl == commentModel.authorUrl &&
@@ -119,7 +119,7 @@ class CommentsMapperTest {
             ID = entity.remoteCommentId
             URL = entity.url
             author = Author().apply {
-                ID = entity.remoteParentCommentId
+                ID = entity.authorId
                 URL = entity.authorUrl
                 avatar_URL = entity.authorProfileImageUrl
                 email = entity.authorEmail
@@ -147,7 +147,7 @@ class CommentsMapperTest {
             id = entity.id.toInt()
             remoteCommentId = entity.remoteCommentId
             remotePostId = entity.remotePostId
-            remoteParentCommentId = entity.remoteParentCommentId
+            authorId = entity.authorId
             localSiteId = entity.localSiteId
             remoteSiteId = entity.remoteSiteId
             authorUrl = entity.authorUrl
@@ -168,7 +168,7 @@ class CommentsMapperTest {
 
     private fun CommentEntity.toXmlRpcDto(): HashMap<*, *> {
         return hashMapOf<String, Any?>(
-                "parent" to this.remoteParentCommentId.toString(),
+                "parent" to this.parentId.toString(),
                 "post_title" to this.postTitle,
                 "author" to this.authorName,
                 "link" to this.url,
@@ -177,19 +177,18 @@ class CommentsMapperTest {
                 "content" to this.content,
                 "author_url" to this.authorUrl,
                 "post_id" to this.remotePostId,
-                "user_id" to "1",
+                "user_id" to this.authorId,
                 "author_email" to this.authorEmail,
                 "status" to this.status
         )
     }
 
     private fun getDefaultComment(allowNulls: Boolean): CommentEntity {
-        val remoteParentCommentId = 1_000L
         return CommentEntity(
                 id = 0,
                 remoteCommentId = 10,
                 remotePostId = 100,
-                remoteParentCommentId = remoteParentCommentId,
+                authorId = 44,
                 localSiteId = 10_000,
                 remoteSiteId = 100_000,
                 authorUrl = if (allowNulls) null else "https://test-debug-site.wordpress.com",
@@ -203,7 +202,7 @@ class CommentsMapperTest {
                 content = if (allowNulls) null else "content example",
                 url = if (allowNulls) null else "https://test-debug-site.wordpress.com/2021/02/25/again/#comment-137",
                 hasParent = true,
-                parentId = remoteParentCommentId,
+                parentId = 1_000L,
                 iLike = false
         )
     }
