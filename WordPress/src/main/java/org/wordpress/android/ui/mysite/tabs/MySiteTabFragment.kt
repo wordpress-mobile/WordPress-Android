@@ -379,7 +379,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         super.onPause()
         activity?.let {
             if (!it.isChangingConfigurations) {
-                viewModel.clearActiveQuickStartTask()
                 viewModel.dismissQuickStartNotice()
             }
         }
@@ -457,6 +456,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
+                viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
                         data.getIntExtra(
                                 SitePickerActivity.KEY_SITE_LOCAL_ID,
@@ -466,6 +466,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
                             data.getIntExtra(
                                     SitePickerActivity.KEY_SITE_LOCAL_ID,

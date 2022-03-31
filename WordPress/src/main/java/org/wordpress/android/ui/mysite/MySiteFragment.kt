@@ -173,9 +173,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
         }
-
         viewModel.onTrackWithTabSource.observeEvent(viewLifecycleOwner) {
             binding?.viewPager?.getCurrentFragment()?.onTrackWithTabSource(it)
+        }
+        viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
+            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
     }
 
@@ -312,6 +314,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     ) : TabLayoutMediator.TabConfigurationStrategy {
         override fun onConfigureTab(@NonNull tab: TabLayout.Tab, position: Int) {
             binding?.updateTab(tab, tabUiStates[position])
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            if (!it.isChangingConfigurations) {
+                viewModel.clearActiveQuickStartTask()
+            }
         }
     }
 
