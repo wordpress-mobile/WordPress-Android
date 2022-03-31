@@ -5,7 +5,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
-
     fun mapReady(): Ready = Ready(
             promptRes = R.string.blogging_prompts_onboarding_card_prompt,
             answersRes = R.string.my_site_blogging_prompt_card_number_of_answers,

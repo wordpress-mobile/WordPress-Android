@@ -5,7 +5,6 @@ import org.junit.Test
 import org.wordpress.android.R
 
 class BloggingPromptsOnboardingUiStateMapperTest {
-
     private val classToTest = BloggingPromptsOnboardingUiStateMapper()
 
     @Test

@@ -13,7 +13,6 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val uiStateMapper: BloggingPromptsOnboardingUiStateMapper
 ) : ViewModel() {
-
     private val _uiState = MutableLiveData<BloggingPromptsOnboardingUiState>()
     val uiState: LiveData<BloggingPromptsOnboardingUiState> = _uiState
 

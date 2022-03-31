@@ -15,7 +15,6 @@ import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 
 @Suppress("TooManyFunctions")
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
-
     private var _binding: FeatureIntroductionDialogFragmentBinding? = null
     private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")
 
