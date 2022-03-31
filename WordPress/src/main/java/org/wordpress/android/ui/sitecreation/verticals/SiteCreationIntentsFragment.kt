@@ -77,6 +77,8 @@ class SiteCreationIntentsFragment : Fragment() {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         if (!uiState.isHeaderVisible) input.requestFocus()
+        // More instantaneous alternative:
+//        siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
         animateHeaderVisibility(uiState.isHeaderVisible)
         updateContinueButtonVisibility(uiState.isContinueButtonVisible)
     }
@@ -100,10 +102,12 @@ class SiteCreationIntentsFragment : Fragment() {
 
         when {
             !shouldBeVisible && headerLayout.isVisible -> {
-                headerLayout.animate().translationY(-headerLayout.height.toFloat()).withEndAction(toggleVisibility)
+                headerLayout.animate().alpha(0f).withEndAction(toggleVisibility)
             }
             shouldBeVisible && headerLayout.isGone -> {
-                headerLayout.animate().translationY(0f).withEndAction(toggleVisibility)
+                // I don't think we ever encounter this transition in the current code
+                headerLayout.isVisible = shouldBeVisible
+                headerLayout.animate().alpha(1f)
             }
         }
     }
