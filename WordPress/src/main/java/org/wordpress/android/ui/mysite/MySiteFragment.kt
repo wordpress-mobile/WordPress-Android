@@ -173,6 +173,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
         }
+
+        viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
+            viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
+        }
     }
 
     private fun MySiteFragmentBinding.loadGravatar(avatarUrl: String) =
@@ -318,6 +322,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     ) : TabLayoutMediator.TabConfigurationStrategy {
         override fun onConfigureTab(@NonNull tab: TabLayout.Tab, position: Int) {
             binding?.updateTab(tab, tabUiStates[position])
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            if (!it.isChangingConfigurations) {
+                viewModel.clearActiveQuickStartTask()
+            }
         }
     }
 
