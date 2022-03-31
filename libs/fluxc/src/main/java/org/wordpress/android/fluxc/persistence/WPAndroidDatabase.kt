@@ -134,8 +134,9 @@ abstract class WPAndroidDatabase : RoomDatabase() {
         val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
+                    execSQL("DROP TABLE Comments")
                     execSQL(
-                        "CREATE TABLE `Comments_backup` (" +
+                        "CREATE TABLE `Comments` (" +
                             "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                             "`remoteCommentId` INTEGER NOT NULL, " +
                             "`remotePostId` INTEGER NOT NULL, " +
@@ -145,7 +146,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                             "`authorName` TEXT, " +
                             "`authorEmail` TEXT, " +
                             "`authorProfileImageUrl` TEXT, " +
-                            "`authorId` INTEGER NOT NULL DEFAULT 0 , " +
+                            "`authorId` INTEGER NOT NULL , " +
                             "`postTitle` TEXT, " +
                             "`status` TEXT, " +
                             "`datePublished` TEXT, " +
@@ -156,48 +157,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                             "`parentId` INTEGER NOT NULL, " +
                             "`iLike` INTEGER NOT NULL)"
                     )
-                    execSQL(
-                        "INSERT INTO `Comments_backup` (" +
-                            "id," +
-                            "remoteCommentId," +
-                            "remotePostId," +
-                            "localSiteId," +
-                            "remoteSiteId," +
-                            "authorUrl," +
-                            "authorName," +
-                            "authorEmail," +
-                            "authorProfileImageUrl," +
-                            "postTitle," +
-                            "status," +
-                            "datePublished," +
-                            "publishedTimestamp," +
-                            "content," +
-                            "url," +
-                            "hasParent," +
-                            "parentId," +
-                            "iLike)" +
-                            "SELECT " +
-                            "id," +
-                            "remoteCommentId," +
-                            "remotePostId," +
-                            "localSiteId," +
-                            "remoteSiteId," +
-                            "authorUrl," +
-                            "authorName," +
-                            "authorEmail," +
-                            "authorProfileImageUrl," +
-                            "postTitle," +
-                            "status," +
-                            "datePublished," +
-                            "publishedTimestamp," +
-                            "content," +
-                            "url," +
-                            "hasParent," +
-                            "parentId," +
-                            "iLike FROM Comments"
-                    )
-                    execSQL("DROP TABLE Comments")
-                    execSQL("ALTER TABLE Comments_backup RENAME TO Comments")
                 }
             }
         }
