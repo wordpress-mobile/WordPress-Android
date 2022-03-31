@@ -1080,7 +1080,7 @@ class MySiteViewModel @Inject constructor(
         @DimenRes val appBarHeight: Int,
         @DimenRes val toolbarBottomMargin: Int,
         val headerVisible: Boolean = true,
-        val appBarLiftOnScroll: Boolean = false,
+        val appBarLiftOnScroll: Boolean = false
     )
 
     data class TextInputDialogModel(
