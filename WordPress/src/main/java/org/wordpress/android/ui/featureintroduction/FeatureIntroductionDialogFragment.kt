@@ -13,6 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.FeatureIntroductionDialogFragmentBinding
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 
+@Suppress("TooManyFunctions")
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
 
     private var _binding: FeatureIntroductionDialogFragmentBinding? = null
