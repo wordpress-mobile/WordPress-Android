@@ -70,7 +70,7 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
-        recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
+        recyclerView.adapter = SiteCreationIntentsAdapter()
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
@@ -122,7 +122,12 @@ class SiteCreationIntentsFragment : Fragment() {
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
         continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
-        input.setOnFocusChangeListener { _, willFocus -> if (willFocus) viewModel.onSearchInputFocused() }
+        input.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                viewModel.onSearchInputFocused()
+                recyclerView.smoothScrollToPosition(0)
+            }
+        }
     }
 
     private fun SiteCreationIntentsFragmentBinding.addSearchTextChangedListener() {

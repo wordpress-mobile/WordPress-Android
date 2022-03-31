@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabExperimentVariant;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -167,7 +168,10 @@ public class AppPrefs {
         PINNED_DYNAMIC_CARD,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
-        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION
+        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
+
+        // Used to store the variant for the my site default tab experiment
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT
     }
 
     /**
@@ -1339,5 +1343,16 @@ public class AppPrefs {
             capabilities.add(JetpackCapability.Companion.fromString(item));
         }
         return capabilities;
+    }
+
+    public static void setMySiteDefaultTabExperimentVariant(String variant) {
+        setString(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT, variant);
+    }
+
+    public static String getMySiteDefaultTabExperimentVariant() {
+        return getString(
+                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT,
+                MySiteTabExperimentVariant.NONEXISTENT.getLabel()
+        );
     }
 }

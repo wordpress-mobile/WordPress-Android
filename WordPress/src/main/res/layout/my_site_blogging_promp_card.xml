@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/my_site_card_row_padding"
         android:paddingTop="@dimen/my_site_card_row_top_padding"
-        android:paddingEnd="@dimen/my_site_card_row_padding">
+        android:paddingEnd="@dimen/my_site_card_row_padding"
+        android:paddingBottom="@dimen/margin_small">
 
         <ImageView
             android:id="@+id/title_icon"
@@ -33,12 +34,12 @@
             android:text="@string/my_site_blogging_prompt_card_title"
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceSubtitle1"
-            app:layout_constraintEnd_toStartOf="@+id/my_site_card_toolbar_more"
+            app:layout_constraintEnd_toStartOf="@+id/blogging_prompt_card_menu"
             app:layout_constraintStart_toEndOf="@+id/title_icon"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/my_site_card_toolbar_more"
+            android:id="@+id/blogging_prompt_card_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -78,18 +79,39 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/answer_button"
-            style="@style/MySiteCardFooterLinkItem"
+            style="@style/MySiteCardAnswerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small_medium"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:clickable="true"
-            android:focusable="true"
             android:text="@string/my_site_blogging_prompt_card_answer_prompt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/answered_users_recycler" />
 
+        <LinearLayout
+            android:id="@+id/answered_prompt_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/answered_users_container">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/answered_button"
+                style="@style/MySiteCardAnsweredButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_blogging_prompt_card_answered_prompt"
+                android:textColor="@color/success_emphasis_medium_selector" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/share_button"
+                style="@style/MySiteCardAnsweredButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_site_blogging_prompt_card_share" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

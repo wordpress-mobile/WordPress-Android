@@ -14,9 +14,10 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.S
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_ID
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.experiments.SiteIntentQuestionABExperiment.Variation
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,8 +45,8 @@ class SiteCreationTracker @Inject constructor(
         LOCATION("location"),
         FILTER("filter"),
         SELECTED_FILTERS("selected_filters"),
-        VERTICAL_ID("vertical_id"),
-        VERTICAL_SLUG("vertical_slug")
+        VERTICAL_SLUG("vertical_slug"),
+        VARIATION("variation")
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -267,10 +268,17 @@ class SiteCreationTracker @Inject constructor(
         )
     }
 
-    fun trackSiteIntentQuestionVerticalSelected(verticalId: String, verticalSlug: String) {
+    fun trackSiteIntentQuestionVerticalSelected(verticalSlug: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED,
-                mapOf(VERTICAL_ID.key to verticalId, VERTICAL_SLUG.key to verticalSlug)
+                mapOf(VERTICAL_SLUG.key to verticalSlug)
+        )
+    }
+
+    fun trackSiteIntentQuestionExperimentVariation(variation: Variation) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT,
+                mapOf(VARIATION.key to variation.key)
         )
     }
 }
