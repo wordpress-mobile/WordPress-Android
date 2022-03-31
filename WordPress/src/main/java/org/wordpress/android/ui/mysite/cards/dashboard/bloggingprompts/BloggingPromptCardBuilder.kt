@@ -11,7 +11,8 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 prompt = UiStringText(it.text),
                 answeredUsers = emptyList(),
                 numberOfAnswers = it.numberOfAnswers,
-                isAnswered = false
+                isAnswered = false,
+                onShareClick = params.onShareClick
         )
     }
 }

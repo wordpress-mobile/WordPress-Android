@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-24 15:54:07+0000
+Translation-Revision-Date: 2022-03-25 18:54:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
@@ -8,7 +8,8 @@ Language: ru
 <resources>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Это сочетание цветов может затруднить чтение. Попробуйте использовать более яркий цвет фона и/или более темный цвет текста.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Это сочетание цветов может затруднить чтение. Попробуйте использовать более темный цвет фона и/или более яркий цвет текста.</string>
-    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Не удалось вставить медиафайл.\nTap for more info.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Не удалось вставить медиафайл.\nКоснитесь, чтобы получить больше информации.</string>
+    <string name="new_site_creation_intents_header_subtitle">Выберите тему из списка ниже или укажите собственную</string>
     <string name="new_site_creation_intents_header_title">Чему посвящён ваш веб-сайт?</string>
     <string name="notification_channel_weekly_roundup_title">За неделю</string>
     <string name="my_site_dashboard_tab_title">Главная</string>

@@ -2250,7 +2250,13 @@
     <!-- My Site - Blogging Prompt Card -->
     <string name="my_site_blogging_prompt_card_title">Prompts</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
+    <string name="my_site_blogging_prompt_card_share" translatable="false">@string/share_action</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_number_of_answers">%d answers</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -3201,7 +3207,7 @@
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
-    <string name="new_site_creation_intents_input_hint">Eg. Lifestyle, Poetry, Politics</string>
+    <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>

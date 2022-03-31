@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -20,11 +21,13 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -32,6 +35,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -56,6 +60,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     private val featureAnnouncement = FeatureAnnouncement(
@@ -93,6 +100,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
                 quickStartRepository,
+                selectedSiteRepository,
+                accountStore,
+                siteStore,
                 mySiteDefaultTabExperiment,
                 NoDelayCoroutineDispatcher()
         )
@@ -657,6 +667,42 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
+    }
+
+    @Test
+    fun `hasMultipleSites should be true when there are more than one site`() {
+        whenever(siteStore.sitesCount).thenReturn(2)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(true)
+    }
+
+    @Test
+    fun `hasMultipleSites should be false when there is only one site`() {
+        whenever(siteStore.sitesCount).thenReturn(1)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(false)
+    }
+
+    @Test
+    fun `hasMultipleSites should be false when there are no site`() {
+        whenever(siteStore.sitesCount).thenReturn(0)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(false)
+    }
+
+    @Test
+    fun `firstSite should return the first site available in the list of sites`() {
+        val sites = mock<ArrayList<SiteModel>>()
+        whenever(siteStore.sites).thenReturn(sites)
+        val siteModel = mock<SiteModel>()
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(sites.get(0)).thenReturn(siteModel)
+
+        assertThat(viewModel.firstSite).isEqualTo(siteModel)
+    }
+
+    @Test
+    fun `firstSite should return null when there are no sites`() {
+        whenever(siteStore.hasSite()).thenReturn(false)
+
+        assertThat(viewModel.firstSite).isEqualTo(null)
     }
 
     @Test

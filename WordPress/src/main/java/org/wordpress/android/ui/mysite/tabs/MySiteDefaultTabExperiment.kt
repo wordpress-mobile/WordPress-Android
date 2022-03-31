@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.tabs
 
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
@@ -23,6 +24,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
                     false -> setExperimentVariant(MySiteTabExperimentVariant.SITE_MENU)
                 }
                 analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
+                analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
             }
         }
     }

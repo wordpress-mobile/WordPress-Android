@@ -12,14 +12,14 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCa
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
-class SiteInfoCardBuilderTest {
+class SiteInfoHeaderCardBuilderTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
-    private lateinit var siteInfoCardBuilder: SiteInfoCardBuilder
+    private lateinit var siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
 
     @Before
     fun setUp() {
-        siteInfoCardBuilder = SiteInfoCardBuilder(resourceProvider)
+        siteInfoHeaderCardBuilder = SiteInfoHeaderCardBuilder(resourceProvider)
     }
 
     @Test
@@ -61,7 +61,7 @@ class SiteInfoCardBuilderTest {
     private fun buildSiteInfoCard(
         showUpdateSiteTitleFocusPoint: Boolean = false,
         showUploadSiteIconFocusPoint: Boolean = false
-    ) = siteInfoCardBuilder.buildSiteInfoCard(
+    ) = siteInfoHeaderCardBuilder.buildSiteInfoCard(
             SiteInfoCardBuilderParams(
                     site = site,
                     showSiteIconProgressBar = showUploadSiteIconFocusPoint,
