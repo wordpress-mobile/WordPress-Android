@@ -1033,7 +1033,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
         return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
-                nextSiteInfoHeaderCard)?: false)
+                nextSiteInfoHeaderCard
+        ) ?: false)
     }
 
     data class UiModel(
@@ -1093,7 +1094,7 @@ class MySiteViewModel @Inject constructor(
         @DimenRes val appBarHeight: Int,
         @DimenRes val toolbarBottomMargin: Int,
         val headerVisible: Boolean = true,
-        val appBarLiftOnScroll: Boolean = false,
+        val appBarLiftOnScroll: Boolean = false
     )
 
     data class TextInputDialogModel(
