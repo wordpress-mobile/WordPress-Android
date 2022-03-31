@@ -10,8 +10,7 @@
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_with_site_info_height"
-        android:visibility="visible"
-        app:liftOnScroll="false">
+        android:visibility="visible">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"

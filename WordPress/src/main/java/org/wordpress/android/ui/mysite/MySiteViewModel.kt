@@ -62,8 +62,8 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -477,8 +477,11 @@ class MySiteViewModel @Inject constructor(
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
                 siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
-                        R.dimen.app_bar_with_no_site_info_height,
-                        R.dimen.toolbar_bottom_margin_with_no_tabs
+                        appBarHeight = R.dimen.app_bar_with_no_site_info_height,
+                        toolbarBottomMargin = R.dimen.toolbar_bottom_margin_with_no_tabs,
+                        headerVisible = false,
+                        appBarLiftOnScroll = true
+
                 ),
                 shouldShowImage = shouldShowImage
         )
@@ -1075,7 +1078,9 @@ class MySiteViewModel @Inject constructor(
 
     data class SiteInfoToolbarViewParams(
         @DimenRes val appBarHeight: Int,
-        @DimenRes val toolbarBottomMargin: Int
+        @DimenRes val toolbarBottomMargin: Int,
+        val headerVisible: Boolean = true,
+        val appBarLiftOnScroll: Boolean = false,
     )
 
     data class TextInputDialogModel(
