@@ -31,8 +31,6 @@ ext {
 
     exoPlayerVersion = '2.9.3'
 
-    composeVersion = '1.0.5'
-
     // testing
     jUnitVersion = '4.13'
     androidxTestVersion = '1.1.0'

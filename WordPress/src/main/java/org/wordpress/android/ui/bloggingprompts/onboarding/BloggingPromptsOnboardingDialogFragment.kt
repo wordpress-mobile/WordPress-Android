@@ -3,33 +3,18 @@ package org.wordpress.android.ui.bloggingprompts.onboarding
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.BloggingPromptsOmboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
-import org.wordpress.android.ui.bloggingprompts.onboarding.card.BloggingPromptsOnboardingCardView
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.util.extensions.exhaustive
 import javax.inject.Inject
 
@@ -80,44 +65,19 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     }
 
     private fun setupContent(readyState: Ready) {
-        setContent {
-            Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()) {
-                Text(
-                    modifier = Modifier.padding(bottom = 24.dp),
-                    text = stringResource(R.string.blogging_prompts_onboarding_body_top),
-                    fontFamily = FontFamily.Serif,
-                    style = MaterialTheme.typography.subtitle1,
-                        color = colorResource(id = attr.wpColorOnSurfaceMedium)
-                )
-                AndroidView(
-                    modifier = Modifier
-                            .height(200.dp)
-                            .fillMaxWidth()
-                            .background(Color.Blue),
-                    factory = { context ->
-                        val cardView = BloggingPromptsOnboardingCardView(context)
-                        cardView.bind(
-                            BloggingPromptCardWithData(
-                                prompt = readyState.prompt,
-                                answeredUsers = readyState.answeredUsers,
-                                numberOfAnswers = readyState.numberOfAnswers,
-                                isAnswered = readyState.isAnswered,
-                                onShareClick = {
-                                    // no op
-                                }
-                            )
-                        )
-                        cardView
-                    }
-                )
-                Text(
-                    modifier = Modifier.padding(top = 24.dp),
-                    text = getString(R.string.blogging_prompts_onboarding_body_bottom),
-                    fontFamily = FontFamily.Serif,
-                    style = MaterialTheme.typography.subtitle1
-                )
+        val contentBinding = BloggingPromptsOmboardingDialogContentViewBinding.inflate(layoutInflater)
+        setContent(contentBinding.root)
+        with(contentBinding) {
+            contentTop.text = getString(readyState.contentTopRes)
+            cardCoverView.setOnClickListener { /*do nothing*/ }
+            promptCard.promptContent.text = getString(readyState.promptRes)
+            promptCard.numberOfAnswers.text = getString(readyState.answersRes, readyState.answersCount)
+            contentBottom.text = getString(readyState.contentBottomRes)
+            contentNote.text = getString(readyState.contentNoteTitle)
+
+            contentNote.text = buildSpannedString {
+                bold { append(getString(readyState.contentNoteTitle)) }
+                append(getString(readyState.contentNoteContent))
             }
         }
     }

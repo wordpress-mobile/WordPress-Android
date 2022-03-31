@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.runtime.Composable
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import org.wordpress.android.R
@@ -70,8 +69,8 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
         binding.headerIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, headerIconRes, context?.theme))
     }
 
-    fun setContent(content: @Composable () -> Unit) {
-        binding.content.setContent(content)
+    fun setContent(view: View) {
+        binding.contentContainer.addView(view)
     }
 
     private fun setupCloseButton() {
