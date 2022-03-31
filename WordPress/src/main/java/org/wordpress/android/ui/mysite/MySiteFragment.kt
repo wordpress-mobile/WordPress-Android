@@ -251,11 +251,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         actionableEmptyView.image.setVisible(state.shouldShowImage)
         siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
-        appbarMain.setExpanded(false,true)
+        appbarMain.setExpanded(false, true)
     }
 
     private fun MySiteFragmentBinding.showHeader(visibility: Boolean) {
-        header.visibility = if(visibility) View.VISIBLE else View.INVISIBLE
+        header.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 
     private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
