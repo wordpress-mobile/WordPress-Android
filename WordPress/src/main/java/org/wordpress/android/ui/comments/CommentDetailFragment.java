@@ -639,8 +639,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
-            AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
-                    mCommentSource.toAnalyticsCommentActionSource(), mSite);
         }
     }
 

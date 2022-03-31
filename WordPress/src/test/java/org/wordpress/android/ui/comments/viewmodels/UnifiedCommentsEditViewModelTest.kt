@@ -15,6 +15,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
@@ -43,6 +44,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
@@ -54,6 +57,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var getCommentUseCase: GetCommentUseCase
     @Mock lateinit var notificationActionsWrapper: NotificationsActionsWrapper
     @Mock lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
+    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
@@ -93,7 +97,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
                 getCommentUseCase = getCommentUseCase,
                 notificationActionsWrapper = notificationActionsWrapper,
-                readerCommentTableWrapper = readerCommentTableWrapper
+                readerCommentTableWrapper = readerCommentTableWrapper,
+                analyticsUtilsWrapper
         )
 
         setupObservers()
@@ -415,6 +420,53 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         val expected = UiStringRes(R.string.error_edit_notification)
         val actual = onSnackbarMessage.first().message
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `should correct tracking method for NotificationCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        whenever(notificationActionsWrapper.downloadNoteAndUpdateDB(noteId))
+                .thenReturn(true)
+        viewModel.start(site, notificationCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+                Stat.COMMENT_EDITED,
+                AnalyticsCommentActionSource.NOTIFICATIONS,
+                site
+        )
+    }
+
+    @Test
+    fun `should correct tracking method for ReaderCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, readerCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+                Stat.COMMENT_EDITED,
+                AnalyticsCommentActionSource.READER,
+                site
+        )
+    }
+
+    @Test
+    fun `should correct tracking method for SiteCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+                Stat.COMMENT_EDITED,
+                AnalyticsCommentActionSource.SITE_COMMENTS,
+                site
+        )
     }
 
     private fun setupObservers() {
