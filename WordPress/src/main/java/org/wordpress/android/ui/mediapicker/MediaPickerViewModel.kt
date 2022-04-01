@@ -263,7 +263,8 @@ class MediaPickerViewModel @Inject constructor(
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
         } else {
-            val stringId = when (if (domainModel?.mediaTypes?.size === 1) domainModel.mediaTypes.first() else null) {
+            val onlyMediaType = if (domainModel?.mediaTypes?.size == 1) domainModel.mediaTypes.first() else null
+            val stringId = when (onlyMediaType) {
                 IMAGE -> R.string.media_empty_image_list
                 AUDIO -> R.string.media_empty_audio_list
                 VIDEO -> R.string.media_empty_videos_list
