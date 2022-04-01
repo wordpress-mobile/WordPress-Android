@@ -8,7 +8,7 @@ import androidx.core.text.buildSpannedString
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.BloggingPromptsOmboardingDialogContentViewBinding
+import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
@@ -65,7 +65,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     }
 
     private fun setupContent(readyState: Ready) {
-        val contentBinding = BloggingPromptsOmboardingDialogContentViewBinding.inflate(layoutInflater)
+        val contentBinding = BloggingPromptsOnboardingDialogContentViewBinding.inflate(layoutInflater)
         setContent(contentBinding.root)
         with(contentBinding) {
             contentTop.text = getString(readyState.contentTopRes)
