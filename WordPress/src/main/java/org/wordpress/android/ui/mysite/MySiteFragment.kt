@@ -170,7 +170,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition == -1) {
                 appbarMain.setExpanded(true, true)
                 quickStartScrollPosition = 0
-            } else if (quickStartScrollPosition > 2) {
+            } else {
                 appbarMain.setExpanded(false, true)
             }
             binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
