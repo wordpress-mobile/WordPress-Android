@@ -60,7 +60,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
 
     fun onContinuePressed() {
         uiState.value?.let { state ->
-            analyticsTracker.trackSiteIntentQuestionContinuePressed(state.searchQuery.orEmpty())
+            analyticsTracker.trackSiteIntentQuestionCustomVerticalSelected(state.searchQuery.orEmpty())
             _onIntentSelected.value = state.searchQuery
         }
     }
