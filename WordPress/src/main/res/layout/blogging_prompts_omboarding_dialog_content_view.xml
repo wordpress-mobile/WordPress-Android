@@ -66,7 +66,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content_note"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
         android:background="@drawable/bg_rectangle_black_60_radius_2dp"
