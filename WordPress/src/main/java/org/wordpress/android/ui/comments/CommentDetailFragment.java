@@ -1207,7 +1207,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canEdit() {
-        return mSite != null && mSite.getHasCapabilityEditOthersPosts();
+        return mSite != null && (mSite.getHasCapabilityEditOthersPosts() || mSite.isSelfHostedAdmin());
     }
 
     private boolean canLike() {
