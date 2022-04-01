@@ -34,6 +34,7 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
@@ -129,7 +130,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 .get(DynamicCardMenuViewModel::class.java)
     }
 
-    // todo: annmarie - if we keep this, then think about instance state
     private fun initTabType() {
         mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
             MySiteTabType.fromString(
@@ -604,5 +604,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     fun handleScrollTo(scrollTo: Int) {
         (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
+    }
+
+    fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
+        viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
 }
