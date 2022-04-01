@@ -556,6 +556,7 @@ REPOSITORY_NAME = 'WordPress-Android'
 
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     version = options[:version]
 
@@ -574,6 +575,7 @@ REPOSITORY_NAME = 'WordPress-Android'
           aab: aab_file_path,
           track: options[:track],
           release_status: 'draft',
+          metadata_path: metadata_dir,
           skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for alpha/beta tracks
           skip_upload_changelogs: false,
           skip_upload_images: true,
@@ -651,15 +653,20 @@ REPOSITORY_NAME = 'WordPress-Android'
   # If a locale doesn't have any screenshots, it'll be skipped.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:<wordpress|jetpack>
   #
   # Example:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:wordpress
   #####################################################################################
   desc 'Upload Screenshots to Play Store and Replaces the existing ones'
   lane :upload_and_replace_screenshots_in_play_store do |options|
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+
     upload_to_play_store(
-      package_name: 'org.wordpress.android',
+      package_name: package_name,
+      metadata_path: metadata_dir,
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: true,
