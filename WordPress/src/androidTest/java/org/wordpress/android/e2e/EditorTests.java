@@ -29,9 +29,6 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBe
 
 public class EditorTests extends BaseTest {
     @Rule
-    public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
-            = new ActivityScenarioRule<>(WPLaunchActivity.class);
-    @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
 
     @Before
