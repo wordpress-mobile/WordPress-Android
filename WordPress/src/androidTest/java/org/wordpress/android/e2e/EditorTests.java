@@ -2,7 +2,6 @@ package org.wordpress.android.e2e;
 
 import android.Manifest.permission;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.SiteSettingsPage;
 import org.wordpress.android.support.BaseTest;
-import org.wordpress.android.ui.WPLaunchActivity;
 
 import java.time.Instant;
 
