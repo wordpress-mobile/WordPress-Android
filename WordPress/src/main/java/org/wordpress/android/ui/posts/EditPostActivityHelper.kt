@@ -12,6 +12,7 @@ import java.util.Locale
 // Until EditPostActivity gets converted to Kotlin, this file is for those parts of EditPostActivity
 // that would really benefit from being written in Kotlin now.
 internal object EditPostActivityHelper {
+    @Suppress("LongParameterList")
     fun getGutenbergPropsBuilder(
         site: SiteModel,
         isPage: Boolean,
