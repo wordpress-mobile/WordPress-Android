@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-25 16:54:06+0000
+Translation-Revision-Date: 2022-04-01 15:27:20+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: fr
 -->
 <resources>
@@ -12,6 +12,7 @@ Language: fr
     <string name="new_site_creation_intents_header_subtitle">Choisissez un thème dans la liste ci-dessous ou saisissez le vôtre</string>
     <string name="new_site_creation_intents_header_title">De quoi parle votre site Web ?</string>
     <string name="notification_channel_weekly_roundup_title">Résumé hebdomadaire</string>
+    <string name="my_site_dashboard_tab_title">Accueil</string>
     <string name="adding_cat">Ajout d’une catégorie</string>
     <string name="login_select_email_client">Quelle app utilisez-vous pour vos e-mails ?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Un problème est survenu lors de la communication avec le site. Cela a provoqué une erreur HTTP 401.</string>
