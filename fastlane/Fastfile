@@ -718,6 +718,7 @@ REPOSITORY_NAME = 'WordPress-Android'
       download_path: download_path
     )
 
+    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
     sh("git add #{download_path} && git commit -m \"Update WordPress metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
@@ -752,6 +753,7 @@ REPOSITORY_NAME = 'WordPress-Android'
       File.join(download_path, 'en-US')
     )
 
+    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
     locales_including_enUS = [['en-gb', 'en-US']] + JP_RELEASE_NOTES_LOCALES # first item (GlotPress locale) unused for this action; second param = google_play locale
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: locales_including_enUS)
     sh("git add #{download_path} && git commit -m \"Update Jetpack metadata translations for #{options[:version]}\" && git push origin HEAD")
