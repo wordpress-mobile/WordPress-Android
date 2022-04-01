@@ -78,7 +78,6 @@ class SiteCreationIntentsFragment : Fragment() {
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         if (!uiState.isHeaderVisible) input.requestFocus()
         siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
-        updateContinueButtonVisibility(uiState.isContinueButtonVisible)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
@@ -88,10 +87,6 @@ class SiteCreationIntentsFragment : Fragment() {
                 siteCreationIntentsHeader.title,
                 shouldAppBarTitleBeVisible
         )
-    }
-
-    private fun SiteCreationIntentsFragmentBinding.updateContinueButtonVisibility(shouldBeVisible: Boolean) {
-        continueButtonContainer.isVisible = shouldBeVisible
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
@@ -105,7 +100,6 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupActionListeners() {
         siteCreationIntentsTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
-        continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
         input.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {

@@ -93,8 +93,8 @@ class SiteCreationIntentsViewModelTest {
         val valueOfSearchInput = "test vertical"
         viewModel.initializeFromResources(resources)
         viewModel.onSearchTextChanged(valueOfSearchInput)
-        viewModel.onContinuePressed()
-        verify(analyticsTracker).trackSiteIntentQuestionContinuePressed(eq(valueOfSearchInput))
+        viewModel.onCustomVerticalSelected()
+        verify(analyticsTracker).trackSiteIntentQuestionCustomVerticalSelected(eq(valueOfSearchInput))
     }
 
     @Test
@@ -109,22 +109,37 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
-    fun `when there are matching search results the continue button is hidden`() {
-        val valueOfSearchInput = "test1"
+    fun `when there are matching search results but not exact the custom vertical is not visible`() {
+        val valueOfSearchInput = "test"
         val matchingItem = "Test1"
         whenever(resources.getStringArray(any())).thenReturn(arrayOf(matchingItem, "Test2", "Test3"))
         viewModel.initializeFromResources(resources)
         viewModel.onSearchTextChanged(valueOfSearchInput)
-        assertThat(viewModel.uiState.value?.isContinueButtonVisible).isEqualTo(false)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(4)
+        assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
+                .isEqualTo(valueOfSearchInput)
     }
 
     @Test
-    fun `when there are no search results the continue button is visible`() {
+    fun `when there are no search results the custom vertical is visible`() {
         val valueOfSearchInput = "test1"
         whenever(resources.getStringArray(any())).thenReturn(arrayOf("Test2", "Test3"))
         viewModel.initializeFromResources(resources)
         viewModel.onSearchTextChanged(valueOfSearchInput)
-        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(0)
-        assertThat(viewModel.uiState.value?.isContinueButtonVisible).isEqualTo(true)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
+        assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
+                .isEqualTo(valueOfSearchInput)
+    }
+
+    @Test
+    fun `when there is one search result exactly matching the input the custom vertical is not visible`() {
+        val valueOfSearchInput = "test2"
+        val matchingItem = "Test2"
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf(matchingItem, "Test3"))
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
+        assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
+                .isEqualTo(matchingItem)
     }
 }
