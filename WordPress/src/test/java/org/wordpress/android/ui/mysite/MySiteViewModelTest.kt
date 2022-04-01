@@ -1852,7 +1852,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* STATE LISTS */
-    /* STATE LISTS */
     @Test
     fun `given site select exists, then cardAndItem lists are not empty`() {
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
@@ -2024,6 +2023,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
     }
 
+    @Test
+    fun `given selected site, when site menu cards and items, then site info header has updates`() {
+        initSelectedSite()
+
+        val siteInfoHeaderCard = (uiModels.last().state as SiteSelected).siteInfoHeaderState.hasUpdates
+
+        assertThat(siteInfoHeaderCard).isTrue
+    }
+
     /* TRACK WITH TAB SOURCE */
     @Test
     fun `given tabs are enabled, when pull to refresh invoked, then track with tab source is requested`() {
@@ -2144,7 +2152,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun getSiteMenuTabLastItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
-    private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeader
+    private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeaderState.siteInfoHeader
 
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoHeaderCardAction) {
         onSiteChange.value = site

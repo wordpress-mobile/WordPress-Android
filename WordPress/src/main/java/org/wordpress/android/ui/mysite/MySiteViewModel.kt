@@ -323,7 +323,10 @@ class MySiteViewModel @Inject constructor(
                         }
                 ),
                 siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
-                siteInfoHeader = siteInfo,
+                siteInfoHeaderState = SiteInfoHeaderState(
+                        hasUpdates = hasSiteHeaderUpdates(siteInfo),
+                        siteInfoHeader = siteInfo
+                ),
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
@@ -1079,6 +1082,12 @@ class MySiteViewModel @Inject constructor(
     private fun findUiStateForTab(tabType: MySiteTabType) =
             tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
 
+    private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
+        return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
+                nextSiteInfoHeaderCard
+        ) ?: false)
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
@@ -1091,7 +1100,7 @@ class MySiteViewModel @Inject constructor(
         data class SiteSelected(
             override val tabsUiState: TabsUiState,
             override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
-            val siteInfoHeader: SiteInfoHeaderCard,
+            val siteInfoHeaderState: SiteInfoHeaderState,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
@@ -1103,6 +1112,11 @@ class MySiteViewModel @Inject constructor(
             val shouldShowImage: Boolean
         ) : State()
     }
+
+    data class SiteInfoHeaderState(
+        val hasUpdates: Boolean,
+        val siteInfoHeader: SiteInfoHeaderCard
+    )
 
     data class TabsUiState(
         val showTabs: Boolean = false,
