@@ -574,8 +574,8 @@ REPOSITORY_NAME = 'WordPress-Android'
           aab: aab_file_path,
           track: options[:track],
           release_status: 'draft',
-          skip_upload_metadata: true,
-          skip_upload_changelogs: true,
+          skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for alpha/beta tracks
+          skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
