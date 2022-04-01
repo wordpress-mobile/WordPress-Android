@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-24 11:54:15+0000
+Translation-Revision-Date: 2022-04-01 15:29:18+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: ko_KR
 -->
 <resources>
@@ -324,6 +324,7 @@ Language: ko_KR
     <string name="gutenberg_native_preview_page">페이지 미리 보기</string>
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
     <string name="gutenberg_native_retry">재시도</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_s_link">%s 링크</string>
