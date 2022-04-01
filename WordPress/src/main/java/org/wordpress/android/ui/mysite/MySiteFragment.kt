@@ -163,7 +163,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 is State.NoSites -> loadEmptyView(state)
             }
         }
-        viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
 
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
             var quickStartScrollPosition = it
@@ -173,7 +173,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
         }
-
+        viewModel.onTrackWithTabSource.observeEvent(viewLifecycleOwner) {
+            binding?.viewPager?.getCurrentFragment()?.onTrackWithTabSource(it)
+        }
         viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
             viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }

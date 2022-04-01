@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REFRESH
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -153,6 +152,7 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
     private val _onShare = MutableLiveData<Event<String>>()
+    private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
@@ -212,6 +212,7 @@ class MySiteViewModel @Inject constructor(
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
     val onShare = _onShare
+    val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
 
     val state: LiveData<MySiteUiState> =
@@ -678,14 +679,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_STATS_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_STATS_TAPPED)
         quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_PAGES_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
         quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
@@ -693,13 +694,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionPostsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_POSTS_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_POSTS_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
     }
 
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_MEDIA_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
@@ -710,7 +711,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh(isPullToRefresh: Boolean = false) {
-        if (isPullToRefresh) analyticsTrackerWrapper.track(MY_SITE_PULL_TO_REFRESH)
+        if (isPullToRefresh) trackWithTabSourceIfNeeded(Stat.MY_SITE_PULL_TO_REFRESH)
         mySiteSourceManager.refresh()
     }
 
@@ -1022,6 +1023,26 @@ class MySiteViewModel @Inject constructor(
         setVisible()
     }
 
+    fun trackWithTabSource(event: MySiteTrackWithTabSource) {
+        if (event.currentTab == MySiteTabType.ALL) {
+            analyticsTrackerWrapper.track(event.stat, event.properties ?: emptyMap())
+        } else {
+            val props: MutableMap<String, Any> = mutableMapOf(event.key to event.currentTab.label)
+            if (!event.properties.isNullOrEmpty()) {
+                props.putAll(event.properties)
+            }
+            analyticsTrackerWrapper.track(event.stat, props)
+        }
+    }
+
+    private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
+        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+            _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
+        } else {
+            analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
+        }
+    }
+
     private fun selectDefaultTabIfNeeded() {
         if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
         val index = orderedTabTypes.indexOf(defaultABExperimentTab)
@@ -1125,6 +1146,13 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    data class MySiteTrackWithTabSource(
+        val stat: Stat,
+        val properties: HashMap<String, *>? = null,
+        val key: String = TAB_SOURCE,
+        val currentTab: MySiteTabType = MySiteTabType.ALL
+    )
+
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
@@ -1135,5 +1163,6 @@ class MySiteViewModel @Inject constructor(
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         const val LIST_SCROLL_DELAY_MS = 500L
         const val MY_SITE_TAB = "tab"
+        const val TAB_SOURCE = "tab_source"
     }
 }
