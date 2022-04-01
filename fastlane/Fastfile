@@ -613,7 +613,6 @@ REPOSITORY_NAME = 'WordPress-Android'
     #       in the `upload_build_to_play_store` lane? (especially if we do the same for `skip_upload_changelogs` and get rid of `android_create_xml_release_notes`)
     upload_to_play_store(
       package_name: package_name,
-      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
       track: 'production',
       version_code: version_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
       metadata_path: metadata_dir,
@@ -623,7 +622,8 @@ REPOSITORY_NAME = 'WordPress-Android'
       # TODO: enable changelogs upload once we drop the `android_create_xml_release_notes` action call (and drop the step in release scenario)
       skip_upload_changelogs: true,
       skip_upload_images: true,
-      skip_upload_screenshots: true
+      skip_upload_screenshots: true,
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
     )
   end
 
