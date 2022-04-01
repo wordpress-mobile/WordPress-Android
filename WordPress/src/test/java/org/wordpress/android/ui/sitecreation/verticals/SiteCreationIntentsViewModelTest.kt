@@ -89,7 +89,7 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
-    fun `when the continue button is pressed the analytics event is emitted with the search input value`() {
+    fun `when the custom vertical is tapped the analytics event is emitted with the search input value`() {
         val valueOfSearchInput = "test vertical"
         viewModel.initializeFromResources(resources)
         viewModel.onSearchTextChanged(valueOfSearchInput)
