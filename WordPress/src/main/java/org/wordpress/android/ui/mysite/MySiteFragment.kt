@@ -230,10 +230,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
+        showHeader(siteInfoToolbarViewParams.headerVisible)
         val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
         appbarMain.layoutParams.height = appBarHeight
         val toolbarBottomMargin = resources.getDimension(siteInfoToolbarViewParams.toolbarBottomMargin).toInt()
         updateToolbarBottomMargin(toolbarBottomMargin)
+        appbarMain.isLiftOnScroll = siteInfoToolbarViewParams.appBarLiftOnScroll
         appbarMain.requestLayout()
     }
 
@@ -251,7 +253,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
+        siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
+        appbarMain.setExpanded(false, true)
+    }
+
+    private fun MySiteFragmentBinding.showHeader(visibility: Boolean) {
+        header.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 
     private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {

@@ -494,8 +494,11 @@ class MySiteViewModel @Inject constructor(
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
                 siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
-                        R.dimen.app_bar_with_no_site_info_height,
-                        R.dimen.toolbar_bottom_margin_with_no_tabs
+                        appBarHeight = R.dimen.app_bar_with_no_site_info_height,
+                        toolbarBottomMargin = R.dimen.toolbar_bottom_margin_with_no_tabs,
+                        headerVisible = false,
+                        appBarLiftOnScroll = true
+
                 ),
                 shouldShowImage = shouldShowImage
         )
@@ -1126,7 +1129,9 @@ class MySiteViewModel @Inject constructor(
 
     data class SiteInfoToolbarViewParams(
         @DimenRes val appBarHeight: Int,
-        @DimenRes val toolbarBottomMargin: Int
+        @DimenRes val toolbarBottomMargin: Int,
+        val headerVisible: Boolean = true,
+        val appBarLiftOnScroll: Boolean = false
     )
 
     data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
