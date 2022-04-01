@@ -279,7 +279,8 @@ platform :android do
   MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
   FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] }
+    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] },
+    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", exclusions: [] }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
