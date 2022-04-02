@@ -1362,9 +1362,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        verify(cardsBuilder).build(any(), any(), any(), argWhere {
-            it.bloggingPromptCardBuilderParams.bloggingPrompt != null
-        })
+        verify(cardsBuilder).build(
+                any(), any(), any(),
+                argWhere {
+                    it.bloggingPromptCardBuilderParams.bloggingPrompt != null
+                },
+                any()
+        )
     }
 
     @Test
@@ -1373,9 +1377,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite()
 
-        verify(cardsBuilder).build(any(), any(), any(), argWhere {
-            it.bloggingPromptCardBuilderParams.bloggingPrompt == null
-        })
+        verify(cardsBuilder).build(
+                any(), any(), any(),
+                argWhere {
+                    it.bloggingPromptCardBuilderParams.bloggingPrompt == null
+                },
+                any()
+        )
     }
 
     @Test
@@ -2235,7 +2243,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 quickActionsCardBuilderParams = any(),
                 domainRegistrationCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
-                dashboardCardsBuilderParams = any()
+                dashboardCardsBuilderParams = any(),
+                quickLinkRibbonsBuilderParams = any()
         )
 
         doAnswer {

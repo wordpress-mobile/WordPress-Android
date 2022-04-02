@@ -25,9 +25,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
+import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonsBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -44,6 +46,7 @@ class CardsBuilderTest {
     @Mock lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
     @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
+    @Mock lateinit var quickLinkRibbonsBuilder: QuickLinkRibbonsBuilder
     @Mock lateinit var site: SiteModel
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 
@@ -177,6 +180,13 @@ class CardsBuilderTest {
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock())
+                ),
+                quickLinkRibbonsBuilderParams = QuickLinkRibbonsBuilderParams(
+                        siteModel = mock(),
+                        onStatsClick = mock(),
+                        onPagesClick = mock(),
+                        onPostsClick = mock(),
+                        onMediaClick = mock(),
                 )
         )
     }
@@ -205,6 +215,7 @@ class CardsBuilderTest {
                 quickStartDynamicCardsFeatureConfig,
                 quickActionsCardBuilder,
                 quickStartCardBuilder,
+                quickLinkRibbonsBuilder,
                 dashboardCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig
         )

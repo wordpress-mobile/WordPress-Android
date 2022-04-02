@@ -5,9 +5,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
+import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonsBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
@@ -21,6 +23,7 @@ class CardsBuilder @Inject constructor(
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
+    private val quickLinkRibbonsBuilder: QuickLinkRibbonsBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
 ) {
@@ -28,11 +31,13 @@ class CardsBuilder @Inject constructor(
         quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         quickStartCardBuilderParams: QuickStartCardBuilderParams,
-        dashboardCardsBuilderParams: DashboardCardsBuilderParams
+        dashboardCardsBuilderParams: DashboardCardsBuilderParams,
+        quickLinkRibbonsBuilderParams: QuickLinkRibbonsBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         if (buildConfigWrapper.isQuickActionEnabled) {
             cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
+            cards.add(quickLinkRibbonsBuilder.build(quickLinkRibbonsBuilderParams))
         }
         if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
             cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
