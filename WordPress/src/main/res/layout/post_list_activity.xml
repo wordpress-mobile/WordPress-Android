@@ -82,8 +82,9 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:contentDescription="@string/fab_create_desc"
         android:src="@drawable/ic_create_white_24dp"
+        android:layout_gravity="end|bottom"
         app:borderWidth="0dp"
-        android:layout_gravity="end|bottom" />
+        app:layout_behavior="org.wordpress.android.ui.FloatingActionButtonBehavior" />
 
     <org.wordpress.android.ui.WPTooltipView
         android:id="@+id/fab_tooltip"

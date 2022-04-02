@@ -6,12 +6,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
-import android.view.View.MeasureSpec
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.ABOVE
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.BELOW
@@ -152,33 +149,4 @@ class WPTooltipView @JvmOverloads constructor(
     }
 
     fun getPosition() = position
-}
-
-class WPTooltipViewBehavior : CoordinatorLayout.Behavior<WPTooltipView> {
-    constructor()
-    constructor(context: Context, attr: AttributeSet)
-
-    override fun layoutDependsOn(parent: CoordinatorLayout, child: WPTooltipView, dependency: View): Boolean {
-        return dependency is FloatingActionButton
-    }
-
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: WPTooltipView, dependency: View): Boolean {
-        if (child.getPosition() != ABOVE) {
-            // Remove this condition if you want to support different TooltipPosition
-            throw IllegalArgumentException("This behavior only supports TooltipPosition.ABOVE")
-        }
-
-        dependency.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-        child.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-
-        child.x = dependency.x - child.measuredWidth + dependency.measuredWidth
-        child.y = dependency.y - child.measuredHeight
-
-        return true
-    }
-
-    override fun onDependentViewRemoved(parent: CoordinatorLayout, child: WPTooltipView, dependency: View) {
-        super.onDependentViewRemoved(parent, child, dependency)
-        child.visibility = View.GONE
-    }
 }
