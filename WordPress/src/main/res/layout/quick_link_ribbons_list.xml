@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/quick_actions_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/margin_my_site_quick_actions_bottom"
+        android:paddingEnd="@dimen/my_site_card_row_padding"
+        android:paddingStart="@dimen/my_site_card_row_padding"
+        android:paddingTop="@dimen/margin_extra_large">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/stats"
+            style="@style/QuickLinkRibbonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            app:icon="@drawable/ic_stats_alt_white_24dp"
+            android:text="@string/stats"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/posts"
+            style="@style/QuickLinkRibbonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            app:icon="@drawable/ic_posts_white_24dp"
+            android:text="@string/posts"
+            app:layout_constraintStart_toEndOf="@+id/stats"
+            app:layout_constraintTop_toTopOf="@+id/stats" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/media"
+            style="@style/QuickLinkRibbonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            app:icon="@drawable/ic_media_white_24dp"
+            android:text="@string/media"
+            app:layout_constraintStart_toEndOf="@+id/posts"
+            app:layout_constraintTop_toTopOf="@+id/stats" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/pages"
+            style="@style/QuickLinkRibbonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            app:icon="@drawable/ic_pages_white_24dp"
+            android:text="@string/my_site_btn_site_pages"
+            app:layout_constraintStart_toEndOf="@+id/media"
+            app:layout_constraintTop_toTopOf="@+id/stats" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</HorizontalScrollView>

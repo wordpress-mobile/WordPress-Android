@@ -1740,4 +1740,24 @@
         <item name="android:fontFamily">serif</item>
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
+
+    <style name="QuickLinkRibbonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="strokeColor">@color/on_surface_divider</item>
+        <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
+        <item name="android:drawablePadding">18dp</item>
+        <item name="iconSize">24dp</item>
+        <item name="iconTint">#666666</item>
+        <item name="iconPadding">16dp</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
