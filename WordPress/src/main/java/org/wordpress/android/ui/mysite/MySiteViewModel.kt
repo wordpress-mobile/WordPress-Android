@@ -154,6 +154,7 @@ class MySiteViewModel @Inject constructor(
     private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
+    private val _mySiteFragmentActivityResult = MutableLiveData<Event<Triple<Int, Int, Intent?>>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -214,6 +215,7 @@ class MySiteViewModel @Inject constructor(
     val onShare = _onShare
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
+    val mySiteFragmentActivityResult: LiveData<Event<Triple<Int, Int, Intent?>>> = _mySiteFragmentActivityResult
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -473,6 +475,10 @@ class MySiteViewModel @Inject constructor(
             add(Type.DOMAIN_REGISTRATION_CARD)
         }
         MySiteTabType.ALL -> emptyList()
+    }
+
+    fun setMySiteFragmentActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        _mySiteFragmentActivityResult.value = Event(Triple(requestCode, resultCode, data))
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {

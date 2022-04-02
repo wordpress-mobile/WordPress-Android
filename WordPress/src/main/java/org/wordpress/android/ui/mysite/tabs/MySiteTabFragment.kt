@@ -231,6 +231,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
         viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
+        viewModel.mySiteFragmentActivityResult.observeEvent(viewLifecycleOwner) { (requestCode, resultCode, data) ->
+            handleParentFragmentActivityResult(requestCode, resultCode, data)
+        }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -400,8 +403,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     }
 
     @Suppress("ReturnCount", "LongMethod", "ComplexMethod")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun handleParentFragmentActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (data == null) {
             return
         }

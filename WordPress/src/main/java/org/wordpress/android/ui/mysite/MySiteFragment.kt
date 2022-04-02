@@ -308,7 +308,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
+        viewModel.setMySiteFragmentActivityResult(requestCode, resultCode, data)
     }
 
     private fun ViewPager2.getCurrentFragment() =
