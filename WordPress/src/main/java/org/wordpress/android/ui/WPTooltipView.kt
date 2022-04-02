@@ -6,16 +6,18 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
+import android.view.View.MeasureSpec
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.ABOVE
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.BELOW
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.LEFT
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.RIGHT
 import org.wordpress.android.util.RtlUtils
-import java.lang.IllegalArgumentException
 
 /**
  * Partially based on https://stackoverflow.com/a/42756576
@@ -29,7 +31,7 @@ import java.lang.IllegalArgumentException
 
 private const val HIDE_ANIMATION_DURATION = 50L
 
-class WPTooltipView @JvmOverloads constructor (
+class WPTooltipView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -147,5 +149,36 @@ class WPTooltipView @JvmOverloads constructor (
 
     fun setMessage(message: CharSequence) {
         tvMessage.text = message
+    }
+
+    fun getPosition() = position
+}
+
+class WPTooltipViewBehavior : CoordinatorLayout.Behavior<WPTooltipView> {
+    constructor()
+    constructor(context: Context, attr: AttributeSet)
+
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: WPTooltipView, dependency: View): Boolean {
+        return dependency is FloatingActionButton
+    }
+
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: WPTooltipView, dependency: View): Boolean {
+        if (child.getPosition() != ABOVE) {
+            // Remove this condition if you want to support different TooltipPosition
+            throw IllegalArgumentException("This behavior only supports TooltipPosition.ABOVE")
+        }
+
+        dependency.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
+        child.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
+
+        child.x = dependency.x - child.measuredWidth + dependency.measuredWidth
+        child.y = dependency.y - child.measuredHeight
+
+        return true
+    }
+
+    override fun onDependentViewRemoved(parent: CoordinatorLayout, child: WPTooltipView, dependency: View) {
+        super.onDependentViewRemoved(parent, child, dependency)
+        child.visibility = View.GONE
     }
 }

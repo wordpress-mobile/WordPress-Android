@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.WPTooltipViewBehavior
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils.observeBottomSheet
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -214,6 +216,10 @@ class PostsListActivity : LocaleAwareActivity(),
         }
 
         fabButton.redirectContextClickToLongPressListener()
+
+        fabTooltip.layoutParams = (fabTooltip.layoutParams as CoordinatorLayout.LayoutParams).apply {
+            behavior = WPTooltipViewBehavior()
+        }
 
         fabTooltip.setOnClickListener {
             postListCreateMenuViewModel.onTooltipTapped()
