@@ -308,7 +308,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
+        /* Add brief delay before passing result to nested (view pager) tab fragments to give them time to get created.
+           This is a workaround to fix API Level 25 (GitHub #16225) issue where we noticed that nested fragments
+           were created after parent fragment was shown the first time and received activity result. It might not be a
+           real issue as we could only test it on an emulator, we added it to be safe in such cases. */
+        view?.postDelayed({
+            binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
+        }, PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY)
     }
 
     private fun ViewPager2.getCurrentFragment() =
@@ -346,6 +352,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
+        private const val PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY = 300L
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
