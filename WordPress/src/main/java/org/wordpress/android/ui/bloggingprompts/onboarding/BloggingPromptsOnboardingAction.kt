@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
+import org.wordpress.android.fluxc.model.SiteModel
+
 sealed class BloggingPromptsOnboardingAction {
     object OpenEditor : BloggingPromptsOnboardingAction()
 
-    object OpenSitePicker : BloggingPromptsOnboardingAction()
+    data class OpenSitePicker(val selectedSite: SiteModel?) : BloggingPromptsOnboardingAction()
 
-    object OpenRemindersIntro : BloggingPromptsOnboardingAction()
+    data class OpenRemindersIntro(val selectedSiteLocalId: Int?) : BloggingPromptsOnboardingAction()
 }
