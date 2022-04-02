@@ -93,6 +93,7 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:importantForAccessibility="noHideDescendants"
         android:visibility="gone"
+        app:layout_behavior="org.wordpress.android.ui.WPTooltipViewBehavior"
         app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
         app:wpTooltipMessage="@string/create_post_story_fab_tooltip"
         app:wpTooltipPosition="above"
