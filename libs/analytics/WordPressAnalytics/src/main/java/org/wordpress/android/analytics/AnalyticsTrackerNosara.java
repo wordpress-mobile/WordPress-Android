@@ -1403,8 +1403,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_intent_question_canceled";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_SKIPPED:
                 return "enhanced_site_creation_intent_question_skipped";
-            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CONTINUE_PRESSED:
-                return "enhanced_site_creation_intent_question_continue_pressed";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED:
+                return "enhanced_site_creation_intent_question_custom_vertical_selected";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED:
                 return "enhanced_site_creation_intent_question_vertical_selected";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED:

@@ -58,9 +58,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _onBackButtonPressed.call()
     }
 
-    fun onContinuePressed() {
+    fun onCustomVerticalSelected() {
         uiState.value?.let { state ->
-            analyticsTracker.trackSiteIntentQuestionContinuePressed(state.searchQuery.orEmpty())
+            analyticsTracker.trackSiteIntentQuestionCustomVerticalSelected(state.searchQuery.orEmpty())
             _onIntentSelected.value = state.searchQuery
         }
     }
@@ -129,11 +129,17 @@ class SiteCreationIntentsViewModel @Inject constructor(
     }
 
     fun onSearchTextChanged(query: String) {
-        val searchResults = searchResultsProvider.search(fullItemsList.items, query)
+        val searchResults = searchResultsProvider.search(fullItemsList.items, query).toMutableList().apply {
+            if (query.isNotEmpty() && !(this.size == 1 && this[0].verticalText.equals(query, true))) {
+                val customVertical = IntentListItemUiState("", query, "+").apply {
+                    onItemTapped = { onCustomVerticalSelected() }
+                }
+                this.add(0, customVertical)
+            }
+        }
         uiState.value?.let { state ->
             updateUiState(
                     state.copy(
-                            isContinueButtonVisible = query.isNotEmpty() && searchResults.isEmpty(),
                             searchQuery = query,
                             content = IntentsUiState.Content.SearchResults(searchResults)
                     )
@@ -144,7 +150,6 @@ class SiteCreationIntentsViewModel @Inject constructor(
     data class IntentsUiState(
         val isAppBarTitleVisible: Boolean = false,
         val isHeaderVisible: Boolean = true,
-        val isContinueButtonVisible: Boolean = false,
         val searchQuery: String? = null,
         val content: Content
     ) {

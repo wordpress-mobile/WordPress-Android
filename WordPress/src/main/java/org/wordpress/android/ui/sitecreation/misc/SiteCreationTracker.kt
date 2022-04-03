@@ -261,9 +261,9 @@ class SiteCreationTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED)
     }
 
-    fun trackSiteIntentQuestionContinuePressed(searchInput: String) {
+    fun trackSiteIntentQuestionCustomVerticalSelected(searchInput: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_CONTINUE_PRESSED,
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED,
                 mapOf(SEARCH_TERM.key to searchInput)
         )
     }
