@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleNew
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
@@ -53,6 +54,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_NEW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
@@ -80,6 +82,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.Referre
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TabsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TagViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TextViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TitleNewViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TitleViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValueViewHolder
 import org.wordpress.android.util.image.ImageManager
@@ -100,6 +103,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): BlockListItemViewHolder {
         return when (values()[itemType]) {
             TITLE -> TitleViewHolder(parent)
+            TITLE_NEW -> TitleNewViewHolder(parent)
             BIG_TITLE -> BigTitleViewHolder(parent)
             TAG_ITEM -> TagViewHolder(parent)
             IMAGE_ITEM -> ImageItemViewHolder(parent, imageManager)
@@ -137,6 +141,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
         val item = items[position]
         when (holder) {
             is TitleViewHolder -> holder.bind(item as Title)
+            is TitleNewViewHolder -> holder.bind(item as TitleNew)
             is BigTitleViewHolder -> holder.bind(item as BigTitle)
             is TagViewHolder -> holder.bind(item as Tag)
             is ImageItemViewHolder -> holder.bind(item as ImageItem)

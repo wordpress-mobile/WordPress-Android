@@ -482,6 +482,7 @@
     <dimen name="page_item_horizontal_padding">16dp</dimen>
     <dimen name="page_parent_radio_button_offset">11dp</dimen>
     <dimen name="one_line_list_item_height">48dp</dimen>
+    <dimen name="one_line_list_item_height_small">40dp</dimen>
     <dimen name="two_line_list_item_height">72dp</dimen>
     <dimen name="page_list_divider_height">40dp</dimen>
     <dimen name="page_list_row_min_height">80dp</dimen>

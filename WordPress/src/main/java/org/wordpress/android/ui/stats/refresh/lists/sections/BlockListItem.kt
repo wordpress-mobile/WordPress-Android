@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_NEW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -42,6 +43,7 @@ sealed class BlockListItem(val type: Type) {
 
     enum class Type {
         TITLE,
+        TITLE_NEW,
         BIG_TITLE,
         TAG_ITEM,
         IMAGE_ITEM,
@@ -73,6 +75,12 @@ sealed class BlockListItem(val type: Type) {
         val text: String? = null,
         val menuAction: ((View) -> Unit)? = null
     ) : BlockListItem(TITLE)
+
+    data class TitleNew(
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        val moreAction: ((View) -> Unit)? = null
+    ) : BlockListItem(TITLE_NEW)
 
     data class BigTitle(
         @StringRes val textResource: Int

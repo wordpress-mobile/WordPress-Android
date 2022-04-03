@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_NEW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 
 class BlockDiffCallback(
@@ -62,6 +63,7 @@ class BlockDiffCallback(
                 INFO,
                 HEADER,
                 TITLE,
+                TITLE_NEW,
                 BIG_TITLE,
                 VALUE_ITEM,
                 DIVIDER,
