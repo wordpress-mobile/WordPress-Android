@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_NEW
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.utils.ListItemInteraction
 
@@ -48,6 +49,7 @@ sealed class BlockListItem(val type: Type) {
         TAG_ITEM,
         IMAGE_ITEM,
         VALUE_ITEM,
+        VALUE_WITH_CHART_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         INFO,
@@ -206,6 +208,9 @@ sealed class BlockListItem(val type: Type) {
         override val itemId: Int
             get() = entries.hashCode()
     }
+
+    // TODO: add the chart parameter
+    data class ValueWithChartItem(val value: Int) : BlockListItem(VALUE_WITH_CHART_ITEM)
 
     data class ChartLegend(@StringRes val text: Int) : BlockListItem(CHART_LEGEND)
 
