@@ -12,7 +12,7 @@ import org.wordpress.android.util.image.ImageManager
 
 open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder(
         parent,
-        R.layout.stats_list_block
+        R.layout.stats_list_block_new // TODO: use feature flag for stats_list_block or stats_list_block_new
 ) {
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
     override fun bind(statsType: StatsType?, items: List<BlockListItem>) {
