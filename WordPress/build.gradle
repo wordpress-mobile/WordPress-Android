@@ -118,7 +118,7 @@ android {
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
-        buildConfigField "boolean", "SITE_INTENT_QUESTION", "false"
+        buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
         buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT", "false"
