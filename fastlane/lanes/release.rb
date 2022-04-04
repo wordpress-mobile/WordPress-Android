@@ -292,23 +292,21 @@ platform :android do
 
   def release_notes_path(app)
     paths = {
-      wordpress: "#{ENV['PROJECT_ROOT_FOLDER']}WordPress/metadata/release_notes.txt",
-      jetpack: "#{ENV['PROJECT_ROOT_FOLDER']}WordPress/jetpack_metadata/release_notes.txt"
+      wordpress: File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'metadata', 'release_notes.txt'),
+      jetpack: File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'jetpack_metadata', 'release_notes.txt')
     }
     paths[app.to_sym] || paths[:wordpress]
   end
 
   def release_notes_short_paths
-    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
     [
-      File.join(project_root, 'WordPress', 'metadata', 'release_notes_short.txt'),
-      File.join(project_root, 'WordPress', 'jetpack_metadata', 'release_notes_short.txt')
+      File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'metadata', 'release_notes_short.txt'),
+      File.join(ENV['PROJECT_ROOT_FOLDER'], 'WordPress', 'jetpack_metadata', 'release_notes_short.txt')
     ]
   end
 
   def bundle_file_path(app, version)
     prefix = APP_SPECIFIC_VALUES[app.to_sym][:bundle_name_prefix]
-    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    File.join(project_root, 'build', "#{prefix}-#{version['name']}.aab")
+    File.join(ENV['PROJECT_ROOT_FOLDER'], 'build', "#{prefix}-#{version['name']}.aab")
   end
 end
