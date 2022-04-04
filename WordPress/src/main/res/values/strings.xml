@@ -2930,20 +2930,20 @@
     <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
-    <string name="notification_channel_general_title">General</string>
-    <string name="notification_channel_important_title">Important</string>
-    <string name="notification_channel_transient_title">Transient</string>
-    <string name="notification_channel_reminder_title">Reminder</string>
+    
+    
+    
+    
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
-    <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
+    
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
-    <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
+    
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id" content_override="true" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
+    <string content_override="true" name="login_notification_channel_id" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -3707,8 +3707,6 @@ translators: Block name. %s: The localized block name -->
     <!-- translators: Missing block alert title. %s: The localized block name -->
     <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully-supported</string>
     <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
-    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources">%s link</string>
-    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
     <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s previews not yet available</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s social icon</string>
@@ -4005,4 +4003,61 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+    <string name="post_content">Content</string>
+    <string name="uploading">Uploading…</string>
+    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
+    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
+    <string name="alert_error_adding_media">An error occurred while inserting media</string>
+    <string name="stop_save_dialog_title">Files saving</string>
+    <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
+    <string name="create_a_link">Create a link</string>
+    <string name="width">Width</string>
+    <string name="featured">Use as featured image</string>
+    <string name="featured_in_post">Include image in post content</string>
+    <string name="horizontal_alignment">Horizontal alignment</string>
+    <string name="caption">Caption (optional)</string>
+    <string name="pixel_suffix">%dpx</string>
+    <string name="image_alt_text">Alt text</string>
+    <string name="media_bar_description_camera">Take Photo or Video with camera</string>
+    <string name="media_bar_description_gallery">Pick a media from gallery</string>
+    <string name="media_bar_description_library">Pick a media from WordPress media library</string>
+    <string name="visual_editor">Visual editor</string>
+    <string name="image_thumbnail">Image thumbnail</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
+    <string name="dialog_content_info_title">Content structure</string>
+    <string name="dialog_content_info_body">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
+    <string name="toast_content_info_failed">Failed to get content structure</string>
+    <string name="toast_content_info_editor_not_ready">Editor is still loading</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="dialog_title">Insert link</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+    <string name="stop_upload_dialog_button_yes">Yes</string>
+    <string name="stop_upload_dialog_button_no">No</string>
+    <string name="retry_failed_upload_title">Couldn\'t upload file</string>
+    <string name="retry_failed_upload_yes">Retry</string>
+    <string name="retry_failed_upload_remove">Remove upload</string>
+    <string name="retry_failed_upload_retry_all">Retry all</string>
+    <string name="long_post_dlg_saving">Saving</string>
+    <string name="menu_toolbar_title">Edit %s block</string>
+    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
+    <string name="dialog_title_try_block_editor" translatable="true">Try the new Block Editor</string>
+    <string name="dialog_body_try_block_editor" translatable="true">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
+    <string name="featured_image_replace_dialog_title">Replace current featured image?</string>
+    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it with the new image?</string>
+    <string name="featured_image_replace_dialog_confirm">Replace featured image</string>
+    <string name="featured_image_replace_dialog_cancel">Keep current</string>
+    <string name="featured_image_confirmation_notice">Set as featured image</string>
+    <string name="featured_image_removed_notice">Removed as featured image</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">General</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Important</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Transient</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Reminder</string>
+    <string name="notification_channel_important_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_reminder_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_reminder_channel_id</string>
 </resources>
