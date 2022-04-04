@@ -53,6 +53,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbons
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegi
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
@@ -262,6 +264,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
     private var quickActionsMediaClickAction: (() -> Unit)? = null
+
+    private var quickLinkRibbonsStatsClickAction: (() -> Unit)? = null
+    private var quickLinkRibbonsPagesClickAction: (() -> Unit)? = null
+    private var quickLinkRibbonsPostsClickAction: (() -> Unit)? = null
+    private var quickLinkRibbonsMediaClickAction: (() -> Unit)? = null
 
     private val partialStates = listOf(
             isDomainCreditAvailable,
@@ -2144,6 +2151,115 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_MEDIA_TAPPED))
     }
 
+    @Test
+    fun `given site doesn't have required capability, when dashboard cards, then quick link ribbon pages is not shown`() {
+        site.hasCapabilityEditPages = false
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+
+        initSelectedSite()
+
+        val quickLinkRibbons = findQuickLinkRibbons()
+
+        assertThat(quickLinkRibbons).isNotNull
+        assertThat(quickLinkRibbons?.showPages).isFalse
+    }
+
+    @Test
+    fun `given site is WPCOM, when quick link ribbon stats click, then stats screen is shown`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsWPCom(true)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+
+        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
+    }
+
+    @Test
+    fun `given site is Jetpack, when quick link ribbon stats click, then stats screen is shown`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+
+        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
+    }
+
+    @Test
+    fun `given user logged in self-hosted site, when quick link ribbon stats click, then shows connect jetpack screen`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsJetpackInstalled(false)
+        site.setIsJetpackConnected(false)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+
+        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `given user is not logged in jetpack site, when quick link ribbon stats click, then login screen is shown`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+
+        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.StartWPComLoginForJetpackStats)
+    }
+
+    @Test
+    fun `given user is not logged in self hosted site, when quick link ribbon stats click, then connect jetpack is shown`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        site.setIsJetpackInstalled(false)
+        site.setIsJetpackConnected(false)
+
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+
+        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `when quick link ribbon pages click, then pages screen is shown`() {
+        initSelectedSite()
+
+        requireNotNull(quickActionsPagesClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
+    }
+
+    @Test
+    fun `when quick link ribbon posts click, then posts screen is shown `() {
+        initSelectedSite()
+
+        requireNotNull(quickActionsPostsClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPosts(site))
+    }
+
+    @Test
+    fun `when quick link ribbon media click, then media screen is shown`() {
+        initSelectedSite()
+
+        requireNotNull(quickActionsMediaClickAction).invoke()
+
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -2161,6 +2277,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun getSiteMenuTabLastItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
     private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeaderState.siteInfoHeader
+
+    private fun findQuickLinkRibbons() = getDashboardTabLastItems().find { it is QuickLinkRibbons } as QuickLinkRibbons?
 
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoHeaderCardAction) {
         onSiteChange.value = site
@@ -2222,12 +2340,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun setUpCardsBuilder() {
         doAnswer {
             val quickActionsCard = initQuickActionsCard(it)
+            val quickLinkRibbons = initQuickLinkRibbons(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
             if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
                 listOf(
                         quickActionsCard,
+                        quickLinkRibbons,
                         domainRegistrationCard,
                         quickStartCard,
                         dashboardCards
@@ -2304,6 +2424,21 @@ class MySiteViewModelTest : BaseUnitTest() {
                 showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
                 showPagesFocusPoint = false,
                 showStatsFocusPoint = false
+        )
+    }
+
+    private fun initQuickLinkRibbons(mockInvocation: InvocationOnMock): QuickLinkRibbons {
+        val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonsBuilderParams>()).first()
+        quickLinkRibbonsStatsClickAction = params.onStatsClick
+        quickLinkRibbonsPagesClickAction = params.onPagesClick
+        quickLinkRibbonsPostsClickAction = params.onPostsClick
+        quickLinkRibbonsMediaClickAction = params.onMediaClick
+        return QuickLinkRibbons(
+            onStatsClick = ListItemInteraction.create { params.onStatsClick.invoke() },
+            onPagesClick = ListItemInteraction.create { params.onPagesClick.invoke() },
+            onPostsClick = ListItemInteraction.create { params.onPostsClick.invoke() },
+            onMediaClick = ListItemInteraction.create { params.onMediaClick.invoke() },
+            showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages
         )
     }
 
