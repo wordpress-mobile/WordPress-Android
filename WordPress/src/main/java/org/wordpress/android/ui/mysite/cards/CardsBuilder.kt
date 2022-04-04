@@ -14,6 +14,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
@@ -25,7 +26,8 @@ class CardsBuilder @Inject constructor(
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val quickLinkRibbonsBuilder: QuickLinkRibbonsBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
+    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
 ) {
     fun build(
         quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
@@ -35,6 +37,9 @@ class CardsBuilder @Inject constructor(
         quickLinkRibbonsBuilderParams: QuickLinkRibbonsBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
+        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+            cards.add(quickLinkRibbonsBuilder.build(quickLinkRibbonsBuilderParams))
+        }
         if (buildConfigWrapper.isQuickActionEnabled) {
             cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
         }
@@ -48,7 +53,6 @@ class CardsBuilder @Inject constructor(
         }
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
             cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
-            cards.add(quickLinkRibbonsBuilder.build(quickLinkRibbonsBuilderParams))
         }
         return cards
     }
