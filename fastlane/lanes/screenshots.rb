@@ -1,29 +1,42 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 RAW_SCREENSHOTS_DIR = File.join(Dir.pwd, "screenshots", "raw")
 RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
 PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
 FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
 
-default_platform(:android)
 
 platform :android do
-########################################################################
-# Sreenshot Lanes
-########################################################################
+  #####################################################################################
+  # upload_and_replace_screenshots_in_play_store
+  # -----------------------------------------------------------------------------------
+  # This lane uploads the screenshots in /metadata/android/{locale}/images to Play
+  # Store and replaces the existing ones.
+  # If a locale doesn't have any screenshots, it'll be skipped.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:<wordpress|jetpack>
+  #
+  # Example:
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:wordpress
+  #####################################################################################
+  desc 'Upload Screenshots to Play Store and Replaces the existing ones'
+  lane :upload_and_replace_screenshots_in_play_store do |options|
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+
+    upload_to_play_store(
+      package_name: package_name,
+      metadata_path: metadata_dir,
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: false,
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+    )
+  end
+
   #####################################################################################
   # screenshots
   # -----------------------------------------------------------------------------------
@@ -323,7 +336,6 @@ platform :android do
   #####################################################################################
   desc "Rebuild screenshot devices"
   lane :rebuild_screenshot_devices do |options|
-
     emulators = [
         Dir.pwd + "/emulators/Nexus_9_API_28.ini",
         Dir.pwd + "/emulators/Pixel_2_XL_API_28.ini",
@@ -334,5 +346,4 @@ platform :android do
         sh("helpers/copy-device.sh '#{emulator_configuration}'")
     end
   end
-
 end
