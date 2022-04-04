@@ -6,7 +6,6 @@
     android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/quick_actions_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
