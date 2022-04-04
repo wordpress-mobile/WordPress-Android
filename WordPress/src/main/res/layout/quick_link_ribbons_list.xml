@@ -11,7 +11,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
-            style="@style/MySiteQuickLinkRibbonStyle"
+            style="@style/MySiteQuickLinkRibbon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stats"
@@ -21,7 +21,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/posts"
-            style="@style/MySiteQuickLinkRibbonStyle"
+            style="@style/MySiteQuickLinkRibbon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
@@ -32,7 +32,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/media"
-            style="@style/MySiteQuickLinkRibbonStyle"
+            style="@style/MySiteQuickLinkRibbon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
@@ -43,7 +43,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/pages"
-            style="@style/MySiteQuickLinkRibbonStyle"
+            style="@style/MySiteQuickLinkRibbon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
