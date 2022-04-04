@@ -14,10 +14,10 @@ class QuickLinkRibbonsViewHolder(
         parent.viewBinding(QuickLinkRibbonsListBinding::inflate)
 ) {
     fun bind(quickLinkRibbons: QuickLinkRibbons) = with(binding) {
-        stats.setOnClickListener { quickLinkRibbons.onStatsClick.click() }
+        pages.setOnClickListener { quickLinkRibbons.onPagesClick.click() }
         posts.setOnClickListener { quickLinkRibbons.onPostsClick.click() }
         media.setOnClickListener { quickLinkRibbons.onMediaClick.click() }
-        pages.setOnClickListener { quickLinkRibbons.onPagesClick.click() }
+        stats.setOnClickListener { quickLinkRibbons.onStatsClick.click() }
         uiHelpers.updateVisibility(pages, quickLinkRibbons.showPages)
     }
 }

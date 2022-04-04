@@ -421,10 +421,10 @@ class MySiteViewModel @Inject constructor(
                 ),
                 QuickLinkRibbonsBuilderParams(
                         siteModel = site,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick,
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
-                        onMediaClick = this::onQuickLinkRibbonMediaClick
+                        onMediaClick = this::onQuickLinkRibbonMediaClick,
+                        onStatsClick = this::onQuickLinkRibbonStatsClick
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(

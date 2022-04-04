@@ -36,10 +36,10 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class QuickLinkRibbonsBuilderParams(
         val siteModel: SiteModel,
-        val onStatsClick: () -> Unit,
         val onPagesClick: () -> Unit,
         val onPostsClick: () -> Unit,
-        val onMediaClick: () -> Unit
+        val onMediaClick: () -> Unit,
+        val onStatsClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class DomainRegistrationCardBuilderParams(

@@ -207,10 +207,10 @@ class CardsBuilderTest {
                 ),
                 quickLinkRibbonsBuilderParams = QuickLinkRibbonsBuilderParams(
                         siteModel = mock(),
-                        onStatsClick = mock(),
                         onPagesClick = mock(),
                         onPostsClick = mock(),
-                        onMediaClick = mock()
+                        onMediaClick = mock(),
+                        onStatsClick = mock()
                 )
         )
     }
@@ -288,10 +288,10 @@ class CardsBuilderTest {
 
     private fun initQuickLinkRibbons(): QuickLinkRibbons {
         return QuickLinkRibbons(
-            onStatsClick = mock(),
             onPagesClick = mock(),
             onPostsClick = mock(),
             onMediaClick = mock(),
+            onStatsClick = mock(),
             showPages = false
         )
     }

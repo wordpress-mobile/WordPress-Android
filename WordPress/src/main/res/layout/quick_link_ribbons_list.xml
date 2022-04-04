@@ -10,13 +10,13 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/stats"
+            android:id="@+id/pages"
             style="@style/MySiteQuickLinkRibbon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/stats"
-            app:icon="@drawable/ic_stats_alt_white_24dp"
             android:layout_marginStart="@dimen/margin_extra_large"
+            android:text="@string/my_site_btn_site_pages"
+            app:icon="@drawable/ic_pages_white_24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,8 +28,8 @@
             android:layout_marginStart="@dimen/margin_large"
             android:text="@string/posts"
             app:icon="@drawable/ic_posts_white_24dp"
-            app:layout_constraintStart_toEndOf="@+id/stats"
-            app:layout_constraintTop_toTopOf="@+id/stats" />
+            app:layout_constraintStart_toEndOf="@+id/pages"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/media"
@@ -40,20 +40,20 @@
             android:text="@string/media"
             app:icon="@drawable/ic_media_white_24dp"
             app:layout_constraintStart_toEndOf="@+id/posts"
-            app:layout_constraintTop_toTopOf="@+id/stats" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/pages"
+            android:id="@+id/stats"
             style="@style/MySiteQuickLinkRibbon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:text="@string/my_site_btn_site_pages"
-            app:icon="@drawable/ic_pages_white_24dp"
-            app:layout_constraintStart_toEndOf="@+id/media"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            app:layout_constraintTop_toTopOf="@+id/stats" />
+            android:layout_marginStart="@dimen/margin_large"
+            android:text="@string/stats"
+            app:icon="@drawable/ic_stats_alt_white_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/media"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </HorizontalScrollView>

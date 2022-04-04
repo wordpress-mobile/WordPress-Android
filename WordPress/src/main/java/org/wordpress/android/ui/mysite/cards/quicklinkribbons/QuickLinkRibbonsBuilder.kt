@@ -7,10 +7,10 @@ import javax.inject.Inject
 
 class QuickLinkRibbonsBuilder @Inject constructor() {
     fun build(params: QuickLinkRibbonsBuilderParams) = QuickLinkRibbons(
-            onStatsClick = ListItemInteraction.create(params.onStatsClick),
             onPagesClick = ListItemInteraction.create(params.onPagesClick),
             onPostsClick = ListItemInteraction.create(params.onPostsClick),
             onMediaClick = ListItemInteraction.create(params.onMediaClick),
+            onStatsClick = ListItemInteraction.create(params.onStatsClick),
             showPages = params.siteModel.isSelfHostedAdmin || params.siteModel.hasCapabilityEditPages
     )
 }

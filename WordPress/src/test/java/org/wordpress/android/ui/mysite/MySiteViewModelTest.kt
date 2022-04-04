@@ -2409,15 +2409,15 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initQuickLinkRibbons(mockInvocation: InvocationOnMock): QuickLinkRibbons {
         val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonsBuilderParams>()).first()
-        quickLinkRibbonsStatsClickAction = params.onStatsClick
         quickLinkRibbonsPagesClickAction = params.onPagesClick
         quickLinkRibbonsPostsClickAction = params.onPostsClick
         quickLinkRibbonsMediaClickAction = params.onMediaClick
+        quickLinkRibbonsStatsClickAction = params.onStatsClick
         return QuickLinkRibbons(
-            onStatsClick = ListItemInteraction.create { params.onStatsClick.invoke() },
             onPagesClick = ListItemInteraction.create { params.onPagesClick.invoke() },
             onPostsClick = ListItemInteraction.create { params.onPostsClick.invoke() },
             onMediaClick = ListItemInteraction.create { params.onMediaClick.invoke() },
+            onStatsClick = ListItemInteraction.create { params.onStatsClick.invoke() },
             showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages
         )
     }
