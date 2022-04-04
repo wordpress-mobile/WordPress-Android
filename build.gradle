@@ -31,7 +31,7 @@ ext {
 
     exoPlayerVersion = '2.9.3'
 
-    composeVersion = '1.0.5'
+    composeVersion = '1.1.1'
 
     // testing
     jUnitVersion = '4.13'
@@ -141,18 +141,6 @@ allprojects {
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
             jvmTarget = "1.8"
-        }
-    }
-
-    // TODO remove after merging PR that bumps Kotlin version
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        kotlinOptions {
-            jvmTarget = "1.8"
-            freeCompilerArgs += [
-                    "-Xallow-jvm-ir-dependencies",
-                    "-P",
-                    "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
-            ]
         }
     }
 }
