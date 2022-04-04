@@ -37,7 +37,6 @@ class CardsBuilder @Inject constructor(
         val cards = mutableListOf<MySiteCardAndItem>()
         if (buildConfigWrapper.isQuickActionEnabled) {
             cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
-            cards.add(quickLinkRibbonsBuilder.build(quickLinkRibbonsBuilderParams))
         }
         if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
             cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
@@ -49,6 +48,7 @@ class CardsBuilder @Inject constructor(
         }
         if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
             cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
+            cards.add(quickLinkRibbonsBuilder.build(quickLinkRibbonsBuilderParams))
         }
         return cards
     }
