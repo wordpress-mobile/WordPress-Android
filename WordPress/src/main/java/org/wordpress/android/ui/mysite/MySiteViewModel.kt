@@ -471,17 +471,16 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    // todo: @ajesh change the logic here
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
             if (defaultABExperimentTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
-            else add(Type.QUICK_LINK_RIBBONS)
+            add(Type.QUICK_LINK_RIBBONS)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultABExperimentTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
-            else add(Type.QUICK_LINK_RIBBONS)
             add(Type.DOMAIN_REGISTRATION_CARD)
+            add(Type.QUICK_ACTIONS_CARD)
         }
         MySiteTabType.ALL -> emptyList()
     }
