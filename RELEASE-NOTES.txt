@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.7
+-----
+
+
 19.6
 -----
 * [*] My Site: Fixes an issue where a deleted site is displayed until the app restarts [https://github.com/wordpress-mobile/WordPress-Android/pull/16063]
