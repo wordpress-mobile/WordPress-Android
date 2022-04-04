@@ -8,8 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/quick_actions_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
@@ -27,8 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            app:icon="@drawable/ic_posts_white_24dp"
             android:text="@string/posts"
+            app:icon="@drawable/ic_posts_white_24dp"
             app:layout_constraintStart_toEndOf="@+id/stats"
             app:layout_constraintTop_toTopOf="@+id/stats" />
 
@@ -38,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            app:icon="@drawable/ic_media_white_24dp"
             android:text="@string/media"
+            app:icon="@drawable/ic_media_white_24dp"
             app:layout_constraintStart_toEndOf="@+id/posts"
             app:layout_constraintTop_toTopOf="@+id/stats" />
 
@@ -49,8 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            app:icon="@drawable/ic_pages_white_24dp"
             android:text="@string/my_site_btn_site_pages"
+            app:icon="@drawable/ic_pages_white_24dp"
             app:layout_constraintStart_toEndOf="@+id/media"
             app:layout_constraintTop_toTopOf="@+id/stats" />
 
