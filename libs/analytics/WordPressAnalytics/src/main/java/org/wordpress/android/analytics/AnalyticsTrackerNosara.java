@@ -2174,6 +2174,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_site_menu_shown";
             case MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED:
                 return "my_site_default_tab_experiment_variant_assigned";
+            case APP_SETTINGS_INITIAL_SCREEN_CHANGED:
+                return "app_settings_initial_screen_changed";
         }
         return null;
     }
