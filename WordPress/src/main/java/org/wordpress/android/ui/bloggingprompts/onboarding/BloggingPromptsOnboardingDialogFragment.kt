@@ -1,24 +1,24 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogFragmentBinding
+import org.wordpress.android.databinding.BloggingPromptsOmboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
+import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
 import org.wordpress.android.util.extensions.exhaustive
-import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
 import javax.inject.Inject
 
-class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
+class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel
 
@@ -29,28 +29,14 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
         fun newInstance(): BloggingPromptsOnboardingDialogFragment = BloggingPromptsOnboardingDialogFragment()
     }
 
-    override fun getTheme(): Int {
-        return R.style.BloggingPromptsOnboardingDialogFragment
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(BloggingPromptsOnboardingViewModel::class.java)
-        dialog.setStatusBarAsSurfaceColor()
-        return dialog
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = BloggingPromptsOnboardingDialogFragmentBinding.inflate(inflater).root
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = BloggingPromptsOnboardingDialogFragmentBinding.bind(view)
-        setupTryNow(binding.tryNow)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(BloggingPromptsOnboardingViewModel::class.java)
+        setupTryNowButton()
+        setupRemindMeButton()
+        setupHeaderTitle()
+        setupHeaderIcon()
+        setupUiStateObserver()
         setupActionObserver()
         viewModel.start()
     }
@@ -60,15 +46,59 @@ class BloggingPromptsOnboardingDialogFragment : DialogFragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    private fun setupTryNow(tryNow: MaterialButton) {
-        tryNow.setOnClickListener { viewModel.onTryNow() }
+    private fun setupTryNowButton() {
+        setPrimaryButtonListener { viewModel.onTryNowClick() }
+        setPrimaryButtonText(R.string.blogging_prompts_onboarding_try_it_now)
+    }
+
+    private fun setupRemindMeButton() {
+        setSecondaryButtonListener { viewModel.onRemindMeClick() }
+        setSecondaryButtonText(R.string.blogging_prompts_onboarding_remind_me)
+    }
+
+    private fun setupHeaderTitle() {
+        setHeaderTitle(R.string.blogging_prompts_onboarding_header_title)
+    }
+
+    private fun setupHeaderIcon() {
+        setHeaderIcon(R.drawable.ic_outline_lightbulb_orange_gradient_40dp)
+    }
+
+    private fun setupContent(readyState: Ready) {
+        val contentBinding = BloggingPromptsOmboardingDialogContentViewBinding.inflate(layoutInflater)
+        setContent(contentBinding.root)
+        with(contentBinding) {
+            contentTop.text = getString(readyState.contentTopRes)
+            cardCoverView.setOnClickListener { /*do nothing*/ }
+            promptCard.promptContent.text = getString(readyState.promptRes)
+            promptCard.numberOfAnswers.text = getString(readyState.answersRes, readyState.answersCount)
+            contentBottom.text = getString(readyState.contentBottomRes)
+            contentNote.text = buildSpannedString {
+                bold { append("${getString(readyState.contentNoteTitle)} ") }
+                append(getString(readyState.contentNoteContent))
+            }
+        }
+    }
+
+    private fun setupUiStateObserver() {
+        viewModel.uiState.observe(this) { uiState ->
+            when (uiState) {
+                is Ready -> {
+                    setupContent(uiState)
+                }
+            }.exhaustive
+        }
     }
 
     private fun setupActionObserver() {
-        viewModel.action.observe(this, { action ->
+        viewModel.action.observe(this) { action ->
             when (action) {
                 is OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
+                is OpenSitePicker -> { /*TODO*/
+                }
+                is OpenRemindersIntro -> { /*TODO*/
+                }
             }.exhaustive
-        })
+        }
     }
 }

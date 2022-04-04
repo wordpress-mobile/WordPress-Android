@@ -556,6 +556,7 @@ REPOSITORY_NAME = 'WordPress-Android'
 
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
     version = options[:version]
 
@@ -574,8 +575,9 @@ REPOSITORY_NAME = 'WordPress-Android'
           aab: aab_file_path,
           track: options[:track],
           release_status: 'draft',
-          skip_upload_metadata: true,
-          skip_upload_changelogs: true,
+          metadata_path: metadata_dir,
+          skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for alpha/beta tracks
+          skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
@@ -611,7 +613,6 @@ REPOSITORY_NAME = 'WordPress-Android'
     #       in the `upload_build_to_play_store` lane? (especially if we do the same for `skip_upload_changelogs` and get rid of `android_create_xml_release_notes`)
     upload_to_play_store(
       package_name: package_name,
-      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
       track: 'production',
       version_code: version_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
       metadata_path: metadata_dir,
@@ -621,7 +622,8 @@ REPOSITORY_NAME = 'WordPress-Android'
       # TODO: enable changelogs upload once we drop the `android_create_xml_release_notes` action call (and drop the step in release scenario)
       skip_upload_changelogs: true,
       skip_upload_images: true,
-      skip_upload_screenshots: true
+      skip_upload_screenshots: true,
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
     )
   end
 
@@ -651,15 +653,20 @@ REPOSITORY_NAME = 'WordPress-Android'
   # If a locale doesn't have any screenshots, it'll be skipped.
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:<wordpress|jetpack>
   #
   # Example:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store app:wordpress
   #####################################################################################
   desc 'Upload Screenshots to Play Store and Replaces the existing ones'
   lane :upload_and_replace_screenshots_in_play_store do |options|
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+
     upload_to_play_store(
-      package_name: 'org.wordpress.android',
+      package_name: package_name,
+      metadata_path: metadata_dir,
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: true,
@@ -696,7 +703,7 @@ REPOSITORY_NAME = 'WordPress-Android'
       "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
       play_store_app_title: { desc: 'title.txt', max_size: 30 },
       play_store_promo: { desc: 'short_description.txt', max_size: 80 },
-      play_store_desc: { desc: 'full_description.txt', max_size: 0 }
+      play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
     }
 
     delete_old_changelogs(app: 'wordpress', build: options[:build_number])
@@ -711,6 +718,7 @@ REPOSITORY_NAME = 'WordPress-Android'
       download_path: download_path
     )
 
+    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
     sh("git add #{download_path} && git commit -m \"Update WordPress metadata translations for #{options[:version]}\" && git push origin HEAD")
   end
@@ -745,6 +753,7 @@ REPOSITORY_NAME = 'WordPress-Android'
       File.join(download_path, 'en-US')
     )
 
+    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
     locales_including_enUS = [['en-gb', 'en-US']] + JP_RELEASE_NOTES_LOCALES # first item (GlotPress locale) unused for this action; second param = google_play locale
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: locales_including_enUS)
     sh("git add #{download_path} && git commit -m \"Update Jetpack metadata translations for #{options[:version]}\" && git push origin HEAD")
@@ -756,7 +765,8 @@ REPOSITORY_NAME = 'WordPress-Android'
   MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
   FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] }
+    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] },
+    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", exclusions: [] }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {

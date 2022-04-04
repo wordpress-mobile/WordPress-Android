@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-15 07:06:31+0000
+Translation-Revision-Date: 2022-04-01 05:36:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: pl
 -->
 <resources>
@@ -19,8 +19,8 @@ Language: pl
     <string name="about_automattic_dayone">Dzień pierwszy</string>
     <string name="about_automattic_source_code_item_title">Kod źródłowy</string>
     <string name="about_automattic_privacy_policy_item_title">Polityka prywatności</string>
-    <string name="about_automattic_terms_of_service_item_title">Warunki świadczenia usług</string>
     <string name="about_automattic_work_with_us_item_subtitle">Pracuj z dowolnego miejsca</string>
+    <string name="about_automattic_terms_of_service_item_title">Warunki usługi</string>
     <string name="about_automattic_work_with_us_item_title">Pracuj dla nas</string>
     <string name="about_automattic_family_item_title">Rodzina Automattic</string>
     <string name="about_automattic_legal_and_more_item_title">Sprawy prawne i więcej</string>
@@ -118,7 +118,6 @@ Language: pl
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /year&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_title">Masz niezapisane zmiany.</string>
     <string name="comment_edit_comment_error">Komentarz nie może być pusty</string>
-    <string name="comment_edit_email_address">Adres email</string>
     <string name="comment_edit_web_address">Adres w sieci Web</string>
     <string name="comment_edit_comment">Komentarz</string>
     <string name="comment_edit_user_name_error">Nazwa użytkownika nie może być pusta</string>
@@ -127,6 +126,7 @@ Language: pl
     <string name="comment_edit_web_address_error">Adres sieciowy nie jest prawidłowy</string>
     <string name="comment_edit_user_name">Nazwa</string>
     <string name="comment_edit_menu_done">Gotowe</string>
+    <string name="comment_edit_email_address">Adres e-mail</string>
     <string name="gutenberg_native_embed_block_previews_are_coming_soon">Podglądy zagnieżdżonych bloków już wkrótce</string>
     <string name="weekly_roundup">W każdym tygodniu</string>
     <string name="gutenberg_native_embed_options">Opcje zagnieżdzania</string>

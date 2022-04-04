@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.MenuCompat
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPrompCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
@@ -22,5 +24,38 @@ class BloggingPromptCardViewHolder(
                 card.numberOfAnswers
         )
         uiHelpers.setTextOrHide(numberOfAnswers, numberOfAnswersLabel)
+        uiHelpers.updateVisibility(answerButton, !card.isAnswered)
+
+        bloggingPromptCardMenu.setOnClickListener {
+            showCardMenu()
+        }
+
+        answerButton.setOnClickListener {
+            uiHelpers.updateVisibility(answerButton, false)
+            uiHelpers.updateVisibility(answeredPromptControls, true)
+        }
+        answeredButton.setOnClickListener {
+            uiHelpers.updateVisibility(answerButton, true)
+            uiHelpers.updateVisibility(answeredPromptControls, false)
+        }
+        shareButton.setOnClickListener {
+            card.onShareClick.invoke(
+                    uiHelpers.getTextOfUiString(
+                            shareButton.context,
+                            card.prompt
+                    ).toString()
+            )
+        }
+        uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
+    }
+
+    private fun MySiteBloggingPrompCardBinding.showCardMenu() {
+        val quickStartPopupMenu = PopupMenu(itemView.context, bloggingPromptCardMenu)
+        quickStartPopupMenu.setOnMenuItemClickListener {
+            return@setOnMenuItemClickListener true
+        }
+        quickStartPopupMenu.inflate(R.menu.blogging_prompt_card_menu)
+        MenuCompat.setGroupDividerEnabled(quickStartPopupMenu.menu, true)
+        quickStartPopupMenu.show()
     }
 }
