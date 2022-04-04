@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbons
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
@@ -64,6 +65,7 @@ class CardsBuilderTest {
         setUpQuickActionsBuilder()
         setUpQuickStartCardBuilder()
         setUpDashboardCardsBuilder()
+        setUpQuickLinkRibbonsBuilder()
     }
 
     /* DOMAIN REGISTRATION CARD */
@@ -138,6 +140,21 @@ class CardsBuilderTest {
         assertThat(cards.findDashboardCards()).isNotNull
     }
 
+    /*  QUICK LINK RIBBONS */
+    @Test
+    fun `given mySiteDashboardPhase2 disabled, when cards are built, then quick link ribbons are not built`() {
+        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
+
+        assertThat(cards.findQuickLinkRibbons()).isNull()
+    }
+
+    @Test
+    fun `given mySiteDashboardPhase2 enabled, when cards are built, then quick link ribbons built`() {
+        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = true)
+
+        assertThat(cards.findQuickLinkRibbons()).isNotNull
+    }
+
     private fun List<MySiteCardAndItem>.findQuickActionsCard() =
             this.find { it is QuickActionsCard } as QuickActionsCard?
 
@@ -147,6 +164,9 @@ class CardsBuilderTest {
 
     private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
             this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
+
+    private fun List<MySiteCardAndItem>.findQuickLinkRibbons() =
+        this.find { it is QuickLinkRibbons } as QuickLinkRibbons?
 
     private fun buildCards(
         activeTask: QuickStartTask? = null,
@@ -209,6 +229,12 @@ class CardsBuilderTest {
         }.whenever(dashboardCardsBuilder).build(any())
     }
 
+    private fun setUpQuickLinkRibbonsBuilder() {
+        doAnswer {
+            initQuickLinkRibbons()
+        }.whenever(quickLinkRibbonsBuilder).build(any())
+    }
+
     private fun setUpCardsBuilder() {
         cardsBuilder = CardsBuilder(
                 buildConfigWrapper,
@@ -254,4 +280,14 @@ class CardsBuilderTest {
     )
 
     private fun initDashboardCards() = DashboardCards(cards = mock())
+
+    private fun initQuickLinkRibbons(): QuickLinkRibbons {
+        return QuickLinkRibbons(
+            onStatsClick = mock(),
+            onPagesClick = mock(),
+            onPostsClick = mock(),
+            onMediaClick = mock(),
+            showPages = false,
+        )
+    }
 }
