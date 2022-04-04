@@ -2152,11 +2152,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site doesn't have required capability, when dashboard cards, then quick link ribbon pages is not shown`() {
+    fun `given site doesn't have required capability, when dashboard cards, then quick link ribbon pages not shown`() {
         site.hasCapabilityEditPages = false
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
-        initSelectedSite()
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
 
         val quickLinkRibbons = findQuickLinkRibbons()
 
@@ -2192,7 +2190,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given user logged in self-hosted site, when quick link ribbon stats click, then shows connect jetpack screen`() {
+    fun `given self-hosted site, when quick link ribbon stats click, then shows connect jetpack screen`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
         site.setIsJetpackInstalled(false)
@@ -2217,20 +2215,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.StartWPComLoginForJetpackStats)
-    }
-
-    @Test
-    fun `given user is not logged in self hosted site, when quick link ribbon stats click, then connect jetpack is shown`() {
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
-
-        site.setIsJetpackInstalled(false)
-        site.setIsJetpackConnected(false)
-
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
-
-        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
-
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
 
     @Test
@@ -2344,21 +2328,17 @@ class MySiteViewModelTest : BaseUnitTest() {
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
-            if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-                listOf(
-                        quickActionsCard,
-                        quickLinkRibbons,
-                        domainRegistrationCard,
-                        quickStartCard,
-                        dashboardCards
-                )
-            } else {
-                listOf<MySiteCardAndItem>(
+            val listOfCards = arrayListOf<MySiteCardAndItem>(
                         quickActionsCard,
                         domainRegistrationCard,
                         quickStartCard
-                )
-            }
+            )
+
+            if (mySiteDashboardPhase2FeatureConfig.isEnabled())
+                listOfCards.add(dashboardCards)
+            if (mySiteDashboardTabsFeatureConfig.isEnabled())
+                listOfCards.add(quickLinkRibbons)
+            listOfCards
         }.whenever(cardsBuilder).build(
                 quickActionsCardBuilderParams = any(),
                 domainRegistrationCardBuilderParams = any(),

@@ -144,7 +144,7 @@ class CardsBuilderTest {
 
     /*  QUICK LINK RIBBONS */
     @Test
-    fun `given mySiteDashboardTabsFeatureConfig disabled, when cards are built, then quick link ribbons are not built`() {
+    fun `given mySiteDashboardTabsFeatureConfig disabled, when cards are built, then quick link ribbon not built`() {
         val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
 
         assertThat(cards.findQuickLinkRibbons()).isNull()
@@ -292,7 +292,7 @@ class CardsBuilderTest {
             onPagesClick = mock(),
             onPostsClick = mock(),
             onMediaClick = mock(),
-            showPages = false,
+            showPages = false
         )
     }
 }
