@@ -35,12 +35,18 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
             _action.value = OpenSitePicker(selectedSiteRepository.getSelectedSite())
         } else {
             siteStore.sites.firstOrNull()?.let {
-                _action.value = OpenRemindersIntro(it.id)
+                _action.value = OpenRemindersIntro(
+                        selectedSiteLocalId = it.id,
+                        isFirstTimePublishing = true
+                )
             }
         }
     }
 
-    fun onSiteSelected(selectedSiteLocalId: Int?) {
-        _action.value = OpenRemindersIntro(selectedSiteLocalId)
+    fun onSiteSelected(selectedSiteLocalId: Int) {
+        _action.value = OpenRemindersIntro(
+                selectedSiteLocalId = selectedSiteLocalId,
+                isFirstTimePublishing = true
+        )
     }
 }

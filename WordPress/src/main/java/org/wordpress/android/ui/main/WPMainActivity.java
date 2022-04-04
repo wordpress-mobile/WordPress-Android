@@ -77,6 +77,7 @@ import org.wordpress.android.ui.ShortcutsNavigator;
 import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
@@ -161,7 +162,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         BottomNavController,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
-        QuickStartPromptClickInterface {
+        QuickStartPromptClickInterface,
+        BloggingPromptsReminderSchedulerListener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -1565,6 +1567,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (mySiteFragment != null) {
             mySiteFragment.onNegativeClicked(instanceTag);
         }
+    }
+
+    @Override public void onSetPromptReminderClick(final int siteId, final boolean isFirstTimePublishing) {
+        mBloggingRemindersViewModel.onPublishingPost(siteId, isFirstTimePublishing);
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

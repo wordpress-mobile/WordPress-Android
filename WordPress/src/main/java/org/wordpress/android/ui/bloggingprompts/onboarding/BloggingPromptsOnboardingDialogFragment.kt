@@ -32,7 +32,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             val selectedSiteLocalId = result.data?.getIntExtra(
                     SitePickerActivity.KEY_SITE_LOCAL_ID,
                     SelectedSiteRepository.UNAVAILABLE
-            )
+            ) ?: SelectedSiteRepository.UNAVAILABLE
             viewModel.onSiteSelected(selectedSiteLocalId)
         }
     }
@@ -59,6 +59,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+        if (context !is BloggingPromptsReminderSchedulerListener) {
+            throw RuntimeException(
+                    "$context must implement ${BloggingPromptsReminderSchedulerListener::class.simpleName}"
+            )
+        }
     }
 
     private fun setupTryNowButton() {
@@ -117,7 +122,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     sitePickerLauncher.launch(intent)
                 }
                 is OpenRemindersIntro -> {
-                    // TODO open reminders intro when screen is ready
+                    activity?.let {
+                        dismiss()
+                        (it as BloggingPromptsReminderSchedulerListener)
+                                .onSetPromptReminderClick(action.selectedSiteLocalId, action.isFirstTimePublishing)
+                    }
                 }
             }.exhaustive
         }

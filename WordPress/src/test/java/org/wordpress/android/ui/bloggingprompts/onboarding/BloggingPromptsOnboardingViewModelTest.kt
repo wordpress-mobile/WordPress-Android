@@ -55,13 +55,13 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
         classToTest.onRemindMeClick()
-        verify(actionObserver).onChanged(OpenRemindersIntro(123))
+        verify(actionObserver).onChanged(OpenRemindersIntro(123, true))
     }
 
     @Test
     fun `Should trigger OpenRemindersIntro after site is selected on site picker and onSiteSelected is called`() {
         val selectedSiteLocalId = 123
         classToTest.onSiteSelected(selectedSiteLocalId)
-        verify(actionObserver).onChanged(OpenRemindersIntro(selectedSiteLocalId))
+        verify(actionObserver).onChanged(OpenRemindersIntro(selectedSiteLocalId, true))
     }
 }
