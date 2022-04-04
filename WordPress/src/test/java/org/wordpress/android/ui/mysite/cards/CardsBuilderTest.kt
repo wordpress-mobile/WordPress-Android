@@ -206,7 +206,7 @@ class CardsBuilderTest {
                         onStatsClick = mock(),
                         onPagesClick = mock(),
                         onPostsClick = mock(),
-                        onMediaClick = mock(),
+                        onMediaClick = mock()
                 )
         )
     }

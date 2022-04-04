@@ -424,7 +424,7 @@ class MySiteViewModel @Inject constructor(
                         onStatsClick = this::onQuickLinkRibbonStatsClick,
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
-                        onMediaClick = this::onQuickLinkRibbonMediaClick,
+                        onMediaClick = this::onQuickLinkRibbonMediaClick
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(

@@ -11,6 +11,6 @@ class QuickLinkRibbonsBuilder @Inject constructor() {
             onPagesClick = ListItemInteraction.create(params.onPagesClick),
             onPostsClick = ListItemInteraction.create(params.onPostsClick),
             onMediaClick = ListItemInteraction.create(params.onMediaClick),
-            showPages = params.siteModel.isSelfHostedAdmin || params.siteModel.hasCapabilityEditPages,
+            showPages = params.siteModel.isSelfHostedAdmin || params.siteModel.hasCapabilityEditPages
     )
 }
