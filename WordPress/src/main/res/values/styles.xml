@@ -1741,7 +1741,7 @@
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
-    <style name="QuickLinkRibbonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+    <style name="MySiteQuickLinkRibbon" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
         <item name="strokeColor">@color/on_surface_divider</item>
         <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
         <item name="iconSize">@dimen/quick_link_ribbon_icon_size</item>
