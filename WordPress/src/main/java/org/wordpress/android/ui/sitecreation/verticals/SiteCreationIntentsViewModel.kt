@@ -81,9 +81,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         val newItems = slugsArray.mapIndexed { index, slug ->
             val vertical = verticalArray[index]
             val emoji = emojiArray[index]
-            val item = IntentListItemUiState(slug, vertical, emoji)
-            item.onItemTapped = { intentSelected(slug, vertical) }
-            return@mapIndexed item
+            return@mapIndexed IntentListItemUiState(slug, vertical, emoji) { intentSelected(slug, vertical) }
         }
         fullItemsList = FullItemsList(newItems)
         defaultItems = DefaultItems(newItems.filter { it.verticalSlug in defaultsArray })
@@ -130,11 +128,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
 
     fun onSearchTextChanged(query: String) {
         val searchResults = searchResultsProvider.search(fullItemsList.items, query).toMutableList().apply {
-            if (query.isNotEmpty() && !(this.size == 1 && this[0].verticalText.equals(query, true))) {
-                val customVertical = IntentListItemUiState("", query, "+").apply {
-                    onItemTapped = { onCustomVerticalSelected() }
-                }
-                this.add(0, customVertical)
+            val isAnExactMatch = query.isNotEmpty() && !(size == 1 && this[0].verticalText.equals(query, true))
+            if (isAnExactMatch) {
+                add(0, IntentListItemUiState.getCustomVertical(query) { onCustomVerticalSelected() })
             }
         }
         uiState.value?.let { state ->
@@ -175,8 +171,15 @@ class SiteCreationIntentsViewModel @Inject constructor(
     data class IntentListItemUiState(
         val verticalSlug: String,
         val verticalText: String,
-        val emoji: String
+        val emoji: String,
+        val onItemTapped: (() -> Unit)
     ) {
-        var onItemTapped: (() -> Unit)? = null
+        companion object {
+            private const val customVerticalSlug = ""
+            private const val customVerticalEmoji = "+"
+
+            fun getCustomVertical(query: String, onCustomVerticalSelected: (() -> Unit)) =
+                    IntentListItemUiState(customVerticalSlug, query, customVerticalEmoji, onCustomVerticalSelected)
+        }
     }
 }

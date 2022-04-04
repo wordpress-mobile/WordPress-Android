@@ -78,6 +78,7 @@ class SiteCreationIntentsFragment : Fragment() {
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         if (!uiState.isHeaderVisible) input.requestFocus()
         siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
+        recyclerView.scrollToPosition(0)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
@@ -104,7 +105,6 @@ class SiteCreationIntentsFragment : Fragment() {
         input.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 viewModel.onSearchInputFocused()
-                recyclerView.smoothScrollToPosition(0)
             }
         }
     }
