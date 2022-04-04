@@ -114,6 +114,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
+    //Just to trigger CI...
     fun onSearchInputFocused() {
         uiState.value?.let { state ->
             if (!state.isHeaderVisible) return
