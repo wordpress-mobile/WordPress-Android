@@ -20,20 +20,16 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoCardBuilder
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
@@ -45,7 +41,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as Dashboard
 class CardsBuilderTest {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig
-    @Mock lateinit var siteInfoCardBuilder: SiteInfoCardBuilder
     @Mock lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
     @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
@@ -63,26 +58,9 @@ class CardsBuilderTest {
     @Before
     fun setUp() {
         setUpCardsBuilder()
-        setUpSiteInfoCardBuilder()
         setUpQuickActionsBuilder()
         setUpQuickStartCardBuilder()
         setUpDashboardCardsBuilder()
-    }
-
-    /* SITE INFO CARD */
-
-    @Test
-    fun `when active task is update site title, then title focus point is shown in the site info card`() {
-        val cards = buildCards(activeTask = QuickStartTask.UPDATE_SITE_TITLE)
-
-        assertThat(cards.findSiteInfoCard()?.showTitleFocusPoint).isTrue
-    }
-
-    @Test
-    fun `when active task is update site icon, then icon focus point is shown in the site info card`() {
-        val cards = buildCards(activeTask = QuickStartTask.UPLOAD_SITE_ICON)
-
-        assertThat(cards.findSiteInfoCard()?.showIconFocusPoint).isTrue
     }
 
     /* DOMAIN REGISTRATION CARD */
@@ -160,8 +138,6 @@ class CardsBuilderTest {
     private fun List<MySiteCardAndItem>.findQuickActionsCard() =
             this.find { it is QuickActionsCard } as QuickActionsCard?
 
-    private fun List<MySiteCardAndItem>.findSiteInfoCard() = this.find { it is SiteInfoCard } as SiteInfoCard?
-
     private fun List<MySiteCardAndItem>.findQuickStartCard() = this.find { it is QuickStartCard } as QuickStartCard?
 
     private fun List<MySiteCardAndItem>.findDashboardCards() = this.find { it is DashboardCards }
@@ -179,15 +155,6 @@ class CardsBuilderTest {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
         return cardsBuilder.build(
-                siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
-                        site,
-                        showSiteIconProgressBar = false,
-                        mock(),
-                        mock(),
-                        mock(),
-                        mock(),
-                        activeTask
-                ),
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
                         activeTask = activeTask,
@@ -214,12 +181,6 @@ class CardsBuilderTest {
         )
     }
 
-    private fun setUpSiteInfoCardBuilder() {
-        doAnswer {
-            initSiteInfoCard(it)
-        }.whenever(siteInfoCardBuilder).buildSiteInfoCard(any())
-    }
-
     private fun setUpQuickActionsBuilder() {
         doAnswer {
             initQuickActionsCard(it)
@@ -242,26 +203,10 @@ class CardsBuilderTest {
         cardsBuilder = CardsBuilder(
                 buildConfigWrapper,
                 quickStartDynamicCardsFeatureConfig,
-                siteInfoCardBuilder,
                 quickActionsCardBuilder,
                 quickStartCardBuilder,
                 dashboardCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig
-        )
-    }
-
-    private fun initSiteInfoCard(mockInvocation: InvocationOnMock): SiteInfoCard {
-        val params = (mockInvocation.arguments.filterIsInstance<SiteInfoCardBuilderParams>()).first()
-        return SiteInfoCard(
-                title = "",
-                url = "",
-                iconState = IconState.Visible(""),
-                showTitleFocusPoint = params.activeTask == QuickStartTask.UPDATE_SITE_TITLE,
-                showIconFocusPoint = params.activeTask == QuickStartTask.UPLOAD_SITE_ICON,
-                onTitleClick = mock(),
-                onIconClick = mock(),
-                onUrlClick = mock(),
-                onSwitchSiteClick = mock()
         )
     }
 

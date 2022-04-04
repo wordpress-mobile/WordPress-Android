@@ -3207,7 +3207,7 @@
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
-    <string name="new_site_creation_intents_input_hint">Eg. Lifestyle, Poetry, Politics</string>
+    <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -3997,6 +3997,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources">App icon</string>
 
     <!-- Blogging prompts -->
+    <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
+    <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others — that’s where Prompts come in!</string>
+    <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Note:</string>
+    <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
 </resources>

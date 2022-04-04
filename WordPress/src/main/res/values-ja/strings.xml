@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-25 10:54:07+0000
+Translation-Revision-Date: 2022-04-01 15:28:19+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: ja_JP
 -->
 <resources>
@@ -324,6 +324,7 @@ Language: ja_JP
     <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
     <string name="gutenberg_native_preview_page">ページをプレビュー</string>
     <string name="gutenberg_native_retry">リトライ</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_s_link">%s リンク</string>

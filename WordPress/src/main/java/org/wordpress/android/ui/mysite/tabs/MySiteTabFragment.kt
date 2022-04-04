@@ -34,6 +34,7 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
@@ -129,7 +130,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 .get(DynamicCardMenuViewModel::class.java)
     }
 
-    // todo: annmarie - if we keep this, then think about instance state
     private fun initTabType() {
         mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
             MySiteTabType.fromString(
@@ -181,9 +181,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 is State.SiteSelected -> loadData(state)
                 is State.NoSites -> loadEmptyView()
             }
-        })
-        viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
-            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
         })
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
             dialogViewModel.showDialog(requireActivity().supportFragmentManager,
@@ -382,7 +379,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         super.onPause()
         activity?.let {
             if (!it.isChangingConfigurations) {
-                viewModel.clearActiveQuickStartTask()
                 viewModel.dismissQuickStartNotice()
             }
         }
@@ -460,6 +456,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
+                viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
                         data.getIntExtra(
                                 SitePickerActivity.KEY_SITE_LOCAL_ID,
@@ -469,6 +466,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
                             data.getIntExtra(
                                     SitePickerActivity.KEY_SITE_LOCAL_ID,
@@ -602,5 +600,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onDismiss() {
         viewModel.onQuickStartFullScreenDialogDismiss()
+    }
+
+    fun handleScrollTo(scrollTo: Int) {
+        (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
+    }
+
+    fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
+        viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
 }

@@ -15,6 +15,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.util.LocaleManagerWrapper
+import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationIntentsViewModelTest {
@@ -22,15 +24,19 @@ class SiteCreationIntentsViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var analyticsTracker: SiteCreationTracker
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var dispatcher: CoroutineDispatcher
     @Mock private lateinit var resources: Resources
 
     private lateinit var viewModel: SiteCreationIntentsViewModel
+    private lateinit var searchResultsProvider: VerticalsSearchResultsProvider
 
     @Before
     fun setUp() {
-        viewModel = SiteCreationIntentsViewModel(analyticsTracker, dispatcher)
         whenever(resources.getStringArray(any())).thenReturn(emptyArray())
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        searchResultsProvider = VerticalsSearchResultsProvider(localeManagerWrapper)
+        viewModel = SiteCreationIntentsViewModel(analyticsTracker, searchResultsProvider, dispatcher)
     }
 
     @Test
@@ -43,6 +49,20 @@ class SiteCreationIntentsViewModelTest {
     fun `when the skip button is pressed an analytics event is emitted`() {
         viewModel.onSkipPressed()
         verify(analyticsTracker).trackSiteIntentQuestionSkipped()
+    }
+
+    @Test
+    fun `when the back button is pressed an analytics event is emitted`() {
+        viewModel.onBackPressed()
+        verify(analyticsTracker).trackSiteIntentQuestionCanceled()
+    }
+
+    @Test
+    fun `when an item is tapped an analytics event is emitted`() {
+        val slug = "test1"
+        viewModel.initializeFromResources(resources)
+        viewModel.intentSelected(slug, slug)
+        verify(analyticsTracker).trackSiteIntentQuestionVerticalSelected(slug)
     }
 
     @Test
@@ -69,11 +89,57 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
-    fun `when the continue button is pressed the analytics event is emitted with the search input value`() {
+    fun `when the custom vertical is tapped the analytics event is emitted with the search input value`() {
         val valueOfSearchInput = "test vertical"
         viewModel.initializeFromResources(resources)
         viewModel.onSearchTextChanged(valueOfSearchInput)
-        viewModel.onContinuePressed()
-        verify(analyticsTracker).trackSiteIntentQuestionContinuePressed(eq(valueOfSearchInput))
+        viewModel.onCustomVerticalSelected()
+        verify(analyticsTracker).trackSiteIntentQuestionCustomVerticalSelected(eq(valueOfSearchInput))
+    }
+
+    @Test
+    fun `when the user types in the search field the results are filtered`() {
+        val valueOfSearchInput = "test1"
+        val matchingItem = "Test1"
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf(matchingItem, "Test2", "Test3"))
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
+        assertThat(viewModel.uiState.value?.content?.items?.firstOrNull()?.verticalText).isEqualTo("Test1")
+    }
+
+    @Test
+    fun `when there are matching search results but not exact the custom vertical is not visible`() {
+        val valueOfSearchInput = "test"
+        val matchingItem = "Test1"
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf(matchingItem, "Test2", "Test3"))
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(4)
+        assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
+                .isEqualTo(valueOfSearchInput)
+    }
+
+    @Test
+    fun `when there are no search results the custom vertical is visible`() {
+        val valueOfSearchInput = "test1"
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf("Test2", "Test3"))
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
+        assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
+                .isEqualTo(valueOfSearchInput)
+    }
+
+    @Test
+    fun `when there is one search result exactly matching the input the custom vertical is not visible`() {
+        val valueOfSearchInput = "test2"
+        val matchingItem = "Test2"
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf(matchingItem, "Test3"))
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+        assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(1)
+        assertThat(viewModel.uiState.value?.content?.items?.getOrNull(0)?.verticalText)
+                .isEqualTo(matchingItem)
     }
 }

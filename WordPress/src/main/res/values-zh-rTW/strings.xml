@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-25 09:54:07+0000
+Translation-Revision-Date: 2022-04-01 15:30:06+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: zh_TW
 -->
 <resources>
@@ -324,6 +324,7 @@ Language: zh_TW
     <string name="gutenberg_native_preview_page">閱覽頁面</string>
     <string name="gutenberg_native_preview_post">預覽文章</string>
     <string name="gutenberg_native_retry">重試</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">壹</string>
     <string name="gutenberg_native_no_preview_available">未提供預覽</string>
     <string name="gutenberg_native_s_link">%s 連結</string>
