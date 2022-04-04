@@ -30,15 +30,15 @@ class QuickLinkRibbonsBuilderTest : BaseUnitTest() {
     /* ACTION CLICKS */
     @Test
     fun `when card is built, then ribbon click are set on the card`() {
-        val quickActionsCard = buildQuickActionsCard()
+        val quickLinkRibbons = buildQuickLinkRibbons()
 
-        assertThat(quickActionsCard.onStatsClick).isEqualTo(ListItemInteraction.create(onStatsClick))
-        assertThat(quickActionsCard.onPagesClick).isEqualTo(ListItemInteraction.create(onPagesClick))
-        assertThat(quickActionsCard.onPostsClick).isEqualTo(ListItemInteraction.create(onPostsClick))
-        assertThat(quickActionsCard.onMediaClick).isEqualTo(ListItemInteraction.create(onMediaClick))
+        assertThat(quickLinkRibbons.onStatsClick).isEqualTo(ListItemInteraction.create(onStatsClick))
+        assertThat(quickLinkRibbons.onPagesClick).isEqualTo(ListItemInteraction.create(onPagesClick))
+        assertThat(quickLinkRibbons.onPostsClick).isEqualTo(ListItemInteraction.create(onPostsClick))
+        assertThat(quickLinkRibbons.onMediaClick).isEqualTo(ListItemInteraction.create(onMediaClick))
     }
 
-    private fun buildQuickActionsCard(
+    private fun buildQuickLinkRibbons(
         showPages: Boolean = true
     ): QuickLinkRibbons {
         setShowPages(showPages)
