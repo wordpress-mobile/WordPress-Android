@@ -4005,4 +4005,22 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+
+    <!-- Initial Screen -->
+    <string name="initial_screen">Initial Screen</string>
+    <string name="initial_screen_home">Home</string>
+    <string name="initial_screen_site_menu">Site Menu</string>
+    <string name="initial_screen_default">Home</string>
+    <string name="initial_screen_entry_value_home" translatable="false">home</string>
+    <string name="initial_screen_entry_value_site_menu" translatable="false">site_menu</string>
+    <string name="initial_screen_entry_value_default" translatable="false">home</string>
+    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_home</string>
+    <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/initial_screen_home</item>
+        <item>@string/initial_screen_site_menu</item>
+    </string-array>
+    <string-array name="initial_screen_entry_values" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/initial_screen_entry_value_home</item>
+        <item>@string/initial_screen_entry_value_site_menu</item>
+    </string-array>
 </resources>
