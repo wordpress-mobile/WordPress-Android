@@ -1758,5 +1758,6 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">@dimen/text_sz_larger</item>
         <item name="android:textStyle">bold</item>
+        <item name="rippleColor">@color/on_surface_disabled_transparent_selector</item>
     </style>
 </resources>
