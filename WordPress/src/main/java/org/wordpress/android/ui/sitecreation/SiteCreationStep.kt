@@ -2,7 +2,7 @@ package org.wordpress.android.ui.sitecreation
 
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.util.config.SiteIntentQuestionFeatureConfig
 import org.wordpress.android.util.wizard.WizardStep
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 enum class SiteCreationStep : WizardStep {
-    SEGMENTS, DOMAINS, SITE_PREVIEW, INTENTS;
+    SITE_DESIGNS, DOMAINS, SITE_PREVIEW, INTENTS;
 }
 
 @Singleton
@@ -21,14 +21,14 @@ class SiteCreationStepsProvider @Inject constructor(
         if (siteIntentQuestionFeatureConfig.isEnabled()) {
             return listOf(
                     INTENTS,
-                    SEGMENTS,
+                    SITE_DESIGNS,
                     DOMAINS,
                     SITE_PREVIEW
             )
         }
 
         return listOf(
-                SEGMENTS,
+                SITE_DESIGNS,
                 DOMAINS,
                 SITE_PREVIEW
         )
