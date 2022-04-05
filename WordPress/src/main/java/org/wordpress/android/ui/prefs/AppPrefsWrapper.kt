@@ -214,7 +214,7 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setMySiteDefaultTabExperimentVariant(variant: String) = AppPrefs.setMySiteDefaultTabExperimentVariant(variant)
 
-    fun getMySiteDefaultTabExperimentVariant() = AppPrefs.getMySiteDefaultTabExperimentVariant()
+    fun getMySiteDefaultTabExperimentVariant(): String = AppPrefs.getMySiteDefaultTabExperimentVariant()
 
     fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
 
@@ -222,6 +222,8 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setInitialScreenFromMySiteDefaultTabExperimentVariant(variant: String) =
             AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
+
+    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
 
     companion object {
         private const val LIGHT_MODE_ID = 0
