@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:id="@+id/quick_link_scroll_view"
     android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
