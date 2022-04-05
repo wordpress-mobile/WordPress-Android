@@ -7,6 +7,9 @@ gradleEnterprise {
     allowUntrustedServer = true // Unless a trusted certificate is already configured in GE.
     buildScan {
         publishAlways()
+        capture {
+            taskInputFiles = true
+        }
     }
 }
 
