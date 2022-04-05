@@ -56,7 +56,7 @@
             style="@style/MySiteCardItemTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:textAlignment="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_title"
@@ -64,8 +64,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/answered_users_recycler"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
             android:orientation="horizontal"
             app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
