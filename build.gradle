@@ -172,18 +172,6 @@ subprojects {
     }
 }
 
-buildScan {
-    // Always run Gradle scan on CI builds
-    if (System.getenv('CI')) {
-        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-        termsOfServiceAgree = 'yes'
-        tag 'CI'
-        publishAlways()
-        // Otherwise CI might shut down before it's uploaded
-        uploadInBackground = false
-    }
-}
-
 // Onboarding and dev env setup tasks
 tasks.register("checkBundler", Exec) {
     doFirst {
