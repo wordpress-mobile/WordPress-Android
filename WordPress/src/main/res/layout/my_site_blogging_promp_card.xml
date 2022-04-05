@@ -62,29 +62,17 @@
             app:layout_constraintTop_toBottomOf="@+id/card_title"
             tools:text="Cast the movie of your life." />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/container"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/answered_users_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            app:layout_constrainedWidth="true"
+            android:orientation="horizontal"
+            app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prompt_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/answered_users_recycler"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/success"
-                tools:itemCount="3"
-                tools:layoutManager="LinearLayoutManager"
-                tools:listitem="@layout/liker_face_item"
-                tools:orientation="horizontal" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
+            app:layout_constraintTop_toBottomOf="@+id/prompt_content"
+            tools:itemCount="5"
+            tools:listitem="@layout/avatar_item" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/answer_button"
@@ -94,7 +82,7 @@
             android:text="@string/my_site_blogging_prompt_card_answer_prompt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/container" />
+            app:layout_constraintTop_toBottomOf="@+id/answered_users_recycler" />
 
         <LinearLayout
             android:id="@+id/answered_prompt_controls"
@@ -104,7 +92,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/container">
+            app:layout_constraintTop_toBottomOf="@+id/answered_users_recycler">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/answered_button"

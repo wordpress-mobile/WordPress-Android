@@ -3,15 +3,17 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPrompCardBinding
-import org.wordpress.android.ui.avatars.FACE_ITEM_LEFT_OFFSET_DIMEN
-import org.wordpress.android.ui.avatars.PostLikerItemDecorator
-import org.wordpress.android.ui.avatars.ReaderPostLikersAdapter
-import org.wordpress.android.ui.avatars.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.avatars.TrainOfFacesItem.FaceItem
+import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
+import org.wordpress.android.ui.avatars.AvatarItemDecorator
+import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -34,7 +36,6 @@ class BloggingPromptCardViewHolder(
                 R.string.my_site_blogging_prompt_card_number_of_answers,
                 card.numberOfAnswers
         )
-//        uiHelpers.setTextOrHide(numberOfAnswers, numberOfAnswersLabel)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
         bloggingPromptCardMenu.setOnClickListener {
@@ -59,35 +60,43 @@ class BloggingPromptCardViewHolder(
         }
         uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
 
-        val layoutManager = LinearLayoutManager(answeredUsersRecycler.context, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = FlexboxLayoutManager(answeredUsersRecycler.context)
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.flexWrap = FlexWrap.NOWRAP
+        layoutManager.justifyContent = JustifyContent.CENTER
         answeredUsersRecycler.addItemDecoration(
-                PostLikerItemDecorator(
+                AvatarItemDecorator(
                         RtlUtils.isRtl(answeredUsersRecycler.context),
                         answeredUsersRecycler.context,
-                        FACE_ITEM_LEFT_OFFSET_DIMEN
+                        AVATAR_LEFT_OFFSET_DIMEN
                 )
         )
-
         answeredUsersRecycler.layoutManager = layoutManager
 
-        val snapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(answeredUsersRecycler)
-
-        val adapter = ReaderPostLikersAdapter(
+        val adapter = TrainOfAvatarsAdapter(
                 imageManager,
                 uiHelpers
         )
+        answeredUsersRecycler.adapter = adapter
 
         adapter.loadData(
                 listOf(
-                        FaceItem(
+                        AvatarItem(
                                 54279365,
                                 "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
-                        ), BloggersLikingTextItem(UiStringText(numberOfAnswersLabel))
+                        ),
+                        AvatarItem(
+                                54279365,
+                                "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                        ),
+
+                        AvatarItem(
+                                54279365,
+                                "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                        ),
+                        TrailingLabelTextItem(UiStringText(numberOfAnswersLabel))
                 )
         )
-
-        answeredUsersRecycler.adapter = adapter
     }
 }
 
