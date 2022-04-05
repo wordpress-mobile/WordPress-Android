@@ -2930,16 +2930,16 @@
     <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
-    
-    
-    
-    
+
+
+
+
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
-    
+
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
-    
+
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
@@ -3208,6 +3208,9 @@
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
+    <string name="new_site_creation_site_name_header_title">Give your website a name</string>
+    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later</string>
+    <string name="new_site_creation_site_name_input_hint">Fashion Designerly</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
