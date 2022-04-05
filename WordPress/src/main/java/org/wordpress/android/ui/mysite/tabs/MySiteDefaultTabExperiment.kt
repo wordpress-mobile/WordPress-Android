@@ -36,6 +36,14 @@ class MySiteDefaultTabExperiment @Inject constructor(
         }
     }
 
+    fun changeExperimentVariantAssignmentIfNeeded(toVariant: String) {
+        if (isExperimentRunning()) {
+            setExperimentVariant(toVariant)
+            analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
+            analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
+        }
+    }
+
     private fun isExperimentRunning() =
             mySiteDashboardTabsFeatureConfig.isEnabled() && mySiteDefaultTabExperimentFeatureConfig.isEnabled()
 
