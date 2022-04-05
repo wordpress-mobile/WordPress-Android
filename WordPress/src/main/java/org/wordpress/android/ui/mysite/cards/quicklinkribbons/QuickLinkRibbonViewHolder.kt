@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import org.wordpress.android.databinding.QuickLinkRibbonListBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
@@ -25,6 +26,14 @@ class QuickLinkRibbonViewHolder(
         media.setOnClickListener { quickLinkRibbon.onMediaClick.click() }
         stats.setOnClickListener { quickLinkRibbon.onStatsClick.click() }
         uiHelpers.updateVisibility(pages, quickLinkRibbon.showPages)
+
+        quickStartFocusPointPages.setVisibleOrGone(quickLinkRibbon.showPagesFocusPoint)
+        quickStartFocusPointPages.setVisibleOrGone(quickLinkRibbon.showStatsFocusPoint)
+
+        if(quickLinkRibbon.showStatsFocusPoint)
+            quickLinkScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
+        if(quickLinkRibbon.showPagesFocusPoint)
+            quickLinkScrollView.fullScroll(HorizontalScrollView.FOCUS_LEFT)
     }
 
     // we are not detecting click events in the scroll view so we can ignore this

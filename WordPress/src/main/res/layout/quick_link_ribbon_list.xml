@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/quick_link_scroll_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/quick_link_scroll_view"
     android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +20,17 @@
             app:icon="@drawable/ic_pages_white_24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <org.wordpress.android.widgets.QuickStartFocusPoint
+            android:id="@+id/quick_start_focus_point_pages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/quick_start_focus_point_description"
+            android:elevation="@dimen/quick_start_focus_point_elevation"
+            app:layout_constraintEnd_toEndOf="@+id/pages"
+            app:layout_constraintTop_toTopOf="@+id/pages"
+            app:layout_constraintVertical_bias="0.0"
+            app:size="small" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/posts"
@@ -55,6 +66,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/media"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <org.wordpress.android.widgets.QuickStartFocusPoint
+            android:id="@+id/quick_start_focus_point_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/quick_start_focus_point_description"
+            android:elevation="@dimen/quick_start_focus_point_elevation"
+            app:layout_constraintEnd_toEndOf="@+id/stats"
+            app:layout_constraintTop_toTopOf="@+id/stats"
+            app:layout_constraintVertical_bias="0.0"
+            app:size="small" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </HorizontalScrollView>

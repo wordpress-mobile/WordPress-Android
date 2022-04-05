@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -350,7 +351,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun getPositionOfQuickStartItem(siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>) =
             if (isMySiteTabsEnabled) {
-                (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
+                val currentTab = orderedTabTypes[_selectTab.value!!.peekContent().position]
+                (siteItems[currentTab] as List<MySiteCardAndItem>)
                         .indexOfFirst { it.activeQuickStartItem }
             } else {
                 (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
@@ -424,7 +426,8 @@ class MySiteViewModel @Inject constructor(
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick
+                        onStatsClick = this::onQuickLinkRibbonStatsClick,
+                        activeTask = activeTask
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(

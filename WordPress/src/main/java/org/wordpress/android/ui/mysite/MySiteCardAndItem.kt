@@ -80,8 +80,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onPostsClick: ListItemInteraction,
             val onMediaClick: ListItemInteraction,
             val onStatsClick: ListItemInteraction,
-            val showPages: Boolean = true
-        ) : Card(QUICK_LINK_RIBBON)
+            val showPages: Boolean = true,
+            val showStatsFocusPoint: Boolean = false,
+            val showPagesFocusPoint: Boolean = false
+        ) : Card(QUICK_LINK_RIBBON, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
         data class DomainRegistrationCard(val onClick: ListItemInteraction) : Card(DOMAIN_REGISTRATION_CARD)
 
