@@ -53,7 +53,7 @@ class InsightsManagementMapper
             withContext(bgDispatcher) {
                 val insightListItems = mutableListOf<InsightListItem>()
                 insightListItems += Header(string.stats_insights_management_general)
-                if (statsRevampV2FeatureConfig.isEnabled()) {
+                if (statsRevampV2FeatureConfig.isEnabled() && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
                     GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
                 }
                 insightListItems += GENERAL_INSIGHTS.map { type ->
