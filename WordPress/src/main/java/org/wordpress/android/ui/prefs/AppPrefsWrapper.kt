@@ -216,6 +216,8 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getMySiteDefaultTabExperimentVariant() = AppPrefs.getMySiteDefaultTabExperimentVariant()
 
+    fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

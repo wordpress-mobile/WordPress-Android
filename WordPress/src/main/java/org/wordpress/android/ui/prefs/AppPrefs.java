@@ -171,7 +171,10 @@ public class AppPrefs {
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
         // Used to store the variant for the my site default tab experiment
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT,
+
+        // Used to indicate if the variant has been assigned for the My Site Tab experiment
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED
     }
 
     /**
@@ -1353,6 +1356,13 @@ public class AppPrefs {
         return getString(
                 DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT,
                 MySiteTabExperimentVariant.NONEXISTENT.getLabel()
+        );
+    }
+
+    public static boolean isMySiteDefaultTabExperimentVariantAssigned() {
+        return getBoolean(
+                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
+                false
         );
     }
 }

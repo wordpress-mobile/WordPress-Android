@@ -18,7 +18,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
 ) {
     fun checkAndSetVariantIfNeeded() {
         if (isExperimentRunning()) {
-            if (isVariantNotAssigned()) {
+            if (!isVariantAssigned()) {
                 when (mySiteDefaultTabExperimentVariationDashboardFeatureConfig.isDashboardVariant()) {
                     true -> setExperimentVariant(MySiteTabExperimentVariant.DASHBOARD)
                     false -> setExperimentVariant(MySiteTabExperimentVariant.SITE_MENU)
@@ -38,8 +38,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
     private fun isExperimentRunning() =
             mySiteDashboardTabsFeatureConfig.isEnabled() && mySiteDefaultTabExperimentFeatureConfig.isEnabled()
 
-    private fun isVariantNotAssigned() =
-            appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabExperimentVariant.NONEXISTENT.label
+    private fun isVariantAssigned() = appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()
 
     private fun setExperimentVariant(variant: MySiteTabExperimentVariant) {
         appPrefsWrapper.setMySiteDefaultTabExperimentVariant(variant.label)
