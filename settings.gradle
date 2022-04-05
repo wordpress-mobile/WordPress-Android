@@ -2,6 +2,8 @@ plugins {
   id "com.gradle.enterprise" version "3.4.1"
 }
 
+rootProject.name = 'WPAndroid'
+
 include ':WordPress'
 
 include ':libs:image-editor:ImageEditor'
