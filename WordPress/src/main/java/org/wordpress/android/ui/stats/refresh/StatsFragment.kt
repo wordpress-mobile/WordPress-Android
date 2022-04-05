@@ -45,8 +45,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private val selectedTabListener: SelectedTabListener
-        get() = SelectedTabListener(viewModel)
+    private lateinit var selectedTabListener: SelectedTabListener
 
     private var restorePreviousSearch = false
 
@@ -84,6 +83,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         statsPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
+        selectedTabListener = SelectedTabListener(viewModel)
         TabLayoutMediator(tabLayout, statsPager) { tab, position ->
             tab.text = adapter.getTabTitle(position)
         }.attach()

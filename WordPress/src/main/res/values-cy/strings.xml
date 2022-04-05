@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: cy_GB
 -->
 <resources>
@@ -147,6 +147,7 @@ Language: cy_GB
     <string name="start_over">Cychwyn Eto</string>
     <string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
     <string name="site_settings_advanced_header">Uwch</string>
+    <string name="button_skip">Hepgor</string>
     <string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
     <string name="post_format_status">Statws</string>
     <string name="post_format_video">Fideo</string>

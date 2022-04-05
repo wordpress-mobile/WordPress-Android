@@ -26,6 +26,7 @@
         <item>personal</item>
         <item>photography</item>
         <item>politics</item>
+        <item>real_estate</item>
         <item>sports</item>
         <item>technology</item>
         <item>travel</item>
@@ -57,6 +58,7 @@
         <item>@string/site_creation_intent_personal</item>
         <item>@string/site_creation_intent_photography</item>
         <item>@string/site_creation_intent_politics</item>
+        <item>@string/site_creation_intent_real_estate</item>
         <item>@string/site_creation_intent_sports</item>
         <item>@string/site_creation_intent_technology</item>
         <item>@string/site_creation_intent_travel</item>
@@ -79,7 +81,7 @@
         <item>&#127918;</item><!-- 🎮 Gaming -->
         <item>&#10084;</item><!-- ❤️ Health -->
         <item>&#128715;</item><!-- 🛋️ Interior Design -->
-        <item>&#127968;</item><!-- 🏠 Lifestyle -->
+        <item>&#9749;</item><!-- ☕ Lifestyle -->
         <item>&#128205;</item><!-- 📍Local Services -->
         <item>&#127925;</item><!-- 🎵 Music -->
         <item>&#128478;</item><!-- 🗞️ News -->
@@ -88,6 +90,7 @@
         <item>&#9997;&#65039;</item><!-- ✍️ Personal -->
         <item>&#128247;</item><!-- 📷 Photography -->
         <item>&#128499;</item><!-- 🗳️ Politics -->
+        <item>&#127968;</item><!-- 🏠 Real Estate -->
         <item>&#9917;</item><!-- ⚽ Sports -->
         <item>&#128187;</item><!-- 💻 Technology -->
         <item>&#9992;</item><!-- ✈️ Travel -->

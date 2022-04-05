@@ -366,7 +366,7 @@
     <!-- post version sync conflict dialog -->
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %s\n\nWeb\nSaved on %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %1$s\n\nWeb\nSaved on %2$s\n</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Discard Web</string>
     <string name="toast_conflict_updating_post">Updating post</string>
@@ -378,7 +378,7 @@
     <string name="dialog_confirm_autosave_title">Which version would you like to edit?</string>
     <string name="dialog_confirm_autosave_body_first_part">You recently made changes to this post but didn\'t save them. Choose a version to load:\n\n</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">You recently made changes to this page but didn\'t save them. Choose a version to load:\n\n</string>
-    <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %s\n\nFrom another device\nSaved on %s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %1$s\n\nFrom another device\nSaved on %2$s\n</string>
     <string name="dialog_confirm_autosave_restore_button">The version from another device</string>
     <string name="dialog_confirm_autosave_dont_restore_button">The version from this app</string>
 
@@ -427,7 +427,7 @@
     <string name="comment_delete_talkback">Comment deleted</string>
     <string name="comment_spam_talkback">Comment marked as spam</string>
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
-    <string name="comment_title">%s on %s</string>
+    <string name="comment_title">%1$s on %2$s</string>
     <string name="comment_read_source_post">Read the source post</string>
     <string name="comment_toast_err_share_intent">Unable to share</string>
     <string name="comment_share_link_via">Share via</string>
@@ -1096,7 +1096,7 @@
     <string name="activity_log_activity_type_empty_title">No activities available</string>
     <string name="activity_log_activity_type_empty_subtitle">No activities recorded in the selected date range.</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activity Type filter</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (showing %s items)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (showing %2$s items)</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activity Type filter (%s types selected)</string>
     <string name="activity_log_multisite_message">Jetpack Backup for Multisite installations provides downloadable backups, no one-click restores. For more information %1$s.</string>
     <string name="activity_log_visit_our_documentation_page">visit our documentation page</string>
@@ -1146,7 +1146,7 @@
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
-    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
+    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %1$s and did not find any risks. %2$s</string>
     <!-- translators: %3$s: "here to help" clickable text linking to help screen inside the app. -->
     <string name="scan_idle_threats_description_plural">The scan found %1$s potential threats with %2$s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
     <!-- translators: %2$s: "here to help" clickable text linking to help screen inside the app. -->
@@ -1180,8 +1180,8 @@
     <string name="threat_item_header_infected_core_file">%s: infected core file</string>
     <string name="threat_item_header_database_threat">Database %s threats</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: malicious code pattern</string>
-    <string name="threat_item_header_vulnerable_plugin">Vulnerable Plugin: %s (version %s)</string>
-    <string name="threat_item_header_vulnerable_theme">Vulnerable Theme: %s (version %s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Vulnerable Plugin: %1$s (version %2$s)</string>
+    <string name="threat_item_header_vulnerable_theme">Vulnerable Theme: %1$s (version %2$s)</string>
 
     <!-- threat item sub header -->
     <string name="threat_item_sub_header_misc_vulnerability">Miscellaneous vulnerability</string>
@@ -1648,7 +1648,7 @@
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
 
     <!-- Post Status -->
     <string name="post_status_publish_post">Publish</string>
@@ -2247,6 +2247,17 @@
     <string name="my_site_error_card_subtitle">We\'re having trouble loading your site\'s data at the moment.</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
 
+    <!-- My Site - Blogging Prompt Card -->
+    <string name="my_site_blogging_prompt_card_title">Prompts</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
+    <string name="my_site_blogging_prompt_card_share" translatable="false">@string/share_action</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">%d answers</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
+
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
@@ -2657,7 +2668,7 @@
     <string name="edit">Edit</string>
     <string name="tap_to_try_again">Tap to try again!</string>
     <string name="add_media_progress">Adding media</string>
-    <string name="suggestion_invalid">%s is not a valid %s</string>
+    <string name="suggestion_invalid">%1$s is not a valid %2$s</string>
     <string name="suggestion_selection_needed">Please type to filter the list of suggestions.</string>
     <string name="suggestion_none">No %s suggestions available.</string>
     <string name="suggestion_problem">There was a problem loading suggestions.</string>
@@ -2919,20 +2930,20 @@
     <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
-    <string name="notification_channel_general_title">General</string>
-    <string name="notification_channel_important_title">Important</string>
-    <string name="notification_channel_transient_title">Transient</string>
-    <string name="notification_channel_reminder_title">Reminder</string>
+    
+    
+    
+    
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
-    <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
+    
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
-    <string name="notification_channel_reminder_id" translatable="false">wpandroid_notification_reminder_channel_id</string>
+    
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id" content_override="true" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
+    <string content_override="true" name="login_notification_channel_id" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -3077,6 +3088,7 @@
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
+    <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
 
     <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="quick_start_card_menu_unpin">Unpin this</string>
@@ -3192,8 +3204,10 @@
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
+    <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -3246,6 +3260,7 @@
     <string name="site_creation_intent_personal">Personal</string>
     <string name="site_creation_intent_photography">Photography</string>
     <string name="site_creation_intent_politics">Politics</string>
+    <string name="site_creation_intent_real_estate">Real Estate</string>
     <string name="site_creation_intent_sports">Sports</string>
     <string name="site_creation_intent_technology">Technology</string>
     <string name="site_creation_intent_travel">Travel</string>
@@ -3692,8 +3707,6 @@ translators: Block name. %s: The localized block name -->
     <!-- translators: Missing block alert title. %s: The localized block name -->
     <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully-supported</string>
     <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
-    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources">%s link</string>
-    <!-- translators: %s: embed block variant's label e.g: "Twitter". -->
     <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources">%s previews not yet available</string>
     <!-- translators: %s: social link name e.g: "Instagram". -->
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources">%s social icon</string>
@@ -3982,6 +3995,69 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources">App icon</string>
 
     <!-- Blogging prompts -->
+    <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
+    <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others — that’s where Prompts come in!</string>
+    <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Note:</string>
+    <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+    <string name="post_content">Content</string>
+    <string name="uploading">Uploading…</string>
+    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
+    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
+    <string name="alert_error_adding_media">An error occurred while inserting media</string>
+    <string name="stop_save_dialog_title">Files saving</string>
+    <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
+    <string name="create_a_link">Create a link</string>
+    <string name="width">Width</string>
+    <string name="featured">Use as featured image</string>
+    <string name="featured_in_post">Include image in post content</string>
+    <string name="horizontal_alignment">Horizontal alignment</string>
+    <string name="caption">Caption (optional)</string>
+    <string name="pixel_suffix">%dpx</string>
+    <string name="image_alt_text">Alt text</string>
+    <string name="media_bar_description_camera">Take Photo or Video with camera</string>
+    <string name="media_bar_description_gallery">Pick a media from gallery</string>
+    <string name="media_bar_description_library">Pick a media from WordPress media library</string>
+    <string name="visual_editor">Visual editor</string>
+    <string name="image_thumbnail">Image thumbnail</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
+    <string name="dialog_content_info_title">Content structure</string>
+    <string name="dialog_content_info_body">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
+    <string name="toast_content_info_failed">Failed to get content structure</string>
+    <string name="toast_content_info_editor_not_ready">Editor is still loading</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="dialog_title">Insert link</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+    <string name="stop_upload_dialog_button_yes">Yes</string>
+    <string name="stop_upload_dialog_button_no">No</string>
+    <string name="retry_failed_upload_title">Couldn\'t upload file</string>
+    <string name="retry_failed_upload_yes">Retry</string>
+    <string name="retry_failed_upload_remove">Remove upload</string>
+    <string name="retry_failed_upload_retry_all">Retry all</string>
+    <string name="long_post_dlg_saving">Saving</string>
+    <string name="menu_toolbar_title">Edit %s block</string>
+    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
+    <string name="dialog_title_try_block_editor" translatable="true">Try the new Block Editor</string>
+    <string name="dialog_body_try_block_editor" translatable="true">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
+    <string name="featured_image_replace_dialog_title">Replace current featured image?</string>
+    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it with the new image?</string>
+    <string name="featured_image_replace_dialog_confirm">Replace featured image</string>
+    <string name="featured_image_replace_dialog_cancel">Keep current</string>
+    <string name="featured_image_confirmation_notice">Set as featured image</string>
+    <string name="featured_image_removed_notice">Removed as featured image</string>
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">General</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Important</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Transient</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Reminder</string>
+    <string name="notification_channel_important_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_important_channel_id</string>
+    <string name="notification_channel_reminder_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_reminder_channel_id</string>
 </resources>

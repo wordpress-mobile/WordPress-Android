@@ -28,7 +28,6 @@ fun testScope() = CoroutineScope(Unconfined)
 
 @InternalCoroutinesApi
 private class TestDispatcher : CoroutineDispatcher(), Delay {
-    @InternalCoroutinesApi
     override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) {
         continuation.resume(Unit)
     }

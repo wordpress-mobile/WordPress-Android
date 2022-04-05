@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -74,7 +73,6 @@ class HistoryViewModelTest {
         assertThat(viewModel.listStatus.value).isEqualTo(HistoryListStatus.DONE)
     }
 
-    @UseExperimental(ExperimentalCoroutinesApi::class)
     private fun createHistoryVieWModel() = HistoryViewModel(
             dispatcher = dispatcher,
             resourceProvider = mock(),

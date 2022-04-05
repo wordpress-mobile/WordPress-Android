@@ -510,8 +510,6 @@
 
 
     <!--site creation-->
-    <dimen name="site_creation_segments_icon_size">24dp</dimen>
-    <dimen name="site_creation_segments_list_divider_start_margin">72dp</dimen>
     <dimen name="site_creation_segments_content_padding_vertical">16dp</dimen>
     <dimen name="site_creation_segments_content_padding_horizontal">16dp</dimen>
     <dimen name="site_creation_verticals_search_progress_size">24dp</dimen>
@@ -652,7 +650,8 @@
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 
     <!-- Site Intent Question -->
-    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
+    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_large</dimen>
+    <dimen name="siq_header_scroll_snap_threshold">-96dp</dimen>
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
@@ -691,4 +690,10 @@
 
     <dimen name="blogging_reminders_days_top_margin">42dp</dimen>
     <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
+
+    <dimen name="app_bar_with_site_info_height">146dp</dimen>
+    <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
+    <dimen name="app_bar_with_site_info_tabs_height">206dp</dimen>
+    <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
+    <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
 </resources>

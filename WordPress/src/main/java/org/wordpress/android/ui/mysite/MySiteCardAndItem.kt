@@ -37,30 +37,31 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
         POST_CARD_WITHOUT_POST_ITEMS,
-        POST_CARD_WITH_POST_ITEMS
+        POST_CARD_WITH_POST_ITEMS,
+        BLOGGING_PROMPT_CARD
+    }
+
+    data class SiteInfoHeaderCard(
+        val title: String,
+        val url: String,
+        val iconState: IconState,
+        val showTitleFocusPoint: Boolean,
+        val showIconFocusPoint: Boolean,
+        val onTitleClick: ListItemInteraction? = null,
+        val onIconClick: ListItemInteraction,
+        val onUrlClick: ListItemInteraction,
+        val onSwitchSiteClick: ListItemInteraction
+    ) : MySiteCardAndItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
+        sealed class IconState {
+            object Progress : IconState()
+            data class Visible(val url: String? = null) : IconState()
+        }
     }
 
     sealed class Card(
         override val type: Type,
         override val activeQuickStartItem: Boolean = false
     ) : MySiteCardAndItem(type, activeQuickStartItem) {
-        data class SiteInfoCard(
-            val title: String,
-            val url: String,
-            val iconState: IconState,
-            val showTitleFocusPoint: Boolean,
-            val showIconFocusPoint: Boolean,
-            val onTitleClick: ListItemInteraction? = null,
-            val onIconClick: ListItemInteraction,
-            val onUrlClick: ListItemInteraction,
-            val onSwitchSiteClick: ListItemInteraction
-        ) : Card(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
-            sealed class IconState {
-                object Progress : IconState()
-                data class Visible(val url: String? = null) : IconState()
-            }
-        }
-
         data class QuickActionsCard(
             val title: UiString,
             val onStatsClick: ListItemInteraction,
@@ -168,6 +169,22 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val label: UiString,
                         val onClick: (postCardType: PostCardType) -> Unit
                     )
+                }
+
+                sealed class BloggingPromptCard(
+                    override val dashboardCardType: DashboardCardType
+                ) : DashboardCard(dashboardCardType) {
+                    data class BloggingPromptCardWithData(
+                        val prompt: UiString,
+                        val answeredUsers: List<AnsweredUser>,
+                        val numberOfAnswers: Int,
+                        val isAnswered: Boolean,
+                        val onShareClick: (String) -> Unit
+                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD) {
+                        data class AnsweredUser(
+                            val avatarUrl: String?
+                        )
+                    }
                 }
             }
         }
