@@ -3,6 +3,11 @@ package org.wordpress.android.ui.bloggingprompts.onboarding
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.wordpress.android.R
+import org.wordpress.android.R.string
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class BloggingPromptsOnboardingUiStateMapperTest {
     private val classToTest = BloggingPromptsOnboardingUiStateMapper()
@@ -16,15 +21,30 @@ class BloggingPromptsOnboardingUiStateMapperTest {
 
     @Test
     fun `Should return correct Ready state string resource for answersRes`() {
-        val actual = classToTest.mapReady().answersRes
-        val expected = R.string.my_site_blogging_prompt_card_number_of_answers
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should return correct Ready state answers count`() {
-        val actual = classToTest.mapReady().answersCount
-        val expected = 19
+        val actual = classToTest.mapReady().respondents
+        val expected = listOf(
+                AvatarItem(
+                        54279365,
+                        "https://0.gravatar.com/avatar/cec64efa352617" +
+                                "c35743d8ed233ab410?s=96&d=identicon&r=G"
+                ),
+                AvatarItem(
+                        54279365,
+                        "https://0.gravatar.com/avatar/cec64efa352617" +
+                                "c35743d8ed233ab410?s=96&d=identicon&r=G"
+                ),
+                AvatarItem(
+                        54279365,
+                        "https://0.gravatar.com/avatar/cec64efa352617" +
+                                "c35743d8ed233ab410?s=96&d=identicon&r=G"
+                ),
+                TrailingLabelTextItem(
+                        UiStringResWithParams(
+                                string.my_site_blogging_prompt_card_number_of_answers,
+                                listOf(UiStringText("3"))
+                        )
+                )
+        )
         assertThat(actual).isEqualTo(expected)
     }
 
