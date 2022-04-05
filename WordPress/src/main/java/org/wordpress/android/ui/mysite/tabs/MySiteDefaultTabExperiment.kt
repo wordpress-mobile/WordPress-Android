@@ -37,7 +37,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
     }
 
     fun changeExperimentVariantAssignmentIfNeeded(toVariant: String) {
-        if (isExperimentRunning()) {
+        if (isExperimentRunning() && isVariantAssigned()) {
             setExperimentVariant(toVariant)
             analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
             analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
