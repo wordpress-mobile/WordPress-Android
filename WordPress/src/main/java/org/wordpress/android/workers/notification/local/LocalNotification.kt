@@ -1,4 +1,4 @@
-package org.wordpress.android.workers
+package org.wordpress.android.workers.notification.local
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

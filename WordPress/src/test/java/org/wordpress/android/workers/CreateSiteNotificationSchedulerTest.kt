@@ -16,7 +16,11 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.CREATE_SITE_NOTIFICATION_SCHEDULED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.workers.LocalNotification.Type.CREATE_SITE
+import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationHandler
+import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler
+import org.wordpress.android.workers.notification.local.LocalNotification
+import org.wordpress.android.workers.notification.local.LocalNotification.Type.CREATE_SITE
+import org.wordpress.android.workers.notification.local.LocalNotificationScheduler
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateSiteNotificationSchedulerTest {

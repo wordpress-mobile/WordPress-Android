@@ -6,7 +6,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.workers.LocalNotification.Type.CREATE_SITE
+import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationHandler
+import org.wordpress.android.workers.notification.local.LocalNotification.Type.CREATE_SITE
+import org.wordpress.android.workers.notification.local.LocalNotificationHandlerFactory
 
 @RunWith(MockitoJUnitRunner::class)
 class LocalNotificationHandlerFactoryTest {
