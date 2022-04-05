@@ -3,11 +3,10 @@ package org.wordpress.android.e2e.flows;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.rule.ActivityTestRule;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
@@ -34,7 +33,7 @@ public class SignupFlow {
         return this;
     }
 
-    public SignupFlow openMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
+    public SignupFlow openMagicLink() {
         // Should see "Check email" button
         // See SignupMagicLinkFragment
         waitForElementToBeDisplayed(R.id.signup_magic_link_button);
@@ -46,7 +45,7 @@ public class SignupFlow {
                 Uri.parse("wordpress://magic-login?token=valid_token&new_user=1")
         ).setPackage(getApplicationContext().getPackageName());
 
-        magicLinkActivityTestRule.launchActivity(intent);
+        ActivityScenario.launch(intent);
 
         return this;
     }

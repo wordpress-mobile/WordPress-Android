@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_PULL_TO_REFRESH
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -79,6 +78,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -141,8 +141,10 @@ class MySiteViewModel @Inject constructor(
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
+    private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -152,6 +154,8 @@ class MySiteViewModel @Inject constructor(
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
     private val _onShare = MutableLiveData<Event<String>>()
+    private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
+    private val _selectTab = MutableLiveData<Event<TabNavigation>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -174,9 +178,20 @@ class MySiteViewModel @Inject constructor(
 
     val orderedTabTypes: List<MySiteTabType>
         get() = if (isMySiteTabsEnabled) {
-            listOf(MySiteTabType.SITE_MENU, MySiteTabType.DASHBOARD)
+            listOf(MySiteTabType.DASHBOARD, MySiteTabType.SITE_MENU)
         } else {
             listOf(MySiteTabType.ALL)
+        }
+
+    private val defaultABExperimentTab: MySiteTabType
+        get() = if (isMySiteTabsEnabled) {
+            if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
+                MySiteTabType.DASHBOARD
+            } else {
+                MySiteTabType.SITE_MENU
+            }
+        } else {
+            MySiteTabType.ALL
         }
 
     val onScrollTo: LiveData<Event<Int>> = merge(
@@ -199,6 +214,8 @@ class MySiteViewModel @Inject constructor(
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
     val onShare = _onShare
+    val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
+    val selectTab: LiveData<Event<TabNavigation>> = _selectTab
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -234,6 +251,7 @@ class MySiteViewModel @Inject constructor(
                         scanAvailable,
                         cardsUpdate
                 )
+                selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
                 state
             } else {
@@ -307,7 +325,10 @@ class MySiteViewModel @Inject constructor(
                         }
                 ),
                 siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
-                siteInfoHeader = siteInfo,
+                siteInfoHeaderState = SiteInfoHeaderState(
+                        hasUpdates = hasSiteHeaderUpdates(siteInfo),
+                        siteInfoHeader = siteInfo
+                ),
                 cardAndItems = siteItems[MySiteTabType.ALL]!!,
                 siteMenuCardsAndItems = siteItems[MySiteTabType.SITE_MENU]!!,
                 dashboardCardsAndItems = siteItems[MySiteTabType.DASHBOARD]!!
@@ -414,7 +435,6 @@ class MySiteViewModel @Inject constructor(
                         )
                 )
         )
-
         val dynamicCards = dynamicCardsBuilder.build(
                 quickStartCategories,
                 pinnedDynamicCard,
@@ -462,10 +482,10 @@ class MySiteViewModel @Inject constructor(
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
-            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.DASHBOARD) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (quickStartRepository.quickStartOrigin == QuickStartOrigin.SITE_MENU) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
             add(Type.DOMAIN_REGISTRATION_CARD)
         }
         MySiteTabType.ALL -> emptyList()
@@ -493,8 +513,11 @@ class MySiteViewModel @Inject constructor(
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
                 siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
-                        R.dimen.app_bar_with_no_site_info_height,
-                        R.dimen.toolbar_bottom_margin_with_no_tabs
+                        appBarHeight = R.dimen.app_bar_with_no_site_info_height,
+                        toolbarBottomMargin = R.dimen.toolbar_bottom_margin_with_no_tabs,
+                        headerVisible = false,
+                        appBarLiftOnScroll = true
+
                 ),
                 shouldShowImage = shouldShowImage
         )
@@ -678,14 +701,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_STATS_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_STATS_TAPPED)
         quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_PAGES_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
         quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
@@ -693,13 +716,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun quickActionPostsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_POSTS_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_POSTS_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
     }
 
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        analyticsTrackerWrapper.track(Stat.QUICK_ACTION_MEDIA_TAPPED)
+        trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
@@ -710,7 +733,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun refresh(isPullToRefresh: Boolean = false) {
-        if (isPullToRefresh) analyticsTrackerWrapper.track(MY_SITE_PULL_TO_REFRESH)
+        if (isPullToRefresh) trackWithTabSourceIfNeeded(Stat.MY_SITE_PULL_TO_REFRESH)
         mySiteSourceManager.refresh()
     }
 
@@ -909,6 +932,11 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    fun onCreateSiteResult() {
+        isDefaultABExperimentTabSet = false
+        selectDefaultTabIfNeeded()
+    }
+
     fun performFirstStepAfterSiteCreation(siteLocalId: Int) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor()
@@ -1017,6 +1045,35 @@ class MySiteViewModel @Inject constructor(
         setVisible()
     }
 
+    fun trackWithTabSource(event: MySiteTrackWithTabSource) {
+        if (event.currentTab == MySiteTabType.ALL) {
+            analyticsTrackerWrapper.track(event.stat, event.properties ?: emptyMap())
+        } else {
+            val props: MutableMap<String, Any> = mutableMapOf(event.key to event.currentTab.label)
+            if (!event.properties.isNullOrEmpty()) {
+                props.putAll(event.properties)
+            }
+            analyticsTrackerWrapper.track(event.stat, props)
+        }
+    }
+
+    private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
+        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+            _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
+        } else {
+            analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
+        }
+    }
+
+    private fun selectDefaultTabIfNeeded() {
+        if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
+        val index = orderedTabTypes.indexOf(defaultABExperimentTab)
+        if (index != -1) {
+            _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
+            isDefaultABExperimentTabSet = true
+        }
+    }
+
     private fun trackCardsAndItemsShownIfNeeded(siteSelected: SiteSelected) {
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
@@ -1041,6 +1098,12 @@ class MySiteViewModel @Inject constructor(
     private fun findUiStateForTab(tabType: MySiteTabType) =
             tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
 
+    private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
+        return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
+                nextSiteInfoHeaderCard
+        ) ?: false)
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
@@ -1053,7 +1116,7 @@ class MySiteViewModel @Inject constructor(
         data class SiteSelected(
             override val tabsUiState: TabsUiState,
             override val siteInfoToolbarViewParams: SiteInfoToolbarViewParams,
-            val siteInfoHeader: SiteInfoHeaderCard,
+            val siteInfoHeaderState: SiteInfoHeaderState,
             val cardAndItems: List<MySiteCardAndItem>,
             val siteMenuCardsAndItems: List<MySiteCardAndItem>,
             val dashboardCardsAndItems: List<MySiteCardAndItem>
@@ -1065,6 +1128,11 @@ class MySiteViewModel @Inject constructor(
             val shouldShowImage: Boolean
         ) : State()
     }
+
+    data class SiteInfoHeaderState(
+        val hasUpdates: Boolean,
+        val siteInfoHeader: SiteInfoHeaderCard
+    )
 
     data class TabsUiState(
         val showTabs: Boolean = false,
@@ -1091,8 +1159,12 @@ class MySiteViewModel @Inject constructor(
 
     data class SiteInfoToolbarViewParams(
         @DimenRes val appBarHeight: Int,
-        @DimenRes val toolbarBottomMargin: Int
+        @DimenRes val toolbarBottomMargin: Int,
+        val headerVisible: Boolean = true,
+        val appBarLiftOnScroll: Boolean = false
     )
+
+    data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
@@ -1109,6 +1181,13 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    data class MySiteTrackWithTabSource(
+        val stat: Stat,
+        val properties: HashMap<String, *>? = null,
+        val key: String = TAB_SOURCE,
+        val currentTab: MySiteTabType = MySiteTabType.ALL
+    )
+
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
@@ -1119,5 +1198,6 @@ class MySiteViewModel @Inject constructor(
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         const val LIST_SCROLL_DELAY_MS = 500L
         const val MY_SITE_TAB = "tab"
+        const val TAB_SOURCE = "tab_source"
     }
 }

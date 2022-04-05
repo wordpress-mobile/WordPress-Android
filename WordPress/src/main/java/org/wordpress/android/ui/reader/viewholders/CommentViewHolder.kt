@@ -37,6 +37,7 @@ class CommentViewHolder(
         textCommentDate.text = state.datePublished
         imageManager.loadIntoCircle(imageCommentAvatar, AVATAR, state.avatarUrl)
         authorBadge.visibility = if (state.showAuthorBadge) View.VISIBLE else View.GONE
+        commentActionButtonContainer.visibility = View.GONE
 
         threadedCommentsUtils.setLinksClickable(textCommentText, state.isPrivatePost)
         CommentUtils.displayHtmlComment(

@@ -24,6 +24,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
                     false -> setExperimentVariant(MySiteTabExperimentVariant.SITE_MENU)
                 }
                 analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
+                analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
             }
         }
     }
@@ -42,7 +43,6 @@ class MySiteDefaultTabExperiment @Inject constructor(
 
     private fun setExperimentVariant(variant: MySiteTabExperimentVariant) {
         appPrefsWrapper.setMySiteDefaultTabExperimentVariant(variant.label)
-        analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
     }
 
     private fun getVariantMapForTracking() =

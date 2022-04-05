@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-18 11:42:34+0000
+Translation-Revision-Date: 2022-04-01 15:29:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: nl
 -->
 <resources>
@@ -315,6 +315,7 @@ Language: nl
     <string name="gutenberg_native_preview_post">Voorbeeld bericht</string>
     <string name="gutenberg_native_preview_page">Voorbeeld pagina</string>
     <string name="gutenberg_native_retry">Probeer het opnieuw</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Eén</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
     <string name="gutenberg_native_text_color">Tekstkleur</string>
