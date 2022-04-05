@@ -417,15 +417,18 @@ class MySiteViewModel @Inject constructor(
                                             listOf(
                                                     BloggingPromptRespondent(
                                                             54279365,
-                                                            "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                                            "https://0.gravatar.com/avatar/cec64efa352617" +
+                                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
                                                     ),
                                                     BloggingPromptRespondent(
                                                             54279365,
-                                                            "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                                            "https://0.gravatar.com/avatar/cec64efa352617" +
+                                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
                                                     ),
                                                     BloggingPromptRespondent(
                                                             54279365,
-                                                            "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                                            "https://0.gravatar.com/avatar/cec64efa352617" +
+                                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
                                                     )
                                             )
                                     )

@@ -85,4 +85,3 @@ private fun MySiteBloggingPrompCardBinding.showCardMenu() {
     MenuCompat.setGroupDividerEnabled(quickStartPopupMenu.menu, true)
     quickStartPopupMenu.show()
 }
-
