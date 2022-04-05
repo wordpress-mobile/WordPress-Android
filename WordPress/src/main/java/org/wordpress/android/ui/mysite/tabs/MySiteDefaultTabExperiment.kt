@@ -19,9 +19,10 @@ class MySiteDefaultTabExperiment @Inject constructor(
     fun checkAndSetVariantIfNeeded() {
         if (isExperimentRunning()) {
             if (!isVariantAssigned()) {
+                setVariantAssigned()
                 when (mySiteDefaultTabExperimentVariationDashboardFeatureConfig.isDashboardVariant()) {
-                    true -> setExperimentVariant(MySiteTabExperimentVariant.DASHBOARD)
-                    false -> setExperimentVariant(MySiteTabExperimentVariant.SITE_MENU)
+                    true -> setExperimentVariant(VARIANT_HOME)
+                    false -> setExperimentVariant(VARIANT_SITE_MENU)
                 }
                 analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
                 analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
@@ -40,15 +41,20 @@ class MySiteDefaultTabExperiment @Inject constructor(
 
     private fun isVariantAssigned() = appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()
 
-    private fun setExperimentVariant(variant: MySiteTabExperimentVariant) {
-        appPrefsWrapper.setMySiteDefaultTabExperimentVariant(variant.label)
-    }
+    private fun setVariantAssigned() = appPrefsWrapper.setMySiteDefaultTabExperimentVariantAssigned()
+
+    private fun setExperimentVariant(variant: String) =
+            appPrefsWrapper.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
 
     private fun getVariantMapForTracking() =
             mapOf(DEFAULT_TAB_EXPERIMENT to appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
 
     companion object {
         private const val DEFAULT_TAB_EXPERIMENT = "default_tab_experiment"
+        private const val VARIANT_DASHBOARD = "dashboard"
+        private const val VARIANT_SITE_MENU = "site_menu"
+        private const val VARIANT_HOME = "home"
+        private const val NONEXISTENT = "nonexistent"
     }
 }
 enum class MySiteTabExperimentVariant(val label: String) {
