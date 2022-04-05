@@ -711,9 +711,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         UiStringText("")
     }
 
+    @Suppress("LongMethod")
     private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfAvatarsItem> {
         @AttrRes val labelColor = R.attr.wpColorOnSurfaceMedium
-
         return when {
             showEmptyState -> {
                 listOf()

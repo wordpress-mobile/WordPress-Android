@@ -12,6 +12,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
+    @Suppress("MagicNumber")
     fun mapReady(): Ready {
         val dummyRespondents = listOf(
                 BloggingPromptRespondent(
