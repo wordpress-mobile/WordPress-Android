@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 class BloggingPromptCardBuilder @Inject constructor() {
     fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
-
         val respondents = params.bloggingPrompt.respondents
 
         val trailingLabel = UiStringResWithParams(
