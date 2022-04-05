@@ -9,6 +9,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHIPS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIALOG_BUTTONS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -42,6 +44,7 @@ sealed class BlockListItem(val type: Type) {
 
     enum class Type {
         TITLE,
+        TITLE_WITH_MORE,
         BIG_TITLE,
         TAG_ITEM,
         IMAGE_ITEM,
@@ -52,6 +55,7 @@ sealed class BlockListItem(val type: Type) {
         EMPTY,
         TEXT,
         COLUMNS,
+        CHIPS,
         LINK,
         BAR_CHART,
         CHART_LEGEND,
@@ -73,6 +77,12 @@ sealed class BlockListItem(val type: Type) {
         val text: String? = null,
         val menuAction: ((View) -> Unit)? = null
     ) : BlockListItem(TITLE)
+
+    data class TitleWithMore(
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        val menuAction: ((View) -> Unit)? = null
+    ) : BlockListItem(TITLE_WITH_MORE)
 
     data class BigTitle(
         @StringRes val textResource: Int
@@ -170,6 +180,17 @@ sealed class BlockListItem(val type: Type) {
             get() = columns.hashCode()
 
         data class Column(val header: Int, val value: String, val contentDescription: String)
+    }
+
+    data class Chips(
+        val chips: List<Chip>,
+        val selectedColumn: Int? = null,
+        val onColumnSelected: ((position: Int) -> Unit)? = null
+    ) : BlockListItem(CHIPS) {
+        override val itemId: Int
+            get() = chips.hashCode()
+
+        data class Chip(val header: Int, val value: String, val contentDescription: String)
     }
 
     data class Link(
