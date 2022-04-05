@@ -269,6 +269,9 @@ public class AppPrefs {
 
         // Tracks which block types are considered "new" via impression counts
         GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
+
+        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
+        wp_pref_initial_screen,
     }
 
     private static SharedPreferences prefs() {
@@ -1364,5 +1367,17 @@ public class AppPrefs {
                 DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
                 false
         );
+    }
+
+    public static void setMySiteDefaultTabExperimentVariantAssigned() {
+        setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
+    }
+
+    public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
+        // This supports the MySiteDefaultTab AB Experiment.
+        // AppSettings are undeletable across logouts and keys are all lower case.
+        // This method will be removed when the experiment has completed and thus
+        // the settings will be maintained only from the AppSettings view
+        setString(UndeletablePrefKey.wp_pref_initial_screen, variant);
     }
 }
