@@ -71,7 +71,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             contentTop.text = getString(readyState.contentTopRes)
             cardCoverView.setOnClickListener { /*do nothing*/ }
             promptCard.promptContent.text = getString(readyState.promptRes)
-            promptCard.numberOfAnswers.text = getString(readyState.answersRes, readyState.answersCount)
+//            promptCard.numberOfAnswers.text = getString(readyState.answersRes, readyState.answersCount)
             contentBottom.text = getString(readyState.contentBottomRes)
             contentNote.text = buildSpannedString {
                 bold { append("${getString(readyState.contentNoteTitle)} ") }
