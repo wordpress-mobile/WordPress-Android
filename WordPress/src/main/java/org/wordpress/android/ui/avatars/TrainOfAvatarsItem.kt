@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.avatars
 
+import androidx.annotation.AttrRes
 import androidx.annotation.DimenRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsViewType.AVATAR
@@ -11,7 +12,7 @@ import org.wordpress.android.ui.utils.UiString
 
 sealed class TrainOfAvatarsItem(val type: TrainOfAvatarsViewType) {
     data class AvatarItem(val userId: Long, val userAvatarUrl: String) : TrainOfAvatarsItem(AVATAR)
-    data class TrailingLabelTextItem(val text: UiString) : TrainOfAvatarsItem(TRAILING_LABEL)
+    data class TrailingLabelTextItem(val text: UiString, @AttrRes val labelColor: Int) : TrainOfAvatarsItem(TRAILING_LABEL)
 }
 
 enum class TrainOfAvatarsViewType {

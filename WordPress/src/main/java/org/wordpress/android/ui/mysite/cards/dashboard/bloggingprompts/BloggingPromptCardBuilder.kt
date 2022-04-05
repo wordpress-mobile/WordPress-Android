@@ -24,7 +24,9 @@ class BloggingPromptCardBuilder @Inject constructor() {
                     respondent.userId,
                     respondent.avatarUrl
             )
-        }.toMutableList<TrainOfAvatarsItem>().also { list -> list.add(TrailingLabelTextItem(trailingLabel)) }
+        }
+                .toMutableList<TrainOfAvatarsItem>()
+                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
 
         BloggingPromptCardWithData(
                 prompt = UiStringText(it.text),

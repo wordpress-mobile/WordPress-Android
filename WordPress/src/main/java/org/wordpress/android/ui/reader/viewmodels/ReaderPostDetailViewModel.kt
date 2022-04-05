@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.annotation.AttrRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -24,8 +25,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
-import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
@@ -711,6 +712,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfAvatarsItem> {
+        @AttrRes val labelColor = R.attr.wpColorOnSurfaceMedium
+
         return when {
             showEmptyState -> {
                 listOf()
@@ -719,7 +722,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes == 2 && iLiked -> {
@@ -728,7 +732,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_you_plus_one_like_text
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes > 2 && iLiked -> {
@@ -738,7 +743,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                                         R.string.like_faces_you_plus_others_like_text,
                                         numLikes - 1
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes == 1 && !iLiked -> {
@@ -747,7 +753,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_one_blogger_likes_text
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes > 1 && !iLiked -> {
@@ -757,7 +764,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                                         R.string.like_faces_others_like_text,
                                         numLikes
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             else -> {

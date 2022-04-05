@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.databinding.TrailingLabelItemBinding
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.viewBinding
 
 class TrailingLabelViewHolder(
@@ -30,6 +31,8 @@ class TrailingLabelViewHolder(
                 }
             }
         }
+
+        label.setTextColor(label.context.getColorFromAttribute(textItem.labelColor))
 
         label.text = with(textItem) {
             uiHelpers.getTextOfUiString(itemView.context, text)

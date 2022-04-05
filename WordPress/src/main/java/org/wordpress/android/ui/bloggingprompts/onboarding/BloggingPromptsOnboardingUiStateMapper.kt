@@ -41,7 +41,9 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
                     respondent.userId,
                     respondent.avatarUrl
             )
-        }.toMutableList<TrainOfAvatarsItem>().also { list -> list.add(TrailingLabelTextItem(trailingLabel)) }
+        }
+                .toMutableList<TrainOfAvatarsItem>()
+                .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
 
         return Ready(
                 promptRes = R.string.blogging_prompts_onboarding_card_prompt,
