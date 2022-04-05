@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
+import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -62,8 +63,8 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartOrigin
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
@@ -392,13 +393,28 @@ class MySiteViewModel @Inject constructor(
                                     BloggingPrompt(
                                             "Test Prompt",
                                             19,
-                                            ""
+                                            "",
+                                            listOf(
+                                                    BloggingPromptRespondent(
+                                                            54279365,
+                                                            "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                                    ),
+                                                    BloggingPromptRespondent(
+                                                            54279365,
+                                                            "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                                    ),
+                                                    BloggingPromptRespondent(
+                                                            54279365,
+                                                            "https://0.gravatar.com/avatar/cec64efa352617c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                                    )
+                                            )
                                     )
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick
                         )
                 )
         )
+
         val dynamicCards = dynamicCardsBuilder.build(
                 quickStartCategories,
                 pinnedDynamicCard,

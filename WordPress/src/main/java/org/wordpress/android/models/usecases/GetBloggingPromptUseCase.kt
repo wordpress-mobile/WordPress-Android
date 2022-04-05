@@ -12,7 +12,8 @@ class GetBloggingPromptUseCase @Inject constructor() {
                 BloggingPrompt(
                         text = "This is a blogging prompt!",
                         numberOfAnswers = 7,
-                        template = ""
+                        template = "",
+                        emptyList()
                 )
         )
     }
