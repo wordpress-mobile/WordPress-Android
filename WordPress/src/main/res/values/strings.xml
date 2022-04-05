@@ -4012,7 +4012,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="initial_screen_site_menu">@string/my_site_menu_tab_title</string>
     <string name="initial_screen_entry_value_home" translatable="false">home</string>
     <string name="initial_screen_entry_value_site_menu" translatable="false">site_menu</string>
-    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_home</string>
+    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_site_menu</string>
     <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/initial_screen_home</item>
         <item>@string/initial_screen_site_menu</item>
