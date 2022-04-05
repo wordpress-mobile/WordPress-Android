@@ -35,6 +35,7 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
     val siteIntent: String? = null,
+    val siteName: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: String? = null
@@ -102,6 +103,15 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onSiteIntentSkipped() {
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteNameSkipped() {
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteNameEntered(siteName: String) {
+        siteCreationState = siteCreationState.copy(siteName = siteName)
         wizardManager.showNextStep()
     }
 
