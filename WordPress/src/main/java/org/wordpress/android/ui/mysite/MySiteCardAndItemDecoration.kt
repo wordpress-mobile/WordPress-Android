@@ -18,7 +18,7 @@ class MySiteCardAndItemDecoration(
         val position = parent.getChildAdapterPosition(view)
         if (position < 0) return
         when (parent.adapter?.getItemViewType(position)) {
-            MySiteCardAndItem.Type.QUICK_LINK_RIBBONS.ordinal -> {
+            MySiteCardAndItem.Type.QUICK_LINK_RIBBON.ordinal -> {
                 outRect.top = verticalMargin
             }
             MySiteCardAndItem.Type.INFO_ITEM.ordinal -> {

@@ -34,7 +34,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val onQuickActionMediaClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
-    data class QuickLinkRibbonsBuilderParams(
+    data class QuickLinkRibbonBuilderParams(
         val siteModel: SiteModel,
         val onPagesClick: () -> Unit,
         val onPostsClick: () -> Unit,

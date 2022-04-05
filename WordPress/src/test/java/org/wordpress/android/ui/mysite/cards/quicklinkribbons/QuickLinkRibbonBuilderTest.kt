@@ -8,14 +8,14 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbons
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction
 
 @InternalCoroutinesApi
-class QuickLinkRibbonsBuilderTest : BaseUnitTest() {
+class QuickLinkRibbonBuilderTest : BaseUnitTest() {
     @Mock lateinit var siteModel: SiteModel
-    private lateinit var builder: QuickLinkRibbonsBuilder
+    private lateinit var builder: QuickLinkRibbonBuilder
 
     private val onStatsClick: () -> Unit = {}
     private val onPostsClick: () -> Unit = {}
@@ -24,26 +24,26 @@ class QuickLinkRibbonsBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = QuickLinkRibbonsBuilder()
+        builder = QuickLinkRibbonBuilder()
     }
 
     /* ACTION CLICKS */
     @Test
     fun `when card is built, then ribbon click are set on the card`() {
-        val quickLinkRibbons = buildQuickLinkRibbons()
+        val quickLinkRibbon = buildQuickLinkRibbon()
 
-        assertThat(quickLinkRibbons.onPagesClick).isEqualTo(ListItemInteraction.create(onPagesClick))
-        assertThat(quickLinkRibbons.onPostsClick).isEqualTo(ListItemInteraction.create(onPostsClick))
-        assertThat(quickLinkRibbons.onMediaClick).isEqualTo(ListItemInteraction.create(onMediaClick))
-        assertThat(quickLinkRibbons.onStatsClick).isEqualTo(ListItemInteraction.create(onStatsClick))
+        assertThat(quickLinkRibbon.onPagesClick).isEqualTo(ListItemInteraction.create(onPagesClick))
+        assertThat(quickLinkRibbon.onPostsClick).isEqualTo(ListItemInteraction.create(onPostsClick))
+        assertThat(quickLinkRibbon.onMediaClick).isEqualTo(ListItemInteraction.create(onMediaClick))
+        assertThat(quickLinkRibbon.onStatsClick).isEqualTo(ListItemInteraction.create(onStatsClick))
     }
 
-    private fun buildQuickLinkRibbons(
+    private fun buildQuickLinkRibbon(
         showPages: Boolean = true
-    ): QuickLinkRibbons {
+    ): QuickLinkRibbon {
         setShowPages(showPages)
         return builder.build(
-                QuickLinkRibbonsBuilderParams(
+                QuickLinkRibbonBuilderParams(
                         siteModel,
                         onPagesClick,
                         onPostsClick,

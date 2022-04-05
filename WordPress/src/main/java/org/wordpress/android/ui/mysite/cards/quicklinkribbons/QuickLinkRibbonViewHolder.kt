@@ -4,27 +4,27 @@ import android.annotation.SuppressLint
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ViewGroup
-import org.wordpress.android.databinding.QuickLinkRibbonsListBinding
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbons
+import org.wordpress.android.databinding.QuickLinkRibbonListBinding
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
 private const val Y_BUFFER = 100
 
-class QuickLinkRibbonsViewHolder(
+class QuickLinkRibbonViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : MySiteCardAndItemViewHolder<QuickLinkRibbonsListBinding>(
-        parent.viewBinding(QuickLinkRibbonsListBinding::inflate)
+) : MySiteCardAndItemViewHolder<QuickLinkRibbonListBinding>(
+        parent.viewBinding(QuickLinkRibbonListBinding::inflate)
 ) {
-    fun bind(quickLinkRibbons: QuickLinkRibbons) = with(binding) {
+    fun bind(quickLinkRibbon: QuickLinkRibbon) = with(binding) {
         setOnTouchItemListener()
-        pages.setOnClickListener { quickLinkRibbons.onPagesClick.click() }
-        posts.setOnClickListener { quickLinkRibbons.onPostsClick.click() }
-        media.setOnClickListener { quickLinkRibbons.onMediaClick.click() }
-        stats.setOnClickListener { quickLinkRibbons.onStatsClick.click() }
-        uiHelpers.updateVisibility(pages, quickLinkRibbons.showPages)
+        pages.setOnClickListener { quickLinkRibbon.onPagesClick.click() }
+        posts.setOnClickListener { quickLinkRibbon.onPostsClick.click() }
+        media.setOnClickListener { quickLinkRibbon.onMediaClick.click() }
+        stats.setOnClickListener { quickLinkRibbon.onStatsClick.click() }
+        uiHelpers.updateVisibility(pages, quickLinkRibbon.showPages)
     }
 
     // we are not detecting click events in the scroll view so we can ignore this

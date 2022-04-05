@@ -53,7 +53,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbons
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard
@@ -67,7 +67,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegi
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
@@ -265,10 +265,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var quickActionsPostsClickAction: (() -> Unit)? = null
     private var quickActionsMediaClickAction: (() -> Unit)? = null
 
-    private var quickLinkRibbonsStatsClickAction: (() -> Unit)? = null
-    private var quickLinkRibbonsPagesClickAction: (() -> Unit)? = null
-    private var quickLinkRibbonsPostsClickAction: (() -> Unit)? = null
-    private var quickLinkRibbonsMediaClickAction: (() -> Unit)? = null
+    private var quickLinkRibbonStatsClickAction: (() -> Unit)? = null
+    private var quickLinkRibbonPagesClickAction: (() -> Unit)? = null
+    private var quickLinkRibbonPostsClickAction: (() -> Unit)? = null
+    private var quickLinkRibbonMediaClickAction: (() -> Unit)? = null
 
     private val partialStates = listOf(
             isDomainCreditAvailable,
@@ -2156,7 +2156,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.hasCapabilityEditPages = false
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
 
-        val quickLinkRibbons = findQuickLinkRibbons()
+        val quickLinkRibbons = findQuickLinkRibbon()
 
         assertThat(quickLinkRibbons).isNotNull
         assertThat(quickLinkRibbons?.showPages).isFalse
@@ -2170,7 +2170,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
 
-        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
@@ -2184,7 +2184,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
 
-        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
@@ -2198,7 +2198,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
 
-        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
@@ -2212,7 +2212,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
 
-        requireNotNull(quickLinkRibbonsStatsClickAction).invoke()
+        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.StartWPComLoginForJetpackStats)
     }
@@ -2262,7 +2262,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeaderState.siteInfoHeader
 
-    private fun findQuickLinkRibbons() = getDashboardTabLastItems().find { it is QuickLinkRibbons } as QuickLinkRibbons?
+    private fun findQuickLinkRibbon() = getDashboardTabLastItems().find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoHeaderCardAction) {
         onSiteChange.value = site
@@ -2407,13 +2407,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun initQuickLinkRibbons(mockInvocation: InvocationOnMock): QuickLinkRibbons {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonsBuilderParams>()).first()
-        quickLinkRibbonsPagesClickAction = params.onPagesClick
-        quickLinkRibbonsPostsClickAction = params.onPostsClick
-        quickLinkRibbonsMediaClickAction = params.onMediaClick
-        quickLinkRibbonsStatsClickAction = params.onStatsClick
-        return QuickLinkRibbons(
+    private fun initQuickLinkRibbons(mockInvocation: InvocationOnMock): QuickLinkRibbon {
+        val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonBuilderParams>()).first()
+        quickLinkRibbonPagesClickAction = params.onPagesClick
+        quickLinkRibbonPostsClickAction = params.onPostsClick
+        quickLinkRibbonMediaClickAction = params.onMediaClick
+        quickLinkRibbonStatsClickAction = params.onStatsClick
+        return QuickLinkRibbon(
             onPagesClick = ListItemInteraction.create { params.onPagesClick.invoke() },
             onPostsClick = ListItemInteraction.create { params.onPostsClick.invoke() },
             onMediaClick = ListItemInteraction.create { params.onMediaClick.invoke() },

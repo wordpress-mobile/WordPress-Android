@@ -41,7 +41,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
@@ -419,7 +419,7 @@ class MySiteViewModel @Inject constructor(
                                 onShareClick = this::onBloggingPromptShareClick
                         )
                 ),
-                QuickLinkRibbonsBuilderParams(
+                QuickLinkRibbonBuilderParams(
                         siteModel = site,
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
@@ -475,7 +475,7 @@ class MySiteViewModel @Inject constructor(
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
             if (defaultABExperimentTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
-            add(Type.QUICK_LINK_RIBBONS)
+            add(Type.QUICK_LINK_RIBBON)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultABExperimentTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)

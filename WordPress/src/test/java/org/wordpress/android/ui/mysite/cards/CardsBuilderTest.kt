@@ -18,7 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbons
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
@@ -26,11 +26,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardC
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
-import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonsBuilder
+import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -48,7 +48,7 @@ class CardsBuilderTest {
     @Mock lateinit var quickActionsCardBuilder: QuickActionsCardBuilder
     @Mock lateinit var quickStartCardBuilder: QuickStartCardBuilder
     @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
-    @Mock lateinit var quickLinkRibbonsBuilder: QuickLinkRibbonsBuilder
+    @Mock lateinit var quickLinkRibbonBuilder: QuickLinkRibbonBuilder
     @Mock lateinit var site: SiteModel
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
@@ -67,7 +67,7 @@ class CardsBuilderTest {
         setUpQuickActionsBuilder()
         setUpQuickStartCardBuilder()
         setUpDashboardCardsBuilder()
-        setUpQuickLinkRibbonsBuilder()
+        setUpQuickLinkRibbonBuilder()
     }
 
     /* DOMAIN REGISTRATION CARD */
@@ -168,7 +168,7 @@ class CardsBuilderTest {
             this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
     private fun List<MySiteCardAndItem>.findQuickLinkRibbons() =
-        this.find { it is QuickLinkRibbons } as QuickLinkRibbons?
+        this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
     private fun buildCards(
         activeTask: QuickStartTask? = null,
@@ -205,7 +205,7 @@ class CardsBuilderTest {
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock())
                 ),
-                quickLinkRibbonsBuilderParams = QuickLinkRibbonsBuilderParams(
+                quickLinkRibbonsBuilderParams = QuickLinkRibbonBuilderParams(
                         siteModel = mock(),
                         onPagesClick = mock(),
                         onPostsClick = mock(),
@@ -233,10 +233,10 @@ class CardsBuilderTest {
         }.whenever(dashboardCardsBuilder).build(any())
     }
 
-    private fun setUpQuickLinkRibbonsBuilder() {
+    private fun setUpQuickLinkRibbonBuilder() {
         doAnswer {
-            initQuickLinkRibbons()
-        }.whenever(quickLinkRibbonsBuilder).build(any())
+            initQuickLinkRibbon()
+        }.whenever(quickLinkRibbonBuilder).build(any())
     }
 
     private fun setUpCardsBuilder() {
@@ -245,7 +245,7 @@ class CardsBuilderTest {
                 quickStartDynamicCardsFeatureConfig,
                 quickActionsCardBuilder,
                 quickStartCardBuilder,
-                quickLinkRibbonsBuilder,
+                quickLinkRibbonBuilder,
                 dashboardCardsBuilder,
                 mySiteDashboardPhase2FeatureConfig,
                 mySiteDashboardTabsFeatureConfig
@@ -286,8 +286,8 @@ class CardsBuilderTest {
 
     private fun initDashboardCards() = DashboardCards(cards = mock())
 
-    private fun initQuickLinkRibbons(): QuickLinkRibbons {
-        return QuickLinkRibbons(
+    private fun initQuickLinkRibbon(): QuickLinkRibbon {
+        return QuickLinkRibbon(
             onPagesClick = mock(),
             onPostsClick = mock(),
             onMediaClick = mock(),

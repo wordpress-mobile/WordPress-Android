@@ -5,11 +5,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistration
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
-import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonsBuilder
+import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
@@ -24,7 +24,7 @@ class CardsBuilder @Inject constructor(
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val quickActionsCardBuilder: QuickActionsCardBuilder,
     private val quickStartCardBuilder: QuickStartCardBuilder,
-    private val quickLinkRibbonsBuilder: QuickLinkRibbonsBuilder,
+    private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
@@ -34,11 +34,11 @@ class CardsBuilder @Inject constructor(
         domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
         quickStartCardBuilderParams: QuickStartCardBuilderParams,
         dashboardCardsBuilderParams: DashboardCardsBuilderParams,
-        quickLinkRibbonsBuilderParams: QuickLinkRibbonsBuilderParams
+        quickLinkRibbonsBuilderParams: QuickLinkRibbonBuilderParams
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
-            cards.add(quickLinkRibbonsBuilder.build(quickLinkRibbonsBuilderParams))
+            cards.add(quickLinkRibbonBuilder.build(quickLinkRibbonsBuilderParams))
         }
         if (buildConfigWrapper.isQuickActionEnabled) {
             cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
