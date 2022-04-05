@@ -17,7 +17,6 @@
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceCaption"
-        android:textColor="@color/material_on_surface_emphasis_medium"
         tools:text="19 bloggers like this." />
 
 </FrameLayout>
