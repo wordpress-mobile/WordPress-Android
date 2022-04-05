@@ -7,6 +7,7 @@ DIFF_DEPENDENCIES_FILE="$DIFF_DEPENDENCIES_FOLDER/diff_dependencies.txt"
 CONFIGURATION="wordpressVanillaReleaseRuntimeClasspath"
 DEPENDENCY_TREE_VERSION="1.2.0"
 
+echo "--> Starting the check"
 
 git config --global user.email '$( git log --format='%ae' $CIRCLE_SHA1^! )'
 git config --global user.name '$( git log --format='%an' $CIRCLE_SHA1^! )'
@@ -15,8 +16,11 @@ currentBranch=$(git rev-parse --abbrev-ref HEAD)
 
 prNumber="${CIRCLE_PULL_REQUEST##*/}"
 githubUrl="https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$prNumber"
+
+echo "--> Fetching the target branch from $githubUrl"
 githubResponse="$(curl "$githubUrl" -H "Authorization: token $GITHUB_API_TOKEN")"
 targetBranch=$(echo "$githubResponse" | tr '\r\n' ' ' | jq '.base.ref' | tr -d '"')
+echo "--> Target branch is $targetBranch"
 
 git merge "origin/$targetBranch" --no-edit
 
@@ -30,19 +34,24 @@ fi
 
 mkdir -p "$DIFF_DEPENDENCIES_FOLDER"
 
+echo "--> Generating dependencies to the file $CURRENT_TARGET_BRANCH_DEPENDENCIES_FILE"
 ./gradlew :WordPress:dependencies --configuration $CONFIGURATION > $CURRENT_TARGET_BRANCH_DEPENDENCIES_FILE
 
+echo "--> Generating dependencies to the file $TARGET_BRANCH_DEPENDENCIES_FILE"
 git checkout "$targetBranch"
 ./gradlew :WordPress:dependencies --configuration $CONFIGURATION > $TARGET_BRANCH_DEPENDENCIES_FILE
 
+echo "--> Downloading dependency-tree-diff.jar"
 # https://github.com/JakeWharton/dependency-tree-diff
-curl -L "https://github.com/JakeWharton/dependency-tree-diff/releases/download/$DEPENDENCY_TREE_VERSION/dependency-tree-diff.jar" -o dependency-tree-diff.jar
+curl -v -L "https://github.com/JakeWharton/dependency-tree-diff/releases/download/$DEPENDENCY_TREE_VERSION/dependency-tree-diff.jar" -o dependency-tree-diff.jar
 sha=($(sha1sum dependency-tree-diff.jar))
 if [[ $sha != "949394274f37c06ac695b5d49860513e4d16e847" ]]; then
   echo "dependency-tree-diff.jar file has unexpected sha1"
   exit 1
 fi
 chmod +x dependency-tree-diff.jar
+
+echo "--> Running dependency-tree-diff.jar"
 ./dependency-tree-diff.jar $TARGET_BRANCH_DEPENDENCIES_FILE $CURRENT_TARGET_BRANCH_DEPENDENCIES_FILE > $DIFF_DEPENDENCIES_FILE
 
 git checkout "$currentBranch"
@@ -53,4 +62,6 @@ else
   echo "There are no changes in dependencies of the project"
   rm "$DIFF_DEPENDENCIES_FILE"
 fi
+
+echo "--> Commenting result to GitHub"
 ./gradlew dependencyTreeDiffCommentToGitHub -DGITHUB_PULLREQUESTID="${CIRCLE_PULL_REQUEST##*/}" -DGITHUB_OAUTH2TOKEN="$GITHUB_API_TOKEN" --info
