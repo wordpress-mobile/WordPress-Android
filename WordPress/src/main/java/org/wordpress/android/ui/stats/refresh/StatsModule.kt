@@ -47,7 +47,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -77,6 +79,8 @@ class StatsModule {
     @Singleton
     @Named(BLOCK_INSIGHTS_USE_CASES)
     fun provideBlockInsightsUseCases(
+        statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
+        viewsAndVisitorsUseCaseFactory: ViewsAndVisitorsUseCaseFactory,
         allTimeStatsUseCase: AllTimeStatsUseCase,
         latestPostSummaryUseCase: LatestPostSummaryUseCase,
         todayStatsUseCase: TodayStatsUseCase,
@@ -91,21 +95,28 @@ class StatsModule {
         managementControlUseCase: ManagementControlUseCase,
         managementNewsCardUseCase: ManagementNewsCardUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
-        return listOf(
-                allTimeStatsUseCase,
-                latestPostSummaryUseCase,
-                todayStatsUseCase,
-                followersUseCaseFactory.build(BLOCK),
-                commentsUseCase,
-                mostPopularInsightsUseCase,
-                tagsAndCategoriesUseCaseFactory.build(BLOCK),
-                publicizeUseCaseFactory.build(BLOCK),
-                postingActivityUseCase,
-                followerTotalsUseCase,
-                annualSiteStatsUseCaseFactory.build(BLOCK),
-                managementControlUseCase,
-                managementNewsCardUseCase
+        val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
+        if (statsRevampV2FeatureConfig.isEnabled()) {
+            useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
+        }
+        useCases.addAll(
+                listOf(
+                    allTimeStatsUseCase,
+                    latestPostSummaryUseCase,
+                    todayStatsUseCase,
+                    followersUseCaseFactory.build(BLOCK),
+                    commentsUseCase,
+                    mostPopularInsightsUseCase,
+                    tagsAndCategoriesUseCaseFactory.build(BLOCK),
+                    publicizeUseCaseFactory.build(BLOCK),
+                    postingActivityUseCase,
+                    followerTotalsUseCase,
+                    annualSiteStatsUseCaseFactory.build(BLOCK),
+                    managementControlUseCase,
+                    managementNewsCardUseCase
+                )
         )
+        return useCases
     }
 
     /**

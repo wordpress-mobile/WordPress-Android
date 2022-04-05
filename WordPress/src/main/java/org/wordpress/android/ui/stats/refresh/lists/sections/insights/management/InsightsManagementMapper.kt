@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Header
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.REMOVED
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,7 +37,7 @@ private val ACTIVITY_INSIGHTS = listOf(
         FOLLOWER_TOTALS,
         PUBLICIZE
 )
-private val GENERAL_INSIGHTS = listOf(
+private val GENERAL_INSIGHTS = mutableListOf(
         ALL_TIME_STATS,
         MOST_POPULAR_DAY_AND_HOUR,
         ANNUAL_SITE_STATS,
@@ -43,11 +45,17 @@ private val GENERAL_INSIGHTS = listOf(
 )
 
 class InsightsManagementMapper
-@Inject constructor(@Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher) {
+@Inject constructor(
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
+) {
     suspend fun buildUIModel(addedTypes: Set<InsightType>, onClick: (InsightType) -> Unit) =
             withContext(bgDispatcher) {
                 val insightListItems = mutableListOf<InsightListItem>()
                 insightListItems += Header(string.stats_insights_management_general)
+                if (statsRevampV2FeatureConfig.isEnabled()) {
+                    GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
+                }
                 insightListItems += GENERAL_INSIGHTS.map { type ->
                     buildInsightModel(type, addedTypes, onClick)
                 }
@@ -76,6 +84,7 @@ class InsightsManagementMapper
     }
 
     private fun toName(insightType: InsightType) = when (insightType) {
+        VIEWS_AND_VISITORS -> R.string.stats_insights_views_and_visitors
         LATEST_POST_SUMMARY -> R.string.stats_insights_latest_post_summary
         MOST_POPULAR_DAY_AND_HOUR -> R.string.stats_insights_popular
         ALL_TIME_STATS -> R.string.stats_insights_all_time_stats
