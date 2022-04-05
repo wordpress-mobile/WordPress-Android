@@ -46,8 +46,16 @@ class MySiteDefaultTabExperiment @Inject constructor(
     private fun setExperimentVariant(variant: String) =
             appPrefsWrapper.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
 
-    private fun getVariantMapForTracking() =
-            mapOf(DEFAULT_TAB_EXPERIMENT to appPrefsWrapper.getMySiteDefaultTabExperimentVariant())
+    private fun getVariantMapForTracking() = mapOf(DEFAULT_TAB_EXPERIMENT to getVariantTrackingLabel())
+
+    private fun getVariantTrackingLabel(): String {
+        if (!isVariantAssigned()) return NONEXISTENT
+        return if (appPrefsWrapper.getMySiteInitialScreen() == VARIANT_HOME) {
+            VARIANT_DASHBOARD
+        } else {
+            VARIANT_SITE_MENU
+        }
+    }
 
     companion object {
         private const val DEFAULT_TAB_EXPERIMENT = "default_tab_experiment"
