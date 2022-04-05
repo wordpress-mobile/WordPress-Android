@@ -27,6 +27,7 @@ class QuickLinkRibbonsViewHolder(
         uiHelpers.updateVisibility(pages, quickLinkRibbons.showPages)
     }
 
+    // we are not detecting click events in the scroll view so we can ignore this
     @SuppressLint("ClickableViewAccessibility")
     private fun setOnTouchItemListener() = with(binding) {
         val gestureDetector = GestureDetector(quickLinkScrollView.context, GestureListener())
