@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.avatars
 
 import androidx.recyclerview.widget.DiffUtil
-import org.wordpress.android.ui.avatars.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.avatars.TrainOfFacesItem.FaceItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 
-class ReaderPostLikersAdapterDiffCallback(
-    private val oldItems: List<TrainOfFacesItem>,
-    private val newItems: List<TrainOfFacesItem>
+class TrainOfAvatarsAdapterDiffCallback(
+    private val oldItems: List<TrainOfAvatarsItem>,
+    private val newItems: List<TrainOfAvatarsItem>
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldItems.size
@@ -20,8 +20,8 @@ class ReaderPostLikersAdapterDiffCallback(
         val oldItem = oldItems[oldItemPosition]
         val newItem = newItems[newItemPosition]
         return when {
-            oldItem is FaceItem && newItem is FaceItem -> oldItem.userId == newItem.userId
-            oldItem is BloggersLikingTextItem && newItem is BloggersLikingTextItem -> true
+            oldItem is AvatarItem && newItem is AvatarItem -> oldItem.userId == newItem.userId
+            oldItem is TrailingLabelTextItem && newItem is TrailingLabelTextItem -> true
             else -> false
         }
     }

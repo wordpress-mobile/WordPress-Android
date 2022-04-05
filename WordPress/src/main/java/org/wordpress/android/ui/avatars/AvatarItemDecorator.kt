@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.RecyclerView.State
 
-class PostLikerItemDecorator(isRtl: Boolean, context: Context, @DimenRes leftOffsetResId: Int) : ItemDecoration() {
+class AvatarItemDecorator(isRtl: Boolean, context: Context, @DimenRes leftOffsetResId: Int) : ItemDecoration() {
     private val isRtl = isRtl
     private val offset: Int = context.resources.getDimensionPixelSize(leftOffsetResId)
 

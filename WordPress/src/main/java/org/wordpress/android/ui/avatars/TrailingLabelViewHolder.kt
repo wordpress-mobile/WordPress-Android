@@ -4,16 +4,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.databinding.BloggerLikersTextItemBinding
-import org.wordpress.android.ui.avatars.TrainOfFacesItem.BloggersLikingTextItem
+import org.wordpress.android.databinding.TrailingLabelItemBinding
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
-class BloggingLikersTextViewHolder(
+class TrailingLabelViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers
-) : TrainOfFacesViewHolder<BloggerLikersTextItemBinding>(parent.viewBinding(BloggerLikersTextItemBinding::inflate)) {
-    fun bind(bloggersTextItem: BloggersLikingTextItem) = with(binding) {
+) : TrainOfAvatarsViewHolder<TrailingLabelItemBinding>(parent.viewBinding(TrailingLabelItemBinding::inflate)) {
+    fun bind(textItem: TrailingLabelTextItem) = with(binding) {
         val position = adapterPosition
 
         if (position >= 0) {
@@ -22,16 +22,16 @@ class BloggingLikersTextViewHolder(
 
                 parent?.let {
                     val parentWidth = it.measuredWidth
-                    val avatarSize = itemView.context.resources.getDimensionPixelSize(FACE_ITEM_AVATAR_SIZE_DIMEN)
-                    val leftOffest = itemView.context.resources.getDimensionPixelSize(FACE_ITEM_LEFT_OFFSET_DIMEN)
-                    val facesWidth = position * avatarSize - (position - 1).coerceAtLeast(0) * leftOffest
+                    val avatarSize = itemView.context.resources.getDimensionPixelSize(AVATAR_SIZE_DIMEN)
+                    val leftOffset = itemView.context.resources.getDimensionPixelSize(AVATAR_LEFT_OFFSET_DIMEN)
+                    val facesWidth = position * avatarSize - (position - 1).coerceAtLeast(0) * leftOffset
 
                     itemView.layoutParams.width = parentWidth - facesWidth
                 }
             }
         }
 
-        numBloggers.text = with(bloggersTextItem) {
+        label.text = with(textItem) {
             uiHelpers.getTextOfUiString(itemView.context, text)
         }
     }

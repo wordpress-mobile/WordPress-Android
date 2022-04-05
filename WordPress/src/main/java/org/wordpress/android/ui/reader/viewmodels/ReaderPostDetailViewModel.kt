@@ -23,9 +23,9 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.avatars.TrainOfFacesItem
-import org.wordpress.android.ui.avatars.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.avatars.TrainOfFacesItem.FaceItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
@@ -184,7 +184,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     data class TrainOfFacesUiState(
         val showLikeFacesTrainContainer: Boolean,
         val showLoading: Boolean,
-        val engageItemsList: List<TrainOfFacesItem>,
+        val engageItemsList: List<TrainOfAvatarsItem>,
         val showEmptyState: Boolean,
         val emptyStateTitle: UiString? = null,
         val contentDescription: UiString,
@@ -700,30 +700,30 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun getContentDescription(
         goingToShowFaces: Boolean,
-        items: List<TrainOfFacesItem>
+        items: List<TrainOfAvatarsItem>
     ) = if (goingToShowFaces) {
         when (val lastItem = items.lastOrNull()) {
-            is BloggersLikingTextItem -> lastItem.text
-            is FaceItem, null -> UiStringText("")
+            is TrailingLabelTextItem -> lastItem.text
+            is AvatarItem, null -> UiStringText("")
         }
     } else {
         UiStringText("")
     }
 
-    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfFacesItem> {
+    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfAvatarsItem> {
         return when {
             showEmptyState -> {
                 listOf()
             }
             numLikes == 1 && iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
                         )
                 ).toList()
             }
             numLikes == 2 && iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_you_plus_one_like_text
@@ -732,7 +732,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 ).toList()
             }
             numLikes > 2 && iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_you_plus_others_like_text,
@@ -742,7 +742,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 ).toList()
             }
             numLikes == 1 && !iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_one_blogger_likes_text
@@ -751,7 +751,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 ).toList()
             }
             numLikes > 1 && !iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_others_like_text,
@@ -766,9 +766,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun BloggersLikingTextItem.toList() = listOf(this)
+    private fun TrailingLabelTextItem.toList() = listOf(this)
 
-    private fun getLikersEssentials(updateLikesState: GetLikesState?): Triple<List<TrainOfFacesItem>, Int, Boolean> {
+    private fun getLikersEssentials(updateLikesState: GetLikesState?): Triple<List<TrainOfAvatarsItem>, Int, Boolean> {
         return when (updateLikesState) {
             is LikesData -> {
                 val liked = isLikedByCurrentUser(updateLikesState.iLike)

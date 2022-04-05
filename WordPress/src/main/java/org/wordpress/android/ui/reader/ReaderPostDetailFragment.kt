@@ -66,10 +66,10 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
-import org.wordpress.android.ui.avatars.FACE_ITEM_LEFT_OFFSET_DIMEN
-import org.wordpress.android.ui.avatars.PostLikerItemDecorator
-import org.wordpress.android.ui.avatars.ReaderPostLikersAdapter
-import org.wordpress.android.ui.avatars.TrainOfFacesItem
+import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
+import org.wordpress.android.ui.avatars.AvatarItemDecorator
+import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -460,10 +460,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         likeFacesRecycler.addItemDecoration(
-                PostLikerItemDecorator(
+                AvatarItemDecorator(
                 RtlUtils.isRtl(activity),
                 contextProvider.getContext(),
-                FACE_ITEM_LEFT_OFFSET_DIMEN)
+                AVATAR_LEFT_OFFSET_DIMEN)
         )
 
         likeFacesRecycler.layoutManager = layoutManager
@@ -670,7 +670,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         commentSnippetRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
-    private fun setupLikeFacesTrain(items: List<TrainOfFacesItem>, loading: Boolean, shouldSkipAnimation: Boolean) {
+    private fun setupLikeFacesTrain(items: List<TrainOfAvatarsItem>, loading: Boolean, shouldSkipAnimation: Boolean) {
         likeFacesRecycler.visibility = if (loading) View.GONE else View.VISIBLE
 
         if (shouldSkipAnimation) {
@@ -679,10 +679,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             likeFacesRecycler.itemAnimator = DefaultItemAnimator()
         }
 
-        var adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter
+        var adapter = likeFacesRecycler.adapter as? TrainOfAvatarsAdapter
 
         if (adapter == null) {
-            adapter = ReaderPostLikersAdapter(
+            adapter = TrainOfAvatarsAdapter(
                     imageManager,
                     uiHelpers
             )
