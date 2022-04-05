@@ -22,6 +22,7 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.extensions.exhaustive
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
@@ -60,7 +61,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
         if (context !is BloggingPromptsReminderSchedulerListener) {
-            throw RuntimeException(
+            throw IllegalStateException(
                     "$context must implement ${BloggingPromptsReminderSchedulerListener::class.simpleName}"
             )
         }
