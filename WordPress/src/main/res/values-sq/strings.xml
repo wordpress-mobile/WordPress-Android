@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-21 19:18:48+0000
+Translation-Revision-Date: 2022-03-29 11:41:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.2
 Language: sq_AL
 -->
 <resources>
@@ -10,6 +10,7 @@ Language: sq_AL
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">S’u arrit të futej media.\nPrekeni për më tepër hollësi.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të errët dhe/ose një ngjyrë të ndritshme teksti.</string>
     <string name="new_site_creation_intents_header_title">Për çfarë është sajti juaj?</string>
+    <string name="new_site_creation_intents_header_subtitle">Zgjidhni një temë nga lista më poshtë, ose shtypni tuajën</string>
     <string name="notification_channel_weekly_roundup_title">Përmbledhje Javore</string>
     <string name="my_site_dashboard_tab_title">Kreu</string>
     <string name="adding_cat">Shtim kategorish</string>
@@ -33,9 +34,11 @@ Language: sq_AL
     <string name="gutenberg_native_navigates_to_layout_selection_screen">Kalohet te skena e përzgjedhjes së skemës</string>
     <string name="gutenberg_native_gallery_style">Stil galerie</string>
     <string name="sharing_facebook_warning_message">Mund ta lidhni llogarinë tuaj Facebook në sajtin WordPress.com. Kur të keni mbaruar, kthehuni te aplikacioni WordPress, që të ndryshoni rregullimet tuaja për Ndarje Me të Tjerë.</string>
+    <string name="sharing_facebook_warning_positive_button">Kaloni në web</string>
     <string name="about_automattic_app_icon_description">Ikonë aplikacioni</string>
     <string name="about_automattic_logo_description">Stemë e Automattic-ut</string>
     <string name="about_automattic_wordpress">WordPress</string>
+    <string name="about_automattic_back_icon_description">Ikonë për mbrapsht</string>
     <string name="about_automattic_woocommerce">WooCommerce</string>
     <string name="about_automattic_tumblr">Tumblr</string>
     <string name="about_automattic_simplenote">Simplenote</string>

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.DimenRes
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 
@@ -80,3 +81,5 @@ fun View.focusAndShowKeyboard() {
 fun RecyclerView.disableAnimation() {
     (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
 }
+
+fun View.getString(@StringRes stringRes: Int) = context.getString(stringRes)

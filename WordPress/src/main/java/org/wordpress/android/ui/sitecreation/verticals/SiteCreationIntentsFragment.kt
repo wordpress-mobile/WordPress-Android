@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -70,15 +69,16 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
         siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
-        recyclerView.adapter = SiteCreationIntentsAdapter(uiHelper)
+        recyclerView.itemAnimator = null
+        recyclerView.adapter = SiteCreationIntentsAdapter()
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         if (!uiState.isHeaderVisible) input.requestFocus()
-        animateHeaderVisibility(uiState.isHeaderVisible)
-        updateContinueButtonVisibility(uiState.isContinueButtonVisible)
+        siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
+        recyclerView.scrollToPosition(0)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
@@ -88,25 +88,6 @@ class SiteCreationIntentsFragment : Fragment() {
                 siteCreationIntentsHeader.title,
                 shouldAppBarTitleBeVisible
         )
-    }
-
-    private fun SiteCreationIntentsFragmentBinding.updateContinueButtonVisibility(shouldBeVisible: Boolean) {
-        continueButtonContainer.isVisible = shouldBeVisible
-        continueButtonShadow.isVisible = shouldBeVisible
-    }
-
-    private fun SiteCreationIntentsFragmentBinding.animateHeaderVisibility(shouldBeVisible: Boolean) {
-        val headerLayout = siteCreationIntentsHeader.root
-        val toggleVisibility = Runnable { headerLayout.isVisible = shouldBeVisible }
-
-        when {
-            !shouldBeVisible && headerLayout.isVisible -> {
-                headerLayout.animate().translationY(-headerLayout.height.toFloat()).withEndAction(toggleVisibility)
-            }
-            shouldBeVisible && headerLayout.isGone -> {
-                headerLayout.animate().translationY(0f).withEndAction(toggleVisibility)
-            }
-        }
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
@@ -120,9 +101,12 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupActionListeners() {
         siteCreationIntentsTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
-        continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
-        input.setOnFocusChangeListener { _, willFocus -> if (willFocus) viewModel.onSearchInputFocused() }
+        input.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                viewModel.onSearchInputFocused()
+            }
+        }
     }
 
     private fun SiteCreationIntentsFragmentBinding.addSearchTextChangedListener() {

@@ -1,0 +1,392 @@
+# NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
+# of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
+ALL_LOCALES = [
+  # First are the locales which are used for *both* downloading the `strings.xml` files from GlotPress *and* for generating the release notes XML files.
+  { glotpress: 'ar', android: 'ar',    google_play: 'ar',     promo_config: {} },
+  { glotpress: 'de', android: 'de',    google_play: 'de-DE',  promo_config: {} },
+  { glotpress: 'en-gb', android: 'en-rGB', google_play: 'en-US', promo_config: {} },
+  { glotpress: 'es', android: 'es', google_play: 'es-ES', promo_config: {} },
+  { glotpress: 'fr', android: 'fr-rCA', google_play: 'fr-CA', promo_config: false },
+  { glotpress: 'fr', android: 'fr',    google_play: 'fr-FR',  promo_config: {} },
+  { glotpress: 'he', android: 'he',    google_play: 'iw-IL',  promo_config: {} },
+  { glotpress: 'id', android: 'id',    google_play: 'id',     promo_config: {} },
+  { glotpress: 'it', android: 'it',    google_play: 'it-IT',  promo_config: {} },
+  { glotpress: 'ja', android: 'ja',    google_play: 'ja-JP',  promo_config: {} },
+  { glotpress: 'ko', android: 'ko',    google_play: 'ko-KR',  promo_config: {} },
+  { glotpress: 'nl', android: 'nl',    google_play: 'nl-NL',  promo_config: {} },
+  { glotpress: 'pl', android: 'pl',    google_play: 'pl-PL',  promo_config: {} },
+  { glotpress: 'pt-br', android: 'pt-rBR', google_play: 'pt-BR', promo_config: {} },
+  { glotpress: 'ru', android: 'ru',    google_play: 'ru-RU',  promo_config: {} },
+  { glotpress: 'sr', android: 'sr',    google_play: 'sr',     promo_config: {} },
+  { glotpress: 'sv', android: 'sv',    google_play: 'sv-SE',  promo_config: {} },
+  { glotpress: 'th', android: 'th',    google_play: 'th',     promo_config: {} },
+  { glotpress: 'tr', android: 'tr',    google_play: 'tr-TR',  promo_config: {} },
+  { glotpress: 'vi', android: 'vi',    google_play: 'vi',     promo_config: {} },
+  { glotpress: 'zh-cn', android: 'zh-rCN', google_play: 'zh-CN',  promo_config: {} },
+  { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
+  # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `RELEASE_NOTES_LOCALES` below.
+  { glotpress: 'az', android: 'az', promo_config: false },
+  { glotpress: 'el', android: 'el', promo_config: false },
+  { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },
+  { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
+  { glotpress: 'gd', android: 'gd', promo_config: false },
+  { glotpress: 'hi', android: 'hi', promo_config: false },
+  { glotpress: 'hu', android: 'hu', promo_config: false },
+  { glotpress: 'nb', android: 'nb', promo_config: false },
+  { glotpress: 'pl', android: 'pl', promo_config: false },
+  { glotpress: 'th', android: 'th', promo_config: false },
+  { glotpress: 'uz', android: 'uz', promo_config: false },
+  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
+  { glotpress: 'eu', android: 'eu', promo_config: false },
+  { glotpress: 'ro', android: 'ro', promo_config: false },
+  { glotpress: 'mk', android: 'mk', promo_config: false },
+  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
+  { glotpress: 'sr', android: 'sr', promo_config: false },
+  { glotpress: 'sk', android: 'sk', promo_config: false },
+  { glotpress: 'cy', android: 'cy', promo_config: false },
+  { glotpress: 'da', android: 'da', promo_config: false },
+  { glotpress: 'bg', android: 'bg', promo_config: false },
+  { glotpress: 'sq', android: 'sq', promo_config: false },
+  { glotpress: 'hr', android: 'hr', promo_config: false },
+  { glotpress: 'cs', android: 'cs', promo_config: false },
+  { glotpress: 'pt-br', android: 'pt-rBR', promo_config: false },
+  { glotpress: 'en-ca', android: 'en-rCA', promo_config: false },
+  { glotpress: 'ms', android: 'ms', promo_config: false },
+  { glotpress: 'es-ve', android: 'es-rVE', promo_config: false },
+  { glotpress: 'gl', android: 'gl', promo_config: false },
+  { glotpress: 'is', android: 'is' },
+  { glotpress: 'es-co', android: 'es-rCO', promo_config: false },
+  { glotpress: 'kmr', android: 'kmr', promo_config: false },
+].freeze
+
+RELEASE_NOTES_LOCALES = ALL_LOCALES
+  .reject { |h| h[:google_play].nil? }
+  .map { |h| [h[:glotpress], h[:google_play]] }
+
+JP_RELEASE_NOTES_LOCALES = ALL_LOCALES
+  .reject { |h| h[:google_play].nil? }
+  .select { |h| %w[ar de-DE es-ES fr-FR iw-IL id it-IT ja-JP ko-KR nl-NL pt-BR ru-RU sv-SE tr-TR zh-CN zh-TW].include?(h[:google_play]) }
+  .map { |h| [h[:glotpress], h[:google_play]] }
+
+platform :android do
+  ########################################################################
+  # PlayStore Metadata
+  ########################################################################
+
+  #####################################################################################
+  # update_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the `WordPress/metadata/` and
+  # `WordPress/jetpack_metadata/` folders and updates the `.po` files that is then
+  # picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_appstore_strings version:10.3
+  #####################################################################################
+  desc 'Updates the PlayStoreStrings.po files for WP + JP'
+  lane :update_appstore_strings do |options|
+    update_wordpress_appstore_strings(options)
+    update_jetpack_appstore_strings(options)
+  end
+
+  #####################################################################################
+  # update_wordpress_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the `WordPress/metadata/` folder
+  # and updates the `.po` file that is then picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_wordpress_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_wordpress_appstore_strings version:10.3
+  #####################################################################################
+  desc 'Updates the PlayStoreStrings.po file for WordPress'
+  lane :update_wordpress_appstore_strings do |options|
+    metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'metadata')
+
+    # <key in po file> => <path to txt file to read the content from>
+    files = {
+      release_note: File.join(metadata_folder, 'release_notes.txt'),
+      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
+      play_store_promo: File.join(metadata_folder, 'short_description.txt'),
+      play_store_desc: File.join(metadata_folder, 'full_description.txt'),
+      play_store_app_title: File.join(metadata_folder, 'title.txt'),
+    }
+    files.merge!((1..9).map do |n|
+      [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
+    end.to_h)
+
+    android_update_metadata_source(
+      po_file_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
+      source_files: files,
+      release_version: options[:version]
+    )
+  end
+
+  #####################################################################################
+  # update_jetpack_appstore_strings
+  # -----------------------------------------------------------------------------------
+  # This lane gets the data from the txt files in the `WordPress/jetpack_metadata/` folder
+  # and updates the `.po` file that is then picked by GlotPress for translations.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane update_jetpack_appstore_strings version:<version>
+  #
+  # Example:
+  # fastlane update_jetpack_appstore_strings version:10.3
+  #####################################################################################
+  desc 'Updates the PlayStoreStrings.po file for Jetpack'
+  lane :update_jetpack_appstore_strings do |options|
+    metadata_folder = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
+
+    files = {
+      release_note: File.join(metadata_folder, 'release_notes.txt'),
+      release_note_short: File.join(metadata_folder, 'release_notes_short.txt'),
+      'short-description': File.join(metadata_folder, 'short_description.txt'),
+      'app-store-description': File.join(metadata_folder, 'full_description.txt'),
+      'app-store-name': File.join(metadata_folder, 'title.txt'),
+    }
+
+    android_update_metadata_source(
+      po_file_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
+      source_files: files,
+      release_version: options[:version]
+    )
+  end
+
+  # Updates the metadata (from `fastlane/{metadata|jetpack_metadata}/android/*/*.txt`) in the PlayStore (Main store listing).
+  #
+  # @option [String] app The app to update the metadata for. Mandatory. Must be one of `wordpress` or `jetpack`.
+  #
+  desc 'Uploads the localized metadata to the PlayStore.'
+  lane :upload_playstore_localized_metadata do |options|
+    app = get_app_name_option!(options)
+    package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
+    metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
+    version_code = android_get_release_version['code']
+
+    # TODO: This is currently a separate lane so we can invoke it separately, but if after a couple of sprints we see that it works well,
+    #       it we would make sense to remove the lane and instead directly use `skip_upload_metadata: (options[:track] != 'production')`
+    #       in the `upload_build_to_play_store` lane? (especially if we do the same for `skip_upload_changelogs` and get rid of `android_create_xml_release_notes`)
+    upload_to_play_store(
+      package_name: package_name,
+      track: 'production',
+      version_code: version_code, # Apparently required by fastlane… even if the "Main Store Listing" isn't be attached to a specific build ¯\_(ツ)_/¯
+      metadata_path: metadata_dir,
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
+      # TODO: enable changelogs upload once we drop the `android_create_xml_release_notes` action call (and drop the step in release scenario)
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+    )
+  end
+
+  #####################################################################################
+  # download_metadata_strings
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the translated metadata (release notes, app store strings, title, etc.)
+  # from GlotPress and updates the local files
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane download_metadata_strings build_number:<build_number> version:<version>
+  #
+  # Example:
+  # fastlane download_metadata_strings build_number:573 version:10.3
+  #####################################################################################
+  desc 'Downloads translated metadata from GlotPress'
+  lane :download_metadata_strings do |options|
+    download_wordpress_metadata_strings(options)
+    download_jetpack_metadata_strings(options)
+  end
+
+  desc "Downloads WordPress's translated metadata from GlotPress"
+  lane :download_wordpress_metadata_strings do |options|
+    app_values = APP_SPECIFIC_VALUES[:wordpress]
+    values = options[:version].split('.')
+    files = {
+      "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
+      play_store_app_title: { desc: 'title.txt', max_size: 30 },
+      play_store_promo: { desc: 'short_description.txt', max_size: 80 },
+      play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
+    }
+
+    delete_old_changelogs(app: 'wordpress', build: options[:build_number])
+    download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
+    # The case for the source locale (en-US) is pulled in a hacky way, by having an {en-gb => en-US} mapping as part of the RELEASE_NOTES_LOCALES,
+    # which is then treated in a special way by gp_downloadmetadata by specifying a `source_locale: 'en-US'` to process it differently from the rest.
+    gp_downloadmetadata(
+      project_url: app_values[:gp_url],
+      target_files: files,
+      locales: RELEASE_NOTES_LOCALES,
+      source_locale: 'en-US',
+      download_path: download_path
+    )
+
+    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
+    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
+    sh("git add #{download_path} && git commit -m \"Update WordPress metadata translations for #{options[:version]}\" && git push origin HEAD")
+  end
+
+  desc "Downloads Jetpack's translated metadata from GlotPress"
+  lane :download_jetpack_metadata_strings do |options|
+    UI.message('Hey')
+    app_values = APP_SPECIFIC_VALUES[:jetpack]
+    values = options[:version].split('.')
+    files = {
+      "release_note_#{values[0]}#{values[1]}" => { desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key: "release_note_short_#{values[0]}#{values[1]}" },
+      'app-store-name': { desc: 'title.txt', max_size: 30 },
+      'short-description': { desc: 'short_description.txt', max_size: 80 },
+      'app-store-description': { desc: 'full_description.txt', max_size: 4000 }
+    }
+
+    delete_old_changelogs(app: 'jetpack', build: options[:build_number])
+    download_path = File.join(Dir.pwd, app_values[:metadata_dir], 'android')
+    gp_downloadmetadata(
+      project_url: app_values[:gp_url],
+      target_files: files,
+      locales: JP_RELEASE_NOTES_LOCALES,
+      download_path: download_path
+    )
+
+    # For WordPress, the en-US release notes come from using the source keys (instead of translations) downloaded from GlotPress' en-gb locale (which is unused otherwise).
+    # But for Jetpack, we don't have an unused locale like en-gb in the GP release notes project, so copy from source instead as a fallback
+    metadata_source_dir = File.join(Dir.pwd, '..', 'WordPress', 'jetpack_metadata')
+    FileUtils.cp(File.join(metadata_source_dir, 'release_notes.txt'), File.join(download_path, 'en-US', 'changelogs', "#{options[:build_number]}.txt"))
+    FileUtils.cp(
+      ['title.txt', 'short_description.txt', 'full_description.txt'].map { |f| File.join(metadata_source_dir, f) },
+      File.join(download_path, 'en-US')
+    )
+
+    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
+    locales_including_enUS = [['en-gb', 'en-US']] + JP_RELEASE_NOTES_LOCALES # first item (GlotPress locale) unused for this action; second param = google_play locale
+    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: locales_including_enUS)
+    sh("git add #{download_path} && git commit -m \"Update Jetpack metadata translations for #{options[:version]}\" && git push origin HEAD")
+  end
+
+  ########################################################################
+  # In-App Translations
+  ########################################################################
+
+  ### Libraries Translation Merging ###
+
+  MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
+  FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
+  LOCAL_LIBRARIES_STRINGS_PATHS = [
+    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] },
+    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", exclusions: [] }
+  ].freeze
+  REMOTE_LIBRARIES_STRINGS_PATHS = [
+    {
+      name: 'Gutenberg Native',
+      import_key: 'gutenbergMobileVersion',
+      repository: 'wordpress-mobile/gutenberg-mobile',
+      strings_file_path: 'bundle/android/strings.xml',
+      github_release_prefix: '',
+      exclusions: [],
+      merge_tool: File.join(ENV['PROJECT_ROOT_FOLDER'], 'tools', 'merge_strings_xml.py')
+    },
+    {
+      name: 'Login Library',
+      import_key: 'wordPressLoginVersion',
+      repository: 'wordpress-mobile/WordPress-Login-Flow-Android',
+      strings_file_path: 'WordPressLoginFlow/src/main/res/values/strings.xml',
+      github_release_prefix: '',
+      exclusions: ['default_web_client_id']
+    },
+    {
+      name: "Stories Library",
+      import_key: "storiesVersion",
+      repository: "Automattic/stories-android",
+      strings_file_path: "stories/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
+    },
+    {
+      name: "About Library",
+      import_key: "aboutAutomatticVersion",
+      repository: "Automattic/about-automattic-android",
+      strings_file_path: "library/src/main/res/values/strings.xml",
+      github_release_prefix: "",
+      exclusions: []
+    },
+  ].freeze
+
+  lane :update_frozen_strings_for_translation do
+    # We need to `cd` to the parent directory because, unlike when calling fastlane actions, commands running directly from the `Fastfile`
+    # (like `FileUtils` calls here) run relative to the `./fastlane` folder, but the `*_DIR_PATH` we use are relative to the repo root.
+    # See: https://docs.fastlane.tools/advanced/fastlane/#directory-behavior
+    Dir.chdir('..') do
+      FileUtils.mkdir_p(FROZEN_STRINGS_DIR_PATH)
+      FileUtils.cp(MAIN_STRINGS_PATH, FROZEN_STRINGS_DIR_PATH)
+    end
+    git_commit(path: File.join(FROZEN_STRINGS_DIR_PATH, 'strings.xml'), message: 'Freeze strings for translation', allow_nothing_to_commit: true)
+  end
+
+  desc 'Merge libraries strings files into the main app one'
+  lane :localize_libraries do
+    # Merge `strings.xml` files of libraries that are hosted locally in the repository (in `./libs` folder)
+    an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: LOCAL_LIBRARIES_STRINGS_PATHS)
+
+    # Merge `strings.xml` files of libraries that are hosted in separate repositories (and linked as binary dependencies with the project)
+    REMOTE_LIBRARIES_STRINGS_PATHS.each do |lib|
+      download_path = android_download_file_by_version(
+        library_name: lib[:name],
+        import_key: lib[:import_key],
+        repository: lib[:repository],
+        file_path: lib[:strings_file_path],
+        github_release_prefix: lib[:github_release_prefix]
+      )
+
+      if download_path.nil?
+        error_message = <<~ERROR
+          Can't download strings file for #{lib[:name]}.
+          Strings for this library won't get translated.
+          Do you want to continue anyway?
+        ERROR
+        UI.user_error! 'Abort.' unless UI.confirm(error_message)
+      else
+        UI.message("`strings.xml` file for #{lib[:name]} downloaded to #{download_path}.")
+        if lib.key?(:merge_tool)
+          sh(lib[:merge_tool], lib[:name], download_path)
+        else
+          lib_to_merge = [{
+            library: lib[:name],
+            strings_path: download_path,
+            exclusions: lib[:exclusions]
+          }]
+          an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
+        end
+        File.delete(download_path) if File.exist?(download_path)
+      end
+    end
+
+    # Commit changes
+    git_commit(path: MAIN_STRINGS_PATH, message: 'Merge strings from libraries for translation', allow_nothing_to_commit: true)
+  end
+
+  #####################################################################################
+  # download_translations
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the string translations from GlotPress
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane download_translations
+  #####################################################################################
+  lane :download_translations do
+    # For now WordPress and Jetpack use the same GlotPress project and share the same `strings.xml`
+    # (the Jetpack-dedicated one, https://translate.wordpress.com/projects/jetpack/apps/android/, is empty anyway for now).
+    android_download_translations(
+      res_dir: File.join('WordPress', 'src', 'main', 'res'),
+      glotpress_url: 'https://translate.wordpress.org/projects/apps/android/dev/',
+      locales: ALL_LOCALES,
+      lint_task: 'lintWordpressVanillaRelease' # TODO: Should we adapt this?
+    )
+  end
+end

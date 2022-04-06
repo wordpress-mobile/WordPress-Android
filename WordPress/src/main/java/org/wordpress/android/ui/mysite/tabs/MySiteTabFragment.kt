@@ -34,6 +34,7 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
@@ -67,9 +68,9 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import java.io.File
 import javax.inject.Inject
@@ -129,7 +130,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 .get(DynamicCardMenuViewModel::class.java)
     }
 
-    // todo: annmarie - if we keep this, then think about instance state
     private fun initTabType() {
         mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
             MySiteTabType.fromString(
@@ -182,9 +182,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 is State.NoSites -> loadEmptyView()
             }
         })
-        viewModel.onScrollTo.observeEvent(viewLifecycleOwner, {
-            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
-        })
         viewModel.onBasicDialogShown.observeEvent(viewLifecycleOwner, { model ->
             dialogViewModel.showDialog(requireActivity().supportFragmentManager,
                     BasicDialogModel(
@@ -233,6 +230,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
+        viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -381,7 +379,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         super.onPause()
         activity?.let {
             if (!it.isChangingConfigurations) {
-                viewModel.clearActiveQuickStartTask()
                 viewModel.dismissQuickStartNotice()
             }
         }
@@ -459,6 +456,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
+                viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
                         data.getIntExtra(
                                 SitePickerActivity.KEY_SITE_LOCAL_ID,
@@ -468,6 +466,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
                             data.getIntExtra(
                                     SitePickerActivity.KEY_SITE_LOCAL_ID,
@@ -551,6 +550,19 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
     }
 
+    private fun shareMessage(message: String) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message)
+
+        startActivity(
+                Intent.createChooser(
+                        shareIntent,
+                        resources.getString(R.string.my_site_blogging_prompt_card_share_chooser_title)
+                )
+        )
+    }
+
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
@@ -588,5 +600,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     override fun onDismiss() {
         viewModel.onQuickStartFullScreenDialogDismiss()
+    }
+
+    fun handleScrollTo(scrollTo: Int) {
+        (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
+    }
+
+    fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
+        viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
 }
