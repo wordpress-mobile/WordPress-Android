@@ -23,8 +23,7 @@ class QuickLinkRibbonViewHolder(
         with(binding.quickLinkRibbonItemList) {
             if (adapter == null) {
                 layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                val readerInterestAdapter = QuickLinkRibbonItemAdapter()
-                adapter = readerInterestAdapter
+                adapter = QuickLinkRibbonItemAdapter()
             }
         }
     }
