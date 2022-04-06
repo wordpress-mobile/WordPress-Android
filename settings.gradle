@@ -5,7 +5,7 @@ plugins {
 
 gradleEnterprise {
     server = "https://gradle.a8c.com"
-    allowUntrustedServer = true // Unless a trusted certificate is already configured in GE.
+    allowUntrustedServer = false
     buildScan {
         publishAlways()
         capture {
