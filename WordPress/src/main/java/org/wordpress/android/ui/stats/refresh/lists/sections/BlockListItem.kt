@@ -163,8 +163,7 @@ sealed class BlockListItem(val type: Type) {
         val links: List<Clickable>? = null,
         val bolds: List<String>? = null,
         val isLast: Boolean = false
-    ) :
-            BlockListItem(TEXT) {
+    ) : BlockListItem(TEXT) {
         data class Clickable(
             val link: String,
             val navigationAction: ListItemInteraction
