@@ -25,9 +25,7 @@ class SiteCreationStepsProvider @Inject constructor(
 ) {
     fun getSteps(): List<SiteCreationStep> {
         if (siteIntentQuestionFeatureConfig.isEnabled()) {
-            // if (siteNameFeatureConfig.isEnabled() && siteNameABExperiment.getVariation() != Control) {
-            // For convenience while testing, hardcode to true:
-            if (true) {
+             if (siteNameFeatureConfig.isEnabled() && siteNameABExperiment.getVariation() != Control) {
                 return listOf(
                         INTENTS,
                         SITE_NAME,
