@@ -163,17 +163,21 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 is State.NoSites -> loadEmptyView(state)
             }
         }
-        viewModel.onNavigation.observeEvent(viewLifecycleOwner) { handleNavigationAction(it) }
+        viewModel.onNavigation.observeEvent(viewLifecycleOwner, { handleNavigationAction(it) })
 
         viewModel.onScrollTo.observeEvent(viewLifecycleOwner) {
             var quickStartScrollPosition = it
             if (quickStartScrollPosition == -1) {
                 appbarMain.setExpanded(true, true)
                 quickStartScrollPosition = 0
+            } else {
+                appbarMain.setExpanded(false, true)
             }
             binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
         }
-
+        viewModel.onTrackWithTabSource.observeEvent(viewLifecycleOwner) {
+            binding?.viewPager?.getCurrentFragment()?.onTrackWithTabSource(it)
+        }
         viewModel.selectTab.observeEvent(viewLifecycleOwner) { navTarget ->
             viewPager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
         }
@@ -198,7 +202,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         viewModel.setActionableEmptyViewGone(actionableEmptyView.isVisible) {
             actionableEmptyView.setVisible(false)
         }
-        siteInfo.loadMySiteDetails(state.siteInfoHeader)
+        if (state.siteInfoHeaderState.hasUpdates || !header.isVisible) {
+            siteInfo.loadMySiteDetails(state.siteInfoHeaderState.siteInfoHeader)
+        }
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
     }
 
@@ -228,10 +234,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.updateSiteInfoToolbarView(siteInfoToolbarViewParams: SiteInfoToolbarViewParams) {
+        showHeader(siteInfoToolbarViewParams.headerVisible)
         val appBarHeight = resources.getDimension(siteInfoToolbarViewParams.appBarHeight).toInt()
         appbarMain.layoutParams.height = appBarHeight
         val toolbarBottomMargin = resources.getDimension(siteInfoToolbarViewParams.toolbarBottomMargin).toInt()
         updateToolbarBottomMargin(toolbarBottomMargin)
+        appbarMain.isLiftOnScroll = siteInfoToolbarViewParams.appBarLiftOnScroll
         appbarMain.requestLayout()
     }
 
@@ -249,7 +257,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             actionableEmptyView.image.setVisible(state.shouldShowImage)
         }
         actionableEmptyView.image.setVisible(state.shouldShowImage)
+        siteTitle = getString(R.string.my_site_section_screen_title)
         updateSiteInfoToolbarView(state.siteInfoToolbarViewParams)
+        appbarMain.setExpanded(false, true)
+    }
+
+    private fun MySiteFragmentBinding.showHeader(visibility: Boolean) {
+        header.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 
     private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
@@ -294,7 +308,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
+        /* Add brief delay before passing result to nested (view pager) tab fragments to give them time to get created.
+           This is a workaround to fix API Level 25 (GitHub #16225) issue where we noticed that nested fragments
+           were created after parent fragment was shown the first time and received activity result. It might not be a
+           real issue as we could only test it on an emulator, we added it to be safe in such cases. */
+        view?.postDelayed({
+            binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
+        }, PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY)
     }
 
     private fun ViewPager2.getCurrentFragment() =
@@ -332,6 +352,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
+        private const val PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY = 300L
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
