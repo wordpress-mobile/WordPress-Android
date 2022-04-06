@@ -11,5 +11,5 @@ sealed class UiString {
     data class UiStringText(val text: CharSequence) : UiString()
     data class UiStringRes(@StringRes val stringRes: Int) : UiString()
     data class UiStringResWithParams(@StringRes val stringRes: Int, val params: List<UiString>) : UiString()
-    data class UiStringResPlural(@PluralsRes val pluralsRes: Int, val count: Int) : UiString()
+    data class UiStringPluralRes(@PluralsRes val pluralsRes: Int, val count: Int) : UiString()
 }

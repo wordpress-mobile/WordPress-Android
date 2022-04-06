@@ -13,7 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiDimen.UIDimenDPInt
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResPlural
+import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AniUtils
@@ -41,7 +41,7 @@ class UiHelpers @Inject constructor() {
                             )
                         }.toTypedArray()
                 )
-                is UiStringResPlural -> context.resources.getQuantityString(
+                is UiStringPluralRes -> context.resources.getQuantityString(
                         uiString.pluralsRes,
                         uiString.count,
                         uiString.count

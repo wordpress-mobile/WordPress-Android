@@ -5,7 +5,7 @@ import org.junit.Test
 import org.wordpress.android.R
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
-import org.wordpress.android.ui.utils.UiString.UiStringResPlural
+import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 
 class BloggingPromptsOnboardingUiStateMapperTest {
     private val classToTest = BloggingPromptsOnboardingUiStateMapper()
@@ -37,7 +37,7 @@ class BloggingPromptsOnboardingUiStateMapperTest {
                                 "c35743d8ed233ab410?s=96&d=identicon&r=G"
                 ),
                 TrailingLabelTextItem(
-                        UiStringResPlural(R.plurals.my_site_blogging_prompt_card_number_of_answers, 3),
+                        UiStringPluralRes(R.plurals.my_site_blogging_prompt_card_number_of_answers, 3),
                         R.attr.colorPrimary
                 )
         )

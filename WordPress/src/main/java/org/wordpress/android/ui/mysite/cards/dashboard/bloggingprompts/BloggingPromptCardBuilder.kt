@@ -6,7 +6,7 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
-import org.wordpress.android.ui.utils.UiString.UiStringResPlural
+import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
@@ -14,17 +14,18 @@ class BloggingPromptCardBuilder @Inject constructor() {
     fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
         val respondents = params.bloggingPrompt.respondents
 
-        val trailingLabel = UiStringResPlural(
+        val trailingLabel = UiStringPluralRes(
                 R.plurals.my_site_blogging_prompt_card_number_of_answers,
                 respondents.size
         )
 
-        val avatarsTrain = respondents.take(MAX_NUMBER_OF_VISIBLE_RESPONDENTS).map { respondent ->
-            AvatarItem(
-                    respondent.userId,
-                    respondent.avatarUrl
-            )
-        }
+        val avatarsTrain = respondents.take(MAX_NUMBER_OF_VISIBLE_RESPONDENTS)
+                .map { respondent ->
+                    AvatarItem(
+                            respondent.userId,
+                            respondent.avatarUrl
+                    )
+                }
                 .toMutableList<TrainOfAvatarsItem>()
                 .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
 
@@ -38,6 +39,6 @@ class BloggingPromptCardBuilder @Inject constructor() {
     }
 
     companion object {
-        const val MAX_NUMBER_OF_VISIBLE_RESPONDENTS = 3
+        private const val MAX_NUMBER_OF_VISIBLE_RESPONDENTS = 3
     }
 }
