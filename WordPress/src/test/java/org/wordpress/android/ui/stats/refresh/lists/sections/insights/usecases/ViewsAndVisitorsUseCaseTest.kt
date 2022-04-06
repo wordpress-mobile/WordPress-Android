@@ -90,7 +90,9 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(viewsAndVisitorsMapper.buildTitle(any(), isNull(), any(), any(), any(), any())).thenReturn(title)
-        whenever(viewsAndVisitorsMapper.buildChart(any(), any(), any(), any(), any(), any())).thenReturn(listOf(barChartItem))
+        whenever(viewsAndVisitorsMapper
+                .buildChart(any(), any(), any(), any(), any(), any()))
+                .thenReturn(listOf(barChartItem))
         whenever(viewsAndVisitorsMapper.buildInformation()).thenReturn(Text(""))
         whenever(viewsAndVisitorsMapper.buildChips(any(), any(), any())).thenReturn(chips)
         whenever(resourceProvider.getString(string.stats_loading_card)).thenReturn("Loading")
