@@ -57,13 +57,7 @@ class TodaysStatsCardBuilder @Inject constructor(
                                                 Constants.URL_GET_MORE_VIEWS_AND_TRAFFIC
                                         )
                                 ),
-                                links = listOf(
-                                        Clickable(
-                                                link = Constants.URL_GET_MORE_VIEWS_AND_TRAFFIC,
-                                                navigationAction = ListItemInteraction
-                                                        .create(params.onGetMoreViewsClick)
-                                        )
-                                )
+                                links = listOf(Clickable(ListItemInteraction.create(params.onGetMoreViewsClick)))
                         )
                     },
                     footerLink = FooterLink(
