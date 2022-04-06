@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Header
@@ -42,6 +44,7 @@ class InsightsManagementMapperTest : BaseUnitTest() {
     fun `maps all added insights from StatsStore with correct type`() = test {
         // Given
         val allInsightTypes = InsightType.values().toSet()
+        whenever(statsRevampV2FeatureConfig.isEnabled()).thenReturn(true)
 
         // When
         val result = insightsManagementMapper.buildUIModel(allInsightTypes) {}
@@ -49,25 +52,27 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         // Then
         assertThat(result).hasSize(insightTypeCount + sectionsCount)
         assertHeader(result[0], R.string.stats_insights_management_general)
-        assertInsight(result[1], ALL_TIME_STATS, true)
-        assertInsight(result[2], MOST_POPULAR_DAY_AND_HOUR, true)
-        assertInsight(result[3], ANNUAL_SITE_STATS, true)
-        assertInsight(result[4], TODAY_STATS, true)
-        assertHeader(result[5], R.string.stats_insights_management_posts_and_pages)
-        assertInsight(result[6], LATEST_POST_SUMMARY, true)
-        assertInsight(result[7], POSTING_ACTIVITY, true)
-        assertInsight(result[8], TAGS_AND_CATEGORIES, true)
-        assertHeader(result[9], R.string.stats_insights_management_activity)
-        assertInsight(result[10], COMMENTS, true)
-        assertInsight(result[11], FOLLOWERS, true)
-        assertInsight(result[12], FOLLOWER_TOTALS, true)
-        assertInsight(result[13], PUBLICIZE, true)
+        assertInsight(result[1], VIEWS_AND_VISITORS, true)
+        assertInsight(result[2], ALL_TIME_STATS, true)
+        assertInsight(result[3], MOST_POPULAR_DAY_AND_HOUR, true)
+        assertInsight(result[4], ANNUAL_SITE_STATS, true)
+        assertInsight(result[5], TODAY_STATS, true)
+        assertHeader(result[6], R.string.stats_insights_management_posts_and_pages)
+        assertInsight(result[7], LATEST_POST_SUMMARY, true)
+        assertInsight(result[8], POSTING_ACTIVITY, true)
+        assertInsight(result[9], TAGS_AND_CATEGORIES, true)
+        assertHeader(result[10], R.string.stats_insights_management_activity)
+        assertInsight(result[11], COMMENTS, true)
+        assertInsight(result[12], FOLLOWERS, true)
+        assertInsight(result[13], FOLLOWER_TOTALS, true)
+        assertInsight(result[14], PUBLICIZE, true)
     }
 
     @Test
     fun `maps subset of added insights with correct type`() = test {
         // Given
         val addedInsightTypes = setOf(ALL_TIME_STATS, PUBLICIZE)
+        whenever(statsRevampV2FeatureConfig.isEnabled()).thenReturn(true)
 
         // When
         val result = insightsManagementMapper.buildUIModel(addedInsightTypes) {}
@@ -75,19 +80,20 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         // Then
         assertThat(result).hasSize(insightTypeCount + sectionsCount)
         assertHeader(result[0], R.string.stats_insights_management_general)
-        assertInsight(result[1], ALL_TIME_STATS, true)
-        assertInsight(result[2], MOST_POPULAR_DAY_AND_HOUR, false)
-        assertInsight(result[3], ANNUAL_SITE_STATS, false)
-        assertInsight(result[4], TODAY_STATS, false)
-        assertHeader(result[5], R.string.stats_insights_management_posts_and_pages)
-        assertInsight(result[6], LATEST_POST_SUMMARY, false)
-        assertInsight(result[7], POSTING_ACTIVITY, false)
-        assertInsight(result[8], TAGS_AND_CATEGORIES, false)
-        assertHeader(result[9], R.string.stats_insights_management_activity)
-        assertInsight(result[10], COMMENTS, false)
-        assertInsight(result[11], FOLLOWERS, false)
-        assertInsight(result[12], FOLLOWER_TOTALS, false)
-        assertInsight(result[13], PUBLICIZE, true)
+        assertInsight(result[1], VIEWS_AND_VISITORS, false)
+        assertInsight(result[2], ALL_TIME_STATS, true)
+        assertInsight(result[3], MOST_POPULAR_DAY_AND_HOUR, false)
+        assertInsight(result[4], ANNUAL_SITE_STATS, false)
+        assertInsight(result[5], TODAY_STATS, false)
+        assertHeader(result[6], R.string.stats_insights_management_posts_and_pages)
+        assertInsight(result[7], LATEST_POST_SUMMARY, false)
+        assertInsight(result[8], POSTING_ACTIVITY, false)
+        assertInsight(result[9], TAGS_AND_CATEGORIES, false)
+        assertHeader(result[10], R.string.stats_insights_management_activity)
+        assertInsight(result[11], COMMENTS, false)
+        assertInsight(result[12], FOLLOWERS, false)
+        assertInsight(result[13], FOLLOWER_TOTALS, false)
+        assertInsight(result[14], PUBLICIZE, true)
     }
 
     @Test
@@ -98,19 +104,20 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         // Then
         assertThat(result).hasSize(insightTypeCount + sectionsCount)
         assertHeader(result[0], R.string.stats_insights_management_general)
-        assertInsight(result[1], ALL_TIME_STATS, false)
-        assertInsight(result[2], MOST_POPULAR_DAY_AND_HOUR, false)
-        assertInsight(result[3], ANNUAL_SITE_STATS, false)
-        assertInsight(result[4], TODAY_STATS, false)
-        assertHeader(result[5], R.string.stats_insights_management_posts_and_pages)
-        assertInsight(result[6], LATEST_POST_SUMMARY, false)
-        assertInsight(result[7], POSTING_ACTIVITY, false)
-        assertInsight(result[8], TAGS_AND_CATEGORIES, false)
-        assertHeader(result[9], R.string.stats_insights_management_activity)
-        assertInsight(result[10], COMMENTS, false)
-        assertInsight(result[11], FOLLOWERS, false)
-        assertInsight(result[12], FOLLOWER_TOTALS, false)
-        assertInsight(result[13], PUBLICIZE, false)
+        assertInsight(result[1], VIEWS_AND_VISITORS, false)
+        assertInsight(result[2], ALL_TIME_STATS, false)
+        assertInsight(result[3], MOST_POPULAR_DAY_AND_HOUR, false)
+        assertInsight(result[4], ANNUAL_SITE_STATS, false)
+        assertInsight(result[5], TODAY_STATS, false)
+        assertHeader(result[6], R.string.stats_insights_management_posts_and_pages)
+        assertInsight(result[7], LATEST_POST_SUMMARY, false)
+        assertInsight(result[8], POSTING_ACTIVITY, false)
+        assertInsight(result[9], TAGS_AND_CATEGORIES, false)
+        assertHeader(result[10], R.string.stats_insights_management_activity)
+        assertInsight(result[11], COMMENTS, false)
+        assertInsight(result[12], FOLLOWERS, false)
+        assertInsight(result[13], FOLLOWER_TOTALS, false)
+        assertInsight(result[14], PUBLICIZE, false)
     }
 
     private fun assertHeader(item: InsightListItem, text: Int) {
