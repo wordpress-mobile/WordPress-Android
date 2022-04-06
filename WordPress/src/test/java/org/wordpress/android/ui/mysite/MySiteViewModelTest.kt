@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -2401,7 +2402,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
         return QuickLinkRibbon(
-            quickLinkRibbonItems = mock()
+            quickLinkRibbonItems = mock(),
+            showStatsFocusPoint = params.activeTask == CHECK_STATS,
+            showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                    params.activeTask == QuickStartTask.REVIEW_PAGES
         )
     }
 

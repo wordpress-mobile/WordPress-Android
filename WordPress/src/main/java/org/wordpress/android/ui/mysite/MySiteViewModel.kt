@@ -352,6 +352,7 @@ class MySiteViewModel @Inject constructor(
     private fun getPositionOfQuickStartItem(siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>) =
             if (isMySiteTabsEnabled) {
                 val currentTab = orderedTabTypes[_selectTab.value!!.peekContent().position]
+                Log.e("current tab",currentTab.label)
                 (siteItems[currentTab] as List<MySiteCardAndItem>)
                         .indexOfFirst { it.activeQuickStartItem }
             } else {
@@ -383,7 +384,8 @@ class MySiteViewModel @Inject constructor(
                         onQuickActionStatsClick = this::quickActionStatsClick,
                         onQuickActionPagesClick = this::quickActionPagesClick,
                         onQuickActionPostsClick = this::quickActionPostsClick,
-                        onQuickActionMediaClick = this::quickActionMediaClick
+                        onQuickActionMediaClick = this::quickActionMediaClick,
+                        enableFocusPoints = shouldQuickStartCardShowActiveFocusPoint()
                 ),
                 DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
@@ -427,7 +429,8 @@ class MySiteViewModel @Inject constructor(
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
                         onStatsClick = this::onQuickLinkRibbonStatsClick,
-                        activeTask = activeTask
+                        activeTask = activeTask,
+                        enableFocusPoints = shouldQuickLinkRibbonShowActiveFocusPoint()
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -486,6 +489,14 @@ class MySiteViewModel @Inject constructor(
             add(Type.QUICK_ACTIONS_CARD)
         }
         MySiteTabType.ALL -> emptyList()
+    }
+
+    private fun shouldQuickStartCardShowActiveFocusPoint(): Boolean {
+        return defaultABExperimentTab != MySiteTabType.DASHBOARD
+    }
+
+    private fun shouldQuickLinkRibbonShowActiveFocusPoint(): Boolean {
+        return defaultABExperimentTab == MySiteTabType.DASHBOARD
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
