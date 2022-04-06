@@ -903,7 +903,14 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
             assertThat(showLoading).isFalse
-            assertThat(engageItemsList).isEqualTo(likers + TrailingLabelTextItem(UiStringText(testTextString)))
+            assertThat(engageItemsList).isEqualTo(
+                    likers + TrailingLabelTextItem(
+                            UiStringText(
+                                    testTextString
+                            ),
+                            R.attr.wpColorOnSurfaceMedium
+                    )
+            )
             assertThat(showEmptyState).isFalse
             assertThat(emptyStateTitle).isNull()
         }
