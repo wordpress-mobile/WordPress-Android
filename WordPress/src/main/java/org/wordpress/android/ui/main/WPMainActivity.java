@@ -1569,8 +1569,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override public void onSetPromptReminderClick(final int siteId, final boolean isFirstTimePublishing) {
-        mBloggingRemindersViewModel.onPublishingPost(siteId, isFirstTimePublishing);
+    @Override public void onSetPromptReminderClick(final int siteId) {
+        mBloggingRemindersViewModel.onBloggingPromptSchedulingRequested(siteId);
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

@@ -126,7 +126,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     activity?.let {
                         dismiss()
                         (it as BloggingPromptsReminderSchedulerListener)
-                                .onSetPromptReminderClick(action.selectedSiteLocalId, action.isFirstTimePublishing)
+                                .onSetPromptReminderClick(action.selectedSiteLocalId)
                     }
                 }
             }.exhaustive

@@ -1,5 +1,5 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
 interface BloggingPromptsReminderSchedulerListener {
-    fun onSetPromptReminderClick(siteId: Int, isFirstTimePublishing: Boolean)
+    fun onSetPromptReminderClick(siteId: Int)
 }

@@ -237,6 +237,10 @@ class BloggingRemindersViewModel @Inject constructor(
         onSettingsItemClicked(siteStore.getLocalIdForRemoteSiteId(remoteSiteId), NOTIFICATION_SETTINGS)
     }
 
+    fun onBloggingPromptSchedulingRequested(siteId: Int) {
+        showBottomSheet(siteId, PROLOGUE, PUBLISH_FLOW)
+    }
+
     private fun onSettingsItemClicked(siteId: Int, source: Source) {
         launch {
             val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
