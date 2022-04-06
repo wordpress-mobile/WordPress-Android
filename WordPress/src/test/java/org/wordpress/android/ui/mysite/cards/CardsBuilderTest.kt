@@ -288,11 +288,7 @@ class CardsBuilderTest {
 
     private fun initQuickLinkRibbon(): QuickLinkRibbon {
         return QuickLinkRibbon(
-            onPagesClick = mock(),
-            onPostsClick = mock(),
-            onMediaClick = mock(),
-            onStatsClick = mock(),
-            showPages = false
+            quickLinkRibbonItems = mock()
         )
     }
 }
