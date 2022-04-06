@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
-import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
@@ -54,7 +53,7 @@ class TodaysStatsCardBuilder @Inject constructor(
                                 text = UiStringText(
                                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                                 R.string.my_site_todays_stats_get_more_views_message,
-                                                Constants.URL_GET_MORE_VIEWS_AND_TRAFFIC
+                                                URL_GET_MORE_VIEWS_AND_TRAFFIC
                                         )
                                 ),
                                 links = listOf(Clickable(ListItemInteraction.create(params.onGetMoreViewsClick)))
@@ -71,4 +70,8 @@ class TodaysStatsCardBuilder @Inject constructor(
     private fun statToUiString(stat: Int) = UiStringText(statsUtils.toFormattedString(stat))
 
     private fun TodaysStatsCardModel.isEmptyStats() = views == 0 && visitors == 0 && likes == 0
+
+    companion object {
+        const val URL_GET_MORE_VIEWS_AND_TRAFFIC = "https://wordpress.com/support/getting-more-views-and-traffic"
+    }
 }

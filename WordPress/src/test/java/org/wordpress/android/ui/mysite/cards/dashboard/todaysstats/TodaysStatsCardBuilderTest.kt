@@ -8,7 +8,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
@@ -18,6 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -34,7 +34,7 @@ private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
 
 private const val GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK =
         "If you want to try get more views and traffic check out our " +
-                "<a href=\"${Constants.URL_GET_MORE_VIEWS_AND_TRAFFIC}\">top tips</a>."
+                "<a href=\"${URL_GET_MORE_VIEWS_AND_TRAFFIC}\">top tips</a>."
 
 @RunWith(MockitoJUnitRunner::class)
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
@@ -159,7 +159,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                         R.string.my_site_todays_stats_get_more_views_message,
-                        Constants.URL_GET_MORE_VIEWS_AND_TRAFFIC
+                        URL_GET_MORE_VIEWS_AND_TRAFFIC
                 )
         ).thenReturn(GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK)
         return builder.build(
