@@ -103,10 +103,12 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onSiteIntentSkipped() {
+        siteCreationState = siteCreationState.copy(siteIntent = null)
         wizardManager.showNextStep()
     }
 
     fun onSiteNameSkipped() {
+        siteCreationState = siteCreationState.copy(siteName = null)
         wizardManager.showNextStep()
     }
 
