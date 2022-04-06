@@ -41,6 +41,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
@@ -417,6 +418,13 @@ class MySiteViewModel @Inject constructor(
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick
                         )
+                ),
+                QuickLinkRibbonBuilderParams(
+                        siteModel = site,
+                        onPagesClick = this::onQuickLinkRibbonPagesClick,
+                        onPostsClick = this::onQuickLinkRibbonPostsClick,
+                        onMediaClick = this::onQuickLinkRibbonMediaClick,
+                        onStatsClick = this::onQuickLinkRibbonStatsClick
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -467,10 +475,12 @@ class MySiteViewModel @Inject constructor(
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
             if (defaultABExperimentTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
+            add(Type.QUICK_LINK_RIBBON)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
             if (defaultABExperimentTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
             add(Type.DOMAIN_REGISTRATION_CARD)
+            add(Type.QUICK_ACTIONS_CARD)
         }
         MySiteTabType.ALL -> emptyList()
     }
@@ -707,6 +717,27 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
+        _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
+    }
+
+    // todo: @ajesh add tracking logic in the below clicks
+    private fun onQuickLinkRibbonStatsClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
+    }
+
+    private fun onQuickLinkRibbonPagesClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
+    }
+
+    private fun onQuickLinkRibbonPostsClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
+    }
+
+    private fun onQuickLinkRibbonMediaClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
