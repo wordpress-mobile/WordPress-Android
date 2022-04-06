@@ -207,9 +207,10 @@ class ViewsAndVisitorsUseCase
         return items
     }
 
-    private fun buildTitle() = TitleWithMore(string.stats_insights_views_and_visitors, menuAction = this::onMenuClick)
+    private fun buildTitle() = TitleWithMore(string.stats_insights_views_and_visitors, moreAction = this::onMenuClick)
 
     private fun onMenuClick(view: View) {
+        // TODO: Connect this to second level navigation later
         popupMenuHandler.onMenuClick(view, type)
     }
 

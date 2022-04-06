@@ -81,7 +81,7 @@ sealed class BlockListItem(val type: Type) {
     data class TitleWithMore(
         @StringRes val textResource: Int? = null,
         val text: String? = null,
-        val menuAction: ((View) -> Unit)? = null
+        val moreAction: ((View) -> Unit)? = null
     ) : BlockListItem(TITLE_WITH_MORE)
 
     data class BigTitle(
