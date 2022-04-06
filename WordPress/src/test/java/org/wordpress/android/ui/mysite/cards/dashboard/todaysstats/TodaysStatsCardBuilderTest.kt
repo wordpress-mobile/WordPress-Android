@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.Constants
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardError
@@ -30,6 +31,10 @@ private const val TODAYS_STATS_COMMENTS = 1000
 private const val TODAYS_STATS_VIEWS_FORMATTED_STRING = "10,000"
 private const val TODAYS_STATS_VISITORS_FORMATTED_STRING = "1,000"
 private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
+
+private const val GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK =
+        "If you want to try get more views and traffic check out our " +
+                "<a href=\"${Constants.URL_GET_MORE_VIEWS_AND_TRAFFIC}\">top tips</a>."
 
 @RunWith(MockitoJUnitRunner::class)
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
@@ -110,6 +115,8 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         assertThat(statCard).isNull()
     }
 
+    /* TODAY'S STATS CARD - CONTENT */
+
     @Test
     fun `given todays stats, when card is built, then return stat card`() {
         val statCard = buildTodaysStatsCard(todaysStatsCardModel)
@@ -124,14 +131,46 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         assertThat(statCard).isEqualTo(todaysStatsCard)
     }
 
-    private fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?) = builder.build(
-            TodaysStatsCardBuilderParams(
-                    todaysStatsCardModel,
-                    onTodaysStatsCardClick,
-                    onGetMoreViewsClick,
-                    onTodaysStatsCardFooterLinkClick
-            )
-    )
+    @Test
+    fun `given empty todays stats, when card is built, then get more views message exists`() {
+        val zeroCount = 0
+        whenever(statsUtils.toFormattedString(zeroCount)).thenReturn("$zeroCount")
+
+        val todaysStatsCard = buildTodaysStatsCard(
+                TodaysStatsCardModel(
+                        views = zeroCount,
+                        visitors = zeroCount,
+                        likes = zeroCount
+                )
+        )
+
+        assertThat((todaysStatsCard as TodaysStatsCardWithData).message?.text)
+                .isEqualTo(UiStringText(GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK))
+    }
+
+    @Test
+    fun `given non empty todays stats, when card is built, then get more views message not exists`() {
+        val todaysStatsCard = buildTodaysStatsCard(todaysStatsCardModel)
+
+        assertThat((todaysStatsCard as TodaysStatsCardWithData).message).isNull()
+    }
+
+    private fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?): TodaysStatsCard? {
+        whenever(
+                htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                        R.string.my_site_todays_stats_get_more_views_message,
+                        Constants.URL_GET_MORE_VIEWS_AND_TRAFFIC
+                )
+        ).thenReturn(GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK)
+        return builder.build(
+                TodaysStatsCardBuilderParams(
+                        todaysStatsCardModel,
+                        onTodaysStatsCardClick,
+                        onGetMoreViewsClick,
+                        onTodaysStatsCardFooterLinkClick
+                )
+        )
+    }
 
     private val onGetMoreViewsClick: () -> Unit = { }
     private val onTodaysStatsCardFooterLinkClick: () -> Unit = { }
