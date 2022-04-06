@@ -2253,10 +2253,13 @@
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
     <string name="my_site_blogging_prompt_card_share" translatable="false">@string/share_action</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%s answers</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
+    <plurals name="my_site_blogging_prompt_card_number_of_answers">
+        <item quantity="one">%d answer</item>
+        <item quantity="other">%d answers</item>
+    </plurals>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2930,16 +2933,16 @@
     <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
-    
-    
-    
-    
+
+
+
+
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
-    
+
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
-    
+
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->

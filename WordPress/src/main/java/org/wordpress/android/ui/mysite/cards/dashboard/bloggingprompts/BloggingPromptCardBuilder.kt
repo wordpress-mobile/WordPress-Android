@@ -6,7 +6,7 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringResPlural
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
@@ -14,12 +14,12 @@ class BloggingPromptCardBuilder @Inject constructor() {
     fun build(params: BloggingPromptCardBuilderParams) = params.bloggingPrompt?.let {
         val respondents = params.bloggingPrompt.respondents
 
-        val trailingLabel = UiStringResWithParams(
-                R.string.my_site_blogging_prompt_card_number_of_answers,
-                listOf(UiStringText(respondents.size.toString()))
+        val trailingLabel = UiStringResPlural(
+                R.plurals.my_site_blogging_prompt_card_number_of_answers,
+                respondents.size
         )
 
-        val avatarsTrain = respondents.map { respondent ->
+        val avatarsTrain = respondents.take(MAX_NUMBER_OF_VISIBLE_RESPONDENTS).map { respondent ->
             AvatarItem(
                     respondent.userId,
                     respondent.avatarUrl
@@ -31,9 +31,13 @@ class BloggingPromptCardBuilder @Inject constructor() {
         BloggingPromptCardWithData(
                 prompt = UiStringText(it.text),
                 respondents = avatarsTrain,
-                numberOfAnswers = it.numberOfAnswers,
+                numberOfAnswers = respondents.size,
                 isAnswered = false,
                 onShareClick = params.onShareClick
         )
+    }
+
+    companion object {
+        const val MAX_NUMBER_OF_VISIBLE_RESPONDENTS = 3
     }
 }

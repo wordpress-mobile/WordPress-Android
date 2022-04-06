@@ -1,14 +1,12 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
-import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.ui.utils.UiString.UiStringResPlural
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
@@ -32,9 +30,9 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
                 )
         )
 
-        val trailingLabel = UiStringResWithParams(
-                string.my_site_blogging_prompt_card_number_of_answers,
-                listOf(UiStringText(dummyRespondents.size.toString()))
+        val trailingLabel = UiStringResPlural(
+                R.plurals.my_site_blogging_prompt_card_number_of_answers,
+                dummyRespondents.size
         )
 
         val avatarsTrain = dummyRespondents.map { respondent ->

@@ -409,27 +409,22 @@ class MySiteViewModel @Inject constructor(
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                                 // TODO @klymyam fetch the actual blogging prompt
                                 bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                    val dummyRespondent = BloggingPromptRespondent(
+                                            54279365,
+                                            "https://0.gravatar.com/avatar/cec64efa352617" +
+                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                    )
+
                                     @Suppress("MagicNumber")
                                     BloggingPrompt(
-                                            "Test Prompt",
-                                            19,
+                                            "Cast the movie of your life",
                                             "",
                                             listOf(
-                                                    BloggingPromptRespondent(
-                                                            54279365,
-                                                            "https://0.gravatar.com/avatar/cec64efa352617" +
-                                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
-                                                    ),
-                                                    BloggingPromptRespondent(
-                                                            54279365,
-                                                            "https://0.gravatar.com/avatar/cec64efa352617" +
-                                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
-                                                    ),
-                                                    BloggingPromptRespondent(
-                                                            54279365,
-                                                            "https://0.gravatar.com/avatar/cec64efa352617" +
-                                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
-                                                    )
+                                                    dummyRespondent,
+                                                    dummyRespondent,
+                                                    dummyRespondent,
+                                                    dummyRespondent,
+                                                    dummyRespondent
                                             )
                                     )
                                 } else null,
