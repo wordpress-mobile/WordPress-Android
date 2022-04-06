@@ -73,24 +73,3 @@ class MySiteDefaultTabExperiment @Inject constructor(
         private const val NONEXISTENT = "nonexistent"
     }
 }
-enum class MySiteTabExperimentVariant(val label: String) {
-    NONEXISTENT(MySiteTabExperimentVariant.VARIANT_NONEXISTENT),
-    DASHBOARD(MySiteTabExperimentVariant.VARIANT_DASHBOARD),
-    SITE_MENU(MySiteTabExperimentVariant.VARIANT_SITE_MENU);
-
-    override fun toString() = label
-
-    companion object {
-        private const val VARIANT_NONEXISTENT = "nonexistent"
-        private const val VARIANT_DASHBOARD = "dashboard"
-        private const val VARIANT_SITE_MENU = "site_menu"
-
-        @JvmStatic
-        fun fromString(label: String) = when {
-            NONEXISTENT.label == label -> NONEXISTENT
-            DASHBOARD.label == label -> DASHBOARD
-            SITE_MENU.label == label -> SITE_MENU
-            else -> NONEXISTENT
-        }
-    }
-}
