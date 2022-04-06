@@ -398,6 +398,7 @@ class MySiteViewModel @Inject constructor(
                                 todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
                                         as? TodaysStatsCardModel,
                                 onTodaysStatsCardClick = this::onTodaysStatsCardClick,
+                                onGetMoreViewsClick = this:: onGetMoreViewsClick,
                                 onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
@@ -473,6 +474,9 @@ class MySiteViewModel @Inject constructor(
             add(Type.DOMAIN_REGISTRATION_CARD)
         }
         MySiteTabType.ALL -> emptyList()
+    }
+
+    private fun onGetMoreViewsClick() {
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {

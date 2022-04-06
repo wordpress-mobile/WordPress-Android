@@ -8,4 +8,5 @@ public class Constants {
     public static final String URL_TIMEZONE_ENDPOINT = "https://public-api.wordpress.com/wpcom/v2/timezones";
     public static final String URL_JETPACK_SETTINGS = "https://wordpress.com/settings/jetpack";
     public static final String URL_MANAGE_DOMAINS = "https://wordpress.com/domains/manage";
+    public static final String URL_GET_MORE_VIEWS_AND_TRAFFIC = "https://wordpress.com/support/getting-more-views-and-traffic";
 }

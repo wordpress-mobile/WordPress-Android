@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -34,6 +35,7 @@ private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
 class TodaysStatsCardBuilderTest : BaseUnitTest() {
     @Mock private lateinit var statsUtils: StatsUtils
     @Mock private lateinit var appLogWrapper: AppLogWrapper
+    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
 
     private lateinit var builder: TodaysStatsCardBuilder
     private val todaysStatsCardModel = TodaysStatsCardModel(
@@ -45,7 +47,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = TodaysStatsCardBuilder(statsUtils, appLogWrapper)
+        builder = TodaysStatsCardBuilder(statsUtils, appLogWrapper, htmlMessageUtils)
         setUpMocks()
     }
 
@@ -123,9 +125,15 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
     }
 
     private fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?) = builder.build(
-            TodaysStatsCardBuilderParams(todaysStatsCardModel, onTodaysStatsCardClick, onTodaysStatsCardFooterLinkClick)
+            TodaysStatsCardBuilderParams(
+                    todaysStatsCardModel,
+                    onTodaysStatsCardClick,
+                    onGetMoreViewsClick,
+                    onTodaysStatsCardFooterLinkClick
+            )
     )
 
+    private val onGetMoreViewsClick: () -> Unit = { }
     private val onTodaysStatsCardFooterLinkClick: () -> Unit = { }
     private val onTodaysStatsCardClick: () -> Unit = { }
 
