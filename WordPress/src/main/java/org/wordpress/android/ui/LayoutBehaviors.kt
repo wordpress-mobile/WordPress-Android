@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.animation.AccelerateInterpolator
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior
 import androidx.core.view.marginBottom
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar.SnackbarLayout
@@ -25,7 +24,7 @@ class WPTooltipViewBehavior : CoordinatorLayout.Behavior<WPTooltipView> {
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: WPTooltipView, dependency: View): Boolean {
-        if (child.getPosition() != ABOVE) {
+        if (child.position != ABOVE) {
             // Remove this condition if you want to support different TooltipPosition
             throw IllegalArgumentException("This behavior only supports TooltipPosition.ABOVE")
         }
@@ -51,7 +50,7 @@ class WPTooltipViewBehavior : CoordinatorLayout.Behavior<WPTooltipView> {
  * This class will let FloatingActionButton anchor above SnackBar with transition animation.
  */
 
-class FloatingActionButtonBehavior : Behavior<FloatingActionButton> {
+class FloatingActionButtonBehavior : CoordinatorLayout.Behavior<FloatingActionButton> {
     constructor() : super()
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 

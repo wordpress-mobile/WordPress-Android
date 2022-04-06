@@ -33,7 +33,6 @@ class WPTooltipView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private var position = LEFT
     private var messageId = 0
     private var arrowHorizontalOffsetFromEndResId = 0
     private var arrowHorizontalOffsetFromStartResId = 0
@@ -41,6 +40,8 @@ class WPTooltipView @JvmOverloads constructor(
     private var arrowHorizontalOffsetFromStart = -1
     private var animationDuration: Int
     private var tvMessage: TextView
+    var position = LEFT
+        private set
 
     init {
         attrs?.also {
@@ -147,6 +148,4 @@ class WPTooltipView @JvmOverloads constructor(
     fun setMessage(message: CharSequence) {
         tvMessage.text = message
     }
-
-    fun getPosition() = position
 }
