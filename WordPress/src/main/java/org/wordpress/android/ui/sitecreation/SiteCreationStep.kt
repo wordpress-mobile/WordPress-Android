@@ -21,7 +21,7 @@ enum class SiteCreationStep : WizardStep {
 class SiteCreationStepsProvider @Inject constructor(
     private val siteIntentQuestionFeatureConfig: SiteIntentQuestionFeatureConfig,
     private val siteNameFeatureConfig: SiteNameFeatureConfig,
-    private val siteNameABExperiment: SiteNameABExperiment,
+    private val siteNameABExperiment: SiteNameABExperiment
 ) {
     fun getSteps(): List<SiteCreationStep> {
         if (siteIntentQuestionFeatureConfig.isEnabled()) {
