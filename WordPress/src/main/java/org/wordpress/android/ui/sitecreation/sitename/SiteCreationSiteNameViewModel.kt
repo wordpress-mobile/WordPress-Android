@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.sitename
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +33,9 @@ class SiteCreationSiteNameViewModel @Inject constructor(
     private val _onSiteNameEntered = SingleLiveEvent<String>()
     val onSiteNameEntered: LiveData<String> = _onSiteNameEntered
 
+    private val _uiState: MutableLiveData<SiteNameUiState> = MutableLiveData()
+    val uiState: LiveData<SiteNameUiState> = _uiState
+
     fun start() {
         if (isInitialized) return
         // TODO: analyticsTracker.trackSiteNameViewed()
@@ -51,9 +55,20 @@ class SiteCreationSiteNameViewModel @Inject constructor(
         _onBackButtonPressed.call()
     }
 
-    fun onSiteNameEntered(siteName: String) {
+    fun onSiteNameEntered() {
         // TODO: analyticsTracker.trackSiteNameEntered(siteName?) maybe we don't want to track the names here?
-        Log.d("siteNameWip", "Site name entered: $siteName")
-        _onSiteNameEntered.value = siteName
+        uiState.value?.siteName.let {
+            if (it.isNullOrBlank()) return
+            Log.d("siteNameWip", "Site name entered: $it")
+            _onSiteNameEntered.value = it
+        }
+    }
+
+    fun onSiteNameChanged(siteName: String) {
+        _uiState.value = SiteNameUiState(siteName)
+    }
+
+    data class SiteNameUiState(val siteName: String) {
+        val isContinueButtonEnabled get() = siteName.isNotBlank()
     }
 }

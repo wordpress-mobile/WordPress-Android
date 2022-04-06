@@ -89,6 +89,8 @@
             android:id="@+id/continue_button_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
+            tools:visibility="visible"
             android:layout_gravity="bottom"
             android:background="?attr/layoutPickerBackground"
             android:gravity="center"

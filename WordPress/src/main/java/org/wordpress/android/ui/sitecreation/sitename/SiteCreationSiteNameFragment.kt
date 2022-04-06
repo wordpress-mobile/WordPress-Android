@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationSiteNameFragmentBinding
+import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel.SiteNameUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
@@ -61,6 +64,7 @@ class SiteCreationSiteNameFragment : Fragment() {
     }
 
     private fun SiteCreationSiteNameFragmentBinding.setupViewModel() {
+        viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
         viewModel.onSiteNameEntered.observe(viewLifecycleOwner, (requireActivity() as
                 SiteNameScreenListener)::onSiteNameEntered)
         viewModel.start()
@@ -69,19 +73,25 @@ class SiteCreationSiteNameFragment : Fragment() {
     private fun SiteCreationSiteNameFragmentBinding.setupActionListeners() {
         siteCreationSiteNameTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
         siteCreationSiteNameTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
-        // TODO: disable continue button when input is empty
         continueButton.setOnClickListener {
-            viewModel.onSiteNameEntered(input.text.toString())
+            viewModel.onSiteNameEntered()
+        }
+        input.doOnTextChanged { text, _, _, _ ->
+            viewModel.onSiteNameChanged(text?.toString() ?: "")
         }
         input.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    viewModel.onSiteNameEntered(input.text.toString())
+                    viewModel.onSiteNameEntered()
                     return@setOnEditorActionListener true
                 }
                 else -> return@setOnEditorActionListener false
             }
         }
+    }
+
+    private fun SiteCreationSiteNameFragmentBinding.updateUiState(uiState: SiteNameUiState) {
+        continueButtonContainer.isVisible = uiState.isContinueButtonEnabled
     }
 
     override fun onDestroyView() {
