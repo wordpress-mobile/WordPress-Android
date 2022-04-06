@@ -130,6 +130,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             mainViewModel.onBackPressed()
         })
         siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this, Observer {
+            ActivityUtils.hideKeyboard(this)
             mainViewModel.onSiteNameSkipped()
         })
         hppViewModel.onBackButtonPressed.observe(this, Observer {

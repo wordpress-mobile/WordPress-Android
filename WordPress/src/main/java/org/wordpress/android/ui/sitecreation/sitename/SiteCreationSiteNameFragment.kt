@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationSiteNameFragmentBinding
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel.SiteNameUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
@@ -61,6 +62,9 @@ class SiteCreationSiteNameFragment : Fragment() {
 
     private fun SiteCreationSiteNameFragmentBinding.setupUi() {
         siteCreationSiteNameTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
+        viewModel.uiState.value?.siteName.let { input.setText(it) }
+        input.requestFocus()
+        ActivityUtils.showKeyboard(input)
     }
 
     private fun SiteCreationSiteNameFragmentBinding.setupViewModel() {
