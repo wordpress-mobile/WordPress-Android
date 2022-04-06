@@ -130,7 +130,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
                     data class Text(
                         val text: UiString,
-                        val links: List<Clickable>? = null,
+                        val links: List<Clickable>? = null
                     ) {
                         data class Clickable(
                             val link: String,
