@@ -1569,13 +1569,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override public void onSetPromptReminderClick(final int siteId) {
+    @Override
+    public void onSetPromptReminderClick(final int siteId) {
         mBloggingRemindersViewModel.onBloggingPromptSchedulingRequested(siteId);
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because
     // SnackBar sometimes do not appear when another SnackBar is still visible, even in other activities (weird)
-    @Override protected void onPause() {
+    @Override
+    protected void onPause() {
         super.onPause();
 
         QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
