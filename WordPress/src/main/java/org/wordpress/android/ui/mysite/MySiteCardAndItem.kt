@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -11,6 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATIO
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
@@ -22,6 +24,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     enum class Type {
         SITE_INFO_CARD,
         QUICK_ACTIONS_CARD,
+        QUICK_LINK_RIBBON,
         DOMAIN_REGISTRATION_CARD,
         QUICK_START_CARD,
         QUICK_START_DYNAMIC_CARD,
@@ -72,6 +75,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val showStatsFocusPoint: Boolean = false,
             val showPagesFocusPoint: Boolean = false
         ) : Card(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
+
+        data class QuickLinkRibbon(
+            val quickLinkRibbonItems: List<QuickLinkRibbonItem>
+        ) : Card(QUICK_LINK_RIBBON) {
+            data class QuickLinkRibbonItem(
+                @StringRes val label: Int,
+                @DrawableRes val icon: Int,
+                val onClick: ListItemInteraction
+            )
+        }
 
         data class DomainRegistrationCard(val onClick: ListItemInteraction) : Card(DOMAIN_REGISTRATION_CARD)
 
