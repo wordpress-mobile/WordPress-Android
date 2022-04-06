@@ -10,9 +10,10 @@ class QuickLinkRibbonItemViewHolder(
     parent: ViewGroup,
     private val binding: QuickLinkRibbonItemBinding = parent.viewBinding(QuickLinkRibbonItemBinding::inflate)
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun onBind(item: QuickLinkRibbonItem) = with(binding.quickLinkItem) {
-        setText(item.label)
-        setIconResource(item.icon)
-        setOnClickListener { item.onClick.click() }
+    fun onBind(item: QuickLinkRibbonItem) = with(binding) {
+        quickLinkItem.setText(item.label)
+        quickLinkItem.setIconResource(item.icon)
+        quickLinkItem.setOnClickListener { item.onClick.click() }
+        quickStartFocusPoint.setVisibleOrGone(item.showFocusPoint)
     }
 }
