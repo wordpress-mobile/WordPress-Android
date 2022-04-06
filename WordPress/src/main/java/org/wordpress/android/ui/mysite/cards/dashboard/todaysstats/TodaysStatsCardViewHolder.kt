@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ImageSpan
+import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.view.View
 import android.view.ViewGroup
@@ -56,23 +56,22 @@ class TodaysStatsCardViewHolder(
     }
 
     fun TextView.updateLink(links: List<Clickable>) {
-        val spannableBuilder = SpannableStringBuilder()
-        spannableBuilder.append(SpannableString(text))
-        spannableBuilder.insert(text.length - 1, SpannableString(" "))
-        for (urlSpan in spannableBuilder.getSpans(0, spannableBuilder.length, URLSpan::class.java)) {
-            val startIndex = spannableBuilder.getSpanStart(urlSpan)
-            val endIndex = spannableBuilder.getSpanEnd(urlSpan)
+        val spannable = SpannableString(text)
+        for (urlSpan in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
+            val startIndex = spannable.getSpanStart(urlSpan)
+            val endIndex = spannable.getSpanEnd(urlSpan)
             links.forEach { link ->
-                spannableBuilder.withClickableSpan(startIndex, endIndex) {
+                spannable.withClickableSpan(startIndex, endIndex) {
                     link.navigationAction.click()
                 }
             }
-            spannableBuilder.withExternalLinkImageSpan(endIndex)
+            spannable.withExternalLinkImageSpan(endIndex)
+            spannable.withBoldSpan(startIndex, endIndex)
         }
-        text = spannableBuilder
+        text = spannable
     }
 
-    private fun SpannableStringBuilder.withClickableSpan(
+    private fun SpannableString.withClickableSpan(
         startIndex: Int,
         endIndex: Int,
         onClickListener: (Context) -> Unit
@@ -99,15 +98,36 @@ class TodaysStatsCardViewHolder(
         )
     }
 
-    private fun SpannableStringBuilder.withExternalLinkImageSpan(endIndex: Int) {
+    private fun SpannableString.withExternalLinkImageSpan(endIndex: Int) {
         val drawable = ContextCompat.getDrawable(itemView.context, drawable.ic_external_white_24dp) ?: return
         drawable.setTint(linkColor)
-        drawable.setBounds(5, 0, drawable.intrinsicWidth / 2, drawable.intrinsicHeight / 2)
+        drawable.setBounds(
+                EXTERNAL_LINK_DRAWABLE_BOUND_LEFT,
+                0,
+                drawable.intrinsicWidth / 2,
+                drawable.intrinsicHeight / 2
+        )
         setSpan(
                 ImageSpan(drawable, ImageSpan.ALIGN_BASELINE),
                 endIndex,
                 endIndex + 1,
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE
         )
+    }
+
+    private fun SpannableString.withBoldSpan(
+        startIndex: Int,
+        endIndex: Int
+    ) {
+        setSpan(
+                StyleSpan(Typeface.BOLD),
+                startIndex,
+                endIndex,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+
+    companion object {
+        private const val EXTERNAL_LINK_DRAWABLE_BOUND_LEFT = 5
     }
 }
