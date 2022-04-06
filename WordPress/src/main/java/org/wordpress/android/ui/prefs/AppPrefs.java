@@ -1352,17 +1352,6 @@ public class AppPrefs {
         return capabilities;
     }
 
-    public static void setMySiteDefaultTabExperimentVariant(String variant) {
-        setString(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT, variant);
-    }
-
-    public static String getMySiteDefaultTabExperimentVariant() {
-        return getString(
-                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT,
-                MySiteTabExperimentVariant.NONEXISTENT.getLabel()
-        );
-    }
-
     public static boolean isMySiteDefaultTabExperimentVariantAssigned() {
         return getBoolean(
                 DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,

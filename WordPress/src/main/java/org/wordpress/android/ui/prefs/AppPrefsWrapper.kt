@@ -212,10 +212,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
 
-    fun setMySiteDefaultTabExperimentVariant(variant: String) = AppPrefs.setMySiteDefaultTabExperimentVariant(variant)
-
-    fun getMySiteDefaultTabExperimentVariant(): String = AppPrefs.getMySiteDefaultTabExperimentVariant()
-
     fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
 
     fun setMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.setMySiteDefaultTabExperimentVariantAssigned()
