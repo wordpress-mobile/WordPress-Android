@@ -2930,16 +2930,16 @@
     <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
-    
-    
-    
-    
+
+
+
+
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
-    
+
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
-    
+
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
@@ -4003,6 +4003,23 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+
+    <!-- Initial Screen -->
+    <string name="initial_screen">Initial Screen</string>
+    <string name="initial_screen_home" translatable="false">@string/my_site_dashboard_tab_title</string>
+    <string name="initial_screen_site_menu" translatable="false">@string/my_site_menu_tab_title</string>
+    <string name="initial_screen_entry_value_home" translatable="false">home</string>
+    <string name="initial_screen_entry_value_site_menu" translatable="false">site_menu</string>
+    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_site_menu</string>
+    <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/initial_screen_home</item>
+        <item>@string/initial_screen_site_menu</item>
+    </string-array>
+    <string-array name="initial_screen_entry_values" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/initial_screen_entry_value_home</item>
+        <item>@string/initial_screen_entry_value_site_menu</item>
+    </string-array>
+
     <string name="post_content">Content</string>
     <string name="uploading">Uploading…</string>
     <string name="uploading_gallery_placeholder">Uploading gallery…</string>

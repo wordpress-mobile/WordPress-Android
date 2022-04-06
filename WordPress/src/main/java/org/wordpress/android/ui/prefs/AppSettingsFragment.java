@@ -57,6 +57,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
 import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
@@ -73,6 +74,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private DetailListPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
+    private ListPreference mInitialScreenPreference;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -93,6 +95,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
+    @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,9 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
+
+        mInitialScreenPreference = (ListPreference) findPreference(getString(R.string.pref_key_initial_screen));
+        mInitialScreenPreference.setOnPreferenceChangeListener(this);
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -201,6 +207,10 @@ public class AppSettingsFragment extends PreferenceFragment
         if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
             removeDebugSettingsCategory();
         }
+
+        if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
+            removeInitialScreen();
+        }
     }
 
     @Override
@@ -249,6 +259,14 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.addPreference(mWhatsNew);
+    }
+
+    private void removeInitialScreen() {
+        Preference initialScreenPreference =
+                findPreference(getString(R.string.pref_key_initial_screen));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(initialScreenPreference);
     }
 
     @Override
@@ -407,6 +425,10 @@ public class AppSettingsFragment extends PreferenceFragment
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
+        } else if (preference == mInitialScreenPreference) {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("selected", (String) newValue);
+            AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
         }
         return true;
     }
