@@ -4,36 +4,52 @@ import android.annotation.SuppressLint
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import org.wordpress.android.databinding.QuickLinkRibbonListBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 
-private const val Y_BUFFER = 100
+private const val Y_BUFFER = 10
 
 class QuickLinkRibbonViewHolder(
-    parent: ViewGroup,
-    private val uiHelpers: UiHelpers
+    parent: ViewGroup
 ) : MySiteCardAndItemViewHolder<QuickLinkRibbonListBinding>(
         parent.viewBinding(QuickLinkRibbonListBinding::inflate)
 ) {
-    fun bind(quickLinkRibbon: QuickLinkRibbon) = with(binding) {
-        setOnTouchItemListener()
-        pages.setOnClickListener { quickLinkRibbon.onPagesClick.click() }
-        posts.setOnClickListener { quickLinkRibbon.onPostsClick.click() }
-        media.setOnClickListener { quickLinkRibbon.onMediaClick.click() }
-        stats.setOnClickListener { quickLinkRibbon.onStatsClick.click() }
-        uiHelpers.updateVisibility(pages, quickLinkRibbon.showPages)
+    init {
+        with(binding.quickLinkRibbonItemList) {
+            if (adapter == null) {
+                layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+                val readerInterestAdapter = QuickLinkRibbonItemAdapter()
+                adapter = readerInterestAdapter
+            }
+        }
     }
 
-    // we are not detecting click events in the scroll view so we can ignore this
+    fun bind(quickLinkRibbon: QuickLinkRibbon) = with(binding) {
+        setOnTouchItemListener()
+        (quickLinkRibbonItemList.adapter as QuickLinkRibbonItemAdapter).update(quickLinkRibbon.quickLinkRibbonItems)
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setOnTouchItemListener() = with(binding) {
-        val gestureDetector = GestureDetector(quickLinkScrollView.context, GestureListener())
-        quickLinkScrollView.setOnTouchListener { _, motionEvent ->
-            gestureDetector.onTouchEvent(motionEvent)
-        }
+        val gestureDetector = GestureDetector(quickLinkRibbonItemList.context, GestureListener())
+        quickLinkRibbonItemList.addOnItemTouchListener(object : OnItemTouchListener {
+            override fun onInterceptTouchEvent(recyclerView: RecyclerView, e: MotionEvent): Boolean {
+                return gestureDetector.onTouchEvent(e)
+            }
+
+            override fun onTouchEvent(recyclerView: RecyclerView, e: MotionEvent) {
+                // NO OP
+            }
+
+            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+                // NO OP
+            }
+        })
     }
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
@@ -43,7 +59,7 @@ class QuickLinkRibbonViewHolder(
          * trigger the viewPager to switch tabs
          */
         override fun onDown(e: MotionEvent?): Boolean = with(binding) {
-            quickLinkScrollView.parent.requestDisallowInterceptTouchEvent(true)
+            quickLinkRibbonItemList.parent.requestDisallowInterceptTouchEvent(true)
             return super.onDown(e)
         }
 
@@ -55,10 +71,10 @@ class QuickLinkRibbonViewHolder(
         ): Boolean = with(binding) {
             if (kotlin.math.abs(distanceX) > kotlin.math.abs(distanceY)) {
                 // Detected a horizontal scroll, prevent the viewpager from switching tabs
-                quickLinkScrollView.parent.requestDisallowInterceptTouchEvent(true)
+                quickLinkRibbonItemList.parent.requestDisallowInterceptTouchEvent(true)
             } else if (kotlin.math.abs(distanceY) > Y_BUFFER) {
                 // Detected a vertical scroll allow the viewpager to switch tabs
-                quickLinkScrollView.parent.requestDisallowInterceptTouchEvent(false)
+                quickLinkRibbonItemList.parent.requestDisallowInterceptTouchEvent(false)
             }
             return super.onScroll(e1, e2, distanceX, distanceY)
         }

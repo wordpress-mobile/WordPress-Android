@@ -2152,17 +2152,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site doesn't have required capability, when dashboard cards, then quick link ribbon pages not shown`() {
-        site.hasCapabilityEditPages = false
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
-
-        val quickLinkRibbons = findQuickLinkRibbon()
-
-        assertThat(quickLinkRibbons).isNotNull
-        assertThat(quickLinkRibbons?.showPages).isFalse
-    }
-
-    @Test
     fun `given site is WPCOM, when quick link ribbon stats click, then stats screen is shown`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
@@ -2261,8 +2250,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun getSiteMenuTabLastItems() = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
 
     private fun getSiteInfoHeaderCard() = (uiModels.last().state as SiteSelected).siteInfoHeaderState.siteInfoHeader
-
-    private fun findQuickLinkRibbon() = getDashboardTabLastItems().find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
     private suspend fun invokeSiteInfoCardAction(action: SiteInfoHeaderCardAction) {
         onSiteChange.value = site
@@ -2414,11 +2401,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
         return QuickLinkRibbon(
-            onPagesClick = ListItemInteraction.create { params.onPagesClick.invoke() },
-            onPostsClick = ListItemInteraction.create { params.onPostsClick.invoke() },
-            onMediaClick = ListItemInteraction.create { params.onMediaClick.invoke() },
-            onStatsClick = ListItemInteraction.create { params.onStatsClick.invoke() },
-            showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages
+            quickLinkRibbonItems = mock()
         )
     }
 

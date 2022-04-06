@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -76,12 +77,14 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         ) : Card(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
         data class QuickLinkRibbon(
-            val onPagesClick: ListItemInteraction,
-            val onPostsClick: ListItemInteraction,
-            val onMediaClick: ListItemInteraction,
-            val onStatsClick: ListItemInteraction,
-            val showPages: Boolean = true
-        ) : Card(QUICK_LINK_RIBBON)
+            val quickLinkRibbonItems: List<QuickLinkRibbonItem>
+        ) : Card(QUICK_LINK_RIBBON) {
+            data class QuickLinkRibbonItem(
+                @StringRes val label: Int,
+                @DrawableRes val icon: Int,
+                val onClick: ListItemInteraction
+            )
+        }
 
         data class DomainRegistrationCard(val onClick: ListItemInteraction) : Card(DOMAIN_REGISTRATION_CARD)
 
