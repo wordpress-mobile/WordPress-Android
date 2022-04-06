@@ -44,6 +44,7 @@ class ViewsAndVisitorsMapper
         }
     }
 
+    @Suppress("LongParameterList")
     fun buildTitle(
         selectedItem: PeriodData,
         previousItem: PeriodData?,
@@ -78,6 +79,7 @@ class ViewsAndVisitorsMapper
         )
     }
 
+    @Suppress("MagicNumber")
     private fun buildChange(
         previousValue: Long?,
         value: Long,
@@ -117,6 +119,7 @@ class ViewsAndVisitorsMapper
         }
     }
 
+    @Suppress("LongParameterList")
     fun buildChart(
         dates: List<PeriodData>,
         statsGranularity: StatsGranularity,

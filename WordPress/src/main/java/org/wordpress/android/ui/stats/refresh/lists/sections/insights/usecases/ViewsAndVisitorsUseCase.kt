@@ -89,7 +89,7 @@ class ViewsAndVisitorsUseCase
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.Top(org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OVERVIEW_ITEMS_TO_LOAD),
+                LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
                 forced
         )
         val model = response.model
@@ -116,6 +116,7 @@ class ViewsAndVisitorsUseCase
      * Track the incorrect data shown for some users
      * see https://github.com/wordpress-mobile/WordPress-Android/issues/11412
      */
+    @Suppress("MagicNumber")
     private fun logIfIncorrectData(
         model: VisitsAndViewsModel,
         granularity: StatsGranularity,

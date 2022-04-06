@@ -29,7 +29,9 @@ class ChipsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             else -> {
                 chips.forEachIndexed { index, chip ->
                     chip.setOnCheckedChangeListener { buttonView, _ ->
-                        buttonView.announceForAccessibility(buttonView.resources.getString(R.string.stats_graph_updated))
+                        buttonView.announceForAccessibility(
+                                buttonView.resources.getString(R.string.stats_graph_updated)
+                        )
                         item.onColumnSelected?.invoke(index)
                     }
                     val currentColumn = item.chips[index]

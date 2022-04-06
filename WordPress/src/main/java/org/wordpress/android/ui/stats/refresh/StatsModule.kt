@@ -78,6 +78,7 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(BLOCK_INSIGHTS_USE_CASES)
+    @Suppress("LongParameterList")
     fun provideBlockInsightsUseCases(
         statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
         viewsAndVisitorsUseCaseFactory: ViewsAndVisitorsUseCaseFactory,
