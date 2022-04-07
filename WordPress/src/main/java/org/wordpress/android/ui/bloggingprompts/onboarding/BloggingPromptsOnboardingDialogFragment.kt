@@ -84,10 +84,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             cardCoverView.setOnClickListener { /*do nothing*/ }
             promptCard.promptContent.text = getString(readyState.promptRes)
 
-            val layoutManager = FlexboxLayoutManager(context)
-            layoutManager.flexDirection = FlexDirection.ROW
-            layoutManager.flexWrap = FlexWrap.NOWRAP
-            layoutManager.justifyContent = JustifyContent.CENTER
+            val layoutManager = FlexboxLayoutManager(
+                    context,
+                    FlexDirection.ROW,
+                    FlexWrap.NOWRAP
+            ).apply { justifyContent = JustifyContent.CENTER }
             promptCard.answeredUsersRecycler.addItemDecoration(
                     AvatarItemDecorator(RtlUtils.isRtl(context), requireContext(), AVATAR_LEFT_OFFSET_DIMEN)
             )

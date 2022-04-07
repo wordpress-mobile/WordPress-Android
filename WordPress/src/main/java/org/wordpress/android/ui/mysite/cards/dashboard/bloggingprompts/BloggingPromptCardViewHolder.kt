@@ -53,10 +53,11 @@ class BloggingPromptCardViewHolder(
         }
         uiHelpers.updateVisibility(answeredPromptControls, card.isAnswered)
 
-        val layoutManager = FlexboxLayoutManager(answeredUsersRecycler.context)
-        layoutManager.flexDirection = FlexDirection.ROW
-        layoutManager.flexWrap = FlexWrap.NOWRAP
-        layoutManager.justifyContent = JustifyContent.CENTER
+        val layoutManager = FlexboxLayoutManager(
+                answeredUsersRecycler.context,
+                FlexDirection.ROW,
+                FlexWrap.NOWRAP
+        ).apply { justifyContent = JustifyContent.CENTER }
         answeredUsersRecycler.addItemDecoration(
                 AvatarItemDecorator(
                         RtlUtils.isRtl(answeredUsersRecycler.context),
