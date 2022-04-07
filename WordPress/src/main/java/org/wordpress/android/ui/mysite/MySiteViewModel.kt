@@ -58,6 +58,7 @@ import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -399,7 +400,7 @@ class MySiteViewModel @Inject constructor(
                                 todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
                                         as? TodaysStatsCardModel,
                                 onTodaysStatsCardClick = this::onTodaysStatsCardClick,
-                                onGetMoreViewsClick = this:: onGetMoreViewsClick,
+                                onGetMoreViewsClick = this::onGetMoreViewsClick,
                                 onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
@@ -498,6 +499,10 @@ class MySiteViewModel @Inject constructor(
 
     @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
+        cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
+        _onNavigation.value = Event(
+                SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(URL_GET_MORE_VIEWS_AND_TRAFFIC)
+        )
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
