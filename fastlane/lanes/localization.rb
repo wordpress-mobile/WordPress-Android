@@ -158,7 +158,7 @@ platform :android do
     )
   end
 
-  # Updates the metadata (from `fastlane/{metadata|jetpack_metadata}/android/*/*.txt`) in the PlayStore (Main store listing).
+  # Updates the metadata in the PlayStore (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
   #
   # @option [String] app The app to update the metadata for. Mandatory. Must be one of `wordpress` or `jetpack`.
   #
@@ -169,9 +169,6 @@ platform :android do
     metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
     version_code = android_get_release_version['code']
 
-    # TODO: This is currently a separate lane so we can invoke it separately, but if after a couple of sprints we see that it works well,
-    #       it we would make sense to remove the lane and instead directly use `skip_upload_metadata: (options[:track] != 'production')`
-    #       in the `upload_build_to_play_store` lane? (especially if we do the same for `skip_upload_changelogs` and get rid of `android_create_xml_release_notes`)
     upload_to_play_store(
       package_name: package_name,
       track: 'production',
@@ -180,7 +177,6 @@ platform :android do
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
-      # TODO: enable changelogs upload once we drop the `android_create_xml_release_notes` action call (and drop the step in release scenario)
       skip_upload_changelogs: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
@@ -229,9 +225,9 @@ platform :android do
       download_path: download_path
     )
 
-    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
-    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: RELEASE_NOTES_LOCALES)
-    sh("git add #{download_path} && git commit -m \"Update WordPress metadata translations for #{options[:version]}\" && git push origin HEAD")
+    git_add(path: download_path)
+    git_commit(message: "Update WordPress metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
+    push_to_git_remote
   end
 
   desc "Downloads Jetpack's translated metadata from GlotPress"
@@ -264,10 +260,9 @@ platform :android do
       File.join(download_path, 'en-US')
     )
 
-    # TODO: Remove this call after a few sprints of validating that that the `skip_upload_metadata: options[:track] != 'production'` recently added to `upload_build_to_play_store` lane works well
-    locales_including_enUS = [['en-gb', 'en-US']] + JP_RELEASE_NOTES_LOCALES # first item (GlotPress locale) unused for this action; second param = google_play locale
-    android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: locales_including_enUS)
-    sh("git add #{download_path} && git commit -m \"Update Jetpack metadata translations for #{options[:version]}\" && git push origin HEAD")
+    git_add(path: download_path)
+    git_commit(message: "Update Jetpack metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
+    push_to_git_remote
   end
 
   ########################################################################
