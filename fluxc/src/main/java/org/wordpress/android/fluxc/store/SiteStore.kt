@@ -1490,7 +1490,9 @@ open class SiteStore
     @VisibleForTesting
     suspend fun createNewSite(payload: NewSitePayload): OnNewSiteCreated {
         val result = siteRestClient.newSite(
+                payload.username,
                 payload.siteName,
+                payload.siteTitle,
                 payload.language,
                 payload.timeZoneId,
                 payload.visibility,
