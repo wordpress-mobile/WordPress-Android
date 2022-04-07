@@ -2230,7 +2230,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when quick link ribbon pages click, then pages screen is shown and requests next step of EDIT_HOMEPAGE task`() {
+    fun `when quick link ribbon pages click, then pages screen is shown + requests next step of EDIT_HOMEPAGE task`() {
         initSelectedSite()
 
         requireNotNull(quickActionsPagesClickAction).invoke()
