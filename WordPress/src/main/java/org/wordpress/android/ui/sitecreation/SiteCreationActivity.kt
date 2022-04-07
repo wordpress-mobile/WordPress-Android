@@ -60,6 +60,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private lateinit var hppViewModel: HomePagePickerViewModel
     private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
     private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
+    @Inject lateinit var siteCreationStepsProvider: SiteCreationStepsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,7 +144,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onIntentSelected(intent: String) {
         mainViewModel.onSiteIntentSelected(intent)
-        ActivityUtils.hideKeyboard(this)
+        if (!siteCreationStepsProvider.isSiteNameEnabled) {
+            ActivityUtils.hideKeyboard(this)
+        }
     }
 
     override fun onSiteNameEntered(siteName: String) {
