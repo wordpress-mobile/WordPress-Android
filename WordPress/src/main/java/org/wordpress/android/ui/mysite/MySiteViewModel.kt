@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -309,7 +308,7 @@ class MySiteViewModel @Inject constructor(
         if (activeTask != null) {
             scrollToQuickStartTaskIfNecessary(
                     activeTask,
-                    getPositionOfQuickStartItem(siteItems)
+                    getPositionOfQuickStartItem(siteItems, activeTask)
             )
         }
         // It is okay to use !! here because we are explicitly creating the lists
@@ -349,16 +348,30 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun getPositionOfQuickStartItem(siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>) =
+    private fun getPositionOfQuickStartItem(
+        siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
+        activeTask: QuickStartTask
+    ) =
             if (isMySiteTabsEnabled) {
                 val currentTab = orderedTabTypes[_selectTab.value!!.peekContent().position]
-                Log.e("current tab",currentTab.label)
-                (siteItems[currentTab] as List<MySiteCardAndItem>)
-                        .indexOfFirst { it.activeQuickStartItem }
+                if (currentTab == MySiteTabType.DASHBOARD && activeTask.showInSiteMenu()) {
+                    (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
+                                .indexOfFirst { it.activeQuickStartItem }
+                } else {
+                        (siteItems[currentTab] as List<MySiteCardAndItem>)
+                                    .indexOfFirst { it.activeQuickStartItem }
+                }
             } else {
                 (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
-                        .indexOfFirst { it.activeQuickStartItem }
+                            .indexOfFirst { it.activeQuickStartItem }
             }
+
+    private fun QuickStartTask.showInSiteMenu() = when (this) {
+        QuickStartTask.VIEW_SITE,
+        QuickStartTask.ENABLE_POST_SHARING,
+        QuickStartTask.EXPLORE_PLANS -> true
+        else -> false
+    }
 
     @Suppress("LongParameterList")
     private fun buildSiteSelectedState(
@@ -385,7 +398,7 @@ class MySiteViewModel @Inject constructor(
                         onQuickActionPagesClick = this::quickActionPagesClick,
                         onQuickActionPostsClick = this::quickActionPostsClick,
                         onQuickActionMediaClick = this::quickActionMediaClick,
-                        enableFocusPoints = shouldQuickStartCardShowActiveFocusPoint()
+                        enableFocusPoints = enableQuickActionCardFocusPoints()
                 ),
                 DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
@@ -430,7 +443,7 @@ class MySiteViewModel @Inject constructor(
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
                         onStatsClick = this::onQuickLinkRibbonStatsClick,
                         activeTask = activeTask,
-                        enableFocusPoints = shouldQuickLinkRibbonShowActiveFocusPoint()
+                        enableFocusPoints = enableQuickLinkRibbonFocusPoints()
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -477,6 +490,14 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
+    private fun enableQuickActionCardFocusPoints(): Boolean {
+        return defaultABExperimentTab != MySiteTabType.DASHBOARD
+    }
+
+    private fun enableQuickLinkRibbonFocusPoints(): Boolean {
+        return defaultABExperimentTab == MySiteTabType.DASHBOARD
+    }
+
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
@@ -489,14 +510,6 @@ class MySiteViewModel @Inject constructor(
             add(Type.QUICK_ACTIONS_CARD)
         }
         MySiteTabType.ALL -> emptyList()
-    }
-
-    private fun shouldQuickStartCardShowActiveFocusPoint(): Boolean {
-        return defaultABExperimentTab != MySiteTabType.DASHBOARD
-    }
-
-    private fun shouldQuickLinkRibbonShowActiveFocusPoint(): Boolean {
-        return defaultABExperimentTab == MySiteTabType.DASHBOARD
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
