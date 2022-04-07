@@ -1357,6 +1357,19 @@ public class ActivityLauncher {
         return intent;
     }
 
+    @NonNull
+    public static Intent createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(Context context,
+                                                                                          @Nullable NotificationType notificationType) {
+        final Intent intent = new Intent(context, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        if (notificationType != null) {
+            intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
+        }
+        return intent;
+    }
+
     public static void showSignInForResult(Activity activity) {
         showSignInForResult(activity, false);
     }
