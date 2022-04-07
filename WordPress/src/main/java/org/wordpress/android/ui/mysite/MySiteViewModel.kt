@@ -458,7 +458,7 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        dynamicCards,
+                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) { dynamicCards } else { listOf() },
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
@@ -466,7 +466,7 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        listOf(),
+                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) { dynamicCards } else { listOf() },
                         listOf()
                 )
         )
@@ -475,15 +475,25 @@ class MySiteViewModel @Inject constructor(
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
             add(Type.DASHBOARD_CARDS)
-            if (defaultABExperimentTab == MySiteTabType.DASHBOARD) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+                add(Type.QUICK_START_CARD)
+            }
             add(Type.QUICK_LINK_RIBBON)
         }
         MySiteTabType.DASHBOARD -> mutableListOf<Type>().apply {
-            if (defaultABExperimentTab == MySiteTabType.SITE_MENU) add(Type.QUICK_START_CARD)
+            if (defaultABExperimentTab == MySiteTabType.SITE_MENU) {
+                add(Type.QUICK_START_CARD)
+            }
             add(Type.DOMAIN_REGISTRATION_CARD)
             add(Type.QUICK_ACTIONS_CARD)
         }
         MySiteTabType.ALL -> emptyList()
+    }
+
+    private fun shouldIncludeDynamicCards(tabType: MySiteTabType) = when (tabType) {
+        MySiteTabType.SITE_MENU -> defaultABExperimentTab != MySiteTabType.DASHBOARD
+        MySiteTabType.DASHBOARD -> defaultABExperimentTab != MySiteTabType.SITE_MENU
+        MySiteTabType.ALL -> true
     }
 
     @Suppress("EmptyFunctionBlock")
