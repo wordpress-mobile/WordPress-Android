@@ -13,7 +13,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -35,6 +35,7 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
     val siteIntent: String? = null,
+    val siteName: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: String? = null
@@ -102,6 +103,17 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun onSiteIntentSkipped() {
+        siteCreationState = siteCreationState.copy(siteIntent = null)
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteNameSkipped() {
+        siteCreationState = siteCreationState.copy(siteName = null)
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteNameEntered(siteName: String) {
+        siteCreationState = siteCreationState.copy(siteName = siteName)
         wizardManager.showNextStep()
     }
 
@@ -131,7 +143,7 @@ class SiteCreationMainVM @Inject constructor(
 
     private fun clearOldSiteCreationState(wizardStep: SiteCreationStep) {
         when (wizardStep) {
-            SEGMENTS -> { }
+            SITE_DESIGNS -> { }
             DOMAINS -> siteCreationState.domain?.let {
                 siteCreationState = siteCreationState.copy(domain = null)
             }

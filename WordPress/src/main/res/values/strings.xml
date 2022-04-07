@@ -1281,6 +1281,8 @@
     <string name="stats_insights">Insights</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
+    <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
+    <string name="stats_insights_views_and_visitors_message">Your last weeks views are %1$s %2$s than previous week.</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
@@ -2227,6 +2229,7 @@
     <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
     <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
     <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
+    <string name="my_site_todays_stats_get_more_views_message">If you want to try get more views and traffic check out our &lt;a href="%1$s"&gt;top tips&lt;/a&gt;.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
 
 
@@ -3211,6 +3214,9 @@
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
+    <string name="new_site_creation_site_name_header_title">Give your website a name</string>
+    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later</string>
+    <string name="new_site_creation_site_name_input_hint">Fashion Designerly</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -4006,6 +4012,23 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+
+    <!-- Initial Screen -->
+    <string name="initial_screen">Initial Screen</string>
+    <string name="initial_screen_home" translatable="false">@string/my_site_dashboard_tab_title</string>
+    <string name="initial_screen_site_menu" translatable="false">@string/my_site_menu_tab_title</string>
+    <string name="initial_screen_entry_value_home" translatable="false">home</string>
+    <string name="initial_screen_entry_value_site_menu" translatable="false">site_menu</string>
+    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_site_menu</string>
+    <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/initial_screen_home</item>
+        <item>@string/initial_screen_site_menu</item>
+    </string-array>
+    <string-array name="initial_screen_entry_values" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/initial_screen_entry_value_home</item>
+        <item>@string/initial_screen_entry_value_site_menu</item>
+    </string-array>
+
     <string name="post_content">Content</string>
     <string name="uploading">Uploading…</string>
     <string name="uploading_gallery_placeholder">Uploading gallery…</string>

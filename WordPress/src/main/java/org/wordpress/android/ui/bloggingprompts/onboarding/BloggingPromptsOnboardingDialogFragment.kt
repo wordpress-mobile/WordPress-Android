@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +15,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.BloggingPromptsOmboardingDialogContentViewBinding
+import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
@@ -22,9 +25,13 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
+import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.exhaustive
+import java.lang.IllegalStateException
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -33,6 +40,15 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel
+    private val sitePickerLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val selectedSiteLocalId = result.data?.getIntExtra(
+                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    SelectedSiteRepository.UNAVAILABLE
+            ) ?: SelectedSiteRepository.UNAVAILABLE
+            viewModel.onSiteSelected(selectedSiteLocalId)
+        }
+    }
 
     companion object {
         const val TAG = "BLOGGING_PROMPTS_ONBOARDING_DIALOG_FRAGMENT"
@@ -56,6 +72,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+        if (context !is BloggingPromptsReminderSchedulerListener) {
+            throw IllegalStateException(
+                    "$context must implement ${BloggingPromptsReminderSchedulerListener::class.simpleName}"
+            )
+        }
     }
 
     private fun setupTryNowButton() {
@@ -77,7 +98,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     }
 
     private fun setupContent(readyState: Ready) {
-        val contentBinding = BloggingPromptsOmboardingDialogContentViewBinding.inflate(layoutInflater)
+        val contentBinding = BloggingPromptsOnboardingDialogContentViewBinding.inflate(layoutInflater)
         setContent(contentBinding.root)
         with(contentBinding) {
             contentTop.text = getString(readyState.contentTopRes)
@@ -123,9 +144,19 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
         viewModel.action.observe(this) { action ->
             when (action) {
                 is OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
-                is OpenSitePicker -> { /*TODO*/
+                is OpenSitePicker -> {
+                    val intent = Intent(context, SitePickerActivity::class.java).apply {
+                        putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)
+                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.DEFAULT_MODE)
+                    }
+                    sitePickerLauncher.launch(intent)
                 }
-                is OpenRemindersIntro -> { /*TODO*/
+                is OpenRemindersIntro -> {
+                    activity?.let {
+                        dismiss()
+                        (it as BloggingPromptsReminderSchedulerListener)
+                                .onSetPromptReminderClick(action.selectedSiteLocalId)
+                    }
                 }
             }.exhaustive
         }
