@@ -3,7 +3,7 @@ package org.wordpress.android.workers.notification.bloggingprompts
 import android.content.Context
 import android.content.Intent
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.push.NotificationType.CREATE_SITE
+import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.workers.notification.local.LocalNotificationHandler
@@ -22,10 +22,12 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
     }
 
     override fun buildIntent(context: Context): Intent {
-        return ActivityLauncher.createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(context, CREATE_SITE)
+        return ActivityLauncher.createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
+                context, BLOGGING_PROMPTS_ONBOARDING
+        )
     }
 
     override fun onNotificationShown() {
-        notificationsTracker.trackShownNotification(CREATE_SITE)
+        notificationsTracker.trackShownNotification(BLOGGING_PROMPTS_ONBOARDING)
     }
 }
