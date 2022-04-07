@@ -31,7 +31,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
                 dummyRespondents.size
         )
 
-        val avatarsTrain = dummyRespondents.map { respondent ->
+        val avatarsTrain = dummyRespondents.take(3).map { respondent ->
             AvatarItem(
                     respondent.userId,
                     respondent.avatarUrl

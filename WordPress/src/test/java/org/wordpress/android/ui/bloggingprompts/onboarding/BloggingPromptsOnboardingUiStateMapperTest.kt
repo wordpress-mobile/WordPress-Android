@@ -37,7 +37,7 @@ class BloggingPromptsOnboardingUiStateMapperTest {
                                 "c35743d8ed233ab410?s=96&d=identicon&r=G"
                 ),
                 TrailingLabelTextItem(
-                        UiStringPluralRes(R.plurals.my_site_blogging_prompt_card_number_of_answers, 3),
+                        UiStringPluralRes(R.plurals.my_site_blogging_prompt_card_number_of_answers, 5),
                         R.attr.colorPrimary
                 )
         )
