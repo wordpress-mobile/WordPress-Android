@@ -1403,8 +1403,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_intent_question_canceled";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_SKIPPED:
                 return "enhanced_site_creation_intent_question_skipped";
-            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CONTINUE_PRESSED:
-                return "enhanced_site_creation_intent_question_continue_pressed";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED:
+                return "enhanced_site_creation_intent_question_custom_vertical_selected";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED:
                 return "enhanced_site_creation_intent_question_vertical_selected";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED:
@@ -2174,6 +2174,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_site_menu_shown";
             case MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED:
                 return "my_site_default_tab_experiment_variant_assigned";
+            case APP_SETTINGS_INITIAL_SCREEN_CHANGED:
+                return "app_settings_initial_screen_changed";
         }
         return null;
     }

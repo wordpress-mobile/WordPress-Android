@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,7 +18,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.posts.editor.EditorTracker
 
 @RunWith(MockitoJUnitRunner::class)
-@UseExperimental(InternalCoroutinesApi::class)
 class AddExistingMediaToPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `addMediaToEditor called on all models returned from loadMediaByRemoteId`() = test {

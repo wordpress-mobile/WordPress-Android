@@ -184,10 +184,10 @@ class MySiteViewModel @Inject constructor(
 
     private val defaultABExperimentTab: MySiteTabType
         get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
-                MySiteTabType.DASHBOARD
-            } else {
+            if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.SITE_MENU.label) {
                 MySiteTabType.SITE_MENU
+            } else {
+                MySiteTabType.DASHBOARD
             }
         } else {
             MySiteTabType.ALL
@@ -416,6 +416,7 @@ class MySiteViewModel @Inject constructor(
                                 todaysStatsCard = cardsUpdate?.cards?.firstOrNull { it is TodaysStatsCardModel }
                                         as? TodaysStatsCardModel,
                                 onTodaysStatsCardClick = this::onTodaysStatsCardClick,
+                                onGetMoreViewsClick = this:: onGetMoreViewsClick,
                                 onFooterLinkClick = this::onTodaysStatsCardFooterLinkClick
                         ),
                         postCardBuilderParams = PostCardBuilderParams(
@@ -510,6 +511,10 @@ class MySiteViewModel @Inject constructor(
             add(Type.QUICK_ACTIONS_CARD)
         }
         MySiteTabType.ALL -> emptyList()
+    }
+
+    @Suppress("EmptyFunctionBlock")
+    private fun onGetMoreViewsClick() {
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {

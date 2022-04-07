@@ -1,9 +1,9 @@
 ext {
-    wordPressUtilsVersion = 'trunk-39557b2153d1b0c0e7e3fd3a4fa32e6099bf50a2'
-    wordPressLoginVersion = 'trunk-d4f9830a9e2d2cbf7e1edec2886af687363b0980'
+    wordPressUtilsVersion = '2.5.0'
+    wordPressLoginVersion = '0.13.0'
     gutenbergMobileVersion = 'v1.73.0'
-    storiesVersion = 'trunk-0b727f84440048e39d5e4835e2a84c67d043d225'
-    aboutAutomatticVersion = 'trunk-99c45a25f4493f1ff19f1b88f718438dc7b3297a'
+    storiesVersion = '1.3.0'
+    aboutAutomatticVersion = '0.0.5'
 
     minSdkVersion = 24
     compileSdkVersion = 31
@@ -13,7 +13,7 @@ ext {
     androidxWorkVersion = "2.7.0"
 
     daggerVersion = '2.41'
-    fluxCVersion = 'trunk-cbf724da3c1a6a63247a7eae7fe0a5f07249ad9c'
+    fluxCVersion = 'trunk-5a6d2edffd723f600b2994b592f1724c55d864aa'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.3.2'
@@ -33,16 +33,17 @@ ext {
 
     // testing
     jUnitVersion = '4.13'
-    androidxTestVersion = '1.1.0'
+    androidxTestVersion = '1.4.0'
+    jUnitExtVersion = '1.1.3'
     androidxArchCoreVersion = '2.0.0'
     assertJVersion = '3.11.1'
-    espressoVersion = '3.1.0'
+    espressoVersion = '3.4.0'
     mockitoCoreVersion = "3.3.3"
     nhaarmanMockitoVersion = "2.2.0"
 }
 
 buildscript {
-    ext.kotlinVersion = '1.5.32'
+    ext.kotlinVersion = '1.6.10'
     ext.navComponentVersion = '2.3.5'
     ext.detektVersion = '1.15.0'
 
@@ -168,18 +169,6 @@ subprojects {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-    }
-}
-
-buildScan {
-    // Always run Gradle scan on CI builds
-    if (System.getenv('CI')) {
-        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-        termsOfServiceAgree = 'yes'
-        tag 'CI'
-        publishAlways()
-        // Otherwise CI might shut down before it's uploaded
-        uploadInBackground = false
     }
 }
 
