@@ -32,10 +32,10 @@ class QuickLinkRibbonViewHolder(
     fun bind(quickLinkRibbon: QuickLinkRibbon) = with(binding) {
         setOnTouchItemListener()
         (quickLinkRibbonItemList.adapter as QuickLinkRibbonItemAdapter).update(quickLinkRibbon.quickLinkRibbonItems)
-        if(quickLinkRibbon.showStatsFocusPoint) {
+        if (quickLinkRibbon.showStatsFocusPoint) {
             quickLinkRibbonItemList.smoothScrollToPosition(quickLinkRibbon.quickLinkRibbonItems.size)
         }
-        if(quickLinkRibbon.showPagesFocusPoint){
+        if (quickLinkRibbon.showPagesFocusPoint) {
             quickLinkRibbonItemList.smoothScrollToPosition(0)
         }
     }

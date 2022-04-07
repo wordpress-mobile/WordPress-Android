@@ -32,7 +32,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val onQuickActionPagesClick: () -> Unit,
         val onQuickActionPostsClick: () -> Unit,
         val onQuickActionMediaClick: () -> Unit,
-        val enableFocusPoints:Boolean = false
+        val enableFocusPoints: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class QuickLinkRibbonBuilderParams(

@@ -38,7 +38,7 @@ class QuickLinkRibbonBuilder @Inject constructor() {
                 QuickLinkRibbonItem(
                     label = R.string.media,
                     icon = R.drawable.ic_media_white_24dp,
-                    onClick = ListItemInteraction.create(params.onMediaClick),
+                    onClick = ListItemInteraction.create(params.onMediaClick)
                 )
             )
 
