@@ -92,6 +92,7 @@ import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
@@ -221,6 +222,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var dynamicCardMoreClick: ((DynamicCardMenuModel) -> Unit)? = null
     private var onPostCardFooterLinkClick: ((postCardType: PostCardType) -> Unit)? = null
     private var onPostItemClick: ((params: PostItemClickParams) -> Unit)? = null
+    private var onTodaysStatsCardGetMoreViewsClick: (() -> Unit) = {}
     private var onTodaysStatsCardClick: (() -> Unit) = {}
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
@@ -1252,6 +1254,21 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onTodaysStatsCardFooterLinkClick.invoke()
 
                 assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+            }
+
+    @Test
+    fun `given todays stat card, when get more views url is clicked, then external link is opened`() =
+            test {
+                initSelectedSite()
+
+                onTodaysStatsCardGetMoreViewsClick.invoke()
+
+                assertThat(navigationActions)
+                        .containsOnly(
+                                SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl(
+                                        URL_GET_MORE_VIEWS_AND_TRAFFIC
+                                )
+                        )
             }
 
     /* DASHBOARD POST CARD - FOOTER LINK */
@@ -2323,9 +2340,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
             val listOfCards = arrayListOf<MySiteCardAndItem>(
-                        quickActionsCard,
-                        domainRegistrationCard,
-                        quickStartCard
+                    quickActionsCard,
+                    domainRegistrationCard,
+                    quickStartCard
             )
 
             if (mySiteDashboardPhase2FeatureConfig.isEnabled())
@@ -2481,6 +2498,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun initTodaysStatsCard(mockInvocation: InvocationOnMock): TodaysStatsCard {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
+        onTodaysStatsCardGetMoreViewsClick = params.todaysStatsCardBuilderParams.onGetMoreViewsClick
         onTodaysStatsCardClick = params.todaysStatsCardBuilderParams.onTodaysStatsCardClick
         onTodaysStatsCardFooterLinkClick = params.todaysStatsCardBuilderParams.onFooterLinkClick
         return TodaysStatsCardWithData(
