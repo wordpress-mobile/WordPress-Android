@@ -44,6 +44,8 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -96,6 +98,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
     @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
+    @Inject MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -426,9 +429,13 @@ public class AppSettingsFragment extends PreferenceFragment
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
         } else if (preference == mInitialScreenPreference) {
+            String trackValue = (((String) newValue).equals(MySiteTabType.SITE_MENU.getLabel()))
+                    ? (String) newValue
+                    : MySiteTabType.DASHBOARD.getLabel();
             Map<String, Object> properties = new HashMap<>();
-            properties.put("selected", (String) newValue);
+            properties.put("selected", trackValue);
             AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
+            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded((String) newValue);
         }
         return true;
     }

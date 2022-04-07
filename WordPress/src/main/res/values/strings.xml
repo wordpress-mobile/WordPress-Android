@@ -1281,6 +1281,8 @@
     <string name="stats_insights">Insights</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
+    <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
+    <string name="stats_insights_views_and_visitors_message">Your last weeks views are %1$s %2$s than previous week.</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
@@ -2227,6 +2229,7 @@
     <string name="my_site_todays_stat_card_likes" translatable="false">@string/stats_likes</string>
     <string name="my_site_todays_stat_card_views" translatable="false">@string/stats_views</string>
     <string name="my_site_todays_stat_card_visitors" translatable="false">@string/stats_visitors</string>
+    <string name="my_site_todays_stats_get_more_views_message">If you want to try get more views and traffic check out our &lt;a href="%1$s"&gt;top tips&lt;/a&gt;.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Go to stats</string>
 
 
@@ -3208,6 +3211,9 @@
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
     <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
+    <string name="new_site_creation_site_name_header_title">Give your website a name</string>
+    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later</string>
+    <string name="new_site_creation_site_name_input_hint">Fashion Designerly</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
