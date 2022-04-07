@@ -17,7 +17,7 @@ class QuickActionsCardBuilder @Inject constructor() {
             onMediaClick = ListItemInteraction.create(params.onQuickActionMediaClick),
             showPages = params.siteModel.isSelfHostedAdmin || params.siteModel.hasCapabilityEditPages,
             showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS && params.enableFocusPoints,
-            showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                    params.activeTask == QuickStartTask.REVIEW_PAGES && params.enableFocusPoints
+            showPagesFocusPoint = (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                    params.activeTask == QuickStartTask.REVIEW_PAGES) && params.enableFocusPoints
     )
 }

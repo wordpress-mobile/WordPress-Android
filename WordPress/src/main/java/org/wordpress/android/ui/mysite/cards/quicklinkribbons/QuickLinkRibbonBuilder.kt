@@ -11,10 +11,8 @@ import javax.inject.Inject
 class QuickLinkRibbonBuilder @Inject constructor() {
     fun build(params: QuickLinkRibbonBuilderParams) = QuickLinkRibbon(
         quickLinkRibbonItems = getQuickLinkRibbonItems(params),
-        // todo @ajesh : extract to function
-        showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS && params.enableFocusPoints,
-        showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartTask.REVIEW_PAGES && params.enableFocusPoints
+        showPagesFocusPoint = shouldShowPagesFocusPoint(params),
+        showStatsFocusPoint = shouldShowStatsFocusPoint(params)
     )
 
     private fun getQuickLinkRibbonItems(params: QuickLinkRibbonBuilderParams): MutableList<QuickLinkRibbonItem> {
@@ -24,8 +22,7 @@ class QuickLinkRibbonBuilder @Inject constructor() {
                 label = R.string.pages,
                 icon = R.drawable.ic_pages_white_24dp,
                 onClick = ListItemInteraction.create(params.onPagesClick),
-                showFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                        params.activeTask == QuickStartTask.REVIEW_PAGES
+                showFocusPoint = shouldShowPagesFocusPoint(params)
             )
             items.add(pages)
         }
@@ -47,13 +44,22 @@ class QuickLinkRibbonBuilder @Inject constructor() {
 
             add(
                 QuickLinkRibbonItem(
-                    label =R.string.stats,
+                    label = R.string.stats,
                     icon = R.drawable.ic_stats_alt_white_24dp,
                     onClick = ListItemInteraction.create(params.onStatsClick),
-                    showFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS
+                    showFocusPoint = shouldShowStatsFocusPoint(params)
                 )
             )
         }
         return items
+    }
+
+    private fun shouldShowPagesFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
+        return params.enableFocusPoints && (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartTask.REVIEW_PAGES)
+    }
+
+    private fun shouldShowStatsFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
+        return params.enableFocusPoints && params.activeTask == QuickStartTask.CHECK_STATS
     }
 }
