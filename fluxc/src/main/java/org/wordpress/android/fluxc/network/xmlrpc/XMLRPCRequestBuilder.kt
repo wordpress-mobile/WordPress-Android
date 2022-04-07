@@ -37,6 +37,7 @@ class XMLRPCRequestBuilder
             method,
             params,
             // **Do not** convert it to lambda! See https://youtrack.jetbrains.com/issue/KT-51868
+            @Suppress("RedundantSamConstructor")
             Listener<Any> { obj: Any? ->
                 if (obj == null) {
                     errorListener.invoke(BaseNetworkError(INVALID_RESPONSE))
