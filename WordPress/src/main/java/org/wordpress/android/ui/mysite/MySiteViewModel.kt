@@ -184,10 +184,10 @@ class MySiteViewModel @Inject constructor(
 
     private val defaultABExperimentTab: MySiteTabType
         get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteDefaultTabExperimentVariant() == MySiteTabType.DASHBOARD.label) {
-                MySiteTabType.DASHBOARD
-            } else {
+            if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.SITE_MENU.label) {
                 MySiteTabType.SITE_MENU
+            } else {
+                MySiteTabType.DASHBOARD
             }
         } else {
             MySiteTabType.ALL
