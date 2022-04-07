@@ -110,6 +110,7 @@ class SiteRestClient @Inject constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     data class NewSiteResponsePayload(
         val newSiteRemoteId: Long = 0,
+        val siteUrl: String? = null,
         val dryRun: Boolean = false
     ) : Payload<NewSiteError>()
 
@@ -272,7 +273,7 @@ class SiteRestClient @Inject constructor(
                         // No op: In dry run mode, returned newSiteRemoteId is "Array"
                     }
                 }
-                NewSiteResponsePayload(siteId, dryRun)
+                NewSiteResponsePayload(siteId, response.data.blog_details?.url, dryRun)
             }
             is Error -> {
                 volleyErrorToAccountResponsePayload(response.error.volleyError, dryRun)

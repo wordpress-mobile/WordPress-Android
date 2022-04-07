@@ -526,9 +526,14 @@ open class SiteStore
 
     data class OnNewSiteCreated(
         @JvmField val dryRun: Boolean = false,
+        @JvmField val url: String? = null,
         @JvmField val newSiteRemoteId: Long = 0
     ) : OnChanged<NewSiteError>() {
-        constructor(dryRun: Boolean, newSiteRemoteId: Long, error: NewSiteError?) : this(dryRun, newSiteRemoteId) {
+        constructor(dryRun: Boolean, url: String?, newSiteRemoteId: Long, error: NewSiteError?) : this(
+                dryRun,
+                url,
+                newSiteRemoteId
+        ) {
             this.error = error
         }
     }
@@ -1506,7 +1511,7 @@ open class SiteStore
     }
 
     private fun handleCreateNewSiteCompleted(payload: NewSiteResponsePayload): OnNewSiteCreated {
-        return OnNewSiteCreated(payload.dryRun, payload.newSiteRemoteId, payload.error)
+        return OnNewSiteCreated(payload.dryRun, payload.siteUrl, payload.newSiteRemoteId, payload.error)
     }
 
     suspend fun fetchPostFormats(site: SiteModel): OnPostFormatsChanged {
