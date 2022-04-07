@@ -119,7 +119,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val visitors: UiString,
                         val likes: UiString,
                         val onCardClick: () -> Unit,
-                        val message: Text? = null,
+                        val message: TextWithLinks? = null,
                         val footerLink: FooterLink
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
 
@@ -128,7 +128,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val onClick: () -> Unit
                     )
 
-                    data class Text(
+                    data class TextWithLinks(
                         val text: UiString,
                         val links: List<Clickable>? = null
                     ) {

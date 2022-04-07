@@ -7,8 +7,8 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.TodaysStatsCardErr
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.FooterLink
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.Text
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.Text.Clickable
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TextWithLinks.Clickable
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
@@ -49,7 +49,7 @@ class TodaysStatsCardBuilder @Inject constructor(
                     likes = statToUiString(model.likes),
                     onCardClick = params.onTodaysStatsCardClick,
                     message = model.takeIf { it.isEmptyStats() }?.let {
-                        Text(
+                        TextWithLinks(
                                 text = UiStringText(
                                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                                 R.string.my_site_todays_stats_get_more_views_message,
