@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc
 
+import com.android.volley.Response.Listener
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC
 import org.wordpress.android.fluxc.network.BaseRequest
@@ -31,16 +32,29 @@ class XMLRPCRequestBuilder
         listener: (T) -> Unit,
         errorListener: (BaseNetworkError) -> Unit
     ): XMLRPCRequest {
-        return XMLRPCRequest(url, method, params, { obj: Any? ->
-            if (obj == null) {
-                errorListener.invoke(BaseNetworkError(INVALID_RESPONSE))
-            }
-            try {
-                clazz.cast(obj)?.let { listener(it) }
-            } catch (e: ClassCastException) {
-                errorListener.invoke(BaseNetworkError(INVALID_RESPONSE, XmlRpcErrorType.UNABLE_TO_READ_SITE))
-            }
-        }, errorListener)
+        return XMLRPCRequest(
+            url,
+            method,
+            params,
+            // **Do not** convert it to lambda! See https://youtrack.jetbrains.com/issue/KT-51868
+            @Suppress("RedundantSamConstructor")
+            Listener<Any> { obj: Any? ->
+                if (obj == null) {
+                    errorListener.invoke(BaseNetworkError(INVALID_RESPONSE))
+                }
+                try {
+                    clazz.cast(obj)?.let { listener(it) }
+                } catch (e: ClassCastException) {
+                    errorListener.invoke(
+                        BaseNetworkError(
+                            INVALID_RESPONSE,
+                            XmlRpcErrorType.UNABLE_TO_READ_SITE
+                        )
+                    )
+                }
+            },
+            errorListener
+        )
     }
 
     /**
