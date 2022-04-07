@@ -24,28 +24,13 @@ class SiteCreationStepsProvider @Inject constructor(
     private val siteNameABExperiment: SiteNameABExperiment
 ) {
     fun getSteps(): List<SiteCreationStep> {
-        if (siteIntentQuestionFeatureConfig.isEnabled()) {
-             if (siteNameFeatureConfig.isEnabled() && siteNameABExperiment.getVariation() != Control) {
-                return listOf(
-                        INTENTS,
-                        SITE_NAME,
-                        SITE_DESIGNS,
-                        SITE_PREVIEW
-                )
-            }
+        val isSiteNameEnabled = siteNameFeatureConfig.isEnabled() && siteNameABExperiment.getVariation() != Control
+        val isIntentsEnabled = siteIntentQuestionFeatureConfig.isEnabled()
 
-            return listOf(
-                    INTENTS,
-                    SITE_DESIGNS,
-                    DOMAINS,
-                    SITE_PREVIEW
-            )
+        return when {
+            isSiteNameEnabled -> listOf(INTENTS, SITE_NAME, SITE_DESIGNS, SITE_PREVIEW)
+            isIntentsEnabled-> listOf(INTENTS, SITE_DESIGNS, DOMAINS, SITE_PREVIEW)
+            else -> listOf(SITE_DESIGNS, DOMAINS, SITE_PREVIEW)
         }
-
-        return listOf(
-                SITE_DESIGNS,
-                DOMAINS,
-                SITE_PREVIEW
-        )
     }
 }
