@@ -287,33 +287,26 @@ platform :android do
       name: 'Gutenberg Native',
       import_key: 'gutenbergMobileVersion',
       repository: 'wordpress-mobile/gutenberg-mobile',
-      strings_file_path: 'bundle/android/strings.xml',
-      github_release_prefix: '',
-      exclusions: []
+      strings_file_path: 'bundle/android/strings.xml'
     },
     {
       name: 'Login Library',
       import_key: 'wordPressLoginVersion',
       repository: 'wordpress-mobile/WordPress-Login-Flow-Android',
       strings_file_path: 'WordPressLoginFlow/src/main/res/values/strings.xml',
-      github_release_prefix: '',
       exclusions: ['default_web_client_id']
     },
     {
       name: "Stories Library",
       import_key: "storiesVersion",
       repository: "Automattic/stories-android",
-      strings_file_path: "stories/src/main/res/values/strings.xml",
-      github_release_prefix: "",
-      exclusions: []
+      strings_file_path: "stories/src/main/res/values/strings.xml"
     },
     {
       name: "About Library",
       import_key: "aboutAutomatticVersion",
       repository: "Automattic/about-automattic-android",
-      strings_file_path: "library/src/main/res/values/strings.xml",
-      github_release_prefix: "",
-      exclusions: []
+      strings_file_path: "library/src/main/res/values/strings.xml"
     },
   ].freeze
 
@@ -339,8 +332,7 @@ platform :android do
         library_name: lib[:name],
         import_key: lib[:import_key],
         repository: lib[:repository],
-        file_path: lib[:strings_file_path],
-        github_release_prefix: lib[:github_release_prefix]
+        file_path: lib[:strings_file_path]
       )
 
       if download_path.nil?
