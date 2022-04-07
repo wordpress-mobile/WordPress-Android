@@ -35,7 +35,8 @@ private const val NEW_SITE_REMOTE_ID = 1234L
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
         "slug",
-        "domain"
+        "domain",
+        null
 )
 
 private val IDLE_STATE = SiteCreationServiceState(IDLE)

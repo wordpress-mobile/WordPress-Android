@@ -4,11 +4,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
+import org.wordpress.android.ui.accounts.signup.SignupUtils
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.util.UrlUtilsWrapper
 import javax.inject.Inject
@@ -22,7 +24,9 @@ import kotlin.coroutines.suspendCoroutine
 class CreateSiteUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused") private val siteStore: SiteStore,
-    private val urlUtilsWrapper: UrlUtilsWrapper
+    private val urlUtilsWrapper: UrlUtilsWrapper,
+    private val accountStore: AccountStore,
+    private val signupUtils: SignupUtils
 ) {
     private var continuation: Continuation<OnNewSiteCreated>? = null
 
@@ -45,12 +49,18 @@ class CreateSiteUseCase @Inject constructor(
          * time of this comment, changing FluxC's Payload might end up affecting the old site creation flow,
          * so the workaround is applied here instead.
          */
-        val domain = if (isWordPressComSubDomain(siteData.domain)) {
-            urlUtilsWrapper.extractSubDomain(siteData.domain)
-        } else siteData.domain
+        val domain = when {
+            siteData.domain.isNullOrEmpty() -> null
+            isWordPressComSubDomain(siteData.domain) -> urlUtilsWrapper.extractSubDomain(siteData.domain)
+            else -> siteData.domain
+        }
+        val username = accountStore.account?.userName
+        val emailUser = signupUtils.createUsernameFromEmail(accountStore.account.email)
         return suspendCoroutine { cont ->
             val newSitePayload = NewSitePayload(
+                    username ?: emailUser ?: "",
                     domain,
+                    siteData.title,
                     languageWordPressId,
                     timeZoneId,
                     siteVisibility,

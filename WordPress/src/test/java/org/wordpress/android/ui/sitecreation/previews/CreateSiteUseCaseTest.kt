@@ -15,11 +15,13 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.test
+import org.wordpress.android.ui.accounts.signup.SignupUtils
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -27,7 +29,8 @@ import org.wordpress.android.util.UrlUtilsWrapper
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
         "slug",
-        "domain"
+        "domain",
+        null
 )
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
@@ -40,12 +43,14 @@ class CreateSiteUseCaseTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: SiteStore
     @Mock private lateinit var urlUtilsWrapper: UrlUtilsWrapper
+    @Mock private lateinit var accountStore: AccountStore
+    @Mock private lateinit var signupUtils: SignupUtils
     private lateinit var useCase: CreateSiteUseCase
     private lateinit var event: OnNewSiteCreated
 
     @Before
     fun setUp() {
-        useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper)
+        useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper, accountStore, signupUtils)
         event = OnNewSiteCreated(newSiteRemoteId = 123)
     }
 
