@@ -61,6 +61,7 @@ class TodaysStatsCardViewHolder(
             val startIndex = spannable.getSpanStart(urlSpan)
             val endIndex = spannable.getSpanEnd(urlSpan)
             links.forEach { link ->
+                spannable.removeSpan(urlSpan)
                 spannable.withClickableSpan(startIndex, endIndex) {
                     link.navigationAction.click()
                 }
