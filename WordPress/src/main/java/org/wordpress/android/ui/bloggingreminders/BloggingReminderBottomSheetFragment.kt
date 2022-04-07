@@ -101,6 +101,8 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
+        const val TAG = "BLOGGING_REMINDER_BOTTOM_SHEET_FRAGMENT"
+
         @JvmStatic
         fun newInstance() = BloggingReminderBottomSheetFragment()
     }

@@ -20,7 +20,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_NAME
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
@@ -31,6 +32,9 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
+import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel
+import org.wordpress.android.ui.sitecreation.sitename.SiteNameScreenListener
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel
 import org.wordpress.android.ui.sitecreation.verticals.IntentsScreenListener
@@ -44,6 +48,7 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 class SiteCreationActivity : LocaleAwareActivity(),
         IntentsScreenListener,
+        SiteNameScreenListener,
         DomainsScreenListener,
         SitePreviewScreenListener,
         OnHelpClickedListener,
@@ -54,6 +59,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private lateinit var mainViewModel: SiteCreationMainVM
     private lateinit var hppViewModel: HomePagePickerViewModel
     private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
+    private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
+    @Inject lateinit var siteCreationStepsProvider: SiteCreationStepsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +70,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
         siteCreationIntentsViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(SiteCreationIntentsViewModel::class.java)
+        siteCreationSiteNameViewModel = ViewModelProvider(this, viewModelFactory)
+                .get(SiteCreationSiteNameViewModel::class.java)
         mainViewModel.start(savedInstanceState)
         hppViewModel.loadSavedState(savedInstanceState)
 
@@ -118,6 +127,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
         siteCreationIntentsViewModel.onSkipButtonPressed.observe(this, Observer {
             mainViewModel.onSiteIntentSkipped()
         })
+        siteCreationSiteNameViewModel.onBackButtonPressed.observe(this, Observer {
+            mainViewModel.onBackPressed()
+        })
+        siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this, Observer {
+            ActivityUtils.hideKeyboard(this)
+            mainViewModel.onSiteNameSkipped()
+        })
         hppViewModel.onBackButtonPressed.observe(this, Observer {
             mainViewModel.onBackPressed()
         })
@@ -128,6 +144,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onIntentSelected(intent: String) {
         mainViewModel.onSiteIntentSelected(intent)
+        if (!siteCreationStepsProvider.isSiteNameEnabled) {
+            ActivityUtils.hideKeyboard(this)
+        }
+    }
+
+    override fun onSiteNameEntered(siteName: String) {
+        mainViewModel.onSiteNameEntered(siteName)
         ActivityUtils.hideKeyboard(this)
     }
 
@@ -151,7 +174,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
-            SEGMENTS -> HomePagePickerFragment()
+            SITE_NAME -> SiteCreationSiteNameFragment()
+            SITE_DESIGNS -> HomePagePickerFragment()
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle
             )

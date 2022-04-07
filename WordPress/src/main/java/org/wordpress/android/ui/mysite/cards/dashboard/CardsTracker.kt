@@ -21,7 +21,8 @@ class CardsTracker @Inject constructor(
     }
 
     enum class StatsSubtype(val label: String) {
-        TODAYS_STATS("todays_stats")
+        TODAYS_STATS("todays_stats"),
+        TODAYS_STATS_NUDGE("todays_stats_nudge")
     }
 
     enum class PostSubtype(val label: String) {
@@ -29,6 +30,10 @@ class CardsTracker @Inject constructor(
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
+    }
+
+    fun trackTodaysStatsCardGetMoreViewsNudgeClicked() {
+        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS_NUDGE.label)
     }
 
     fun trackTodaysStatsCardFooterLinkClicked() {
