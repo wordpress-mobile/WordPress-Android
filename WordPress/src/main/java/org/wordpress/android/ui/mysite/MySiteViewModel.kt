@@ -486,8 +486,8 @@ class MySiteViewModel @Inject constructor(
         MySiteTabType.ALL -> emptyList()
     }
 
-    @Suppress("EmptyFunctionBlock")
     private fun onGetMoreViewsClick() {
+        cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
     }
 
     private fun onTodaysStatsCardFooterLinkClick() {
