@@ -279,34 +279,38 @@ platform :android do
   MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
   FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] },
-    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", exclusions: [] }
+    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
+    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", source_id: 'module:editor' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
       name: 'Gutenberg Native',
       import_key: 'gutenbergMobileVersion',
       repository: 'wordpress-mobile/gutenberg-mobile',
-      strings_file_path: 'bundle/android/strings.xml'
+      strings_file_path: 'bundle/android/strings.xml',
+      source_id: 'gutenberg'
     },
     {
       name: 'Login Library',
       import_key: 'wordPressLoginVersion',
       repository: 'wordpress-mobile/WordPress-Login-Flow-Android',
       strings_file_path: 'WordPressLoginFlow/src/main/res/values/strings.xml',
-      exclusions: ['default_web_client_id']
+      exclusions: ['default_web_client_id'],
+      source_id: 'login'
     },
     {
       name: "Stories Library",
       import_key: "storiesVersion",
       repository: "Automattic/stories-android",
-      strings_file_path: "stories/src/main/res/values/strings.xml"
+      strings_file_path: "stories/src/main/res/values/strings.xml",
+      source_id: 'stories'
     },
     {
       name: "About Library",
       import_key: "aboutAutomatticVersion",
       repository: "Automattic/about-automattic-android",
-      strings_file_path: "library/src/main/res/values/strings.xml"
+      strings_file_path: "library/src/main/res/values/strings.xml",
+      source_id: 'about'
     },
   ].freeze
 
@@ -347,7 +351,8 @@ platform :android do
         lib_to_merge = [{
           library: lib[:name],
           strings_path: download_path,
-          exclusions: lib[:exclusions]
+          exclusions: lib[:exclusions],
+          source_id: lib[:source_id]
         }]
         an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
