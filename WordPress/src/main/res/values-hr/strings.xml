@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-02-05 09:32:53+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0-rc.4
 Language: hr
 -->
 <resources>
@@ -488,6 +488,7 @@ Language: hr
     <string name="trash">Smeće</string>
     <string name="mnu_comment_trash">Smeće</string>
     <string name="mnu_comment_spam">Spam</string>
+    <string name="create_a_link">Kreiraj poveznicu</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
     <string name="notifications_empty_all">Nema obavijesti… još.</string>
     <string name="privacy_policy">Pravila privatnosti</string>
@@ -503,6 +504,7 @@ Language: hr
     <string name="link_enter_url_text">Tekst poveznice (opcionalno)</string>
     <string name="page_settings">Postavke stranice</string>
     <string name="local_draft">Lokalna skica</string>
+    <string name="horizontal_alignment">Horizontalno poravnanje</string>
     <string name="comment_status_approved">Odobreno</string>
     <string name="comment_status_unapproved">Na čekanju</string>
     <string name="comment_status_spam">Spam</string>
@@ -600,12 +602,17 @@ Language: hr
     <string name="log_in">Prijavi se</string>
     <string name="reader">Čitač</string>
     <string name="no_network_title">Nema dostupne mreže</string>
+    <string name="width">Širina</string>
     <string name="anonymous">Anonimno</string>
     <string name="pages">Stranice</string>
+    <string name="caption">Opis (opcionalan)</string>
+    <string name="featured">Upotrijebi kao istaknutu sliku</string>
     <string name="posts">Objave</string>
+    <string name="featured_in_post">Uključi sliku u sadržaj objave</string>
     <string name="ok">OK</string>
     <string name="done">Gotovo</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Prijenos…</string>
     <string name="version">Inačica</string>
     <string name="tos">Uvjeti Korištenja</string>
     <string name="app_title">WordPress za Android</string>

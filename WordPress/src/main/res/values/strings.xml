@@ -2933,20 +2933,20 @@
     <string name="content_description_person_building_website">Person building website</string>
 
     <!-- Android O notification channels, these show in the Android app settings -->
-
-
-
-
+    <string name="notification_channel_general_title" tools:ignore="UnusedResources">General</string>
+    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Important</string>
+    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Transient</string>
+    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Reminder</string>
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
 
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
-
+    <string name="notification_channel_important_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
-
+    <string name="notification_channel_reminder_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_reminder_channel_id</string>
     <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
 
     <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string content_override="true" name="login_notification_channel_id" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
+    <string name="login_notification_channel_id" content_override="true" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -4010,6 +4010,59 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
 
+    <!-- WordPressEditor module -->
+    <string name="post_content" tools:ignore="UnusedResources">Content</string>
+    <string name="uploading" tools:ignore="UnusedResources">Uploading…</string>
+    <string name="uploading_gallery_placeholder" tools:ignore="UnusedResources">Uploading gallery…</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources">You are currently uploading media. Please wait until this completes.</string>
+    <string name="alert_error_adding_media" tools:ignore="UnusedResources">An error occurred while inserting media</string>
+    <string name="stop_save_dialog_title" tools:ignore="UnusedResources">Files saving</string>
+    <string name="stop_save_dialog_message" tools:ignore="UnusedResources">Please wait until all files have been saved</string>
+    <string name="stop_save_dialog_ok_button" tools:ignore="UnusedResources">OK</string>
+    <string name="create_a_link" tools:ignore="UnusedResources">Create a link</string>
+    <string name="width" tools:ignore="UnusedResources">Width</string>
+    <string name="featured" tools:ignore="UnusedResources">Use as featured image</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources">Include image in post content</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources">Horizontal alignment</string>
+    <string name="caption" tools:ignore="UnusedResources">Caption (optional)</string>
+    <string name="pixel_suffix" tools:ignore="UnusedResources">%dpx</string>
+    <string name="image_alt_text" tools:ignore="UnusedResources">Alt text</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources">Take Photo or Video with camera</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources">Pick a media from gallery</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources">Pick a media from WordPress media library</string>
+    <string name="visual_editor" tools:ignore="UnusedResources">Visual editor</string>
+    <string name="image_thumbnail" tools:ignore="UnusedResources">Image thumbnail</string>
+    <string name="editor_failed_to_insert_media_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources">Content structure</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources">Failed to get content structure</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources">Editor is still loading</string>
+    <string name="editor_title_beta" tools:ignore="UnusedResources">Beta</string>
+    <string name="dialog_title" tools:ignore="UnusedResources">Insert link</string>
+    <string name="dialog_edit_hint" tools:ignore="UnusedResources">http(s)://</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources">OK</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources">Cancel</string>
+    <string name="media_insert_unimplemented" tools:ignore="UnusedResources">Apologies! Feature not implemented yet :(</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources">Yes</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources">No</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources">Couldn\'t upload file</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources">Retry</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources">Remove upload</string>
+    <string name="retry_failed_upload_retry_all" tools:ignore="UnusedResources">Retry all</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources">Saving</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources">Edit %s block</string>
+    <string name="pref_key_seen_classic_editor_deprecation_notice" tools:ignore="UnusedResources" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
+    <string name="dialog_title_try_block_editor" tools:ignore="UnusedResources" translatable="true">Try the new Block Editor</string>
+    <string name="dialog_body_try_block_editor" tools:ignore="UnusedResources" translatable="true">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
+    <string name="dialog_dismiss_try_block_editor" tools:ignore="UnusedResources" translatable="true">Dismiss</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources">Replace current featured image?</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources">You already have a featured image set. Do you want to replace it with the new image?</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources">Replace featured image</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources">Keep current</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources">Set as featured image</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources">Removed as featured image</string>
+
     <!-- Initial Screen -->
     <string name="initial_screen">Initial Screen</string>
     <string name="initial_screen_home" translatable="false">@string/my_site_dashboard_tab_title</string>
@@ -4025,62 +4078,4 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
         <item>@string/initial_screen_entry_value_home</item>
         <item>@string/initial_screen_entry_value_site_menu</item>
     </string-array>
-
-    <string name="post_content">Content</string>
-    <string name="uploading">Uploading…</string>
-    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
-    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
-    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
-    <string name="alert_error_adding_media">An error occurred while inserting media</string>
-    <string name="stop_save_dialog_title">Files saving</string>
-    <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
-    <string name="stop_save_dialog_ok_button">OK</string>
-    <string name="create_a_link">Create a link</string>
-    <string name="width">Width</string>
-    <string name="featured">Use as featured image</string>
-    <string name="featured_in_post">Include image in post content</string>
-    <string name="horizontal_alignment">Horizontal alignment</string>
-    <string name="caption">Caption (optional)</string>
-    <string name="pixel_suffix">%dpx</string>
-    <string name="image_alt_text">Alt text</string>
-    <string name="media_bar_description_camera">Take Photo or Video with camera</string>
-    <string name="media_bar_description_gallery">Pick a media from gallery</string>
-    <string name="media_bar_description_library">Pick a media from WordPress media library</string>
-    <string name="visual_editor">Visual editor</string>
-    <string name="image_thumbnail">Image thumbnail</string>
-    <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
-    <string name="dialog_content_info_title">Content structure</string>
-    <string name="dialog_content_info_body">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
-    <string name="toast_content_info_failed">Failed to get content structure</string>
-    <string name="toast_content_info_editor_not_ready">Editor is still loading</string>
-    <string name="editor_title_beta">Beta</string>
-    <string name="dialog_title">Insert link</string>
-    <string name="dialog_edit_hint">http(s)://</string>
-    <string name="dialog_button_ok">OK</string>
-    <string name="dialog_button_cancel">Cancel</string>
-    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
-    <string name="stop_upload_dialog_button_yes">Yes</string>
-    <string name="stop_upload_dialog_button_no">No</string>
-    <string name="retry_failed_upload_title">Couldn\'t upload file</string>
-    <string name="retry_failed_upload_yes">Retry</string>
-    <string name="retry_failed_upload_remove">Remove upload</string>
-    <string name="retry_failed_upload_retry_all">Retry all</string>
-    <string name="long_post_dlg_saving">Saving</string>
-    <string name="menu_toolbar_title">Edit %s block</string>
-    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
-    <string name="dialog_title_try_block_editor" translatable="true">Try the new Block Editor</string>
-    <string name="dialog_body_try_block_editor" translatable="true">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
-    <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
-    <string name="featured_image_replace_dialog_title">Replace current featured image?</string>
-    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it with the new image?</string>
-    <string name="featured_image_replace_dialog_confirm">Replace featured image</string>
-    <string name="featured_image_replace_dialog_cancel">Keep current</string>
-    <string name="featured_image_confirmation_notice">Set as featured image</string>
-    <string name="featured_image_removed_notice">Removed as featured image</string>
-    <string name="notification_channel_general_title" tools:ignore="UnusedResources">General</string>
-    <string name="notification_channel_important_title" tools:ignore="UnusedResources">Important</string>
-    <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Transient</string>
-    <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Reminder</string>
-    <string name="notification_channel_important_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_reminder_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_reminder_channel_id</string>
 </resources>

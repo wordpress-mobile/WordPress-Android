@@ -81,7 +81,7 @@
         <ignore path="**/WordPressEditor/**" />
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
-        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/.*\.xml$"/>
     </issue>
 
     <issue id="Typos" severity="error">
