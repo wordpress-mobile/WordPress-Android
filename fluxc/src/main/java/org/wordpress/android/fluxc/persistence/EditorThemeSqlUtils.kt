@@ -92,6 +92,7 @@ class EditorThemeSqlUtils {
             @JvmName("setIsFSETheme")
             set
         @Column var galleryWithImageBlocks: Boolean = false
+        @Column var quoteBlockV2: Boolean = false
 
         override fun setId(id: Int) {
             this.mId = id
@@ -119,7 +120,8 @@ class EditorThemeSqlUtils {
                     rawStyles,
                     rawFeatures,
                     isFSETheme,
-                    galleryWithImageBlocks
+                    galleryWithImageBlocks,
+                    quoteBlockV2
             )
 
             return EditorTheme(editorThemeSupport, stylesheet, version)

@@ -1845,6 +1845,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("DELETE FROM WCOrderSummaryModel")
                     db.execSQL("DELETE FROM WCOrderShipmentTrackingModel")
                 }
+                172 -> migrate(version) {
+                    db.execSQL("ALTER TABLE EditorTheme ADD QUOTE_BLOCK_V2 BOOLEAN")
+                }
             }
         }
         db.setTransactionSuccessful()
