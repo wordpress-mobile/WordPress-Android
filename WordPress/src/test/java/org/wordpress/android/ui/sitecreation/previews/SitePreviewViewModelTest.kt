@@ -52,6 +52,7 @@ private const val SUB_DOMAIN = "test"
 private const val DOMAIN = ".wordpress.com"
 private const val URL = "$SUB_DOMAIN$DOMAIN"
 private const val REMOTE_SITE_ID = 1L
+private const val REMOTE_SITE_URL = "remote.site.url"
 private const val LOCAL_SITE_ID = 2
 private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = defaultTemplateSlug, domain = URL)
 
@@ -335,7 +336,7 @@ class SitePreviewViewModelTest {
     }
 
     private fun createServiceSuccessState(): SiteCreationServiceState {
-        return SiteCreationServiceState(SUCCESS, REMOTE_SITE_ID)
+        return SiteCreationServiceState(SUCCESS, Pair(REMOTE_SITE_ID, REMOTE_SITE_URL))
     }
 
     private fun createLocalDbSiteModelId(): SiteModel {
