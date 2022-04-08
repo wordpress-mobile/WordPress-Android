@@ -758,15 +758,16 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
-    // todo: @ajesh add tracking logic in the below clicks
     private fun onQuickLinkRibbonStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
         quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun onQuickLinkRibbonPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
         quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
         quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
@@ -774,11 +775,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickLinkRibbonPostsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_POSTS_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenPosts(selectedSite))
     }
 
     private fun onQuickLinkRibbonMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
