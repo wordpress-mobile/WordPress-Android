@@ -223,10 +223,10 @@ class SitePreviewViewModel @Inject constructor(
             IDLE, CREATE_SITE -> {
             } // do nothing
             SUCCESS -> {
-                startPreLoadingWebView()
                 val remoteSiteId = (event.payload as Pair<*, *>).first as Long
                 urlWithoutScheme = event.payload.second as String
                 createSiteState = SiteNotInLocalDb(remoteSiteId)
+                startPreLoadingWebView()
                 fetchNewlyCreatedSiteModel(remoteSiteId)
                 _onSiteCreationCompleted.asyncCall()
             }
