@@ -309,7 +309,7 @@ class MySiteViewModel @Inject constructor(
         if (activeTask != null) {
             scrollToQuickStartTaskIfNecessary(
                     activeTask,
-                    getPositionOfQuickStartItem(siteItems)
+                    getPositionOfQuickStartItem(siteItems, activeTask)
             )
         }
         // It is okay to use !! here because we are explicitly creating the lists
@@ -349,14 +349,31 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun getPositionOfQuickStartItem(siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>) =
-            if (isMySiteTabsEnabled) {
+    private fun getPositionOfQuickStartItem(
+        siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
+        activeTask: QuickStartTask
+    ) = if (isMySiteTabsEnabled) {
+        _selectTab.value?.let { tabEvent ->
+            val currentTab = orderedTabTypes[tabEvent.peekContent().position]
+            if (currentTab == MySiteTabType.DASHBOARD && activeTask.showInSiteMenu()) {
                 (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
                         .indexOfFirst { it.activeQuickStartItem }
             } else {
-                (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
+                (siteItems[currentTab] as List<MySiteCardAndItem>)
                         .indexOfFirst { it.activeQuickStartItem }
             }
+        } ?: LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM
+    } else {
+        (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
+                .indexOfFirst { it.activeQuickStartItem }
+    }
+
+    private fun QuickStartTask.showInSiteMenu() = when (this) {
+        QuickStartTask.VIEW_SITE,
+        QuickStartTask.ENABLE_POST_SHARING,
+        QuickStartTask.EXPLORE_PLANS -> true
+        else -> false
+    }
 
     @Suppress("LongParameterList")
     private fun buildSiteSelectedState(
@@ -382,7 +399,8 @@ class MySiteViewModel @Inject constructor(
                         onQuickActionStatsClick = this::quickActionStatsClick,
                         onQuickActionPagesClick = this::quickActionPagesClick,
                         onQuickActionPostsClick = this::quickActionPostsClick,
-                        onQuickActionMediaClick = this::quickActionMediaClick
+                        onQuickActionMediaClick = this::quickActionMediaClick,
+                        enableFocusPoints = enableQuickActionCardFocusPoints()
                 ),
                 DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
@@ -426,7 +444,9 @@ class MySiteViewModel @Inject constructor(
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick
+                        onStatsClick = this::onQuickLinkRibbonStatsClick,
+                        activeTask = activeTask,
+                        enableFocusPoints = enableQuickLinkRibbonFocusPoints()
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -471,6 +491,14 @@ class MySiteViewModel @Inject constructor(
                         listOf()
                 )
         )
+    }
+
+    private fun enableQuickActionCardFocusPoints(): Boolean {
+        return defaultABExperimentTab != MySiteTabType.DASHBOARD
+    }
+
+    private fun enableQuickLinkRibbonFocusPoints(): Boolean {
+        return defaultABExperimentTab == MySiteTabType.DASHBOARD
     }
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
@@ -558,7 +586,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == -1 && (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
+        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM &&
+                (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
         else position >= 0
     }
 
@@ -732,11 +761,14 @@ class MySiteViewModel @Inject constructor(
     // todo: @ajesh add tracking logic in the below clicks
     private fun onQuickLinkRibbonStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun onQuickLinkRibbonPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
+        quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
 
@@ -1214,6 +1246,7 @@ class MySiteViewModel @Inject constructor(
 
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
+        private const val LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM = -1
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"

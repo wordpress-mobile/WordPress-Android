@@ -2187,6 +2187,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
+        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
@@ -2219,11 +2220,22 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when quick link ribbon pages click, then pages screen is shown`() {
+    fun `when quick link ribbon pages click, then pages screen is shown and completes REVIEW_PAGES task `() {
         initSelectedSite()
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
+        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
+    }
+
+    @Test
+    fun `when quick link ribbon pages click, then pages screen is shown + requests next step of EDIT_HOMEPAGE task`() {
+        initSelectedSite()
+
+        requireNotNull(quickActionsPagesClickAction).invoke()
+
+        verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -2413,7 +2425,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
         return QuickLinkRibbon(
-                quickLinkRibbonItems = mock()
+            quickLinkRibbonItems = mock(),
+            showStatsFocusPoint = false,
+            showPagesFocusPoint = false
         )
     }
 
