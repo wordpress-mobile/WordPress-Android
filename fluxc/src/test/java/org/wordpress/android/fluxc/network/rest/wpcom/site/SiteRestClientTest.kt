@@ -201,7 +201,17 @@ class SiteRestClientTest {
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
 
-        val result = restClient.newSite(username, siteName, siteTitle, language, timeZoneId, visibility, segmentId, siteDesign, dryRun)
+        val result = restClient.newSite(
+            username,
+            siteName,
+            siteTitle,
+            language,
+            timeZoneId,
+            visibility,
+            segmentId,
+            siteDesign,
+            dryRun
+        )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
         assertThat(result.dryRun).isEqualTo(dryRun)
@@ -249,7 +259,17 @@ class SiteRestClientTest {
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
 
-        val result = restClient.newSite(username, siteName, siteTitle, language, timeZoneId, visibility, segmentId, siteDesign, dryRun)
+        val result = restClient.newSite(
+            username,
+            siteName,
+            siteTitle,
+            language,
+            timeZoneId,
+            visibility,
+            segmentId,
+            siteDesign,
+            dryRun
+        )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
         assertThat(result.dryRun).isEqualTo(dryRun)
@@ -299,7 +319,17 @@ class SiteRestClientTest {
         val siteDesign = "design"
         val timeZoneId = "Europe/London"
 
-        val result = restClient.newSite(username, siteName, siteTitle, language, timeZoneId, visibility, segmentId, siteDesign, dryRun)
+        val result = restClient.newSite(
+            username,
+            siteName,
+            siteTitle,
+            language,
+            timeZoneId,
+            visibility,
+            segmentId,
+            siteDesign,
+            dryRun
+        )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
         assertThat(result.dryRun).isEqualTo(dryRun)
@@ -346,7 +376,17 @@ class SiteRestClientTest {
         val visibility = SiteVisibility.PRIVATE
         val timeZoneId = "Europe/London"
 
-        val result = restClient.newSite(username, siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun)
+        val result = restClient.newSite(
+            username,
+            siteName,
+            siteTitle,
+            language,
+            timeZoneId,
+            visibility,
+            null,
+            null,
+            dryRun
+        )
 
         assertThat(result.newSiteRemoteId).isEqualTo(siteId)
         assertThat(result.dryRun).isEqualTo(dryRun)
