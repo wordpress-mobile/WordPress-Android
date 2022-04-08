@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-03-24 17:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0-rc.4
 Language: ar
 -->
 <resources>
@@ -327,7 +327,6 @@ Language: ar
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">واحد</string>
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
-    <string name="gutenberg_native_s_link">%s رابط</string>
     <string name="gutenberg_native_text_color">لون النص</string>
     <string name="gutenberg_native_padding">الهوامش الداخلية</string>
     <string name="gutenberg_native_four">أربعة</string>
@@ -605,15 +604,12 @@ Language: ar
     <string name="threat_item_sub_header_file_signature">تم العثور على تهديد %s</string>
     <string name="threat_item_sub_header_core_file">تم العثور على ثغرة أمنية في ووردبريس</string>
     <string name="threat_item_sub_header_misc_vulnerability">ثغرات أمنية متنوعة</string>
-    <string name="threat_item_header_vulnerable_theme">القالب المعرض للاختراق: %s (النسخة %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">الإضافة المعرضة للاختراق: %s (النسخة %s)</string>
     <string name="threat_item_header_database_threat">تهديدات قاعدة البيانات %s</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: نمط شفرة برمجية ضارة</string>
     <string name="scan_this_site">هذا الموقع</string>
     <string name="threat_item_header_threat_found">تم العثور على تهديد</string>
     <string name="threat_item_header_infected_core_file">%s: ملف أساسي (core file) مصاب</string>
     <string name="threats_fix_all">إصلاح الكل</string>
-    <string name="scan_idle_last_scan_description">تم تشغيل Jetpack scan آخر مرة في %s وكل شيء على ما يُرام. %s</string>
     <string name="scan_in_few_seconds">قبل بضع ثوانٍ</string>
     <string name="scan_in_minutes_ago">قبل %s دقيقة</string>
     <string name="scan_in_hours_ago">قبل %s ساعة</string>
@@ -628,7 +624,6 @@ Language: ar
     <string name="activity_log_activity_type_empty_title">لا توجد أنشطة متاحة</string>
     <string name="activity_log_activity_type_empty_subtitle">لم تُسجّل أي أنشطة في مدى التاريخ المحدد.</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">عامل تصفية نوع النشاط</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (عرض %s من العناصر)</string>
     <string name="activity_log_activity_type_error_title">لا يوجد اتصال</string>
     <string name="activity_log_activity_type_filter_active_label">نوع النشاط (%s)</string>
     <string name="activity_log_date_range_filter_label_content_description">عامل تصفية نطاق التاريخ</string>
@@ -979,7 +974,6 @@ Language: ar
     <string name="site_settings_select_page">تحديد صفحة</string>
     <string name="site_settings_classic_blog">المدونة التقليدية</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">يتعذر أن تتشابه الصفحة الرئيسية المحدَّدة مع صفحة المقالات.</string>
-    <string name="suggestion_invalid">%s ليس %s صالح</string>
     <string name="site_settings_accept_homepage">موافقة</string>
     <string name="site_settings_failed_update_homepage_settings">فشل تحديث إعدادات الصفحة الرئيسية، تحقَّق من اتصالك بالإنترنت</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">يتعذر حفظ إعدادات الصفحة الرئيسية قبل تحميل الصفحات</string>
@@ -1274,7 +1268,6 @@ Language: ar
     <string name="post_preview_saving_draft">جاري الحفظ…</string>
     <string name="dialog_confirm_autosave_dont_restore_button">الإصدار من هذا التطبيق</string>
     <string name="dialog_confirm_autosave_restore_button">الإصدار من جهاز آخر</string>
-    <string name="dialog_confirm_autosave_body_second_part">من هذا التطبيق\nتم الحفظ بتاريخ %s\n\nمن جهاز آخر\nتم الحفظ بتاريخ %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">لقد أجريت مؤخرًا تغييرات على هذه المقالة ولكن لم نحفظها. اختيار إصدار لتحميله:\n\n</string>
     <string name="dialog_confirm_autosave_title">ما الإصدار الذي ترغب في تحريره؟</string>
     <string name="post_waiting_for_connection_draft_cancel">لن نحفظ أحدث التغييرات في مسودتك.</string>
@@ -1326,7 +1319,6 @@ Language: ar
     <string name="navigate_forward_desc">التقدم للأمام</string>
     <string name="notification_post_will_be_published_in_ten_minutes">سيتم نشر \"%s\" خلال 10 دقائق</string>
     <string name="calendar_scheduled_post_title">مقالة ووردبريس مجدولة: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">تم جدولة \"%s\" للنشر على \"%s\" في تطبيق ووردبريس الخاص بك\n%s</string>
     <string name="notification_scheduled_post">مقالة مجدولة</string>
     <string name="notification_scheduled_post_one_hour_reminder">مقالة مجدولة: تذكير ساعة واحدة</string>
     <string name="notification_scheduled_post_ten_minute_reminder">مقالة مجدولة: تذكير 10 دقائق</string>
@@ -1428,6 +1420,7 @@ Language: ar
     <string name="stats_management_news_card_message">اختر الإحصائيات التي ستراها، والتركيز على البيانات التي تهمك أكثر. أنقر على %1$s في الجزء السفلي من الإحصائيات لتخصيص إحصائياتك.</string>
     <string name="history_fetching_revisions">جاري جلب المراجعات…</string>
     <string name="editor_uploading_draft">جاري رفع مسودّتك</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">فشلت عملية إدراج وسائط.\nيرجى النقر لإعادة المحاولة.</string>
     <string name="post_uploading_draft">رفع المسودّة</string>
     <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
@@ -1573,7 +1566,6 @@ Language: ar
     <string name="toast_conflict_updating_post">تحديث المقالة</string>
     <string name="dialog_confirm_load_remote_post_discard_web">تجاهل الويب</string>
     <string name="dialog_confirm_load_remote_post_discard_local">تجاهل محلي</string>
-    <string name="dialog_confirm_load_remote_post_body_2">محلي\nتم الحفظ على %s\n\nالويب\nتم الحفظ على %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">تحتوي هذه المقالة على إصدارين متعارضين. حدّد الإصدار الذي ترغب في تجاهله.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">حل تعارض المزامنة</string>
     <string name="stats_no_data_for_period">لا توجد بيانات لهذه الفترة</string>
@@ -1857,7 +1849,6 @@ Language: ar
     <string name="notification_settings_item_your_sites_all_followed_sites">جميع المواقع التي أتابعها</string>
     <string name="content_description_person_reading_device_notification">جهاز قراءة الشخصيات مع وجود إخطارات</string>
     <string name="content_description_people_looking_charts">الأشخاص الذين ينظرون إلى الرسومات والمخططات</string>
-    <string name="comment_title">%s في %s</string>
     <string name="dialog_confirm_delete_permanently_post">هل ترغب بالتأكيد في حذف هذه المقالة بشكل دائم؟</string>
     <string name="notification_settings_category_followed_sites">مواقع تمّت متابعتها</string>
     <string name="notification_channel_important_title">مهم</string>
@@ -2476,12 +2467,19 @@ Language: ar
     <string name="error_fetch_email_followers_list">تعذر استرداد متابعي الموقع عبر البريد الإلكتروني</string>
     <string name="error_fetch_followers_list">تعذر استرداد متابعي الموقع</string>
     <string name="editor_failed_uploads_switch_html">فشل رفع بعض الوسائط. يمكنك الإنتقال الى وضع HTML\nبهذه الحالة. إزالة جميع المرفوعات الفاشلة والمتابعة؟</string>
+    <string name="visual_editor">المحرر المرئي</string>
+    <string name="image_thumbnail">الصورة المصغرة</string>
     <string name="image_settings_save_toast">تم حفظ التغييرات</string>
+    <string name="image_alt_text">النص البديل</string>
     <string name="image_width">العرض</string>
     <string name="image_link_to">رابط لـ</string>
     <string name="image_caption">كلمات توضيحية</string>
     <string name="image_settings_dismiss_dialog_title">تجاهل التغييرات الغير محفوظة؟</string>
     <string name="stop_upload_dialog_title">إيقاف الرفع؟</string>
+    <string name="alert_error_adding_media">خطأ ما قد حدث أثناء إدراج الوسائط</string>
+    <string name="alert_action_while_uploading">أنت تقوم برفع وسائط حاليًا. يرجى الانتظار حتى يكتمل هذا.</string>
+    <string name="alert_insert_image_html_mode">لا يمكن إدراج الوسائط مباشرة في وضع HTML. يرجى التبديل إلى الوضع المرئي.</string>
+    <string name="uploading_gallery_placeholder">جاري رفع المعرض…</string>
     <string name="invite_error_some_failed">تم إرسال الدعوة ولكن بعض الأخطاء قد وقعت!</string>
     <string name="invite_sent">تم إرسال الدعوة بنجاح</string>
     <string name="tap_to_try_again">اضغط للمحاولة مرة أخرى!</string>
@@ -2933,6 +2931,7 @@ Language: ar
     <string name="select_categories">تحديد التصنيفات</string>
     <string name="post_not_found">حدث خطأ أثناء تحميل المقال . قم بتحديث مقالاتك ثم أعد المحاولة.</string>
     <string name="media_error_no_permission">ليس لديك تصريح لعرض مكتبة الوسائط</string>
+    <string name="create_a_link">إنشاء رابط</string>
     <string name="link_enter_url_text">نص الرابط (اختياري)</string>
     <string name="cannot_delete_multi_media_items">بعض الوسائط لايمكن حذفها في الوقت الحاضر. حاول مرة أخرى فيما بعد.</string>
     <string name="learn_more">تعلم المزيد</string>
@@ -2957,6 +2956,7 @@ Language: ar
     <string name="post_settings">إعدادات المقالة</string>
     <string name="error_blog_hidden">هذه المدونة مخفية و لايمكن تحميلها . قم بتفعيلها مرة اخرى من الإعدادات وأعد المحاولة.</string>
     <string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
+    <string name="horizontal_alignment">المحاذاة الأفقية</string>
     <string name="trash">سلة المهملات</string>
     <string name="comment_status_spam">مزعج</string>
     <string name="mnu_comment_spam">مزعج</string>
@@ -3043,12 +3043,17 @@ Language: ar
     <string name="username">اسم المستخدم</string>
     <string name="reader">القارئ</string>
     <string name="pages">صفحات</string>
+    <string name="width">عرض</string>
     <string name="no_network_title">لا توجد شبكة متاحة</string>
+    <string name="caption">الكلمات التوضيحية (اختياري)</string>
     <string name="posts">المقالات</string>
+    <string name="featured">استخدام كصورة بارزة</string>
+    <string name="featured_in_post">إدراج الصورة في محتوى المقالة</string>
     <string name="anonymous">غير معروف</string>
     <string name="done">تم</string>
     <string name="ok">موافق</string>
     <string name="link_enter_url">الرابط URL</string>
+    <string name="uploading">جاري الرفع…</string>
     <string name="version">النسخة</string>
     <string name="tos">بنود الخدمة</string>
     <string name="app_title">ووردبريس للآندرويد</string>
