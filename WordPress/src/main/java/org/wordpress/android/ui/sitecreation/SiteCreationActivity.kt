@@ -42,6 +42,7 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragme
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
@@ -56,11 +57,11 @@ class SiteCreationActivity : LocaleAwareActivity(),
         BasicDialogNegativeClickInterface {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
+    @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     private lateinit var mainViewModel: SiteCreationMainVM
     private lateinit var hppViewModel: HomePagePickerViewModel
     private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
     private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
-    @Inject lateinit var siteCreationStepsProvider: SiteCreationStepsProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,7 +145,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onIntentSelected(intent: String) {
         mainViewModel.onSiteIntentSelected(intent)
-        if (!siteCreationStepsProvider.isSiteNameEnabled) {
+        if (!siteNameFeatureConfig.isEnabled()) {
             ActivityUtils.hideKeyboard(this)
         }
     }
