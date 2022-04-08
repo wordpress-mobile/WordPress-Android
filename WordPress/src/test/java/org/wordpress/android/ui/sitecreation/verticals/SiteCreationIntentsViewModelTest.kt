@@ -134,7 +134,7 @@ class SiteCreationIntentsViewModelTest {
     @Test
     fun `when the user types white spaces the custom vertical is not visible`() {
         val valueOfSearchInput = "   \n "
-        whenever(resources.getStringArray(any())).thenReturn(arrayOf("Test1" , "Test2", "Test3"))
+        whenever(resources.getStringArray(any())).thenReturn(arrayOf("Test1", "Test2", "Test3"))
         viewModel.initializeFromResources(resources)
         viewModel.onSearchTextChanged(valueOfSearchInput)
         assertThat(viewModel.uiState.value?.content?.items?.size).isEqualTo(3)
