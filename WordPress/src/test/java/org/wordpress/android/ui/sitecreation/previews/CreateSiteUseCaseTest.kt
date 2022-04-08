@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
@@ -26,12 +27,16 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
 
+private const val SITE_TITLE = "site title"
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
         "slug",
         "domain",
-        null
+        SITE_TITLE
 )
+private const val USERNAME = "username"
+private const val EMAIL_USERNAME = "emailusername"
+private const val EMAIL = EMAIL_USERNAME + "@domain.tl"
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
 
@@ -44,12 +49,16 @@ class CreateSiteUseCaseTest {
     @Mock private lateinit var store: SiteStore
     @Mock private lateinit var urlUtilsWrapper: UrlUtilsWrapper
     @Mock private lateinit var accountStore: AccountStore
-    @Mock private lateinit var signupUtils: SignupUtils
+    @Mock lateinit var accountModel: AccountModel
     private lateinit var useCase: CreateSiteUseCase
     private lateinit var event: OnNewSiteCreated
+    private val signupUtils = SignupUtils()
 
     @Before
     fun setUp() {
+        whenever(accountStore.account).thenReturn(accountModel)
+        whenever(accountModel.userName).thenReturn(USERNAME)
+        whenever(accountModel.email).thenReturn(EMAIL)
         useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper, accountStore, signupUtils)
         event = OnNewSiteCreated(newSiteRemoteId = 123)
     }
@@ -75,6 +84,8 @@ class CreateSiteUseCaseTest {
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
+        assertThat(payload.siteTitle).isEqualTo(SITE_TITLE)
+        assertThat(payload.username).isEqualTo(USERNAME)
     }
 
     @Test
@@ -123,5 +134,18 @@ class CreateSiteUseCaseTest {
 
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.timeZoneId).isEqualTo(TIMEZONE_ID)
+    }
+
+    @Test
+    fun verifyPropagatesEmailUsernameWhenUsernameIsNull() = test {
+        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
+        whenever(accountModel.userName).thenReturn(null)
+        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
+
+        val captor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(captor.capture())
+
+        val payload = captor.value.payload as NewSitePayload
+        assertThat(payload.username).isEqualTo(EMAIL_USERNAME)
     }
 }
