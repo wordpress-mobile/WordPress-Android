@@ -19,7 +19,6 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private int mId;
     @Column private long mRemoteCommentId;
     @Column private long mRemotePostId;
-    @Column private long mRemoteParentCommentId;
     @Column private int mLocalSiteId;
     @Column private long mRemoteSiteId;
 
@@ -27,6 +26,7 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mAuthorUrl;
     @Column private String mAuthorName;
     @Column private String mAuthorEmail;
+    @Column private long mAuthorId;
     @Column private String mAuthorProfileImageUrl;
 
     // Comment data
@@ -153,12 +153,12 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
         mRemoteSiteId = remoteSiteId;
     }
 
-    public long getRemoteParentCommentId() {
-        return mRemoteParentCommentId;
+    public long getAuthorId() {
+        return mAuthorId;
     }
 
-    public void setRemoteParentCommentId(long remoteParentCommentId) {
-        mRemoteParentCommentId = remoteParentCommentId;
+    public void setAuthorId(long authorId) {
+        mAuthorId = authorId;
     }
 
     public boolean getILike() {

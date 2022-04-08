@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -35,7 +36,14 @@ import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
-val DEFAULT_INSIGHTS = listOf(MOST_POPULAR_DAY_AND_HOUR, ALL_TIME_STATS, TODAY_STATS, FOLLOWERS, COMMENTS)
+val DEFAULT_INSIGHTS = listOf(
+    VIEWS_AND_VISITORS,
+    MOST_POPULAR_DAY_AND_HOUR,
+    ALL_TIME_STATS,
+    TODAY_STATS,
+    FOLLOWERS,
+    COMMENTS
+)
 val STATS_UNAVAILABLE_WITH_JETPACK = listOf(FILE_DOWNLOADS)
 const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
 
@@ -162,6 +170,7 @@ class StatsStore
     interface StatsType
 
     enum class InsightType : StatsType {
+        VIEWS_AND_VISITORS,
         LATEST_POST_SUMMARY,
         MOST_POPULAR_DAY_AND_HOUR,
         ALL_TIME_STATS,

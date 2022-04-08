@@ -81,6 +81,8 @@
 /tracker
 
 /coupons
+/coupons/<id>
+/reports/coupons
 
 /admin/notes
 /admin/notes/<note_id>/action/<action_id>
