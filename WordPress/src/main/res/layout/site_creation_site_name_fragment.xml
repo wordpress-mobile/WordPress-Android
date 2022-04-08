@@ -76,7 +76,7 @@
                 android:hint="@string/new_site_creation_site_name_input_hint"
                 android:imeOptions="actionDone|flagNoFullscreen"
                 android:importantForAutofill="noExcludeDescendants"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
