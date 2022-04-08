@@ -31,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
 private const val NEW_SITE_REMOTE_ID = 1234L
+private const val NEW_SITE_REMOTE_URL = "new.site.url"
 
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
@@ -41,7 +42,7 @@ private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
 
 private val IDLE_STATE = SiteCreationServiceState(IDLE)
 private val CREATE_SITE_STATE = SiteCreationServiceState(CREATE_SITE)
-private val SUCCESS_STATE = SiteCreationServiceState(SUCCESS, NEW_SITE_REMOTE_ID)
+private val SUCCESS_STATE = SiteCreationServiceState(SUCCESS, Pair(NEW_SITE_REMOTE_ID, NEW_SITE_REMOTE_URL))
 private val FAILURE_STATE = SiteCreationServiceState(FAILURE)
 
 @InternalCoroutinesApi
@@ -64,8 +65,8 @@ class SiteCreationServiceManagerTest {
     @Before
     fun setUp() {
         manager = SiteCreationServiceManager(useCase, dispatcher, tracker, TEST_DISPATCHER)
-        successEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID)
-        siteExistsErrorEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID)
+        successEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
+        siteExistsErrorEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
         genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")
         siteExistsErrorEvent.error = NewSiteError(SITE_NAME_EXISTS, "")
     }
