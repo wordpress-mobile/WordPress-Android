@@ -2200,46 +2200,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given tabs are disabled, when quick link ribbon stats tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
-
-        requireNotNull(quickLinkRibbonStatsClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_STATS_TAPPED))
-    }
-
-    @Test
-    fun `given tabs are disabled, when quick link ribbon pages tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
-
-        requireNotNull(quickLinkRibbonPagesClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED))
-    }
-
-    @Test
-    fun `given tabs are disabled, when quick link ribbon posts tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
-
-        requireNotNull(quickLinkRibbonPostsClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_POSTS_TAPPED))
-    }
-
-    @Test
-    fun `given tabs are disabled, when quick link ribbon media tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
-
-        requireNotNull(quickLinkRibbonMediaClickAction).invoke()
-
-        assertThat(trackWithTabSource).isEmpty()
-        assertThat(analyticsTrackerWrapper.track(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED))
-    }
-
-    @Test
     fun `given site is WPCOM, when quick link ribbon stats click, then stats screen is shown`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
