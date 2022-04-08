@@ -19,7 +19,8 @@ data class LocalNotification(
     val id = uniqueId ?: NotificationPushIds.LOCAL_NOTIFICATION_ID + type.ordinal
 
     enum class Type(val tag: String) {
-        CREATE_SITE("create_site");
+        CREATE_SITE("create_site"),
+        BLOGGING_PROMPTS_ONBOARDING("blogging_prompts_onboarding");
 
         companion object {
             fun fromTag(tag: String?): Type? {

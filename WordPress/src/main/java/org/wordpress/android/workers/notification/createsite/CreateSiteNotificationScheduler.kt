@@ -1,14 +1,13 @@
 package org.wordpress.android.workers.notification.createsite
 
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.CREATE_SITE_NOTIFICATION_SCHEDULED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.workers.notification.local.LocalNotification
 import org.wordpress.android.workers.notification.local.LocalNotification.Type.CREATE_SITE
 import org.wordpress.android.workers.notification.local.LocalNotificationScheduler
-import java.util.concurrent.TimeUnit.DAYS
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CreateSiteNotificationScheduler
@@ -23,12 +22,12 @@ class CreateSiteNotificationScheduler
             val firstNotification = LocalNotification(
                     type = CREATE_SITE,
                     delay = 1, // 1 day from now
-                    delayUnits = DAYS,
-                    title = string.create_site_notification_title,
-                    text = string.create_site_notification_text,
-                    icon = drawable.ic_wordpress_white_24dp,
+                    delayUnits = TimeUnit.DAYS,
+                    title = R.string.create_site_notification_title,
+                    text = R.string.create_site_notification_text,
+                    icon = R.drawable.ic_wordpress_white_24dp,
                     actionIcon = -1,
-                    actionTitle = string.create_site_notification_create_site_action
+                    actionTitle = R.string.create_site_notification_create_site_action
             )
             val secondNotification = firstNotification.copy(
                     delay = 8 // 1 week after first notification
