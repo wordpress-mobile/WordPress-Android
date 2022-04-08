@@ -2059,6 +2059,74 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(siteInfoHeaderCard).isTrue
     }
 
+    @Test
+    fun `given tabs enabled + site menu initial screen, when site menu cards + items, then dynamic card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                initialScreen = SITE_MENU.label,
+                isQuickStartDynamicCardEnabled = true
+        )
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(DynamicCard::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given tabs enabled + dashboard initial screen, when dashboard cards + items, then dynamic card exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                initialScreen = home,
+                isQuickStartDynamicCardEnabled = true
+        )
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(DynamicCard::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `given tabs enabled + site menu initial screen, when dashboard cards + items, then dynamic card not exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                initialScreen = SITE_MENU.label,
+                isQuickStartDynamicCardEnabled = true
+        )
+
+        val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
+
+        assertThat(items.filterIsInstance(DynamicCard::class.java)).isEmpty()
+    }
+
+    @Test
+    fun `given tabs enabled + dashboard initial screen, when site menu cards + items, then dynamic card not exists`() {
+        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+        setUpSiteItemBuilder()
+
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                initialScreen = home,
+                isQuickStartDynamicCardEnabled = true
+        )
+
+        val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
+
+        assertThat(items.filterIsInstance(DynamicCard::class.java)).isEmpty()
+    }
+
     /* TRACK WITH TAB SOURCE */
     @Test
     fun `given tabs are enabled, when pull to refresh invoked, then track with tab source is requested`() {
