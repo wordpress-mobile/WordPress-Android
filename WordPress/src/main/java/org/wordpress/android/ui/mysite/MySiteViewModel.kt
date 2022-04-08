@@ -352,20 +352,21 @@ class MySiteViewModel @Inject constructor(
     private fun getPositionOfQuickStartItem(
         siteItems: Map<MySiteTabType, List<MySiteCardAndItem>>,
         activeTask: QuickStartTask
-    ) =
-            if (isMySiteTabsEnabled) {
-                val currentTab = orderedTabTypes[_selectTab.value!!.peekContent().position]
-                if (currentTab == MySiteTabType.DASHBOARD && activeTask.showInSiteMenu()) {
-                    (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
-                                .indexOfFirst { it.activeQuickStartItem }
-                } else {
-                        (siteItems[currentTab] as List<MySiteCardAndItem>)
-                                    .indexOfFirst { it.activeQuickStartItem }
-                }
+    ) = if (isMySiteTabsEnabled) {
+        _selectTab.value?.let { tabEvent ->
+            val currentTab = orderedTabTypes[tabEvent.peekContent().position]
+            if (currentTab == MySiteTabType.DASHBOARD && activeTask.showInSiteMenu()) {
+                (siteItems[MySiteTabType.SITE_MENU] as List<MySiteCardAndItem>)
+                        .indexOfFirst { it.activeQuickStartItem }
             } else {
-                (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
-                            .indexOfFirst { it.activeQuickStartItem }
+                (siteItems[currentTab] as List<MySiteCardAndItem>)
+                        .indexOfFirst { it.activeQuickStartItem }
             }
+        } ?: LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM
+    } else {
+        (siteItems[MySiteTabType.ALL] as List<MySiteCardAndItem>)
+                .indexOfFirst { it.activeQuickStartItem }
+    }
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
         QuickStartTask.VIEW_SITE,
@@ -585,7 +586,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == -1 && (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
+        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM &&
+                (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
         else position >= 0
     }
 
@@ -1244,6 +1246,7 @@ class MySiteViewModel @Inject constructor(
 
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
+        private const val LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM = -1
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
