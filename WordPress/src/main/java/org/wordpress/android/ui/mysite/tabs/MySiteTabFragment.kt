@@ -318,6 +318,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
         is SiteNavigationAction.OpenTodaysStats ->
             ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.DAY)
+        is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
+            ActivityLauncher.openUrlExternal(requireActivity(), action.url)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {

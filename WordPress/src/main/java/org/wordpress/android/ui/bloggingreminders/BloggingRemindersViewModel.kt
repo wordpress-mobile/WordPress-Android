@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.NOTIFICATION_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
@@ -235,6 +236,10 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun onNotificationSettingsItemClicked(remoteSiteId: Long) {
         onSettingsItemClicked(siteStore.getLocalIdForRemoteSiteId(remoteSiteId), NOTIFICATION_SETTINGS)
+    }
+
+    fun onBloggingPromptSchedulingRequested(siteId: Int) {
+        showBottomSheet(siteId, PROLOGUE, BLOGGING_PROMPTS_ONBOARDING)
     }
 
     private fun onSettingsItemClicked(siteId: Int, source: Source) {

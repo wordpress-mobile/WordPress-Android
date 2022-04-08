@@ -2,7 +2,7 @@
 
 19.7
 -----
-
+* [***] My Site: your My Site screen now has two tabs, "Site Menu" and "Home". Under "Home", you'll find contextual cards with some highlights of whats going on with your site. Check your drafts or scheduled posts, your today's stats or go directly to another section of the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/15989]
 
 19.6
 -----
