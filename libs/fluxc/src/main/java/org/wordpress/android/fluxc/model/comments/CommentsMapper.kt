@@ -13,9 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestRe
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.utils.DateTimeUtilsWrapper
-import java.util.ArrayList
 import java.util.Date
-import java.util.HashMap
 import javax.inject.Inject
 
 @Reusable
@@ -46,7 +44,7 @@ class CommentsMapper @Inject constructor(
             publishedTimestamp = dateTimeUtilsWrapper.timestampFromIso8601(commentDto.date),
             content = commentDto.content,
             url = commentDto.URL,
-            remoteParentCommentId = commentDto.author?.ID ?: 0L,
+            authorId = commentDto.author?.ID ?: 0L,
             hasParent = commentDto.parent != null,
             parentId = commentDto.parent?.ID ?: 0,
             iLike = commentDto.i_like
@@ -58,7 +56,7 @@ class CommentsMapper @Inject constructor(
             this.id = entity.id.toInt()
             this.remoteCommentId = entity.remoteCommentId
             this.remotePostId = entity.remotePostId
-            this.remoteParentCommentId = entity.remoteParentCommentId
+            this.authorId = entity.authorId
             this.localSiteId = entity.localSiteId
             this.remoteSiteId = entity.remoteSiteId
             this.authorUrl = entity.authorUrl
@@ -82,7 +80,7 @@ class CommentsMapper @Inject constructor(
                 id = commentModel.id.toLong(),
                 remoteCommentId = commentModel.remoteCommentId,
                 remotePostId = commentModel.remotePostId,
-                remoteParentCommentId = commentModel.remoteParentCommentId,
+                authorId = commentModel.authorId,
                 localSiteId = commentModel.localSiteId,
                 remoteSiteId = commentModel.remoteSiteId,
                 authorUrl = commentModel.authorUrl,
@@ -116,7 +114,7 @@ class CommentsMapper @Inject constructor(
         return CommentEntity(
                 remoteCommentId = XMLRPCUtils.safeGetMapValue(commentMap, "comment_id", 0L),
                 remotePostId = XMLRPCUtils.safeGetMapValue(commentMap, "post_id", 0L),
-                remoteParentCommentId = remoteParentCommentId,
+                authorId = XMLRPCUtils.safeGetMapValue(commentMap, "user_id", 0L),
                 localSiteId = site.id,
                 remoteSiteId = site.selfHostedSiteId,
                 authorUrl = XMLRPCUtils.safeGetMapValue(commentMap, "author_url", ""),
