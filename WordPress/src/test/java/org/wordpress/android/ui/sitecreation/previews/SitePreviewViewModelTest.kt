@@ -102,6 +102,7 @@ class SitePreviewViewModelTest {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)
         whenever(urlUtils.addUrlSchemeIfNeeded(URL, true)).thenReturn(URL)
+        whenever(urlUtils.removeScheme(URL)).thenReturn(URL)
         whenever(siteStore.getSiteBySiteId(REMOTE_SITE_ID)).thenReturn(createLocalDbSiteModelId())
     }
 
