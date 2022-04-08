@@ -22,7 +22,6 @@
         android:id="@+id/view_more_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:background="?attr/selectableItemBackgroundBorderless"
         android:text="@string/stats_insights_view_more"
         android:textAllCaps="true"

@@ -9,6 +9,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_BLUE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_PURPLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHIPS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIALOG_BUTTONS
@@ -59,6 +61,8 @@ sealed class BlockListItem(val type: Type) {
         LINK,
         BAR_CHART,
         CHART_LEGEND,
+        CHART_LEGENDS_BLUE,
+        CHART_LEGENDS_PURPLE,
         TABS,
         HEADER,
         MAP,
@@ -81,7 +85,7 @@ sealed class BlockListItem(val type: Type) {
     data class TitleWithMore(
         @StringRes val textResource: Int? = null,
         val text: String? = null,
-        val moreAction: ((View) -> Unit)? = null
+        val navigationAction: ListItemInteraction? = null,
     ) : BlockListItem(TITLE_WITH_MORE)
 
     data class BigTitle(
@@ -220,6 +224,16 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class ChartLegend(@StringRes val text: Int) : BlockListItem(CHART_LEGEND)
+
+    data class ChartLegendsBlue(
+        @StringRes val legend1: Int,
+        @StringRes val legend2: Int
+    ) : BlockListItem(CHART_LEGENDS_BLUE)
+
+    data class ChartLegendsPurple(
+        @StringRes val legend1: Int,
+        @StringRes val legend2: Int
+    ) : BlockListItem(CHART_LEGENDS_PURPLE)
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
             BlockListItem(TABS) {

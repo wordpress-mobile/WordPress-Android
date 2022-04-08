@@ -8,7 +8,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegendsBlue
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegendsPurple
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips.Chip
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
@@ -43,6 +44,16 @@ class ViewsAndVisitorsMapper
             fun valueOf(value: Int): SelectedType? = values().find { it.value == value }
         }
     }
+
+    fun buildChartLegendsBlue() = ChartLegendsBlue(
+            string.stats_timeframe_this_week,
+            string.stats_timeframe_previous_week
+        )
+
+    fun buildChartLegendsPurple() = ChartLegendsPurple(
+            string.stats_timeframe_this_week,
+            string.stats_timeframe_previous_week
+        )
 
     @Suppress("LongParameterList")
     fun buildTitle(
@@ -154,9 +165,6 @@ class ViewsAndVisitorsMapper
             null
         }
         val result = mutableListOf<BlockListItem>()
-        if (shouldShowVisitors) {
-            result.add(ChartLegend(string.stats_visitors))
-        }
 
         val entryType = when (SelectedType.valueOf(selectedType)) {
             Visitors -> R.string.stats_visitors

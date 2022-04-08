@@ -10,6 +10,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Activ
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegendsBlue
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegendsPurple
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.DialogButtons
@@ -35,6 +37,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_BLUE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_PURPLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHIPS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIALOG_BUTTONS
@@ -65,6 +69,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BarChar
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BigTitleViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BlockListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ChartLegendViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ChartLegendsPurpleViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ChartLegendsBlueViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ChipsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.DialogButtonsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.DividerViewHolder
@@ -119,6 +125,8 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             LINK -> LinkViewHolder(parent)
             BAR_CHART -> BarChartViewHolder(parent)
             CHART_LEGEND -> ChartLegendViewHolder(parent)
+            CHART_LEGENDS_BLUE -> ChartLegendsBlueViewHolder(parent)
+            CHART_LEGENDS_PURPLE -> ChartLegendsPurpleViewHolder(parent)
             TABS -> TabsViewHolder(parent, imageManager)
             INFO -> InformationViewHolder(parent)
             HEADER -> HeaderViewHolder(parent)
@@ -158,6 +166,8 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem)
             is ChartLegendViewHolder -> holder.bind(item as ChartLegend)
+            is ChartLegendsBlueViewHolder -> holder.bind(item as ChartLegendsBlue)
+            is ChartLegendsPurpleViewHolder -> holder.bind(item as ChartLegendsPurple)
             is TabsViewHolder -> holder.bind(item as TabsItem, payloads.contains(TAB_CHANGED))
             is InformationViewHolder -> holder.bind(item as Information)
             is HeaderViewHolder -> holder.bind(item as Header)

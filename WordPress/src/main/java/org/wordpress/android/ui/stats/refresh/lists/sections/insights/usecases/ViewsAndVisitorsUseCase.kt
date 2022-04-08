@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -14,6 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITO
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
@@ -22,11 +22,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
-import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -47,7 +47,6 @@ class ViewsAndVisitorsUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
-    private val popupMenuHandler: ItemPopupMenuHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -153,6 +152,12 @@ class ViewsAndVisitorsUseCase
         if (domainModel.dates.isNotEmpty()) {
             items.add(buildTitle())
 
+            if (uiState.selectedPosition == 1) {
+                items.add(viewsAndVisitorsMapper.buildChartLegendsPurple())
+            } else {
+                items.add(viewsAndVisitorsMapper.buildChartLegendsBlue())
+            }
+
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
             val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
             val availableDates = domainModel.dates.map {
@@ -202,16 +207,19 @@ class ViewsAndVisitorsUseCase
             )
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
-            AppLog.e(T.STATS, "There is no data to be shown in the overview block")
+            AppLog.e(T.STATS, "There is no data to be shown in the views and visitors block")
         }
         return items
     }
 
-    private fun buildTitle() = TitleWithMore(string.stats_insights_views_and_visitors, moreAction = this::onMenuClick)
+    private fun buildTitle() = TitleWithMore(
+            string.stats_insights_views_and_visitors,
+            navigationAction = ListItemInteraction.create(this::onViewMoreClick)
+    )
 
-    private fun onMenuClick(view: View) {
-        // TODO: Connect this to second level navigation later
-        popupMenuHandler.onMenuClick(view, type)
+    private fun onViewMoreClick() {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED)
+        navigateTo(ViewTagsAndCategoriesStats) // TODO: Connect this to proper second level navigation later
     }
 
     private fun onBarSelected(period: String?) {
@@ -250,7 +258,6 @@ class ViewsAndVisitorsUseCase
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
-        private val popupMenuHandler: ItemPopupMenuHandler,
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val statsWidgetUpdaters: StatsWidgetUpdaters,
@@ -265,7 +272,6 @@ class ViewsAndVisitorsUseCase
                         statsSiteProvider,
                         statsDateFormatter,
                         viewsAndVisitorsMapper,
-                        popupMenuHandler,
                         mainDispatcher,
                         backgroundDispatcher,
                         analyticsTracker,

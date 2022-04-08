@@ -14,4 +14,5 @@
     <color name="stats_map_activity_low">@color/blue_5</color>
     <color name="stats_map_activity_high">@color/blue</color>
     <color name="stats_map_activity_empty">@color/neutral_5</color>
+    <color name="stats_legend_previous_week">@color/gray_60</color>
 </resources>

@@ -1241,6 +1241,8 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
+    <string name="stats_timeframe_this_week">This Week</string>
+    <string name="stats_timeframe_previous_week">Previous Week</string>
 
     <string name="stats_views">Views</string>
     <string name="stats_visitors">Visitors</string>
