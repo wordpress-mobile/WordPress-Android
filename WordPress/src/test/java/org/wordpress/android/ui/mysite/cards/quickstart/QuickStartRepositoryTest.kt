@@ -67,10 +67,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private val siteMenuTasks = listOf(
             QuickStartTask.VIEW_SITE,
             QuickStartTask.ENABLE_POST_SHARING,
-            QuickStartTask.EXPLORE_PLANS,
-            QuickStartTask.CHECK_STATS,
-            QuickStartTask.EDIT_HOMEPAGE,
-            QuickStartTask.REVIEW_PAGES
+            QuickStartTask.EXPLORE_PLANS
     )
 
     private val nonSiteMenuTasks = QuickStartTask.values().subtract(siteMenuTasks)
