@@ -71,7 +71,21 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onPrimarySiteChanged(siteRemoteId: Long) {
-        //TODO
+        val optimisticallyUiState = {
+            val siteViewModel = _accountSettingsUiState.value.primarySiteSettingsUiState?.sites
+                    ?.firstOrNull { it.siteId == siteRemoteId }
+            _accountSettingsUiState.update {
+                it.copy(
+                        primarySiteSettingsUiState = it.primarySiteSettingsUiState?.copy(
+                                primarySite = siteViewModel
+                        )
+                )
+            }
+        }
+
+        onAccountSettingsChange(optimisticallyUiState) {
+            accountsSettingsRepository.updatePrimaryBlog(siteRemoteId.toString())
+        }
     }
 
     fun onEmailChanged(newEmail: String) {
