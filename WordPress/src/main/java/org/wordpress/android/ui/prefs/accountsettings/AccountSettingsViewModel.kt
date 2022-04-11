@@ -114,7 +114,14 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onPasswordChanged(newPassword: String) {
-        //TODO
+        _accountSettingsUiState.update {
+            it.copy(
+                    changePasswordSettingsUiState = it.changePasswordSettingsUiState.copy(
+                            showChangePasswordProgressDialog = true
+                    ),
+            )
+        }
+        onAccountSettingsChange { accountsSettingsRepository.updatePassword(newPassword) }
     }
 
     private fun onAccountSettingsChange(
