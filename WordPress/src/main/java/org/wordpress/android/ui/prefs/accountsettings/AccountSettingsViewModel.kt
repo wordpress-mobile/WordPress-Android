@@ -21,11 +21,13 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
 class AccountSettingsViewModel @Inject constructor(
+    private val resourceProvider: ResourceProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
@@ -64,7 +66,7 @@ class AccountSettingsViewModel @Inject constructor(
         )
     }
 
-    fun onUsernameChangeConfirmedFromServer(userName: String){
+    fun onUsernameChangeConfirmedFromServer(userName: String) {
         //TODO
     }
 
@@ -82,6 +84,44 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun onPasswordChanged(newPassword: String) {
         //TODO
+    }
+
+    private fun onAccountSettingsChange(
+        optimisticallyChangeUiState: (() -> Unit?)? = null,
+        updateAccountSettings: suspend () -> OnAccountChanged
+    ) {
+        optimisticallyChangeUiState?.invoke()
+        viewModelScope.launch {
+            val onAccountChangedEvent = updateAccountSettings.invoke()
+            if (onAccountChangedEvent.isError) {
+                handleError(onAccountChangedEvent.error)
+            }
+            updateAccountSettingsUiState()
+        }
+    }
+
+    private fun updateAccountSettingsUiState() {
+        _accountSettingsUiState.value = getAccountSettingsUiState()
+    }
+
+    private fun handleError(accountError: AccountError) {
+        val errorMessage: String? = when (accountError.type) {
+            SETTINGS_FETCH_GENERIC_ERROR -> resourceProvider.getString(string.error_fetch_account_settings)
+            SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR -> resourceProvider.getString(string.error_disabled_apis)
+            SETTINGS_POST_ERROR -> {
+                if (!TextUtils.isEmpty(accountError.message)) accountError.message else resourceProvider.getString(
+                        string.error_post_account_settings
+                )
+            }
+            else -> null
+        }
+        errorMessage?.let { updateErrorUiState(it) }
+    }
+
+    private fun updateErrorUiState(errorMessage: String) {
+        _accountSettingsUiState.update {
+            it.copy(error = errorMessage)
+        }
     }
 
     data class UserNameSettingsUiState(
