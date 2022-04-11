@@ -39,6 +39,13 @@ class AccountSettingsRepository @Inject constructor(
         return siteStore.getSiteBySiteId(siteRemoteId)
     }
 
+    suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
+        suspendCancellableCoroutine {
+            continuation = it
+            dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
+        }
+    }
+
     suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["primary_site_ID"] = blogId }
         return updateAccountSettings(addPayload)
