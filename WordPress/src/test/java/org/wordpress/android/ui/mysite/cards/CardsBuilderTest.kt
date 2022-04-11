@@ -210,7 +210,8 @@ class CardsBuilderTest {
                         onPagesClick = mock(),
                         onPostsClick = mock(),
                         onMediaClick = mock(),
-                        onStatsClick = mock()
+                        onStatsClick = mock(),
+                        activeTask = activeTask
                 )
         )
     }
