@@ -67,7 +67,12 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
-        //TODO
+        _accountSettingsUiState.update {
+            it.copy(userNameSettingsUiState =
+            it.userNameSettingsUiState.copy(
+                    userName = userName,
+                    showUserNameConfirmedSnackBar = true))
+        }
     }
 
     fun onPrimarySiteChanged(siteRemoteId: Long) {
