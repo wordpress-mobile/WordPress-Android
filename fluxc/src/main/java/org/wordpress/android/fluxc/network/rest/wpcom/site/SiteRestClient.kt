@@ -226,14 +226,8 @@ class SiteRestClient @Inject constructor(
         if (siteTitle != null) {
             body["blog_title"] = siteTitle
         }
-        if (siteName != null) {
-            body["blog_name"] = siteName
-        } else {
-            if (siteTitle != null) {
-                body["blog_name"] = siteTitle
-            } else {
-                body["blog_name"] = username
-            }
+        body["blog_name"] = siteName ?: siteTitle ?: username
+        siteName ?: run {
             body["site_creation_flow"] = "with-design-picker"
             body["find_available_url"] = "1"
         }
