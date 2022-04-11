@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -51,6 +52,7 @@ sealed class BlockListItem(val type: Type) {
         TAG_ITEM,
         IMAGE_ITEM,
         VALUE_ITEM,
+        VALUES_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         INFO,
@@ -116,6 +118,16 @@ sealed class BlockListItem(val type: Type) {
     ) : BlockListItem(VALUE_ITEM) {
         enum class State { POSITIVE, NEGATIVE, NEUTRAL }
     }
+
+    data class ValuesItem(
+        val selectedItem: Int,
+        val value1: String,
+        @StringRes val unit1: Int,
+        val contentDescription1: String,
+        val value2: String,
+        @StringRes val unit2: Int,
+        val contentDescription2: String,
+    ) : BlockListItem(VALUES_ITEM)
 
     data class ListItem(
         val text: String,

@@ -346,7 +346,7 @@
         <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_96dp</item>
-        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawablePadding">4dp</item>
         <item name="android:textColor">@color/blue_50</item>
         <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
     </style>
@@ -355,7 +355,7 @@
         <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_96dp</item>
-        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawablePadding">4dp</item>
         <item name="android:textColor">@color/purple_50</item>
         <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
         <item name="android:drawableTint">@color/purple_50</item>
@@ -365,7 +365,7 @@
         <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_96dp</item>
-        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawablePadding">4dp</item>
         <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
         <item name="android:drawableTint">@color/stats_legend_previous_week</item>
     </style>

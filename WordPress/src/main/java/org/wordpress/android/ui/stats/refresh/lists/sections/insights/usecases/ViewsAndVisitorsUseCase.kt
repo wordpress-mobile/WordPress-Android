@@ -181,7 +181,6 @@ class ViewsAndVisitorsUseCase
                             selectedItem,
                             previousItem,
                             uiState.selectedPosition,
-                            isLast = selectedItem == domainModel.dates.last(),
                             statsGranularity = statsGranularity
                     )
             )

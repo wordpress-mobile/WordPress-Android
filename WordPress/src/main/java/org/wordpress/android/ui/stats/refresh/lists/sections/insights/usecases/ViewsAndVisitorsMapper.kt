@@ -13,8 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chart
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips.Chip
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Views
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Visitors
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
@@ -60,32 +59,31 @@ class ViewsAndVisitorsMapper
         selectedItem: PeriodData,
         previousItem: PeriodData?,
         selectedPosition: Int,
-        isLast: Boolean,
         startValue: Int = MILLION,
         statsGranularity: StatsGranularity = DAYS
-    ): ValueItem {
+    ): ValuesItem {
         val value = selectedItem.getValue(selectedPosition) ?: 0
-        val previousValue = previousItem?.getValue(selectedPosition)
-        val positive = value >= (previousValue ?: 0)
-        val change = buildChange(previousValue, value, positive, isFormattedNumber = true)
-        val unformattedChange = buildChange(previousValue, value, positive, isFormattedNumber = false)
-        val state = when {
-            isLast -> State.NEUTRAL
-            positive -> State.POSITIVE
-            else -> State.NEGATIVE
-        }
-        return ValueItem(
-                value = statsUtils.toFormattedString(value, startValue),
-                unit = units[selectedPosition],
-                isFirst = true,
-                change = change,
-                state = state,
-                contentDescription = resourceProvider.getString(
+        val previousValue = previousItem?.getValue(selectedPosition) ?: 0
+
+        return ValuesItem(
+                selectedItem = selectedPosition,
+                value1 = statsUtils.toFormattedString(value, startValue),
+                unit1 = units[selectedPosition],
+                contentDescription1 = resourceProvider.getString(
                         string.stats_overview_content_description,
                         value,
                         resourceProvider.getString(units[selectedPosition]),
                         statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
-                        unformattedChange ?: ""
+                        ""
+                ),
+                value2 = statsUtils.toFormattedString(previousValue, startValue),
+                unit2 = units[selectedPosition],
+                contentDescription2 = resourceProvider.getString(
+                        string.stats_overview_content_description,
+                        previousValue,
+                        resourceProvider.getString(units[selectedPosition]),
+                        statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
+                        ""
                 )
         )
     }
