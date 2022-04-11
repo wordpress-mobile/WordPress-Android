@@ -226,7 +226,7 @@ platform :android do
     )
 
     git_add(path: download_path)
-    git_commit(message: "Update WordPress metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
+    git_commit(path: download_path, message: "Update WordPress metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
     push_to_git_remote
   end
 
@@ -261,7 +261,7 @@ platform :android do
     )
 
     git_add(path: download_path)
-    git_commit(message: "Update Jetpack metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
+    git_commit(path: download_path, message: "Update Jetpack metadata translations for #{options[:version]}", allow_nothing_to_commit: true)
     push_to_git_remote
   end
 
