@@ -1,4 +1,4 @@
-package org.wordpress.android.workers
+package org.wordpress.android.workers.notification.createsite
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationType.CREATE_SITE
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
-import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationHandler
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateSiteNotificationHandlerTest {

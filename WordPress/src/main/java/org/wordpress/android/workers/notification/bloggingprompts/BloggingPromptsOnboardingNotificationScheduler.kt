@@ -7,8 +7,7 @@ import org.wordpress.android.workers.notification.local.LocalNotificationSchedul
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
-class BloggingPromptsOnboardingNotificationScheduler
-@Inject constructor(
+class BloggingPromptsOnboardingNotificationScheduler @Inject constructor(
     private val localNotificationScheduler: LocalNotificationScheduler,
     private val bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler
 ) {

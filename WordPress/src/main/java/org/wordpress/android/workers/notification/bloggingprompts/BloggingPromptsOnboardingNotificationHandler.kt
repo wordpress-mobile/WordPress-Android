@@ -13,11 +13,9 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
     private val accountStore: AccountStore,
     private val notificationsTracker: SystemNotificationsTracker
 ) : LocalNotificationHandler {
-    // TODO @RenanLukas replace with real check
-    private val hasUserOptedInBloggingPrompts = false
-
+    // TODO @RenanLukas update with show notification business rule
     override fun shouldShowNotification(): Boolean {
-        return accountStore.hasAccessToken() && !hasUserOptedInBloggingPrompts
+        return accountStore.hasAccessToken()
     }
 
     override fun buildIntent(context: Context): Intent {
