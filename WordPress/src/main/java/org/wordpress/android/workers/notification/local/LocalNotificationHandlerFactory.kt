@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class LocalNotificationHandlerFactory @Inject constructor(
     private val createSiteNotificationHandler: CreateSiteNotificationHandler,
-    private val bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler,
+    private val bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler
 ) {
     fun buildLocalNotificationHandler(type: Type): LocalNotificationHandler {
         return when (type) {

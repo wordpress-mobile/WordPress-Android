@@ -13,7 +13,6 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
     private val accountStore: AccountStore,
     private val notificationsTracker: SystemNotificationsTracker
 ) : LocalNotificationHandler {
-
     // TODO @RenanLukas replace with real check
     private val hasUserOptedInBloggingPrompts = false
 
