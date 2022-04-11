@@ -55,7 +55,7 @@ class AccountSettingsViewModel @Inject constructor(
                         account.email,
                         account.newEmail,
                         account.pendingEmailChange
-                ) { },
+                ) { cancelPendingEmailChange() },
                 primarySiteSettingsUiState = PrimarySiteSettingsUiState(
                         primarySiteViewModel,
                         sitesAccessedViaWPComRest
@@ -64,6 +64,10 @@ class AccountSettingsViewModel @Inject constructor(
                 changePasswordSettingsUiState = ChangePasswordSettingsUiState(false),
                 error = null
         )
+    }
+
+    private fun cancelPendingEmailChange() {
+        onAccountSettingsChange {  accountsSettingsRepository.cancelPendingEmailChange() }
     }
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
