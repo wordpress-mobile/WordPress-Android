@@ -39,15 +39,41 @@ class AccountSettingsRepository @Inject constructor(
         return siteStore.getSiteBySiteId(siteRemoteId)
     }
 
-    private suspend fun updateAccountSettings(addPayload: (PushAccountSettingsPayload) -> Unit): OnAccountChanged = withContext(ioDispatcher) {
-        suspendCancellableCoroutine {
-            continuation = it
-            val payload = PushAccountSettingsPayload()
-            payload.params = HashMap()
-            addPayload(payload)
-            dispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
-        }
+    suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
+        val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["primary_site_ID"] = blogId }
+        return updateAccountSettings(addPayload)
     }
+
+    suspend fun cancelPendingEmailChange(): OnAccountChanged {
+        val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email_change_pending"] = "false" }
+        return updateAccountSettings(addPayload)
+    }
+
+    suspend fun updateEmail(newEmail: String): OnAccountChanged {
+        val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email"] = newEmail }
+        return updateAccountSettings(addPayload)
+    }
+
+    suspend fun updateWebAddress(newWebAddress: String?): OnAccountChanged {
+        val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_URL"] = newWebAddress }
+        return updateAccountSettings(addPayload)
+    }
+
+    suspend fun updatePassword(newPassword: String?): OnAccountChanged {
+        val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["password"] = newPassword }
+        return updateAccountSettings(addPayload)
+    }
+
+    private suspend fun updateAccountSettings(addPayload: (PushAccountSettingsPayload) -> Unit): OnAccountChanged =
+            withContext(ioDispatcher) {
+                suspendCancellableCoroutine {
+                    continuation = it
+                    val payload = PushAccountSettingsPayload()
+                    payload.params = HashMap()
+                    addPayload(payload)
+                    dispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
+                }
+            }
 
     @Subscribe
     fun onAccountChanged(event: OnAccountChanged) {
