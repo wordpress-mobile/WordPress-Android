@@ -110,6 +110,7 @@ class SiteRestClient @Inject constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     data class NewSiteResponsePayload(
         val newSiteRemoteId: Long = 0,
+        val siteUrl: String? = null,
         val dryRun: Boolean = false
     ) : Payload<NewSiteError>()
 
@@ -179,8 +180,34 @@ class SiteRestClient @Inject constructor(
         }
     }
 
+    /**
+     * Calls the API at https://public-api.wordpress.com/rest/v1.1/sites/new/ to create a new site
+     * @param username The username of the user
+     * @param siteName The domain of the site
+     * @param siteTitle The title of the site
+     * @param language The language of the site
+     * @param timeZoneId The timezone of the site
+     * @param visibility The visibility of the site (public or private)
+     * @param segmentId The segment that the site belongs to
+     * @param siteDesign The design template of the site
+     * @param dryRun If set to true the call only validates the parameters passed
+     *
+     * The domain of the site is generated with the following logic:
+     *
+     * 1. If the [siteName] is provided it is used as a domain
+     * 2. If the [siteName] is not provided the [siteTitle] is passed and the API generates the domain from it
+     * 3. If neither the [siteName] or the [siteTitle] is passed the [username] is used by the API to generate a domain
+     *
+     * In the cases 2 and 3 two extra parameters are passed:
+     * - `site_creation_flow` with value `with-design-picker`
+     * - `find_available_url` with value `1`
+     *
+     * @return the response of the API call  as [NewSiteResponsePayload]
+     */
     suspend fun newSite(
-        siteName: String,
+        username: String,
+        siteName: String?,
+        siteTitle: String?,
         language: String,
         timeZoneId: String?,
         visibility: SiteVisibility,
@@ -190,12 +217,20 @@ class SiteRestClient @Inject constructor(
     ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
         val body = mutableMapOf<String, Any>()
-        body["blog_name"] = siteName
         body["lang_id"] = language
         body["public"] = visibility.value().toString()
         body["validate"] = if (dryRun) "1" else "0"
         body["client_id"] = appSecrets.appId
         body["client_secret"] = appSecrets.appSecret
+
+        if (siteTitle != null) {
+            body["blog_title"] = siteTitle
+        }
+        body["blog_name"] = siteName ?: siteTitle ?: username
+        siteName ?: run {
+            body["site_creation_flow"] = "with-design-picker"
+            body["find_available_url"] = "1"
+        }
 
         // Add site options if available
         val options = mutableMapOf<String, Any>()
@@ -232,7 +267,7 @@ class SiteRestClient @Inject constructor(
                         // No op: In dry run mode, returned newSiteRemoteId is "Array"
                     }
                 }
-                NewSiteResponsePayload(siteId, dryRun)
+                NewSiteResponsePayload(siteId, response.data.blog_details?.url, dryRun)
             }
             is Error -> {
                 volleyErrorToAccountResponsePayload(response.error.volleyError, dryRun)
