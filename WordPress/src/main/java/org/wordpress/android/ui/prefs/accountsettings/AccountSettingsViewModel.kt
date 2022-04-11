@@ -2,12 +2,16 @@ package org.wordpress.android.ui.prefs.accountsettings
 
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R.string
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -16,6 +20,40 @@ class AccountSettingsViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
+
+    private val sitesAccessedViaWPComRest: List<SiteViewModel> by lazy {
+        accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
+            SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
+        }
+    }
+
+    private var _accountSettingsUiState = MutableStateFlow(getAccountSettingsUiState())
+    val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
+
+    private fun getAccountSettingsUiState(): AccountSettingsUiState {
+        val primarySiteViewModel = sitesAccessedViaWPComRest
+                .firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId }
+        val account = accountsSettingsRepository.account
+        return AccountSettingsUiState(
+                userNameSettingsUiState = UserNameSettingsUiState(
+                        account.userName,
+                        account.displayName,
+                        account.usernameCanBeChanged
+                ),
+                emailSettingsUiState = EmailSettingsUiState(
+                        account.email,
+                        account.newEmail,
+                        account.pendingEmailChange
+                ) { },
+                primarySiteSettingsUiState = PrimarySiteSettingsUiState(
+                        primarySiteViewModel,
+                        sitesAccessedViaWPComRest
+                ),
+                webAddressSettingsUiState = WebAddressSettingsUiState(account.webAddress),
+                changePasswordSettingsUiState = ChangePasswordSettingsUiState(false),
+                error = null
+        )
+    }
 
     data class UserNameSettingsUiState(
         val userName: String,
@@ -65,5 +103,6 @@ class AccountSettingsViewModel @Inject constructor(
         val primarySiteSettingsUiState: PrimarySiteSettingsUiState?,
         val webAddressSettingsUiState: WebAddressSettingsUiState,
         val changePasswordSettingsUiState: ChangePasswordSettingsUiState,
-        val error: String?)
+        val error: String?
+    )
 }
