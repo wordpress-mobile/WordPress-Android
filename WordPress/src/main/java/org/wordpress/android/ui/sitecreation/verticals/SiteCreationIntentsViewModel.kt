@@ -126,7 +126,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
-    fun onSearchTextChanged(query: String) {
+    fun onSearchTextChanged(userInput: String) {
+        val query = userInput.trim()
         val searchResults = searchResultsProvider.search(fullItemsList.items, query).toMutableList().apply {
             val isAnExactMatch = query.isNotEmpty() && !(size == 1 && this[0].verticalText.equals(query, true))
             if (isAnExactMatch) {
