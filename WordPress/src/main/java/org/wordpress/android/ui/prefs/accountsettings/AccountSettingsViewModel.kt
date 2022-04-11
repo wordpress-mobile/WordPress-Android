@@ -1,11 +1,20 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
+import android.text.TextUtils
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.store.AccountStore.AccountError
+import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR
+import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR
+import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_POST_ERROR
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -53,6 +62,26 @@ class AccountSettingsViewModel @Inject constructor(
                 changePasswordSettingsUiState = ChangePasswordSettingsUiState(false),
                 error = null
         )
+    }
+
+    fun onUsernameChangeConfirmedFromServer(userName: String){
+        //TODO
+    }
+
+    fun onPrimarySiteChanged(siteRemoteId: Long) {
+        //TODO
+    }
+
+    fun onEmailChanged(newEmail: String) {
+        //TODO
+    }
+
+    fun onWebAddressChanged(newWebAddress: String) {
+        //TODO
+    }
+
+    fun onPasswordChanged(newPassword: String) {
+        //TODO
     }
 
     data class UserNameSettingsUiState(
