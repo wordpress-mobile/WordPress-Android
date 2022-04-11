@@ -20,6 +20,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -28,6 +29,7 @@ import javax.inject.Named
 
 class AccountSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
@@ -35,6 +37,18 @@ class AccountSettingsViewModel @Inject constructor(
     private val sitesAccessedViaWPComRest: List<SiteViewModel> by lazy {
         accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
             SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
+        }
+    }
+
+    init {
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            viewModelScope.launch {
+                val onAccountChanged = accountsSettingsRepository.fetchNewSettings()
+                if (onAccountChanged.isError) {
+                    handleError(onAccountChanged.error)
+                }
+                updateAccountSettingsUiState()
+            }
         }
     }
 
