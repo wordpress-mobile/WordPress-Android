@@ -158,7 +158,7 @@ platform :android do
     )
   end
 
-  # Updates the metadata in the PlayStore (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
+  # Updates the metadata in the Play Store (Main store listing) from the content of `fastlane/{metadata|jetpack_metadata}/android/*/*.txt` files
   #
   # @option [String] app The app to update the metadata for. Mandatory. Must be one of `wordpress` or `jetpack`.
   #
