@@ -103,7 +103,14 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onWebAddressChanged(newWebAddress: String) {
-        //TODO
+        val optimisticallyUiState = {
+            _accountSettingsUiState.update {
+                it.copy(
+                        webAddressSettingsUiState = it.webAddressSettingsUiState.copy(webAddress = newWebAddress),
+                )
+            }
+        }
+        onAccountSettingsChange(optimisticallyUiState) { accountsSettingsRepository.updateWebAddress(newWebAddress) }
     }
 
     fun onPasswordChanged(newPassword: String) {
