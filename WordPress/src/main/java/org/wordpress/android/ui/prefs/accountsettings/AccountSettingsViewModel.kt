@@ -89,7 +89,17 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onEmailChanged(newEmail: String) {
-        //TODO
+        val optimisticallyUiState = {
+            _accountSettingsUiState.update {
+                it.copy(
+                        emailSettingsUiState = it.emailSettingsUiState.copy(
+                                hasPendingEmailChange = true,
+                                newEmail = newEmail
+                        )
+                )
+            }
+        }
+        onAccountSettingsChange(optimisticallyUiState) { accountsSettingsRepository.updateEmail(newEmail) }
     }
 
     fun onWebAddressChanged(newWebAddress: String) {
