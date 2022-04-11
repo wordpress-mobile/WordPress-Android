@@ -26,6 +26,7 @@ data class LocalNotification(
             fun fromTag(tag: String?): Type? {
                 return when (tag) {
                     CREATE_SITE.tag -> CREATE_SITE
+                    BLOGGING_PROMPTS_ONBOARDING.tag -> BLOGGING_PROMPTS_ONBOARDING
                     else -> null
                 }
             }

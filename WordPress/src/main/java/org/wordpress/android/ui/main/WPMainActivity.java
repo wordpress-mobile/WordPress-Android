@@ -139,7 +139,8 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
-import org.wordpress.android.workers.CreateSiteNotificationScheduler;
+import org.wordpress.android.workers.notification.bloggingprompts.BloggingPromptsOnboardingNotificationScheduler;
+import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
 import java.util.EnumSet;
@@ -229,6 +230,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
+    @Inject BloggingPromptsOnboardingNotificationScheduler mBloggingPromptsOnboardingNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
 
@@ -395,6 +397,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             ActivityLauncher.showSignInForResultWpComOnly(this);
+        } else if (getIntent().getBooleanExtra(ARG_BLOGGING_PROMPTS_ONBOARDING, false)
+                   && savedInstanceState == null) {
+            canShowAppRatingPrompt = false;
+            new BloggingPromptsOnboardingDialogFragment()
+                    .show(getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG);
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -447,6 +454,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
         mWeeklyRoundupScheduler.schedule();
+        mBloggingPromptsOnboardingNotificationScheduler.scheduleBloggingPromptsOnboardingNotificationIfNeeded();
     }
 
     private void initViewModel() {

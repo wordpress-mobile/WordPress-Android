@@ -7,6 +7,7 @@ import org.wordpress.android.push.NotificationType.ACTIONS_RESULT
 import org.wordpress.android.push.NotificationType.AUTHENTICATION
 import org.wordpress.android.push.NotificationType.AUTOMATTCHER
 import org.wordpress.android.push.NotificationType.BADGE_RESET
+import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.push.NotificationType.BLOGGING_REMINDERS
 import org.wordpress.android.push.NotificationType.COMMENT
 import org.wordpress.android.push.NotificationType.COMMENT_LIKE
@@ -114,6 +115,7 @@ class SystemNotificationsTracker
             BLOGGING_REMINDERS -> BLOGGING_REMINDERS_TYPE_VALUE
             CREATE_SITE -> CREATE_SITE_TYPE_VALUE
             WEEKLY_ROUNDUP -> WEEKLY_ROUNDUP_TYPE_VALUE
+            BLOGGING_PROMPTS_ONBOARDING -> BLOGGING_PROMPTS_ONBOARDING_VALUE
         }
     }
 
@@ -149,5 +151,6 @@ class SystemNotificationsTracker
         private const val BLOGGING_REMINDERS_TYPE_VALUE = "blogging_reminders"
         private const val CREATE_SITE_TYPE_VALUE = "create_site"
         private const val WEEKLY_ROUNDUP_TYPE_VALUE = "weekly_roundup"
+        private const val BLOGGING_PROMPTS_ONBOARDING_VALUE = "blogging_prompts_onboarding"
     }
 }
