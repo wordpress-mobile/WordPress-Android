@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.test
-import org.wordpress.android.ui.accounts.signup.SignupUtils
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -35,8 +34,6 @@ private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         SITE_TITLE
 )
 private const val USERNAME = "username"
-private const val EMAIL_USERNAME = "emailusername"
-private const val EMAIL = EMAIL_USERNAME + "@domain.tl"
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
 
@@ -52,14 +49,12 @@ class CreateSiteUseCaseTest {
     @Mock lateinit var accountModel: AccountModel
     private lateinit var useCase: CreateSiteUseCase
     private lateinit var event: OnNewSiteCreated
-    private val signupUtils = SignupUtils()
 
     @Before
     fun setUp() {
         whenever(accountStore.account).thenReturn(accountModel)
         whenever(accountModel.userName).thenReturn(USERNAME)
-        whenever(accountModel.email).thenReturn(EMAIL)
-        useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper, accountStore, signupUtils)
+        useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper, accountStore)
         event = OnNewSiteCreated(newSiteRemoteId = 123)
     }
 
@@ -134,18 +129,5 @@ class CreateSiteUseCaseTest {
 
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.timeZoneId).isEqualTo(TIMEZONE_ID)
-    }
-
-    @Test
-    fun verifyPropagatesEmailUsernameWhenUsernameIsNull() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
-        whenever(accountModel.userName).thenReturn(null)
-        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
-
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher).dispatch(captor.capture())
-
-        val payload = captor.value.payload as NewSitePayload
-        assertThat(payload.username).isEqualTo(EMAIL_USERNAME)
     }
 }

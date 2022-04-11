@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
-import org.wordpress.android.ui.accounts.signup.SignupUtils
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.util.UrlUtilsWrapper
 import javax.inject.Inject
@@ -25,8 +24,7 @@ class CreateSiteUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused") private val siteStore: SiteStore,
     private val urlUtilsWrapper: UrlUtilsWrapper,
-    private val accountStore: AccountStore,
-    private val signupUtils: SignupUtils
+    private val accountStore: AccountStore
 ) {
     private var continuation: Continuation<OnNewSiteCreated>? = null
 
@@ -54,11 +52,9 @@ class CreateSiteUseCase @Inject constructor(
             isWordPressComSubDomain(siteData.domain) -> urlUtilsWrapper.extractSubDomain(siteData.domain)
             else -> siteData.domain
         }
-        val username = accountStore.account?.userName
-        val emailUser = signupUtils.createUsernameFromEmail(accountStore.account.email)
         return suspendCoroutine { cont ->
             val newSitePayload = NewSitePayload(
-                    username ?: emailUser ?: "",
+                    accountStore.account.userName,
                     domain,
                     siteData.title,
                     languageWordPressId,
