@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
@@ -200,15 +201,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 ) : DashboardCard(dashboardCardType) {
                     data class BloggingPromptCardWithData(
                         val prompt: UiString,
-                        val answeredUsers: List<AnsweredUser>,
+                        val respondents: List<TrainOfAvatarsItem>,
                         val numberOfAnswers: Int,
                         val isAnswered: Boolean,
                         val onShareClick: (String) -> Unit
-                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD) {
-                        data class AnsweredUser(
-                            val avatarUrl: String?
-                        )
-                    }
+                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }
         }

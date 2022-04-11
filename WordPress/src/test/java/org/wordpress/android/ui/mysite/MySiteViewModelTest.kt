@@ -2654,7 +2654,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
-                answeredUsers = emptyList(),
+                respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit)

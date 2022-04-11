@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
+import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -430,10 +431,21 @@ class MySiteViewModel @Inject constructor(
                                 // TODO @klymyam fetch the actual blogging prompt
                                 bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
                                     @Suppress("MagicNumber")
+                                    val dummyRespondent = BloggingPromptRespondent(
+                                            54279365,
+                                            "https://0.gravatar.com/avatar/cec64efa352617" +
+                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
+                                    )
                                     BloggingPrompt(
-                                            "Test Prompt",
-                                            19,
-                                            ""
+                                            "Cast the movie of your life",
+                                            "",
+                                            listOf(
+                                                    dummyRespondent,
+                                                    dummyRespondent,
+                                                    dummyRespondent,
+                                                    dummyRespondent,
+                                                    dummyRespondent
+                                            )
                                     )
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick
