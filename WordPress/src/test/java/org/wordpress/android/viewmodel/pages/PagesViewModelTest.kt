@@ -262,7 +262,7 @@ class PagesViewModelTest {
         whenever(page.remoteId).thenReturn(pageModel.remoteId)
         viewModel.start(site)
         // When
-        viewModel.onMenuAction(PUBLISH_NOW, page)
+        viewModel.onMenuAction(PUBLISH_NOW, page, null)
 
         // Then
         assertThat(viewModel.publishAction.value).isEqualTo(pageModel)
@@ -277,7 +277,7 @@ class PagesViewModelTest {
         whenever(pageStore.getPagesFromDb(anyOrNull())).thenReturn(listOf(pageModel))
         viewModel.start(site)
         // When
-        viewModel.onMenuAction(COPY, page)
+        viewModel.onMenuAction(COPY, page, null)
         // Then
         val newPage: PostModel = requireNotNull(viewModel.editPage.value?.second)
         assertThat(newPage.id).isNotEqualTo(pageModel.post.id)
@@ -314,7 +314,8 @@ class PagesViewModelTest {
         // Act
         viewModel.onMenuAction(
                 SET_AS_HOMEPAGE,
-                getPublishedPage(homepageId)
+                getPublishedPage(homepageId),
+                context
         )
 
         // Assert
@@ -337,7 +338,8 @@ class PagesViewModelTest {
         // Act
         viewModel.onMenuAction(
                 SET_AS_HOMEPAGE,
-                getPublishedPage(homepageId)
+                getPublishedPage(homepageId),
+                context
         )
 
         // Assert
@@ -359,7 +361,8 @@ class PagesViewModelTest {
         // Act
         viewModel.onMenuAction(
                 SET_AS_POSTS_PAGE,
-                getPublishedPage(pageForPostsId)
+                getPublishedPage(pageForPostsId),
+                context
         )
 
         // Assert
@@ -382,7 +385,8 @@ class PagesViewModelTest {
         // Act
         viewModel.onMenuAction(
                 SET_AS_POSTS_PAGE,
-                getPublishedPage(pageForPostsId)
+                getPublishedPage(pageForPostsId),
+                context
         )
 
         // Assert

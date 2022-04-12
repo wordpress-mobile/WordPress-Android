@@ -1,5 +1,8 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -101,7 +104,7 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val postStore: PostStore,
     private val dispatcher: Dispatcher,
-    private val actionPerfomer: ActionPerformer,
+    private val actionPerformer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     private val siteStore: SiteStore,
@@ -219,6 +222,7 @@ class PagesViewModel
         val post: PostModel,
         val previewType: RemotePreviewType
     )
+
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
@@ -256,7 +260,7 @@ class PagesViewModel
     }
 
     override fun onCleared() {
-        actionPerfomer.onCleanup()
+        actionPerformer.onCleanup()
         pageListEventListener.onDestroy()
     }
 
@@ -432,7 +436,7 @@ class PagesViewModel
         }
     }
 
-    fun onMenuAction(action: Action, page: Page): Boolean {
+    fun onMenuAction(action: Action, page: Page, context: Context?): Boolean {
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
@@ -444,7 +448,7 @@ class PagesViewModel
             SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
             COPY -> onCopyPage(page)
-            COPY_LINK -> copyPageLink(page)
+            COPY_LINK -> context?.let { copyPageLink(page, it) }
         }
         return true
     }
@@ -527,12 +531,22 @@ class PagesViewModel
         }
     }
 
-    private fun copyPageLink(page: Page) {
-        TODO("Need to adapt this code to current context")
-//        val pageLink = postStore.getPostByLocalPostId(page.localId)
-//        activity.clipboardManager?.setPrimaryClip(
-//                ClipData.newPlainText("${page.localId}", pageLink)
-//        ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
+    private fun copyPageLink(page: Page, context: Context) {
+        // Get the link to the page
+        val pageLink = postStore.getPostByLocalPostId(page.localId).link
+        try {
+            // Copy the link to the clipboard
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("${page.localId}", pageLink)
+            clipboard.setPrimaryClip(clip)
+        } catch (e: Exception) {
+            /**
+             * Ignore any exceptions here as certain devices have bugs and will fail.
+             * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
+             */
+            AppLog.e(AppLog.T.PAGES, e)
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
+        }
     }
 
     private fun previewPage(page: Page) {
@@ -710,7 +724,7 @@ class PagesViewModel
 
         launch {
             _arePageActionsEnabled = false
-            actionPerfomer.performAction(action)
+            actionPerformer.performAction(action)
             _arePageActionsEnabled = true
         }
     }
@@ -757,7 +771,7 @@ class PagesViewModel
         }
 
         launch {
-            actionPerfomer.performAction(action)
+            actionPerformer.performAction(action)
         }
     }
 
@@ -818,7 +832,7 @@ class PagesViewModel
 
                 launch {
                     _arePageActionsEnabled = false
-                    actionPerfomer.performAction(action)
+                    actionPerformer.performAction(action)
                     _arePageActionsEnabled = true
                 }
             }
@@ -1022,3 +1036,4 @@ class PagesViewModel
         PageStatus.PRIVATE -> R.string.pages_private
     }
 }
+

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
@@ -69,7 +68,7 @@ class SearchListViewModel
     }
 
     fun onMenuAction(action: Action, pageItem: Page): Boolean {
-        return pagesViewModel.onMenuAction(action, pageItem)
+        return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
     fun onItemTapped(pageItem: Page) {

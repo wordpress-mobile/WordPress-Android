@@ -164,7 +164,7 @@ class SearchListViewModelTest {
 
         viewModel.onMenuAction(action, clickedPage)
 
-        verify(pagesViewModel).onMenuAction(action, clickedPage)
+        verify(pagesViewModel).onMenuAction(action, clickedPage, null)
     }
 
     @Test
