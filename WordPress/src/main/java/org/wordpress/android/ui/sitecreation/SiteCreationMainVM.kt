@@ -156,6 +156,10 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
+    fun onDomainsScreenSkipped() {
+        wizardManager.showNextStep()
+    }
+
     fun screenTitleForWizardStep(step: SiteCreationStep): SiteCreationScreenTitle {
         val stepPosition = wizardManager.stepPosition(step)
         val stepCount = wizardManager.stepsCount

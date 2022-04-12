@@ -155,6 +155,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
         ActivityUtils.hideKeyboard(this)
     }
 
+    override fun onDomainSkipped() {
+        mainViewModel.onDomainsScreenSkipped()
+    }
+
     override fun onDomainSelected(domain: String) {
         mainViewModel.onDomainsScreenFinished(domain)
     }

@@ -2,6 +2,8 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +19,9 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.config.SiteNameFeatureConfig
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -28,6 +32,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
+    @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
 
     private var binding: SiteCreationDomainsScreenBinding? = null
 
@@ -103,6 +108,9 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         viewModel.createSiteBtnClicked.observe(this@SiteCreationDomainsFragment, { domain ->
             domain?.let { (requireActivity() as DomainsScreenListener).onDomainSelected(domain) }
         })
+        viewModel.onSkipButtonPressed.observe(this@SiteCreationDomainsFragment, {
+            (requireActivity() as DomainsScreenListener).onDomainSkipped()
+        })
         viewModel.onHelpClicked.observe(this@SiteCreationDomainsFragment, {
             (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
         })
@@ -128,7 +136,19 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun onHelp() {
-        viewModel.onHelpClicked()
+        if (siteNameFeatureConfig.isEnabled()) {
+            viewModel.onSkipPressed()
+        } else {
+            viewModel.onHelpClicked()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (siteNameFeatureConfig.isEnabled()) {
+            inflater.inflate(R.menu.menu_site_creation_domain, menu)
+        } else {
+            inflater.inflate(R.menu.menu_site_creation, menu)
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

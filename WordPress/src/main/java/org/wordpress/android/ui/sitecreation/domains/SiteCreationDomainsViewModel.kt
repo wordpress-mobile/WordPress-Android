@@ -74,6 +74,9 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _createSiteBtnClicked = SingleLiveEvent<String>()
     val createSiteBtnClicked: LiveData<String> = _createSiteBtnClicked
 
+    private val _onSkipButtonPressed = SingleLiveEvent<Unit>()
+    val onSkipButtonPressed: LiveData<Unit> = _onSkipButtonPressed
+
     private val _clearBtnClicked = SingleLiveEvent<Unit>()
     val clearBtnClicked = _clearBtnClicked
 
@@ -104,6 +107,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
         tracker.trackDomainSelected(domain, currentQuery?.value ?: "")
         _createSiteBtnClicked.value = domain
+    }
+
+    fun onSkipPressed() {
+        // TODO: analyticsTracker.trackSiteDomainSkipped()
+        _onSkipButtonPressed.call()
     }
 
     fun onClearTextBtnClicked() {
