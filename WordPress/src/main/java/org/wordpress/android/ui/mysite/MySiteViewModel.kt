@@ -557,7 +557,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun navigateToTodaysStats() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onNavigation.value = Event(SiteNavigationAction.OpenTodaysStats(selectedSite))
+        _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
     }
 
     private fun buildNoSiteState(): NoSites {
