@@ -16,16 +16,19 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMP
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
+import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
@@ -131,7 +134,14 @@ class WPMainActivityViewModel @Inject constructor(
 
     private fun loadMainActions(site: SiteModel?) {
         val actionsList = ArrayList<MainActionListItem>()
-
+        actionsList.add(
+                AnswerBloggingPromptAction(
+                        actionType = ANSWER_BLOGGING_PROMP,
+                        promptTitle = UiStringText("Cast the movie of your life"),
+                        isAnswered = false,
+                        onClickAction = null
+                )
+        )
         actionsList.add(
                 CreateAction(
                         actionType = NO_ACTION,
