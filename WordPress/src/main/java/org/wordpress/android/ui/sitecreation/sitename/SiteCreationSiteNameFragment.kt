@@ -63,6 +63,7 @@ class SiteCreationSiteNameFragment : Fragment() {
     private fun SiteCreationSiteNameFragmentBinding.setupUi() {
         siteCreationSiteNameHeader.title?.setText(R.string.new_site_creation_site_name_header_title)
         siteCreationSiteNameHeader.subtitle?.setText(R.string.new_site_creation_site_name_header_subtitle)
+        siteCreationSiteNameTitlebar.appBarTitle.setText(R.string.new_site_creation_site_name_title)
         siteCreationSiteNameTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
         viewModel.uiState.value?.siteName.let { input.setText(it) }
         input.requestFocus()
