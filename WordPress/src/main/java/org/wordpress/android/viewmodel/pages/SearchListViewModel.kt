@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -67,7 +68,7 @@ class SearchListViewModel
         }
     }
 
-    fun onMenuAction(action: Action, pageItem: Page): Boolean {
+    fun onMenuAction(action: Action, pageItem: Page, context: Context?): Boolean {
         return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
