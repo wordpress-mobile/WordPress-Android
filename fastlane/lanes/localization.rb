@@ -279,6 +279,8 @@ platform :android do
   MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
   FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
+    # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
+    # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
     { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
     { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", source_id: 'module:editor' }
   ].freeze
@@ -352,7 +354,8 @@ platform :android do
           library: lib[:name],
           strings_path: download_path,
           exclusions: lib[:exclusions],
-          source_id: lib[:source_id]
+          source_id: lib[:source_id],
+          add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
         an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
