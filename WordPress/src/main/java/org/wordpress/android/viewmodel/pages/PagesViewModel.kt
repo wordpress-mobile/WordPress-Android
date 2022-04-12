@@ -285,7 +285,7 @@ class PagesViewModel
                     if (result.isError) {
                         _listState.setOnUi(ERROR)
                         showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.error_refresh_pages)))
-                        AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+                        AppLog.e(PAGES, "An error occurred while fetching the Pages")
                     } else {
                         _listState.setOnUi(DONE)
                     }
@@ -398,19 +398,18 @@ class PagesViewModel
         val list = pageStore.search(site, searchQuery)
                 .groupBy { PageListType.fromPageStatus(it.status) }
 
-        return@withContext list.toSortedMap(
-                Comparator { previous, next ->
-                    when {
-                        previous == next -> 0
-                        previous == PUBLISHED -> -1
-                        next == PUBLISHED -> 1
-                        previous == DRAFTS -> -1
-                        next == DRAFTS -> 1
-                        previous == SCHEDULED -> -1
-                        next == SCHEDULED -> 1
-                        else -> throw IllegalArgumentException("Unexpected page type")
-                    }
-                })
+        return@withContext list.toSortedMap { previous, next ->
+            when {
+                previous == next -> 0
+                previous == PUBLISHED -> -1
+                next == PUBLISHED -> 1
+                previous == DRAFTS -> -1
+                next == DRAFTS -> 1
+                previous == SCHEDULED -> -1
+                next == SCHEDULED -> 1
+                else -> throw IllegalArgumentException("Unexpected page type")
+            }
+        }
     }
 
     fun onSearchExpanded(restorePreviousSearch: Boolean) {
@@ -544,7 +543,7 @@ class PagesViewModel
              * Ignore any exceptions here as certain devices have bugs and will fail.
              * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
              */
-            AppLog.e(AppLog.T.PAGES, e)
+            AppLog.e(PAGES, e)
             _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
         }
     }
