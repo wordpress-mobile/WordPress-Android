@@ -24,7 +24,7 @@ class SiteCreationStepsProvider @Inject constructor(
     private val isIntentsEnabled get() = siteIntentQuestionFeatureConfig.isEnabled()
 
     fun getSteps(): List<SiteCreationStep> = when {
-        isSiteNameEnabled -> listOf(INTENTS, SITE_NAME, SITE_DESIGNS, SITE_PREVIEW)
+        isSiteNameEnabled -> listOf(INTENTS, SITE_NAME, SITE_DESIGNS, DOMAINS, SITE_PREVIEW)
         isIntentsEnabled -> listOf(INTENTS, SITE_DESIGNS, DOMAINS, SITE_PREVIEW)
         else -> listOf(SITE_DESIGNS, DOMAINS, SITE_PREVIEW)
     }
