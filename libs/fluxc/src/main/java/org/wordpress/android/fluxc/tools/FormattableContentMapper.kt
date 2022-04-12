@@ -70,7 +70,7 @@ data class FormattableMeta(
 }
 
 data class FormattableRange(
-    @SerializedName("id") val id: Long? = null,
+    @SerializedName("id") private val stringId: String? = null,
     @SerializedName("site_id") val siteId: Long? = null,
     @SerializedName("post_id") val postId: Long? = null,
     @SerializedName("root_id") val rootId: Long? = null,
@@ -82,6 +82,15 @@ data class FormattableRange(
     @SerializedName("value") val value: String? = null,
     @SerializedName("indices") val indices: List<Int>? = null
 ) {
+    // IS in json response is string, and can be non numerical.
+    // we only use numerical ID at the moment, and can safely ignore non-numerical values
+    val id: Long?
+        get() = try {
+            stringId?.toLong() ?: 0
+        } catch (e: NumberFormatException) {
+            null
+        }
+
     fun rangeType(): FormattableRangeType {
         return if (type != null) FormattableRangeType.fromString(type) else FormattableRangeType.fromString(section)
     }
