@@ -186,7 +186,9 @@ android {
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
         }
 
-        vanilla { // used for release and beta
+        // Used for release/beta testing builds. Usually shouldn't be build locally.
+        // AppName: WordPress/Jetpack
+        vanilla {
             dimension "buildType"
 
             versionName versionProperties.getProperty("versionName")
@@ -197,7 +199,9 @@ android {
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
-        zalpha { // alpha version - enable experimental features
+        // Used for Alpha builds - testing builds with experimental features enabled.
+        // AppName: WordPress/Jetpack
+        zalpha {
             dimension "buildType"
 
             versionName versionProperties.getProperty("alpha.versionName")
@@ -207,7 +211,9 @@ android {
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
-        wasabi { // "hot" version, can be installed along release, alpha or beta versions
+        // Used for local development - preferred variant for developers.
+        // AppName: WordPress Beta/Jetpack Beta
+        wasabi {
             applicationIdSuffix ".beta"
             dimension "buildType"
 
@@ -215,7 +221,10 @@ android {
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
         }
 
-        jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
+        // Used for CI builds on PRs (downloadable apks). Can be used locally when a developer needs
+        // to install multiple versions of the app on the same device.
+        // AppName: WordPress Pre-Alpha/Jetpack Pre-Alpha
+        jalapeno {
             isDefault true
             applicationIdSuffix ".prealpha"
             dimension "buildType"
