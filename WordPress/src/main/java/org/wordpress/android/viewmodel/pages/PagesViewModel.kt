@@ -538,6 +538,7 @@ class PagesViewModel
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("${page.localId}", pageLink)
             clipboard.setPrimaryClip(clip)
+            _showSnackbarMessage.postValue(SnackbarMessageHolder((UiStringRes(R.string.media_edit_copy_url_toast))))
         } catch (e: Exception) {
             /**
              * Ignore any exceptions here as certain devices have bugs and will fail.

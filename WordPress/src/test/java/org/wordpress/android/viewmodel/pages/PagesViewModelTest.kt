@@ -273,7 +273,6 @@ class PagesViewModelTest {
     fun `when copying page link, it copies to device clipboard`() = test {
         val pageModel = setUpPageStoreWithASinglePage(site)
         val page: PageItem.Page = mock()
-        whenever(page.remoteId).thenReturn(pageModel.remoteId)
         whenever(pageStore.getPagesFromDb(anyOrNull())).thenReturn(listOf(pageModel))
         viewModel.start(site)
 
