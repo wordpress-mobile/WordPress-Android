@@ -198,6 +198,8 @@ class SiteRestClient @Inject constructor(
      * 2. If the [siteName] is not provided the [siteTitle] is passed and the API generates the domain from it
      * 3. If neither the [siteName] or the [siteTitle] is passed the [username] is used by the API to generate a domain
      *
+     * Note: The [siteTitle] can be used only if it contains latin alphanumeric characters
+     *
      * In the cases 2 and 3 two extra parameters are passed:
      * - `site_creation_flow` with value `with-design-picker`
      * - `find_available_url` with value `1`
@@ -226,7 +228,7 @@ class SiteRestClient @Inject constructor(
         if (siteTitle != null) {
             body["blog_title"] = siteTitle
         }
-        body["blog_name"] = siteName ?: siteTitle ?: username
+        body["blog_name"] = siteName ?: if (siteTitle?.containsAlphaNumericCharacters == true) siteTitle else username
         siteName ?: run {
             body["site_creation_flow"] = "with-design-picker"
             body["find_available_url"] = "1"
@@ -274,6 +276,9 @@ class SiteRestClient @Inject constructor(
             }
         }
     }
+
+    private val String.containsAlphaNumericCharacters: Boolean
+        get() = this.replace("[^a-zA-Z0-9]".toRegex(), "").isNotEmpty()
 
     fun fetchSiteEditors(site: SiteModel) {
         val params = mutableMapOf<String, String>()
