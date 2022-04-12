@@ -124,4 +124,18 @@ class FormattableContentMapperTest {
         val formattableContent = formattableContentMapper.mapToFormattableContent(response)
         assertEquals(FormattableRangeType.REWIND_DOWNLOAD_READY, formattableContent.ranges!![0].rangeType())
     }
+
+    @Test
+    fun `getting non numerical ID from FormattableRange returns null `() {
+        val notificationCommentBodyResponse = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/comment-response.json")
+        val formattableContent = formattableContentMapper.mapToFormattableContent(notificationCommentBodyResponse)
+        assertEquals(4, formattableContent.ranges!!.size)
+        with(formattableContent.ranges!![1]) {
+            assertEquals(16, this.id)
+        }
+        with(formattableContent.ranges!![2]) {
+            assertEquals(null, this.id)
+        }
+    }
 }
