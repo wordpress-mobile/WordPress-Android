@@ -162,9 +162,9 @@ class SearchListViewModelTest {
         )
         val action = VIEW_PAGE
 
-        viewModel.onMenuAction(action, clickedPage, null)
+        viewModel.onMenuAction(action, clickedPage)
 
-        verify(pagesViewModel).onMenuAction(action, clickedPage, null)
+        verify(pagesViewModel).onMenuAction(action, clickedPage)
     }
 
     @Test

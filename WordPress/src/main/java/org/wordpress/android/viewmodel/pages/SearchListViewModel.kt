@@ -68,7 +68,7 @@ class SearchListViewModel
         }
     }
 
-    fun onMenuAction(action: Action, pageItem: Page, context: Context?): Boolean {
+    fun onMenuAction(action: Action, pageItem: Page, context: Context? = null): Boolean {
         return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 

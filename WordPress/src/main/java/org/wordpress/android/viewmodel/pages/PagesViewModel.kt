@@ -435,7 +435,7 @@ class PagesViewModel
         }
     }
 
-    fun onMenuAction(action: Action, page: Page, context: Context?): Boolean {
+    fun onMenuAction(action: Action, page: Page, context: Context? = null): Boolean {
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
