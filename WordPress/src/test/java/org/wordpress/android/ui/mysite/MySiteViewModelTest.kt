@@ -1243,7 +1243,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 onTodaysStatsCardClick.invoke()
 
-                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
             }
 
     @Test
@@ -1253,7 +1253,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 onTodaysStatsCardFooterLinkClick.invoke()
 
-                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
             }
 
     @Test

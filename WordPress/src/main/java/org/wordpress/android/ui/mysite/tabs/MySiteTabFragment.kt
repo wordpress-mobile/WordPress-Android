@@ -316,8 +316,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is SiteNavigationAction.OpenTodaysStats ->
-            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.DAY)
+        is SiteNavigationAction.OpenStatsInsights ->
+            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
         is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
     }
