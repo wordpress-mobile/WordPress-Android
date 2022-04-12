@@ -107,7 +107,7 @@ class PagesViewModelTest {
                 pageStore = pageStore,
                 postStore = postStore,
                 dispatcher = dispatcher,
-                actionPerfomer = actionPerformer,
+                actionPerformer = actionPerformer,
                 networkUtils = networkUtils,
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
@@ -315,7 +315,7 @@ class PagesViewModelTest {
         viewModel.onMenuAction(
                 SET_AS_HOMEPAGE,
                 getPublishedPage(homepageId),
-                context
+                null
         )
 
         // Assert
@@ -339,7 +339,7 @@ class PagesViewModelTest {
         viewModel.onMenuAction(
                 SET_AS_HOMEPAGE,
                 getPublishedPage(homepageId),
-                context
+                null
         )
 
         // Assert
@@ -362,7 +362,7 @@ class PagesViewModelTest {
         viewModel.onMenuAction(
                 SET_AS_POSTS_PAGE,
                 getPublishedPage(pageForPostsId),
-                context
+                null
         )
 
         // Assert
@@ -386,7 +386,7 @@ class PagesViewModelTest {
         viewModel.onMenuAction(
                 SET_AS_POSTS_PAGE,
                 getPublishedPage(pageForPostsId),
-                context
+                null
         )
 
         // Assert
