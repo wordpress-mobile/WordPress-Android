@@ -83,7 +83,6 @@
         </com.google.android.material.textfield.TextInputLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-
         <FrameLayout
             android:id="@+id/continue_button_container"
             android:layout_width="match_parent"
