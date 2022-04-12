@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.FeatureIntroductionDialogFragmentBinding
@@ -66,7 +65,7 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
     }
 
     fun setHeaderIcon(@DrawableRes headerIconRes: Int) {
-        binding.headerIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, headerIconRes, context?.theme))
+        binding.headerIcon.setImageResource(headerIconRes)
     }
 
     fun setContent(view: View) {

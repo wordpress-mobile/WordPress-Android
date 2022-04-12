@@ -113,6 +113,13 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `shows bottom sheet on onBloggingPromptSchedulingRequested`() {
+        viewModel.onBloggingPromptSchedulingRequested(siteId)
+
+        assertThat(events).containsExactly(true)
+    }
+
+    @Test
     fun `shows prologue ui state on PROLOGUE`() {
         val uiItems = initPrologueBuilder()
         whenever(bloggingRemindersManager.shouldShowBloggingRemindersPrompt(siteId)).thenReturn(true)
