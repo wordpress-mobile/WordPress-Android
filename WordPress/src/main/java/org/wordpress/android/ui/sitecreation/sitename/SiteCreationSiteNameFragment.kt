@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -61,7 +60,10 @@ class SiteCreationSiteNameFragment : Fragment() {
     }
 
     private fun SiteCreationSiteNameFragmentBinding.setupUi() {
-        siteCreationSiteNameTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
+        siteCreationSiteNameHeader.title?.setText(R.string.new_site_creation_site_name_header_title)
+        siteCreationSiteNameHeader.subtitle?.setText(R.string.new_site_creation_site_name_header_subtitle)
+        siteCreationSiteNameTitlebar.appBarTitle.setText(R.string.new_site_creation_site_name_title)
+        siteCreationSiteNameTitlebar.appBarTitle.isInvisible = !displayUtils.isPhoneLandscape()
         viewModel.uiState.value?.siteName.let { input.setText(it) }
         input.requestFocus()
         ActivityUtils.showKeyboard(input)
@@ -95,15 +97,15 @@ class SiteCreationSiteNameFragment : Fragment() {
     }
 
     private fun SiteCreationSiteNameFragmentBinding.updateUiState(uiState: SiteNameUiState) {
-        continueButtonContainer.isVisible = uiState.isContinueButtonEnabled
+        // Using isVisible would make the condition easier read, But it produces a UI bug causing
+        // the continue button to briefly appear the first time a character is entered in the input.
+        continueButtonContainer.isInvisible = !uiState.isContinueButtonEnabled || displayUtils.isPhoneLandscape()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
-
-    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
 
     companion object {
         const val TAG = "site_creation_site_name_fragment_tag"
