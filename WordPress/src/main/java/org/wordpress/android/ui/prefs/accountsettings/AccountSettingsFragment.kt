@@ -93,9 +93,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         setTextAlignment(mEmailPreference!!.editText)
         setTextAlignment(mWebAddressPreference!!.editText)
         setTextAlignment(mChangePasswordPreference!!.editText)
-
-        // load site list asynchronously
-        LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
     override fun onCreateView(
