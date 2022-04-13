@@ -2,17 +2,17 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/my_site_card_row_padding"
-        android:paddingTop="@dimen/my_site_card_row_top_padding"
-        android:paddingEnd="@dimen/my_site_card_row_padding"
-        android:paddingBottom="@dimen/margin_small">
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_medium_large">
 
         <ImageView
             android:id="@+id/title_icon"
@@ -38,31 +38,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/answered_prompt_controls"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prompt_content">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/answered_button"
-                style="@style/MySiteCardAnsweredButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_site_blogging_prompt_card_answered_prompt"
-                android:textColor="@color/success_emphasis_medium_selector" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/share_button"
-                style="@style/MySiteCardAnsweredButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_site_blogging_prompt_card_share" />
-        </LinearLayout>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/prompt_content"
@@ -75,19 +50,31 @@
             app:layout_constraintTop_toBottomOf="@+id/card_title"
             tools:text="Cast the movie of your life." />
 
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/answer_button"
             style="@style/MySiteCardAnswerButton"
-            android:padding="0dp"
-            android:layout_marginTop="@dimen/margin_large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:padding="0dp"
             android:text="@string/my_site_blogging_prompt_card_answer_prompt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/prompt_content" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/answered_button"
+            style="@style/MySiteCardAnsweredButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:padding="0dp"
+            android:text="@string/my_site_blogging_prompt_card_answered_prompt"
+            android:textColor="@color/success_emphasis_medium_selector"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/prompt_content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,16 +4,15 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMP
+import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class AddContentAdapter(context: Context) : Adapter<ActionListItemViewHolder>() {
+class AddContentAdapter(context: Context) : Adapter<AddContentViewHolder<*>>() {
     private var items: List<MainActionListItem> = listOf()
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
@@ -35,15 +34,17 @@ class AddContentAdapter(context: Context) : Adapter<ActionListItemViewHolder>() 
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: ActionListItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AddContentViewHolder<*>, position: Int) {
         val item = items[position]
-        // Currently we have only one ViewHolder type
-        holder.bind(item as CreateAction)
+        when (holder) {
+            is ActionListItemViewHolder -> holder.bind(item as CreateAction)
+            is CompactBloggingPromptCardViewHolder -> holder.bind(item as AnswerBloggingPromptAction)
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when (ActionType.values()[viewType]) {
-            ANSWER_BLOGGING_PROMP -> CompactBloggingPromptCardViewHolder(parent, uiHelpers)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddContentViewHolder<*> {
+        return when (viewType) {
+            ActionType.ANSWER_BLOGGING_PROMP.ordinal -> CompactBloggingPromptCardViewHolder(parent, uiHelpers)
             else -> ActionListItemViewHolder(parent, imageManager)
         }
     }
