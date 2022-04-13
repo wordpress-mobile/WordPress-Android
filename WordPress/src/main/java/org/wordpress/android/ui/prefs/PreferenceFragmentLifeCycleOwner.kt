@@ -17,11 +17,11 @@ import androidx.lifecycle.coroutineScope
  * LifecycleOwner is a single method interface that denotes that the class has a Lifecycle.
  * android.preference.PreferenceFragment doesn't implement android.app.Fragment.LifecycleOwner interface.
  * Fragments and Activities in Support Library 26.1.0 and later already implement the LifecycleOwner interface.
- * Until we migrate to androidx Preference Library, we can use this class instead of deprecated PreferenceFragment
- * (android.preference.PreferenceFragment), which supports the use of lifecycleCoroutineScope for observing Live data or Flows.
+ * Until we migrate to androidx Preference Library, we can use this class instead of deprecated PreferenceFragment,
+ * which supports the use of lifecycleCoroutineScope for observing Live data or Flows.
  * https://developer.android.com/topic/libraries/architecture/lifecycle#implementing-lco
  */
-class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
+open class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
     private lateinit var lifecycleRegistry: LifecycleRegistry
 
     val lifecycleScope: LifecycleCoroutineScope
