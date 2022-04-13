@@ -21,7 +21,7 @@ import androidx.lifecycle.coroutineScope
  * which supports the use of lifecycleCoroutineScope for observing Live data or Flows.
  * https://developer.android.com/topic/libraries/architecture/lifecycle#implementing-lco
  */
-class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
+open class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
     private lateinit var lifecycleRegistry: LifecycleRegistry
 
     val lifecycleScope: LifecycleCoroutineScope
