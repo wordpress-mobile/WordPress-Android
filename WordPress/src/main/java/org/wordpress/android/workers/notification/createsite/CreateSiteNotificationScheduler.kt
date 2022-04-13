@@ -1,10 +1,12 @@
-package org.wordpress.android.workers
+package org.wordpress.android.workers.notification.createsite
 
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.CREATE_SITE_NOTIFICATION_SCHEDULED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.workers.LocalNotification.Type.CREATE_SITE
+import org.wordpress.android.workers.notification.local.LocalNotification
+import org.wordpress.android.workers.notification.local.LocalNotification.Type.CREATE_SITE
+import org.wordpress.android.workers.notification.local.LocalNotificationScheduler
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

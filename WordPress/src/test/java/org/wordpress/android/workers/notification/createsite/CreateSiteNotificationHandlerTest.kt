@@ -1,4 +1,4 @@
-package org.wordpress.android.workers
+package org.wordpress.android.workers.notification.createsite
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify

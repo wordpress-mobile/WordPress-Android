@@ -1,4 +1,4 @@
-package org.wordpress.android.workers
+package org.wordpress.android.workers.notification.local
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -19,12 +19,14 @@ data class LocalNotification(
     val id = uniqueId ?: NotificationPushIds.LOCAL_NOTIFICATION_ID + type.ordinal
 
     enum class Type(val tag: String) {
-        CREATE_SITE("create_site");
+        CREATE_SITE("create_site"),
+        BLOGGING_PROMPTS_ONBOARDING("blogging_prompts_onboarding");
 
         companion object {
             fun fromTag(tag: String?): Type? {
                 return when (tag) {
                     CREATE_SITE.tag -> CREATE_SITE
+                    BLOGGING_PROMPTS_ONBOARDING.tag -> BLOGGING_PROMPTS_ONBOARDING
                     else -> null
                 }
             }
