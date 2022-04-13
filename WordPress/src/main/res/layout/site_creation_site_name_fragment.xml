@@ -87,15 +87,15 @@
         android:id="@+id/continue_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_gravity="bottom"
         android:background="?attr/layoutPickerBackground"
         android:gravity="center"
+        tools:visibility="visible"
         android:paddingVertical="@dimen/picker_bottom_button_vertical_margin"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_container"
-        app:layout_constraintVertical_bias="1"
-        tools:visibility="visible">
+        app:layout_constraintVertical_bias="1">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/continue_button"
