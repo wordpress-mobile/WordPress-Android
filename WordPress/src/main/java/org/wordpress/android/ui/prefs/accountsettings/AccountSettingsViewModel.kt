@@ -221,7 +221,16 @@ class AccountSettingsViewModel @Inject constructor(
 
     data class SiteViewModel(val siteName: String, val siteId: Long, val homeURLOrHostName: String)
 
-    data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>)
+    data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>) {
+        val siteNames
+            get() = sites.map { it.siteName }.toTypedArray()
+
+        val siteIds
+            get() = sites.map { it.siteId.toString() }.toTypedArray()
+
+        val homeURLOrHostNames
+            get() = sites.map { it.siteName }.toTypedArray()
+    }
 
     data class WebAddressSettingsUiState(val webAddress: String)
 
