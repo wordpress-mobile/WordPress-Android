@@ -69,6 +69,9 @@ class AccountSettingsFragment : PreferenceFragment(),
     private var mEmailSnackbar: Snackbar? = null
 
     @Inject
+    private var viewModel: AccountSettingsViewModel? = null
+
+    @Inject
     var mDispatcher: Dispatcher? = null
 
     @Inject
