@@ -22,7 +22,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
                 setVariantAssigned()
                 when (mySiteDefaultTabExperimentVariationDashboardFeatureConfig.isDashboardVariant()) {
                     true -> setExperimentVariant(VARIANT_HOME)
-                    false -> setExperimentVariant(VARIANT_SITE_MENU)
+                    false -> setExperimentVariant(VARIANT_MENU)
                 }
                 analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
                 analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
@@ -70,6 +70,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
         private const val VARIANT_DASHBOARD = "dashboard"
         private const val VARIANT_SITE_MENU = "site_menu"
         private const val VARIANT_HOME = "home"
+        private const val VARIANT_MENU = "menu"
         private const val NONEXISTENT = "nonexistent"
     }
 }
