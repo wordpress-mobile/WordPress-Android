@@ -11,7 +11,7 @@ public enum QuickStartTaskDetails {
             QuickStartTask.CREATE_SITE,
             R.string.quick_start_list_create_site_title,
             R.string.quick_start_list_create_site_subtitle,
-            R.drawable.ic_plus_white_24dp
+            R.drawable.ic_gridicons_site_white_24dp
     ),
     UPDATE_SITE_TITLE(
             QuickStartTask.UPDATE_SITE_TITLE,

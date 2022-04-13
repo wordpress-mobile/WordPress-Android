@@ -79,6 +79,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.MediaUtilsWrapper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -96,6 +97,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
+import static org.wordpress.android.util.ToastUtils.Duration.LONG;
 
 /**
  * The main activity in which the user can browse their media.
@@ -117,6 +119,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject MediaUtilsWrapper mMediaUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -447,8 +450,22 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         }
     }
 
-    private void getMediaFromDeviceAndTrack(Uri imageUri, int requestCode) {
-        final String mimeType = getContentResolver().getType(imageUri);
+    private void getMediaFromDeviceAndTrack(Uri videoUri, int requestCode) {
+        final String mimeType = getContentResolver().getType(videoUri);
+        final boolean isVideo = mMediaUtilsWrapper.isVideoMimeType(mimeType);
+
+        if (isVideo && mSite.getHasFreePlan()) {
+            if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, videoUri)) {
+                fetchMediaAndDoNext(videoUri, requestCode, mimeType);
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
+            }
+        } else {
+            fetchMediaAndDoNext(videoUri, requestCode, mimeType);
+        }
+    }
+
+    private void fetchMediaAndDoNext(Uri imageUri, int requestCode, String mimeType) {
         WPMediaUtils.fetchMediaAndDoNext(this, imageUri,
                 uri -> queueFileForUpload(getOptimizedPictureIfNecessary(uri), mimeType));
         trackAddMediaFromDeviceEvents(
@@ -456,6 +473,22 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 requestCode == RequestCodes.VIDEO_LIBRARY,
                 imageUri
         );
+    }
+
+    private void checkRecordedVideoDurationBeforeUploadAndTrack() {
+        Uri uri = MediaUtils.getLastRecordedVideoUri(this);
+
+        if (mSite.getHasFreePlan()) {
+            if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, uri)) {
+                queueFileForUpload(uri, getContentResolver().getType(uri));
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
+            }
+        } else {
+            queueFileForUpload(uri, getContentResolver().getType(uri));
+        }
+
+        trackAddMediaFromDeviceEvents(true, true, uri);
     }
 
     @Override
@@ -488,9 +521,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = MediaUtils.getLastRecordedVideoUri(this);
-                    queueFileForUpload(uri, getContentResolver().getType(uri));
-                    trackAddMediaFromDeviceEvents(true, true, uri);
+                    checkRecordedVideoDurationBeforeUploadAndTrack();
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
@@ -743,7 +774,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         if (!TextUtils.isEmpty(messageDetail)) {
             errorMessage += ". " + messageDetail;
         }
-        ToastUtils.showToast(this, errorMessage, ToastUtils.Duration.LONG);
+        ToastUtils.showToast(this, errorMessage, LONG);
     }
 
     @SuppressWarnings("unused")
@@ -841,7 +872,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         }
 
         if (processedItemCount != ids.size()) {
-            ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(this, R.string.cannot_delete_multi_media_items, LONG);
         }
 
         // mark items for delete without actually deleting items yet,

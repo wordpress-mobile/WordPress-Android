@@ -63,11 +63,13 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList<String>): ReCreateStoryResult {
         // the StoryRepository didn't have it but we have editable serialized slides so,
         // create a new Story from scratch with these deserialized StoryFrameItems
-        var allStorySlidesAreEditable: Boolean = true
-        var noSlidesLoaded = false
         var storyIndex = StoryRepository.DEFAULT_NONE_SELECTED
         storyRepositoryWrapper.loadStory(storyIndex)
         storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
+
+        // hold media that we'll need to retrieve from Site's media to use its remote url (flattened media)
+        val tmpMediaIdsLong = ArrayList<Long>()
+
         for (mediaId in mediaIds) {
             // let's check if this is a temporary id
             if (mediaId.startsWith(TEMPORARY_ID_PREFIX)) {
@@ -82,36 +84,52 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                         site.getId().toLong(),
                         RemoteId(mediaId.toLong())
                 )?.let {
-                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(it)
-                } ?: run {
-                    allStorySlidesAreEditable = false
-
-                    // for this missing frame we'll create a new frame using the actual uploaded flattened media
-                    val tmpMediaIdsLong = ArrayList<Long>()
-                    tmpMediaIdsLong.add(mediaId.toLong())
-                    val mediaModelList: List<MediaModel> = mediaStore.getSiteMediaWithIds(
-                            site,
-                            tmpMediaIdsLong
-                    )
-                    if (mediaModelList.isEmpty()) {
-                        noSlidesLoaded = true
+                    // verify the background media referenced here is still valid for editing, otherwise
+                    // use the actual uploaded flattened media for safety
+                    if (storiesPrefs.isValidSlide(site.getId().toLong(), RemoteId(mediaId.toLong()))) {
+                        // just add the deserialized slide, given it's perfectly valid
+                        storyRepositoryWrapper.addStoryFrameItemToCurrentStory(it)
                     } else {
-                        for (mediaModel in mediaModelList) {
-                            val storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
-                                    Uri.parse(mediaModel.url),
-                                    mediaModel.isVideo
-                            )
-                            storyFrameItem.id = mediaModel.mediaId.toString()
-                            storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
-                        }
+                        // add to the list of slides we need to retrieve a flattened media url for
+                        tmpMediaIdsLong.add(mediaId.toLong())
                     }
-                }
+                } ?: tmpMediaIdsLong.add(mediaId.toLong())
             }
         }
 
-        noSlidesLoaded = storyRepositoryWrapper.getStoryAtIndex(storyIndex).frames.size == 0
+        // if we collected media that we couldn't find locally, let's retrieve the remote urls for these all in one go
+        val result: ReCreateStoryResult
+        if (!tmpMediaIdsLong.isEmpty()) {
+            result = recreateStoryFrameItemsFromRemoteSiteFlattenedMediaUrls(storyIndex, site, tmpMediaIdsLong)
+        } else {
+            val noSlidesLoaded = storyRepositoryWrapper.getStoryAtIndex(storyIndex).frames.size == 0
+            result = ReCreateStoryResult(storyIndex, allStorySlidesAreEditable = true, noSlidesLoaded)
+        }
+        return result
+    }
 
-        return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, noSlidesLoaded)
+    private fun recreateStoryFrameItemsFromRemoteSiteFlattenedMediaUrls(
+        storyIndex: StoryIndex,
+        site: SiteModel,
+        mediaIds: ArrayList<Long>
+    ): ReCreateStoryResult {
+        // for this missing frame we'll create a new frame using the actual uploaded flattened media
+        val mediaModelList: List<MediaModel> = mediaStore.getSiteMediaWithIds(
+                site,
+                mediaIds
+        )
+
+        for (mediaModel in mediaModelList) {
+            val storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
+                    Uri.parse(mediaModel.url),
+                    mediaModel.isVideo
+            )
+            storyFrameItem.id = mediaModel.mediaId.toString()
+            storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
+        }
+
+        val noSlidesLoaded = storyRepositoryWrapper.getStoryAtIndex(storyIndex).frames.size == 0
+        return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable = false, noSlidesLoaded)
     }
 
     fun loadStoryFromMemoryOrRecreateFromPrefs(site: SiteModel, mediaFiles: ArrayList<Any>): ReCreateStoryResult {
@@ -124,7 +142,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         )
 
         // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
-        // just build the Story object ourselves to match the order in which the media files were passed. 
+        // just build the Story object ourselves to match the order in which the media files were passed.
         var storyIndex = storyRepositoryWrapper.findStoryContainingStoryFrameItemsByIds(mediaIds)
         if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
             // the StoryRepository didn't have it but we have editable serialized slides so,

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -116,6 +118,7 @@ public class EditPostSettingsFragment extends Fragment {
     private ImageView mFeaturedImageView;
     private ImageView mLocalFeaturedImageView;
     private Button mFeaturedImageButton;
+    private SwitchCompat mStickySwitch;
     private ViewGroup mFeaturedImageRetryOverlay;
     private ViewGroup mFeaturedImageProgressOverlay;
 
@@ -138,6 +141,9 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
+
+    private final OnCheckedChangeListener mOnStickySwitchChangeListener =
+            (buttonView, isChecked) -> onStickySwitchChanged(isChecked);
 
 
     public interface EditPostActivityHook {
@@ -258,6 +264,7 @@ public class EditPostSettingsFragment extends Fragment {
         mFeaturedImageHeaderTextView = rootView.findViewById(R.id.post_settings_featured_image_header);
         mPublishHeaderTextView = rootView.findViewById(R.id.post_settings_publish);
         mPublishDateContainer = rootView.findViewById(R.id.publish_date_container);
+        mStickySwitch = rootView.findViewById(R.id.post_settings_sticky_switch);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
@@ -355,13 +362,17 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
+        mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
+
 
         if (getEditPostRepository() != null && getEditPostRepository().isPage()) { // remove post specific views
             final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
             final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
+            final View markAsStickyContainer = rootView.findViewById(R.id.post_settings_mark_as_sticky_container);
             categoriesTagsContainer.setVisibility(View.GONE);
             formatBottomSeparator.setVisibility(View.GONE);
             mFormatContainer.setVisibility(View.GONE);
+            markAsStickyContainer.setVisibility(View.GONE);
         }
 
         mPublishedViewModel.getOnUiModel().observe(getViewLifecycleOwner(), new Observer<PublishUiModel>() {
@@ -470,6 +481,7 @@ public class EditPostSettingsFragment extends Fragment {
         mPublishedViewModel.start(getEditPostRepository());
         updateCategoriesTextView(postModel);
         updateFeaturedImageView(postModel);
+        updateStickySwitch(postModel);
     }
 
     @Override
@@ -562,6 +574,16 @@ public class EditPostSettingsFragment extends Fragment {
         String tags = TextUtils.join(",", getEditPostRepository().getTagNameList());
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
+    }
+
+    private void onStickySwitchChanged(boolean checked) {
+        EditPostRepository editPostRepository = getEditPostRepository();
+        if (editPostRepository != null) {
+            editPostRepository.updateAsync(postModel -> {
+                postModel.setSticky(checked);
+                return true;
+            }, null);
+        }
     }
 
     /*
@@ -838,6 +860,17 @@ public class EditPostSettingsFragment extends Fragment {
         // If `tags` is empty, the hint "Not Set" will be shown instead
         tags = StringEscapeUtils.unescapeHtml4(tags);
         mTagsTextView.setText(tags);
+    }
+
+    private void updateStickySwitch(PostImmutableModel postModel) {
+        if (!isAdded() || postModel == null || mStickySwitch == null) {
+            return;
+        }
+
+        // We need to remove the listener first, otherwise the listener will be triggered
+        mStickySwitch.setOnCheckedChangeListener(null);
+        mStickySwitch.setChecked(postModel.getSticky());
+        mStickySwitch.setOnCheckedChangeListener(mOnStickySwitchChangeListener);
     }
 
     private void updatePostFormatTextView(PostImmutableModel postModel) {

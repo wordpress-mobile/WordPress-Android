@@ -1,18 +1,29 @@
 apply plugin: 'com.android.library'
 
-dependencies {
-    implementation 'com.automattic:tracks:1.2.1'
-    implementation 'org.wordpress:utils:1.19.0'
+repositories {
+    maven {
+        url "https://a8c-libs.s3.amazonaws.com/android"
+        content {
+            includeGroup "org.wordpress"
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.tracks"
+        }
+    }
+}
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+dependencies {
+    implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
+    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+
+    lintChecks 'org.wordpress:lint:1.1.0'
 }
 
 android {
     compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 29
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
     }
 }
 

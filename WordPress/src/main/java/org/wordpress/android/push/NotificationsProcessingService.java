@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -25,19 +24,18 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -92,9 +90,8 @@ public class NotificationsProcessingService extends Service {
     private QuickActionProcessor mQuickActionProcessor;
     private List<Long> mActionedCommentsRemoteIds = new ArrayList<>();
 
-    @Inject Dispatcher mDispatcher;
+    @Inject CommentsStoreAdapter mCommentsStoreAdapter;
     @Inject SiteStore mSiteStore;
-    @Inject CommentStore mCommentStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
 
@@ -137,7 +134,8 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
 
-        return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent
+                .getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     public static void stopService(Context context) {
@@ -158,14 +156,14 @@ public class NotificationsProcessingService extends Service {
     public void onCreate() {
         super.onCreate();
         ((WordPress) getApplication()).component().inject(this);
-        mDispatcher.register(this);
+        mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.NOTIFS, "notifications action processing service > created");
     }
 
     @Override
     public void onDestroy() {
         AppLog.i(AppLog.T.NOTIFS, "notifications action processing service > destroyed");
-        mDispatcher.unregister(this);
+        mCommentsStoreAdapter.unregister(this);
         super.onDestroy();
     }
 
@@ -263,7 +261,7 @@ public class NotificationsProcessingService extends Service {
                     return;
                 }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && mActionType.equals(ARG_ACTION_REPLY)) {
+                if (mActionType.equals(ARG_ACTION_REPLY)) {
                     // we don't need showing the infinite progress bar in case of REPLY on Android N,
                     // because we've got inline-reply there with its own spinner to show progress
                     // no op
@@ -558,7 +556,7 @@ public class NotificationsProcessingService extends Service {
                     mNote.buildComment());
 
             if (site != null) {
-                mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
+                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
                         new RemoteLikeCommentPayload(site, mNote.getCommentId(), true)));
             } else {
                 requestFailed(ARG_ACTION_LIKE);
@@ -602,7 +600,8 @@ public class NotificationsProcessingService extends Service {
             keepRemoteCommentIdForPostProcessing(comment.getRemoteCommentId());
 
             // Push the comment
-            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(site, comment)));
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder
+                    .newPushCommentAction(new RemoteCommentPayload(site, comment)));
         }
 
         private void replyToComment() {
@@ -614,8 +613,8 @@ public class NotificationsProcessingService extends Service {
             if (!TextUtils.isEmpty(mReplyText)) {
                 SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
                 if (site == null) {
-                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App. SiteId: "
-                                       + mNote.getSiteId());
+                    AppLog.e(T.NOTIFS, "Impossible to reply to a comment on a site that is not in the App."
+                                       + " SiteId: " + mNote.getSiteId());
                     requestFailed(ARG_ACTION_APPROVE);
                     return;
                 }
@@ -629,7 +628,7 @@ public class NotificationsProcessingService extends Service {
 
                 // Push the reply
                 RemoteCreateCommentPayload payload = new RemoteCreateCommentPayload(site, comment, reply);
-                mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
+                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
 
                 // Bump analytics
                 AnalyticsUtils.trackCommentReplyWithDetails(true,
@@ -680,7 +679,7 @@ public class NotificationsProcessingService extends Service {
             if (mActionedCommentsRemoteIds.size() > 0) {
                 // prepare a comparable list of Ids
                 for (Integer commentLocalId : event.changedCommentsLocalIds) {
-                    CommentModel localComment = mCommentStore.getCommentByLocalId(commentLocalId);
+                    CommentModel localComment = mCommentsStoreAdapter.getCommentByLocalId(commentLocalId);
                     if (localComment != null) {
                         eventChangedCommentsRemoteIds.add(localComment.getRemoteCommentId());
                     }

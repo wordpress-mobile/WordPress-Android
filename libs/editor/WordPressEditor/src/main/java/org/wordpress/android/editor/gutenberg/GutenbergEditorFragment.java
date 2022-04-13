@@ -25,6 +25,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -61,10 +62,13 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
@@ -487,6 +491,37 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         return mEditorFragmentListener.onGutenbergEditorRequestFocalPointPickerTooltipShown();
                     }
                 },
+                new OnGutenbergDidRequestPreviewListener() {
+                    @Override
+                    public void gutenbergDidRequestPreview() {
+                        mEditorFragmentListener.showPreview();
+                    }
+                },
+                new OnBlockTypeImpressionsEventListener() {
+                    @Override
+                    public Map<String, Double> onRequestBlockTypeImpressions() {
+                        return mEditorFragmentListener.onRequestBlockTypeImpressions();
+                    }
+
+                    @Override
+                    public void onSetBlockTypeImpressions(Map<String, Double> impressions) {
+                        mEditorFragmentListener.onSetBlockTypeImpressions(impressions);
+                    }
+                },
+                new OnCustomerSupportOptionsListener() {
+                    @Override
+                    public void onContactCustomerSupport() {
+                        mEditorFragmentListener.onContactCustomerSupport();
+                    }
+
+                    @Override
+                    public void onGotoCustomerSupportOptions() {
+                        mEditorFragmentListener.onGotoCustomerSupportOptions();
+                    }
+                },
+
+                mEditorFragmentListener::onSendEventToHost,
+
                 GutenbergUtils.isDarkMode(getActivity()));
 
         // request dependency injection. Do this after setting min/max dimensions
@@ -1087,17 +1122,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    /**
-     * Returns the contents of the title field from the JavaScript editor. Should be called from a background thread
-     * where possible.
-     */
     @Override
-    public CharSequence getTitle() throws EditorFragmentNotAddedException {
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
+            EditorFragmentNotAddedException {
         if (!isAdded()) {
             throw new EditorFragmentNotAddedException();
         }
-        return getGutenbergContainerFragment().getTitle(new OnGetContentTimeout() {
-            @Override public void onGetContentTimeout(InterruptedException ie) {
+        return getGutenbergContainerFragment().getTitleAndContent(originalContent, new OnGetContentInterrupted() {
+            @Override public void onGetContentInterrupted(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
@@ -1124,14 +1156,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (!isAdded()) {
             throw new EditorFragmentNotAddedException();
         }
-        return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentTimeout() {
-            @Override public void onGetContentTimeout(InterruptedException ie) {
+        return getGutenbergContainerFragment().getContent(originalContent, new OnGetContentInterrupted() {
+            @Override public void onGetContentInterrupted(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
         });
     }
-
 
     @Override
     public void showContentInfo() throws EditorFragmentNotAddedException {
@@ -1395,6 +1426,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void showNotice(String message) {
         getGutenbergContainerFragment().showNotice(message);
+    }
+
+    @Override
+    public void showEditorHelp() {
+        getGutenbergContainerFragment().showEditorHelp();
     }
 
     @Override

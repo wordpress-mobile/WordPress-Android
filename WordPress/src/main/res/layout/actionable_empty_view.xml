@@ -65,6 +65,14 @@
                 android:contentDescription="@string/content_description_person_reading_device_notification"
                 android:visibility="gone" />
 
+            <ProgressBar
+                android:id="@+id/actionable_empty_view_progress_bar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:visibility="gone"
+                tool:visibility="visible" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

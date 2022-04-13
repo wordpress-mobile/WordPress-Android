@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.layoutpicker
 
+import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -7,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 /**
  * Renders the layout categories
  */
-class LayoutCategoryAdapter : Adapter<LayoutsItemViewHolder>() {
+class LayoutCategoryAdapter(private var nestedScrollStates: Bundle) : Adapter<LayoutsItemViewHolder>() {
     private var items: List<LayoutCategoryUiState> = listOf()
 
     fun update(newItems: List<LayoutCategoryUiState>) {
@@ -27,5 +28,19 @@ class LayoutCategoryAdapter : Adapter<LayoutsItemViewHolder>() {
         holder.bind(items[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutsItemViewHolder(parent)
+    override fun onViewRecycled(holder: LayoutsItemViewHolder) {
+        super.onViewRecycled(holder)
+        holder.onRecycled()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            LayoutsItemViewHolder(parent = parent, nestedScrollStates = nestedScrollStates)
+
+    fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        nestedScrollStates = savedInstanceState
+    }
+
+    fun onSaveInstanceState(): Bundle {
+        return nestedScrollStates
+    }
 }

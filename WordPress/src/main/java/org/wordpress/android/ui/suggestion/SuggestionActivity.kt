@@ -9,11 +9,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.SuggestUsersActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.LocaleAwareActivity
@@ -30,11 +30,15 @@ class SuggestionActivity : LocaleAwareActivity() {
     private var suggestionAdapter: SuggestionAdapter? = null
     private var siteId: Long? = null
     @Inject lateinit var viewModel: SuggestionViewModel
+    private lateinit var binding: SuggestUsersActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.suggest_users_activity)
+        with(SuggestUsersActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            binding = this
+        }
 
         val siteModel = intent.getSerializableExtra(INTENT_KEY_SITE_MODEL) as? SiteModel
         val suggestionType = intent.getSerializableExtra(INTENT_KEY_SUGGESTION_TYPE) as? SuggestionType
@@ -70,12 +74,12 @@ class SuggestionActivity : LocaleAwareActivity() {
         // The previous activity is visible "behind" this Activity if the list of Suggestions does not fill
         // the entire screen. If the user taps a part of the screen showing the still-visible previous
         // Activity, then finish this Activity and return the user to the previous Activity.
-        rootView.setOnClickListener {
+        binding.rootView.setOnClickListener {
             viewModel.trackExit(false)
             finish()
         }
 
-        autocompleteText.apply {
+        binding.autocompleteText.apply {
             initializeWithPrefix(viewModel.suggestionPrefix)
             setOnItemClickListener { _, _, position, _ ->
                 val suggestionUserId = suggestionAdapter?.getItem(position)?.value
@@ -125,11 +129,14 @@ class SuggestionActivity : LocaleAwareActivity() {
                             // Tapping delete when only the prefix is shown exits the suggestions UI
                             viewModel.trackExit(false)
                             finish()
+                        } else if (s.startsWith("$prefix ")) {
+                            // Tapping the space key directly after the prefix exits the suggestions UI
+                            finishWithValue("", false)
                         } else if (!s.startsWith(prefix)) {
                             // Re-insert prefix if it was deleted
                             val string = "$prefix$s"
-                            autocompleteText.setText(string)
-                            autocompleteText.setSelection(1)
+                            binding.autocompleteText.setText(string)
+                            binding.autocompleteText.setSelection(1)
                             showDropDown()
                         }
                         matchesPrefixBeforeChanged = null
@@ -152,14 +159,14 @@ class SuggestionActivity : LocaleAwareActivity() {
 
             // Calling forceFiltering is needed to force the suggestions list to always
             // immediately refresh when there is new data
-            autocompleteText.forceFiltering(autocompleteText.text)
+            binding.autocompleteText.forceFiltering(binding.autocompleteText.text)
 
             // Ensure that the suggestions list is displayed wth the new data. This is particularly needed when
             // suggestion list was empty before the new data was received, otherwise the no-longer-empty
             // suggestion list will not display when it is updated. Wrapping this in the isAttachedToWindow
             // check avoids a crash if the suggestions are loaded when the view is not attached.
-            if (autocompleteText.isAttachedToWindow) {
-                autocompleteText.showDropDown()
+            if (binding.autocompleteText.isAttachedToWindow) {
+                binding.autocompleteText.showDropDown()
             }
 
             updateEmptyView()
@@ -169,7 +176,7 @@ class SuggestionActivity : LocaleAwareActivity() {
     private fun exitIfOnlyOneMatchingUser() {
         when (val finishAttempt = viewModel.onAttemptToFinish(
                 suggestionAdapter?.filteredSuggestions,
-                autocompleteText.text.toString()
+                binding.autocompleteText.text.toString()
         )) {
             is OnlyOneAvailable -> {
                 finishWithValue(finishAttempt.onlySelectedValue)
@@ -196,8 +203,9 @@ class SuggestionActivity : LocaleAwareActivity() {
         overridePendingTransition(R.anim.do_nothing, R.anim.do_nothing)
     }
 
-    private fun finishWithValue(value: String?) {
-        viewModel.trackExit(true)
+    private fun finishWithValue(value: String?, withSuggestion: Boolean = true) {
+        viewModel.trackExit(withSuggestion)
+
         setResult(Activity.RESULT_OK, Intent().apply {
             putExtra(SELECTED_VALUE, value)
         })
@@ -219,11 +227,11 @@ class SuggestionActivity : LocaleAwareActivity() {
             })
         }
 
-        autocompleteText.setAdapter(suggestionAdapter)
+        binding.autocompleteText.setAdapter(suggestionAdapter)
     }
 
     private fun updateEmptyView() {
-        empty_view.apply {
+        binding.emptyView.apply {
             val (newText, newVisibility) = viewModel.getEmptyViewState(suggestionAdapter?.filteredSuggestions)
             text = newText
             visibility = newVisibility
@@ -233,8 +241,8 @@ class SuggestionActivity : LocaleAwareActivity() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
-        if (autocompleteText.isAttachedToWindow) {
-            autocompleteText.showDropDown()
+        if (binding.autocompleteText.isAttachedToWindow) {
+            binding.autocompleteText.showDropDown()
         }
     }
 

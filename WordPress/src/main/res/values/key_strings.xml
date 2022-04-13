@@ -13,7 +13,7 @@
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_send_crash" translatable="false">wp_pref_send_crash_stats</string>
     <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
-    <string name="pref_key_feature_config" translatable="false">wp_pref_feature_config</string>
+    <string name="pref_key_debug_settings" translatable="false">wp_pref_debug_settings</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
@@ -133,6 +133,9 @@
     <string name="pref_key_jetpack_match_via_email" translatable="false">wp_pref_jetpack_match_via_email</string>
     <string name="pref_key_jetpack_require_two_factor" translatable="false">wp_pref_jetpack_require_two_factor</string>
     <string name="pref_key_jetpack_learn_more" translatable="false">wp_pref_jetpack_learn_more</string>
+
+    <!-- Initial Screen -->
+    <string name="pref_key_initial_screen" translatable="false">wp_pref_initial_screen</string>
 
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
     <string name="wp_pref_notifications_main" translatable="false">wp_pref_notifications_master</string>

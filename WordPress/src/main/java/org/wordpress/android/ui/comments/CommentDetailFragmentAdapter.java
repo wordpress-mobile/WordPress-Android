@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
 import org.wordpress.android.util.AppLog;
 
 /**
@@ -19,13 +20,13 @@ import org.wordpress.android.util.AppLog;
 @Deprecated
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     private final SiteModel mSite;
-    private final CommentAdapter.OnLoadMoreListener mOnLoadMoreListener;
+    private final OnLoadMoreListener mOnLoadMoreListener;
     private final CommentList mCommentList;
 
     CommentDetailFragmentAdapter(FragmentManager fm,
                                  CommentList commentList,
                                  SiteModel site,
-                                 CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
+                                 OnLoadMoreListener onLoadMoreListener) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mSite = site;
         this.mOnLoadMoreListener = onLoadMoreListener;

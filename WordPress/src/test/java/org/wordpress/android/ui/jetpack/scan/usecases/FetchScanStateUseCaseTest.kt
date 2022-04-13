@@ -17,13 +17,13 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStateFetched
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
-import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure.RemoteRequestFailure
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -49,7 +49,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         val result = useCase.fetchScanState(site).toList(mutableListOf())
 
-        assertThat(result).contains(FetchScanState.Failure.NetworkUnavailable)
+        assertThat(result).contains(Failure.NetworkUnavailable)
     }
 
     @Test
@@ -68,17 +68,31 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
         )
         val result = useCase.fetchScanState(site).toList(mutableListOf())
 
-        assertThat(result).contains(FetchScanState.Failure.RemoteRequestFailure)
+        assertThat(result).contains(Failure.RemoteRequestFailure)
+    }
+
+    @Test
+    fun `given multisite, when scan state is fetched, then MultisiteNotSupported is returned`() = test {
+        val scanStateModel = ScanStateModel(
+                state = ScanStateModel.State.UNAVAILABLE,
+                reason = Reason.MULTISITE_NOT_SUPPORTED
+        )
+        whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
+        whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
+
+        val result = useCase.fetchScanState(site).toList(mutableListOf())
+
+        assertThat(result).contains(Failure.MultisiteNotSupported)
     }
 
     @Test
     fun `when SCANNING scan state is fetched, then polling occurs until IDLE state is returned on success`() = test {
         whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
-        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
+        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
         val scanStateModels = listOf(
                 scanStateScanningModel,
                 scanStateScanningModel,
-                ScanStateModel(state = ScanStateModel.State.IDLE)
+                ScanStateModel(state = ScanStateModel.State.IDLE, reason = Reason.NO_REASON)
         )
         whenever(scanStore.getScanStateForSite(any()))
                 .thenReturn(scanStateModels[0])
@@ -93,7 +107,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when SCANNING scan state is fetched, then polling occurs until error is returned on failure`() = test {
-        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
+        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
         val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
         whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateScanningModel)
         whenever(scanStore.fetchScanState(any())).thenReturn(
@@ -105,10 +119,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         // one success and 1+MAX_RETRY attempts
         verify(scanStore, times(5)).fetchScanState(any())
-        assertThat(result).containsSequence(
-                Success(scanStateScanningModel),
-                FetchScanState.Failure.RemoteRequestFailure
-        )
+        assertThat(result).containsSequence(Success(scanStateScanningModel), Failure.RemoteRequestFailure)
     }
 
     @Test
@@ -120,13 +131,13 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         verify(scanStore, times(MAX_RETRY + 1)).fetchScanState(anyOrNull())
         assertThat(result).size().isEqualTo(1)
-        assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
+        assertThat(result).isEqualTo(listOf(Failure.RemoteRequestFailure))
     }
 
     @Test
     fun `given fetch error under retry count, when scan state triggers, then return only success`() = test {
-        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
-        val scanStateFinished = ScanStateModel(state = ScanStateModel.State.IDLE)
+        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING, reason = Reason.NO_REASON)
+        val scanStateFinished = ScanStateModel(state = ScanStateModel.State.IDLE, reason = Reason.NO_REASON)
         val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
         whenever(scanStore.fetchScanState(any()))
                 .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))

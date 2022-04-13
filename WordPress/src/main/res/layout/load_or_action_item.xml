@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/margin_extra_large"
     android:background="@android:color/transparent"
     android:foregroundGravity="center">
 
@@ -19,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_margin="@dimen/margin_extra_large"
         android:text="@string/retry"
         android:visibility="gone" />
 

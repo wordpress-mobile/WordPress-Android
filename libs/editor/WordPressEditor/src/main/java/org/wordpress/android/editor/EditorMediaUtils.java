@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
-import android.os.Build;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.DrawableRes;
@@ -31,7 +30,7 @@ public class EditorMediaUtils {
         if (drawable instanceof BitmapDrawable) {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
             bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxImageSizeForVisualEditor);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable instanceof VectorDrawable) {
+        } else if (drawable instanceof VectorDrawable) {
             bitmap = Bitmap.createBitmap(maxImageSizeForVisualEditor, maxImageSizeForVisualEditor,
                                          Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);

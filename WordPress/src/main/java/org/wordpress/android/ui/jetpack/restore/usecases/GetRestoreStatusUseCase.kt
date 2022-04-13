@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Reason.MULTISITE_NOT_SUPPORTED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
@@ -17,12 +18,13 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
-import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.AwaitingCredentials
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Multisite
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -73,7 +75,11 @@ class GetRestoreStatusUseCase @Inject constructor(
                 break
             }
             if (rewind == null) {
-                emit(Empty)
+                if (rewindStatus?.reason == MULTISITE_NOT_SUPPORTED) {
+                    emit(Multisite)
+                } else {
+                    emit(Empty)
+                }
                 break
             }
             if (restoreId == null || rewind.restoreId == restoreId) {

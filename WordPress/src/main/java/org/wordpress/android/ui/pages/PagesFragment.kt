@@ -53,8 +53,8 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -106,13 +106,18 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        val nonNullActivity = requireActivity()
+        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
+
+        viewModel = ViewModelProvider(nonNullActivity, viewModelFactory).get(PagesViewModel::class.java)
+        mlpViewModel = ViewModelProvider(nonNullActivity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
         with(PagesFragmentBinding.bind(view)) {
             binding = this
             with(nonNullActivity as AppCompatActivity) {
@@ -123,13 +128,13 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 }
             }
             initializeViews(nonNullActivity)
-            initializeViewModels(nonNullActivity, savedInstanceState)
+            initializeViewModelObservers(nonNullActivity, savedInstanceState)
         }
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -278,10 +283,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         })
     }
 
-    private fun PagesFragmentBinding.initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
-        mlpViewModel = ViewModelProvider(activity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
-
+    private fun PagesFragmentBinding.initializeViewModelObservers(
+        activity: FragmentActivity,
+        savedInstanceState: Bundle?
+    ) {
         setupObservers(activity)
         setupActions(activity)
         setupMlpObservers(activity)
@@ -451,14 +456,15 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                         data,
                         post,
                         site,
-                        uploadActionUseCase.getUploadAction(post)
-                ) {
-                    uploadUtilsWrapper.publishPost(
-                            activity,
-                            post,
-                            site
-                    )
-                }
+                        uploadActionUseCase.getUploadAction(post),
+                        {
+                            uploadUtilsWrapper.publishPost(
+                                    activity,
+                                    post,
+                                    site
+                            )
+                        }
+                )
             }
         })
 
@@ -485,7 +491,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
     private fun setupMlpObservers(activity: FragmentActivity) {
         mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, { request ->
-            createNewPage(request.title, request.content, request.template)
+            createNewPage(request.title, "", request.template)
         })
         mlpViewModel.isModalLayoutPickerShowing.observeEvent(viewLifecycleOwner, { isShowing ->
             val fm = activity.supportFragmentManager

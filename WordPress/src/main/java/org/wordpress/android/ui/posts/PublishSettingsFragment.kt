@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context.ALARM_SERVICE
@@ -18,7 +19,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
@@ -124,7 +125,7 @@ abstract class PublishSettingsFragment : Fragment() {
                         it,
                         notification.id,
                         notificationIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
+                        PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
 
                 val alarmManager = it.getSystemService(ALARM_SERVICE) as AlarmManager
@@ -205,6 +206,7 @@ abstract class PublishSettingsFragment : Fragment() {
 }
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 enum class PublishSettingsFragmentType : Parcelable {
     EDIT_POST,
     PREPUBLISHING_NUDGES

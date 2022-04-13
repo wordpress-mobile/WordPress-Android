@@ -133,13 +133,13 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     override fun onDestroyView() {
-        notesAdapter!!.cancelReloadNotesTask()
+        super.onDestroyView()
+        notesAdapter?.cancelReloadNotesTask()
+        notesAdapter = null
         swipeToRefreshHelper = null
         binding?.notificationsList?.adapter = null
         binding?.notificationsList?.removeCallbacks(showNewUnseenNotificationsRunnable)
-        notesAdapter = null
         binding = null
-        super.onDestroyView()
     }
 
     override fun onDataLoaded(itemsCount: Int) {
@@ -358,10 +358,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             else -> titleResId = R.string.notifications_empty_list
         }
-        if (BuildConfig.IS_JETPACK_APP) {
-            showEmptyView(titleResId)
-        } else {
+        if (BuildConfig.ENABLE_READER) {
             showEmptyView(titleResId, descriptionResId, buttonResId)
+        } else {
+            showEmptyView(titleResId)
         }
         actionableEmptyView.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }

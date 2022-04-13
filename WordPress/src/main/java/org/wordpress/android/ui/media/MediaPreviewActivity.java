@@ -360,7 +360,6 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
         }
 
         mViewPager.setCurrentItem(initialPos);
-        mPagerAdapter.unpauseFragment(initialPos);
         mLastPosition = initialPos;
 
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -368,12 +367,6 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
             public void onPageSelected(int position) {
                 switch (getPreviewType()) {
                     case MULTI_MEDIA_IDS:
-                        // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
-                        // playing in inactive fragments
-                        if (mLastPosition != position) {
-                            mPagerAdapter.pauseFragment(mLastPosition);
-                        }
-                        mPagerAdapter.unpauseFragment(position);
                         mMediaId = Integer.valueOf(mMediaIdOrUrlList.get(position));
                         // fire event so settings activity shows the same media as this activity (user may have swiped)
                         EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
@@ -401,7 +394,7 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
         private boolean mDidAutoPlay;
 
         MediaPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
@@ -453,20 +446,6 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
         public void destroyItem(ViewGroup container, int position, Object object) {
             mFragmentMap.remove(position);
             super.destroyItem(container, position, object);
-        }
-
-        void pauseFragment(int position) {
-            Fragment fragment = mFragmentMap.get(position);
-            if (fragment != null) {
-                ((MediaPreviewFragment) fragment).pauseMedia();
-            }
-        }
-
-        void unpauseFragment(int position) {
-            Fragment fragment = mFragmentMap.get(position);
-            if (fragment != null) {
-                ((MediaPreviewFragment) fragment).playMedia();
-            }
         }
 
         @Override

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="default_dialog_width">480dp</dimen>
-
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_tablet</dimen>
     <dimen name="fab_margin">@dimen/fab_margin_tablet</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_tablet</dimen>

@@ -56,11 +56,11 @@ class SiteIconUploadHandler
         analyticsTrackerWrapper.track(MY_SITE_ICON_UPLOAD_UNSUCCESSFUL)
         eventBusWrapper.removeStickyEvent(event)
         selectedSiteRepository.showSiteIconProgressBar(false)
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site != null && event.post != null && event.post.localSiteId == site.id) {
-            _onUploadedItem.postValue(Event(PostUploaded(event.post, site, event.errorMessage)))
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null && event.post != null && event.post.localSiteId == selectedSite.id) {
+            _onUploadedItem.postValue(Event(PostUploaded(event.post, selectedSite, event.errorMessage)))
         } else if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
-            _onUploadedItem.postValue(Event(MediaUploaded(event.mediaModelList, site, event.errorMessage)))
+            _onUploadedItem.postValue(Event(MediaUploaded(event.mediaModelList, selectedSite, event.errorMessage)))
         }
     }
 
@@ -68,8 +68,8 @@ class SiteIconUploadHandler
     fun onEventMainThread(event: UploadMediaSuccessEvent) {
         analyticsTrackerWrapper.track(MY_SITE_ICON_UPLOADED)
         eventBusWrapper.removeStickyEvent(event)
-        val site = selectedSiteRepository.getSelectedSite()
-        if (site != null) {
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite != null) {
             if (selectedSiteRepository.isSiteIconUploadInProgress()) {
                 if (event.mediaModelList.size > 0) {
                     val media = event.mediaModelList[0]
@@ -81,7 +81,15 @@ class SiteIconUploadHandler
                     )
                 }
             } else if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
-                _onUploadedItem.postValue(Event(MediaUploaded(event.mediaModelList, site, event.successMessage)))
+                _onUploadedItem.postValue(
+                        Event(
+                                MediaUploaded(
+                                        event.mediaModelList,
+                                        selectedSite,
+                                        event.successMessage
+                                )
+                        )
+                )
             }
         }
     }

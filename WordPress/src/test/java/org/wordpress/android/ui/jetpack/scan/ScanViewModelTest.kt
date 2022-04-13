@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -40,6 +41,7 @@ import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
@@ -79,7 +81,11 @@ class ScanViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: ScanViewModel
 
-    private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
+    private val fakeScanStateModel = ScanStateModel(
+            state = ScanStateModel.State.IDLE,
+            hasCloud = true,
+            reason = Reason.NO_REASON
+    )
     private val fakeUiStringText = UiStringText("")
     private val fakeDetectedAt = UiStringText("")
     private val fakeSubHeaderColor = 1
@@ -117,10 +123,11 @@ class ScanViewModelTest : BaseUnitTest() {
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt())).thenReturn("")
     }
 
+    /* VM START */
+
     @Test
-    fun `given last scan state not present in db, when vm starts, then app displays full screen loading scan state`() =
+    fun `when vm starts, then app displays full screen loading scan state`() =
             test {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
                 val uiStates = init().uiStates
 
                 assertThat(uiStates.first()).isInstanceOf(FullScreenLoadingUiState::class.java)
@@ -145,59 +152,63 @@ class ScanViewModelTest : BaseUnitTest() {
                 verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(any(), any())
             }
 
-    @Test
-    fun `given no network, when scan state fetched over empty scan state, then app reaches no connection state`() =
-            test {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-                val uiStates = init().uiStates
-
-                assertThat(uiStates.last()).isInstanceOf(ErrorUiState.NoConnection::class.java)
-            }
+    /* FETCH SCAN STATE */
 
     @Test
-    fun `given no connection state, when scan state fetched over empty scan state, then no network ui is shown`() =
-            test {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-                val uiStates = init().uiStates
+    fun `given no network, when scan state fetch not invoked by user, then app reaches no connection state`() = test {
+        val observers = initObservers()
 
-                val error = uiStates.last() as ErrorUiState
-                with(error) {
-                    assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
-                    assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
-                    assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
-                    assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
-                }
-            }
+        fetchScanStateStatusForState(state = Failure.NetworkUnavailable, observers = observers, invokedByUser = false)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.NoConnection::class.java)
+    }
 
     @Test
-    fun `given no network, when scan state fetched over last scan state, then no network msg is shown`() = test {
-        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-        val observers = init()
+    fun `given no connection state, when scan state fetch not invoked by user, then no network ui is shown`() = test {
+        val observers = initObservers()
+
+        fetchScanStateStatusForState(state = Failure.NetworkUnavailable, observers = observers, invokedByUser = false)
+
+        val error = observers.uiStates.last() as ErrorUiState
+        with(error) {
+            assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+            assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
+            assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
+            assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
+        }
+    }
+
+    @Test
+    fun `given no network, when scan state fetch invoked by user, then no network msg is shown`() = test {
+        val observers = initObservers()
+
+        fetchScanStateStatusForState(state = Failure.NetworkUnavailable, observers = observers, invokedByUser = true)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
         assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
     }
 
     @Test
-    fun `given fetch scan fails, when scan state fetched over empty scan state, then app reaches failed ui state`() =
-            test {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
-                val uiStates = init().uiStates
+    fun `given fetch scan fails, when scan state fetch not invoked by user, then app reaches failed ui state`() = test {
+        val observers = initObservers()
 
-                assertThat(uiStates.last()).isInstanceOf(ErrorUiState.GenericRequestFailed::class.java)
-            }
+        fetchScanStateStatusForState(state = Failure.RemoteRequestFailure, observers = observers, invokedByUser = false)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.GenericRequestFailed::class.java)
+    }
 
     @Test
-    fun `given request failed ui state, when scan state fetched over empty scan state, then request failed ui shown`() =
+    fun `given request failed ui state, when scan state fetch not invoked by user, then request failed ui shown`() =
             test {
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
-                val uiStates = init().uiStates
+                val observers = initObservers()
 
-                val state = uiStates.last() as ErrorUiState
+                fetchScanStateStatusForState(
+                        state = Failure.RemoteRequestFailure,
+                        observers = observers,
+                        invokedByUser = false
+                )
+
+                val state = observers.uiStates.last() as ErrorUiState
                 with(state) {
                     assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
                     assertThat(title).isEqualTo(UiStringRes(R.string.scan_request_failed_title))
@@ -207,14 +218,14 @@ class ScanViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `given fetch scan state fails, when scan state fetched over last scan state, then request failed msg shown`() =
-            test {
-                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
-                val observers = init()
+    fun `given fetch scan state fails, when scan state fetch invoked by user, then request failed msg shown`() = test {
+        val observers = initObservers()
 
-                val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-                assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.request_failed_message)))
-            }
+        fetchScanStateStatusForState(state = Failure.RemoteRequestFailure, observers = observers, invokedByUser = true)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.request_failed_message)))
+    }
 
     @Test
     fun `given fetch scan state succeeds with valid state, when scan state is fetched, then ui updated with content`() =
@@ -242,7 +253,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 .thenReturn(flowOf(Success(fakeScanStateModel.copy(state = ScanStateModel.State.UNKNOWN))))
         val observers = init()
 
-        (observers.uiStates.last() as ErrorUiState).action.invoke()
+        (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
         assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
     }
@@ -254,7 +265,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
                 val uiStates = init().uiStates
 
-                (uiStates.last() as ErrorUiState).action.invoke()
+                (uiStates.last() as ErrorUiState).action?.invoke()
                 advanceTimeBy(RETRY_DELAY)
 
                 verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
@@ -267,10 +278,38 @@ class ScanViewModelTest : BaseUnitTest() {
                 whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
                 val observers = init()
 
-                (observers.uiStates.last() as ErrorUiState).action.invoke()
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }
+
+    @Test
+    fun `given multisite, when scan state is fetched, then app reaches multisite not supported state`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.MultisiteNotSupported, observers = observers)
+
+                assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.MultisiteNotSupported::class.java)
+            }
+
+    @Test
+    fun `given multisite not supported state, when scan state is fetched, then corresponding error ui is shown`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.MultisiteNotSupported, observers = observers)
+
+                val state = observers.uiStates.last() as ErrorUiState
+                with(state) {
+                    assertThat(image).isEqualTo(R.drawable.ic_baseline_security_white_24dp)
+                    assertThat(imageColorResId).isEqualTo(R.color.gray)
+                    assertThat(title).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_title))
+                    assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_subtitle))
+                }
+            }
+
+    /* THREAT ITEM */
 
     @Test
     fun `when threat item is clicked, then app navigates to threat details`() = test {
@@ -280,6 +319,8 @@ class ScanViewModelTest : BaseUnitTest() {
 
         assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowThreatDetails::class.java)
     }
+
+    /* START SCAN */
 
     @Test
     fun `when scan button is clicked, then start scan is triggered`() = test {
@@ -371,7 +412,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
                 (observers.uiStates.last() as ContentUiState)
                         .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
-                (observers.uiStates.last() as ErrorUiState).action.invoke()
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
                 assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
             }
@@ -455,6 +496,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringText(threatsFoundMessage)))
             }
 
+    /* FIX THREAT */
+
     @Test
     fun `when fix all threats button is clicked, then fix threats confirmation dialog action is triggered`() =
             test {
@@ -515,6 +558,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(snackBarMsg)
                         .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message)))
             }
+
+    /* FETCH FIX STATUS */
 
     @Test
     fun `given threats are fixed, when threats fix status is checked, then pluralised success message is shown`() =
@@ -619,6 +664,125 @@ class ScanViewModelTest : BaseUnitTest() {
             }
 
     @Test
+    fun `given FixFailure(onlyErr=true) returned, when fetch fix status invoked by user, then snackbar is shown`() =
+            test {
+                val observers = initObservers()
+
+                fetchFixThreatsStatusForState(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        ),
+                        invokedByUser = true
+                )
+
+                assertThat(observers.snackBarMsgs.isNotEmpty()).isTrue
+            }
+
+    @Test
+    fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
+            test {
+                val observers = initObservers()
+
+                fetchFixThreatsStatusForState(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        ),
+                        invokedByUser = false
+                )
+
+                assertThat(observers.snackBarMsgs.isEmpty()).isTrue
+            }
+
+    @Test
+    fun `given no network, when fetch fix status invoked by user, then snackbar is shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.NetworkUnavailable, invokedByUser = true)
+
+        assertThat(observers.snackBarMsgs.last().peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
+    }
+
+    @Test
+    fun `given no network, when fetch fix status not invoked by user, then snackbar is not shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.NetworkUnavailable, invokedByUser = false)
+
+        assertThat(observers.snackBarMsgs.isEmpty()).isTrue
+    }
+
+    @Test
+    fun `given request failed, when fetch fix status invoked by user, then snackbar is shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.RemoteRequestFailure, invokedByUser = true)
+
+        assertThat(observers.snackBarMsgs.last().peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_error_message)))
+    }
+
+    @Test
+    fun `given request failed, when fetch fix status not invoked by user, then snackbar is not shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Failure.RemoteRequestFailure, invokedByUser = false)
+
+        assertThat(observers.snackBarMsgs.isEmpty()).isTrue
+    }
+
+    @Test
+    fun `given request succeeds, when fetch fix status invoked by user, then snackbar is shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Complete(fixedThreatsCount = 1), invokedByUser = true)
+
+        assertThat(observers.snackBarMsgs.last().peekContent())
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message_singular)))
+    }
+
+    @Test
+    fun `given request succeeds, when fetch fix status not invoked by user, then snackbar is not shown`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Complete(fixedThreatsCount = 1), invokedByUser = false)
+
+        assertThat(observers.snackBarMsgs.isEmpty()).isTrue
+    }
+
+    @Test
+    fun `given complete state, when fix status is fetched, then ui is updated`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.Complete(fixedThreatsCount = 1))
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ContentUiState::class.java)
+    }
+
+    @Test
+    fun `given progress state, when fix status is fetched, then ui is updated`() = test {
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.InProgress(listOf(1L)))
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ContentUiState::class.java)
+    }
+
+    @Test
+    fun `given non progress or complete state, when fix status is fetched, then ui is not updated`() = test {
+        whenever(fetchScanStateUseCase.fetchScanState(site = site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val observers = initObservers()
+
+        fetchFixThreatsStatusForState(FetchFixThreatsState.NotStarted)
+
+        assertThat(observers.uiStates.filterIsInstance(ContentUiState::class.java)).isEmpty()
+    }
+
+    /* ACTIVITY RESULT */
+
+    @Test
     fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
             test {
                 whenever(site.siteId).thenReturn(1L)
@@ -654,44 +818,6 @@ class ScanViewModelTest : BaseUnitTest() {
                 verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
             }
 
-    @Test
-    fun `given FixFailure(onlyErr=true) returned, when fetch fix status invoked by user, then snackbar is shown`() =
-            test {
-                val messages = init().snackBarMsgs
-                whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                        flowOf(
-                                FetchFixThreatsState.Failure.FixFailure(
-                                        containsOnlyErrors = true,
-                                        mightBeMissingCredentials = false
-                                )
-                        )
-                )
-
-                viewModel.onFixStateRequested(threatId = 11L)
-
-                assertThat(messages.isNotEmpty()).isTrue
-            }
-
-    @Test
-    fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
-            test {
-                whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                        flowOf(
-                                FetchFixThreatsState.Failure.FixFailure(
-                                        containsOnlyErrors = true,
-                                        mightBeMissingCredentials = false
-                                )
-                        )
-                )
-                val scanStateModelWithFixableThreats = fakeScanStateModel
-                        .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
-                whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
-
-                val messages = init().snackBarMsgs
-
-                assertThat(messages.isEmpty()).isTrue
-            }
-
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as ContentUiState)
                 .items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
@@ -701,6 +827,40 @@ class ScanViewModelTest : BaseUnitTest() {
     private suspend fun fetchFixThreatsStatus(observers: Observers) {
         whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
         triggerFixThreatsAction(observers)
+    }
+
+    private suspend fun fetchScanStateStatusForState(
+        state: FetchScanState,
+        observers: Observers? = null,
+        invokedByUser: Boolean = false
+    ) {
+        whenever(fetchScanStateUseCase.fetchScanState(site))
+                .thenReturn(flowOf(if (!invokedByUser) state else Success(fakeScanStateModel)))
+
+        // Fetch scan state on init
+        viewModel.start(site)
+        if (invokedByUser) {
+            whenever(fetchScanStateUseCase.fetchScanState(site, startWithDelay = true)).thenReturn(flowOf(state))
+            whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
+
+            // Fetch scan state on scan start (invoked by user)
+            (observers?.uiStates?.last() as? ContentUiState)?.items
+                    ?.filterIsInstance<ActionButtonState>()?.first()?.onClick?.invoke()
+        }
+    }
+
+    private suspend fun fetchFixThreatsStatusForState(state: FetchFixThreatsState, invokedByUser: Boolean = false) {
+        val scanStateModelWithFixableThreats = fakeScanStateModel
+                .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(flowOf(state))
+
+        // Fetch fix threats status on init
+        viewModel.start(site)
+        if (invokedByUser) {
+            // Fetch fix threats status invoked by user
+            viewModel.onFixStateRequested(threatId = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.id)
+        }
     }
 
     private fun createDummyScanStateListItems(
@@ -746,6 +906,14 @@ class ScanViewModelTest : BaseUnitTest() {
     )
 
     private fun init(): Observers {
+        val observers = initObservers()
+
+        viewModel.start(site)
+
+        return observers
+    }
+
+    private fun initObservers(): Observers {
         val uiStates = mutableListOf<UiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
@@ -758,9 +926,6 @@ class ScanViewModelTest : BaseUnitTest() {
         viewModel.navigationEvents.observeForever {
             navigation.add(it)
         }
-
-        viewModel.start(site)
-
         return Observers(uiStates, snackbarMsgs, navigation)
     }
 

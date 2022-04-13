@@ -40,7 +40,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ViewUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -335,7 +335,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     return true;
                 }
             });
-            ViewUtilsKt.redirectContextClickToLongPressListener(itemView);
+            ViewExtensionsKt.redirectContextClickToLongPressListener(itemView);
 
             mSelectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override

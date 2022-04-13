@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/comments_snippet_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/comments_number_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="45dp"
+        android:gravity="center_vertical"
+        android:layout_marginStart="@dimen/reader_detail_margin"
+        android:text="@string/comments"
+        style="@style/ReaderTextView.Post.Title.Detail"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/divider"/>
+
+    <LinearLayout
+        android:id="@+id/follow_conversation_container"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/comments_number_title"
+        app:layout_constraintTop_toTopOf="@+id/comments_number_title"
+        android:orientation="horizontal"
+        android:animateLayoutChanges="false">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:shimmer_auto_start="false">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/follow_conversation"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="@color/option_disabled_selector_primary"
+                android:gravity="center"
+                android:text="@string/reader_comments_follow_conversation"/>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <ImageView
+            android:id="@+id/bell_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/margin_large"
+            android:src="@drawable/ic_notifications_white_24dp"
+            app:tint="@color/primary"
+            android:contentDescription="@string/reader_btn_follow_conversation_settings"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_marginStart="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="?attr/wpColorSurfaceSecondary"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/comments_number_title"
+        app:layout_constraintBottom_toTopOf="@+id/comments_recycler_container"/>
+
+    <LinearLayout
+        android:id="@+id/comments_recycler_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comments_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

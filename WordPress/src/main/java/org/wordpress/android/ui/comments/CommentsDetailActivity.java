@@ -19,19 +19,20 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.comments.unified.CommentConstants;
+import org.wordpress.android.ui.comments.unified.OnLoadMoreListener;
+import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -42,7 +43,7 @@ import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
+import static org.wordpress.android.ui.comments.unified.CommentConstants.COMMENTS_PER_PAGE;
 
 /**
  * @deprecated
@@ -51,13 +52,12 @@ import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PE
  */
 @Deprecated
 public class CommentsDetailActivity extends LocaleAwareActivity
-        implements CommentAdapter.OnLoadMoreListener,
+        implements OnLoadMoreListener,
         CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
-    @Inject CommentStore mCommentStore;
-    @Inject Dispatcher mDispatcher;
+    @Inject CommentsStoreAdapter mCommentsStoreAdapter;
 
     private WPViewPager mViewPager;
     private AppBarLayout mAppBarLayout;
@@ -89,7 +89,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
-        mDispatcher.register(this);
+        mCommentsStoreAdapter.register(this);
         AppLog.i(AppLog.T.COMMENTS, "Creating CommentsDetailActivity");
 
         setContentView(R.layout.comments_detail_activity);
@@ -140,7 +140,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
 
     @Override
     public void onDestroy() {
-        mDispatcher.unregister(this);
+        mCommentsStoreAdapter.unregister(this);
         super.onDestroy();
     }
 
@@ -171,7 +171,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         }
 
         final int offset = mAdapter.getCount();
-        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+        mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentsAction(
                 new FetchCommentsPayload(mSite, mStatusFilter, COMMENTS_PER_PAGE, offset)));
         mIsUpdatingComments = true;
         setLoadingState(true);
@@ -202,7 +202,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         if (mIsLoadingComments) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
         } else {
-            new LoadCommentsTask(mCommentStore, mStatusFilter, mSite, new LoadCommentsTask.LoadingCallback() {
+            new LoadCommentsTask(mCommentsStoreAdapter, mStatusFilter, mSite, new LoadCommentsTask.LoadingCallback() {
                 @Override
                 public void isLoading(boolean loading) {
                     setLoadingState(loading);
@@ -281,8 +281,8 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                                   final CommentModel comment,
                                   final CommentStatus newStatus) {
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
-        resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
+        resultIntent.putExtra(CommentConstants.COMMENT_MODERATE_ID_EXTRA, comment.getRemoteCommentId());
+        resultIntent.putExtra(CommentConstants.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
         setResult(RESULT_OK, resultIntent);
         finish();
     }

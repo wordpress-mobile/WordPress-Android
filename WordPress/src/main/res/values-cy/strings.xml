@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: cy_GB
 -->
 <resources>
@@ -81,12 +81,19 @@ Language: cy_GB
     <string name="error_fetch_email_followers_list">Methu adfer dilynwr e-bost y wefan</string>
     <string name="error_fetch_followers_list">Methu adfer dilynwr y wefan</string>
     <string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
+    <string name="visual_editor">Golygydd gweledol</string>
+    <string name="image_thumbnail">Llun bach delwedd</string>
     <string name="image_settings_save_toast">Mae\'r newidiadau wedi eu cadw</string>
     <string name="image_caption">Egluryn</string>
+    <string name="image_alt_text">Testun Amgen</string>
     <string name="image_link_to">Cyswllt i</string>
     <string name="image_width">Lled</string>
     <string name="image_settings_dismiss_dialog_title">Dileu\'r newidiadau heb eu cadw?</string>
     <string name="stop_upload_dialog_title">Atal y llwytho?</string>
+    <string name="alert_error_adding_media">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
+    <string name="alert_action_while_uploading">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
+    <string name="alert_insert_image_html_mode">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
+    <string name="uploading_gallery_placeholder">Llwytho\'r oriel…</string>
     <string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
     <string name="tap_to_try_again">Tapiwch i geisio eto!</string>
     <string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
@@ -147,6 +154,7 @@ Language: cy_GB
     <string name="start_over">Cychwyn Eto</string>
     <string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
     <string name="site_settings_advanced_header">Uwch</string>
+    <string name="button_skip">Hepgor</string>
     <string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
     <string name="post_format_status">Statws</string>
     <string name="post_format_video">Fideo</string>
@@ -380,8 +388,6 @@ Language: cy_GB
     <string name="my_site_btn_view_site">Gweld Gwefan</string>
     <string name="site_picker_title">Dewis gwefan</string>
     <string name="my_site_btn_switch_site">Newid Gwefan</string>
-    <string name="my_site_btn_blog_posts">Cofnodion Blog</string>
-    <string name="my_site_btn_site_settings">Gosodiadau</string>
     <string name="my_site_header_look_and_feel">Golwg a Theimlad</string>
     <string name="my_site_header_publish">Cyhoeddi</string>
     <string name="my_site_header_configuration">Ffurfweddiad</string>
@@ -400,7 +406,6 @@ Language: cy_GB
     <string name="stats_search_terms_unknown_search_terms">Termau Chwilio Anhysbys</string>
     <string name="stats_view_authors">Awduron</string>
     <string name="stats_view_search_terms">Geiriau Chwilio</string>
-    <string name="comments_fetching">Estyn sylwadau…</string>
     <string name="pages_fetching">Estyn tudalennau…</string>
     <string name="posts_fetching">Estyn cofnodion…</string>
     <string name="media_fetching">Estyn cyfrwng…</string>
@@ -439,7 +444,6 @@ Language: cy_GB
     <string name="error_publish_empty_post">Methu cyhoeddi cofnod gwag</string>
     <string name="error_refresh_unauthorized_posts">Nid oes gennych ganiatâd i weld na golygu cofnodion</string>
     <string name="error_refresh_unauthorized_pages">Nid oes gennych ganiatâd i weld na golygu tudalennau</string>
-    <string name="error_refresh_unauthorized_comments">Nid oes gennych ganiatâd i weld na golygu sylwadau</string>
     <string name="more">Rhagor</string>
     <string name="older_month">Mwy na mis</string>
     <string name="older_two_days">Mwy na 2 ddiwrnod</string>
@@ -487,8 +491,10 @@ Language: cy_GB
     <string name="media_error_no_permission">Nid oes gennych ganiatâd i weld y llyfrgell cyfryngau</string>
     <string name="cannot_delete_multi_media_items">Nid oes modd dileu rhai cyfryngau ar hyn o bryd. Ceisiwch eto yn nes ymlaen.</string>
     <string name="link_enter_url_text">Testun dolen (dewisol)</string>
+    <string name="create_a_link">Creu dolen</string>
     <string name="page_settings">Gosodiadau tudalen</string>
     <string name="local_draft">Drafft lleol</string>
+    <string name="horizontal_alignment">Alinio llorweddol</string>
     <string name="post_settings">Gosodiadau cofnodion</string>
     <string name="comment_status_approved">Cymeradwy</string>
     <string name="comment_status_unapproved">Dan ystyriaeth</string>
@@ -499,10 +505,6 @@ Language: cy_GB
     <string name="mnu_comment_unapprove">Anghymeradwyo</string>
     <string name="mnu_comment_spam">Sbam</string>
     <string name="mnu_comment_trash">Sbwriel</string>
-    <string name="dlg_approving_comments">Cymeradwyo</string>
-    <string name="dlg_unapproving_comments">Anghymeradwyo</string>
-    <string name="dlg_spamming_comments">Marcio fel sbam</string>
-    <string name="dlg_trashing_comments">Anfon i\'r sbwriel</string>
     <string name="dlg_confirm_trash_comments">Anfon i\'r sbwriel?</string>
     <string name="trash">Sbwriel</string>
     <string name="saving_changes">Cadw\'r newidiadau</string>
@@ -531,7 +533,6 @@ Language: cy_GB
     <string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
     <string name="reader_likes_you_and_multi">Rydych chi a %,d o bobl eraill yn hoffi hwn</string>
     <string name="reader_likes_multi">%,d o pobl yn hoffi hwn</string>
-    <string name="reader_label_reply">Ateb</string>
     <string name="comment_spammed">Mae\'r sylw hwn wedi ei farcio fel sbam</string>
     <string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
@@ -587,12 +588,17 @@ Language: cy_GB
     <string name="password">Cyfrinair</string>
     <string name="username">Enw defnyddiwr</string>
     <string name="reader">Darllennydd</string>
+    <string name="featured">Defnyddio fel delwedd nodwedd</string>
+    <string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
     <string name="pages">Tudalennau</string>
+    <string name="caption">Egluryn (dewisol)</string>
+    <string name="width">Lled</string>
     <string name="posts">Cofnodion</string>
     <string name="anonymous">Di-enw</string>
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Llwytho…</string>
     <string name="version">Fersiwn</string>
     <string name="tos">Amodau Gwasanaeth</string>
     <string name="app_title">WordPress ar gyfer Android</string>
@@ -606,7 +612,6 @@ Language: cy_GB
     <string name="quickpress_add_error">Nid yw enw\'r llwybr byr yn gallu bod yn wag</string>
     <string name="title">Teitl</string>
     <string name="categories">Categorïau</string>
-    <string name="dlg_deleting_comments">Dileu sylwadau</string>
     <string name="sdcard_title">Mae angen cerdyn SD</string>
     <string name="media">Cyfrwng</string>
     <string name="delete">Dileu</string>

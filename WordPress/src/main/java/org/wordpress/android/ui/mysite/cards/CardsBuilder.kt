@@ -1,0 +1,65 @@
+package org.wordpress.android.ui.mysite.cards
+
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder
+import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
+import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonBuilder
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
+import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
+import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import javax.inject.Inject
+
+@Suppress("LongParameterList")
+class CardsBuilder @Inject constructor(
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
+    private val quickActionsCardBuilder: QuickActionsCardBuilder,
+    private val quickStartCardBuilder: QuickStartCardBuilder,
+    private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
+    private val dashboardCardsBuilder: CardsBuilder,
+    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
+    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+) {
+    fun build(
+        quickActionsCardBuilderParams: QuickActionsCardBuilderParams,
+        domainRegistrationCardBuilderParams: DomainRegistrationCardBuilderParams,
+        quickStartCardBuilderParams: QuickStartCardBuilderParams,
+        dashboardCardsBuilderParams: DashboardCardsBuilderParams,
+        quickLinkRibbonsBuilderParams: QuickLinkRibbonBuilderParams
+    ): List<MySiteCardAndItem> {
+        val cards = mutableListOf<MySiteCardAndItem>()
+        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+            cards.add(quickLinkRibbonBuilder.build(quickLinkRibbonsBuilderParams))
+        }
+        if (buildConfigWrapper.isQuickActionEnabled) {
+            cards.add(quickActionsCardBuilder.build(quickActionsCardBuilderParams))
+        }
+        if (domainRegistrationCardBuilderParams.isDomainCreditAvailable) {
+            cards.add(trackAndBuildDomainRegistrationCard(domainRegistrationCardBuilderParams))
+        }
+        if (!quickStartDynamicCardsFeatureConfig.isEnabled()) {
+            quickStartCardBuilderParams.quickStartCategories.takeIf { it.isNotEmpty() }?.let {
+                cards.add(quickStartCardBuilder.build(quickStartCardBuilderParams))
+            }
+        }
+        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
+            cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
+        }
+        return cards
+    }
+
+    private fun trackAndBuildDomainRegistrationCard(
+        params: DomainRegistrationCardBuilderParams
+    ): DomainRegistrationCard {
+        return DomainRegistrationCard(ListItemInteraction.create(params.domainRegistrationClick))
+    }
+}

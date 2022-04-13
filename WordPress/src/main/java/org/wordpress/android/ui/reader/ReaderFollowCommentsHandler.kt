@@ -12,11 +12,14 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
+import org.wordpress.android.R
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Failure
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 class ReaderFollowCommentsHandler @Inject constructor(
     private val readerCommentsFollowUseCase: ReaderCommentsFollowUseCase,
@@ -28,10 +31,19 @@ class ReaderFollowCommentsHandler @Inject constructor(
     private val _followStatusUpdate = MediatorLiveData<FollowCommentsState>()
     val followStatusUpdate: LiveData<FollowCommentsState> = _followStatusUpdate
 
-    suspend fun handleFollowCommentsClicked(blogId: Long, postId: Long, askSubscribe: Boolean) {
-        readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, askSubscribe)
+    private val _pushNotificationsStatusUpdate = MediatorLiveData<FollowStateChanged>()
+    val pushNotificationsStatusUpdate: LiveData<FollowStateChanged> = _pushNotificationsStatusUpdate
+
+    suspend fun handleFollowCommentsClicked(
+        blogId: Long,
+        postId: Long,
+        askSubscribe: Boolean,
+        source: ThreadedCommentsActionSource,
+        onSuccessSnackbarAction: (() -> Unit)?
+    ) {
+        readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, askSubscribe, source)
                 .flowOn(bgDispatcher).collect { state ->
-            manageState(state)
+            manageState(state, onSuccessSnackbarAction)
         }
     }
 
@@ -42,12 +54,38 @@ class ReaderFollowCommentsHandler @Inject constructor(
         }
     }
 
-    private fun manageState(state: FollowCommentsState) {
+    suspend fun handleEnableByPushNotificationsClicked(
+        blogId: Long,
+        postId: Long,
+        askEnable: Boolean,
+        source: ThreadedCommentsActionSource,
+        onSuccessSnackbarAction: (() -> Unit)? = null
+    ) {
+        readerCommentsFollowUseCase.setEnableByPushNotifications(blogId, postId, askEnable, source)
+                .flowOn(bgDispatcher).collect { state ->
+                    manageState(state, onSuccessSnackbarAction)
+                }
+    }
+
+    private fun manageState(state: FollowCommentsState, onSuccessSnackbarAction: (() -> Unit)? = null) {
         when (state) {
             is FollowStateChanged -> {
                 _followStatusUpdate.postValue(state)
+                if (state.forcePushNotificationsUpdate) {
+                    _pushNotificationsStatusUpdate.postValue(state)
+                }
                 state.userMessage?.let {
-                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(it)))
+                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(
+                            message = it,
+                            buttonTitle = onSuccessSnackbarAction?.let {
+                                if (state.isReceivingNotifications) {
+                                    UiStringRes(R.string.undo)
+                                } else {
+                                    UiStringRes(R.string.reader_followed_blog_notifications_action)
+                                }
+                            },
+                            buttonAction = onSuccessSnackbarAction ?: {}
+                    )))
                 }
             }
             is Failure -> {

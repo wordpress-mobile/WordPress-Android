@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
+        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/Widget.AppCompat.Toolbar.Button.Navigation
+        </item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+
+    <!-- Zendesk Styles Override -->
+
+    <style name="ZendeskRequestListButton" parent="@style/Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/zs_request_list_white</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="backgroundTint">@null</item> <!-- This is done so that the custom background is not tinted. See https://git.io/JyEnY -->
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+</resources>

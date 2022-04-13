@@ -1,6 +1,7 @@
 package org.wordpress.android.util.analytics
 
 import dagger.Reusable
+import org.wordpress.android.analytics.AnalyticsInjectExperimentProperties
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -14,10 +15,6 @@ class AnalyticsTrackerWrapper
 @Inject constructor() {
     fun track(stat: Stat) {
         AnalyticsTracker.track(stat)
-    }
-
-    fun track(stat: Stat, feature: FeatureConfig) {
-        AnalyticsTracker.track(stat, feature.toParams())
     }
 
     fun track(stat: Stat, remoteField: String, featureState: FeatureState) {
@@ -42,8 +39,13 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat, properties + feature.toParams())
     }
 
-    fun track(stat: Stat, site: SiteModel) {
-        AnalyticsUtils.trackWithSiteDetails(stat, site)
+    @JvmOverloads
+    fun track(stat: Stat, site: SiteModel?, properties: Map<String, Any?>? = null) {
+        AnalyticsUtils.trackWithSiteDetails(this, stat, site, properties)
+    }
+
+    fun track(stat: Stat, site: SiteModel?, feature: FeatureConfig) {
+        AnalyticsUtils.trackWithSiteDetails(this, stat, site, feature.toParams().toMutableMap<String, Any>())
     }
 
     /**
@@ -57,12 +59,8 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
     }
 
-    fun trackWithSiteDetails(
-        stat: Stat,
-        siteModel: SiteModel?,
-        feature: FeatureConfig
-    ) {
-        AnalyticsUtils.trackWithSiteDetails(stat, siteModel, feature.toParams().toMutableMap<String, Any>())
+    fun setInjectExperimentProperties(properties: Map<String, Any>) {
+        AnalyticsTracker.setInjectExperimentProperties(AnalyticsInjectExperimentProperties.newInstance(properties))
     }
 
     private fun FeatureConfig.toParams() = mapOf(name() to isEnabled())

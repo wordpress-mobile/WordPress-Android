@@ -64,7 +64,7 @@ class PostConflictResolver(
             invalidateList.invoke()
         }
 
-        val onDismissAction = {
+        val onDismissAction = { _: Int ->
             if (!isUndoed) {
                 localPostIdForFetchingRemoteVersionOfConflictedPost = null
                 PostUtils.trackSavePostAnalytics(post, site)
@@ -108,7 +108,7 @@ class PostConflictResolver(
                 dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
             }
         }
-        val onDismissAction = {
+        val onDismissAction = { _: Int ->
             originalPostCopyForConflictUndo = null
         }
         val snackBarHolder = SnackbarMessageHolder(

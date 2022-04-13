@@ -154,8 +154,8 @@ class PageParentFragment : Fragment(R.layout.page_parent_fragment), CoroutineSco
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     private fun PageParentFragmentBinding.initializeViews(activity: FragmentActivity, savedInstanceState: Bundle?) {

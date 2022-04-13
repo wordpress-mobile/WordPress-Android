@@ -80,7 +80,8 @@ public class NotificationsActions {
         }
     }
 
-    public static void downloadNoteAndUpdateDB(final String noteID, final RestRequest.Listener respoListener,
+    public static void downloadNoteAndUpdateDB(final String noteID,
+                                               final RestRequest.Listener requestListener,
                                                final RestRequest.ErrorListener errorListener) {
         WordPress.getRestClientUtilsV1_1().getNotification(
                 noteID,
@@ -104,8 +105,8 @@ public class NotificationsActions {
                             AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + noteID,
                                      e);
                         }
-                        if (respoListener != null) {
-                            respoListener.onResponse(response);
+                        if (requestListener != null) {
+                            requestListener.onResponse(response);
                         }
                     }
                 }, new RestRequest.ErrorListener() {

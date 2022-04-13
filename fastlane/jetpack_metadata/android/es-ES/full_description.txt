@@ -1,0 +1,9 @@
+Consigue potentes herramientas de seguridad y rendimiento con Jetpack para Android.
+
+Restaura tu sitio desde cualquier lugar si se produce algún error. Identifica amenazas y resuélvelas con un toque. Haz un seguimiento de la actividad del sitio para comprobar quién cambio qué y cuándo lo hizo. Consulta las estadísticas para ver de qué nuevos países provienen los visitantes de hoy.
+
+La aplicación también es compatible con las funciones de WordPress que esperas. Escribe un haiku espontáneo desde el sofá. Haz una foto y publícala en el descanso para comer. Responde a los últimos comentarios.
+
+Jetpack para Android es compatible con los sitios de WordPress que tengan Jetpack activado y una cuenta conectada a WordPress.com.
+
+View the Privacy Notice for California Users at https://automattic.com/privacy/#california-consumer-privacy-act-ccpa.

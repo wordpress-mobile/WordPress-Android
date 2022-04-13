@@ -1,14 +1,34 @@
 plugins {
-  id "com.gradle.enterprise" version "3.4.1"
+    id "com.gradle.enterprise" version "3.9"
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '1.6.5'
 }
 
+gradleEnterprise {
+    server = "https://gradle.a8c.com"
+    allowUntrustedServer = false
+    buildScan {
+        publishAlways()
+        capture {
+            taskInputFiles = true
+        }
+        uploadInBackground = System.getenv("CI") == null
+    }
+}
+
+if (System.getenv().containsKey("CI")) {
+    buildCache {
+        remote(HttpBuildCache) {
+            url = "http://10.0.2.215:5071/cache/"
+            allowUntrustedServer = true
+            allowInsecureProtocol = true
+            push = true
+        }
+    }
+}
+
+rootProject.name = 'WPAndroid'
+
 include ':WordPress'
-include ':libs:stories-android:stories'
-project(':libs:stories-android:stories').projectDir = new File(rootProject.projectDir, 'libs/stories-android/stories')
-include ':mp4compose'
-project(':mp4compose').projectDir = new File(rootProject.projectDir, 'libs/stories-android/mp4compose')
-include ':photoeditor'
-project(':photoeditor').projectDir = new File(rootProject.projectDir, 'libs/stories-android/photoeditor')
 
 include ':libs:image-editor:ImageEditor'
 include ':libs:networking:WordPressNetworking'
@@ -20,11 +40,20 @@ include ':libs:WordPressAnnotations'
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
-gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
+gradle.ext.fluxCBinaryPath = "org.wordpress:fluxc"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 gradle.ext.gutenbergMobileBinaryPath = "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
-gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
 gradle.ext.includedBuildGutenbergMobilePath = null
+gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
+gradle.ext.storiesAndroidPath = "com.automattic:stories"
+gradle.ext.storiesAndroidMp4ComposePath = "com.automattic.stories:mp4compose"
+gradle.ext.storiesAndroidPhotoEditorPath = "com.automattic.stories:photoeditor"
+gradle.ext.aztecAndroidAztecPath = "org.wordpress:aztec"
+gradle.ext.aztecAndroidWordPressShortcodesPath = "org.wordpress.aztec:wordpress-shortcodes"
+gradle.ext.aztecAndroidWordPressCommentsPath = "org.wordpress.aztec:wordpress-comments"
+gradle.ext.aztecAndroidGlideLoaderPath = "org.wordpress.aztec:glide-loader"
+gradle.ext.aztecAndroidPicassoLoaderPath = "org.wordpress.aztec:picasso-loader"
+gradle.ext.aboutAutomatticBinaryPath = "com.automattic:about"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -45,7 +74,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localFluxCPath) {
             dependencySubstitution {
                 println "Substituting fluxc with the local build"
-                substitute module("$gradle.ext.fluxCBinaryPath:fluxc") with project(':fluxc')
+                substitute module("$gradle.ext.fluxCBinaryPath") with project(':fluxc')
             }
         }
     }
@@ -77,5 +106,37 @@ if (localBuilds.exists()) {
             }
         }
     }
-}
 
+    if (ext.has("localStoriesAndroidPath")) {
+        includeBuild(ext.localStoriesAndroidPath) {
+            dependencySubstitution {
+                println "Substituting stories-android with the local build"
+                substitute module("$gradle.ext.storiesAndroidPath") with project(':stories')
+                substitute module("$gradle.ext.storiesAndroidMp4ComposePath") with project(':mp4compose')
+                substitute module("$gradle.ext.storiesAndroidPhotoEditorPath") with project(':photoeditor')
+            }
+        }
+    }
+
+    if (ext.has("localAztecAndroidPath")) {
+        includeBuild(ext.localAztecAndroidPath) {
+            dependencySubstitution {
+                println "Substituting AztecEditor-Android with the local build"
+                substitute module("$gradle.ext.aztecAndroidAztecPath") with project(':aztec')
+                substitute module("$gradle.ext.aztecAndroidWordPressShortcodesPath") with project(':wordpress-shortcodes')
+                substitute module("$gradle.ext.aztecAndroidWordPressCommentsPath") with project(':wordpress-comments')
+                substitute module("$gradle.ext.aztecAndroidGlideLoaderPath") with project(':glide-loader')
+                substitute module("$gradle.ext.aztecAndroidPicassoLoaderPath") with project(':picasso-loader')
+            }
+        }
+    }
+
+    if (ext.has("localAboutAutomatticPath")) {
+        includeBuild(ext.localAboutAutomatticPath) {
+            dependencySubstitution {
+                println "Substituting about-automattic with the local build"
+                substitute module("$gradle.ext.aboutAutomatticBinaryPath") using project(':library')
+            }
+        }
+    }
+}

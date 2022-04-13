@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostLikesChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.test
 import org.wordpress.android.ui.engagement.GetLikesUseCase
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.GENERIC
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -36,6 +35,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesDa
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
 import org.wordpress.android.ui.engagement.GetLikesUseCase.PaginationParams
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.utils.getDefaultLikers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -55,8 +55,12 @@ class GetLikesUseCaseTest {
     private val commentId = 10000L
     private val expectedNumLikes = 6
     private val defaultPageLenght = 20
-    private val defaultLikesLimit = 5
-    private val noLikesLimit = -1
+    private val limitedPageLenght = 8
+
+    private val pageInfo = PagingInfo(
+            20,
+            1
+    )
 
     @Before
     fun setup() {
@@ -97,8 +101,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForPost(
                 LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, defaultLikesLimit),
-                DONT_CARE
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList().firstOrNull() is Loading).isTrue
@@ -119,8 +122,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForPost(
                 LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(true, defaultPageLenght, defaultLikesLimit),
-                DONT_CARE
+                PaginationParams(true, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -145,8 +147,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForPost(
                 LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, defaultLikesLimit),
-                DONT_CARE
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -162,7 +163,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.no_network_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -186,8 +188,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForPost(
                 LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, noLikesLimit),
-                DONT_CARE
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -203,7 +204,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -227,8 +229,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForPost(
                 LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, noLikesLimit),
-                DONT_CARE
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -244,7 +245,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -269,8 +271,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForPost(
                 LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, noLikesLimit),
-                DONT_CARE
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -280,7 +281,8 @@ class GetLikesUseCaseTest {
                         LikesData(
                                 likes = likeData,
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -305,8 +307,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForPost(
                 LikeGroupFingerPrint(siteId, postId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, defaultLikesLimit),
-                DONT_CARE
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -314,9 +315,10 @@ class GetLikesUseCaseTest {
                 listOf(
                         Loading,
                         LikesData(
-                                likes = likeData.take(defaultLikesLimit),
+                                likes = likeData.take(limitedPageLenght),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -343,7 +345,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForComment(
                 LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, defaultLikesLimit)
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -359,7 +361,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.no_network_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -386,7 +389,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForComment(
                 LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, noLikesLimit)
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -402,7 +405,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -429,7 +433,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForComment(
                 LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, noLikesLimit)
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -445,7 +449,8 @@ class GetLikesUseCaseTest {
                                         title = UiStringRes(R.string.get_likes_empty_state_title)
                                 ),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -470,7 +475,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForComment(
                 LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, noLikesLimit)
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -480,7 +485,8 @@ class GetLikesUseCaseTest {
                         LikesData(
                                 likes = likeData,
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )
@@ -505,7 +511,7 @@ class GetLikesUseCaseTest {
 
         val flow = getLikesUseCase.getLikesForComment(
                 LikeGroupFingerPrint(siteId, commentId, expectedNumLikes),
-                PaginationParams(false, defaultPageLenght, defaultLikesLimit)
+                PaginationParams(false, defaultPageLenght)
         )
 
         assertThat(flow.toList()).isNotEmpty
@@ -513,9 +519,10 @@ class GetLikesUseCaseTest {
                 listOf(
                         Loading,
                         LikesData(
-                                likes = likeData.take(defaultLikesLimit),
+                                likes = likeData.take(limitedPageLenght),
                                 expectedNumLikes = expectedNumLikes,
-                                hasMore = false
+                                hasMore = false,
+                                pageInfo = pageInfo
                         )
                 )
         )

@@ -4,8 +4,8 @@ import android.app.Instrumentation;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.accessibility.AccessibilityChecks;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.github.jknack.handlebars.Helper;
@@ -55,20 +55,9 @@ public class BaseTest {
 
     public static final int WIREMOCK_PORT = 8080;
 
-    @Before
-    public void setup() {
-        mAppContext = ApplicationProvider.getApplicationContext();
-        mMockedAppComponent = DaggerAppComponentTest.builder()
-                                                    .application(mAppContext)
-                                                    .build();
-
-        Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
-                Matchers.allOf(matchesTypes(
-                        anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
-        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false)
-                           .setSuppressingResultMatcher(nonErrorLevelMatcher);
-    }
-
+    @Rule
+    public ActivityScenarioRule<WPLaunchActivity> mActivityScenarioRule
+            = new ActivityScenarioRule<>(WPLaunchActivity.class);
     @Rule
     public WireMockRule wireMockRule;
 
@@ -86,8 +75,19 @@ public class BaseTest {
                          .notifier(new AndroidNotifier()));
     }
 
-    @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+    @Before
+    public void setup() {
+        mAppContext = ApplicationProvider.getApplicationContext();
+        mMockedAppComponent = DaggerAppComponentTest.builder()
+                                                    .application(mAppContext)
+                                                    .build();
+
+        Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
+                Matchers.allOf(matchesTypes(
+                        anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
+        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false)
+                           .setSuppressingResultMatcher(nonErrorLevelMatcher);
+    }
 
     private void logout() {
         MePage mePage = new MePage();
@@ -115,7 +115,7 @@ public class BaseTest {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword(E2E_WP_COM_USER_PASSWORD)
-                       .confirmLogin();
+                       .confirmLogin(false);
     }
 
     private void wpLogout() {

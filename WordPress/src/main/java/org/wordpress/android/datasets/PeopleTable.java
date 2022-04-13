@@ -305,29 +305,29 @@ public class PeopleTable {
     }
 
     private static Person getPersonFromCursor(Cursor c, String table, int localTableBlogId) {
-        long personId = c.getInt(c.getColumnIndex("person_id"));
+        long personId = c.getInt(c.getColumnIndexOrThrow("person_id"));
 
         Person person = new Person(personId, localTableBlogId);
-        person.setDisplayName(c.getString(c.getColumnIndex("display_name")));
-        person.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
+        person.setDisplayName(c.getString(c.getColumnIndexOrThrow("display_name")));
+        person.setAvatarUrl(c.getString(c.getColumnIndexOrThrow("avatar_url")));
         switch (table) {
             case TEAM_TABLE:
-                person.setUsername(c.getString(c.getColumnIndex("user_name")));
-                String role = c.getString(c.getColumnIndex("role"));
+                person.setUsername(c.getString(c.getColumnIndexOrThrow("user_name")));
+                String role = c.getString(c.getColumnIndexOrThrow("role"));
                 person.setRole(role);
                 person.setPersonType(Person.PersonType.USER);
                 break;
             case FOLLOWERS_TABLE:
-                person.setUsername(c.getString(c.getColumnIndex("user_name")));
-                person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
+                person.setUsername(c.getString(c.getColumnIndexOrThrow("user_name")));
+                person.setSubscribed(c.getString(c.getColumnIndexOrThrow("subscribed")));
                 person.setPersonType(Person.PersonType.FOLLOWER);
                 break;
             case EMAIL_FOLLOWERS_TABLE:
-                person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
+                person.setSubscribed(c.getString(c.getColumnIndexOrThrow("subscribed")));
                 person.setPersonType(Person.PersonType.EMAIL_FOLLOWER);
                 break;
             case VIEWERS_TABLE:
-                person.setUsername(c.getString(c.getColumnIndex("user_name")));
+                person.setUsername(c.getString(c.getColumnIndexOrThrow("user_name")));
                 person.setPersonType(Person.PersonType.VIEWER);
                 break;
         }

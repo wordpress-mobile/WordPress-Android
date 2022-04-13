@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.analytics.AnalyticsUtils.RecommendAppSource
 import javax.inject.Inject
 
 /**
@@ -48,6 +50,13 @@ class AnalyticsUtilsWrapper @Inject constructor(
     fun trackBlogPreviewedByUrl(source: String) = AnalyticsUtils.trackBlogPreviewedByUrl(source)
 
     fun trackLikeListOpened(source: String, listType: String) = AnalyticsUtils.trackLikeListOpened(source, listType)
+
+    fun trackLikeListFetchedMore(
+        source: String,
+        listType: String,
+        nextPage: Int,
+        perPage: Int
+    ) = AnalyticsUtils.trackLikeListFetchedMore(source, listType, nextPage, perPage)
 
     /* READER */
 
@@ -95,4 +104,15 @@ class AnalyticsUtilsWrapper @Inject constructor(
 
     fun trackWithBlogPostDetails(stat: Stat, blogId: Long, postId: Long) =
             AnalyticsUtils.trackWithBlogPostDetails(stat, blogId, postId)
+
+    fun trackRecommendAppEngaged(source: RecommendAppSource) = AnalyticsUtils.trackRecommendAppEngaged(source)
+
+    fun trackRecommendAppFetchFailed(source: RecommendAppSource, error: String) =
+            AnalyticsUtils.trackRecommendAppFetchFailed(source, error)
+
+    fun trackCommentActionWithSiteDetails(
+        stat: Stat,
+        actionSource: AnalyticsCommentActionSource,
+        site: SiteModel
+    ) = AnalyticsUtils.trackCommentActionWithSiteDetails(stat, actionSource, site)
 }

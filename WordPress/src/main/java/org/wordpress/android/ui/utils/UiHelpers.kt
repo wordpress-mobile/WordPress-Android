@@ -1,24 +1,25 @@
 package org.wordpress.android.ui.utils
 
-import org.wordpress.android.R
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Point
 import android.view.View
 import android.view.WindowManager.LayoutParams
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiDimen.UIDimenDPInt
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.DisplayUtils
-import javax.inject.Inject
-import android.graphics.Point
+import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
+import org.wordpress.android.util.DisplayUtils
+import javax.inject.Inject
 
 class UiHelpers @Inject constructor() {
     fun getPxOfUiDimen(context: Context, uiDimen: UiDimen): Int =
@@ -39,6 +40,11 @@ class UiHelpers @Inject constructor() {
                                     value
                             )
                         }.toTypedArray()
+                )
+                is UiStringPluralRes -> context.resources.getQuantityString(
+                        uiString.pluralsRes,
+                        uiString.count,
+                        uiString.count
                 )
             }
 

@@ -4,6 +4,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
@@ -22,13 +23,15 @@ import kotlin.coroutines.suspendCoroutine
 class CreateSiteUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused") private val siteStore: SiteStore,
-    private val urlUtilsWrapper: UrlUtilsWrapper
+    private val urlUtilsWrapper: UrlUtilsWrapper,
+    private val accountStore: AccountStore
 ) {
     private var continuation: Continuation<OnNewSiteCreated>? = null
 
     suspend fun createSite(
         siteData: SiteCreationServiceData,
         languageWordPressId: String,
+        timeZoneId: String,
         siteVisibility: SiteVisibility = PUBLIC,
         dryRun: Boolean = false
     ): OnNewSiteCreated {
@@ -44,13 +47,18 @@ class CreateSiteUseCase @Inject constructor(
          * time of this comment, changing FluxC's Payload might end up affecting the old site creation flow,
          * so the workaround is applied here instead.
          */
-        val domain = if (isWordPressComSubDomain(siteData.domain)) {
-            urlUtilsWrapper.extractSubDomain(siteData.domain)
-        } else siteData.domain
+        val domain = when {
+            siteData.domain.isNullOrEmpty() -> null
+            isWordPressComSubDomain(siteData.domain) -> urlUtilsWrapper.extractSubDomain(siteData.domain)
+            else -> siteData.domain
+        }
         return suspendCoroutine { cont ->
             val newSitePayload = NewSitePayload(
+                    accountStore.account.userName,
                     domain,
+                    siteData.title,
                     languageWordPressId,
+                    timeZoneId,
                     siteVisibility,
                     siteData.segmentId,
                     siteData.siteDesign,

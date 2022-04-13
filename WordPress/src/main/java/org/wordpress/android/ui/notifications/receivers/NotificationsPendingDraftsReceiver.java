@@ -19,9 +19,9 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -47,6 +47,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -58,8 +59,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         if (action != null && action.equals("android.intent.action.BOOT_COMPLETED")) {
             AppLog.i(AppLog.T.NOTIFS, "entering Pending Drafts Receiver from BOOT_COMPLETED");
             // build notifications for existing local drafts
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+            SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
             if (site != null) {
                 List<PostModel> draftPosts = mPostStore.getPostsForSite(site);
                 for (PostModel post : draftPosts) {
@@ -135,15 +135,15 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     private void buildSinglePendingDraftNotification(Context context, String postTitle, String formattedMessage,
                                                      int postId, boolean isPage) {
         buildSinglePendingDraftNotification(context, getResultIntentForOnePost(context, postId, isPage),
-                                    String.format(formattedMessage, getPostTitle(context, postTitle)), postId, isPage);
+                String.format(formattedMessage, getPostTitle(context, postTitle)), postId, isPage);
     }
 
     private void buildSinglePendingDraftNotificationGeneric(Context context, String postTitle, int postId,
                                                             boolean isPage) {
         buildSinglePendingDraftNotification(context, getResultIntentForOnePost(context, postId, isPage),
-                                    String.format(context.getString(R.string.pending_draft_one_generic),
-                                                  getPostTitle(context, postTitle)),
-                                    postId, isPage);
+                String.format(context.getString(R.string.pending_draft_one_generic),
+                        getPostTitle(context, postTitle)),
+                postId, isPage);
     }
 
     private PendingIntent getResultIntentForOnePost(Context context, int postId, boolean isPage) {
@@ -156,10 +156,12 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         resultIntent.putExtra(POST_ID_EXTRA, postId);
         resultIntent.putExtra(IS_PAGE_EXTRA, isPage);
         resultIntent.putExtra(ARG_NOTIFICATION_TYPE, NotificationType.PENDING_DRAFTS);
-        PendingIntent pendingIntent = PendingIntent
-                .getActivity(context, BASE_REQUEST_CODE + PendingDraftsNotificationsUtils
-                                     .makePendingDraftNotificationId(postId),
-                             resultIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                BASE_REQUEST_CODE + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
+                resultIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         return pendingIntent;
     }
@@ -180,8 +182,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         addDismissActionForNotification(context, builder, postId, isPage);
 
         NativeNotificationsUtils.showMessageToUserWithBuilder(builder, message, false,
-                                                              PendingDraftsNotificationsUtils
-                                                                      .makePendingDraftNotificationId(postId), context);
+                PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), context);
         mSystemNotificationsTracker.trackShownNotification(NotificationType.PENDING_DRAFTS);
     }
 
@@ -194,15 +195,14 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         openDraftIntent.putExtra(IS_PAGE_EXTRA, isPage);
         openDraftIntent.putExtra(ARG_NOTIFICATION_TYPE, NotificationType.PENDING_DRAFTS);
 
-        PendingIntent pendingIntent = PendingIntent
-                .getActivity(context,
-                             // need to add + 2 so the request code is different, otherwise they overlap
-                             BASE_REQUEST_CODE + 1 + PendingDraftsNotificationsUtils
-                                     .makePendingDraftNotificationId(postId),
-                             openDraftIntent,
-                             PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.ic_pencil_white_24dp, context.getText(R.string.edit),
-                          pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                // need to add + 1 so the request code is different, otherwise they overlap
+                BASE_REQUEST_CODE + 1 + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
+                openDraftIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        builder.addAction(R.drawable.ic_pencil_white_24dp, context.getText(R.string.edit), pendingIntent);
     }
 
     private void addIgnoreActionForNotification(Context context, NotificationCompat.Builder builder, int postId,
@@ -210,18 +210,18 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         // Call processing service when user taps on IGNORE - we should remember this decision for this post
         Intent ignoreIntent = new Intent(context, NotificationsProcessingService.class);
         ignoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                              NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_IGNORE);
+                NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_IGNORE);
         ignoreIntent.putExtra(POST_ID_EXTRA, postId);
         ignoreIntent.putExtra(IS_PAGE_EXTRA, isPage);
         ignoreIntent.putExtra(ARG_NOTIFICATION_TYPE, NotificationType.PENDING_DRAFTS);
-        PendingIntent ignorePendingIntent = PendingIntent
-                .getService(context,
-                            // need to add + 2 so the request code is different, otherwise they overlap
-                            BASE_REQUEST_CODE + 2
-                            + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
-                            ignoreIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
-                          ignorePendingIntent);
+        PendingIntent ignorePendingIntent = PendingIntent.getService(
+                context,
+                // need to add + 2 so the request code is different, otherwise they overlap
+                BASE_REQUEST_CODE + 2 + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
+                ignoreIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore), ignorePendingIntent);
     }
 
     private void addDismissActionForNotification(Context context, NotificationCompat.Builder builder, int postId,
@@ -229,17 +229,18 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         // Call processing service when notification is dismissed
         Intent notificationDeletedIntent = new Intent(context, NotificationsProcessingService.class);
         notificationDeletedIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                           NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS);
+                NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS);
         notificationDeletedIntent.putExtra(POST_ID_EXTRA, postId);
         notificationDeletedIntent.putExtra(IS_PAGE_EXTRA, isPage);
         notificationDeletedIntent.putExtra(NotificationsProcessingService.ARG_NOTIFICATION_TYPE,
                 NotificationType.PENDING_DRAFTS);
-        PendingIntent dismissPendingIntent = PendingIntent
-                .getService(context,
-                            // need to add + 3 so the request code is different, otherwise they overlap
-                            BASE_REQUEST_CODE + 3
-                            + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
-                            notificationDeletedIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent dismissPendingIntent = PendingIntent.getService(
+                context,
+                // need to add + 3 so the request code is different, otherwise they overlap
+                BASE_REQUEST_CODE + 3 + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
+                notificationDeletedIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
         builder.setDeleteIntent(dismissPendingIntent);
     }
 }

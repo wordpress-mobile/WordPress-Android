@@ -1,23 +1,66 @@
+ext {
+    wordPressUtilsVersion = '2.5.0'
+    wordPressLoginVersion = '0.13.0'
+    gutenbergMobileVersion = 'v1.74.0-alpha1'
+    storiesVersion = '1.3.0'
+    aboutAutomatticVersion = '0.0.5'
+
+    minSdkVersion = 24
+    compileSdkVersion = 31
+    targetSdkVersion = 30
+
+    coroutinesVersion = '1.5.2'
+    androidxWorkVersion = "2.7.0"
+
+    daggerVersion = '2.41'
+    fluxCVersion = 'trunk-884c546e3c2cdca6e743b3439082c42c5aa81b85'
+
+    appCompatVersion = '1.0.2'
+    coreVersion = '1.3.2'
+    lifecycleVersion = '2.2.0'
+    constraintLayoutVersion = '1.1.3'
+    materialVersion = '1.2.1'
+    preferenceVersion = '1.1.0'
+    swipeToRefresh = '1.1.0'
+    uCropVersion = '2.2.4'
+    lifecycleVersion = '2.2.0'
+    tracksVersion = '2.2.0'
+    roomVersion = '2.3.0'
+
+    coreLibraryDesugaringVersion = '1.1.5'
+
+    exoPlayerVersion = '2.9.3'
+
+    // testing
+    jUnitVersion = '4.13'
+    androidxTestVersion = '1.4.0'
+    jUnitExtVersion = '1.1.3'
+    androidxArchCoreVersion = '2.0.0'
+    assertJVersion = '3.11.1'
+    espressoVersion = '3.4.0'
+    mockitoCoreVersion = "3.3.3"
+    nhaarmanMockitoVersion = "2.2.0"
+}
+
 buildscript {
-    ext.kotlinVersion = '1.4.10'
-    ext.serializationVersion = '1.0-M1-1.4.0-rc'
+    ext.kotlinVersion = '1.6.10'
     ext.navComponentVersion = '2.3.5'
-    ext.kotlin_coroutines_version = '1.3.9'
-    ext.coroutinesVersion = '1.3.9'
-    ext.kotlin_ktx_version = '1.2.0'
-    ext.wordPressUtilsVersion = 'develop-bb54ee34c5fec5fa7375ce90a356adb5adbdcae0'
-    ext.wordPressLoginVersion = '0.0.2'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = 'v1.55.0'
 
     repositories {
+        maven {
+            url 'https://a8c-libs.s3.amazonaws.com/android'
+            content {
+                includeGroup "com.automattic.android"
+            }
+        }
+        maven { url "https://plugins.gradle.org/m2/" }
         google()
-        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
-        //classpath 'com.automattic.android:fetchstyle:1.1'
+        classpath 'com.android.tools.build:gradle:7.1.1'
+        classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
@@ -26,7 +69,7 @@ buildscript {
     }
 }
 
-//apply plugin: 'com.automattic.android.fetchstyle'
+apply plugin: 'com.automattic.android.fetchstyle'
 
 allprojects {
     apply plugin: 'checkstyle'
@@ -34,15 +77,40 @@ allprojects {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
+        maven {
+            url "https://a8c-libs.s3.amazonaws.com/android/jcenter-mirror"
+            content {
+                includeVersion "com.android.volley", "volley", "1.1.1"
+                includeVersion "com.automattic", "rest", "1.0.8"
+                includeVersion "com.google.android.exoplayer", "exoplayer-core", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-dash", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-hls", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-smoothstreaming", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer-ui", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "exoplayer", "2.9.3"
+                includeVersion "com.google.android.exoplayer", "extension-okhttp", "2.9.3"
+                includeVersion "com.google.android", "flexbox", "2.0.1"
+                includeVersion "org.wordpress", "emailchecker2", "1.1.0"
+                includeVersion "org.wordpress", "persistentedittext", "1.0.2"
+                includeVersion "org.wordpress", "wellsql-core", "1.6.0"
+                includeVersion "org.wordpress", "wellsql", "1.6.0"
+                // Required for detekt
+                includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
+                // Required for lintWordpressVanillaRelease
+                includeVersion "com.jraska", "falcon", "2.1.1"
+                // Required for ktlint
+                includeVersion "com.andreapivetta.kolor", "kolor", "0.0.2"
+            }
+        }
 
         flatDir {
             dirs '../aars'
         }
     }
 
-    task checkstyle(type: Checkstyle) {
+    tasks.register("checkstyle", Checkstyle) {
         source 'src'
 
         classpath = files()
@@ -85,71 +153,27 @@ subprojects {
         ktlint 'com.github.shyiko:ktlint:0.29.0'
     }
 
-    task ktlint(type: JavaExec) {
+    tasks.register("ktlint", JavaExec) {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt"
     }
 
-    task ktlintFormat(type: JavaExec) {
+    tasks.register("ktlintFormat", JavaExec) {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "-F", "src/**/*.kt"
     }
 
-    task ciktlint(type: JavaExec) {
+    tasks.register("ciktlint", JavaExec) {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
     }
 }
 
-buildScan {
-    // Always run Gradle scan on CI builds
-    if (System.getenv('CI')) {
-        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-        termsOfServiceAgree = 'yes'
-        tag 'CI'
-        publishAlways()
-    }
-}
-
-ext {
-    compileSdkVersion = 29
-    buildToolVersion = '29.0.2'
-
-    minSdkVersion = 21
-    targetSdkVersion = 29
-
-    coroutinesVersion = '1.3.9'
-    androidxWorkVersion = "2.4.0"
-
-    daggerVersion = '2.29.1'
-    fluxCVersion = '1.19.0'
-
-    appCompatVersion = '1.0.2'
-    coreVersion = '1.3.2'
-    lifecycleVersion = '2.2.0'
-    pagingVersion = '3.0.0'
-    constraintLayoutVersion = '1.1.3'
-    materialVersion = '1.2.1'
-    preferenceVersion = '1.1.0'
-    swipeToRefresh = '1.1.0'
-    uCropVersion = '2.2.4'
-    lifecycleVersion = '2.2.0'
-
-    // testing
-    jUnitVersion = '4.13'
-    androidxTestVersion = '1.1.0'
-    androidxArchCoreVersion = '2.0.0'
-    assertJVersion = '3.11.1'
-    espressoVersion = '3.1.0'
-    mockitoCoreVersion = "3.3.3"
-    nhaarmanMockitoVersion = "2.2.0"
-}
-
 // Onboarding and dev env setup tasks
-task checkBundler(type:Exec) {
+tasks.register("checkBundler", Exec) {
     doFirst {
         println "Check Bundler"
     }
@@ -167,7 +191,8 @@ task checkBundler(type:Exec) {
     }
 }
 
-task checkBundle(type:Exec, dependsOn:checkBundler) {
+tasks.register("checkBundle", Exec) {
+    dependsOn tasks.named("checkBundler")
     doFirst {
         println "Check Bundle"
     }
@@ -185,7 +210,8 @@ task checkBundle(type:Exec, dependsOn:checkBundler) {
     }
 }
 
-task applyCredentials(type:Exec, dependsOn:checkBundle) {
+tasks.register("applyCredentials", Exec) {
+    dependsOn tasks.named("checkBundle")
     doFirst {
         println "Apply credentials for this branch"
     }

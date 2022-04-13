@@ -300,7 +300,7 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT count(*) FROM tbl_posts WHERE blog_id=? AND tag_name=''",
+                "SELECT count(*) FROM tbl_posts WHERE blog_id=? AND tag_name='' AND tag_type=0",
                 new String[]{Long.toString(blogId)});
     }
 
@@ -309,7 +309,7 @@ public class ReaderPostTable {
             return 0;
         }
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT count(*) FROM tbl_posts WHERE feed_id=? AND tag_name=''",
+                "SELECT count(*) FROM tbl_posts WHERE feed_id=? AND tag_name='' AND tag_type=0",
                 new String[]{Long.toString(feedId)});
     }
 
@@ -482,6 +482,16 @@ public class ReaderPostTable {
         int numComments = getNumCommentsForPost(blogId, postId);
         numComments++;
         setNumCommentsForPost(blogId, postId, numComments);
+    }
+
+    public static void decrementNumCommentsForPost(long blogId, long postId) {
+        int numComments = getNumCommentsForPost(blogId, postId);
+        if (numComments > 0) {
+            numComments--;
+            setNumCommentsForPost(blogId, postId, numComments);
+        } else {
+            AppLog.d(AppLog.T.READER, "Failed to decrement the number of post comments because they are 0");
+        }
     }
 
     /*
@@ -668,14 +678,14 @@ public class ReaderPostTable {
      */
     public static String getOldestPubDateInBlog(long blogId) {
         String sql = "SELECT date_published FROM tbl_posts"
-                     + " WHERE blog_id=? AND tag_name=''"
+                     + " WHERE blog_id=? AND tag_name='' AND tag_type=0"
                      + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
     public static String getOldestPubDateInFeed(long feedId) {
         String sql = "SELECT date_published FROM tbl_posts"
-                     + " WHERE feed_id=? AND tag_name=''"
+                     + " WHERE feed_id=? AND tag_name='' AND tag_type=0"
                      + " ORDER BY date_published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(feedId)});
     }
@@ -988,7 +998,8 @@ public class ReaderPostTable {
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =
-                "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
+                "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND tag_name='' AND tag_type=0"
+                + " ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;
@@ -1015,7 +1026,8 @@ public class ReaderPostTable {
     public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =
-                "SELECT " + columns + " FROM tbl_posts WHERE feed_id=? AND tag_name='' ORDER BY date_published DESC";
+                "SELECT " + columns + " FROM tbl_posts WHERE feed_id=? AND tag_name='' AND tag_type=0"
+                + " ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;
@@ -1091,7 +1103,8 @@ public class ReaderPostTable {
      * same as getPostsInBlog() but only returns the blogId/postId pairs
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
-        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id=? AND tag_name='' ORDER BY date_published DESC";
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id=? AND tag_name='' AND tag_type=0"
+                     + " ORDER BY date_published DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + maxPosts;
@@ -1117,8 +1130,8 @@ public class ReaderPostTable {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");
         }
         return new Pair<>(
-                c.getString(c.getColumnIndex("tag_name")),
-                ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")))
+                c.getString(c.getColumnIndexOrThrow("tag_name")),
+                ReaderTagType.fromInt(c.getInt(c.getColumnIndexOrThrow("tag_type")))
         );
     }
 
@@ -1135,71 +1148,71 @@ public class ReaderPostTable {
             post.setText(c.getString(idxText));
         }
 
-        post.postId = c.getLong(c.getColumnIndex("post_id"));
-        post.blogId = c.getLong(c.getColumnIndex("blog_id"));
-        post.feedId = c.getLong(c.getColumnIndex("feed_id"));
-        post.feedItemId = c.getLong(c.getColumnIndex("feed_item_id"));
-        post.authorId = c.getLong(c.getColumnIndex("author_id"));
-        post.setPseudoId(c.getString(c.getColumnIndex("pseudo_id")));
+        post.postId = c.getLong(c.getColumnIndexOrThrow("post_id"));
+        post.blogId = c.getLong(c.getColumnIndexOrThrow("blog_id"));
+        post.feedId = c.getLong(c.getColumnIndexOrThrow("feed_id"));
+        post.feedItemId = c.getLong(c.getColumnIndexOrThrow("feed_item_id"));
+        post.authorId = c.getLong(c.getColumnIndexOrThrow("author_id"));
+        post.setPseudoId(c.getString(c.getColumnIndexOrThrow("pseudo_id")));
 
-        post.setAuthorName(c.getString(c.getColumnIndex("author_name")));
-        post.setAuthorFirstName(c.getString(c.getColumnIndex("author_first_name")));
-        post.setBlogName(c.getString(c.getColumnIndex("blog_name")));
-        post.setBlogUrl(c.getString(c.getColumnIndex("blog_url")));
-        post.setBlogImageUrl(c.getString(c.getColumnIndex("blog_image_url")));
-        post.setExcerpt(c.getString(c.getColumnIndex("excerpt")));
-        post.setFormat(c.getString(c.getColumnIndex("format")));
-        post.setFeaturedImage(c.getString(c.getColumnIndex("featured_image")));
-        post.setFeaturedVideo(c.getString(c.getColumnIndex("featured_video")));
+        post.setAuthorName(c.getString(c.getColumnIndexOrThrow("author_name")));
+        post.setAuthorFirstName(c.getString(c.getColumnIndexOrThrow("author_first_name")));
+        post.setBlogName(c.getString(c.getColumnIndexOrThrow("blog_name")));
+        post.setBlogUrl(c.getString(c.getColumnIndexOrThrow("blog_url")));
+        post.setBlogImageUrl(c.getString(c.getColumnIndexOrThrow("blog_image_url")));
+        post.setExcerpt(c.getString(c.getColumnIndexOrThrow("excerpt")));
+        post.setFormat(c.getString(c.getColumnIndexOrThrow("format")));
+        post.setFeaturedImage(c.getString(c.getColumnIndexOrThrow("featured_image")));
+        post.setFeaturedVideo(c.getString(c.getColumnIndexOrThrow("featured_video")));
 
-        post.setTitle(c.getString(c.getColumnIndex("title")));
-        post.setUrl(c.getString(c.getColumnIndex("url")));
-        post.setShortUrl(c.getString(c.getColumnIndex("short_url")));
-        post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
+        post.setTitle(c.getString(c.getColumnIndexOrThrow("title")));
+        post.setUrl(c.getString(c.getColumnIndexOrThrow("url")));
+        post.setShortUrl(c.getString(c.getColumnIndexOrThrow("short_url")));
+        post.setPostAvatar(c.getString(c.getColumnIndexOrThrow("post_avatar")));
 
-        post.setDatePublished(c.getString(c.getColumnIndex("date_published")));
-        post.setDateLiked(c.getString(c.getColumnIndex("date_liked")));
-        post.setDateTagged(c.getString(c.getColumnIndex("date_tagged")));
+        post.setDatePublished(c.getString(c.getColumnIndexOrThrow("date_published")));
+        post.setDateLiked(c.getString(c.getColumnIndexOrThrow("date_liked")));
+        post.setDateTagged(c.getString(c.getColumnIndexOrThrow("date_tagged")));
 
-        post.score = c.getDouble(c.getColumnIndex("score"));
-        post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
-        post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
+        post.score = c.getDouble(c.getColumnIndexOrThrow("score"));
+        post.numReplies = c.getInt(c.getColumnIndexOrThrow("num_replies"));
+        post.numLikes = c.getInt(c.getColumnIndexOrThrow("num_likes"));
 
-        post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
-        post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_followed")));
-        post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
-        post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
-        post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
-        post.isPrivateAtomic = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private_atomic")));
-        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
-        post.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
-        post.isBookmarked = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_bookmarked")));
+        post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_liked")));
+        post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_followed")));
+        post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_comments_open")));
+        post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_external")));
+        post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_private")));
+        post.isPrivateAtomic = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_private_atomic")));
+        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_videopress")));
+        post.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_jetpack")));
+        post.isBookmarked = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_bookmarked")));
 
-        post.setPrimaryTag(c.getString(c.getColumnIndex("primary_tag")));
-        post.setSecondaryTag(c.getString(c.getColumnIndex("secondary_tag")));
+        post.setPrimaryTag(c.getString(c.getColumnIndexOrThrow("primary_tag")));
+        post.setSecondaryTag(c.getString(c.getColumnIndexOrThrow("secondary_tag")));
 
-        post.setAttachmentsJson(c.getString(c.getColumnIndex("attachments_json")));
-        post.setDiscoverJson(c.getString(c.getColumnIndex("discover_json")));
+        post.setAttachmentsJson(c.getString(c.getColumnIndexOrThrow("attachments_json")));
+        post.setDiscoverJson(c.getString(c.getColumnIndexOrThrow("discover_json")));
 
-        post.xpostPostId = c.getLong(c.getColumnIndex("xpost_post_id"));
-        post.xpostBlogId = c.getLong(c.getColumnIndex("xpost_blog_id"));
+        post.xpostPostId = c.getLong(c.getColumnIndexOrThrow("xpost_post_id"));
+        post.xpostBlogId = c.getLong(c.getColumnIndexOrThrow("xpost_blog_id"));
 
-        post.setRailcarJson(c.getString(c.getColumnIndex("railcar_json")));
-        post.setCardType(ReaderCardType.fromString(c.getString(c.getColumnIndex("card_type"))));
+        post.setRailcarJson(c.getString(c.getColumnIndexOrThrow("railcar_json")));
+        post.setCardType(ReaderCardType.fromString(c.getString(c.getColumnIndexOrThrow("card_type"))));
 
-        post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
+        post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("use_excerpt")));
 
-        post.isSeen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_seen")));
-        post.isSeenSupported = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_seen_supported")));
+        post.isSeen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_seen")));
+        post.isSeenSupported = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_seen_supported")));
 
-        String commaSeparatedTags = (c.getString(c.getColumnIndex("tags")));
+        String commaSeparatedTags = (c.getString(c.getColumnIndexOrThrow("tags")));
         if (commaSeparatedTags != null) {
             post.setTags(ReaderUtils.getTagsFromCommaSeparatedSlugs(commaSeparatedTags));
         }
 
-        post.organizationId = c.getInt(c.getColumnIndex("organization_id"));
-        post.authorBlogId = c.getLong(c.getColumnIndex("author_blog_id"));
-        post.setAuthorBlogUrl(c.getString(c.getColumnIndex("author_blog_url")));
+        post.organizationId = c.getInt(c.getColumnIndexOrThrow("organization_id"));
+        post.authorBlogId = c.getLong(c.getColumnIndexOrThrow("author_blog_id"));
+        post.setAuthorBlogUrl(c.getString(c.getColumnIndexOrThrow("author_blog_url")));
 
         return post;
     }
@@ -1246,9 +1259,39 @@ public class ReaderPostTable {
         ReaderBlogIdPostIdList bookmarkedPosts = getBookmarkedPostIds();
         for (ReaderPost post : posts) {
             for (ReaderBlogIdPostId bookmarkedPostId : bookmarkedPosts) {
-                if (post.blogId == bookmarkedPostId.getBlogId() && post.postId == bookmarkedPostId.getPostId()) {
-                    post.isBookmarked = true;
-                }
+                if (isBookmarkedPost(post, bookmarkedPostId)) post.isBookmarked = true;
+            }
+        }
+    }
+
+    private static boolean isBookmarkedPost(ReaderPost post, ReaderBlogIdPostId bookmarkedPostId) {
+        return post.blogId == bookmarkedPostId.getBlogId() && post.postId == bookmarkedPostId.getPostId();
+    }
+
+    public static void updateBookmarkedPostPseudoId(final ReaderPostList posts) {
+        ReaderBlogIdPostIdList bookmarkedPosts = getBookmarkedPostIds();
+        for (ReaderPost post : posts) {
+            for (ReaderBlogIdPostId bookmarkedPostId : bookmarkedPosts) {
+                if (isBookmarkedPost(post, bookmarkedPostId)) updateBookmarkedPostPseudoId(post, bookmarkedPostId);
+            }
+        }
+    }
+
+    public static void updateBookmarkedPostPseudoId(ReaderPost post, ReaderBlogIdPostId bookmarkedPostIds) {
+        ReaderPost bookmarkedPost = getBlogPost(bookmarkedPostIds.getBlogId(), bookmarkedPostIds.getPostId(), true);
+        if (bookmarkedPost != null && !bookmarkedPost.getPseudoId().equals(post.getPseudoId())) {
+            SQLiteDatabase db = ReaderDatabase.getWritableDb();
+            db.beginTransaction();
+            try {
+                String sql = "UPDATE tbl_posts SET pseudo_id=? WHERE blog_id=? AND post_id=? AND tag_type=?";
+                db.execSQL(sql, new String[]{
+                        post.getPseudoId(),
+                        Long.toString(post.blogId),
+                        Long.toString(post.postId),
+                        Integer.toString(ReaderTagType.BOOKMARKED.toInt())});
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
             }
         }
     }

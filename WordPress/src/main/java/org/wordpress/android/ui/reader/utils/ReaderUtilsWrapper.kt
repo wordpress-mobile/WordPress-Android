@@ -15,6 +15,7 @@ import javax.inject.Inject
  *
  */
 @Reusable
+@Suppress("TooManyFunctions")
 class ReaderUtilsWrapper @Inject constructor(
     private val appContext: Context,
     private val tagUpdateClientUtilsProvider: TagUpdateClientUtilsProvider
@@ -53,4 +54,9 @@ class ReaderUtilsWrapper @Inject constructor(
         postId: Long,
         commentId: Long
     ) = ReaderUtils.commentExists(blogId, postId, commentId)
+
+    fun getTextForCommentSnippet(numComments: Int): String? = ReaderUtils.getTextForCommentSnippet(
+            appContext,
+            numComments
+    )
 }

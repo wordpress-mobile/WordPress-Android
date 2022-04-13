@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatButton
 import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
@@ -26,6 +27,7 @@ class ActionableEmptyView : LinearLayout {
     lateinit var layout: View
     lateinit var subtitle: WPTextView
     lateinit var title: WPTextView
+    lateinit var progressBar: ProgressBar
 
     /**
      * Image shown at the bottom after the subtitle.
@@ -59,6 +61,7 @@ class ActionableEmptyView : LinearLayout {
         subtitle = layout.findViewById(R.id.subtitle)
         button = layout.findViewById(R.id.button)
         bottomImage = layout.findViewById(R.id.bottom_image)
+        progressBar = layout.findViewById(R.id.actionable_empty_view_progress_bar)
 
         attrs.let {
             val typedArray = context.obtainStyledAttributes(

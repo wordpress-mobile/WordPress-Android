@@ -29,7 +29,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -40,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 import javax.inject.Inject
@@ -109,7 +109,7 @@ constructor(
         } else {
             val header = Header(R.string.stats_author_label, R.string.stats_author_views_label)
             items.add(header)
-            val maxViews = domainModel.authors.maxBy { it.views }?.views ?: 0
+            val maxViews = domainModel.authors.maxByOrNull { it.views }?.views ?: 0
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatarUrl,

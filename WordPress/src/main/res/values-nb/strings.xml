@@ -1,25 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-04-23 11:24:05+0000
+Translation-Revision-Date: 2021-08-01 20:19:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: nb_NO
 -->
 <resources>
+    <string name="create_site_notification_create_site_action">Opprett netsted</string>
+    <string name="create_site_notification_title">Opprett ditt WordPress-nettsted</string>
+    <string name="stats_disabled_enable_stats_error_message">Kunne ikke aktivere nettstedstatistikk</string>
+    <string name="stats_disabled_enable_stats_button">Slå på nettstedstatistikk</string>
+    <string name="gutenberg_native_what_is_a_block">Hva er en blokk?</string>
+    <string name="gutenberg_native_try_another_search_term">Prøv et annet søkeord</string>
+    <string name="gutenberg_native_no_blocks_found">Ingen blokker funnet</string>
+    <string name="quick_start_dialog_need_help_manage_site_button_positive">Vis meg rundt</string>
+    <string name="login_epilogue_create_new_site_button">Lag et nytt nettsted</string>
+    <string name="blogging_reminders_tip">Tips</string>
+    <string name="blogging_reminders_update">Oppdater</string>
+    <string name="blogging_reminders_n_a_week">%s i uka</string>
+    <string name="blogging_reminders_done">Utført</string>
+    <string name="fab_add_category_desc">Opprett kategori</string>
+    <string name="support_ticket_subject">WordPress for Android-kundestøtte</string>
+    <string name="site_settings_categories_hint">Behandle nettstedets stikkord</string>
+    <string name="site_settings_categories_title">Kategorier</string>
+    <string name="site_settings_blogging_reminders_title">Bloggepåminnere</string>
+    <string name="gutenberg_native_s_block">%s-blokk</string>
+    <string name="gutenberg_native_columns_settings">Kolonneinnstillinger</string>
+    <string name="gutenberg_native_add_link_to_s">Legg til lenke til %s</string>
     <string name="gutenberg_native_what_is_alt_text">Hva er alt-tekst?</string>
     <string name="gutenberg_native_transform_s_to">Omform %s til</string>
     <string name="gutenberg_native_transform_block">Omform blokk…</string>
     <string name="gutenberg_native_failed_to_insert_media">Kunne ikke sette inn media.</string>
     <string name="gutenberg_native_failed_to_insert_audio_file">Kunne ikke sette inn lydfil.</string>
-    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Beskriv hensikten med bildet. La stå tom om bildet kun er dekorativt.</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s omformet til %2$s</string>
-    <string name="like_faces_plural_text">%d bloggere liker dette.</string>
-    <string name="like_faces_singular_text">1 blogger liker dette.</string>
     <string name="like_title_plural">%d likinger</string>
     <string name="like_title_singular">1 liking</string>
     <string name="suggestion">Forslag:</string>
     <string name="gutenberg_native_search_blocks">Søk blokker</string>
-    <string name="gutenberg_native_search_block">Søk blokk</string>
     <string name="gutenberg_native_clear_search">Rensk søk</string>
     <string name="gutenberg_native_cancel_search">Avbryt søk</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s er %3$s %4$s.</string>
@@ -41,7 +58,7 @@ Language: nb_NO
     <string name="scan_fixing_threats_title_singular">Fjerner trusel</string>
     <string name="disable">Slå av</string>
     <string name="quick_start_list_view_site_title">Besøk nettstedet ditt</string>
-    <string name="quick_start_list_enable_sharing_title">Slå på deling</string>
+    <string name="quick_start_list_enable_sharing_title">Sosial deling</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Klokke-ikon</string>
     <string name="restore_warning_action_button">Bekreft</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
@@ -52,6 +69,7 @@ Language: nb_NO
     <string name="gutenberg_native_lock_icon">Låse-ikon</string>
     <string name="gutenberg_native_choose_audio">Velg lyd</string>
     <string name="gutenberg_native_audio_player">Lydavspiller</string>
+    <string name="gutenberg_native_audio_file">lydfil</string>
     <string name="continue_with_wpcom">Logg inn eller registrer deg på WordPress.com</string>
     <string name="photo_picker_use_audio">Bruk denne lyden</string>
     <string name="photo_picker_choose_audio">Velg lyd fra enheten</string>
@@ -102,7 +120,6 @@ Language: nb_NO
     <string name="scan_in_hours_ago">%s time(r) siden</string>
     <string name="scan_this_site">dette nettstedet</string>
     <string name="backup">Sikkerhetskopi</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (viser %s elementer)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Aktivitetstype-filter</string>
     <string name="activity_log_activity_type_filter_active_label">Aktivitetstype (%s)</string>
     <string name="backup_item_sqls">Nettstedsdatabase</string>
@@ -145,7 +162,6 @@ Language: nb_NO
     <string name="reader_discover_no_posts_title">Ingen nylige innlegg</string>
     <string name="reader_discover_empty_title">Velkommen!</string>
     <string name="scan">Skann</string>
-    <string name="hpp_skip_button">Hopp over</string>
     <string name="hpp_choose_button">Velg</string>
     <string name="hpp_title">Velg en utforming</string>
     <string name="prepublishing_nudges_add_category_button">Legg til kategori</string>
@@ -276,7 +292,7 @@ Language: nb_NO
     <string name="create_account">Opprett konto</string>
     <string name="send_link_by_email">Send lenke med e-post</string>
     <string name="reset_your_password">Tilbakestill ditt passord</string>
-    <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>
+    <string name="quick_start_list_update_site_title_title">Sjekk din nettstedstittel</string>
     <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b&gt;%1$s&lt;/b&gt; for å angi en ny tittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
@@ -291,6 +307,7 @@ Language: nb_NO
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
     <string name="gutenberg_native_gradient_type">Gradienttype</string>
+    <string name="gutenberg_native_go_back">Gå tilbake</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
     <string name="pages_list_author">Sideforfatter</string>
@@ -328,7 +345,6 @@ Language: nb_NO
     <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
-    <string name="suggestion_invalid">%s er ikke en gyldig %s</string>
     <string name="site_settings_select_page">Velg side</string>
     <string name="site_settings_posts_page">Innleggsside</string>
     <string name="site_settings_static_homepage">Statisk hjemmeside</string>
@@ -363,12 +379,14 @@ Language: nb_NO
     <string name="button_insert">Sett inn</string>
     <string name="continue_label">Fortsett</string>
     <string name="copy_text">Kopier</string>
+    <string name="gutenberg_native_number_of_columns">Antall kolonner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytt blokken mot høyre fra posisjon %1$s til posisjon %2$s</string>
     <string name="gutenberg_native_move_block_right">Flytt blokken mot høyre</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytt blokken mot venstre fra posisjon %1$s til posisjon %2$s</string>
     <string name="gutenberg_native_move_block_left">Flytt blokken mot venstre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dobbelttrykk for å flytte blokken mot høyre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dobbelttrykk for å flytte blokken mot venstre</string>
+    <string name="gutenberg_native_block_settings">Blokkinnstillinger</string>
     <string name="new_site_creation_creating_site_loading_4">Oppretter kontrollpanel</string>
     <string name="new_site_creation_creating_site_loading_3">Setter opp tema</string>
     <string name="new_site_creation_creating_site_loading_2">Legger til funksjoner på nettstedet</string>
@@ -534,11 +552,11 @@ Language: nb_NO
     <string name="gutenberg_native_move_block_up">Flytt blokk opp</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytt blokk ned fra rad %1$s til rad %2$s</string>
     <string name="gutenberg_native_move_block_down">Flytt blokk ned</string>
+    <string name="gutenberg_native_link_text">Lenketekst</string>
     <string name="gutenberg_native_link_inserted">Lenke satt inn</string>
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
     <string name="gutenberg_native_help_icon">Hjelpeikon</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Mislyktes i å sette inn media.\nVennligst trykk for alternativer.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dobbelttrykk for å angre siste endring</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Dobbelttrykk for å veksle innstilling</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Dobbelttrykk for å velge et bilde</string>
@@ -597,7 +615,6 @@ Language: nb_NO
     <string name="local_post_autosave_revision_available">Du har gjort endringer som ikke er lagret på dette innlegget</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Versjonen fra denne appen</string>
     <string name="dialog_confirm_autosave_restore_button">Versjonen fra en annen enhet</string>
-    <string name="dialog_confirm_autosave_body_second_part">Fra denne appen\nLagret %s\n\nFra annen enhet\nLagret %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Du gjorde nylig endringer på dette innlegget, men lagret dem ikke. Velg en versjon å laste:\n</string>
     <string name="dialog_confirm_autosave_title">Hvilken versjon vil du redigere?</string>
     <string name="button_delete_permanently">Slett permanent</string>
@@ -647,7 +664,6 @@ Language: nb_NO
     <string name="share_desc">Del</string>
     <string name="navigate_back_desc">Gå tilbake</string>
     <string name="navigate_forward_desc">Gå forover</string>
-    <string name="calendar_scheduled_post_description">\"%s\" planlagt for publisering den \"%s\" i din WordPress-app\n%s</string>
     <string name="calendar_scheduled_post_title">WordPress planlagt innlegg: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" vil bli publiser om 10 minutter</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" vil bli publisert om en time</string>
@@ -726,10 +742,6 @@ Language: nb_NO
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrerer domenenavn…</string>
     <string name="domain_registration_state_picker_dialog_title">Velg delstat</string>
     <string name="domain_registration_country_picker_dialog_title">Velg land</string>
-    <string name="domain_registration_result_continue_button">fortsett</string>
-    <string name="domain_registration_result_description">ditt nye domene &lt;b&gt;%s&lt;/b&gt; blir satt opp. Ditt nettsted\n        gjør saltomortaler i begeistring!</string>
-    <string name="domain_registration_result_title">Gratulerer</string>
-    <string name="domain_contact_information_register_domain_button">Registrer domene</string>
     <string name="domain_contact_information_postal_code_hint">Postnummer</string>
     <string name="domain_contact_information_state_hint">Delstat</string>
     <string name="domain_contact_information_city_hint">By/sted</string>
@@ -745,13 +757,13 @@ Language: nb_NO
     <string name="domain_privacy_option_on_title">Registrer privat med personvernbeskyttelse</string>
     <string name="domain_registration_privacy_protection_title">Personvernbeskyttelse</string>
     <string name="domain_registration_contact_form_input_error">Vennligst oppi en gyldig %s</string>
-    <string name="domains_suggestions_choose_domain">Velg domene</string>
     <string name="stats_management_new">Ny</string>
     <string name="stats_management_dismiss_insights_news_card">Avvis</string>
     <string name="stats_management_try_it_now">Prøv det nå</string>
     <string name="stats_management_news_card_message">Vekg hvilken statistikk å se og fokuser på de data du bryr deg mest om. Trykk %1$s i bunnen av innsikter for å tilpasse din statistikk.</string>
     <string name="stats_manage_your_stats">Behandle din statistikk</string>
     <string name="history_fetching_revisions">Henter revisjoner…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Mislyktes i å sette inn menia.\nVennligst trykk for alternativer.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Mislyktes i å sette inn media.\nVennligst trykk for å prøve igjen.</string>
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
@@ -801,7 +813,6 @@ Language: nb_NO
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Registrer domene</string>
     <string name="plugin_install_custom_domain_required_dialog_message">For å installere utvidelser trenger du å ha et eget domene for ditt nettsted.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Installer utvidelser</string>
-    <string name="new_site_creation_preview_subtitle">Du kan tilpasse utseende på ditt nettstede senere</string>
     <string name="publish_on">Publiser på: %s</string>
     <string name="schedule_for">Planlegg for: %s</string>
     <string name="published_on">Publisert på: %s</string>
@@ -839,20 +850,17 @@ Language: nb_NO
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Rediger nye innlegg og sider med blokkredigering</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Bruk blokkredigering</string>
     <string name="exit">gå ut</string>
-    <string name="quick_start_sites_type_subtitle">%1$d av %2$d ferdig</string>
     <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
     <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
     <string name="quick_start_sites">Neste trinn</string>
     <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
-    <string name="quick_start_dialog_upload_icon_title">Last opp nettstedsikon</string>
+    <string name="quick_start_dialog_upload_icon_title">Velg et unikt nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Trykk %1$s pakke %2$s for å se din nåværende pakke og andre tilgjengelige pakker</string>
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
-    <string name="quick_start_dialog_publish_post_message">Kladd og publiser ditt første innlegg.</string>
-    <string name="quick_start_dialog_need_help_message">Vi vil gå gjennom det grunnleggende for å bygge og utvide ditt nettsted.</string>
-    <string name="quick_start_dialog_migration_title">Vi har gjort noen endringer i sjekklisten din</string>
+    <string name="quick_start_dialog_publish_post_message">Kladd og publiser et innlegg.</string>
     <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
     <string name="quick_start_dialog_explore_plans_message">Lær om våre markedsførings- og SEO-verktøy i våre betalte pakker.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
@@ -900,7 +908,6 @@ Language: nb_NO
     <string name="toast_conflict_updating_post">Oppdaterer innlegg</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Forkast nettversjon</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Forkast lokal versjon</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Lokal\nLagret den %s\n\nNett\nLagret den %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Dette innlegget har to versjoner som er i konflikt. Velg den versjonen du vil forkaste\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Løs synkroniseringskonflikt</string>
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
@@ -1034,10 +1041,7 @@ Language: nb_NO
     <string name="quick_start_dialog_share_site_message">Koble til dine konti i sosiale medier - ditt nettsted vil automatisk dele nye innlegg.</string>
     <string name="quick_start_dialog_publish_post_title">Publiser et innlegg</string>
     <string name="quick_start_dialog_publish_post_message_short">Trykk %1$s Lag nytt innlegg %2$s for å lage et nytt innlegg</string>
-    <string name="quick_start_dialog_need_help_title">Vil du ha litt hjelp for å komme i gang?</string>
-    <string name="quick_start_dialog_need_help_button_positive">Godta</string>
-    <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
-    <string name="quick_start_dialog_need_help_button_negative">Nei takk</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nei, takk</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende emner</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
@@ -1177,7 +1181,6 @@ Language: nb_NO
     <string name="notification_settings_category_followed_sites">Fulgte nettsteder</string>
     <string name="content_description_person_reading_device_notification">Person som leser på en enhet med varsler</string>
     <string name="content_description_people_looking_charts">Folk som ser på grafer og diagrammer</string>
-    <string name="comment_title">%s på %s</string>
     <string name="dialog_confirm_delete_permanently_post">Er du sikker på at du vil slette dette innlegget permanent?</string>
     <string name="notification_channel_important_title">Viktig</string>
     <string name="notification_channel_general_title">Generelt</string>
@@ -1220,10 +1223,7 @@ Language: nb_NO
     <string name="signup_with_google_progress">Registrering hos Google…</string>
     <string name="jetpack_connection_failed_with_reason">Tilkobling til Jetpack feilet: %s</string>
     <string name="jetpack_already_connected_toast">Du er allerede koblet til Jetpack</string>
-    <string name="menu_undo_snackbar_action">ANGRE</string>
-    <string name="menu_visual_mode_done_snackbar">Byttet til visuell modus</string>
     <string name="menu_visual_mode">Visuell modus</string>
-    <string name="menu_html_mode_done_snackbar">Byttet ti HTML-modus</string>
     <string name="menu_html_mode">HTML-modus</string>
     <string name="menu_preview">Forhåndsvis</string>
     <string name="menu_save_as_draft">Lagre som kladd</string>
@@ -1364,7 +1364,6 @@ Language: nb_NO
     <string name="plugin_byline">av %s</string>
     <string name="change_photo">Endre bilde</string>
     <string name="plugin_fetch_error">Kan ikke laste utvidelser</string>
-    <string name="my_site_btn_site_pages">Sider på nettstedet</string>
     <string name="site_settings_tags_hint">Behandle stikkord på nettstedet</string>
     <string name="dlg_saving_tag">Lagrer</string>
     <string name="dlg_deleting_tag">Sletter</string>
@@ -1559,6 +1558,7 @@ Language: nb_NO
     <string name="post_title">Tittel</string>
     <string name="menu_redo">Gjør på nytt</string>
     <string name="menu_undo">Omgjør</string>
+    <string name="media_insert_unimplemented">Våre beklagelser! Denne egenskapen er ikke implementert ennå :(</string>
     <string name="error_media_small">Mediet er for lite til å vises</string>
     <string name="editor_dropped_unsupported_files">Advarsel: Ikke alle sluppede gjenstander er støttet!</string>
     <string name="editor_dropped_title_images_not_allowed">Å slippe bilder i tittelfeltet er ikke tillat</string>
@@ -1786,12 +1786,19 @@ Language: nb_NO
     <string name="error_fetch_email_followers_list">Kunne ikke hente inn nettstedets E-postfølgere</string>
     <string name="error_fetch_followers_list">Kunne ikke hente inn nettstedets følgere</string>
     <string name="editor_failed_uploads_switch_html">Noen medieopplastninger har mislyktes. Du kan ikke bytte til HTML-modus i\n  denne tilstanden. Vil du fjerne alle mislykkede opplastninger og fortsette?</string>
+    <string name="image_thumbnail">Miniatyrbilde</string>
+    <string name="visual_editor">Visuell redigerer</string>
     <string name="image_width">Bredde</string>
     <string name="image_link_to">Lenke til</string>
+    <string name="image_alt_text">Alternativ tekst</string>
     <string name="image_caption">Bildetekst</string>
     <string name="image_settings_save_toast">Endringene er lagret</string>
     <string name="image_settings_dismiss_dialog_title">Vil du forkaste ulagrede endringer?</string>
     <string name="stop_upload_dialog_title">Vil du avbryte opplastningen?</string>
+    <string name="alert_error_adding_media">En feil oppstod under innsmetting av medie</string>
+    <string name="alert_action_while_uploading">Du laster for øyeblikket opp medier. Vennligst vent på at dette blir ferdig.</string>
+    <string name="alert_insert_image_html_mode">Kan ikke sette inn medier direkte når du er i HTML-modus. Vennligst bytt tilbake til visuell modus.</string>
+    <string name="uploading_gallery_placeholder">Laster opp et galleri …</string>
     <string name="tap_to_try_again">Trykk for å prøve igjen!</string>
     <string name="invite_sent">Invitasjonenssendingen var vellykket</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -1861,6 +1868,7 @@ Language: nb_NO
     <string name="comments_empty_list_filtered_trashed">Ingen forkastede kommentarer</string>
     <string name="comments_empty_list_filtered_pending">Ingen ventende kommentarer</string>
     <string name="comments_empty_list_filtered_approved">Ingen godkjente kommentarer</string>
+    <string name="button_skip">Hopp over</string>
     <string name="xmlrpc_missing_method_error">Klarte ikke å koble til. De påkrevde XML-RPC-metodene mangler på denne tjeneren.</string>
     <string name="alignment_center">Midten</string>
     <string name="post_format_video">Video</string>
@@ -2120,8 +2128,6 @@ Language: nb_NO
     <string name="my_site_btn_view_site">Vis nettsted</string>
     <string name="my_site_btn_view_admin">Vis admin-området</string>
     <string name="my_site_btn_switch_site">Bytt nettsted</string>
-    <string name="my_site_btn_site_settings">Innstillinger</string>
-    <string name="my_site_btn_blog_posts">Blogginnlegg</string>
     <string name="my_site_header_publish">Publiser</string>
     <string name="my_site_header_look_and_feel">Se og kjenn</string>
     <string name="my_site_header_configuration">Oppsett</string>
@@ -2140,7 +2146,6 @@ Language: nb_NO
     <string name="stats_search_terms_unknown_search_terms">Ukjente Søkeord</string>
     <string name="stats_view_search_terms">Søkeord</string>
     <string name="stats_view_authors">Forfattere</string>
-    <string name="comments_fetching">Henter kommentarer …</string>
     <string name="pages_fetching">Henter sider …</string>
     <string name="posts_fetching">Henter innlegg …</string>
     <string name="media_fetching">Henter media …</string>
@@ -2182,7 +2187,6 @@ Language: nb_NO
     <string name="error_publish_empty_post">Du kan ikke publisere et tomt innlegg, logisk nok</string>
     <string name="error_refresh_unauthorized_posts">Du har ikke tillatelse til å se eller redigere innlegg</string>
     <string name="error_refresh_unauthorized_pages">Du har ikke tillatelse til å se eller redigere sider</string>
-    <string name="error_refresh_unauthorized_comments">Du har ikke tillatelse til å se eller redigere kommentarer</string>
     <string name="more">Mere</string>
     <string name="older_month">Eldre enn en måned</string>
     <string name="older_last_week">Eldre enn en uke</string>
@@ -2261,10 +2265,6 @@ Language: nb_NO
     <string name="saving_changes">Lagrer endringer</string>
     <string name="trash">Papirkurv</string>
     <string name="dlg_confirm_trash_comments">Send til papirkurv?</string>
-    <string name="dlg_trashing_comments">Sender til papirkurven</string>
-    <string name="dlg_spamming_comments">Marker som useriøs</string>
-    <string name="dlg_unapproving_comments">Avslår</string>
-    <string name="dlg_approving_comments">Godkjenner</string>
     <string name="mnu_comment_trash">Papirkurv</string>
     <string name="mnu_comment_spam">Useriøs</string>
     <string name="mnu_comment_unapprove">Avslå</string>
@@ -2278,8 +2278,10 @@ Language: nb_NO
     <string name="delete_post">Slette innlegg?</string>
     <string name="post_settings">Innleggsinnstillinger</string>
     <string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
+    <string name="horizontal_alignment">Loddrett posisjonering</string>
     <string name="local_draft">Lokalt utkast</string>
     <string name="page_settings">Sideinnstillinger</string>
+    <string name="create_a_link">Lag en lenke</string>
     <string name="link_enter_url_text">Lenketekst (valgfritt)</string>
     <string name="cannot_delete_multi_media_items">Noen medier kan ikke bli slettet for øyeblikket. Prøv igjen senere.</string>
     <string name="media_error_no_permission">Du har ikke tillatelse til å se mediebiblioteket</string>
@@ -2293,7 +2295,6 @@ Language: nb_NO
     <string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre liker dette</string>
     <string name="reader_likes_multi">%,d personer liker dette</string>
-    <string name="reader_label_reply">Svar</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uten en synlig blogg</string>
     <string name="comment_spammed">Kommentar merket som useriøs</string>
     <string name="reader_toast_err_get_post">Klarte ikke å hente inn dette innlegget</string>
@@ -2355,6 +2356,10 @@ Language: nb_NO
     <string name="username">Brukernavn</string>
     <string name="password">Passord</string>
     <string name="reader">Nettleser</string>
+    <string name="featured_in_post">Legg til bilde i innlegget</string>
+    <string name="featured">Bruk som fremhevet bilde</string>
+    <string name="width">Bredde</string>
+    <string name="caption">Bildetekst (valgfritt)</string>
     <string name="pages">Sider</string>
     <string name="posts">Innlegg</string>
     <string name="anonymous">Anonym</string>
@@ -2362,6 +2367,7 @@ Language: nb_NO
     <string name="done">fullført</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Laster opp …</string>
     <string name="tos">Lisens</string>
     <string name="version">Versjon</string>
     <string name="app_title">WordPress for Android</string>
@@ -2377,7 +2383,6 @@ Language: nb_NO
     <string name="title">Tittel</string>
     <string name="tags_separate_with_commas">Adskill stikkord med komma</string>
     <string name="categories">Kategorier</string>
-    <string name="dlg_deleting_comments">Sletter kommentarer</string>
     <string name="sdcard_title">Krever SD kort</string>
     <string name="media">Media</string>
     <string name="approve">Godkjenn</string>
@@ -2395,4 +2400,13 @@ Language: nb_NO
     <string name="add">Legg til</string>
     <string name="save">Lagre</string>
     <string name="cancel">Avbryt</string>
+    <string-array name="blogging_reminders_count">
+        <item>Én gang</item>
+        <item>To ganger</item>
+        <item>Tre ganger</item>
+        <item>Fire ganger</item>
+        <item>Fem ganger</item>
+        <item>Seks ganger</item>
+        <item>Sju ganger</item>
+    </string-array>
 </resources>

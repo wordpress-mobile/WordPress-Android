@@ -22,7 +22,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -48,7 +48,7 @@ import java.util.Date
 
 class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: FollowersStore
-    @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
+    @Mock lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
@@ -79,14 +79,14 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
-                statsUtilsWrapper,
+                statsSinceLabelFormatter,
                 resourceProvider,
                 popupMenuHandler,
                 tracker,
                 contentDescriptionHelper
         )
         useCase = useCaseFactory.build(BLOCK)
-        whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
+        whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
                 message

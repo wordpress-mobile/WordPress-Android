@@ -31,8 +31,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         timezoneViewModel.onTimezoneSelected(timezone.value)
     }
 
-    private var _binding: SiteSettingsTimezoneBottomSheetListBinding? = null
-    private val binding get() = _binding
+    private var binding: SiteSettingsTimezoneBottomSheetListBinding? = null
 
     private var bottomSheet: FrameLayout? = null
 
@@ -54,7 +53,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = SiteSettingsTimezoneBottomSheetListBinding.inflate(inflater, container, false)
+        binding = SiteSettingsTimezoneBottomSheetListBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -71,9 +70,9 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         callback = null
         super.onDestroyView()
+        binding = null
     }
 
     private fun setupUI() {

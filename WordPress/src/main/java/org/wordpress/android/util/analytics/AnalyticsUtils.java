@@ -75,6 +75,9 @@ public class AnalyticsUtils {
     private static final String SOURCE_INFO_KEY = "source_info";
     private static final String LIST_TYPE_KEY = "list_type";
     private static final String IS_STORAGE_SETTINGS_RESOLVED_KEY = "is_storage_settings_resolved";
+    private static final String PAGE_KEY = "page";
+    private static final String PER_PAGE_KEY = "per_page";
+    private static final String CAUSE_OF_ISSUE_KEY = "cause_of_issue";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
@@ -237,12 +240,18 @@ public class AnalyticsUtils {
      * @param site       The site object
      * @param properties Properties to attach to the event
      */
-    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
-                                            Map<String, Object> properties) {
+    public static void trackWithSiteDetails(AnalyticsTrackerWrapper analyticsTrackerWrapper,
+                                            AnalyticsTracker.Stat stat,
+                                            @Nullable SiteModel site,
+                                            @Nullable Map<String, Object> properties) {
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
-            AnalyticsTracker.track(stat, properties);
+            if (properties == null) {
+                analyticsTrackerWrapper.track(stat);
+            } else {
+                analyticsTrackerWrapper.track(stat, properties);
+            }
             return;
         }
 
@@ -256,10 +265,23 @@ public class AnalyticsUtils {
         }
 
         if (properties == null) {
-            AnalyticsTracker.track(stat);
+            analyticsTrackerWrapper.track(stat);
         } else {
-            AnalyticsTracker.track(stat, properties);
+            analyticsTrackerWrapper.track(stat, properties);
         }
+    }
+
+    /**
+     * Bump Analytics for the passed Stat and add blog details into properties.
+     *
+     * @param stat       The Stat to bump
+     * @param site       The site object
+     * @param properties Properties to attach to the event
+     */
+    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat,
+                                            @Nullable SiteModel site,
+                                            @Nullable Map<String, Object> properties) {
+        trackWithSiteDetails(new AnalyticsTrackerWrapper(), stat, site, properties);
     }
 
     public enum QuickActionTrackPropertyValue {
@@ -695,6 +717,15 @@ public class AnalyticsUtils {
         AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
 
+    public static void trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat stat,
+                                                               AnalyticsCommentActionSource actionSource,
+                                                               @Nullable ReaderPost post) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
+
+        AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
+    }
+
     public static void trackFollowCommentsWithReaderPostDetails(
             AnalyticsTracker.Stat stat,
             long blogId,
@@ -748,11 +779,56 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(Stat.LIKE_LIST_OPENED, properties);
     }
 
+    public static void trackLikeListFetchedMore(String source,
+                                                String listType,
+                                                int nextPage,
+                                                int perPage) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source);
+        properties.put(LIST_TYPE_KEY, listType);
+        properties.put(PAGE_KEY, nextPage);
+        properties.put(PER_PAGE_KEY, perPage);
+
+        AnalyticsTracker.track(Stat.LIKE_LIST_FETCHED_MORE, properties);
+    }
+
     public static void trackStorageWarningDialogEvent(Stat stat, String source, Boolean isStorageSettingsResolved) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(SOURCE_KEY, source);
         properties.put(IS_STORAGE_SETTINGS_RESOLVED_KEY, isStorageSettingsResolved ? "true" : "false");
 
         AnalyticsTracker.track(stat, properties);
+    }
+
+    public enum RecommendAppSource {
+        ME("me"),
+        ABOUT("about");
+
+        private final String mSourceName;
+
+        RecommendAppSource(String sourceName) {
+            this.mSourceName = sourceName;
+        }
+    }
+
+    public static void trackRecommendAppEngaged(RecommendAppSource source) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source.mSourceName);
+
+        AnalyticsTracker.track(Stat.RECOMMEND_APP_ENGAGED, properties);
+    }
+
+    public static void trackRecommendAppFetchFailed(RecommendAppSource source, String error) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(SOURCE_KEY, source.mSourceName);
+        properties.put(CAUSE_OF_ISSUE_KEY, error);
+
+        AnalyticsTracker.track(Stat.RECOMMEND_APP_CONTENT_FETCH_FAILED, properties);
+    }
+
+    public static void trackBlockEditorEvent(String event, SiteModel site, Map<String, Object> properties) {
+        if (event.equals("editor_block_inserted")) {
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_INSERTED, site, properties);
+        }
     }
 }

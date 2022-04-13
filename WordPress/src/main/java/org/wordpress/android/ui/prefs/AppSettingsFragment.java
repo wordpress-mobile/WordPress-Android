@@ -44,6 +44,10 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
+import org.wordpress.android.ui.about.UnifiedAboutActivity;
+import org.wordpress.android.ui.debug.DebugSettingsActivity;
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -57,7 +61,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.manual.ManualFeatureConfigActivity;
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
+import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;
@@ -73,6 +78,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
+    private ListPreference mInitialScreenPreference;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -86,12 +92,24 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private Preference mWhatsNew;
 
-    @Inject SiteStore mSiteStore;
-    @Inject AccountStore mAccountStore;
-    @Inject Dispatcher mDispatcher;
-    @Inject ContextProvider mContextProvider;
-    @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
-    @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject
+    SiteStore mSiteStore;
+    @Inject
+    AccountStore mAccountStore;
+    @Inject
+    Dispatcher mDispatcher;
+    @Inject
+    ContextProvider mContextProvider;
+    @Inject
+    FeatureAnnouncementProvider mFeatureAnnouncementProvider;
+    @Inject
+    BuildConfigWrapper mBuildConfigWrapper;
+    @Inject
+    UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
+    @Inject
+    MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
+    @Inject
+    MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,8 +137,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
                         return true;
                     }
-                }
-        );
+                });
         updateAnalyticsSyncUI();
 
         mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
@@ -130,41 +147,38 @@ public class AppSettingsFragment extends PreferenceFragment
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
 
+        mInitialScreenPreference = (ListPreference) findPreference(getString(R.string.pref_key_initial_screen));
+        mInitialScreenPreference.setOnPreferenceChangeListener(this);
+
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_feature_config))
+        findPreference(getString(R.string.pref_key_debug_settings))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
 
-        mOptimizedImage =
-                (WPSwitchPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
+        mOptimizedImage = (WPSwitchPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
         mImageMaxSizePref = (DetailListPreference) WPPrefUtils
                 .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
-        mImageQualityPref =
-                (DetailListPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
-        mOptimizedVideo =
-                (WPSwitchPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
+        mImageQualityPref = (DetailListPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
+        mOptimizedVideo = (WPSwitchPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
 
-        mVideoWidthPref =
-                (DetailListPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
-        mVideoEncorderBitratePref =
-                (DetailListPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+        mVideoWidthPref = (DetailListPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
+        mVideoEncorderBitratePref = (DetailListPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
         mPrivacySettings = (PreferenceScreen) WPPrefUtils
                 .getPrefAndSetClickListener(this, R.string.pref_key_privacy_settings, this);
 
-        mStripImageLocation =
-                (WPSwitchPreference) WPPrefUtils
-                        .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
+        mStripImageLocation = (WPSwitchPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -190,18 +204,26 @@ public class AppSettingsFragment extends PreferenceFragment
         removeWhatsNewPreference();
         mDispatcher.dispatch(WhatsNewActionBuilder.newFetchCachedAnnouncementAction());
 
+        if (mUnifiedAboutFeatureConfig.isEnabled()) {
+            removeAboutCategory();
+        }
+
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
 
-        if (!BuildConfig.ENABLE_FEATURE_CONFIGURATION) {
-            removeFeatureConfigCategory();
+        if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
+            removeDebugSettingsCategory();
+        }
+
+        if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
+            removeInitialScreen();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         final ListView listOfPreferences = view.findViewById(android.R.id.list);
@@ -212,32 +234,45 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private void removeExperimentalCategory() {
-        PreferenceCategory experimentalPreferenceCategory =
-                (PreferenceCategory) findPreference(getString(R.string.pref_key_experimental_section));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        PreferenceCategory experimentalPreferenceCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_key_experimental_section));
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreferenceCategory);
     }
 
-    private void removeFeatureConfigCategory() {
-        Preference experimentalPreference =
-                findPreference(getString(R.string.pref_key_feature_config));
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+    private void removeDebugSettingsCategory() {
+        Preference experimentalPreference = findPreference(getString(R.string.pref_key_debug_settings));
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreference);
     }
 
+    private void removeAboutCategory() {
+        PreferenceCategory aboutPreferenceCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_key_about_section));
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(aboutPreferenceCategory);
+    }
 
     private void removeWhatsNewPreference() {
-        PreferenceCategory aboutTheAppPreferenceCategory =
-                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
-        aboutTheAppPreferenceCategory.removePreference(mWhatsNew);
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(mWhatsNew);
     }
 
     private void addWhatsNewPreference() {
-        PreferenceCategory aboutTheAppPreferenceCategory =
-                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
-        aboutTheAppPreferenceCategory.addPreference(mWhatsNew);
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.addPreference(mWhatsNew);
+    }
+
+    private void removeInitialScreen() {
+        Preference initialScreenPreference = findPreference(getString(R.string.pref_key_initial_screen));
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
+                getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(initialScreenPreference);
     }
 
     @Override
@@ -284,7 +319,7 @@ public class AppSettingsFragment extends PreferenceFragment
         WhatsNewAnnouncementModel latestAnnouncement = event.getWhatsNewItems().get(0);
         mWhatsNew.setSummary(getString(R.string.version_with_name_param, latestAnnouncement.getAppVersionName()));
         mWhatsNew.setOnPreferenceClickListener(this);
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (mBuildConfigWrapper.isWhatsNewFeatureEnabled()) {
             addWhatsNewPreference();
         }
     }
@@ -311,7 +346,8 @@ public class AppSettingsFragment extends PreferenceFragment
                     break;
             }
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
-            // no need to sync with remote here, or do anything else here, since the logic is already in WordPress.java
+            // no need to sync with remote here, or do anything else here, since the logic
+            // is already in WordPress.java
             updateAnalyticsSyncUI();
         }
     }
@@ -322,8 +358,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
         if (mAccountStore.hasAccessToken()) {
-            SwitchPreference tracksOptOutPreference =
-                    (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
+            SwitchPreference tracksOptOutPreference = (SwitchPreference) findPreference(
+                    getString(R.string.pref_key_send_usage));
             tracksOptOutPreference.setChecked(!mAccountStore.getAccount().getTracksOptOut());
         }
     }
@@ -334,8 +370,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_feature_config))) {
-            return handleFeatureConfigPreferenceClick();
+        } else if (preferenceKey.equals(getString(R.string.pref_key_debug_settings))) {
+            return handleDebugSettingsPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
@@ -397,6 +433,14 @@ public class AppSettingsFragment extends PreferenceFragment
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
+        } else if (preference == mInitialScreenPreference) {
+            String trackValue = (((String) newValue).equals(MySiteTabType.SITE_MENU.getLabel()))
+                    ? (String) newValue
+                    : MySiteTabType.DASHBOARD.getLabel();
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("selected", trackValue);
+            AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
+            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded((String) newValue);
         }
         return true;
     }
@@ -422,7 +466,8 @@ public class AppSettingsFragment extends PreferenceFragment
         WordPress.updateContextLocale();
         mContextProvider.refreshContext();
 
-        // Track language change on Analytics because we have both the device language and app selected language
+        // Track language change on Analytics because we have both the device language
+        // and app selected language
         // data in Tracks metadata.
         Map<String, Object> properties = new HashMap<>();
         properties.put("app_locale", Locale.getDefault());
@@ -443,12 +488,17 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handleAboutPreferenceClick() {
-        startActivity(new Intent(getActivity(), AboutActivity.class));
+        // Temporarily limiting this feature to the WordPress app
+        if (mUnifiedAboutFeatureConfig.isEnabled() && !BuildConfig.IS_JETPACK_APP) {
+            startActivity(new Intent(getActivity(), UnifiedAboutActivity.class));
+        } else {
+            startActivity(new Intent(getActivity(), AboutActivity.class));
+        }
         return true;
     }
 
-    private boolean handleFeatureConfigPreferenceClick() {
-        startActivity(new Intent(getActivity(), ManualFeatureConfigActivity.class));
+    private boolean handleDebugSettingsPreferenceClick() {
+        startActivity(new Intent(getActivity(), DebugSettingsActivity.class));
         return true;
     }
 
@@ -549,7 +599,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else {
             throw new IllegalArgumentException(
                     "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
-                    + "using support fragment manager from AppCompatActivity.");
+                            + "using support fragment manager from AppCompatActivity.");
         }
     }
 
@@ -563,15 +613,14 @@ public class AppSettingsFragment extends PreferenceFragment
         } else {
             throw new IllegalArgumentException(
                     "Parent activity is not AppCompatActivity. LocalePickerBottomSheet must be called "
-                    + "using support fragment manager from AppCompatActivity.");
+                            + "using support fragment manager from AppCompatActivity.");
         }
     }
 
     private void reattachLocalePickerCallback() {
         if (getActivity() instanceof AppCompatActivity) {
-            LocalePickerBottomSheet bottomSheet =
-                    (LocalePickerBottomSheet) (((AppCompatActivity) getActivity()))
-                            .getSupportFragmentManager().findFragmentByTag(LocalePickerBottomSheet.TAG);
+            LocalePickerBottomSheet bottomSheet = (LocalePickerBottomSheet) (((AppCompatActivity) getActivity()))
+                    .getSupportFragmentManager().findFragmentByTag(LocalePickerBottomSheet.TAG);
             if (bottomSheet != null) {
                 bottomSheet.setLocalePickerCallback(this);
             }

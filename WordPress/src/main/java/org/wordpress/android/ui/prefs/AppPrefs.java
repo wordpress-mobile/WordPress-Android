@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -18,6 +20,8 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -29,15 +33,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class AppPrefs {
+    public static final int SELECTED_SITE_UNAVAILABLE = -1;
+
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
 
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
+
+    private static final Gson GSON = new Gson();
 
     public interface PrefKey {
         String name();
@@ -157,7 +166,12 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
-        BLOGGING_REMINDERS_SHOWN
+        BLOGGING_REMINDERS_SHOWN,
+        SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
+        SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
+
+        // Used to indicate if the variant has been assigned for the My Site Tab experiment
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED
     }
 
     /**
@@ -213,12 +227,6 @@ public class AppPrefs {
         LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
         LAST_READER_KNOWN_USER_ID,
 
-        // used to indicate that user opted out of quick start
-        IS_QUICK_START_DISABLED,
-
-        // quick start migration dialog is shown only once for all sites
-        HAS_QUICK_START_MIGRATION_SHOWN,
-
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
@@ -249,11 +257,18 @@ public class AppPrefs {
         // Used to indicate whether or not the stories intro screen must be shown
         SHOULD_SHOW_STORIES_INTRO,
 
-        // Used to determine if editor onboarding features should be displayed
-        HAS_LAUNCHED_GUTENBERG_EDITOR,
-
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
+
+        // Used to indicate whether or not bookmarked posts pseudo id should be updated after invalid pseudo id fix
+        // (Internal Ref:p3hLNG-18u)
+        SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID,
+
+        // Tracks which block types are considered "new" via impression counts
+        GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
+
+        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
+        wp_pref_initial_screen,
     }
 
     private static SharedPreferences prefs() {
@@ -584,12 +599,26 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 
+    /**
+     * This method should only be used by specific client classes that need access to the persisted selected site
+     * instance due to the fact that the in-memory selected site instance might not be yet available.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such access
+     * to this method is limited to this class.
+     */
     public static int getSelectedSite() {
-        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, -1);
+        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, SELECTED_SITE_UNAVAILABLE);
     }
 
-    public static void setSelectedSite(int selectedSite) {
-        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
+    /**
+     * This method should only be used by specific client classes that need to update the persisted selected site
+     * instance due to the fact that the in-memory selected site instance is updated as well.
+     * <p>
+     * The source of truth should always be the {@link SelectedSiteRepository} in-memory mechanism and as such the
+     * update method should be limited to this class.
+     */
+    public static void setSelectedSite(int siteLocalId) {
+        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, siteLocalId);
     }
 
     public static String getLastPushNotificationWpcomNoteId() {
@@ -878,6 +907,17 @@ public class AppPrefs {
         return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
     }
 
+    public static void setGutenbergBlockTypeImpressions(Map<String, Double> newImpressions) {
+        String json = GSON.toJson(newImpressions);
+        setString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, json);
+    }
+
+    public static Map<String, Double> getGutenbergBlockTypeImpressions() {
+        String jsonString = getString(UndeletablePrefKey.GUTENBERG_BLOCK_TYPE_IMPRESSIONS, "[]");
+        Map<String, Double> impressions = GSON.fromJson(jsonString, Map.class);
+        return impressions;
+    }
+
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
      */
@@ -887,7 +927,7 @@ public class AppPrefs {
 
     private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
-        List<String> items = Arrays.asList(idsAsString.split(","));
+        String[] items = idsAsString.split(",");
 
         ArrayList<Integer> siteIds = new ArrayList<>();
         for (String item : items) {
@@ -960,14 +1000,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
-    public static void setQuickStartDisabled(Boolean isDisabled) {
-        setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
-    }
-
-    public static boolean isQuickStartDisabled() {
-        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
-    }
-
     public static void setMainFabTooltipDisabled(Boolean disable) {
         setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
     }
@@ -982,15 +1014,6 @@ public class AppPrefs {
 
     public static boolean isPostListFabTooltipDisabled() {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
-    }
-
-
-    public static void setQuickStartMigrationDialogShown(Boolean shown) {
-        setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
-    }
-
-    public static boolean hasQuickStartMigrationDialogShown() {
-        return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
     }
 
     public static void setQuickStartNoticeRequired(Boolean shown) {
@@ -1193,20 +1216,22 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
     }
 
-    public static void setHasLaunchedGutenbergEditor(boolean hasLaunched) {
-        setBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, hasLaunched);
-    }
-
-    public static boolean hasLaunchedGutenbergEditor() {
-        return getBoolean(UndeletablePrefKey.HAS_LAUNCHED_GUTENBERG_EDITOR, false);
-    }
-
     public static void setShouldShowStorageWarning(boolean shouldShow) {
         setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, shouldShow);
     }
 
     public static boolean shouldShowStorageWarning() {
         return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING, true);
+    }
+
+    public static void setBookmarkPostsPseudoIdsUpdated() {
+        setBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, false);
+    }
+
+    public static boolean shouldUpdateBookmarkPostsPseudoIds(ReaderTag tag) {
+        return tag != null
+               && tag.getTagSlug().equals(ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES))
+               && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {
@@ -1253,6 +1278,26 @@ public class AppPrefs {
         return DeletablePrefKey.BLOGGING_REMINDERS_SHOWN.name() + siteId;
     }
 
+    public static void setShouldScheduleCreateSiteNotification(boolean shouldSchedule) {
+        setBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, shouldSchedule);
+    }
+
+    public static boolean shouldScheduleCreateSiteNotification() {
+        return getBoolean(DeletablePrefKey.SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION, true);
+    }
+
+    public static void setShouldShowWeeklyRoundupNotification(long remoteSiteId, boolean shouldShow) {
+        prefs().edit().putBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), shouldShow).apply();
+    }
+
+    public static boolean shouldShowWeeklyRoundupNotification(long remoteSiteId) {
+        return prefs().getBoolean(getShouldShowWeeklyRoundupNotification(remoteSiteId), true);
+    }
+
+    @NonNull private static String getShouldShowWeeklyRoundupNotification(long siteId) {
+        return DeletablePrefKey.SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION.name() + siteId;
+    }
+
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1274,10 +1319,7 @@ public class AppPrefs {
         }
         List<String> currentIds = getPostWithHWAccelerationOff();
         String key = localSiteId + "-" + localPostId;
-        if (currentIds.contains(key)) {
-            return true;
-        }
-        return false;
+        return currentIds.contains(key);
     }
 
     public static void setSiteJetpackCapabilities(long remoteSiteId, List<JetpackCapability> capabilities) {
@@ -1304,5 +1346,30 @@ public class AppPrefs {
             capabilities.add(JetpackCapability.Companion.fromString(item));
         }
         return capabilities;
+    }
+
+    public static boolean isMySiteDefaultTabExperimentVariantAssigned() {
+        return getBoolean(
+                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
+                false
+        );
+    }
+
+    public static void setMySiteDefaultTabExperimentVariantAssigned() {
+        setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
+    }
+
+    public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
+        // This supports the MySiteDefaultTab AB Experiment.
+        // AppSettings are undeletable across logouts and keys are all lower case.
+        // This method will be removed when the experiment has completed and thus
+        // the settings will be maintained only from the AppSettings view
+        setString(UndeletablePrefKey.wp_pref_initial_screen, variant);
+    }
+
+    public static String getMySiteInitialScreen() {
+        return getString(
+                UndeletablePrefKey.wp_pref_initial_screen,
+                MySiteTabType.SITE_MENU.getLabel());
     }
 }

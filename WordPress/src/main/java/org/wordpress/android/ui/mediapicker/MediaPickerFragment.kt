@@ -316,8 +316,8 @@ class MediaPickerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -575,7 +575,7 @@ class MediaPickerFragment : Fragment() {
                                     clickListener = View.OnClickListener { holder.buttonAction() }
                             )
                         },
-                        dismissCallback = { _, _ -> holder.onDismissAction() }
+                        dismissCallback = { _, event -> holder.onDismissAction(event) }
                 )
         )
     }

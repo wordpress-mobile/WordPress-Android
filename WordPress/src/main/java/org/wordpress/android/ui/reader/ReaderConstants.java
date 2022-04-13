@@ -13,6 +13,9 @@ public class ReaderConstants {
     // max # top-level comments to request when updating comments
     public static final int READER_MAX_COMMENTS_TO_REQUEST = 20;
 
+    // # top-level comments to request when updating comments snippet in post details
+    public static final int READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET = 1;
+
     public static final int READER_MAX_USERS_TO_DISPLAY = 500; // max # users to show in ReaderUserListActivity
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 10; // 10 minute delay between automatic updates
     public static final int READER_MAX_RECOMMENDED_TO_REQUEST = 20; // max # of recommended blogs to request
@@ -73,7 +76,7 @@ public class ReaderConstants {
     // JSON key names
     public static final String JSON_TAG_TAGS_ARRAY = "tags";
     public static final String JSON_TAG_TITLE = "title";
-    public static final String JSON_TAG_DISPLAY_NAME = "tag_display_name";
+    public static final String JSON_TAG_DISPLAY_NAME = "display_name";
     public static final String JSON_TAG_SLUG = "slug";
     public static final String JSON_TAG_URL = "URL";
     public static final String JSON_CARDS = "cards";

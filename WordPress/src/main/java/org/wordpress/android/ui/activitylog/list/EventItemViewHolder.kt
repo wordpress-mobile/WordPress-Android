@@ -12,7 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class EventItemViewHolder(
     parent: ViewGroup,
@@ -60,10 +60,13 @@ class EventItemViewHolder(
         actionButton.setOnClickListener { renderMoreMenu(activity, it) }
     }
 
-    private fun renderMoreMenu(event: ActivityLogListItem, v: View) {
+    private fun renderMoreMenu(
+        event: Event,
+        v: View
+    ) {
         val popup = ListPopupWindow(v.context)
         popup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
-        popup.setAdapter(ActivityLogListItemMenuAdapter(v.context))
+        popup.setAdapter(ActivityLogListItemMenuAdapter(v.context, event.isRestoreHidden))
         popup.setDropDownGravity(Gravity.END)
         popup.anchorView = v
         popup.isModal = true

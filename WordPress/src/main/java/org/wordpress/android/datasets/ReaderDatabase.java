@@ -7,17 +7,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Date;
 import java.util.Locale;
 
 /**
@@ -25,7 +29,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 150;
+    private static final int DB_VERSION = 153;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -109,6 +113,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 148 - added tbl_posts.is_seen
      * 149 - added tbl_posts.is_seen_supported that will be false for posts created before 2020-07-13
      * 150 - added tbl_posts.author_blog_id and tbl_posts.author_blog_url
+     * 151 - removed existing followed-sites, blog posts from tbl_posts to fix duplicate posts issue
+     * 152 - added short_url to tbl_comments
+     * 153 - added author_email to tbl_comments
      */
 
     /*
@@ -239,6 +246,24 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             case 149:
                 db.execSQL("ALTER TABLE tbl_posts ADD author_blog_id INTEGER;");
                 db.execSQL("ALTER TABLE tbl_posts ADD author_blog_url TEXT;");
+                currentVersion++;
+            case 150:
+                String followedSitesTagSlug = ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES);
+                db.execSQL("DELETE FROM tbl_posts WHERE tag_name=?", new String[]{followedSitesTagSlug});
+                db.execSQL("DELETE FROM tbl_posts WHERE tag_name='' AND tag_type=0");
+                db.execSQL("UPDATE tbl_tags SET date_updated=? WHERE tag_slug=? AND tag_type=?",
+                        new String[]{
+                                DateTimeUtils.iso8601FromDate(new Date(0)),
+                                followedSitesTagSlug,
+                                Integer.toString(ReaderTagType.DEFAULT.toInt())
+                        }
+                );
+                currentVersion++;
+            case 151:
+                db.execSQL("ALTER TABLE tbl_comments ADD short_url TEXT;");
+                currentVersion++;
+            case 152:
+                db.execSQL("ALTER TABLE tbl_comments ADD author_email TEXT;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {

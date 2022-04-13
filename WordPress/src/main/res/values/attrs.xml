@@ -9,6 +9,7 @@
     <attr name="wpColorNavBar" format="reference|color" />
     <attr name="wpColorAppBar" format="reference|color" />
     <attr name="wpColorOnSurfaceMedium" format="reference|color" />
+    <attr name="wpColorOnSurfaceHigh" format="reference|color" />
 
     <attr name="wpColorWarningDark" format="reference|color" />
     <attr name="wpColorWarningLight" format="reference|color" />

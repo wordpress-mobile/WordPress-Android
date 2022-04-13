@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.FloatRange
@@ -45,12 +43,10 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
 
         // setting up a full screen flags for the decor view of this fragment,
         // that will work with transparent status bar
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            val decorView: View = view
-            var flags = decorView.systemUiVisibility
-            flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            decorView.systemUiVisibility = flags
-        }
+        val decorView: View = view
+        var flags = decorView.systemUiVisibility
+        flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        decorView.systemUiVisibility = flags
         val binding = LoginSignupScreenBinding.bind(view)
 
         with(binding.bottomButtonsContainer) {

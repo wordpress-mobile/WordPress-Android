@@ -32,8 +32,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.ActivityLogTracker
-import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.util.toFormattedTimeString
+import org.wordpress.android.util.extensions.toFormattedDateString
+import org.wordpress.android.util.extensions.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -201,8 +201,9 @@ class ActivityLogViewModel @Inject constructor(
         }
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(
-                    model,
-                    withRestoreProgressItem || withBackupDownloadProgressItem
+                    model = model,
+                    rewindDisabled = withRestoreProgressItem || withBackupDownloadProgressItem,
+                    isRestoreHidden = restoreEvent.isRestoreHidden
             )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
@@ -584,10 +585,20 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun handleRestoreStatus(state: RestoreRequestState) {
         when (state) {
+            is RestoreRequestState.Multisite -> handleRestoreStatusForMultisite()
             is RestoreRequestState.Progress -> handleRestoreStatusForProgress(state)
             is RestoreRequestState.Complete -> handleRestoreStatusForComplete(state)
             else -> Unit // Do nothing
         }
+    }
+
+    private fun handleRestoreStatusForMultisite() {
+        reloadEvents(
+                restoreEvent = RestoreEvent(
+                        displayProgress = false,
+                        isRestoreHidden = true
+                )
+        )
     }
 
     private fun handleRestoreStatusForProgress(state: RestoreRequestState.Progress) {
@@ -705,6 +716,7 @@ class ActivityLogViewModel @Inject constructor(
 
     data class RestoreEvent(
         val displayProgress: Boolean,
+        val isRestoreHidden: Boolean = false,
         val isCompleted: Boolean = false,
         val rewindId: String? = null,
         val published: Date? = null

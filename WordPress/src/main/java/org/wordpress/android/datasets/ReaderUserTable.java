@@ -206,13 +206,13 @@ public class ReaderUserTable {
     private static ReaderUser getUserFromCursor(Cursor c) {
         ReaderUser user = new ReaderUser();
 
-        user.userId = c.getLong(c.getColumnIndex("user_id"));
-        user.blogId = c.getLong(c.getColumnIndex("blog_id"));
-        user.setUserName(c.getString(c.getColumnIndex("user_name")));
-        user.setDisplayName(c.getString(c.getColumnIndex("display_name")));
-        user.setUrl(c.getString(c.getColumnIndex("url")));
-        user.setProfileUrl(c.getString(c.getColumnIndex("profile_url")));
-        user.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
+        user.userId = c.getLong(c.getColumnIndexOrThrow("user_id"));
+        user.blogId = c.getLong(c.getColumnIndexOrThrow("blog_id"));
+        user.setUserName(c.getString(c.getColumnIndexOrThrow("user_name")));
+        user.setDisplayName(c.getString(c.getColumnIndexOrThrow("display_name")));
+        user.setUrl(c.getString(c.getColumnIndexOrThrow("url")));
+        user.setProfileUrl(c.getString(c.getColumnIndexOrThrow("profile_url")));
+        user.setAvatarUrl(c.getString(c.getColumnIndexOrThrow("avatar_url")));
 
         return user;
     }

@@ -15,7 +15,6 @@ import org.wordpress.android.ui.WPTooltipView.TooltipPosition.BELOW
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.LEFT
 import org.wordpress.android.ui.WPTooltipView.TooltipPosition.RIGHT
 import org.wordpress.android.util.RtlUtils
-import java.lang.IllegalArgumentException
 
 /**
  * Partially based on https://stackoverflow.com/a/42756576
@@ -29,12 +28,11 @@ import java.lang.IllegalArgumentException
 
 private const val HIDE_ANIMATION_DURATION = 50L
 
-class WPTooltipView @JvmOverloads constructor (
+class WPTooltipView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private var position = LEFT
     private var messageId = 0
     private var arrowHorizontalOffsetFromEndResId = 0
     private var arrowHorizontalOffsetFromStartResId = 0
@@ -42,6 +40,8 @@ class WPTooltipView @JvmOverloads constructor (
     private var arrowHorizontalOffsetFromStart = -1
     private var animationDuration: Int
     private var tvMessage: TextView
+    var position = LEFT
+        private set
 
     init {
         attrs?.also {

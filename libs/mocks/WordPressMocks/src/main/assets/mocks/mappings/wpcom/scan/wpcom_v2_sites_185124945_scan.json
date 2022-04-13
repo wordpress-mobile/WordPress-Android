@@ -16,7 +16,7 @@
       }],
       "most_recent": {
         "is_initial": false,
-        "timestamp": "2021-05-18T06:20:06+00:00",
+        "timestamp": "{{fnow format='yyyy-MM-dd'}}T{{now format='HH:mm:ss.SSSZ'}}",
         "duration": 17,
         "progress": 100,
         "error": false

@@ -36,7 +36,8 @@ import javax.inject.Singleton
             SupportModule::class,
             ThreadModule::class,
             SuggestionSourceModule::class,
-            ExperimentModule::class
+            ExperimentModule::class,
+            CrashLoggingModule::class
         ]
 )
 interface AppComponentTest : AppComponent {

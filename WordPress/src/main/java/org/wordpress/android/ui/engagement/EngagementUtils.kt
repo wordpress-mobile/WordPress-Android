@@ -2,6 +2,7 @@ package org.wordpress.android.ui.engagement
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.LikeModel
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import javax.inject.Inject
@@ -30,5 +31,9 @@ class EngagementUtils @Inject constructor() {
                     source = source
             )
         }
+    }
+
+    fun likesToTrainOfFaces(likes: List<LikeModel>) = likes.map {
+        AvatarItem(userId = it.likerId, userAvatarUrl = it.likerAvatarUrl!!)
     }
 }

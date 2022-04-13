@@ -20,40 +20,45 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "2019-07-31",
-            "period": "month",
+            "date": "{{now format='yyyy-MM-dd'}}",
+            "period": "day",
             "days": {
-                "{{fnow offset='-1 days' format='yyyy-MM-dd'}}": {
+                "{{now format='yyyy-MM-dd'}}": {
+                    "files": [{
+                        "filename": "video146.mp4",
+                        "relative_url": "/2022/01/video146.mp4",
+                        "download_url": "https://penguin.com/2022/01/video146.mp4",
+                        "downloads": 3
+                    }],
+                    "other_downloads": 0,
+                    "total_downloads": 3
+                },
+                "{{now offset='-1 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0
                 },
-                "2019-06-01": {
+                "{{now offset='-2 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0
                 },
-                "2019-05-01": {
+                "{{now offset='-3 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0
                 },
-                "2019-04-01": {
+                "{{now offset='-4 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0
                 },
-                "2019-03-01": {
+                "{{now offset='-5 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0
                 },
-                "2019-02-01": {
-                    "files": [],
-                    "other_downloads": 0,
-                    "total_downloads": 0
-                },
-                "2019-01-01": {
+                "{{now offset='-6 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0

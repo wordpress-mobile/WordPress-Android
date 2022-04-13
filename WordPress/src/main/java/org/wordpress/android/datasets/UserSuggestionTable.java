@@ -109,12 +109,12 @@ public class UserSuggestionTable {
     }
 
     private static UserSuggestion getSuggestionFromCursor(Cursor c) {
-        final String userLogin = c.getString(c.getColumnIndex("user_login"));
-        final String displayName = c.getString(c.getColumnIndex("display_name"));
-        final String imageUrl = c.getString(c.getColumnIndex("image_url"));
-        final String taxonomy = c.getString(c.getColumnIndex("taxonomy"));
+        final String userLogin = c.getString(c.getColumnIndexOrThrow("user_login"));
+        final String displayName = c.getString(c.getColumnIndexOrThrow("display_name"));
+        final String imageUrl = c.getString(c.getColumnIndexOrThrow("image_url"));
+        final String taxonomy = c.getString(c.getColumnIndexOrThrow("taxonomy"));
 
-        long siteId = c.getLong(c.getColumnIndex("site_id"));
+        long siteId = c.getLong(c.getColumnIndexOrThrow("site_id"));
 
         return new UserSuggestion(
                 siteId,
@@ -173,9 +173,9 @@ public class UserSuggestionTable {
     }
 
     private static Tag getTagFromCursor(Cursor c) {
-        final String tag = c.getString(c.getColumnIndex("tag"));
+        final String tag = c.getString(c.getColumnIndexOrThrow("tag"));
 
-        long siteId = c.getLong(c.getColumnIndex("site_id"));
+        long siteId = c.getLong(c.getColumnIndexOrThrow("site_id"));
 
         return new Tag(
                 siteId,

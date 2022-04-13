@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -183,7 +184,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             LIKE -> handleLikeClicked(post, source)
             BOOKMARK -> handleBookmarkClicked(post, isBookmarkList, source)
             REBLOG -> handleReblogClicked(post)
-            COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+            COMMENTS -> handleCommentsClicked(post.postId, post.blogId, source)
             REPORT_POST -> handleReportPostClicked(post)
             TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
             SPACER_NO_ACTION -> Unit // Do nothing
@@ -491,8 +492,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private fun handleCommentsClicked(postId: Long, blogId: Long) {
-        _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
+    private fun handleCommentsClicked(postId: Long, blogId: Long, source: String) {
+        _navigationEvents.postValue(Event(ShowReaderComments(
+                blogId,
+                postId,
+                ThreadedCommentsActionSource.mapReaderPostSource(source)
+        )))
     }
 
     private fun prepareEnableNotificationSnackbarAction(

@@ -2,9 +2,9 @@ package org.wordpress.android.ui.engagement
 
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.EngagedPeopleListActivityBinding
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import java.lang.IllegalArgumentException
@@ -17,7 +17,10 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
-        setContentView(R.layout.engaged_people_list_activity)
+        with(EngagedPeopleListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setSupportActionBar(toolbarMain)
+        }
 
         val listScenario = intent.getParcelableExtra<ListScenario>(KEY_LIST_SCENARIO)
                 ?: throw IllegalArgumentException(
@@ -29,7 +32,6 @@ class EngagedPeopleListActivity : LocaleAwareActivity() {
                 ListScenarioType.getSourceDescription(listScenario.type)
         )
 
-        setSupportActionBar(toolbar_main)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)

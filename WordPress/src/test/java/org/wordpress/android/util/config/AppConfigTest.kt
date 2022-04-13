@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ExperimentConfig.Variant
-import org.wordpress.android.util.config.manual.ManualFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {

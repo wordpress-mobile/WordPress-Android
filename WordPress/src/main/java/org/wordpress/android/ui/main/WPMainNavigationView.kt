@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -25,13 +26,13 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
-import org.wordpress.android.ui.mysite.ImprovedMySiteFragment
+import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
-import org.wordpress.android.util.getColorStateListFromAttribute
+import org.wordpress.android.util.extensions.getColorStateListFromAttribute
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -69,17 +70,17 @@ class WPMainNavigationView @JvmOverloads constructor(
         fun onNewPostButtonClicked()
     }
 
-    fun init(fm: FragmentManager, listener: OnPageListener, showNewMySiteFragment: Boolean) {
+    fun init(fm: FragmentManager, listener: OnPageListener) {
         fragmentManager = fm
         pageListener = listener
 
-        navAdapter = NavAdapter(showNewMySiteFragment)
+        navAdapter = NavAdapter()
         assignNavigationListeners(true)
         disableShiftMode()
 
         // overlay each item with our custom view
         val menuView = getChildAt(0) as BottomNavigationMenuView
-        if (BuildConfig.IS_JETPACK_APP) hideReaderTab()
+        if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
         val inflater = LayoutInflater.from(context)
         for (i in 0 until menu.size()) {
@@ -105,6 +106,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         menu.removeItem(R.id.nav_reader)
     }
 
+    @SuppressLint("WrongConstant")
     private fun disableShiftMode() {
         labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
     }
@@ -286,14 +288,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         return position in 0 until numPages()
     }
 
-    private inner class NavAdapter(val showNewMySiteFragment: Boolean) {
+    private inner class NavAdapter {
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
-                MY_SITE -> if (showNewMySiteFragment) {
-                    ImprovedMySiteFragment.newInstance()
-                } else {
-                    MySiteFragment.newInstance()
-                }
+                MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderFragment()
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
@@ -317,7 +315,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = if (BuildConfig.IS_JETPACK_APP) listOf(MY_SITE, NOTIFS) else listOf(MY_SITE, READER, NOTIFS)
+        private val pages = if (BuildConfig.ENABLE_READER) listOf(MY_SITE, READER, NOTIFS) else listOf(MY_SITE, NOTIFS)
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"

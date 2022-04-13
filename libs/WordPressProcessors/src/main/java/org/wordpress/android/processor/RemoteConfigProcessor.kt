@@ -16,7 +16,6 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic.Kind
 
-@ExperimentalStdlibApi
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 @SupportedAnnotationTypes(

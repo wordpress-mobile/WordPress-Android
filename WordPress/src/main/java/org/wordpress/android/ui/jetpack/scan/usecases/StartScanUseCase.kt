@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.SCANNING
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartPayload
@@ -43,7 +44,10 @@ class StartScanUseCase @Inject constructor(
     }.flowOn(bgDispatcher)
 
     private suspend fun FlowCollector<StartScanState>.updateScanScanningStateInDb(site: SiteModel) {
-        val model = scanStore.getScanStateForSite(site)?.copy(state = SCANNING) ?: ScanStateModel(state = SCANNING)
+        val model = scanStore.getScanStateForSite(site)?.copy(state = SCANNING) ?: ScanStateModel(
+                state = SCANNING,
+                reason = Reason.NO_REASON
+        )
         scanStore.addOrUpdateScanStateModelForSite(START_SCAN, site, model)
         emit(ScanningStateUpdatedInDb(model))
     }

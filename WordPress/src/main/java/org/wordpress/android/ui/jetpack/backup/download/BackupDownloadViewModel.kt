@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
@@ -447,6 +447,7 @@ class BackupDownloadViewModel @Inject constructor(
         )
     }
 
+    @SuppressLint("ParcelCreator")
     sealed class BackupDownloadWizardState : Parcelable {
         @Parcelize
         object BackupDownloadCanceled : BackupDownloadWizardState()

@@ -25,7 +25,7 @@ import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
 import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -40,7 +40,7 @@ import javax.inject.Named
 class ModalLayoutPickerViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper,
+    private val selectedSiteRepository: SelectedSiteRepository,
     private val supportedBlocksProvider: SupportedBlocksProvider,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
@@ -61,21 +61,26 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
-    private val site: SiteModel by lazy { siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite()) }
+    private val site: SiteModel? by lazy {
+        siteStore.getSiteByLocalId(selectedSiteRepository.getSelectedSiteLocalId(true))
+    }
 
     override val useCachedData: Boolean = true
 
     override val selectedLayout: LayoutModel?
         get() = (uiState.value as? Content)?.let { state ->
-            state.selectedLayoutSlug?.let { siteStore.getBlockLayout(site, it) }?.let { LayoutModel(it) }
+            state.selectedLayoutSlug?.let { slug ->
+                site?.let { site ->
+                    siteStore.getBlockLayout(site, slug)
+                }
+            }?.let { LayoutModel(it) }
         }
 
-    sealed class PageRequest(val template: String?, val content: String) {
-        open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
-        object Blank : Create(null, "", "")
-        class Preview(template: String?, content: String, val site: SiteModel, val demoUrl: String?) : PageRequest(
-                template,
-                content
+    sealed class PageRequest(val template: String?) {
+        open class Create(template: String?, val title: String) : PageRequest(template)
+        object Blank : Create(null, "")
+        class Preview(template: String?, val content: String, val site: SiteModel, val demoUrl: String?) : PageRequest(
+                template
         )
     }
 
@@ -89,7 +94,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     override fun fetchLayouts(preferCache: Boolean) {
-        if (!networkUtils.isNetworkAvailable()) {
+        val selectedSite = site
+        if (!networkUtils.isNetworkAvailable() || selectedSite == null) {
             setErrorState()
             return
         }
@@ -98,7 +104,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
         launch {
             val payload = FetchBlockLayoutsPayload(
-                    site,
+                    selectedSite,
                     supportedBlocksProvider.fromAssets().supported,
                     thumbDimensionProvider.previewWidth.toFloat(),
                     thumbDimensionProvider.previewHeight.toFloat(),
@@ -115,7 +121,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (event.isError) {
             setErrorState()
         } else {
-            handleResponse(event.layouts.toLayoutModels(), event.categories.toLayoutCategories())
+            handleResponse(
+                    (event.layouts ?: listOf()).toLayoutModels(),
+                    (event.categories ?: listOf()).toLayoutCategories()
+            )
         }
     }
 
@@ -169,8 +178,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private fun createPage() {
         selectedLayout?.let { layout ->
-            val content: String = siteStore.getBlockLayoutContent(site, layout.slug) ?: ""
-            _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, content, layout.title)
+            _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.title)
             return
         }
         _onCreateNewPageRequested.value = PageRequest.Blank

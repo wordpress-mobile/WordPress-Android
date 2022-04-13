@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.layoutpicker
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Gravity.CENTER_HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +14,10 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
-import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.layout_picker_preview_fragment.*
+import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.LayoutPickerPreviewFragmentBinding
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
 import org.wordpress.android.ui.PreviewMode.DESKTOP
 import org.wordpress.android.ui.PreviewMode.MOBILE
@@ -27,81 +29,99 @@ import org.wordpress.android.ui.layoutpicker.PreviewUiState.Loading
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.skip
 import javax.inject.Inject
 
 private const val INITIAL_SCALE = 90
 private const val JS_EVALUATION_DELAY = 250L
+private const val JS_READY_CALLBACK_ID = 926L
 
 abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     @Inject lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: LayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.layout_picker_preview_fragment, container)
+    private var binding: LayoutPickerPreviewFragmentBinding? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = LayoutPickerPreviewFragmentBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        webView.settings.javaScriptEnabled = true
-        webView.settings.useWideViewPort = true
-        webView.setInitialScale(INITIAL_SCALE)
+        binding?.webView?.settings?.javaScriptEnabled = true
+        binding?.webView?.settings?.useWideViewPort = true
+        binding?.webView?.setInitialScale(INITIAL_SCALE)
+        binding?.chooseButton?.setText(getChooseButtonText())
+        initViewModel()
     }
 
-    fun setViewModel(viewModel: LayoutPickerViewModel) {
-        this.viewModel = viewModel
+    abstract fun getChooseButtonText(): Int
 
-        viewModel.previewState.observe(viewLifecycleOwner, Observer { state ->
+    abstract fun getViewModel(): LayoutPickerViewModel
+
+    private fun initViewModel() {
+        this.viewModel = getViewModel()
+
+        viewModel.previewState.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is Loading -> {
-                    desktopPreviewHint.setVisible(false)
-                    progressBar.setVisible(true)
-                    webView.setVisible(false)
-                    errorView.setVisible(false)
-                    webView.loadUrl(state.url)
+                    binding?.desktopPreviewHint?.setVisible(false)
+                    binding?.progressBar?.setVisible(true)
+                    binding?.webView?.setVisible(false)
+                    binding?.errorView?.setVisible(false)
+                    binding?.webView?.loadUrl(state.url)
                 }
                 is Loaded -> {
-                    progressBar.setVisible(false)
-                    webView.setVisible(true)
-                    errorView.setVisible(false)
-                    desktopPreviewHint.setText(
+                    binding?.progressBar?.setVisible(false)
+                    binding?.webView?.setVisible(true)
+                    binding?.errorView?.setVisible(false)
+                    binding?.desktopPreviewHint?.setText(
                             when (viewModel.selectedPreviewMode()) {
                                 MOBILE -> R.string.web_preview_mobile
                                 TABLET -> R.string.web_preview_tablet
                                 DESKTOP -> R.string.web_preview_desktop
                             }
                     )
-                    AniUtils.animateBottomBar(desktopPreviewHint, true)
+                    AniUtils.animateBottomBar(binding?.desktopPreviewHint, true)
                 }
                 is Error -> {
-                    progressBar.setVisible(false)
-                    webView.setVisible(false)
-                    errorView.setVisible(true)
+                    binding?.progressBar?.setVisible(false)
+                    binding?.webView?.setVisible(false)
+                    binding?.errorView?.setVisible(true)
                     state.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
         })
 
         // We're skipping the first emitted value since it derives from the view model initialization (`start` method)
-        viewModel.previewMode.skip(1).observe(viewLifecycleOwner, Observer { load() })
+        viewModel.previewMode.skip(1).observe(viewLifecycleOwner, { load() })
 
-        viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, Observer {
+        viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
+        binding?.previewTypeSelectorButton?.let {
+            previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), it)
+        }
 
-        backButton.setOnClickListener { closeModal() }
+        binding?.backButton?.setOnClickListener { closeModal() }
 
-        chooseButton.setOnClickListener { viewModel.onPreviewChooseTapped() }
+        binding?.chooseButton?.setOnClickListener { viewModel.onPreviewChooseTapped() }
 
-        previewTypeSelectorButton.setOnClickListener { viewModel.onPreviewModePressed() }
+        binding?.previewTypeSelectorButton?.setOnClickListener { viewModel.onPreviewModePressed() }
 
-        webView.settings.userAgentString = WordPress.getUserAgent()
-        webView.webViewClient = object : WebViewClient() {
+        binding?.webView?.settings?.userAgentString = WordPress.getUserAgent()
+        binding?.webView?.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 if (view == null) return
@@ -109,8 +129,16 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
                 setWebViewWidth(view, width)
                 val widthScript = context?.getString(R.string.web_preview_width_script, width)
                 if (widthScript != null) {
-                    Handler().postDelayed({
-                        view.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded() }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        view.evaluateJavascript(widthScript) {
+                            view.postVisualStateCallback(JS_READY_CALLBACK_ID, object : WebView.VisualStateCallback() {
+                                override fun onComplete(requestId: Long) {
+                                    if (JS_READY_CALLBACK_ID == requestId) {
+                                        viewModel.onPreviewLoaded()
+                                    }
+                                }
+                            })
+                        }
                     }, JS_EVALUATION_DELAY)
                 }
             }
@@ -121,7 +149,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
             }
         }
 
-        errorView.button.setOnClickListener { load() }
+        binding?.errorView?.button?.setOnClickListener { load() }
         load()
     }
 
@@ -137,5 +165,15 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
         } else {
             LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

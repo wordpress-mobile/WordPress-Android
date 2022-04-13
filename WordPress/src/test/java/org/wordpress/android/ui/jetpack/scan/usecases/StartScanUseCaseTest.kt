@@ -15,6 +15,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.Reason
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStarted
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
@@ -57,7 +58,10 @@ class StartScanUseCaseTest : BaseUnitTest() {
     @Test
     fun `when scan start is triggered, then scan starts optimistically by updating scanning scan state in db`() =
             testWithSuccessResponse {
-                val scanStateModelInIdleState = ScanStateModel(state = ScanStateModel.State.IDLE)
+                val scanStateModelInIdleState = ScanStateModel(
+                        state = ScanStateModel.State.IDLE,
+                        reason = Reason.NO_REASON
+                )
                 val expectedScanStateModel = scanStateModelInIdleState.copy(state = ScanStateModel.State.SCANNING)
                 whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
 

@@ -11,34 +11,24 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_175"
+msgctxt "release_note_196"
 msgid ""
-"17.5:\n"
-"What’s new in 17.5?\n"
+"19.6:\n"
+"This release is short and sweet: after deleting a site, you might’ve noticed that same site sticking around in your My Site list until you restarted the app.\n"
 "\n"
-"Reusable blocks let you create block content once and reuse it infinite times, right from the block inserter.\n"
-"\n"
-"Slash commands make adding blocks easy: just tap a forward slash and block name into the editor.\n"
-"\n"
-"You can now pull in audio via URL with the Audio block.\n"
-"\n"
-"Finally, screen readers can now select the stepper cell.\n"
+"We’ve fixed that—deleted sites now disappear right away. So long, farewell.\n"
 msgstr ""
 
-msgctxt "release_note_174"
+msgctxt "release_note_195"
 msgid ""
-"17.4:\n"
-"We’ve added 3 new updates to Stories in this update:\n"
-"\n"
-"You’ll now see a media picker when adding a Story block from the block editor, making it easier to get started.\n"
-"\n"
-"Story previews now render as expected in the Reader.\n"
-"\n"
-"And finally, when slides fail to upload, the app will automatically retry, saving you an extra tap!\n"
+"19.5:\n"
+"- We tweaked the upload error text in media upload blocks.\n"
+"- Animated GIFs now come with a GIF badge.\n"
+"- Block setting changes to ordered lists now appear in the editor.\n"
+"- You can disable Weekly Roundup notifications for all sites in App Info.\n"
 msgstr ""
 
-#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-#. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "sample_post_content"
 msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."
 msgstr ""
@@ -64,7 +54,7 @@ msgctxt "play_store_promo"
 msgid "Easily build your website & blog. Create posts & track analytics from anywhere!"
 msgstr ""
 
-#. translators: Multi-paragraph text used to display in the Play Store.
+#. translators: Multi-paragraph text used to display in the Play Store. Limit to 4000 characters including spaces and commas!
 msgctxt "play_store_desc"
 msgid ""
 "WordPress for Android puts the power of web publishing in your pocket. It’s a website creator and so much more!\n"
@@ -114,104 +104,62 @@ msgid ""
 "California users privacy notice: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.\n"
 msgstr ""
 
-#. translators: Title to be displayed in the Play Store. Limit to 50 characters including spaces and commas!
+#. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
 msgctxt "play_store_app_title"
-msgid "WordPress – Website & Blog Builder"
+msgid "WordPress – Website Builder"
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the 1st screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_1"
-msgid "The world’s most popular website builder"
+msgid "Create and update your website from anywhere."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the 3rd screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_2"
-msgid "Create a site or start a blog"
+msgid "Create a site or start a blog."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the 4th screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_3"
-msgid "Discover new reads"
+msgid "Discover new reads."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the 5th screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_4"
-msgid "Build an audience"
+msgid "Build an audience."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the 6th screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_5"
-msgid "Keep tabs on your site"
+msgid "Keep tabs on your site."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the 7th screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_6"
-msgid "Reply in real time"
+msgid "Reply in real time."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. translators: This is a promo message that will be attached on top of the 8th screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_7"
-msgid "Upload on the go"
+msgid "Upload on the go."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
-#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
-msgctxt "enhanced_app_store_screenshot_1"
-msgid ""
-"<strong>Create</strong> beautiful\n"
-"posts and pages\n"
+#. translators: This is a promo message that will be attached on top of the 9th screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_8"
+msgid "Create immersive fullscreen stories."
 msgstr ""
 
-#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
-#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
-msgctxt "enhanced_app_store_screenshot_2"
-msgid ""
-"<strong>Track</strong> what your\n"
-"visitors love\n"
-msgstr ""
-
-#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
-#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
-msgctxt "enhanced_app_store_screenshot_3"
-msgid ""
-"<strong>Check</strong> what's\n"
-"happening in real-time\n"
-msgstr ""
-
-#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
-#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
-msgctxt "enhanced_app_store_screenshot_4"
-msgid ""
-"<strong>Share</strong>\n"
-"from anywhere\n"
-msgstr ""
-
-#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
-#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
-msgctxt "enhanced_app_store_screenshot_5"
-msgid ""
-"<strong>Capture</strong> ideas\n"
-"on the go\n"
-msgstr ""
-
-#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
-#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
-msgctxt "enhanced_app_store_screenshot_6"
-msgid "<strong>Write</strong> without compromises"
-msgstr ""
-
-#. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
-#. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
-msgctxt "enhanced_app_store_screenshot_7"
-msgid ""
-"<strong>Build</strong> and manage\n"
-"your website\n"
+#. translators: This is a promo message that will be attached on top of the 10th screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_9"
+msgid "Stay engaged with blogging reminders."
 msgstr ""
 

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stories
 
 import android.content.Context
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -25,7 +26,6 @@ import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.DoWithMediaFilesListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
-import org.wordpress.android.util.CrashLogging
 import org.wordpress.android.util.helpers.MediaFile
 
 @RunWith(MockitoJUnitRunner::class)

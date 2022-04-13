@@ -7,11 +7,11 @@
     android:animateLayoutChanges="true">
 
     <include
-        android:id="@+id/header_layout"
+        android:id="@+id/site_creation_header_item"
         layout="@layout/site_creation_header_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/search_input_layout"
+        app:layout_constraintBottom_toTopOf="@+id/site_creation_search_input_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <include
-        android:id="@+id/search_input_layout"
+        android:id="@+id/site_creation_search_input_item"
         layout="@layout/site_creation_search_input_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_layout"
+        app:layout_constraintTop_toBottomOf="@+id/site_creation_header_item"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -41,10 +41,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_input_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/site_creation_search_input_item" />
 
     <include
-        android:id="@+id/domain_list_example"
+        android:id="@+id/site_creation_domains_screen_example"
         layout="@layout/site_creation_domains_screen_example"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_input_layout" />
+        app:layout_constraintTop_toBottomOf="@id/site_creation_search_input_item" />
 
     <View
         android:id="@+id/create_site_button_shaddow"
@@ -99,6 +99,7 @@
         app:layout_constraintTop_toTopOf="@+id/recycler_view">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/domain_list_empty_view_message"
             style="@style/ActionableEmptyStateTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

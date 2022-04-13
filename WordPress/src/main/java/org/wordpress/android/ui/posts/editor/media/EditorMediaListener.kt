@@ -12,4 +12,5 @@ interface EditorMediaListener {
     fun advertiseImageOptimization(listener: () -> Unit)
     fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>)
     fun getImmutablePost(): PostImmutableModel
+    fun showVideoDurationLimitWarning(fileName: String)
 }

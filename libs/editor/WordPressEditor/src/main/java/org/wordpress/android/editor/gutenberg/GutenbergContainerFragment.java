@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.android.editor.BuildConfig;
@@ -16,10 +17,12 @@ import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
@@ -29,7 +32,9 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTo
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSendEventToHostListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 
 import java.util.ArrayList;
 
@@ -72,6 +77,11 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnMediaFilesCollectionBasedBlockEditorListener
                                           onMediaFilesCollectionBasedBlockEditorListener,
                                   OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
+                                  OnGutenbergDidRequestPreviewListener
+                                          onGutenbergDidRequestPreviewListener,
+                                  OnBlockTypeImpressionsEventListener onBlockTypeImpressionsListener,
+                                  OnCustomerSupportOptionsListener onCustomerSupportOptionsListener,
+                                  OnSendEventToHostListener onSendEventToHostListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -90,6 +100,10 @@ public class GutenbergContainerFragment extends Fragment {
                     showSuggestionsUtil,
                     onMediaFilesCollectionBasedBlockEditorListener,
                     onFPPTooltipShownEventListener,
+                    onGutenbergDidRequestPreviewListener,
+                    onBlockTypeImpressionsListener,
+                    onCustomerSupportOptionsListener,
+                    onSendEventToHostListener,
                     isDarkMode);
     }
 
@@ -170,13 +184,15 @@ public class GutenbergContainerFragment extends Fragment {
      * Returns the contents of the content field from the JavaScript editor. Should be called from a background thread
      * where possible.
      */
-    public CharSequence getContent(CharSequence originalContent, OnGetContentTimeout onGetContentTimeout) {
-        return mWPAndroidGlueCode.getContent(originalContent, onGetContentTimeout);
+    public CharSequence getContent(CharSequence originalContent, OnGetContentInterrupted onGetContentInterrupted) {
+        return mWPAndroidGlueCode.getContent(originalContent, onGetContentInterrupted);
     }
 
-    public CharSequence getTitle(OnGetContentTimeout onGetContentTimeout) {
-        return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
+    public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent,
+                                                               OnGetContentInterrupted onGetContentInterrupted) {
+        return mWPAndroidGlueCode.getTitleAndContent(originalContent, onGetContentInterrupted);
     }
+
 
     public void triggerGetContentInfo(OnContentInfoReceivedListener onContentInfoReceivedListener) {
         mWPAndroidGlueCode.triggerGetContentInfo(onContentInfoReceivedListener);
@@ -224,6 +240,10 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void showNotice(String message) {
         mWPAndroidGlueCode.showNotice(message);
+    }
+
+    public void showEditorHelp() {
+        mWPAndroidGlueCode.showEditorHelp();
     }
 
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/WordPress.CardView.Unelevated"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/my_site_toolbar"
+                    layout="@layout/my_site_card_toolbar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/title"
+                    style="@style/MySiteErrorCardTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/margin_extra_extra_large"
+                    android:paddingStart="@dimen/margin_extra_extra_large"
+                    android:paddingTop="@dimen/margin_extra_medium_large"
+                    android:text="@string/my_site_error_card_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/my_site_toolbar" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/subtitle"
+                    style="@style/MySiteErrorCardSubtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/margin_extra_extra_large"
+                    android:paddingEnd="@dimen/margin_extra_extra_large"
+                    android:paddingStart="@dimen/margin_extra_extra_large"
+                    android:text="@string/my_site_error_within_card_subtitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

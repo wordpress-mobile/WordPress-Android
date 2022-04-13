@@ -98,7 +98,7 @@ class WidgetUtils
                         context,
                         0,
                         Intent(),
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
         )
         views.setViewVisibility(R.id.widget_content, View.GONE)
@@ -132,7 +132,7 @@ class WidgetUtils
                 context,
                 Random(appWidgetId).nextInt(),
                 intentSync,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
@@ -177,7 +177,7 @@ class WidgetUtils
                 context,
                 getRandomId(),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
@@ -188,7 +188,7 @@ class WidgetUtils
                 context,
                 getRandomId(),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 

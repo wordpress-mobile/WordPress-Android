@@ -18,7 +18,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.reader.reblog.ReblogState.MultipleSites
 import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
 import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
-import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -101,30 +100,5 @@ class ReblogUseCaseTest {
         val peState = state as? SingleSite
         Assertions.assertThat(peState?.site).isEqualTo(site)
         Assertions.assertThat(peState?.post).isEqualTo(post)
-    }
-
-    @Test
-    fun `when user has only one visible WPCOM site but the selected site is not retrieved an error occurs`() = test {
-        val post = ReaderPost()
-        val visibleWPComSites = listOf(null) // One site
-
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
-
-        val state = reblogUseCase.onReblogButtonClicked(post)
-
-        Assertions.assertThat(state).isInstanceOf(Unknown::class.java)
-    }
-
-    @Test
-    fun `when user has more than one visible WPCOM sites but the selected site is not retrieved an error occurs`() =
-            test {
-        val post = ReaderPost()
-        val visibleWPComSites = listOf(null, null) // More sites
-
-        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
-
-        val state = reblogUseCase.onReblogButtonClicked(post)
-
-        Assertions.assertThat(state).isInstanceOf(Unknown::class.java)
     }
 }

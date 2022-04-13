@@ -10,7 +10,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LOADING
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.NOTICE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
-import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.util.extensions.toFormattedDateString
 import java.util.Date
 
 sealed class ActivityLogListItem(val type: ViewType) {
@@ -30,7 +30,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val rewindId: String?,
         val date: Date,
         override val isButtonVisible: Boolean,
-        val buttonIcon: Icon
+        val buttonIcon: Icon,
+        val isRestoreHidden: Boolean
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
         val icon = Icon.fromValue(gridIcon)
@@ -38,7 +39,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
 
         constructor(
             model: ActivityLogModel,
-            rewindDisabled: Boolean = false
+            rewindDisabled: Boolean,
+            isRestoreHidden: Boolean
         ) : this(
                 activityId = model.activityID,
                 title = model.summary,
@@ -49,7 +51,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 rewindId = model.rewindID,
                 date = model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
-                buttonIcon = MORE
+                buttonIcon = MORE,
+                isRestoreHidden = isRestoreHidden
         )
 
         override fun longId(): Long = activityId.hashCode().toLong()

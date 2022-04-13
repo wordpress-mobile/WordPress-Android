@@ -40,7 +40,7 @@ class PostListCreateMenuViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, actionsShownByDefault: Boolean) {
         if (isStarted) return
         isStarted = true
 
@@ -49,6 +49,9 @@ class PostListCreateMenuViewModel @Inject constructor(
         setMainFabUiState()
 
         loadMainActions()
+        if (actionsShownByDefault) {
+            onFabClicked()
+        }
     }
 
     private fun loadMainActions() {

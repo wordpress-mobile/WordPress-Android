@@ -46,17 +46,6 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `hasCustomDomain returns true when site has custom domain`() {
-        val site = SiteModel()
-        site.url = "http://wordpress.com"
-
-        assertTrue(SiteUtils.hasCustomDomain(site))
-
-        site.url = "https://***.wordpress.com"
-        assertFalse(SiteUtils.hasCustomDomain(site))
-    }
-
-    @Test
     fun `checkMinimalJetpackVersion doesnt fail when Jetpack version is false`() {
         val site = SiteModel()
         site.jetpackVersion = "false"
@@ -122,6 +111,42 @@ class SiteUtilsTest {
         val hasMinimalJetpackVersion = SiteUtils.checkMinimalJetpackVersion(site, "5.6")
 
         assertThat(hasMinimalJetpackVersion).isFalse()
+    }
+
+    @Test
+    fun `checkMinimalWordPressVersion returns true when software version is higher than the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.6"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isTrue
+    }
+
+    @Test
+    fun `checkMinimalWordPressVersion returns true when software version is equal to the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.5"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isTrue
+    }
+
+    @Test
+    fun `checkMinimalWordPressVersion returns false when software version is lower than the minimal version`() {
+        val minVersion = "5.5"
+
+        val site = SiteModel()
+        site.softwareVersion = "5.4"
+
+        val hasMinimalWordPressVersion = SiteUtils.checkMinimalWordPressVersion(site, minVersion)
+
+        assertThat(hasMinimalWordPressVersion).isFalse
     }
 
     @Test

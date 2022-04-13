@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/root_view_main"
-                android:clipChildren="false"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_container"/>
+        android:layout_above="@+id/bottom_container" />
+
+    <!-- this coordinator exists only for snackbars -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_container" />
 
     <LinearLayout
         android:id="@+id/bottom_container"
@@ -20,12 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
-
-        <!-- this coordinator exists only for snackbars -->
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/connection_bar"
@@ -40,13 +41,13 @@
             android:textAppearance="?attr/textAppearanceCaption"
             android:textColor="?attr/colorOnPrimarySurface"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <View
             android:id="@+id/navbar_separator"
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_size"
-            android:background="?android:attr/listDivider"/>
+            android:background="?android:attr/listDivider" />
 
         <org.wordpress.android.ui.main.WPMainNavigationView
             android:id="@+id/bottom_navigation"
@@ -54,34 +55,34 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
             app:elevation="@dimen/navbar_elevation"
-            app:menu="@menu/bottom_nav_main"/>
+            app:menu="@menu/bottom_nav_main" />
     </LinearLayout>
 
     <org.wordpress.android.ui.WPTooltipView
         android:id="@+id/fab_tooltip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:wpTooltipPosition="above"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:wpTooltipMessage="@string/create_post_page_fab_tooltip"
-        app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_above="@+id/fab_container"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
         android:importantForAccessibility="noHideDescendants"
-        android:layout_above="@+id/fab_container"/>
+        android:visibility="gone"
+        app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
+        app:wpTooltipMessage="@string/create_post_page_fab_tooltip"
+        app:wpTooltipPosition="above"
+        tools:visibility="visible" />
 
     <RelativeLayout
-        android:clipToPadding="false"
-        android:clipChildren="false"
         android:id="@+id/fab_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_container"
+        android:layout_above="@+id/coordinator"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginEnd="@dimen/fab_margin">
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_button"

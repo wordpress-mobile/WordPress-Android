@@ -173,12 +173,13 @@ class PageListEventListener(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
     fun onSiteChanged(event: OnSiteChanged) {
-        if (!event.isError) {
-            val updatedSite = siteStore.getSiteByLocalId(site.id)
-            if (updatedSite.showOnFront != site.showOnFront ||
-                    updatedSite.pageForPosts != site.pageForPosts ||
-                    updatedSite.pageOnFront != site.pageForPosts) {
-                handleHomepageSettingsChange(updatedSite)
+        if (!event.isError && siteStore.hasSiteWithLocalId(site.id)) {
+            siteStore.getSiteByLocalId(site.id)?.let { updatedSite ->
+                if (updatedSite.showOnFront != site.showOnFront ||
+                        updatedSite.pageForPosts != site.pageForPosts ||
+                        updatedSite.pageOnFront != site.pageForPosts) {
+                    handleHomepageSettingsChange(updatedSite)
+                }
             }
         }
     }

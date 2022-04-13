@@ -52,8 +52,8 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     override fun onDestroyView() {
-        binding = null
         super.onDestroyView()
+        binding = null
     }
 
     private fun initDagger() {

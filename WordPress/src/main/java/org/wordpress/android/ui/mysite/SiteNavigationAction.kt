@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.annotation.StringRes
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.util.UriWrapper
 
@@ -17,14 +19,15 @@ sealed class SiteNavigationAction {
     data class OpenPlan(val site: SiteModel) : SiteNavigationAction()
     data class OpenPosts(val site: SiteModel) : SiteNavigationAction()
     data class OpenPages(val site: SiteModel) : SiteNavigationAction()
+    data class OpenHomepage(val site: SiteModel, val homepageLocalId: Int) : SiteNavigationAction()
     data class OpenAdmin(val site: SiteModel) : SiteNavigationAction()
     data class OpenPeople(val site: SiteModel) : SiteNavigationAction()
     data class OpenSharing(val site: SiteModel) : SiteNavigationAction()
+    data class OpenDomains(val site: SiteModel) : SiteNavigationAction()
     data class OpenSiteSettings(val site: SiteModel) : SiteNavigationAction()
     data class OpenThemes(val site: SiteModel) : SiteNavigationAction()
     data class OpenPlugins(val site: SiteModel) : SiteNavigationAction()
     data class OpenMedia(val site: SiteModel) : SiteNavigationAction()
-    data class OpenComments(val site: SiteModel) : SiteNavigationAction()
     data class OpenUnifiedComments(val site: SiteModel) : SiteNavigationAction()
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
@@ -47,6 +50,26 @@ sealed class SiteNavigationAction {
         val source: PagePostCreationSourcesDetail,
         val mediaUris: List<String>
     ) : SiteNavigationAction()
+
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
-    data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
+    data class AddNewSite(val hasAccessToken: Boolean) : SiteNavigationAction()
+    data class ShowQuickStartDialog(
+        @StringRes val title: Int,
+        @StringRes val message: Int,
+        @StringRes val positiveButtonLabel: Int,
+        @StringRes val negativeButtonLabel: Int
+    ) : SiteNavigationAction()
+
+    data class OpenQuickStartFullScreenDialog(
+        val type: QuickStartTaskType,
+        @StringRes val title: Int
+    ) : SiteNavigationAction()
+
+    data class OpenDraftsPosts(val site: SiteModel) : SiteNavigationAction()
+    data class OpenScheduledPosts(val site: SiteModel) : SiteNavigationAction()
+    data class OpenEditorToCreateNewPost(val site: SiteModel) : SiteNavigationAction()
+    data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
+    data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
+    data class OpenStatsInsights(val site: SiteModel) : SiteNavigationAction()
+    data class OpenTodaysStatsGetMoreViewsExternalUrl(val url: String) : SiteNavigationAction()
 }

@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.jetpack.scan.history
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
@@ -103,6 +104,7 @@ class ScanHistoryViewModel @Inject constructor(
     }
 
     @Parcelize
+    @SuppressLint("ParcelCreator")
     enum class ScanHistoryTabType : Parcelable {
         ALL, FIXED, IGNORED
     }

@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.util.AniUtils.Duration;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,7 +221,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             itemView.setOnClickListener(clickListener);
             itemView.setOnLongClickListener(longClickListener);
-            ViewUtilsKt.redirectContextClickToLongPressListener(itemView);
+            ViewExtensionsKt.redirectContextClickToLongPressListener(itemView);
         }
     }
 

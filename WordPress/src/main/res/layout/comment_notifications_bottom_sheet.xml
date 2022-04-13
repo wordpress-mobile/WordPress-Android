@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/coordinator">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:contentDescription="@string/reader_follow_comments_bottom_sheet_description"
+        android:paddingBottom="@dimen/reader_follow_sheet_margin_bottom"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large">
+
+        <include
+            android:id="@+id/sheet_handle"
+            layout="@layout/bottom_sheet_handle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/follow_conversation_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/reader_follow_sheet_message_margin_top"
+            android:text="@string/reader_follow_comments_message"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textSize="@dimen/text_sz_medium"
+            app:layout_constraintTop_toBottomOf="@+id/sheet_handle" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/enable_push_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/reader_follow_sheet_switch_margin_top"
+            android:gravity="start"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:text="@string/reader_follow_comments_enable_push_notifications"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="@color/material_on_surface_emphasis_high_type"
+            android:textSize="@dimen/text_sz_medium"
+            app:layout_constraintTop_toBottomOf="@+id/follow_conversation_message"
+            tools:checked="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/unfollow_conversation"
+            style="@style/WordPress.FollowComments.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/reader_follow_sheet_button_margin_top"
+            android:text="@string/reader_follow_comments_unfollow_conversation"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/enable_push_notifications" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

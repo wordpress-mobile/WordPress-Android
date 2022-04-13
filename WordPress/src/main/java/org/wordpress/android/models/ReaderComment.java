@@ -19,6 +19,8 @@ public class ReaderComment {
     private String mAuthorUrl;
     private String mStatus;
     private String mText;
+    private String mShortUrl;
+    private String mAuthorEmail;
 
     private String mPublished;
     public long timestamp;
@@ -44,6 +46,7 @@ public class ReaderComment {
         comment.blogId = blogId;
         comment.commentId = json.optLong("ID");
         comment.mStatus = JSONUtils.getString(json, "status");
+        comment.mShortUrl = JSONUtils.getString(json, "short_URL");
 
         // note that content may contain html, adapter needs to handle it
         comment.mText = HtmlUtils.stripScript(JSONUtils.getString(json, "content"));
@@ -64,6 +67,7 @@ public class ReaderComment {
             comment.mAuthorUrl = JSONUtils.getString(jsonAuthor, "URL");
             comment.authorId = jsonAuthor.optLong("ID");
             comment.authorBlogId = jsonAuthor.optLong("site_ID");
+            comment.mAuthorEmail = JSONUtils.getString(jsonAuthor, "email");
         }
 
         JSONObject jsonParent = json.optJSONObject("parent");
@@ -141,6 +145,22 @@ public class ReaderComment {
         return !TextUtils.isEmpty(mAuthorAvatar);
     }
 
+    public String getShortUrl() {
+        return StringUtils.notNullStr(mShortUrl);
+    }
+
+    public void setShortUrl(String shortUrl) {
+        mShortUrl = shortUrl;
+    }
+
+    public String getAuthorEmail() {
+        return StringUtils.notNullStr(mAuthorName);
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        mAuthorEmail = StringUtils.notNullStr(authorEmail);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -155,9 +175,11 @@ public class ReaderComment {
                && StringUtils.equals(mAuthorName, otherComment.mAuthorName)
                && StringUtils.equals(mAuthorAvatar, otherComment.mAuthorAvatar)
                && StringUtils.equals(mAuthorUrl, otherComment.mAuthorUrl)
+               && StringUtils.equals(mAuthorEmail, otherComment.mAuthorEmail)
                && StringUtils.equals(mStatus, otherComment.mStatus)
                && StringUtils.equals(mText, otherComment.mText)
                && StringUtils.equals(mPublished, otherComment.mPublished)
+               && StringUtils.equals(mShortUrl, otherComment.mShortUrl)
                && timestamp == otherComment.timestamp
                && authorId == otherComment.authorId
                && authorBlogId == otherComment.authorBlogId

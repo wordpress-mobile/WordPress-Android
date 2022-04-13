@@ -138,12 +138,12 @@ public class PublicizeTable {
     private static PublicizeService getServiceFromCursor(Cursor c) {
         PublicizeService service = new PublicizeService();
 
-        service.setId(c.getString(c.getColumnIndex("id")));
-        service.setLabel(c.getString(c.getColumnIndex("label")));
-        service.setDescription(c.getString(c.getColumnIndex("description")));
-        service.setGenericon(c.getString(c.getColumnIndex("genericon")));
-        service.setIconUrl(c.getString(c.getColumnIndex("icon_url")));
-        service.setConnectUrl(c.getString(c.getColumnIndex("connect_url")));
+        service.setId(c.getString(c.getColumnIndexOrThrow("id")));
+        service.setLabel(c.getString(c.getColumnIndexOrThrow("label")));
+        service.setDescription(c.getString(c.getColumnIndexOrThrow("description")));
+        service.setGenericon(c.getString(c.getColumnIndexOrThrow("genericon")));
+        service.setIconUrl(c.getString(c.getColumnIndexOrThrow("icon_url")));
+        service.setConnectUrl(c.getString(c.getColumnIndexOrThrow("connect_url")));
         service.setIsJetpackSupported(getBooleanFromCursor(c, "is_jetpack_supported"));
         service.setIsMultiExternalUserIdSupported(getBooleanFromCursor(c, "is_multi_user_id_supported"));
         service.setIsExternalUsersOnly(getBooleanFromCursor(c, "is_external_users_only"));
@@ -295,22 +295,22 @@ public class PublicizeTable {
     private static PublicizeConnection getConnectionFromCursor(Cursor c) {
         PublicizeConnection connection = new PublicizeConnection();
 
-        connection.siteId = c.getLong(c.getColumnIndex("site_id"));
-        connection.connectionId = c.getInt(c.getColumnIndex("id"));
-        connection.userId = c.getInt(c.getColumnIndex("user_id"));
-        connection.keyringConnectionId = c.getInt(c.getColumnIndex("keyring_connection_id"));
-        connection.keyringConnectionUserId = c.getInt(c.getColumnIndex("keyring_connection_user_id"));
+        connection.siteId = c.getLong(c.getColumnIndexOrThrow("site_id"));
+        connection.connectionId = c.getInt(c.getColumnIndexOrThrow("id"));
+        connection.userId = c.getInt(c.getColumnIndexOrThrow("user_id"));
+        connection.keyringConnectionId = c.getInt(c.getColumnIndexOrThrow("keyring_connection_id"));
+        connection.keyringConnectionUserId = c.getInt(c.getColumnIndexOrThrow("keyring_connection_user_id"));
 
-        connection.isShared = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_shared")));
+        connection.isShared = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_shared")));
 
-        connection.setService(c.getString(c.getColumnIndex("service")));
-        connection.setLabel(c.getString(c.getColumnIndex("label")));
-        connection.setExternalId(c.getString(c.getColumnIndex("external_id")));
-        connection.setExternalName(c.getString(c.getColumnIndex("external_name")));
-        connection.setExternalDisplayName(c.getString(c.getColumnIndex("external_display")));
-        connection.setExternalProfilePictureUrl(c.getString(c.getColumnIndex("external_profile_picture")));
-        connection.setRefreshUrl(c.getString(c.getColumnIndex("refresh_url")));
-        connection.setStatus(c.getString(c.getColumnIndex("status")));
+        connection.setService(c.getString(c.getColumnIndexOrThrow("service")));
+        connection.setLabel(c.getString(c.getColumnIndexOrThrow("label")));
+        connection.setExternalId(c.getString(c.getColumnIndexOrThrow("external_id")));
+        connection.setExternalName(c.getString(c.getColumnIndexOrThrow("external_name")));
+        connection.setExternalDisplayName(c.getString(c.getColumnIndexOrThrow("external_display")));
+        connection.setExternalProfilePictureUrl(c.getString(c.getColumnIndexOrThrow("external_profile_picture")));
+        connection.setRefreshUrl(c.getString(c.getColumnIndexOrThrow("refresh_url")));
+        connection.setStatus(c.getString(c.getColumnIndexOrThrow("status")));
 
         return connection;
     }

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
-import kotlinx.android.synthetic.main.post_signup_interstitial_landscape.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostSignupInterstitialActivityBinding

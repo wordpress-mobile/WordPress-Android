@@ -2,7 +2,9 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.AsyncTask;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.ListPopupWindow;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,36 +22,45 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
-import org.wordpress.android.ui.reader.FollowCommentsUiState;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem.Divider;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuItem.PrimaryItemMenu;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
-import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
+import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.config.ReaderCommentsModerationFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -63,14 +75,15 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int mContentWidth;
 
     private long mHighlightCommentId = 0;
+    private long mReplyTargetComment = 0;
     private long mAnimateLikeCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private boolean mIsHeaderClickEnabled;
 
-    private final int mColorAuthor;
-    private final int mColorNotAuthor;
     private final int mColorHighlight;
+    private final ColorStateList mReplyButtonHighlightedColor;
+    private final ColorStateList mReplyButtonNormalColorColor;
 
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_COMMENT = 2;
@@ -79,40 +92,59 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final int NUM_HEADERS = 1;
 
+    private SiteModel mPostsSite;
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
+    @Inject ThreadedCommentsUtils mThreadedCommentsUtils;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject UiHelpers mUiHelpers;
+    @Inject ReaderCommentsModerationFeatureConfig mReaderCommentsModerationFeatureConfig;
+
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
     }
 
+    public interface CommentMenuActionListener {
+        void onCommentMenuItemTapped(ReaderComment comment, ReaderCommentMenuActionType actionType);
+    }
+
     private ReaderCommentList mComments = new ReaderCommentList();
     private RequestReplyListener mReplyListener;
+    private CommentMenuActionListener mCommentMenuActionListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private PostHeaderHolder mHeaderHolder;
-    private FollowCommentsUiState mFollowButtonState;
 
     class CommentHolder extends RecyclerView.ViewHolder {
-        private final ViewGroup mContainer;
+        private final ViewGroup mCommentContainer;
         private final TextView mTxtAuthor;
         private final TextView mTxtText;
         private final TextView mTxtDate;
 
         private final ImageView mImgAvatar;
         private final View mSpacerIndent;
+        private final View mSelectedCommentIndicator;
+        private final View mTopCommentDivider;
         private final View mAuthorContainer;
+        private final View mAuthorBadge;
+        private final View mActionButtonContainer;
+        private final ImageView mActionButton;
         private final ProgressBar mProgress;
 
         private final ViewGroup mReplyView;
+        private final ImageView mReplyButtonIcon;
+        private final TextView mReplyButtonLabel;
         private final ReaderIconCountView mCountLikes;
 
         CommentHolder(View view) {
             super(view);
 
-            mContainer = view.findViewById(R.id.layout_container);
+            mCommentContainer = view.findViewById(R.id.comment_container);
+            mSelectedCommentIndicator = view.findViewById(R.id.selected_comment_indicator);
 
             mTxtAuthor = view.findViewById(R.id.text_comment_author);
             mTxtText = view.findViewById(R.id.text_comment_text);
@@ -122,13 +154,19 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mSpacerIndent = view.findViewById(R.id.spacer_comment_indent);
             mProgress = view.findViewById(R.id.progress_comment);
 
+            mTopCommentDivider = view.findViewById(R.id.divider);
             mAuthorContainer = view.findViewById(R.id.layout_author);
+            mAuthorBadge = view.findViewById(R.id.author_badge);
+
+            mActionButtonContainer = view.findViewById(R.id.comment_action_button_container);
+            mActionButton = view.findViewById(R.id.comment_action_button);
 
             mReplyView = view.findViewById(R.id.reply_container);
+            mReplyButtonLabel = view.findViewById(R.id.reply_button_label);
+            mReplyButtonIcon = view.findViewById(R.id.reply_button_icon);
             mCountLikes = view.findViewById(R.id.count_likes);
 
-            mTxtText.setLinksClickable(true);
-            mTxtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
+            mThreadedCommentsUtils.setLinksClickable(mTxtText, mIsPrivatePost);
         }
     }
 
@@ -144,10 +182,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public ReaderCommentAdapter(Context context, ReaderPost post) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mPost = post;
-        mIsPrivatePost = (post != null && post.isPrivate);
+        mIsPrivatePost = mThreadedCommentsUtils.isPrivatePost(post);
 
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
+
+        mPostsSite = mSiteStore.getSiteBySiteId(post.blogId);
 
         // calculate the max width of comment content
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
@@ -156,17 +196,23 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
-        mColorAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary);
-        mColorNotAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface);
         mColorHighlight = ColorUtils
-                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
+                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary),
                         context.getResources().getInteger(R.integer.selected_list_item_opacity));
+
+        mReplyButtonHighlightedColor = ContextExtensionsKt.getColorStateListFromAttribute(context, R.attr.colorPrimary);
+        mReplyButtonNormalColorColor =
+                ContextExtensionsKt.getColorStateListFromAttribute(context, R.attr.wpColorOnSurfaceMedium);
 
         setHasStableIds(true);
     }
 
     public void setReplyListener(RequestReplyListener replyListener) {
         mReplyListener = replyListener;
+    }
+
+    public void setCommentMenuActionListener(CommentMenuActionListener commentMenuActionListener) {
+        mCommentMenuActionListener = commentMenuActionListener;
     }
 
     public void setDataLoadedListener(ReaderInterfaces.DataLoadedListener dataLoadedListener) {
@@ -179,13 +225,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void enableHeaderClicks() {
         mIsHeaderClickEnabled = true;
-    }
-
-    public void updateFollowingState(FollowCommentsUiState followButtonState) {
-        mFollowButtonState = followButtonState;
-        if (mHeaderHolder != null && mHeaderHolder.mHeaderView != null) {
-            mHeaderHolder.mHeaderView.setFollowButtonState(followButtonState);
-        }
     }
 
     @Override
@@ -228,7 +267,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PostHeaderHolder) {
             mHeaderHolder = (PostHeaderHolder) holder;
-            mHeaderHolder.mHeaderView.setPost(mPost, mFollowButtonState);
+            mHeaderHolder.mHeaderView.setPost(mPost);
             if (mIsHeaderClickEnabled) {
                 mHeaderHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -282,9 +321,65 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         // author name uses different color for comments from the post's author
         if (comment.authorId == mPost.authorId) {
-            commentHolder.mTxtAuthor.setTextColor(mColorAuthor);
+            commentHolder.mAuthorBadge.setVisibility(View.VISIBLE);
         } else {
-            commentHolder.mTxtAuthor.setTextColor(mColorNotAuthor);
+            commentHolder.mAuthorBadge.setVisibility(View.GONE);
+        }
+
+        if (mReaderCommentsModerationFeatureConfig.isEnabled()
+            && (mPostsSite != null && mPostsSite.getHasCapabilityEditOthersPosts())) {
+            commentHolder.mActionButton.setImageResource(R.drawable.ic_more_vert_white_24dp);
+
+            commentHolder.mActionButtonContainer.setOnClickListener(v -> {
+                Context context = commentHolder.mActionButton.getContext();
+
+                ListPopupWindow menuPopup = new ListPopupWindow(context);
+
+                ArrayList<ReaderCommentMenuItem> actions = new ArrayList<>();
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.UNAPPROVE,
+                        new UiStringRes(R.string.reader_comment_menu_unapprove),
+                        new UiStringRes(R.string.reader_comment_menu_unapprove),
+                        R.drawable.ic_cross_in_circle_white_24dp));
+
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SPAM,
+                        new UiStringRes(R.string.reader_comment_menu_spam),
+                        new UiStringRes(R.string.reader_comment_menu_spam),
+                        R.drawable.ic_spam_white_24dp));
+
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.TRASH,
+                        new UiStringRes(R.string.reader_comment_menu_trash),
+                        new UiStringRes(R.string.reader_comment_menu_trash),
+                        R.drawable.ic_trash_white_24dp));
+
+                actions.add(new Divider());
+
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.EDIT,
+                        new UiStringRes(R.string.reader_comment_menu_edit),
+                        new UiStringRes(R.string.reader_comment_menu_edit),
+                        R.drawable.ic_pencil_white_24dp));
+
+                actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SHARE,
+                        new UiStringRes(R.string.reader_comment_menu_share),
+                        new UiStringRes(R.string.reader_comment_menu_share),
+                        R.drawable.ic_share_white_24dp));
+
+                menuPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+                menuPopup.setAdapter(new ReaderCommentMenuActionAdapter(context, mUiHelpers, actions));
+                menuPopup.setDropDownGravity(Gravity.END);
+                menuPopup.setAnchorView(commentHolder.mActionButton);
+                menuPopup.setModal(true);
+                menuPopup.setOnItemClickListener((parent, view, position1, id) -> {
+                    mCommentMenuActionListener
+                            .onCommentMenuItemTapped(comment, actions.get(position1).getType());
+                    menuPopup.dismiss();
+                });
+                menuPopup.show();
+            });
+        } else {
+            commentHolder.mActionButton.setImageResource(R.drawable.ic_share_white_24dp);
+            commentHolder.mActionButtonContainer.setOnClickListener(
+                    v -> mCommentMenuActionListener
+                            .onCommentMenuItemTapped(comment, ReaderCommentMenuActionType.SHARE));
         }
 
         // show indentation spacer for comments with parents and indent it based on comment level
@@ -295,22 +390,35 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     (RelativeLayout.LayoutParams) commentHolder.mSpacerIndent.getLayoutParams();
             params.width = indentWidth;
             commentHolder.mSpacerIndent.setVisibility(View.VISIBLE);
+            commentHolder.mTopCommentDivider.setVisibility(View.GONE);
         } else {
             indentWidth = 0;
             commentHolder.mSpacerIndent.setVisibility(View.GONE);
+            commentHolder.mTopCommentDivider.setVisibility(View.VISIBLE);
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
+        String renderingError = commentHolder.mTxtText.getResources().getString(R.string.comment_unable_to_show_error);
         CommentUtils.displayHtmlComment(commentHolder.mTxtText, comment.getText(), maxImageWidth,
-                commentHolder.mTxtText.getResources().getString(R.string.comment_unable_to_show_error));
+                commentHolder.mTxtText.getLineHeight(), renderingError);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
-            commentHolder.mContainer.setBackgroundColor(mColorHighlight);
+            commentHolder.mCommentContainer.setBackgroundColor(mColorHighlight);
             commentHolder.mProgress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
+            commentHolder.mSelectedCommentIndicator.setVisibility(View.VISIBLE);
         } else {
-            commentHolder.mContainer.setBackgroundColor(0);
+            commentHolder.mCommentContainer.setBackgroundColor(0);
             commentHolder.mProgress.setVisibility(View.GONE);
+            commentHolder.mSelectedCommentIndicator.setVisibility(View.GONE);
+        }
+
+        if (mReplyTargetComment != 0 && mReplyTargetComment == comment.commentId) {
+            commentHolder.mReplyButtonLabel.setTextColor(mReplyButtonHighlightedColor);
+            commentHolder.mReplyButtonIcon.setImageTintList(mReplyButtonHighlightedColor);
+        } else {
+            commentHolder.mReplyButtonLabel.setTextColor(mReplyButtonNormalColorColor);
+            commentHolder.mReplyButtonIcon.setImageTintList(mReplyButtonNormalColorColor);
         }
 
         if (!mAccountStore.hasAccessToken()) {
@@ -383,7 +491,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (mPost.canLikePost()) {
             holder.mCountLikes.setVisibility(View.VISIBLE);
             holder.mCountLikes.setSelected(comment.isLikedByCurrentUser);
-            holder.mCountLikes.setCount(comment.numLikes);
+            holder.mCountLikes.setTextCount(comment.numLikes);
             holder.mCountLikes.setContentDescription(ReaderUtils.getLongLikeLabelText(
                     holder.mCountLikes.getContext(), comment.numLikes, comment.isLikedByCurrentUser));
 
@@ -495,6 +603,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int index = mComments.indexOfCommentId(commentId);
         if (index > -1) {
             mComments.remove(index);
+            // re-level comments
+            mComments = new ReaderCommentLeveler(mComments).createLevelList();
             notifyDataSetChanged();
         }
     }
@@ -503,9 +613,14 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      * replace the comment that has the passed commentId with another comment
      */
     public void replaceComment(long commentId, ReaderComment comment) {
-        int position = positionOfCommentId(commentId);
-        if (position > -1 && mComments.replaceComment(commentId, comment)) {
-            notifyItemChanged(position);
+        int positionOfTargetComment = positionOfCommentId(comment.commentId);
+        if (positionOfTargetComment == -1) {
+            int position = positionOfCommentId(commentId);
+            if (position > -1 && mComments.replaceComment(commentId, comment)) {
+                notifyItemChanged(position);
+            }
+        } else {
+            removeComment(commentId);
         }
     }
 
@@ -517,6 +632,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void setHighlightCommentId(long commentId, boolean showProgress) {
         mHighlightCommentId = commentId;
         mShowProgressForHighlightedComment = showProgress;
+    }
+
+    public void setReplyTargetComment(long commentId) {
+        mReplyTargetComment = commentId;
     }
 
     /*

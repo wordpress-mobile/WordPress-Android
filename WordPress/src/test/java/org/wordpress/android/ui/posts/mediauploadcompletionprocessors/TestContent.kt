@@ -263,6 +263,61 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
+    const val oldRefactoredGalleryBlockInnerBlocks = """<!-- wp:image {"id":${remoteMediaId2},"align":"full"} -->
+<figure class="wp-block-image alignfull">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-${remoteMediaId2}">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"id":${localMediaId},"align":"full","sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image alignfull">
+  <img src="$localImageUrl" alt="" class="wp-image-${localMediaId}">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"id":${remoteMediaId2},"align":"full"} -->
+<figure class="wp-block-image alignfull">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-${remoteMediaId2}">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+"""
+    const val oldRefactoredGalleryBlock = """<!-- wp:gallery {"linkTo":"none"} -->
+<figure class="wp-block-gallery blocks-gallery-grid has-nested-images columns-3 is-cropped">
+$oldRefactoredGalleryBlockInnerBlocks</figure>
+<!-- /wp:gallery -->
+"""
+
+    const val newRefactoredGalleryBlockInnerBlocks = """<!-- wp:image {"id":${remoteMediaId2},"align":"full"} -->
+<figure class="wp-block-image alignfull">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-${remoteMediaId2}">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"id":${remoteMediaId},"align":"full","sizeSlug":"large","linkDestination":"none"} -->
+<figure class="wp-block-image alignfull">
+  <img src="$remoteImageUrl" alt="" class="wp-image-${remoteMediaId}">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"id":${remoteMediaId2},"align":"full"} -->
+<figure class="wp-block-image alignfull">
+  <img src="$remoteImageUrl2" alt="" class="wp-image-${remoteMediaId2}">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+"""
+
+    const val newRefactoredGalleryBlock = """<!-- wp:gallery {"linkTo":"none"} -->
+<figure class="wp-block-gallery blocks-gallery-grid has-nested-images columns-3 is-cropped">
+$newRefactoredGalleryBlockInnerBlocks</figure>
+<!-- /wp:gallery -->
+"""
+
     const val paragraphBlock = """<!-- wp:paragraph {"align":"center","fontSize":"small","className":"gutenberg-landing\u002d\u002dbutton-disclaimer"} -->
 <p class="has-text-align-center has-small-font-size gutenberg-landing--button-disclaimer"><em>Gutenberg is available as a plugin today, and will be included in version 5.0 of WordPress. The <a href="https://wordpress.org/plugins/classic-editor/">classic editor</a> will be available as a plugin if needed.</em></p>
 <!-- /wp:paragraph -->
@@ -595,4 +650,8 @@ object TestContent {
     const val newPostWithJsonNullId = paragraphBlock + newImageBlock + imageBlockWithJsonNullId + newMediaTextBlock
     const val oldPostWithGalleryJsonNullId = paragraphBlock + oldImageBlock + galleryBlockWithJsonNullId
     const val newPostWithGalleryJsonNullId = paragraphBlock + newImageBlock + galleryBlockWithJsonNullId
+    const val oldPostWithMixedGalleriesOriginal = paragraphBlock + oldGalleryBlock + newRefactoredGalleryBlock
+    const val newPostWithMixedGalleriesOriginal = paragraphBlock + newGalleryBlock + newRefactoredGalleryBlock
+    const val oldPostWithMixedGalleriesRefactored = paragraphBlock + newGalleryBlock + oldRefactoredGalleryBlock
+    const val newPostWithMixedGalleriesRefactored = paragraphBlock + newGalleryBlock + newRefactoredGalleryBlock
 }

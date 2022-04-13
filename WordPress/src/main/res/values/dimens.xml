@@ -30,7 +30,8 @@
 
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
-    <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
+    <item name="emphasis_extra_extra_low" format="float" type="dimen">0.05</item>
+    <item name="emphasis_extra_low" format="float" type="dimen">0.08</item>
 
     <dimen name="divider_size">1dp</dimen>
     <dimen name="bottom_tabs_divider_size">0.3dp</dimen>
@@ -62,7 +63,6 @@
     <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
-    <dimen name="default_dialog_width">280dp</dimen>
     <dimen name="alert_dialog_max_width">300dp</dimen>
 
     <dimen name="default_cardview_radius">2dp</dimen>
@@ -81,8 +81,6 @@
     <dimen name="content_margin_tablet">48dp</dimen>
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
-    <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
-    <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
 
     <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
     <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
@@ -119,7 +117,7 @@
     <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
-    <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
+    <dimen name="margin_my_site_quick_actions_bottom">24dp</dimen>
 
     <!-- left/right margin for reader interests content -->
     <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
@@ -156,18 +154,18 @@
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
 
     <!-- reader follow unfollow comments dimensions -->
-    <dimen name="reader_follow_button_min_height">32dp</dimen>
-    <dimen name="reader_follow_button_skeleton_width">200dp</dimen>
-    <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
-    <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
+    <dimen name="reader_follow_sheet_message_margin_top">20dp</dimen>
+    <dimen name="reader_follow_sheet_switch_margin_top">4dp</dimen>
+    <dimen name="reader_follow_sheet_button_margin_top">6dp</dimen>
+    <dimen name="reader_follow_sheet_margin_bottom">20dp</dimen>
 
     <!-- reader more menu spacer height -->
     <dimen name="reader_more_menu_spacer_height">16dp</dimen>
     <!-- collapsing toolbar scrim visible height trigger -->
-    <dimen name="scrim_visible_height_trigger">150dp</dimen>
+    <dimen name="scrim_visible_height_trigger">130dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
-        @dimen/emphasis_extra_low
+        @dimen/emphasis_extra_extra_low
     </item>
 
     <dimen name="text_sz_extra_extra_small">7sp</dimen>
@@ -186,7 +184,6 @@
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
-    <dimen name="avatar_sz_login">40dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
@@ -226,8 +223,9 @@
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
 
-    <!-- max size for images in Reader comments -->
-    <dimen name="reader_comment_max_image_size">160dp</dimen>
+    <dimen name="reader_comments_actions_height">24dp</dimen>
+    <dimen name="reader_comments_content_line_height">24dp</dimen>
+    <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
 
     <!-- Increased touch targets to make views more accessible -->
     <dimen name="reader_discover_layout_extra_padding">16dp</dimen>
@@ -302,17 +300,36 @@
     <!-- my site -->
     <dimen name="my_site_list_row_icon_margin_right">28dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
-    <dimen name="my_site_list_row_padding_left">20dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
     <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
-    <dimen name="my_site_bottom_spacing">64dp</dimen>
+    <dimen name="my_site_bottom_spacing">64dp</dimen> <!-- added so that the list items are not hidden behind the toast -->
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
     <dimen name="my_site_content_area">500dp</dimen>
-    <dimen name="my_site_quick_action_button_container_width">64dp</dimen>
     <dimen name="my_site_quick_action_button_text_max_width">84dp</dimen>
+    <dimen name="my_site_card_row_padding">16dp</dimen>
+    <dimen name="my_site_card_row_top_padding">12dp</dimen>
+    <dimen name="my_site_card_footer_link_padding">16dp</dimen>
+    <dimen name="my_site_card_footer_link_padding_top">8dp</dimen>
+
+    <!-- my site today's stats card item -->
+    <dimen name="my_site_todays_stats_card_title_line_spacing_extra">10sp</dimen>
+    <dimen name="my_site_todays_stats_card_stat_title_line_spacing_extra">8sp</dimen>
+    <dimen name="my_site_today_stats_card_stat_title_min_width">80dp</dimen>
+
+    <!-- my site post card item -->
+    <dimen name="my_site_post_item_image_corner_radius">2dp</dimen>
+    <dimen name="my_site_post_item_image_size">48dp</dimen>
+    <dimen name="my_site_post_item_time_icon_size">12dp</dimen>
+    <dimen name="my_site_create_first_image_width">75dp</dimen>
+
+    <!-- my site error card -->
+    <dimen name="my_site_error_card_border_radius">4dp</dimen>
+    <dimen name="my_site_error_card_stroke_width">1dp</dimen>
+    <dimen name="my_site_error_card_dash_gap">5dp</dimen>
+    <dimen name="my_site_error_card_dash_width">10dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -423,8 +440,6 @@
     <dimen name="quick_start_focus_point_small_size">30dp</dimen>
     <dimen name="quick_start_focus_point_small_offset_negative">-15dp</dimen>
     <dimen name="quick_start_focus_point_elevation">100dp</dimen>
-    <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
-    <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
     <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
@@ -495,8 +510,6 @@
 
 
     <!--site creation-->
-    <dimen name="site_creation_segments_icon_size">24dp</dimen>
-    <dimen name="site_creation_segments_list_divider_start_margin">72dp</dimen>
     <dimen name="site_creation_segments_content_padding_vertical">16dp</dimen>
     <dimen name="site_creation_segments_content_padding_horizontal">16dp</dimen>
     <dimen name="site_creation_verticals_search_progress_size">24dp</dimen>
@@ -546,6 +559,7 @@
     <dimen name="domain_suggestions_intro_vertical_padding">24dp</dimen>
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
+    <dimen name="domain_suggestions_progress_indicator_size">24dp</dimen>
 
     <dimen name="keyline_second">72dp</dimen>
 
@@ -585,8 +599,10 @@
     <dimen name="unelevated_card_elevation">0dp</dimen>
     <dimen name="unelevated_card_stroke_width">1dp</dimen>
 
+    <!-- dialog fragment -->
+    <dimen name="dialog_fragment_content_margin">40dp</dimen>
+
     <!-- feature announcement-->
-    <dimen name="feature_announcement_content_margin">40dp</dimen>
     <dimen name="feature_announcement_icon_size">48dp</dimen>
     <dimen name="feature_announcement_top_margin">64dp</dimen>
 
@@ -594,8 +610,8 @@
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_height">96dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_width">64dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_height">72dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_width">48dp</dimen>
     <dimen name="story_thumbnail_margin">6dp</dimen>
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
@@ -633,6 +649,10 @@
     <dimen name="hpp_button_max_width">244dp</dimen>
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 
+    <!-- Site Intent Question -->
+    <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_large</dimen>
+    <dimen name="siq_header_scroll_snap_threshold">-96dp</dimen>
+
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
@@ -652,7 +672,7 @@
     <dimen name="edit_with_chips_hint_label_default_alpha" format="float" type="dimen">0.6</dimen>
 
     <!-- Hack to make snackbar padding smaller -->
-    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
+    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="UnusedResources,MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
 
@@ -667,4 +687,20 @@
     <dimen name="login_empty_view_avatar_height">72dp</dimen>
     <dimen name="login_empty_view_avatar_margin_bottom">12dp</dimen>
     <dimen name="login_empty_view_line_spacing">2sp</dimen>
+
+    <dimen name="blogging_reminders_days_top_margin">42dp</dimen>
+    <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
+
+    <dimen name="app_bar_with_site_info_height">146dp</dimen>
+    <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
+    <dimen name="app_bar_with_site_info_tabs_height">206dp</dimen>
+    <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
+    <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
+
+    <!-- quick link ribbon -->
+    <dimen name="quick_link_ribbon_padding_start">18dp</dimen>
+    <dimen name="quick_link_ribbon_icon_size">24dp</dimen>
+    <dimen name="quick_link_ribbon_corner_radius">4dp</dimen>
+    <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
+
 </resources>

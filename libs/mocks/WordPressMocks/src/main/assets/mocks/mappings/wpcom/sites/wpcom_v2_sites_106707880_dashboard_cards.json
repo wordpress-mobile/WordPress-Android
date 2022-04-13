@@ -1,0 +1,44 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/wpcom/v2/sites/106707880/dashboard/cards-data(/)?($|\\?.*)"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "todays_stats": {
+        "views": 10,
+        "visitors": 20,
+        "likes": 30,
+        "comments": 40
+      },
+      "posts": {
+        "has_published": true,
+        "draft": [
+          {
+            "id": 225,
+            "title": "Book Your Summer Sessions",
+            "content": "“One must maintain a little bit of summer, even in the middle of winter.” – Henry David Thoreau Blue skies and warm weather, what’s not to love about summer? It’s a great season for outdoor family portrait sessions and now is the time to book them! We offer a number of family portrait packages and for […]",
+            "featured_image": null,
+            "date": "2020-09-25 02:02:36"
+          },
+          {
+            "id": 213,
+            "title": "Summer Band Jam",
+            "content": "This event was so much fun, I couldn’t wait to share a few of my favorite shots!",
+            "featured_image": "https://infocusphotographers.files.wordpress.com/2019/02/adult-band-concert-995301.jpg?w=200",
+            "date": "2019-07-16 02:39:44"
+          },
+          {
+            "id": 396,
+            "title": "Now Booking Summer Sessions",
+            "content": "“One must maintain a little bit of summer, even in the middle of winter.” – Henry David Thoreau Blue skies and warm weather, what’s not to love about summer? It’s a great season for outdoor family portrait sessions and now is the time to book them! We offer a number of family portrait packages and […]",
+            "featured_image": null,
+            "date": "2019-05-28 21:06:45"
+          }
+        ],
+        "scheduled": []
+      }
+    }
+  }
+}

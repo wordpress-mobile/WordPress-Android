@@ -13,6 +13,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -77,15 +78,14 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.ContextUtilsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -94,11 +94,12 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ValidationUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.BloggingRemindersFeatureConfig;
 import org.wordpress.android.util.config.ManageCategoriesFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
@@ -184,7 +185,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject ZendeskHelper mZendeskHelper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject BloggingRemindersFeatureConfig mBloggingRemindersFeatureConfig;
+    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
+    @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -885,9 +888,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void updateTitle() {
         if (mSite != null) {
             SiteModel updatedSite = mSiteStore.getSiteByLocalId(mSite.getId());
-            updatedSite.setName(mSiteSettings.getTitle());
-            // Locally save the site
-            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+            // updatedSite can be null after site deletion or site removal (.org sites)
+            if (updatedSite != null) {
+                updatedSite.setName(mSiteSettings.getTitle());
+                // Locally save the site
+                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+            }
         }
     }
 
@@ -907,7 +913,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // customize list dividers
-        prefList.setDivider(ContextUtilsKt.getDrawableFromAttribute(getActivity(), android.R.attr.listDivider));
+        prefList.setDivider(ContextExtensionsKt.getDrawableFromAttribute(getActivity(), android.R.attr.listDivider));
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
         prefList.setOnItemLongClickListener(this);
@@ -1205,6 +1211,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mBloggingRemindersFeatureConfig.isEnabled()) {
             removeBloggingRemindersSettings();
         } else {
+            if (mBloggingPromptsFeatureConfig.isEnabled()) {
+                mBloggingRemindersPref.setTitle(R.string.site_settings_blogging_reminders_and_prompts_title);
+            }
+
             mBloggingRemindersViewModel = new ViewModelProvider(getAppCompatActivity(), mViewModelFactory)
                     .get(BloggingRemindersViewModel.class);
             BloggingReminderUtils.observeBottomSheet(
@@ -1213,9 +1223,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                     BLOGGING_REMINDERS_BOTTOM_SHEET_TAG,
                     () -> getAppCompatActivity().getSupportFragmentManager()
             );
-            mBloggingRemindersViewModel.getSettingsState(mSite.getId()).observe(getAppCompatActivity(), s -> {
+            mBloggingRemindersViewModel.getBlogSettingsUiState(mSite.getId()).observe(getAppCompatActivity(), s -> {
                 if (mBloggingRemindersPref != null) {
-                    mBloggingRemindersPref.setSummary(s);
+                    CharSequence summary = mUiHelpers.getTextOfUiString(getActivity(), s);
+                    mBloggingRemindersPref.setSummary(summary);
                 }
             });
         }
@@ -1225,8 +1236,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mBloggingRemindersPref == null || !isAdded()) {
             return;
         }
-
-        mBloggingRemindersViewModel.showBottomSheet(mSite.getId(), Screen.SELECTION);
+        mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
     }
 
     private void showHomepageSettings() {
@@ -1798,7 +1808,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             Toast.makeText(view1.getContext(), R.string.add, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(button);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(button);
 
         return view;
     }
@@ -1919,7 +1929,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeNonSelfHostedPreferences() {
         mUsernamePref.setEnabled(true);
         mPasswordPref.setEnabled(true);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        removeGeneralSettingsExceptBloggingReminders();
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
@@ -1927,6 +1937,21 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
                 R.string.pref_key_jetpack_performance_settings);
+    }
+
+    /**
+     * This removes all preferences from the General preference group, except for Blogging Reminders – in practice it
+     * is removed as well, but then added back.
+     * <p>
+     * In the future, we should consider either moving the Blogging Reminders preference to its own group or
+     * replace this approach with something more scalable and efficient.
+     */
+    private void removeGeneralSettingsExceptBloggingReminders() {
+        PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
+        if (group != null && mBloggingRemindersPref != null) {
+            group.removeAll();
+            group.addPreference(mBloggingRemindersPref);
+        }
     }
 
     private void removeNonJetpackPreferences() {

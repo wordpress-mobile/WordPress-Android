@@ -6,7 +6,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.AppConfig.FeatureState.BuildConfigValue
 import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
 import org.wordpress.android.util.config.ExperimentConfig.Variant
-import org.wordpress.android.util.config.manual.ManualFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 

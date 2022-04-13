@@ -6,8 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement
-import org.wordpress.android.ui.engagement.GetLikesUseCase.CurrentUserInListRequirement.DONT_CARE
 import org.wordpress.android.ui.engagement.GetLikesUseCase.FailureType.NO_NETWORK
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
@@ -33,18 +31,16 @@ class GetLikesHandler @Inject constructor(
     suspend fun handleGetLikesForPost(
         fingerPrint: LikeGroupFingerPrint,
         requestNextPage: Boolean,
-        pageLength: Int = LIKES_PER_PAGE_DEFAULT,
-        limit: Int = LIKES_RESULT_NO_LIMITS,
-        expectingToBeThere: CurrentUserInListRequirement = DONT_CARE
+        pageLength: Int = LIKES_PER_PAGE_DEFAULT
     ) {
+        // Safety net in case page length is computed rather than a constant in the future.
+        require(pageLength != 0) { "The page length for likes cannot be 0." }
         getLikesUseCase.getLikesForPost(
                 fingerPrint,
                 PaginationParams(
                         requestNextPage,
-                        pageLength,
-                        limit
-                ),
-                expectingToBeThere
+                        pageLength
+                )
         ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
         }
@@ -55,12 +51,13 @@ class GetLikesHandler @Inject constructor(
         requestNextPage: Boolean,
         pageLength: Int = LIKES_PER_PAGE_DEFAULT
     ) {
+        // Safety net in case page length is computed rather than a constant in the future.
+        require(pageLength != 0) { "The page length for likes cannot be 0" }
         getLikesUseCase.getLikesForComment(
                 fingerPrint,
                 PaginationParams(
                         requestNextPage,
-                        pageLength,
-                        LIKES_RESULT_NO_LIMITS
+                        pageLength
                 )
         ).flowOn(bgDispatcher).collect { state ->
             manageState(state)
@@ -88,6 +85,5 @@ class GetLikesHandler @Inject constructor(
 
     companion object {
         private const val LIKES_PER_PAGE_DEFAULT = 20
-        private const val LIKES_RESULT_NO_LIMITS = -1
     }
 }

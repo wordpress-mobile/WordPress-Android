@@ -139,7 +139,7 @@ class JetpackRemoteInstallViewModel
     ) {
         mutableActionOnResult.postValue(
                 JetpackResultActionData(
-                        siteStore.getSiteByLocalId(siteId),
+                        siteStore.getSiteByLocalId(siteId)!!,
                         hasAccessToken,
                         action
                 )

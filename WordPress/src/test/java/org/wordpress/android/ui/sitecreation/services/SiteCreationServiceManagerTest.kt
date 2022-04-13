@@ -29,17 +29,20 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 
 private const val LANGUAGE_ID = "lang_id"
+private const val TIMEZONE_ID = "timezone_id"
 private const val NEW_SITE_REMOTE_ID = 1234L
+private const val NEW_SITE_REMOTE_URL = "new.site.url"
 
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
         "slug",
-        "domain"
+        "domain",
+        null
 )
 
 private val IDLE_STATE = SiteCreationServiceState(IDLE)
 private val CREATE_SITE_STATE = SiteCreationServiceState(CREATE_SITE)
-private val SUCCESS_STATE = SiteCreationServiceState(SUCCESS, NEW_SITE_REMOTE_ID)
+private val SUCCESS_STATE = SiteCreationServiceState(SUCCESS, Pair(NEW_SITE_REMOTE_ID, NEW_SITE_REMOTE_URL))
 private val FAILURE_STATE = SiteCreationServiceState(FAILURE)
 
 @InternalCoroutinesApi
@@ -55,15 +58,15 @@ class SiteCreationServiceManagerTest {
 
     private lateinit var manager: SiteCreationServiceManager
 
-    private val successEvent = OnNewSiteCreated()
+    private lateinit var successEvent: OnNewSiteCreated
     private val genericErrorEvent = OnNewSiteCreated()
-    private val siteExistsErrorEvent = OnNewSiteCreated()
+    private lateinit var siteExistsErrorEvent: OnNewSiteCreated
 
     @Before
     fun setUp() {
         manager = SiteCreationServiceManager(useCase, dispatcher, tracker, TEST_DISPATCHER)
-        successEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
-        siteExistsErrorEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
+        successEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
+        siteExistsErrorEvent = OnNewSiteCreated(newSiteRemoteId = NEW_SITE_REMOTE_ID, url = NEW_SITE_REMOTE_URL)
         genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")
         siteExistsErrorEvent.error = NewSiteError(SITE_NAME_EXISTS, "")
     }
@@ -183,7 +186,7 @@ class SiteCreationServiceManagerTest {
 
     @Test
     fun verifyIllegalStateExceptionInUseCaseResultsInServiceErrorState() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
                 .thenThrow(IllegalStateException("Error"))
         startFlow()
         argumentCaptor<SiteCreationServiceState>().apply {
@@ -195,25 +198,25 @@ class SiteCreationServiceManagerTest {
     }
 
     private fun startFlow() {
-        manager.onStart(LANGUAGE_ID, null, DUMMY_SITE_DATA, serviceListener)
+        manager.onStart(LANGUAGE_ID, TIMEZONE_ID, null, DUMMY_SITE_DATA, serviceListener)
     }
 
     private fun retryFlow(previousState: String) {
-        manager.onStart(LANGUAGE_ID, previousState, DUMMY_SITE_DATA, serviceListener)
+        manager.onStart(LANGUAGE_ID, TIMEZONE_ID, previousState, DUMMY_SITE_DATA, serviceListener)
     }
 
     private suspend fun setSuccessfulResponses() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
                 .thenReturn(successEvent)
     }
 
     private suspend fun setGenericErrorResponses() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
                 .thenReturn(genericErrorEvent)
     }
 
     private suspend fun setSiteExistsErrorResponses() = test {
-        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID))
                 .thenReturn(siteExistsErrorEvent)
     }
 }

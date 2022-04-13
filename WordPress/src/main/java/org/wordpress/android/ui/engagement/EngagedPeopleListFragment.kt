@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.scan_list_threat_item.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
@@ -31,7 +30,7 @@ import org.wordpress.android.ui.engagement.UserProfileViewModel.Companion.USER_P
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.services.ReaderCommentService
+import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.SnackbarItem
@@ -161,7 +160,8 @@ class EngagedPeopleListFragment : Fragment() {
                             this,
                             event.siteId,
                             event.commentPostId,
-                            event.postOrCommentId
+                            event.postOrCommentId,
+                            event.source.sourceDescription
                     )
                 }
                 is PreviewPostInReader -> {
@@ -250,7 +250,7 @@ class EngagedPeopleListFragment : Fragment() {
                                     clickListener = { holder.buttonAction() }
                             )
                         },
-                        dismissCallback = { _, _ -> holder.onDismissAction() }
+                        dismissCallback = { _, event -> holder.onDismissAction(event) }
                 )
         )
     }

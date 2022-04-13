@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.layoutpicker
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 data class LayoutModel(
     val slug: String,
     val title: String,

@@ -18,10 +18,12 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_CARD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
@@ -124,7 +126,12 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, event.post.blogId, event.post.postId)
         is SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
         is OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
-        is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, event.blogId, event.postId)
+        is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
+                context,
+                event.blogId,
+                event.postId,
+                READER_POST_CARD.sourceDescription
+        )
         is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
         is ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
                 this@ReaderDiscoverFragment,
@@ -217,7 +224,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK && data != null) {
-            val siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1)
+            val siteLocalId = data.getIntExtra(
+                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    SelectedSiteRepository.UNAVAILABLE
+            )
             viewModel.onReblogSiteSelected(siteLocalId)
         }
     }

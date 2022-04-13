@@ -2,9 +2,9 @@ package org.wordpress.android.ui.history
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.RevisionModel
@@ -12,8 +12,8 @@ import org.wordpress.android.ui.history.HistoryListItem.ViewType.FOOTER
 import org.wordpress.android.ui.history.HistoryListItem.ViewType.HEADER
 import org.wordpress.android.ui.history.HistoryListItem.ViewType.REVISION
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.util.toFormattedTimeString
+import org.wordpress.android.util.extensions.toFormattedDateString
+import org.wordpress.android.util.extensions.toFormattedTimeString
 import java.util.ArrayList
 import java.util.Date
 

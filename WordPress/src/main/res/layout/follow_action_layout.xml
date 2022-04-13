@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:minWidth="@dimen/min_touch_target_sz">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:shimmer_auto_start="false">
+
+        <TextView
+            android:id="@+id/follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
+            android:background="?android:attr/actionBarItemBackground"
+            android:text="@string/reader_btn_follow"
+            android:textAppearance="?android:attr/actionMenuTextAppearance"
+            android:textColor="@color/option_menu_disabled_selector" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</LinearLayout>

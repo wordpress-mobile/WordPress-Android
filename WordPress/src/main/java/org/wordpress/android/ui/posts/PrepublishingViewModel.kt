@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.posts
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -155,6 +156,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 }
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 enum class PrepublishingScreen : Parcelable {
     HOME,
     PUBLISH,

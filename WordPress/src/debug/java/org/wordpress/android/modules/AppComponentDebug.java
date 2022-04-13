@@ -38,7 +38,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         LoginFragmentModule.class,
         LoginServiceModule.class,
         SupportModule.class,
-        ThreadModule.class
+        ThreadModule.class,
+        CrashLoggingModule.class
 })
 public interface AppComponentDebug extends AppComponent {
     @Component.Builder

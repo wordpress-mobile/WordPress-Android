@@ -17,16 +17,17 @@
             android:layout_width="@dimen/reader_related_post_image_width"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
             android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
             android:contentDescription="@null"
             android:cropToPadding="true"
             android:padding="@dimen/reader_image_featured_border_width"
-            app:layout_constraintBottom_toTopOf="@id/text_title"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toStartOf="@id/text_title"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_title"

@@ -10,18 +10,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -34,8 +35,9 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils.observeBottomSheet
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel
+import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -55,8 +57,8 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
@@ -86,9 +88,10 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
+    @Inject internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
 
     private lateinit var site: SiteModel
-    private var binding: PostListActivityBinding? = null
+    private lateinit var binding: PostListActivityBinding
 
     override fun getSite() = site
     override fun getEditPostRepository() = editPostRepository
@@ -137,42 +140,41 @@ class PostsListActivity : LocaleAwareActivity(),
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        val binding = PostListActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        this.binding = binding
-        site = if (savedInstanceState == null) {
-            checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+        with(PostListActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            binding = this
+
+            site = if (savedInstanceState == null) {
+                checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
+                    "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+                }
+            } else {
+                restorePreviousSearch = true
+                savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             }
-        } else {
-            restorePreviousSearch = true
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
 
-        val initPreviewState = if (savedInstanceState == null) {
-            PostListRemotePreviewState.NONE
-        } else {
-            PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
-        }
+            val initPreviewState = if (savedInstanceState == null) {
+                PostListRemotePreviewState.NONE
+            } else {
+                PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
+            }
 
-        val currentBottomSheetPostId = if (savedInstanceState == null) {
-            LocalId(0)
-        } else {
-            LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
-        }
+            val currentBottomSheetPostId = if (savedInstanceState == null) {
+                LocalId(0)
+            } else {
+                LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
+            }
 
-        with(binding) {
+            val actionsShownByDefault = intent.getBooleanExtra(ACTIONS_SHOWN_BY_DEFAULT, false)
+            val tabIndex = intent.getIntExtra(TAB_INDEX, PostListType.PUBLISHED.ordinal)
+
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
-            initCreateMenuViewModel()
+            initBloggingReminders()
+            initCreateMenuViewModel(tabIndex, actionsShownByDefault)
             loadIntentData(intent)
         }
-    }
-
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
     }
 
     private fun setupActionBar() {
@@ -221,7 +223,7 @@ class PostsListActivity : LocaleAwareActivity(),
         postPager.adapter = postsPagerAdapter
     }
 
-    private fun PostListActivityBinding.initCreateMenuViewModel() {
+    private fun PostListActivityBinding.initCreateMenuViewModel(tabIndex: Int, actionsShownByDefault: Boolean) {
         postListCreateMenuViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
@@ -255,12 +257,18 @@ class PostsListActivity : LocaleAwareActivity(),
 
         postListCreateMenuViewModel.createAction.observe(this@PostsListActivity, { createAction ->
             when (createAction) {
-                CREATE_NEW_POST -> viewModel.newPost()
-                CREATE_NEW_STORY -> viewModel.newStoryPost()
+                ActionType.CREATE_NEW_POST -> viewModel.newPost()
+                ActionType.CREATE_NEW_STORY -> viewModel.newStoryPost()
+                ActionType.CREATE_NEW_PAGE -> Unit
+                ActionType.NO_ACTION -> Unit
+                null -> Unit
             }
         })
 
-        postListCreateMenuViewModel.start(site)
+        // Notification opens in Drafts tab
+        tabLayout.getTabAt(tabIndex)?.select()
+
+        postListCreateMenuViewModel.start(site, actionsShownByDefault)
     }
 
     private fun PostListActivityBinding.initViewModel(
@@ -327,6 +335,26 @@ class PostsListActivity : LocaleAwareActivity(),
         setupFabEvents()
     }
 
+    private fun initBloggingReminders() {
+        bloggingRemindersViewModel = ViewModelProvider(
+                this,
+                viewModelFactory
+        ).get(BloggingRemindersViewModel::class.java)
+
+        observeBottomSheet(
+                bloggingRemindersViewModel.isBottomSheetShowing,
+                this,
+                BLOGGING_REMINDERS_FRAGMENT_TAG,
+                {
+                    if (!this.isFinishing) {
+                        this.supportFragmentManager
+                    } else {
+                        null
+                    }
+                }
+        )
+    }
+
     private fun setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity, {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
@@ -339,7 +367,9 @@ class PostsListActivity : LocaleAwareActivity(),
                         findViewById(R.id.coordinator),
                         uploadActionUseCase,
                         uploadUtilsWrapper
-                )
+                ) { isFirstTimePublishing ->
+                    bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
+                }
             }
         })
     }
@@ -398,10 +428,10 @@ class PostsListActivity : LocaleAwareActivity(),
                             holder.buttonTitle?.let {
                                 SnackbarItem.Action(
                                         textRes = holder.buttonTitle,
-                                        clickListener = OnClickListener { holder.buttonAction() }
+                                        clickListener = { holder.buttonAction() }
                                 )
                             },
-                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                            dismissCallback = { _, event -> holder.onDismissAction(event) }
                     )
             )
         }
@@ -429,24 +459,40 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK) {
-            if (data != null && EditPostActivity.checkToRestart(data)) {
-                ActivityLauncher.editPostOrPageForResult(
-                        data, this, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
-                )
+        when {
+            requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK -> {
+                if (data != null && EditPostActivity.checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(
+                            data, this, site,
+                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                    )
 
-                // a restart will happen so, no need to continue here
-                return
+                    // a restart will happen so, no need to continue here
+                    return
+                }
+
+                viewModel.handleEditPostResult(data)
             }
-
-            viewModel.handleEditPostResult(data)
-        } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
-            viewModel.handleRemotePreviewClosing()
-        } else if (requestCode == RequestCodes.PHOTO_PICKER &&
-                resultCode == Activity.RESULT_OK &&
-                data != null) {
-            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site, STORY_FROM_POSTS_LIST)
+            requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
+                viewModel.handleRemotePreviewClosing()
+            }
+            requestCode == RequestCodes.PHOTO_PICKER &&
+                    resultCode == Activity.RESULT_OK &&
+                    data != null -> {
+                storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                        data,
+                        this,
+                        site,
+                        STORY_FROM_POSTS_LIST
+                )
+            }
+            requestCode == RequestCodes.CREATE_STORY -> {
+                val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
+                bloggingRemindersViewModel.onPublishingPost(
+                        site.id,
+                        isNewStory
+                )
+            }
         }
     }
 
@@ -461,7 +507,7 @@ class PostsListActivity : LocaleAwareActivity(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menu?.let {
             menuInflater.inflate(R.menu.posts_list_toggle_view_layout, it)
@@ -476,7 +522,7 @@ class PostsListActivity : LocaleAwareActivity(),
             searchActionButton = it.findItem(R.id.toggle_post_search)
 
             initSearchFragment()
-            binding!!.initSearchView()
+            binding.initSearchView()
         }
         return true
     }
@@ -585,7 +631,7 @@ class PostsListActivity : LocaleAwareActivity(),
     // Menu PostListViewLayoutType handling
 
     private fun updateMenuIcon(@DrawableRes iconRes: Int, menuItem: MenuItem) {
-        getDrawable(iconRes)?.let { drawable ->
+        ContextCompat.getDrawable(this, iconRes)?.let { drawable ->
             menuItem.setIcon(drawable)
         }
     }
@@ -599,17 +645,37 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        with(binding!!) {
-            appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
-            appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
-        }
+        binding.appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        binding.appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
     }
 
     companion object {
+        private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
+        private const val ACTIONS_SHOWN_BY_DEFAULT = "actions_shown_by_default"
+        private const val TAB_INDEX = "tab_index"
+
         @JvmStatic
         fun buildIntent(context: Context, site: SiteModel): Intent {
             val intent = Intent(context, PostsListActivity::class.java)
             intent.putExtra(WordPress.SITE, site)
+            return buildIntent(context, site, PostListType.PUBLISHED, false)
+        }
+
+        @JvmStatic
+        fun buildIntent(
+            context: Context,
+            site: SiteModel,
+            postListType: PostListType,
+            actionsShownByDefault: Boolean,
+            notificationType: NotificationType? = null
+        ): Intent {
+            val intent = Intent(context, PostsListActivity::class.java)
+            intent.putExtra(WordPress.SITE, site)
+            intent.putExtra(ACTIONS_SHOWN_BY_DEFAULT, actionsShownByDefault)
+            intent.putExtra(TAB_INDEX, postListType.ordinal)
+            if (notificationType != null) {
+                intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+            }
             return intent
         }
     }

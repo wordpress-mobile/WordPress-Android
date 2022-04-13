@@ -25,31 +25,9 @@ class PostPageListLabelColorUseCase @Inject constructor() {
         hasUnhandledConflicts: Boolean,
         hasUnhandledAutoSave: Boolean
     ): Int? {
-        return getLabelColor(
-                PostStatus.fromPost(post),
-                post.isLocalDraft,
-                post.isLocallyChanged,
-                uploadUiState,
-                hasUnhandledConflicts,
-                hasUnhandledAutoSave
-        )
-    }
-
-    @ColorRes private fun getLabelColor(
-        postStatus: PostStatus,
-        isLocalDraft: Boolean,
-        isLocallyChanged: Boolean,
-        uploadUiState: PostUploadUiState,
-        hasUnhandledConflicts: Boolean,
-        hasAutoSave: Boolean
-    ): Int? {
-        val isError = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
-                hasUnhandledConflicts
-        val isProgressInfo = uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
-                uploadUiState is UploadQueued
-        val isStateInfo = (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
-                isLocalDraft || isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
-                uploadUiState is UploadWaitingForConnection || hasAutoSave
+        val isError = isError(uploadUiState, hasUnhandledConflicts)
+        val isProgressInfo = isProgressInfo(uploadUiState)
+        val isStateInfo = isStateInfoState(uploadUiState, post, hasUnhandledAutoSave)
 
         return when {
             isError -> ERROR_COLOR
@@ -57,5 +35,27 @@ class PostPageListLabelColorUseCase @Inject constructor() {
             isStateInfo -> STATE_INFO_COLOR
             else -> null
         }
+    }
+
+    private fun isError(
+        uploadUiState: PostUploadUiState,
+        hasUnhandledConflicts: Boolean
+    ) = (uploadUiState is UploadFailed && !uploadUiState.isEligibleForAutoUpload) ||
+            hasUnhandledConflicts
+
+    private fun isProgressInfo(uploadUiState: PostUploadUiState) =
+            uploadUiState is UploadingPost || uploadUiState is UploadingMedia ||
+                    uploadUiState is UploadQueued
+
+    private fun isStateInfoState(
+        uploadUiState: PostUploadUiState,
+        post: PostModel,
+        hasUnhandledAutoSave: Boolean
+    ): Boolean {
+        val postStatus = PostStatus.fromPost(post)
+
+        return (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload) ||
+                post.isLocalDraft || post.isLocallyChanged || postStatus == PRIVATE || postStatus == PENDING ||
+                post.sticky || uploadUiState is UploadWaitingForConnection || hasUnhandledAutoSave
     }
 }

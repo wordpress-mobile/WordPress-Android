@@ -14,6 +14,7 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure.EmptyStateData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.ListScenario
 import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_1
 import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_2
@@ -58,13 +59,18 @@ enum class GetLikesTestConfig {
 }
 
 fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
+    val pageInfo = PagingInfo(
+            20,
+            1
+    )
     return when (testConfig) {
         // Like Data available for post and fetched from API; no more data available
         TEST_CONFIG_1 -> {
             LikesData(
                     getDefaultLikers(10, POST_LIKE, 10, 100),
                     10,
-                    false
+                    false,
+                    pageInfo
             )
         }
         // Like Data available for post and fetched from API, more data available
@@ -72,7 +78,8 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
             LikesData(
                     getDefaultLikers(10, COMMENT_LIKE, 10, 100),
                     10,
-                    true
+                    true,
+                    pageInfo
             )
         }
         // Like Data available for comment and fetched from API, no more data available
@@ -80,7 +87,8 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
             LikesData(
                     getDefaultLikers(10, COMMENT_LIKE, 10, 100),
                     10,
-                    false
+                    false,
+                    pageInfo
             )
         }
         // Like Data available for comment and fetched from API, more data available
@@ -88,7 +96,8 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
             LikesData(
                     getDefaultLikers(10, COMMENT_LIKE, 10, 100),
                     10,
-                    true
+                    true,
+                    pageInfo
             )
         }
         // Failure getting like data from API, and no cached data available
@@ -103,7 +112,8 @@ fun getGetLikesState(testConfig: GetLikesTestConfig): GetLikesState {
                             UiStringRes(10)
                     ),
                     10,
-                    false
+                    false,
+                    pageInfo
             )
         }
     }

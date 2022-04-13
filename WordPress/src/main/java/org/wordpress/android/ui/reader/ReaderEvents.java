@@ -17,6 +17,11 @@ import org.wordpress.android.util.StringUtils;
  * Reader-related EventBus event classes
  */
 public class ReaderEvents {
+    public enum UpdateCommentsScenario {
+        COMMENT_SNIPPET,
+        GENERIC
+    }
+
     private ReaderEvents() {
         throw new AssertionError();
     }
@@ -27,6 +32,7 @@ public class ReaderEvents {
         public FollowedTagsChanged(boolean didSucceed) {
             mDidSucceed = didSucceed;
         }
+
         public boolean didSucceed() {
             return mDidSucceed;
         }
@@ -188,17 +194,61 @@ public class ReaderEvents {
     }
 
     public static class UpdateCommentsStarted {
+        private final UpdateCommentsScenario mScenario;
+        private final long mBlogId;
+        private final long mPostId;
+
+        public UpdateCommentsStarted(UpdateCommentsScenario scenario, long blogId, long postId) {
+            mScenario = scenario;
+            mBlogId = blogId;
+            mPostId = postId;
+        }
+
+        public UpdateCommentsScenario getScenario() {
+            return mScenario;
+        }
+
+        public long getBlogId() {
+            return mBlogId;
+        }
+
+        public long getPostId() {
+            return mPostId;
+        }
     }
 
     public static class UpdateCommentsEnded {
         private final ReaderActions.UpdateResult mResult;
+        private final UpdateCommentsScenario mScenario;
+        private final long mBlogId;
+        private final long mPostId;
 
-        public UpdateCommentsEnded(ReaderActions.UpdateResult result) {
+        public UpdateCommentsEnded(
+                ReaderActions.UpdateResult result,
+                UpdateCommentsScenario scenario,
+                long blogId,
+                long postId
+        ) {
             mResult = result;
+            mScenario = scenario;
+            mBlogId = blogId;
+            mPostId = postId;
         }
 
         public ReaderActions.UpdateResult getResult() {
             return mResult;
+        }
+
+        public UpdateCommentsScenario getScenario() {
+            return mScenario;
+        }
+
+        public long getBlogId() {
+            return mBlogId;
+        }
+
+        public long getPostId() {
+            return mPostId;
         }
     }
 
@@ -210,10 +260,10 @@ public class ReaderEvents {
         private final boolean mDidSucceed;
 
         public RelatedPostsUpdated(
-            @NonNull ReaderPost sourcePost,
-            @NonNull ReaderSimplePostList localRelatedPosts,
-            @NonNull ReaderSimplePostList globalRelatedPosts,
-            boolean didSucceed
+                @NonNull ReaderPost sourcePost,
+                @NonNull ReaderSimplePostList localRelatedPosts,
+                @NonNull ReaderSimplePostList globalRelatedPosts,
+                boolean didSucceed
         ) {
             mSourcePostId = sourcePost.postId;
             mSourceSiteId = sourcePost.blogId;
@@ -276,5 +326,23 @@ public class ReaderEvents {
     }
 
     public static class DoSignIn {
+    }
+
+    public static class CommentModerated {
+        private final boolean mIsSuccess;
+        private final long mCommentId;
+
+        public CommentModerated(boolean isSuccess, long commentId) {
+            mIsSuccess = isSuccess;
+            mCommentId = commentId;
+        }
+
+        public boolean isSuccess() {
+            return mIsSuccess;
+        }
+
+        public long getCommentId() {
+            return mCommentId;
+        }
     }
 }

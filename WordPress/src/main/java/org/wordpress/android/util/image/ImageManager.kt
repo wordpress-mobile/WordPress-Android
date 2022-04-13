@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.TextUtils
@@ -143,8 +144,11 @@ class ImageManager @Inject constructor(
                 },
                 fallbackAction = {
                     if (!context.isAvailable()) return@runIfMediaNotTooBig
+                    val fallbackDrawable = placeholderManager.getErrorResource(imageType)?.let {
+                        ColorDrawable(ContextCompat.getColor(context, it))
+                    }
                     GlideApp.with(context)
-                            .load(placeholderManager.getErrorResource(imageType))
+                            .load(fallbackDrawable)
                             .addPlaceholder(imageType)
                             .addFallback(imageType)
                             .into(imageView)

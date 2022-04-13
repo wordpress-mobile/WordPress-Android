@@ -13,17 +13,12 @@ import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
-/**
- * @deprecated
- * Comments are being refactored as part of Comments Unification project. If you are adding any
- * features or modifying this class, please ping develric or klymyam
- */
-@Deprecated
 public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images
      */
-    public static void displayHtmlComment(TextView textView, String content, int maxImageSize, String errorParseMsg) {
+    public static void displayHtmlComment(TextView textView, String content, int maxImageSize, int maxEmojiSize,
+                                          String errorParseMsg) {
         if (textView == null) {
             return;
         }
@@ -50,7 +45,7 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            html = HtmlUtils.fromHtml(content, new WPCustomImageGetter(textView, maxImageSize));
+            html = HtmlUtils.fromHtml(content, new WPCustomImageGetter(textView, maxImageSize, maxEmojiSize));
         } else {
             html = HtmlUtils.fromHtml(content);
         }

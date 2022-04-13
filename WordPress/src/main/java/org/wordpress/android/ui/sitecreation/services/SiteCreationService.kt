@@ -16,6 +16,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AutoForeground
 import org.wordpress.android.util.LocaleManager
+import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -27,6 +28,7 @@ class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreatio
 
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var tracker: SiteCreationTracker
+    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
 
     override fun onCreate() {
         super.onCreate()
@@ -43,6 +45,7 @@ class SiteCreationService : AutoForeground<SiteCreationServiceState>(SiteCreatio
         val data = intent.getParcelableExtra<SiteCreationServiceData>(ARG_DATA)!!
         manager.onStart(
                 LocaleManager.getLanguageWordPressId(this),
+                localeManagerWrapper.getTimeZone().id,
                 intent.getStringExtra(ARG_RESUME_PHASE),
                 data,
                 serviceListener = this

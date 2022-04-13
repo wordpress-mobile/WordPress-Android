@@ -26,10 +26,12 @@ import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Failure
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.LikesData
 import org.wordpress.android.ui.engagement.GetLikesUseCase.GetLikesState.Loading
 import org.wordpress.android.ui.engagement.GetLikesUseCase.LikeGroupFingerPrint
+import org.wordpress.android.ui.engagement.GetLikesUseCase.PagingInfo
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_COMMENT_LIKES
 import org.wordpress.android.ui.engagement.ListScenarioType.LOAD_POST_LIKES
 import org.wordpress.android.ui.engagement.PreviewBlogByUrlSource.LIKED_COMMENT_USER_HEADER
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.COMMENT_LIKE_NOTIFICATION
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -67,15 +69,13 @@ class EngagedPeopleListViewModel @Inject constructor(
     val onServiceRequestEvent: LiveData<Event<EngagedListServiceRequestEvent>> = _onServiceRequestEvent
 
     data class EngagedPeopleListUiState(
-        val showLikeFacesTrainContainer: Boolean,
         val numLikes: Int = 0,
         val showLoading: Boolean,
         val engageItemsList: List<EngageItem>,
         val showEmptyState: Boolean,
         val emptyStateTitle: UiString? = null,
         val emptyStateAction: (() -> Unit)? = null,
-        val emptyStateButtonText: UiString? = null,
-        val likersFacesText: UiString? = null
+        val emptyStateButtonText: UiString? = null
     )
 
     fun start(listScenario: ListScenario) {
@@ -195,14 +195,14 @@ class EngagedPeopleListViewModel @Inject constructor(
                         updateLikesState.likes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, true, updateLikesState.pageInfo)
             }
             is Failure -> {
                 engagementUtils.likesToEngagedPeople(
                         updateLikesState.cachedLikes,
                         ::onUserProfileHolderClicked,
                         listScenario?.source
-                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false)
+                ) + appendNextPageLoaderIfNeeded(updateLikesState.hasMore, false, updateLikesState.pageInfo)
             }
             Loading, null -> listOf()
         }
@@ -220,7 +220,6 @@ class EngagedPeopleListViewModel @Inject constructor(
         }
 
         return EngagedPeopleListUiState(
-                showLikeFacesTrainContainer = false,
                 showLoading = updateLikesState is Loading,
                 engageItemsList = likedItem + likers,
                 showEmptyState = showEmptyState,
@@ -230,10 +229,20 @@ class EngagedPeopleListViewModel @Inject constructor(
         )
     }
 
-    private fun appendNextPageLoaderIfNeeded(hasMore: Boolean, isLoading: Boolean): List<EngageItem> {
+    private fun appendNextPageLoaderIfNeeded(
+        hasMore: Boolean,
+        isLoading: Boolean,
+        pageInfo: PagingInfo
+    ): List<EngageItem> {
         return if (hasMore) {
             listOf(NextLikesPageLoader(isLoading) {
                 loadRequest(listScenario, requestPostOrComment = false, requestNextPage = true)
+                    analyticsUtilsWrapper.trackLikeListFetchedMore(
+                            EngagementNavigationSource.getSourceDescription(listScenario?.source),
+                            ListScenarioType.getSourceDescription(listScenario?.type),
+                            pageInfo.page + 1,
+                            pageInfo.pageLength
+                    )
             })
         } else {
             listOf()
@@ -266,7 +275,7 @@ class EngagedPeopleListViewModel @Inject constructor(
         _onNavigationEvent.value = Event(
                 if (commentPostId > 0) {
                     if (readerUtilsWrapper.postAndCommentExists(siteId, commentPostId, postOrCommentId)) {
-                        PreviewCommentInReader(siteId, commentPostId, postOrCommentId)
+                        PreviewCommentInReader(siteId, commentPostId, postOrCommentId, COMMENT_LIKE_NOTIFICATION)
                     } else {
                         PreviewSiteByUrl(siteUrl, LIKED_COMMENT_USER_HEADER.sourceDescription)
                     }

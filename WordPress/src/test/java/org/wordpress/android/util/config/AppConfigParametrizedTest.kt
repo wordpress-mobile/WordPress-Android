@@ -17,7 +17,6 @@ import org.wordpress.android.util.config.AppConfig.FeatureState.DefaultValue
 import org.wordpress.android.util.config.AppConfig.FeatureState.ManuallyOverriden
 import org.wordpress.android.util.config.AppConfig.FeatureState.RemoteValue
 import org.wordpress.android.util.config.AppConfig.FeatureState.StaticValue
-import org.wordpress.android.util.config.manual.ManualFeatureConfig
 
 @RunWith(Parameterized::class)
 class AppConfigParametrizedTest(

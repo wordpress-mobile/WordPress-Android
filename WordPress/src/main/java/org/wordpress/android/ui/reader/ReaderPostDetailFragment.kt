@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader
 
 import android.app.Activity
 import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -32,10 +33,13 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -62,12 +66,15 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
-import org.wordpress.android.ui.engagement.EngageItem
-import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel.EngagedPeopleListUiState
+import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
+import org.wordpress.android.ui.avatars.AvatarItemDecorator
+import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
@@ -75,8 +82,10 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
-import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.DIRECT_OPERATION
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -86,8 +95,10 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
-import org.wordpress.android.ui.reader.viewholders.PostLikerItemDecorator
+import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.TrainOfFacesUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
@@ -98,8 +109,8 @@ import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
+import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -111,13 +122,14 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
+import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.isDarkTheme
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
-import org.wordpress.android.util.isDarkTheme
-import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -155,11 +167,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var readerWebView: ReaderWebView
 
     private lateinit var likeFacesTrain: View
-    private lateinit var facesBlock: View
     private lateinit var likeProgressBar: ProgressBar
     private lateinit var likeEmptyStateText: TextView
     private lateinit var likeFacesRecycler: RecyclerView
-    private lateinit var likeNumBloggers: TextView
+
+    private lateinit var commentsSnippetContainer: View
+    private lateinit var followConversationContainer: View
+    private lateinit var commentsNumTitle: TextView
+    private lateinit var commentSnippetRecycler: RecyclerView
 
     private lateinit var excerptFooter: ViewGroup
     private lateinit var textExcerptFooter: TextView
@@ -186,6 +201,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var fileForDownload: String? = null
 
     private lateinit var viewModel: ReaderPostDetailViewModel
+    private lateinit var conversationViewModel: ConversationNotificationsViewModel
 
     @Inject internal lateinit var accountStore: AccountStore
     @Inject internal lateinit var siteStore: SiteStore
@@ -201,6 +217,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var readerTracker: ReaderTracker
     @Inject lateinit var likesEnhancementsFeatureConfig: LikesEnhancementsFeatureConfig
     @Inject lateinit var contextProvider: ContextProvider
+    @Inject lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -285,6 +302,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         initScrollView(view)
         initWebView(view)
         initLikeFacesTrain(view)
+        initCommentSnippetView(view)
         initExcerptFooter(view)
         initRelatedPostsView(view)
         initLayoutFooter(view)
@@ -302,7 +320,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val swipeToRefreshOffset = resources.getDimensionPixelSize(R.dimen.toolbar_content_offset)
         swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset)
 
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) { if (isAdded) updatePost() }
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+            if (isAdded) {
+                if (commentsSnippetFeatureConfig.isEnabled()) {
+                    conversationViewModel.onRefresh()
+                }
+                updatePost()
+            }
+        }
     }
 
     private fun initAppBar(view: View) {
@@ -351,11 +376,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initLikeFacesTrain(view: View) {
         likeFacesTrain = view.findViewById(R.id.liker_faces_container)
-        facesBlock = view.findViewById(R.id.faces_block)
         likeFacesRecycler = view.findViewById(R.id.likes_recycler)
-        likeNumBloggers = view.findViewById(R.id.num_bloggers)
         likeProgressBar = view.findViewById(R.id.progress_bar)
         likeEmptyStateText = view.findViewById(R.id.empty_state_text)
+    }
+
+    private fun initCommentSnippetView(view: View) {
+        commentsSnippetContainer = view.findViewById(R.id.comments_snippet)
+        commentsNumTitle = view.findViewById(R.id.comments_number_title)
+        followConversationContainer = view.findViewById(R.id.follow_conversation_container)
+        commentSnippetRecycler = view.findViewById(R.id.comments_recycler)
     }
 
     private fun initExcerptFooter(view: View) {
@@ -414,7 +444,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val binding = ReaderFragmentPostDetailBinding.bind(view)
 
         initLikeFacesRecycler(savedInstanceState)
+        initCommentSnippetRecycler(savedInstanceState)
         initViewModel(binding, savedInstanceState)
+        restoreState(savedInstanceState)
+        setHasOptionsMenu(true)
 
         showPost()
     }
@@ -426,18 +459,46 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             layoutManager.onRestoreInstanceState(it)
         }
 
-        likeFacesRecycler.addItemDecoration(PostLikerItemDecorator(
+        likeFacesRecycler.addItemDecoration(
+                AvatarItemDecorator(
                 RtlUtils.isRtl(activity),
                 contextProvider.getContext(),
-                R.dimen.margin_small_medium)
+                AVATAR_LEFT_OFFSET_DIMEN)
         )
+
         likeFacesRecycler.layoutManager = layoutManager
-        likeFacesRecycler.itemAnimator = null
+    }
+
+    private fun initCommentSnippetRecycler(savedInstanceState: Bundle?) {
+        if (!commentsSnippetFeatureConfig.isEnabled()) return
+        val layoutManager = LinearLayoutManager(activity)
+
+        savedInstanceState?.getParcelable<Parcelable>(ReaderPostDetailFragment.KEY_COMMENTS_SNIPPET_LIST_STATE)?.let {
+            layoutManager.onRestoreInstanceState(it)
+        }
+
+        commentSnippetRecycler.layoutManager = layoutManager
     }
 
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
+        conversationViewModel = ViewModelProvider(this, viewModelFactory).get(
+                ConversationNotificationsViewModel::class.java
+        )
 
+        initObservers(binding)
+
+        val bundle = savedInstanceState ?: arguments
+        val isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
+        val interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            conversationViewModel.start(blogId, postId, READER_POST_DETAILS_COMMENTS)
+        }
+        viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
+    }
+
+    private fun initObservers(binding: ReaderFragmentPostDetailBinding) {
         viewModel.uiState.observe(viewLifecycleOwner, {
             uiHelpers.updateVisibility(binding.textError, it.errorVisible)
             uiHelpers.updateVisibility(binding.progressLoading, it.loadingVisible)
@@ -464,20 +525,99 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner, { it.handleNavigationEvent() })
 
-        val bundle = savedInstanceState ?: arguments
-        val isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
-        val interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            conversationViewModel.snackbarEvents.observe(viewLifecycleOwner, { event ->
+                if (!isAdded) return@observe
 
-        viewModel.start(isRelatedPost = isRelatedPost, isFeed = isFeed, interceptedUri = interceptedUri)
+                val fm: FragmentManager = childFragmentManager
+                val bottomSheet =
+                        fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+                if (bottomSheet != null) return@observe
+                event.applyIfNotHandled {
+                    this.showSnackbar(binding)
+                }
+            })
+
+            conversationViewModel.showBottomSheetEvent.observeEvent(viewLifecycleOwner, { showBottomSheetData ->
+                if (!isAdded) return@observeEvent
+
+                val fm: FragmentManager = childFragmentManager
+                var bottomSheet =
+                        fm.findFragmentByTag(NOTIFICATIONS_BOTTOM_SHEET_TAG) as? CommentNotificationsBottomSheetFragment
+                if (showBottomSheetData.show && bottomSheet == null) {
+                    bottomSheet = CommentNotificationsBottomSheetFragment.newInstance(
+                            showBottomSheetData.isReceivingNotifications,
+                            true
+                    )
+                    bottomSheet.show(fm, NOTIFICATIONS_BOTTOM_SHEET_TAG)
+                } else if (!showBottomSheetData.show && bottomSheet != null) {
+                    bottomSheet.dismiss()
+                }
+            })
+
+            conversationViewModel.updateFollowUiState.observe(viewLifecycleOwner, { uiState ->
+                manageFollowConversationUiState(uiState, binding)
+            })
+
+            viewModel.commentSnippetState.observe(viewLifecycleOwner, { state ->
+                manageCommentSnippetUiState(state)
+            })
+        }
     }
 
-    private fun manageLikesUiState(state: EngagedPeopleListUiState) {
+    private fun manageFollowConversationUiState(
+        uiState: FollowConversationUiState,
+        binding: ReaderFragmentPostDetailBinding
+    ) {
+        if (!isAdded) return
+
+        with(binding) {
+            val bellItem = commentsSnippet.bellIcon
+            val followContainer = commentsSnippet.followConversationContainer
+
+            val shimmerView: ShimmerFrameLayout = commentsSnippet.shimmerViewContainer
+            val followText = commentsSnippet.followConversation
+            followText.setOnClickListener(
+                    if (uiState.onFollowTapped != null) {
+                        View.OnClickListener { uiState.onFollowTapped.invoke() }
+                    } else {
+                        null
+                    }
+            )
+            bellItem.setOnClickListener {
+                uiState.onManageNotificationsTapped.invoke()
+            }
+            followContainer.isEnabled = uiState.flags.isMenuEnabled
+            followText.isEnabled = uiState.flags.isMenuEnabled
+            bellItem.isEnabled = uiState.flags.isMenuEnabled
+            if (uiState.flags.showMenuShimmer) {
+                if (!shimmerView.isShimmerVisible) {
+                    shimmerView.showShimmer(true)
+                } else if (!shimmerView.isShimmerStarted) {
+                    shimmerView.startShimmer()
+                }
+            } else {
+                shimmerView.hideShimmer()
+            }
+            shimmerView.visibility = if (uiState.flags.isFollowMenuVisible) View.VISIBLE else View.GONE
+            bellItem.visibility = if (uiState.flags.isBellMenuVisible) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun manageLikesUiState(state: TrainOfFacesUiState) {
         if (!isAdded) return
 
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            setupLikeFacesTrain(state.engageItemsList, state.numLikes, state.showLoading, state.likersFacesText)
+            val shouldSkipAnimation = likeFacesTrain.visibility == View.GONE && state.goingToShowFaces
+
+            setupLikeFacesTrain(
+                    state.engageItemsList,
+                    state.showLoading,
+                    shouldSkipAnimation
+            )
+
             likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
             likeFacesTrain.visibility = if (state.showLikeFacesTrainContainer) View.VISIBLE else View.GONE
 
@@ -490,6 +630,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 likeEmptyStateText.visibility = View.GONE
             }
 
+            likeFacesTrain.contentDescription = uiHelpers.getTextOfUiString(
+                    contextProvider.getContext(),
+                    state.contentDescription
+            )
+
             likeFacesTrain.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
 
@@ -498,15 +643,48 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun setupLikeFacesTrain(items: List<EngageItem>, numLikes: Int, loading: Boolean, likersText: UiString?) {
-        facesBlock.visibility = if (loading) View.GONE else View.VISIBLE
+    private fun manageCommentSnippetUiState(state: CommentSnippetUiState) {
+        if (!isAdded) return
 
-        var adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter
+        with(requireActivity()) {
+            if (this.isFinishing) return@with
+
+            uiHelpers.updateVisibility(commentsSnippetContainer, commentsSnippetFeatureConfig.isEnabled())
+            uiHelpers.updateVisibility(followConversationContainer, state.showFollowConversation)
+            commentsNumTitle.text = readerUtilsWrapper.getTextForCommentSnippet(state.commentsNumber)
+
+            setupCommentSnippetAdapter(this, state.snippetItems)
+        }
+    }
+
+    private fun setupCommentSnippetAdapter(context: Context, items: List<CommentSnippetItemState>) {
+        val adapter = commentSnippetRecycler.adapter as? CommentSnippetAdapter ?: CommentSnippetAdapter(
+                context,
+                viewModel.post
+        ).also {
+            commentSnippetRecycler.adapter = it
+        }
+
+        val recyclerViewState = commentSnippetRecycler.layoutManager?.onSaveInstanceState()
+        adapter.loadData(items)
+        commentSnippetRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+    }
+
+    private fun setupLikeFacesTrain(items: List<TrainOfAvatarsItem>, loading: Boolean, shouldSkipAnimation: Boolean) {
+        likeFacesRecycler.visibility = if (loading) View.GONE else View.VISIBLE
+
+        if (shouldSkipAnimation) {
+            likeFacesRecycler.itemAnimator = null
+        } else if (likeFacesRecycler.itemAnimator == null) {
+            likeFacesRecycler.itemAnimator = DefaultItemAnimator()
+        }
+
+        var adapter = likeFacesRecycler.adapter as? TrainOfAvatarsAdapter
 
         if (adapter == null) {
-            adapter = ReaderPostLikersAdapter(
+            adapter = TrainOfAvatarsAdapter(
                     imageManager,
-                    contextProvider.getContext()
+                    uiHelpers
             )
 
             likeFacesRecycler.adapter = adapter
@@ -515,8 +693,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val recyclerViewState = likeFacesRecycler.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
         likeFacesRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
-
-        uiHelpers.setTextOrHide(likeNumBloggers, likersText)
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
@@ -577,14 +753,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
 
             is ReaderNavigationEvents.ShowReportPost ->
-                ReaderActivityLauncher.openUrl(
-                        context,
-                        readerUtilsWrapper.getReportPostUrl(url),
-                        OpenUrlType.INTERNAL
-                )
+                ReaderActivityLauncher.openUrl(context, readerUtilsWrapper.getReportPostUrl(url), OpenUrlType.INTERNAL)
 
-            is ReaderNavigationEvents.ShowReaderComments ->
-                ReaderActivityLauncher.showReaderComments(context, blogId, postId)
+            is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderCommentsForResult(
+                    this@ReaderPostDetailFragment,
+                    blogId,
+                    postId,
+                    this.source.sourceDescription
+            )
 
             is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
 
@@ -605,10 +781,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
-                replaceRelatedPostDetailWithHistory(
-                        postId = this.postId,
-                        blogId = this.blogId
-                )
+                replaceRelatedPostDetailWithHistory(postId = this.postId, blogId = this.blogId)
 
             is ReaderNavigationEvents.ShowPostInWebView -> showPostInWebView(post)
             is ReaderNavigationEvents.ShowEngagedPeopleList -> {
@@ -824,13 +997,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             outState.putString(ReaderConstants.KEY_ERROR_MESSAGE, errorMessage)
         }
 
-        super.onSaveInstanceState(outState)
-    }
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            commentSnippetRecycler?.layoutManager?.let {
+                outState.putParcelable(KEY_COMMENTS_SNIPPET_LIST_STATE, it.onSaveInstanceState())
+            }
+        }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
-        restoreState(savedInstanceState)
+        super.onSaveInstanceState(outState)
     }
 
     private fun restoreState(savedInstanceState: Bundle?) {
@@ -903,6 +1076,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         localRelatedPostsView.visibility = View.GONE
         if (likesEnhancementsFeatureConfig.isEnabled()) {
             likeFacesTrain.visibility = View.GONE
+        }
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            commentsSnippetContainer.visibility = View.GONE
         }
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
@@ -1003,6 +1179,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val resultListener = ReaderActions.UpdateResultListener { result ->
             val post = viewModel.post
             if (isAdded && post != null) {
+                if (commentsSnippetFeatureConfig.isEnabled()) {
+                    conversationViewModel.onUpdatePost(post.blogId, post.postId)
+                    viewModel.onRefreshCommentsData(post.blogId, post.postId)
+                }
+
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
                     viewModel.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
@@ -1054,9 +1235,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (requestCode) {
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
+                    val siteLocalId = data?.getIntExtra(
+                            SitePickerActivity.KEY_SITE_LOCAL_ID,
+                            SelectedSiteRepository.UNAVAILABLE
+                    ) ?: SelectedSiteRepository.UNAVAILABLE
                     viewModel.onReblogSiteSelected(siteLocalId)
                 }
+            }
+            RequestCodes.READER_FOLLOW_CONVERSATION -> {
+                if (resultCode == Activity.RESULT_OK && commentsSnippetFeatureConfig.isEnabled() && data != null) {
+                    val flags = data.getParcelableExtra<FollowConversationStatusFlags>(
+                            FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY
+                    )
+                    flags?.let {
+                        conversationViewModel.onUserNavigateFromComments(it)
+                    }
+                }
+                viewModel.onUserNavigateFromComments()
             }
         }
     }
@@ -1168,6 +1363,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            conversationViewModel.onUpdatePost(blogId, postId)
+        }
+
         viewModel.onShowPost(blogId = blogId, postId = postId)
     }
 
@@ -1215,7 +1414,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     viewModel.post?.let {
                         ReaderActivityLauncher.showReaderComments(
                                 activity, it.blogId, it.postId,
-                                directOperation, commentId.toLong(), viewModel.interceptedUri
+                                directOperation, commentId.toLong(), viewModel.interceptedUri,
+                                DIRECT_OPERATION.sourceDescription
                         )
                     }
 
@@ -1282,6 +1482,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewModel.post?.let {
                     if (likesEnhancementsFeatureConfig.isEnabled()) {
                         viewModel.onRefreshLikersData(it)
+                    }
+                    if (commentsSnippetFeatureConfig.isEnabled()) {
+                        viewModel.onRefreshCommentsData(it.blogId, it.postId)
                     }
                     viewModel.onRelatedPostsRequested(it)
                 }
@@ -1479,6 +1682,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     companion object {
         private const val KEY_LIKERS_LIST_STATE = "likers_list_state"
+        private const val KEY_COMMENTS_SNIPPET_LIST_STATE = "comments_snippet_list_state"
+        private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)

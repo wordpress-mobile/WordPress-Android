@@ -5,7 +5,6 @@
     <ID>ComplexCondition:AllTimeStatsUseCase.kt$AllTimeStatsUseCase$!hasPosts &amp;&amp; !hasViews &amp;&amp; !hasVisitors &amp;&amp; !hasViewsBestDayTotal</ID>
     <ID>ComplexCondition:FollowersUseCase.kt$FollowersUseCase$wpComModel.followers.size &gt;= VIEW_ALL_PAGE_SIZE &amp;&amp; uiState.selectedTab == 0 || emailModel.followers.size &gt;= VIEW_ALL_PAGE_SIZE &amp;&amp; uiState.selectedTab == 1</ID>
     <ID>ComplexCondition:FollowersUseCase.kt$FollowersUseCase$wpComModel.hasMore &amp;&amp; uiState.selectedTab == 0 || emailModel.hasMore &amp;&amp; uiState.selectedTab == 1</ID>
-    <ID>ComplexCondition:GifPickerActivity.kt$GifPickerActivity$isVisible &amp;&amp; selectionBar.visibility == View.VISIBLE || !isVisible &amp;&amp; selectionBar.visibility != View.VISIBLE</ID>
     <ID>ComplexCondition:MinifiedWidgetUpdater.kt$MinifiedWidgetUpdater$networkAvailable &amp;&amp; hasAccessToken &amp;&amp; siteModel != null &amp;&amp; dataType != null</ID>
     <ID>ComplexCondition:NullCheckExtensions.kt$value1 != null &amp;&amp; value2 != null &amp;&amp; value3 != null &amp;&amp; value4 != null</ID>
     <ID>ComplexCondition:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$activity != null &amp;&amp; requestCode == READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE &amp;&amp; grantResults.isNotEmpty() &amp;&amp; grantResults[0] == PackageManager.PERMISSION_GRANTED</ID>
@@ -22,11 +21,9 @@
     <ID>ComplexMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>ComplexMethod:ImagePlaceholderManager.kt$ImagePlaceholderManager$fun getErrorResource(imgType: ImageType): Int?</ID>
     <ID>ComplexMethod:ImagePlaceholderManager.kt$ImagePlaceholderManager$fun getPlaceholderResource(imgType: ImageType): Int?</ID>
-    <ID>ComplexMethod:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>ComplexMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>ComplexMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier&gt;?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
     <ID>ComplexMethod:MySiteAdapterDiffCallback.kt$MySiteAdapterDiffCallback$override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean</ID>
-    <ID>ComplexMethod:MySiteFragment.kt$MySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>ComplexMethod:MySiteViewModel.kt$MySiteViewModel$private fun onItemClick(action: ListItemAction)</ID>
     <ID>ComplexMethod:NoticonUtils.kt$NoticonUtils$fun noticonToGridicon(noticon: String): Int</ID>
     <ID>ComplexMethod:PostActionHandler.kt$PostActionHandler$fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean)</ID>
@@ -53,7 +50,6 @@
     <ID>EmptyFunctionBlock:GlideMShotsLoader.kt$GlideMShotsLoader.Factory${}</ID>
     <ID>EmptyFunctionBlock:ImageManager.kt$ImageManager.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:LayoutViewHolder.kt$LayoutViewHolder.&lt;no name provided&gt;${ }</ID>
-    <ID>EmptyFunctionBlock:MySiteFragment.kt$MySiteFragment${}</ID>
     <ID>EmptyFunctionBlock:NotificationsListFragment.kt$NotificationsListFragment.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:NotificationsListFragmentPage.kt$NotificationsListFragmentPage.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:PagesFragment.kt$PagesFragment.&lt;no name provided&gt;${ }</ID>
@@ -84,19 +80,15 @@
     <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$// create_post_page_fab_tooltip_stories_feature_flag_on private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int</ID>
     <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int</ID>
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
-    <ID>LargeClass:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>LargeClass:PagesViewModel.kt$PagesViewModel : ScopedViewModel</ID>
     <ID>LargeClass:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerScrollDirectionListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>
     <ID>LongMethod:AuthorsUseCase.kt$AuthorsUseCase$override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List&lt;BlockListItem&gt;</ID>
     <ID>LongMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>LongMethod:ClicksUseCase.kt$ClicksUseCase$override fun buildUiModel(domainModel: ClicksModel, uiState: SelectedClicksGroup): List&lt;BlockListItem&gt;</ID>
     <ID>LongMethod:HomepageSettingsDialog.kt$HomepageSettingsDialog$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
-    <ID>LongMethod:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
-    <ID>LongMethod:JetpackRemoteInstallFragment.kt$JetpackRemoteInstallFragment$override fun onActivityCreated(savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:MediaPickerActivity.kt$MediaPickerActivity$override fun onActivityResult( requestCode: Int, resultCode: Int, data: Intent? )</ID>
     <ID>LongMethod:MediaPickerFragment.kt$MediaPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:MediaPickerViewModel.kt$MediaPickerViewModel$private fun buildUiModel( domainModel: DomainModel?, selectedIds: List&lt;Identifier&gt;?, softAskRequest: SoftAskRequest?, isSearching: Boolean? ): PhotoListUiModel</ID>
-    <ID>LongMethod:MySiteFragment.kt$MySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>LongMethod:OverviewMapper.kt$OverviewMapper$fun buildChart( dates: List&lt;PeriodData&gt;, statsGranularity: StatsGranularity, onBarSelected: (String?) -&gt; Unit, onBarChartDrawn: (visibleBarCount: Int) -&gt; Unit, selectedType: Int, selectedItemPeriod: String ): List&lt;BlockListItem&gt;</ID>
     <ID>LongMethod:PhotoPickerFragment.kt$PhotoPickerFragment$override fun onViewCreated(view: View, savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:PostListItemUiStateHelper.kt$PostListItemUiStateHelper$fun createPostListItemUiState( authorFilterSelection: AuthorFilterSelection, post: PostModel, site: SiteModel, unhandledConflicts: Boolean, hasAutoSave: Boolean, capabilitiesToPublish: Boolean, statsSupported: Boolean, featuredImageUrl: String?, formattedDate: String, performingCriticalAction: Boolean, isSearch: Boolean, uploadStatusTracker: PostModelUploadStatusTracker, onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -&gt; Unit ): PostListItemUiState</ID>
@@ -118,7 +110,6 @@
     <ID>LongParameterList:FileDownloadsUseCase.kt$FileDownloadsUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val store: FileDownloadsStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val localeManagerWrapper: LocaleManagerWrapper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode )</ID>
     <ID>LongParameterList:FollowersUseCase.kt$FollowersUseCase$( @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher, private val followersStore: FollowersStore, private val statsSiteProvider: StatsSiteProvider, private val statsUtilsWrapper: StatsUtilsWrapper, private val resourceProvider: ResourceProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val popupMenuHandler: ItemPopupMenuHandler, private val contentDescriptionHelper: ContentDescriptionHelper, private val useCaseMode: UseCaseMode )</ID>
     <ID>LongParameterList:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$( private val context: Context, private val site: SiteModel, private val dispatcher: Dispatcher, private val ioDispatcher: CoroutineDispatcher, private val wpMediaUtilsWrapper: WPMediaUtilsWrapper, private val fluxCUtilsWrapper: FluxCUtilsWrapper, private val mimeTypeMapUtilsWrapper: MimeTypeMapUtilsWrapper )</ID>
-    <ID>LongParameterList:GifMediaViewHolder.kt$GifMediaViewHolder.Companion$( imageManager: ImageManager, onClickListener: (GifMediaViewModel?) -&gt; Unit, onLongClickListener: (GifMediaViewModel) -&gt; Unit, parent: ViewGroup, thumbnailViewDimensions: ThumbnailViewDimensions, isMultiSelectEnabled: Boolean )</ID>
     <ID>LongParameterList:GranularStatefulUseCase.kt$GranularStatefulUseCase$( type: StatsType, mainDispatcher: CoroutineDispatcher, backgroundDispatcher: CoroutineDispatcher, val statsSiteProvider: StatsSiteProvider, val selectedDateProvider: SelectedDateProvider, val statsGranularity: StatsGranularity, defaultUiState: UI_STATE )</ID>
     <ID>LongParameterList:ImageManager.kt$ImageManager$( awt: AppWidgetTarget, context: Context, imageType: ImageType, imgUrl: String = "", scaleType: ScaleType = CENTER, width: Int? = null, height: Int? = null )</ID>
     <ID>LongParameterList:ImageManager.kt$ImageManager$( imageView: ImageView, imageType: ImageType, imgUri: Uri, scaleType: ScaleType = CENTER, thumbnailUrl: String? = null, requestListener: RequestListener&lt;Drawable&gt; )</ID>
@@ -157,14 +148,11 @@
     <ID>LongParameterList:PostPageListLabelColorUseCase.kt$PostPageListLabelColorUseCase$( postStatus: PostStatus, isLocalDraft: Boolean, isLocallyChanged: Boolean, uploadUiState: PostUploadUiState, hasUnhandledConflicts: Boolean, hasAutoSave: Boolean )</ID>
     <ID>LongParameterList:PostRecentWeeksUseCase.kt$PostRecentWeeksUseCase$( @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val statsSiteProvider: StatsSiteProvider, private val statsPostProvider: StatsPostProvider, private val postDetailStore: PostDetailStore, private val postDetailMapper: PostDetailMapper, private val useCaseMode: UseCaseMode )</ID>
     <ID>LongParameterList:PostsAndPagesUseCase.kt$PostsAndPagesUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val postsAndPageViewsStore: PostAndPageViewsStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode )</ID>
-    <ID>LongParameterList:PromoDialog.kt$PromoDialog$( tag: String, title: String, message: String, positiveButtonLabel: String, @DrawableRes drawableResId: Int = UNDEFINED_RES_ID, negativeButtonLabel: String = "", linkLabel: String = "", neutralButtonLabel: String = "" )</ID>
     <ID>LongParameterList:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.Companion$( isFeed: Boolean, blogId: Long, postId: Long, directOperation: DirectOperation?, commentId: Int, isRelatedPost: Boolean, interceptedUri: String?, postListType: ReaderPostListType?, postSlugsResolutionUnderway: Boolean )</ID>
     <ID>LongParameterList:ReaderPostDetailUiStateBuilder.kt$ReaderPostDetailUiStateBuilder$( post: ReaderPost, moreMenuItems: List&lt;SecondaryAction&gt;? = null, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit, onBlogSectionClicked: (Long, Long) -&gt; Unit, onFollowClicked: () -&gt; Unit, onTagItemClicked: (String) -&gt; Unit )</ID>
     <ID>LongParameterList:ReaderPostUiStateBuilder.kt$ReaderPostUiStateBuilder$( source: String, post: ReaderPost, isDiscover: Boolean = false, photonWidth: Int, photonHeight: Int, postListType: ReaderPostListType, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit, onItemClicked: (Long, Long) -&gt; Unit, onItemRendered: (ReaderCardUiState) -&gt; Unit, onDiscoverSectionClicked: (Long, Long) -&gt; Unit, onMoreButtonClicked: (ReaderPostUiState) -&gt; Unit, onMoreDismissed: (ReaderPostUiState) -&gt; Unit, onVideoOverlayClicked: (Long, Long) -&gt; Unit, onPostHeaderViewClicked: (Long, Long) -&gt; Unit, onTagItemClicked: (String) -&gt; Unit, moreMenuItems: List&lt;SecondaryAction&gt;? = null )</ID>
     <ID>LongParameterList:ReferrersUseCase.kt$ReferrersUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val referrersStore: ReferrersStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode, private val popupMenuHandler: ReferrerPopupMenuHandler )</ID>
     <ID>LongParameterList:SearchTermsUseCase.kt$SearchTermsUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val store: SearchTermsStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode )</ID>
-    <ID>LongParameterList:SiteInfoBlockBuilder.kt$SiteInfoBlockBuilder$( site: SiteModel, showSiteIconProgressBar: Boolean, titleClick: () -&gt; Unit, iconClick: () -&gt; Unit, urlClick: () -&gt; Unit, switchSiteClick: () -&gt; Unit, showUpdateSiteTitleFocusPoint: Boolean, showUploadSiteIconFocusPoint: Boolean )</ID>
-    <ID>LongParameterList:SiteItemsBuilder.kt$SiteItemsBuilder$( site: SiteModel, onClick: (ListItemAction) -&gt; Unit, isBackupAvailable: Boolean = false, isScanAvailable: Boolean = false, showViewSiteFocusPoint: Boolean = false, showEnablePostSharingFocusPoint: Boolean = false, showExplorePlansFocusPoint: Boolean = false )</ID>
     <ID>LongParameterList:SiteSettingsInterfaceWrapper.kt$SiteSettingsInterfaceWrapper.Factory$( site: SiteModel, onSaveError: ((error: Exception?) -&gt; Unit)? = null, onFetchError: ((error: Exception?) -&gt; Unit)? = null, onSettingsUpdated: (() -&gt; Unit)? = null, onSettingsSaved: (() -&gt; Unit)? = null, onCredentialsValidated: ((error: Exception?) -&gt; Unit)? = null )</ID>
     <ID>LongParameterList:StatsDetailActivity.kt$StatsDetailActivity.Companion$( context: Context, site: SiteModel, postId: Long, postType: String, postTitle: String, postUrl: String? )</ID>
     <ID>LongParameterList:StatsModule.kt$StatsModule$( allTimeStatsUseCase: AllTimeStatsUseCase, latestPostSummaryUseCase: LatestPostSummaryUseCase, todayStatsUseCase: TodayStatsUseCase, followersUseCaseFactory: FollowersUseCaseFactory, commentsUseCase: CommentsUseCase, mostPopularInsightsUseCase: MostPopularInsightsUseCase, tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory, publicizeUseCaseFactory: PublicizeUseCaseFactory, postingActivityUseCase: PostingActivityUseCase, followerTotalsUseCase: FollowerTotalsUseCase, annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory, managementControlUseCase: ManagementControlUseCase, managementNewsCardUseCase: ManagementNewsCardUseCase )</ID>
@@ -174,13 +162,10 @@
     <ID>LongParameterList:StatsModule.kt$StatsModule$( statsStore: StatsStore, @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher, @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher, statsSiteProvider: StatsSiteProvider, @Named(BLOCK_INSIGHTS_USE_CASES) useCases: List&lt;@JvmSuppressWildcards BaseStatsUseCase&lt;*, *&gt;&gt;, uiModelMapper: UiModelMapper )</ID>
     <ID>LongParameterList:StatsModule.kt$StatsModule$( statsStore: StatsStore, @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher, @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher, statsSiteProvider: StatsSiteProvider, @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List&lt;@JvmSuppressWildcards GranularUseCaseFactory&gt;, uiModelMapper: UiModelMapper )</ID>
     <ID>LongParameterList:StatsViewAllActivity.kt$StatsViewAllActivity.Companion$( context: Context, statsType: StatsViewType, granularity: StatsGranularity? = null, selectedDate: SelectedDate? = null, selectedTab: Int? = null, localSiteId: Int )</ID>
-    <ID>LongParameterList:UploadUtilsWrapper.kt$UploadUtilsWrapper$( activity: Activity, snackbarAttachView: View, data: Intent, post: PostModel, site: SiteModel, uploadAction: UploadAction, publishPostListener: OnClickListener? )</ID>
-    <ID>LongParameterList:UploadUtilsWrapper.kt$UploadUtilsWrapper$( activity: Activity?, snackbarAttachView: View?, isError: Boolean, isFirstTimePublish: Boolean, post: PostModel?, errorMessage: String?, site: SiteModel? )</ID>
     <ID>LongParameterList:UploadUtilsWrapper.kt$UploadUtilsWrapper$( activity: Activity?, snackbarAttachView: View?, isError: Boolean, mediaList: List&lt;MediaModel?&gt;?, site: SiteModel?, messageForUser: String? )</ID>
     <ID>LongParameterList:VideoPlaysUseCase.kt$VideoPlaysUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val store: VideoPlaysStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode )</ID>
     <ID>LongParameterList:WidgetUtils.kt$WidgetUtils$( appWidgetManager: AppWidgetManager, views: RemoteViews, appWidgetId: Int, networkAvailable: Boolean, hasAccessToken: Boolean, resourceProvider: ResourceProvider, context: Context, widgetType: Class&lt;*&gt; )</ID>
     <ID>LongParameterList:WidgetUtils.kt$WidgetUtils$( appWidgetManager: AppWidgetManager, views: RemoteViews, context: Context, appWidgetId: Int, colorMode: Color, siteId: Int, widgetType: WidgetType, isWideView: Boolean )</ID>
-    <ID>LongParameterList:ZendeskHelper.kt$( context: Context, allSites: List&lt;SiteModel&gt;?, origin: Origin?, selectedSite: SiteModel? = null, extraTags: List&lt;String&gt;? = null, zendeskPlanFieldHelper: ZendeskPlanFieldHelper )</ID>
     <ID>LoopWithTooManyJumpStatements:RemoveMediaUseCase.kt$RemoveMediaUseCase$for (mediaId in mediaIds) { if (!TextUtils.isEmpty(mediaId)) { // make sure the MediaModel exists val mediaModel = try { mediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)) ?: continue } catch (e: NumberFormatException) { AppLog.e(AppLog.T.MEDIA, "Invalid media id: $mediaId") continue } // also make sure it's not being uploaded anywhere else (maybe on some other Post, // simultaneously) if (mediaModel.uploadState != null &amp;&amp; mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &amp;&amp; !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) { dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel)) } } }</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$3</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$50</ID>
@@ -207,31 +192,20 @@
     <ID>MagicNumber:DateUtils.kt$DateUtils$6</ID>
     <ID>MagicNumber:DeviceMediaLoader.kt$DeviceMediaLoader$1000</ID>
     <ID>MagicNumber:EditorPhotoPicker.kt$EditorPhotoPicker$0.5f</ID>
-    <ID>MagicNumber:EncryptedLogWriter.kt$EncryptedLogWriter$108</ID>
-    <ID>MagicNumber:EncryptedLogWriter.kt$EncryptedLogWriter$32</ID>
     <ID>MagicNumber:ExpandableItemViewHolder.kt$ExpandableItemViewHolder$180</ID>
     <ID>MagicNumber:ExpandableItemViewHolder.kt$ExpandableItemViewHolder$180F</ID>
     <ID>MagicNumber:ExpandableItemViewHolder.kt$ExpandableItemViewHolder$200</ID>
     <ID>MagicNumber:FeatureAnnouncementViewModel.kt$FeatureAnnouncementViewModel$1000</ID>
-    <ID>MagicNumber:GifPickerActivity.kt$GifPickerActivity$0.75</ID>
-    <ID>MagicNumber:GifPickerActivity.kt$GifPickerActivity$3</ID>
-    <ID>MagicNumber:GifPickerActivity.kt$GifPickerActivity$4</ID>
-    <ID>MagicNumber:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$100</ID>
     <ID>MagicNumber:LargeValueFormatter.kt$LargeValueFormatter$3</ID>
     <ID>MagicNumber:LargeValueFormatter.kt$LargeValueFormatter$5</ID>
     <ID>MagicNumber:LatestPostSummaryMapper.kt$LatestPostSummaryMapper$30</ID>
-    <ID>MagicNumber:LoginPrologueFragment.kt$LoginPrologueFragment.&lt;no name provided&gt;$0.25f</ID>
-    <ID>MagicNumber:LoginPrologueFragment.kt$LoginPrologueFragment.&lt;no name provided&gt;$0.5f</ID>
     <ID>MagicNumber:MapViewHolder.kt$MapViewHolder$0xffffff</ID>
     <ID>MagicNumber:MapViewHolder.kt$MapViewHolder$100</ID>
     <ID>MagicNumber:MapViewHolder.kt$MapViewHolder$5</ID>
     <ID>MagicNumber:MapViewHolder.kt$MapViewHolder$8</ID>
     <ID>MagicNumber:MediaPickerViewModel.kt$MediaPickerViewModel$100</ID>
     <ID>MagicNumber:MediaPickerViewModel.kt$MediaPickerViewModel$300</ID>
-    <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$0.5</ID>
     <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$100</ID>
-    <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$4</ID>
-    <ID>MagicNumber:MySiteFragment.kt$MySiteFragment$600</ID>
     <ID>MagicNumber:MySiteViewModel.kt$MySiteViewModel$600</ID>
     <ID>MagicNumber:NotificationsListFragmentPage.kt$NotificationsListFragmentPage$1000L</ID>
     <ID>MagicNumber:OverviewMapper.kt$OverviewMapper$100</ID>
@@ -250,7 +224,6 @@
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$10000</ID>
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$60</ID>
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$6000</ID>
-    <ID>MagicNumber:QuickStartCardViewHolder.kt$QuickStartCardViewHolder$600</ID>
     <ID>MagicNumber:QuickStartItemBuilder.kt$QuickStartItemBuilder$100</ID>
     <ID>MagicNumber:ReaderCommentListViewModel.kt$ReaderCommentListViewModel$300</ID>
     <ID>MagicNumber:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$300</ID>
@@ -287,31 +260,19 @@
     <ID>MagicNumber:WPWebView.kt$22</ID>
     <ID>MagicNumber:WidgetUtils.kt$WidgetUtils$300</ID>
     <ID>MaxLineLength:AppConfig.kt$AppConfig$*</ID>
-    <ID>MaxLineLength:EncryptedLogWriter.kt$EncryptedLogWriter$*</ID>
     <ID>MaxLineLength:FeatureAnnouncementViewModel.kt$FeatureAnnouncementViewModel$?:</ID>
-    <ID>MaxLineLength:GifPickerActivity.kt$GifPickerActivity$// Update the "Add" and "Preview" labels to include the number of items. For example, "Add 7" and "Preview 7".</ID>
-    <ID>MaxLineLength:GifPickerActivity.kt$GifPickerActivity$// We do not change to labels back to the original text if the number of items go back to zero because that</ID>
-    <ID>MaxLineLength:GifPickerActivity.kt$GifPickerActivity$// causes a weird UX. The selection bar is animated to disappear at that time and it looks weird if the labels</ID>
     <ID>MaxLineLength:ImageManager.kt$ImageManager$*</ID>
-    <ID>MaxLineLength:MySiteFragment.kt$MySiteFragment$private</ID>
     <ID>MaxLineLength:ReaderPostListViewModel.kt$ReaderPostListViewModel$// TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(</ID>
     <ID>MaxLineLength:ReaderUtilsWrapper.kt$ReaderUtilsWrapper$*</ID>
     <ID>MaxLineLength:SaveStoryGutenbergBlockUseCase.kt$SaveStoryGutenbergBlockUseCase.&lt;no name provided&gt;$// now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace</ID>
-    <ID>MaxLineLength:SiteStoriesHandler.kt$SiteStoriesHandler$// TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid</ID>
     <ID>MaxLineLength:StoryComposerActivity.kt$StoryComposerActivity$// if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId so,</ID>
     <ID>MaxLineLength:StoryMediaSaveUploadBridge.kt$StoryMediaSaveUploadBridge.&lt;no name provided&gt;$// WARNING: don't remove this, we need to call the listener no matter what, so save &amp; upload actually happen</ID>
     <ID>MaxLineLength:StoryMediaSaveUploadBridge.kt$StoryMediaSaveUploadBridge.&lt;no name provided&gt;$// here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image</ID>
-    <ID>MaxLineLength:TenorProvider.kt$TenorProvider$*</ID>
     <ID>MaxLineLength:WPWebViewUsageCategory.kt$WPWebViewUsageCategory$*</ID>
     <ID>MaxLineLength:XPostsCapabilityChecker.kt$XPostsCapabilityChecker$// suggestions, but because the response will almost always be empty, it's not an expensive call.</ID>
     <ID>MemberNameEqualsClassName:ActivityLogTypeFilterViewModel.kt$ActivityLogTypeFilterViewModel.Action$lateinit var action: (() -&gt; Unit)</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:252</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:254</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:84</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:86</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:51</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:53</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PrepublishingHomeViewModel.kt:138</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase.kt:25</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:26</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:28</ID>
@@ -321,14 +282,12 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.kt:105</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:54</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:56</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:419</ID>
     <ID>NestedBlockDepth:AllTimeWidgetBlockListViewModel.kt$AllTimeWidgetBlockListViewModel$override fun onDataSetChanged(context: Context)</ID>
     <ID>NestedBlockDepth:AllTimeWidgetListViewModel.kt$AllTimeWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -&gt; Unit)</ID>
     <ID>NestedBlockDepth:CreatePageListItemActionsUseCase.kt$CreatePageListItemActionsUseCase$fun setupPageActions( listType: PageListType, uploadUiState: PostUploadUiState, siteModel: SiteModel, remoteId: Long ): Set&lt;Action&gt;</ID>
     <ID>NestedBlockDepth:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList&lt;String&gt;): ReCreateStoryResult</ID>
     <ID>NestedBlockDepth:MeFragment.kt$MeFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>NestedBlockDepth:MediaPickerActivity.kt$MediaPickerActivity$override fun onActivityResult( requestCode: Int, resultCode: Int, data: Intent? )</ID>
-    <ID>NestedBlockDepth:MySiteFragment.kt$MySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>NestedBlockDepth:PublicizeErrorDialogFragment.kt$PublicizeErrorDialogFragment$override fun onCreateDialog(savedInstanceState: Bundle?): Dialog</ID>
     <ID>NestedBlockDepth:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
     <ID>NestedBlockDepth:ReaderDiscoverLogic.kt$ReaderDiscoverLogic$private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject</ID>
@@ -338,22 +297,18 @@
     <ID>NestedBlockDepth:TodayWidgetBlockListViewModel.kt$TodayWidgetBlockListViewModel$override fun onDataSetChanged(context: Context)</ID>
     <ID>NestedBlockDepth:TodayWidgetListViewModel.kt$TodayWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -&gt; Unit)</ID>
     <ID>NestedBlockDepth:ViewsWidgetListViewModel.kt$ViewsWidgetListViewModel$fun onDataSetChanged(onError: (appWidgetId: Int) -&gt; Unit)</ID>
-    <ID>NestedBlockDepth:WPMainActivityViewModel.kt$WPMainActivityViewModel$private fun onCreateActionClicked(actionType: ActionType)</ID>
     <ID>ProtectedMemberInFinalClass:PageParentSearchFragment.kt$PageParentSearchFragment$protected var job: Job = Job()</ID>
     <ID>ReturnCount:BarChartViewHolder.kt$BarChartViewHolder$private fun roundUp(input: Float): Float</ID>
     <ID>ReturnCount:BlockDiffCallback.kt$BlockDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ReturnCount:DomainPhoneNumberUtils.kt$DomainPhoneNumberUtils.Companion$fun getPhoneNumberPrefixFromFullPhoneNumber(phoneNumber: String?): String?</ID>
     <ID>ReturnCount:DomainPhoneNumberUtils.kt$DomainPhoneNumberUtils.Companion$fun getPhoneNumberWithoutPrefix(phoneNumber: String?): String?</ID>
-    <ID>ReturnCount:DomainRegistrationHandler.kt$DomainRegistrationHandler$override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData&lt;DomainCreditAvailable&gt;</ID>
     <ID>ReturnCount:FeatureAnnouncementListAdapter.kt$FeatureAnnouncementListAdapter$override fun getItemCount(): Int</ID>
     <ID>ReturnCount:FeaturedImageHelper.kt$FeaturedImageHelper$fun createCurrentFeaturedImageState(site: SiteModel, post: PostImmutableModel): FeaturedImageData</ID>
     <ID>ReturnCount:FeaturedImageHelper.kt$FeaturedImageHelper$fun queueFeaturedImageForUpload( localPostId: Int, site: SiteModel, uri: Uri, mimeType: String? ): EnqueueFeaturedImageResult</ID>
     <ID>ReturnCount:FollowedBlogsProvider.kt$FollowedBlogsProvider$fun getAllFollowedBlogs(query: String?): List&lt;PreferenceModel&gt;</ID>
     <ID>ReturnCount:ImageManager.kt$ImageManager$ private fun Context?.isAvailable(): Boolean</ID>
-    <ID>ReturnCount:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)</ID>
     <ID>ReturnCount:LoadStoryFromStoriesPrefsUseCase.kt$LoadStoryFromStoriesPrefsUseCase$fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList&lt;String&gt;): Boolean</ID>
     <ID>ReturnCount:MediaPickerAdapterDiffCallback.kt$MediaPickerAdapterDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
-    <ID>ReturnCount:MySiteFragment.kt$MySiteFragment$private fun startSiteIconUpload(filePath: String)</ID>
     <ID>ReturnCount:MySiteViewModel.kt$MySiteViewModel$private fun startSiteIconUpload(filePath: String)</ID>
     <ID>ReturnCount:PageListViewModel.kt$PageListViewModel$private fun getFeaturedImageUrl(featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PageParentFragment.kt$PageParentFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
@@ -364,7 +319,6 @@
     <ID>ReturnCount:PostListFeaturedImageTracker.kt$PostListFeaturedImageTracker$fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PostsListActivity.kt$PostsListActivity$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
     <ID>ReturnCount:PublishNotificationReceiverViewModel.kt$PublishNotificationReceiverViewModel$fun loadNotification(notificationId: Int): NotificationUiModel?</ID>
-    <ID>ReturnCount:QuickStartUtils.kt$QuickStartUtils.Companion$ @JvmStatic fun getNextUncompletedQuickStartTask( quickStartStore: QuickStartStore, siteId: Long, taskType: QuickStartTaskType ): QuickStartTask?</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$/* * returns True if the passed URL should be opened in the external browser app */ private fun shouldOpenExternal(url: String): Boolean</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
     <ID>ReturnCount:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun doLikePost()</ID>
@@ -390,8 +344,8 @@
     <ID>TooGenericExceptionCaught:BaseStatsUseCase.kt$BaseStatsUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:ColorUnderlineSpan.kt$ColorUnderlineSpan$e: Exception</ID>
     <ID>TooGenericExceptionCaught:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:GifPickerViewModel.kt$GifPickerViewModel$e: Exception</ID>
     <ID>TooGenericExceptionCaught:MediaPickerActivity.kt$MediaPickerActivity$e: RuntimeException</ID>
+    <ID>TooGenericExceptionCaught:PostListAction.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:UploadStarter.kt$UploadStarter$e: Exception</ID>
     <ID>TooGenericExceptionThrown:ActionableEmptyView.kt$ActionableEmptyView$throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")</ID>
     <ID>TooGenericExceptionThrown:ActivityLogDetailFragment.kt$ActivityLogDetailFragment$throw Throwable("Couldn't initialize Activity Log view model")</ID>
@@ -399,9 +353,7 @@
     <ID>TooGenericExceptionThrown:BaseListUseCase.kt$BaseListUseCase$throw RuntimeException("Duplicate stats type in a use case")</ID>
     <ID>TooGenericExceptionThrown:BasicFragmentDialog.kt$BasicFragmentDialog$throw RuntimeException("Hosting activity must implement BasicDialogNegativeClickInterface")</ID>
     <ID>TooGenericExceptionThrown:BasicFragmentDialog.kt$BasicFragmentDialog$throw RuntimeException("Hosting activity must implement BasicDialogPositiveClickInterface")</ID>
-    <ID>TooGenericExceptionThrown:GifMediaFetcher.kt$GifMediaFetcher$throw Exception("Failed to download the image.")</ID>
     <ID>TooGenericExceptionThrown:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$throw Exception("Failed to download the image.")</ID>
-    <ID>TooGenericExceptionThrown:LoginPrologueFragment.kt$LoginPrologueFragment$throw RuntimeException("$context must implement LoginPrologueListener")</ID>
     <ID>TooGenericExceptionThrown:PageListAdapter.kt$PageListAdapter$throw Throwable("Unexpected view type")</ID>
     <ID>TooGenericExceptionThrown:PageParentAdapter.kt$PageParentAdapter$throw Throwable("Unexpected view type")</ID>
     <ID>TooGenericExceptionThrown:PageParentSearchAdapter.kt$PageParentSearchAdapter$throw Throwable("Unexpected view type")</ID>
@@ -433,10 +385,8 @@
     <ID>TooManyFunctions:FollowerTotalsUseCase.kt$FollowerTotalsUseCase : StatelessUseCase</ID>
     <ID>TooManyFunctions:FollowersUseCase.kt$FollowersUseCase : BaseStatsUseCase</ID>
     <ID>TooManyFunctions:FormattableContentUtils.kt$org.wordpress.android.util.FormattableContentUtils.kt</ID>
-    <ID>TooManyFunctions:GifPickerActivity.kt$GifPickerActivity : LocaleAwareActivity</ID>
     <ID>TooManyFunctions:HomepageSettingsViewModel.kt$HomepageSettingsViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ImageManager.kt$ImageManager</ID>
-    <ID>TooManyFunctions:ImprovedMySiteFragment.kt$ImprovedMySiteFragment : FragmentCallback</ID>
     <ID>TooManyFunctions:LatestPostSummaryUseCase.kt$LatestPostSummaryUseCase : StatelessUseCase</ID>
     <ID>TooManyFunctions:LayoutPickerViewModel.kt$LayoutPickerViewModel : ScopedViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:LiveDataUtils.kt$org.wordpress.android.util.LiveDataUtils.kt</ID>
@@ -447,7 +397,6 @@
     <ID>TooManyFunctions:MediaPickerTracker.kt$MediaPickerTracker</ID>
     <ID>TooManyFunctions:MediaPickerViewModel.kt$MediaPickerViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:MediaUtilsWrapper.kt$MediaUtilsWrapper</ID>
-    <ID>TooManyFunctions:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>TooManyFunctions:MySiteViewModel.kt$MySiteViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:NestedCoordinatorLayout.kt$NestedCoordinatorLayout : CoordinatorLayoutNestedScrollingChild3</ID>
     <ID>TooManyFunctions:NestedWebView.kt$NestedWebView : WPWebViewNestedScrollingChild3</ID>
@@ -480,8 +429,6 @@
     <ID>TooManyFunctions:PrepublishingTagsFragment.kt$PrepublishingTagsFragment : TagsFragmentTagsSelectedListener</ID>
     <ID>TooManyFunctions:PrepublishingViewModel.kt$PrepublishingViewModel : ViewModel</ID>
     <ID>TooManyFunctions:PublishSettingsViewModel.kt$PublishSettingsViewModel : ViewModel</ID>
-    <ID>TooManyFunctions:QuickStartRepository.kt$QuickStartRepository : CoroutineScopeMySiteSource</ID>
-    <ID>TooManyFunctions:QuickStartUtils.kt$QuickStartUtils$Companion</ID>
     <ID>TooManyFunctions:ReaderDiscoverDataProvider.kt$ReaderDiscoverDataProvider : CoroutineScope</ID>
     <ID>TooManyFunctions:ReaderDiscoverLogic.kt$ReaderDiscoverLogic</ID>
     <ID>TooManyFunctions:ReaderDiscoverViewModel.kt$ReaderDiscoverViewModel : ScopedViewModel</ID>
@@ -508,10 +455,8 @@
     <ID>TooManyFunctions:ScanViewModel.kt$ScanViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:SelectedDateProvider.kt$SelectedDateProvider</ID>
     <ID>TooManyFunctions:SettingsUsernameChangerFragment.kt$SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragment</ID>
-    <ID>TooManyFunctions:SiteCreationDomainsFragment.kt$SiteCreationDomainsFragment : SiteCreationBaseFormFragment</ID>
     <ID>TooManyFunctions:SiteCreationDomainsViewModel.kt$SiteCreationDomainsViewModel : ViewModelCoroutineScope</ID>
     <ID>TooManyFunctions:SiteCreationMainVM.kt$SiteCreationMainVM : ViewModel</ID>
-    <ID>TooManyFunctions:SiteCreationPreviewFragment.kt$SiteCreationPreviewFragment : SiteCreationBaseFormFragmentErrorManagedWebViewClientListener</ID>
     <ID>TooManyFunctions:SiteCreationTracker.kt$SiteCreationTracker : LayoutPickerTracker</ID>
     <ID>TooManyFunctions:SiteListItemBuilder.kt$SiteListItemBuilder</ID>
     <ID>TooManyFunctions:SitePreviewViewModel.kt$SitePreviewViewModel : ViewModelCoroutineScope</ID>
@@ -553,9 +498,7 @@
     <ID>TopLevelPropertyNaming:ZendeskHelper.kt$private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"</ID>
     <ID>UtilityClassWithPublicConstructor:AppThemeUtils.kt$AppThemeUtils</ID>
     <ID>UtilityClassWithPublicConstructor:DomainPhoneNumberUtils.kt$DomainPhoneNumberUtils</ID>
-    <ID>UtilityClassWithPublicConstructor:EncryptionUtils.kt$EncryptionUtils</ID>
     <ID>UtilityClassWithPublicConstructor:ImageEditorInitializer.kt$ImageEditorInitializer</ID>
-    <ID>UtilityClassWithPublicConstructor:QuickStartUtils.kt$QuickStartUtils</ID>
     <ID>UtilityClassWithPublicConstructor:WPSnackbar.kt$WPSnackbar</ID>
     <ID>VariableNaming:ReaderCommentsFollowUseCase.kt$ReaderCommentsFollowUseCase$private val FOLLOW_COMMENT_ACTION = "follow_action"</ID>
     <ID>VariableNaming:ReaderCommentsFollowUseCase.kt$ReaderCommentsFollowUseCase$private val FOLLOW_COMMENT_ACTION_ERROR = "follow_action_error"</ID>

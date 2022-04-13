@@ -7,10 +7,12 @@
     android:orientation="vertical">
 
     <include
+        android:id="@+id/fullscreen_error_with_retry"
         layout="@layout/fullscreen_error_with_retry"
         tools:visibility="gone" />
 
     <include
+        android:id="@+id/site_creation_progress_creating_site"
         layout="@layout/site_creation_progress_creating_site"
         tools:visibility="gone" />
 
@@ -20,25 +22,26 @@
         android:layout_height="match_parent">
 
         <include
+            android:id="@+id/site_creation_preview_header_item"
             layout="@layout/site_creation_preview_header_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_extra_medium_large"
+            android:layout_marginBottom="@dimen/margin_extra_medium_large"
             android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_extra_medium_large" />
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_medium_large" />
 
         <include
-            android:id="@+id/webviewContainer"
+            android:id="@+id/site_creation_preview_web_view_container"
             layout="@layout/site_creation_preview_web_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/sitePreviewOkButtonContainer"
-            android:layout_below="@id/sitePreviewHeaderLayout"
+            android:layout_below="@id/site_creation_preview_header_item"
+            android:layout_marginBottom="@dimen/negative_margin_medium"
             android:layout_marginLeft="@dimen/site_creation_preview_web_view_side_margin"
-            android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin"
-            android:layout_marginBottom="@dimen/negative_margin_medium" />
+            android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/sitePreviewOkButtonContainer"
@@ -56,8 +59,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
                 android:text="@string/dialog_button_ok" />
         </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>

@@ -1,12 +1,15 @@
 package org.wordpress.android.ui.engagement
 
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
+
 sealed class EngagedListNavigationEvent(val closeUserProfileIfOpened: Boolean = true) {
     data class PreviewSiteByUrl(val siteUrl: String, val source: String) : EngagedListNavigationEvent()
     data class PreviewSiteById(val siteId: Long, val source: String) : EngagedListNavigationEvent()
     data class PreviewCommentInReader(
         val siteId: Long,
         val commentPostId: Long,
-        val postOrCommentId: Long
+        val postOrCommentId: Long,
+        val source: ThreadedCommentsActionSource
     ) : EngagedListNavigationEvent()
     data class PreviewPostInReader(val siteId: Long, val postId: Long) : EngagedListNavigationEvent()
     data class OpenUserProfileBottomSheet(

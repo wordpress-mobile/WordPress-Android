@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-04-09 15:19:07+0000
+Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: da_DK
 -->
 <resources>
@@ -27,6 +27,7 @@ Language: da_DK
     <string name="comment_q_action_done_generic">Det er udført!</string>
     <string name="signout">Log ud</string>
     <string name="sign_in_wpcom">Log ind i WordPress.com</string>
+    <string name="reader_label_local_related_posts">Mere fra %s</string>
     <string name="invite_invalid_email">%s: ugyldig e-mail</string>
     <string name="error_post_my_profile_no_connection">Der er ingen forbindelse, din profil kunne ikke gemmes</string>
     <string name="alignment_left">Venstre</string>
@@ -41,7 +42,9 @@ Language: da_DK
     <string name="export_site_hint">Eksporter dit websted til en XML-fil</string>
     <string name="primary_domain">Primært domæne</string>
     <string name="site_settings_export_content_title">Eksporter indhold</string>
+    <string name="contact_support">Kontakt support</string>
     <string name="site_settings_advanced_header">Avanceret</string>
+    <string name="button_skip">Spring over</string>
     <string name="alignment_center">Centreret</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -52,13 +55,26 @@ Language: da_DK
     <string name="post_format_quote">Citat</string>
     <string name="post_format_standard">Standard</string>
     <string name="post_format_audio">Lyd</string>
+    <string name="site_settings_account_header">Konto</string>
+    <string name="site_settings_general_header">Generelt</string>
+    <string name="newest_first">Nyeste først</string>
+    <string name="oldest_first">Ældste først</string>
+    <string name="unknown">Ukendt</string>
+    <string name="never">Aldrig</string>
+    <string name="theme_details">Detaljer</string>
+    <string name="active">Aktiv</string>
+    <string name="details">Detaljer</string>
     <string name="reader_discover_visit_blog">Besøg %s</string>
     <string name="reader_discover_attribution_blog">Oprindeligt udgivet i %s</string>
     <string name="reader_discover_attribution_author">Oprindeligt udgivet af %s</string>
     <string name="reader_discover_attribution_author_and_blog">Oprindeligt udgivet af %1$s den %2$s</string>
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
+    <string name="reader_label_follow_count">%,d følgere</string>
     <string name="reader_short_like_count_none">Like</string>
+    <string name="reader_menu_tags">Rediger emner og websteder</string>
+    <string name="button_publish">Udgiv</string>
+    <string name="button_edit">Rediger</string>
     <string name="push_auth_expired">Forespørgslen er udløbet. Log ind på WordPress.com og prøv igen.</string>
     <string name="ignore">Ignorer</string>
     <string name="stats_insights_best_ever">Bedste visninger nogensinde</string>
@@ -71,15 +87,15 @@ Language: da_DK
     <string name="account_settings">Kontoindstillinger</string>
     <string name="me_btn_support">Hjælp &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
+    <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
     <string name="site_picker_edit_visibility">Vis/skjul websteder</string>
     <string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
+    <string name="site_picker_add_site">Tilføj nyt websted</string>
     <string name="my_site_btn_view_site">Vis websted</string>
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
     <string name="my_site_btn_view_admin">Vis administration</string>
-    <string name="my_site_btn_site_settings">Indstillinger</string>
     <string name="my_site_header_publish">Udgiv</string>
-    <string name="my_site_btn_blog_posts">Blogindlæg</string>
     <string name="my_site_header_look_and_feel">Udseende</string>
     <string name="my_site_header_configuration">Konfiguration</string>
     <string name="deselect_all">Fravælg alle</string>
@@ -94,7 +110,6 @@ Language: da_DK
     <string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
     <string name="stats_view_authors">Forfattere</string>
     <string name="stats_view_search_terms">Søgeord</string>
-    <string name="comments_fetching">Henter kommentarer…</string>
     <string name="pages_fetching">Henter sider…</string>
     <string name="error_notification_open">Kunne ikke åbne notifikation</string>
     <string name="posts_fetching">Henter indlæg…</string>
@@ -104,6 +119,7 @@ Language: da_DK
     <string name="reader_label_new_posts">Nye indlæg</string>
     <string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
     <string name="error_copy_to_clipboard">Der skete en fejl under kopieringen af teksten til udklipsholderen</string>
+    <string name="reader_empty_posts_in_blog">Dette websted er tomt</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
     <string name="stats_followers_a_minute_ago">et minut siden</string>
     <string name="stats_followers_a_day">En dag</string>
@@ -136,7 +152,6 @@ Language: da_DK
     <string name="error_publish_empty_post">Kan ikke udgive omt indlæg</string>
     <string name="error_refresh_unauthorized_posts">Du har ikke tilladelse til at vise eller redigere indlæg</string>
     <string name="error_refresh_unauthorized_pages">Du har ikke tilladelse til at vise eller redigere sider</string>
-    <string name="error_refresh_unauthorized_comments">Du har ikke tilladelse til at vise eller redigere kommentarer</string>
     <string name="older_last_week">Ældre end en uge</string>
     <string name="comment">Kommentar</string>
     <string name="comment_trashed">Kommentar slettet</string>
@@ -147,10 +162,21 @@ Language: da_DK
     <string name="comment_reply_to_user">Besvar %s</string>
     <string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
     <string name="mnu_comment_liked">Synes godt om</string>
+    <string name="reader_empty_posts_in_tag">Ingen indlæg med dette emne</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
+    <string name="reader_toast_blog_blocked">Indlæg fra dette websted, vil ikke længere blive vist</string>
+    <string name="reader_menu_block_blog">Blokere dette websted</string>
+    <string name="reader_toast_err_block_blog">Det er ikke muligt at blokere dette websted</string>
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
     <string name="reader_page_followed_blogs">Fulgte websteder</string>
+    <string name="reader_empty_recommended_blogs">Ingen anbefalede websteder</string>
+    <string name="reader_hint_add_tag_or_url">Indtast en URL eller emne for at følge</string>
+    <string name="reader_page_followed_tags">Fulgte emner</string>
+    <string name="reader_toast_err_already_follow_blog">Du følger allerede dette websted</string>
+    <string name="reader_toast_err_get_blog_info">Det er ikke muligt at vise dette websted</string>
+    <string name="reader_toast_err_follow_blog">Det er ikke muligt at følge dette websted</string>
+    <string name="reader_label_followed_blog">Webstedet følges</string>
     <string name="help">Hjælp</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
@@ -174,6 +200,7 @@ Language: da_DK
     <string name="error_moderate_comment">Kunne ikke moderere</string>
     <string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
     <string name="error_load_comment">Kunne ikke loade kommentaren</string>
+    <string name="create_a_link">Opret et link</string>
     <string name="select_categories">Vælg kategorier</string>
     <string name="connection_error">Forbindelsesfejl</string>
     <string name="learn_more">Lær mere</string>
@@ -191,10 +218,6 @@ Language: da_DK
     <string name="trash">Papirkurv</string>
     <string name="saving_changes">Gemmer ændringer</string>
     <string name="dlg_confirm_trash_comments">Smid i papirkurven?</string>
-    <string name="dlg_approving_comments">Godkender</string>
-    <string name="dlg_unapproving_comments">Fjerner godkendelse</string>
-    <string name="dlg_spamming_comments">Markerer som spam</string>
-    <string name="dlg_trashing_comments">Smider i papirkurven</string>
     <string name="view_in_browser">Vis i browser</string>
     <string name="add_new_category">Tilføj ny kategori</string>
     <string name="category_name">Kategorinavn</string>
@@ -209,6 +232,7 @@ Language: da_DK
     <string name="open_source_licenses">Open source-licenser</string>
     <string name="cancel_edit">Fortryd redigering</string>
     <string name="reader_title_applog">Applikationslog</string>
+    <string name="horizontal_alignment">Vandret justering</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
     <string name="sure_to_cancel_edit_comment">Annuller redigering af denne kommentar?</string>
@@ -216,11 +240,14 @@ Language: da_DK
     <string name="remove_account">Fjern websted</string>
     <string name="media_error_no_permission">Du har ikke tilladelse til at se mediebiblioteket</string>
     <string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
+    <string name="delete_page">Slet side?</string>
+    <string name="delete_post">Slet indlæg?</string>
+    <string name="reader_toast_err_add_tag">Kunne ikke tilføje dette emne</string>
+    <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette emne</string>
     <string name="share_link">Del link</string>
     <string name="reader_empty_posts_in_tag_updating">Henter indlæg…</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
     <string name="comment_spammed">Kommentar markeret som spam</string>
-    <string name="reader_label_reply">Besvar</string>
     <string name="reader_likes_multi">%,d personer synes godt om dette</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uden en synlig blog</string>
     <string name="pick_photo">Vælg foto</string>
@@ -241,6 +268,8 @@ Language: da_DK
     <string name="reader_toast_err_share_intent">Kunne ikke dele</string>
     <string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
     <string name="reader_hint_comment_on_comment">Besvar kommentar…</string>
+    <string name="reader_toast_err_tag_exists">Du følger allerede dette emne</string>
+    <string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt emne</string>
     <string name="media_edit_failure">Opdatering mislykkedes</string>
     <string name="theme_activate_button">Aktiver</string>
     <string name="share_action">Del</string>
@@ -275,11 +304,16 @@ Language: da_DK
     <string name="username">Brugernavn</string>
     <string name="reader">Læser</string>
     <string name="pages">Sider</string>
+    <string name="width">Bredde</string>
     <string name="posts">Indlæg</string>
     <string name="anonymous">Anonym</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
+    <string name="caption">Billedtekst (valgfri)</string>
+    <string name="featured">Brug som fremhævet billede</string>
+    <string name="featured_in_post">Inkluder billede i indhold</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Uploader</string>
     <string name="version">Version</string>
     <string name="app_title">WordPress til Android</string>
     <string name="tos">Brugskrav</string>
@@ -291,10 +325,10 @@ Language: da_DK
     <string name="quickpress_add_alert_title">Vælg navn på genvej.</string>
     <string name="settings">Indstillinger</string>
     <string name="quickpress_add_error">Genvejsnavn kan ikke være tomt</string>
+    <string name="pages_private">Privat</string>
     <string name="title">Titel</string>
     <string name="categories">Kategorier</string>
     <string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
-    <string name="dlg_deleting_comments">Sletter kommentarer</string>
     <string name="sdcard_title">SD-kort påkrævet</string>
     <string name="media">Medier</string>
     <string name="delete">Slet</string>
@@ -310,4 +344,5 @@ Language: da_DK
     <string name="reply">Svar</string>
     <string name="on">på</string>
     <string name="preview">Forhåndsvis</string>
+    <string name="publish_now">Udgiv nu</string>
 </resources>

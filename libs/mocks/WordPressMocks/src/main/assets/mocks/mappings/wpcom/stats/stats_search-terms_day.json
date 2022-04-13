@@ -24,10 +24,15 @@
             "period": "day",
             "days": {
                 "{{fnow format='yyyy-MM-dd'}}": {
-                    "search_terms": [],
-                    "encrypted_search_terms": 0,
+                    "search_terms": [
+                        {
+                            "term": "Test",
+                            "views": 1
+                        }
+                    ],
+                    "encrypted_search_terms": 3,
                     "other_search_terms": 0,
-                    "total_search_terms": 0
+                    "total_search_terms": 4
                 }
             }
         }

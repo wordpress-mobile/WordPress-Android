@@ -4,8 +4,12 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore.Audio
+import android.provider.MediaStore.Files.FileColumns
 import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.MediaColumns
 import android.provider.MediaStore.Video
@@ -50,13 +54,9 @@ class DeviceMediaLoader
         } else {
             dateCondition ?: filterCondition
         }
-        cursor = context.contentResolver.query(
-                baseUri,
-                projection,
-                condition,
-                null,
-                "$ID_DATE_MODIFIED DESC LIMIT ${(pageSize + 1)}"
-        )
+
+        cursor = getCursor(condition, pageSize, baseUri, projection)
+
         if (cursor == null) {
             return DeviceMediaList(listOf(), null)
         }
@@ -86,6 +86,37 @@ class DeviceMediaLoader
             null
         }
         return DeviceMediaList(result.take(pageSize), nextItem)
+    }
+
+    private fun getCursor(
+        condition: String?,
+        pageSize: Int,
+        baseUri: Uri,
+        projection: Array<String>
+    ) = if (VERSION.SDK_INT >= VERSION_CODES.Q /*29*/) {
+        val bundle = Bundle().apply {
+            putString(ContentResolver.QUERY_ARG_SQL_SELECTION, condition)
+            putStringArray(
+                    ContentResolver.QUERY_ARG_SORT_COLUMNS, arrayOf(FileColumns.DATE_MODIFIED)
+            )
+            putInt(ContentResolver.QUERY_ARG_SORT_DIRECTION, ContentResolver.QUERY_SORT_DIRECTION_DESCENDING)
+            putInt(ContentResolver.QUERY_ARG_LIMIT, pageSize + 1)
+            putInt(ContentResolver.QUERY_ARG_OFFSET, 0)
+        }
+        context.contentResolver.query(
+                baseUri,
+                projection,
+                bundle,
+                null
+        )
+    } else {
+        context.contentResolver.query(
+                baseUri,
+                projection,
+                condition,
+                null,
+                "$ID_DATE_MODIFIED DESC LIMIT ${(pageSize + 1)}"
+        )
     }
 
     fun loadDocuments(filter: String?, pageSize: Int, limitDate: Long? = null): DeviceMediaList {

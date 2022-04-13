@@ -44,11 +44,13 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -74,7 +76,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
         SearchView.OnQueryTextListener {
-    public static final String KEY_LOCAL_ID = "local_id";
+    public static final String KEY_SITE_LOCAL_ID = "local_id";
     public static final String KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched";
 
     public static final String KEY_SITE_PICKER_MODE = "key_site_picker_mode";
@@ -100,7 +102,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private SitePickerMode mSitePickerMode;
-    private Debouncer mDebouncer = new Debouncer();
+    private final Debouncer mDebouncer = new Debouncer();
     private SitePickerViewModel mViewModel;
 
     private HashSet<Integer> mSelectedPositions = new HashSet<>();
@@ -115,6 +117,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
     @Inject StatsStore mStatsStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -197,7 +200,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
+        outState.putInt(KEY_SITE_LOCAL_ID, mCurrentLocalId);
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
         outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
@@ -240,7 +243,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
-            mMenuAdd.setVisible(!BuildConfig.IS_JETPACK_APP);
+            mMenuAdd.setVisible(mBuildConfigWrapper.isSiteCreationEnabled());
         }
 
         // no point showing search if there aren't multiple blogs
@@ -292,7 +295,10 @@ public class SitePickerActivity extends LocaleAwareActivity
         switch (requestCode) {
             case RequestCodes.CREATE_SITE:
                 if (data != null) {
-                    int newSiteLocalID = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    int newSiteLocalID = data.getIntExtra(
+                            SitePickerActivity.KEY_SITE_LOCAL_ID,
+                            SelectedSiteRepository.UNAVAILABLE
+                    );
                     SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
                 }
                 break;
@@ -379,7 +385,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         String lastSearch = "";
 
         if (savedInstanceState != null) {
-            mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
+            mCurrentLocalId = savedInstanceState.getInt(KEY_SITE_LOCAL_ID);
             isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
             mSitePickerMode = (SitePickerMode) savedInstanceState.getSerializable(KEY_SITE_PICKER_MODE);
@@ -389,7 +395,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             mShowMenuEnabled = savedInstanceState.getBoolean(KEY_IS_SHOW_MENU_ENABLED);
             mHideMenuEnabled = savedInstanceState.getBoolean(KEY_IS_HIDE_MENU_ENABLED);
         } else if (getIntent() != null) {
-            mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
+            mCurrentLocalId = getIntent().getIntExtra(KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE);
             mSitePickerMode = (SitePickerMode) getIntent().getSerializableExtra(KEY_SITE_PICKER_MODE);
         }
 
@@ -645,7 +651,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private void selectSiteAndFinish(SiteRecord siteRecord) {
         hideSoftKeyboard();
         AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
-        setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.getLocalId()));
+        setResult(RESULT_OK, new Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.getLocalId()));
         // If the site is hidden, make sure to make it visible
         if (siteRecord.isHidden()) {
             siteRecord.setHidden(false);
@@ -749,16 +755,24 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    public static void addSite(Activity activity, boolean isSignedInWpCom) {
-        // if user is signed into wp.com use the dialog to enable choosing whether to
-        // create a new wp.com blog or add a self-hosted one
-        if (isSignedInWpCom) {
-            DialogFragment dialog = new AddSiteDialog();
-            dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
+    public static void addSite(Activity activity, boolean hasAccessToken) {
+        if (hasAccessToken) {
+            if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
+                ActivityLauncher.newBlogForResult(activity);
+            } else {
+                // user is signed into wordpress app, so use the dialog to enable choosing whether to
+                // create a new wp.com blog or add a self-hosted one
+                showAddSiteDialog(activity);
+            }
         } else {
-            // user isn't signed into wp.com, so simply enable adding self-hosted
+            // user doesn't have an access token, so simply enable adding self-hosted
             ActivityLauncher.addSelfHostedSiteForResult(activity);
         }
+    }
+
+    private static void showAddSiteDialog(Activity activity) {
+        DialogFragment dialog = new AddSiteDialog();
+        dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
     }
 
     /*

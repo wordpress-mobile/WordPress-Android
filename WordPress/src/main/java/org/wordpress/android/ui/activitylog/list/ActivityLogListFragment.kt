@@ -179,6 +179,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
                         viewModel.site,
                         it.activityId,
                         it.isButtonVisible,
+                        it.isRestoreHidden,
                         viewModel.rewindableOnly
                 )
             }

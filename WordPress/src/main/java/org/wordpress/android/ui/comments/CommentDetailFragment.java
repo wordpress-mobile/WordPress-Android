@@ -46,23 +46,23 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
+import org.wordpress.android.fluxc.store.CommentsStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.UserSuggestion;
+import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
@@ -72,6 +72,12 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentSource;
+import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -88,7 +94,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -96,10 +102,10 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -111,12 +117,16 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import kotlinx.coroutines.BuildersKt;
+import kotlinx.coroutines.CoroutineStart;
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.GlobalScope;
+
 /**
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
  *
- * @deprecated
- * Comments are being refactored as part of Comments Unification project. If you are adding any
+ * @deprecated Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this class, please ping develric or klymyam
  */
 @Deprecated
@@ -129,22 +139,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
-
-    enum CommentSource {
-        NOTIFICATION,
-        SITE_COMMENTS;
-
-        AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
-            switch (this) {
-                case NOTIFICATION:
-                    return AnalyticsCommentActionSource.NOTIFICATIONS;
-                case SITE_COMMENTS:
-                    return AnalyticsCommentActionSource.SITE_COMMENTS;
-            }
-            throw new IllegalArgumentException(
-                    this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
-        }
-    }
 
     private CommentModel mComment;
     private SiteModel mSite;
@@ -178,12 +172,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private float mNormalOpacity = 1f;
     private float mMediumOpacity;
 
-    @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
-    @Inject CommentStore mCommentStore;
+    @Inject CommentsStoreAdapter mCommentsStoreAdapter;
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ImageManager mImageManager;
+    @Inject CommentsStore mCommentsStore;
+    @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
+    @Inject UnifiedCommentsCommentEditFeatureConfig mUnifiedCommentsCommentEditFeatureConfig;
 
     private boolean mIsSubmittingReply = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -331,7 +327,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Toast.makeText(view1.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
         mEditReply.initializeWithPrefix('@');
@@ -380,7 +376,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Toast.makeText(v.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(buttonExpand);
         setReplyUniqueId();
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()
@@ -508,7 +504,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     private void setComment(final long commentRemoteId, final int siteLocalId) {
         final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
-        setComment(mCommentStore.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
+        setComment(mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId), site);
     }
 
     private void setComment(@Nullable final CommentModel comment, @Nullable final SiteModel site) {
@@ -607,14 +603,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        mDispatcher.register(this);
+        mCommentsStoreAdapter.register(this);
         showComment();
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        mDispatcher.unregister(this);
+        mCommentsStoreAdapter.unregister(this);
         super.onStop();
     }
 
@@ -643,8 +639,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
-            AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
-                    mCommentSource.toAnalyticsCommentActionSource(), mSite);
         }
     }
 
@@ -655,9 +649,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (mComment == null) {
             return;
         }
-        CommentModel updatedComment = mCommentStore.getCommentByLocalId(mComment.getId());
+        CommentModel updatedComment = mCommentsStoreAdapter.getCommentByLocalId(mComment.getId());
         if (updatedComment != null) {
             setComment(updatedComment, mSite);
+        }
+        if (mNotificationsDetailListFragment != null) {
+            mNotificationsDetailListFragment.refreshBlocksForEditedComment(mNote.getId());
         }
     }
 
@@ -670,16 +667,36 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
         AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITOR_OPENED,
                 mCommentSource.toAnalyticsCommentActionSource(), mSite);
+
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
-        Intent intent = new Intent(getActivity(), EditCommentActivity.class);
-        intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(EditCommentActivity.KEY_COMMENT, mComment);
-        if (mNote != null && mComment == null) {
-            intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
+        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled()) {
+            final CommentIdentifier commentIdentifier = mapCommentIdentifier();
+            final Intent intent =
+                    UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
+            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+        } else {
+            Intent intent = new Intent(getActivity(), EditCommentActivity.class);
+            intent.putExtra(WordPress.SITE, mSite);
+            intent.putExtra(EditCommentActivity.KEY_COMMENT, mComment);
+            if (mNote != null && mComment == null) {
+                intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
+            }
+            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         }
-        startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+    }
+
+    @Nullable
+    private CommentIdentifier mapCommentIdentifier() {
+        switch (mCommentSource) {
+            case SITE_COMMENTS:
+                return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
+            case NOTIFICATION:
+                return new NotificationCommentIdentifier(mNote.getId(), mNote.getCommentId());
+            default:
+                return null;
+        }
     }
 
     /*
@@ -707,14 +724,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 }
 
                 // Check if the comment is already in our store
-                CommentModel comment = mCommentStore.getCommentBySiteAndRemoteId(site, mNote.getCommentId());
+                CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, mNote.getCommentId());
                 if (comment != null) {
                     // It exists, then show it as a "Notification"
                     showCommentAsNotification(mNote, site, comment);
                 } else {
                     // It's not in our store yet, request it.
                     RemoteCommentPayload payload = new RemoteCommentPayload(site, mNote.getCommentId());
-                    mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
+                    mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
                     setProgressVisible(true);
 
                     // Show a "temporary" comment built from the note data, the view will be refreshed once the
@@ -741,9 +758,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(mComment.getDatePublished()),
                 WordPress.getContext()));
 
-        int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz,
-                getString(R.string.comment_unable_to_show_error));
+        String renderingError = getString(R.string.comment_unable_to_show_error);
+        mTxtContent.post(() -> CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(),
+                mTxtContent.getWidth(), mTxtContent.getLineHeight(), renderingError));
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
@@ -797,7 +814,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // if comment doesn't have a post title, set it to the passed one and save to comment table
         if (mComment != null && mComment.getPostTitle() == null) {
             mComment.setPostTitle(postTitle);
-            mDispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(mComment));
+            mCommentsStoreAdapter.dispatch(CommentActionBuilder.newUpdateCommentAction(mComment));
         }
 
         // display "on [Post Title]..."
@@ -988,12 +1005,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void dispatchModerationAction(CommentStatus newStatus) {
         if (newStatus == CommentStatus.DELETED) {
             // For deletion, we need to dispatch a specific action.
-            mDispatcher
+            mCommentsStoreAdapter
                     .dispatch(CommentActionBuilder.newDeleteCommentAction(new RemoteCommentPayload(mSite, mComment)));
         } else {
             // Actual moderation (push the modified comment).
             mComment.setStatus(newStatus.toString());
-            mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
+            mCommentsStoreAdapter
+                    .dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
         }
     }
 
@@ -1030,9 +1048,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         CommentModel reply = new CommentModel();
         reply.setContent(replyText);
 
-        mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(mSite,
-                mComment,
-                reply)));
+        mCommentsStoreAdapter
+                .dispatch(CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(mSite,
+                        mComment,
+                        reply)));
     }
 
     /*
@@ -1188,7 +1207,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canEdit() {
-        return (mSite != null && canModerate());
+        return mSite != null && (mSite.getHasCapabilityEditOthersPosts() || mSite.isSelfHostedAdmin());
     }
 
     private boolean canLike() {
@@ -1288,7 +1307,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 setModerateButtonForStatus(CommentStatus.APPROVED);
             }
         }
-        mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
+        mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
                 new RemoteLikeCommentPayload(mSite, mComment, mBtnLikeComment.isActivated())));
         mBtnLikeComment.announceForAccessibility(getText(mBtnLikeComment.isActivated() ? R.string.comment_liked_talkback
                 : R.string.comment_unliked_talkback));
@@ -1372,10 +1391,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         // Self Hosted site does not return a newly created comment, so we need to fetch it manually.
         if (!mSite.isUsingWpComRestApi() && !event.changedCommentsLocalIds.isEmpty()) {
-            CommentModel createdComment = mCommentStore.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
+            CommentModel createdComment =
+                    mCommentsStoreAdapter.getCommentByLocalId(event.changedCommentsLocalIds.get(0));
 
             if (createdComment != null) {
-                mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(
+                mCommentsStoreAdapter.dispatch(CommentActionBuilder.newFetchCommentAction(
                         new RemoteCommentPayload(mSite, createdComment.getRemoteCommentId())));
             }
         }
@@ -1404,7 +1424,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(OnCommentChanged event) {
         setProgressVisible(false);
+        // requesting local comment cache refresh
+        BuildersKt.launch(GlobalScope.INSTANCE,
+                Dispatchers.getMain(),
+                CoroutineStart.DEFAULT,
+                (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(continuation)
 
+        );
         // Moderating comment
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
             onCommentModerated(event);

@@ -34,17 +34,21 @@ class SiteCreationServiceManager @Inject constructor(
 
     private lateinit var siteData: SiteCreationServiceData
     private lateinit var languageId: String
+    private lateinit var timeZoneId: String
     private lateinit var serviceListener: SiteCreationServiceManagerListener
     private var isRetry by Delegates.notNull<Boolean>()
     private var newSiteRemoteId by Delegates.notNull<Long>()
+    private var newSiteUrl by Delegates.notNull<String>()
 
     fun onStart(
         languageWordPressId: String,
+        timeZoneId: String,
         previousState: String?,
         data: SiteCreationServiceData,
         serviceListener: SiteCreationServiceManagerListener
     ) {
         languageId = languageWordPressId
+        this.timeZoneId = timeZoneId
         siteData = data
         this.serviceListener = serviceListener
 
@@ -81,7 +85,7 @@ class SiteCreationServiceManager @Inject constructor(
                 createSite()
             }
             SUCCESS -> {
-                updateServiceState(SUCCESS, newSiteRemoteId)
+                updateServiceState(SUCCESS, Pair(newSiteRemoteId, newSiteUrl))
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
                 tracker.trackSiteCreated(siteData.siteDesign)
@@ -104,7 +108,7 @@ class SiteCreationServiceManager @Inject constructor(
             )
             val createSiteEvent: OnNewSiteCreated
             try {
-                createSiteEvent = createSiteUseCase.createSite(siteData, languageId)
+                createSiteEvent = createSiteUseCase.createSite(siteData, languageId, timeZoneId)
             } catch (e: IllegalStateException) {
                 AppLog.e(T.SITE_CREATION, e.message ?: "Unexpected error.")
                 executePhase(FAILURE)
@@ -112,6 +116,7 @@ class SiteCreationServiceManager @Inject constructor(
             }
 
             newSiteRemoteId = createSiteEvent.newSiteRemoteId
+            newSiteUrl = createSiteEvent.url ?: ""
             AppLog.i(T.SITE_CREATION, createSiteEvent.toString())
             if (createSiteEvent.isError) {
                 if (createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {

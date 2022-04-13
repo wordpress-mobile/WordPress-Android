@@ -26,7 +26,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
@@ -35,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.getBarWidth
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -100,7 +100,7 @@ class TagsAndCategoriesUseCase
                     header
             )
             val tagsList = mutableListOf<BlockListItem>()
-            val maxViews = domainModel.tags.maxBy { it.views }?.views ?: 0
+            val maxViews = domainModel.tags.maxByOrNull { it.views }?.views ?: 0
             domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {

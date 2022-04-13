@@ -8,10 +8,10 @@ import com.bumptech.glide.Glide
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.R
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import java.lang.ref.WeakReference
-import java.util.HashSet
 import javax.inject.Inject
 
 /**
@@ -20,9 +20,10 @@ import javax.inject.Inject
  *
  * See {@link android.text.Html} for more details.
  */
-class WPCustomImageGetter(
+class WPCustomImageGetter @JvmOverloads constructor(
     textView: TextView,
-    private val maxWidth: Int
+    private val maxWidth: Int,
+    private val maxEmojiWidth: Int = 0
 ) : Html.ImageGetter {
     private val textView: WeakReference<TextView> = WeakReference(textView)
 
@@ -64,18 +65,27 @@ class WPCustomImageGetter(
      * This method is called when the HTML parser encounters an
      * img tag.
      */
-    override fun getDrawable(url: String): Drawable? {
-        var source = url
+    override fun getDrawable(url: String?): Drawable? {
+        var source = StringUtils.notNullStr(url)
 
         // images in reader comments may skip "http:" (no idea why) so make sure to add protocol here
         if (source.startsWith("//")) {
             source = "http:$source"
         }
 
-        source = if (maxWidth > 0) PhotonUtils.getPhotonImageUrl(url, maxWidth, 0) else url
+        // we need to set a separate width to custom emoji
+        val targetWidth = if (source.contains(".wp.com") && source.contains("emojis")) {
+            maxEmojiWidth
+        } else {
+            maxWidth
+        }
+
+        if (targetWidth > 0) {
+            source = PhotonUtils.getPhotonImageUrl(source, targetWidth, 0)
+        }
 
         return textView.get()?.let {
-            val target = WPRemoteResourceViewTarget(it, maxWidth)
+            val target = WPRemoteResourceViewTarget(it, targetWidth)
             imageManager.loadIntoCustomTarget(target, ImageType.UNKNOWN, source)
             targets.add(target)
 

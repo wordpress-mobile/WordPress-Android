@@ -44,6 +44,7 @@
         <item name="wpColorNavBar">@color/nav_bar</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
+        <item name="wpColorOnSurfaceHigh">@color/material_on_surface_emphasis_high_type</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
         <item name="wpColorLoginPrologueBg">@color/blue_0</item>
@@ -203,26 +204,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
-        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
-        <item name="titleTextColor">?attr/colorOnSurface</item>
-        <item name="toolbarNavigationButtonStyle">
-            @style/Widget.AppCompat.Toolbar.Button.Navigation
-        </item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
-    </style>
-
     <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:immersive">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
-        <item name="android:windowLightNavigationBar">false</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
         <item name="android:navigationBarColor">@android:color/black</item>
@@ -247,6 +235,10 @@
         <item name="android:fitsSystemWindows">true</item>
         <item name="bottomSheetStyle">@style/WordPress.BottomSheetDialogTheme.BottomSheetStyle
         </item>
+    </style>
+
+    <style name="WordPress.BottomSheetDialogTheme.NonTranslucent" parent="WordPress.BottomSheetDialogTheme">
+        <item name="android:windowTranslucentStatus">false</item>
     </style>
 
     <style name="WordPress.BottomSheetDialogTheme.BottomSheetStyle" parent="@style/Widget.MaterialComponents.BottomSheet">
@@ -338,6 +330,10 @@
         <item name="android:textColorHint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
+    <style name="WordPress.ActionBar.MenuAlign" parent="WordPress.ActionBar">
+        <item name="android:paddingEnd">2dp</item>
+    </style>
+
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="toolbarNavigationButtonStyle">
@@ -362,6 +358,7 @@
 
     <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
         <item name="actionTextColorAlpha">1.0</item>
+        <item name="android:maxLines">5</item>
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
@@ -382,6 +379,8 @@
 
     <style name="WordPress.NoActionBar.TranslucentStatus" parent="WordPress.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="MediaSettings.Divider">
@@ -415,6 +414,16 @@
         <item name="backgroundTint">@color/secondary_disabled_selector</item>
     </style>
 
+    <style name="WordPress.Button.Primary.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.WordPress.Button.Primary.Unelevated</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="ThemeOverlay.WordPress.Button.Primary.Unelevated" parent="">
+        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
+    </style>
+
     <!-- NUX Styles -->
     <style name="WordPress.NUXPrimaryButton">
         <item name="android:textColor">@color/white_neutral_10_selector</item>
@@ -438,11 +447,34 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>
 
+    <!--My Site Card/ Item Base Styles-->
+    <style name="MySiteCardItemTitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="MySiteCardItemSubtitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
     <!--My Site Styles-->
     <style name="MySiteTitleLabel">
         <item name="android:ellipsize">end</item>
         <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:maxLines">2</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>
@@ -460,44 +492,31 @@
         <item name="iconSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">@dimen/my_site_quick_action_button_container_width</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="borderWidth">0dp</item>
-        <item name="elevation">@dimen/card_elevation</item>
+        <item name="borderWidth">1dp</item>
+        <item name="elevation">0dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_centerHorizontal">true</item>
+        <item name="backgroundTint">@color/on_surface_divider</item>
+        <item name="android:outlineProvider">none</item>
     </style>
 
-    <style name="MySiteQuickActionButtonLabel">
+    <style name="MySiteQuickActionButtonLabel" parent="MySiteCardItemSubtitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:layout_centerHorizontal">true</item>
-    </style>
-
-    <style name="ImprovedMySiteQuickActionButtonLabel" parent="MySiteQuickActionButtonLabel">
-        <item name="android:maxLines">1</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:ellipsize">end</item>
         <item name="maxWidth">@dimen/my_site_quick_action_button_text_max_width</item>
     </style>
 
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_end</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
@@ -519,18 +538,6 @@
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="MySiteListRowAlertIcon">
-        <item name="tint">?attr/wpColorWarningLight</item>
-        <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
-        <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
-        <item name="android:layout_alignParentStart">true</item>
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_marginTop">@dimen/margin_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_large</item>
-        <item name="android:layout_marginEnd">@dimen/my_site_list_row_icon_margin_right</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -556,17 +563,6 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-    </style>
-
-    <style name="MySiteListRowDescription">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
-        <item name="android:paddingTop">@dimen/margin_medium</item>
-        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/content_margin_site_row_start</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">
@@ -599,10 +595,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="MySiteInfoItemTextView">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="MeListRowLayout">
@@ -680,7 +682,7 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <!--Quick Start-->
+    <!--My Site Card - Quick Start-->
     <style name="QuickStartList">
         <item name="android:layout_width">match_parent</item>
     </style>
@@ -738,37 +740,120 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="QuickStartTypeIcon">
-        <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_height">@dimen/quick_start_type_icon</item>
-        <item name="android:layout_marginEnd">@dimen/margin_large</item>
-        <item name="android:layout_width">@dimen/quick_start_type_icon</item>
-    </style>
-
-    <style name="QuickStartTypeTitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:ellipsize">end</item>
+    <style name="QuickStartTypeTitle" parent="MySiteCardItemTitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="QuickStartTypeSubtitle">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:ellipsize">end</item>
+    <style name="QuickStartTypeSubtitle" parent="MySiteCardItemSubtitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
     </style>
 
     <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
+    </style>
+
+    <!--My Site Card-->
+    <style name="MySiteCardFooterLinkItem">
+        <item name="android:textColor">@color/primary_emphasis_medium_selector</item>
+        <item name="android:paddingBottom">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingEnd">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingStart">@dimen/my_site_card_footer_link_padding</item>
+        <item name="android:paddingTop">@dimen/my_site_card_footer_link_padding_top</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <!--My Site Error Card-->
+    <style name="MySiteErrorCardTitle" parent="MySiteCardItemTitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="MySiteErrorCardSubtitle" parent="MySiteCardItemSubtitle">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="MySiteErrorCardRetry" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <!--My Site Card - Today's Stats Item-->
+    <style name="MySiteTodaysStatsCardTitle">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_title_line_spacing_extra</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardStatTitle" >
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:lineSpacingExtra">@dimen/my_site_todays_stats_card_stat_title_line_spacing_extra</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardStatCountText">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:minWidth">@dimen/my_site_today_stats_card_stat_title_min_width</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="MySiteTodaysStatsCardMessage">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+    </style>
+
+    <!--My Site Card - Post Item-->
+    <style name="MySitePostItemTitle" parent="MySiteCardItemTitle"/>
+
+    <style name="MySitePostItemExcerpt"  parent="MySiteCardItemSubtitle"/>
+
+    <style name="MySitePostItemTimeIcon">
+        <item name="android:layout_width">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_post_item_time_icon_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+    </style>
+
+    <!--My Site Card - Blogging Prompt-->
+
+    <style name="MySiteCardAnswerButton" parent="@style/MySiteCardFooterLinkItem">
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+    </style>
+
+    <style name="MySiteCardAnsweredButton" parent="@style/MySiteCardAnswerButton">
+        <item name="android:paddingStart">@dimen/margin_medium</item>
+        <item name="android:paddingEnd">@dimen/margin_medium</item>
     </style>
 
     <!--People Management Styles-->
@@ -829,35 +914,39 @@
         <item name="android:background">?android:listDivider</item>
     </style>
 
-    <!--Promo Dialog Styles-->
-    <style name="PromoDialogTitle">
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="PromoDialogDescription">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+    <style name="PostSettingsSwitch">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="PromoDialogLink">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
+    <!--Quick Start Prompt Dialog Styles -->
+
+    <style name="QuickStartPromptDialogTitleNew">
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="QuickStartPromptDialogDescriptionNew">
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="QuickStartPromptDialogPrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="QuickStartPromptDialogSecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-    </style>
-
-    <style name="PromoDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:letterSpacing">-0.005</item>
     </style>
 
     <!--Plugin Styles-->
@@ -1195,6 +1284,8 @@
     <!-- Main actions styles -->
     <style name="MainBottomSheetRowLayout" parent="MySiteListRowLayout">
         <item name="android:minHeight">@dimen/main_bottom_sheet_list_row_min_height</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
@@ -1205,6 +1296,7 @@
 
     <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_width">match_parent</item>
@@ -1213,7 +1305,7 @@
     <!-- Reader styles -->
     <style name="SubfilterSectionItem">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">@dimen/content_margin_site_row_start</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="SubfilterSectionTitle">
@@ -1330,8 +1422,25 @@
         <item name="android:windowAnimationStyle">@style/FullScreenDialogFragmentAnimation</item>
     </style>
 
+    <style name="FeatureIntroductionFragmentAnimation" parent="@android:style/Theme.Panel">
+        <item name="android:windowEnterAnimation">@anim/full_screen_dialog_fragment_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/full_screen_dialog_fragment_slide_down</item>
+    </style>
+
+    <style name="FeatureIntroductionDialogFragment" parent="WordPress.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">
+            @style/FeatureIntroductionFragmentAnimation
+        </item>
+    </style>
+
     <style name="WordPress.FullscreenDialog">
         <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="WordPress.FullscreenDialog.NoTitle" parent="WordPress.FullscreenDialog">
+        <item name="windowNoTitle">true</item>
     </style>
 
     <!-- Overload of Aztec theme -->
@@ -1549,18 +1658,118 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
     </style>
 
-    <style name="BloggingRemindersTitle" parent="BloggingRemindersText">
+    <style name="BloggingRemindersText.MediumEmphasis" parent="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
+
+    <style name="BloggingRemindersText.Title" parent="BloggingRemindersText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="fontFamily">serif</item>
     </style>
 
+    <style name="BloggingRemindersCaption" parent="BloggingRemindersText">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+    </style>
+
+    <style name="BloggingRemindersDayBubble">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_oval_surface_overlay_emphasis_extra_low</item>
+        <item name="android:textColor">@color/on_surface_emphasis_medium_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
+    </style>
+
     <style name="BloggingRemindersPrimaryButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="android:backgroundTint">?attr/colorSecondary</item>
+        <item name="android:backgroundTint">@color/secondary_gray_20_disabled_selector</item>
+    </style>
+
+    <style name="BloggingRemindersTipTitle">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
+
+    <style name="BloggingRemindersTipMessage">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/on_surface_selector</item>
+    </style>
+
+    <!-- Domains -->
+    <style name="Widget.Domains.CardView.BottomBar" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+    <style name="Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="WordPress.Button.Primary.Unelevated">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Domains.Button.Primary.Unelevated.OnPrimarySurface</item>
+    </style>
+
+    <style name="ThemeOverlay.Domains.Button.Primary.Unelevated.OnPrimarySurface" parent="">
+        <item name="colorPrimary">?attr/colorSurface</item>
+        <item name="colorOnPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="DomainsPurchaseCardTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="fontFamily">serif</item>
+    </style>
+
+    <style name="SiteCategoryRowLayout">
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="SiteCategoryRowTextView">
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+
+    <!-- Blogging prompts onboarding dialog styles -->
+    <style name="BloggingPromptsOnboardingTitle">
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="MySiteQuickLinkRibbon" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="strokeColor">@color/on_surface_divider</item>
+        <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
+        <item name="iconSize">@dimen/quick_link_ribbon_icon_size</item>
+        <item name="iconTint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="iconPadding">@dimen/quick_link_ribbon_icon_padding</item>
+        <item name="cornerRadius">@dimen/quick_link_ribbon_corner_radius</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingStart">@dimen/quick_link_ribbon_padding_start</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">@dimen/text_sz_larger</item>
+        <item name="android:textStyle">bold</item>
+        <item name="rippleColor">@color/on_surface_disabled_transparent_selector</item>
     </style>
 </resources>

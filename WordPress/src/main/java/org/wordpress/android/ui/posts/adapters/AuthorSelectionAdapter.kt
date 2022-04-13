@@ -16,7 +16,7 @@ import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.GravatarUtils
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.NO_PLACEHOLDER
 import javax.inject.Inject

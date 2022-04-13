@@ -22,6 +22,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include
+                android:id="@+id/modal_layout_picker_header_section"
                 layout="@layout/modal_layout_picker_header_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
                         android:layout_gravity="top" />
 
                     <include
+                        android:id="@+id/modal_layout_picker_titlebar"
                         layout="@layout/modal_layout_picker_titlebar"
                         android:layout_width="match_parent"
                         android:layout_gravity="center_vertical"
@@ -61,6 +63,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <include
+            android:id="@+id/modal_layout_picker_categories_skeleton"
             layout="@layout/modal_layout_picker_categories_skeleton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -80,6 +83,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
+        android:id="@+id/modal_layout_picker_layouts_skeleton"
         layout="@layout/modal_layout_picker_layouts_skeleton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,6 +101,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include
+        android:id="@+id/modal_layout_picker_error"
         layout="@layout/modal_layout_picker_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -114,6 +119,7 @@
             android:background="@drawable/modal_layout_picker_bottom_shadow" />
 
         <include
+            android:id="@+id/modal_layout_picker_bottom_toolbar"
             layout="@layout/modal_layout_picker_bottom_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

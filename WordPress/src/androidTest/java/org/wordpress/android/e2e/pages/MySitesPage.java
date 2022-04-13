@@ -19,10 +19,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
+import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 
 public class MySitesPage {
     private static ViewInteraction chooseSiteLabel =
@@ -81,15 +81,13 @@ public class MySitesPage {
         clickItemWithText(R.string.backup);
     }
 
-    public void clickStats() {
-        if (isElementDisplayed(R.id.recycler_view)) {
-            // If My Site Improvements are enabled, we reach the item in a different way
-            onView(withId(R.id.recycler_view))
-                    .perform(actionOnItem(hasDescendant(withText(R.string.stats)), click()));
-        } else {
-            onView(allOf(withId(R.id.my_site_stats_text_view), withText(R.string.stats)))
-                    .perform(scrollTo(), click());
-        }
+    public StatsPage clickStats() {
+        clickOn(R.id.quick_action_stats_button);
+        waitForElementToBeDisplayedWithoutFailure(
+                onView(withId(R.id.tabLayout))
+        );
+
+        return new StatsPage();
     }
 
     private void clickItemWithText(int stringResId) {
@@ -101,9 +99,6 @@ public class MySitesPage {
             // If My Site Improvements are enabled, we reach the item in a different way
             onView(withId(R.id.recycler_view))
                     .perform(actionOnItem(hasDescendant(itemViewMatcher), click()));
-        } else {
-            onView(itemViewMatcher)
-                    .perform(scrollTo(), click());
         }
     }
 }

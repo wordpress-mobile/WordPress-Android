@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class AnalyticsTracker {
     private static boolean mHasUserOptedOut;
+    private static AnalyticsInjectExperimentProperties mInjectExperimentProperties;
 
     public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
@@ -31,6 +33,7 @@ public final class AnalyticsTracker {
         READER_ARTICLE_COMMENT_REPLIED_TO,
         READER_ARTICLE_COMMENTS_OPENED,
         READER_ARTICLE_COMMENT_LIKED,
+        READER_ARTICLE_COMMENT_SHARED,
         READER_ARTICLE_COMMENT_UNLIKED,
         READER_ARTICLE_LIKED,
         READER_ARTICLE_DETAIL_LIKED,
@@ -90,6 +93,7 @@ public final class AnalyticsTracker {
         STATS_INSIGHTS_TYPE_MOVED_DOWN,
         STATS_INSIGHTS_TYPE_REMOVED,
         STATS_INSIGHTS_MANAGEMENT_SAVED,
+        STATS_INSIGHTS_MANAGEMENT_DISMISSED,
         STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED,
         STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED,
         STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED,
@@ -231,6 +235,9 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_ENABLED, // Aztec editor only
         EDITOR_GUTENBERG_ENABLED, // Gutenberg editor only
         EDITOR_GUTENBERG_DISABLED, // Gutenberg editor only
+        EDITOR_HELP_SHOWN,
+        EDITOR_SETTINGS_FETCHED,
+        LANDING_EDITOR_SHOWN,
         REVISIONS_LIST_VIEWED,
         REVISIONS_DETAIL_VIEWED_FROM_LIST,
         REVISIONS_DETAIL_VIEWED_FROM_SWIPE,
@@ -482,6 +489,13 @@ public final class AnalyticsTracker {
         ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED,
         ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
         ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_VIEWED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_CANCELED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_SKIPPED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED,
+        ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT,
         LAYOUT_PICKER_PREVIEW_MODE_CHANGED,
         LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED,
         LAYOUT_PICKER_PREVIEW_MODE_BUTTON_TAPPED,
@@ -599,8 +613,6 @@ public final class AnalyticsTracker {
         QUICK_START_TASK_DIALOG_VIEWED,
         QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED,
         QUICK_START_TASK_DIALOG_POSITIVE_TAPPED,
-        QUICK_START_MIGRATION_DIALOG_VIEWED,
-        QUICK_START_MIGRATION_DIALOG_POSITIVE_TAPPED,
         QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED,
         QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED,
         QUICK_START_TYPE_CUSTOMIZE_VIEWED,
@@ -648,7 +660,6 @@ public final class AnalyticsTracker {
         QUICK_START_REQUEST_VIEWED,
         QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED,
         QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED,
-        QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED,
         QUICK_START_NOTIFICATION_DISMISSED,
         QUICK_START_NOTIFICATION_SENT,
         QUICK_START_NOTIFICATION_TAPPED,
@@ -676,10 +687,22 @@ public final class AnalyticsTracker {
         DOMAIN_CREDIT_REDEMPTION_SUCCESS,
         DOMAIN_CREDIT_SUGGESTION_QUERIED,
         DOMAIN_CREDIT_NAME_SELECTED,
+        DOMAINS_DASHBOARD_VIEWED,
+        DOMAINS_DASHBOARD_GET_DOMAIN_TAPPED,
+        DOMAINS_DASHBOARD_ADD_DOMAIN_TAPPED,
+        DOMAINS_SEARCH_SELECT_DOMAIN_TAPPED,
+        DOMAINS_REGISTRATION_FORM_VIEWED,
+        DOMAINS_REGISTRATION_FORM_SUBMITTED,
+        DOMAINS_PURCHASE_WEBVIEW_VIEWED,
+        DOMAINS_PURCHASE_DOMAIN_SUCCESS,
         QUICK_ACTION_STATS_TAPPED,
         QUICK_ACTION_PAGES_TAPPED,
         QUICK_ACTION_POSTS_TAPPED,
         QUICK_ACTION_MEDIA_TAPPED,
+        QUICK_LINK_RIBBON_PAGES_TAPPED,
+        QUICK_LINK_RIBBON_POSTS_TAPPED,
+        QUICK_LINK_RIBBON_MEDIA_TAPPED,
+        QUICK_LINK_RIBBON_STATS_TAPPED,
         AUTO_UPLOAD_POST_INVOKED,
         AUTO_UPLOAD_PAGE_INVOKED,
         UNPUBLISHED_REVISION_DIALOG_SHOWN,
@@ -750,6 +773,7 @@ public final class AnalyticsTracker {
         COMMENT_EDITED,
         COMMENT_VIEWED,
         COMMENT_DELETED,
+        COMMENT_MODERATION_UNDO,
         COMMENT_QUICK_ACTION_APPROVED,
         COMMENT_QUICK_ACTION_LIKED,
         COMMENT_QUICK_ACTION_REPLIED_TO,
@@ -771,6 +795,9 @@ public final class AnalyticsTracker {
         JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED,
         MY_SITE_CREATE_SHEET_SHOWN,
         MY_SITE_CREATE_SHEET_ACTION_TAPPED,
+        MY_SITE_NO_SITES_VIEW_DISPLAYED,
+        MY_SITE_NO_SITES_VIEW_ACTION_TAPPED,
+        MY_SITE_NO_SITES_VIEW_HIDDEN,
         POST_LIST_CREATE_SHEET_SHOWN,
         POST_LIST_CREATE_SHEET_ACTION_TAPPED,
         INVITE_LINKS_GET_STATUS,
@@ -785,10 +812,38 @@ public final class AnalyticsTracker {
         USER_PROFILE_SHEET_SITE_SHOWN,
         BLOG_URL_PREVIEWED,
         LIKE_LIST_OPENED,
+        LIKE_LIST_FETCHED_MORE,
         STORAGE_WARNING_SHOWN,
         STORAGE_WARNING_ACKNOWLEDGED,
         STORAGE_WARNING_CANCELED,
-        STORAGE_WARNING_DONT_SHOW_AGAIN
+        STORAGE_WARNING_DONT_SHOW_AGAIN,
+        BLOGGING_REMINDERS_SCREEN_SHOWN,
+        BLOGGING_REMINDERS_BUTTON_PRESSED,
+        BLOGGING_REMINDERS_FLOW_START,
+        BLOGGING_REMINDERS_FLOW_DISMISSED,
+        BLOGGING_REMINDERS_FLOW_COMPLETED,
+        BLOGGING_REMINDERS_SCHEDULED,
+        BLOGGING_REMINDERS_CANCELLED,
+        BLOGGING_REMINDERS_NOTIFICATION_RECEIVED,
+        LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED,
+        LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED,
+        CREATE_SITE_NOTIFICATION_SCHEDULED,
+        RECOMMEND_APP_ENGAGED,
+        RECOMMEND_APP_CONTENT_FETCH_FAILED,
+        EDITOR_BLOCK_INSERTED,
+        ABOUT_SCREEN_SHOWN,
+        ABOUT_SCREEN_DISMISSED,
+        ABOUT_SCREEN_BUTTON_TAPPED,
+        MY_SITE_DASHBOARD_CARD_FOOTER_ACTION_TAPPED,
+        MY_SITE_PULL_TO_REFRESH,
+        MY_SITE_MENU_ITEM_TAPPED,
+        MY_SITE_DASHBOARD_CARD_SHOWN,
+        MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
+        MY_SITE_TAB_TAPPED,
+        MY_SITE_DASHBOARD_SHOWN,
+        MY_SITE_SITE_MENU_SHOWN,
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
+        APP_SETTINGS_INITIAL_SCREEN_CHANGED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -820,6 +875,12 @@ public final class AnalyticsTracker {
         if (mHasUserOptedOut) {
             return;
         }
+
+        if (shouldInjectExperimentProperties()) {
+            trackWithExperimentProperties(stat, Collections.emptyMap());
+            return;
+        }
+
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
         }
@@ -829,8 +890,26 @@ public final class AnalyticsTracker {
         if (mHasUserOptedOut) {
             return;
         }
+
+        if (shouldInjectExperimentProperties()) {
+            trackWithExperimentProperties(stat, properties);
+            return;
+        }
+
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
+        }
+    }
+
+    private static void trackWithExperimentProperties(Stat stat, Map<String, ?> properties) {
+        Map<String, ?> props = mInjectExperimentProperties.injectProperties(properties);
+
+        for (Tracker tracker : TRACKERS) {
+            if (props.isEmpty()) {
+                tracker.track(stat);
+            } else {
+                tracker.track(stat, props);
+            }
         }
     }
 
@@ -877,5 +956,16 @@ public final class AnalyticsTracker {
         for (Tracker tracker : TRACKERS) {
             tracker.refreshMetadata(metadata);
         }
+    }
+
+    public static void setInjectExperimentProperties(AnalyticsInjectExperimentProperties injectExperimentProperties) {
+        mInjectExperimentProperties = (injectExperimentProperties != null)
+                ? injectExperimentProperties
+                : AnalyticsInjectExperimentProperties.emptyInstance();
+    }
+
+    private static boolean shouldInjectExperimentProperties() {
+        return mInjectExperimentProperties != null
+               && !mInjectExperimentProperties.getProperties().isEmpty();
     }
 }

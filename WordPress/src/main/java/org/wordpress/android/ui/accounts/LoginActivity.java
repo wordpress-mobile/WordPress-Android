@@ -57,9 +57,9 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
-import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
+import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
@@ -70,6 +70,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -84,11 +85,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
-
-import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener,
@@ -132,6 +133,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +160,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     break;
                 case JETPACK_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
-                    mIsSignupFromLoginEnabled = false;
+                    mIsSignupFromLoginEnabled = mBuildConfigWrapper.isSignupEnabled();
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
@@ -305,10 +307,19 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case JETPACK_LOGIN_ONLY:
-                if (!mSiteStore.hasSite()) {
+                if (!mSiteStore.hasSite() && !mBuildConfigWrapper.isSiteCreationEnabled()) {
                     handleNoJetpackSites();
                 } else {
-                    ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                    if (!mSiteStore.hasSite()
+                        && AppPrefs.shouldShowPostSignupInterstitial()
+                        && !doLoginUpdate
+                        && mBuildConfigWrapper.isSiteCreationEnabled()
+                        && mBuildConfigWrapper.isSignupEnabled()
+                    ) {
+                        ActivityLauncher.showPostSignupInterstitial(this);
+                    } else {
+                        ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
+                    }
                     setResult(Activity.RESULT_OK);
                     finish();
                 }
@@ -324,11 +335,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 finish();
                 break;
             case JETPACK_STATS:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, true);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
+                ActivityLauncher.showLoginEpilogueForResult(this, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
@@ -342,7 +353,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 if (newSitesIds.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newSitesIds.get(0));
+                    intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSitesIds.get(0));
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
@@ -550,8 +561,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void showSignupMagicLink(String email) {
+        boolean isEmailClientAvailable = WPActivityUtils.isEmailClientAvailable(this);
         SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
-                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
+                mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, isEmailClientAvailable);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 
@@ -573,7 +585,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 mLoginAnalyticsListener.trackSignupMagicLinkOpenEmailClientClicked();
             }
 
-            WPActivityUtils.openEmailClient(this);
+            WPActivityUtils.openEmailClientChooser(this, getString(R.string.login_select_email_client));
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
         }

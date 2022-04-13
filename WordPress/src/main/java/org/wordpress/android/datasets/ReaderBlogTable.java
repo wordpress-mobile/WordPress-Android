@@ -104,20 +104,21 @@ public class ReaderBlogTable {
         }
 
         ReaderBlog blogInfo = new ReaderBlog();
-        blogInfo.blogId = c.getLong(c.getColumnIndex("blog_id"));
-        blogInfo.feedId = c.getLong(c.getColumnIndex("feed_id"));
-        blogInfo.setUrl(c.getString(c.getColumnIndex("blog_url")));
-        blogInfo.setImageUrl(c.getString(c.getColumnIndex("image_url")));
-        blogInfo.setFeedUrl(c.getString(c.getColumnIndex("feed_url")));
-        blogInfo.setName(c.getString(c.getColumnIndex("name")));
-        blogInfo.setDescription(c.getString(c.getColumnIndex("description")));
-        blogInfo.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
-        blogInfo.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
-        blogInfo.isFollowing = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_following")));
-        blogInfo.isNotificationsEnabled = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_notifications_enabled")));
-        blogInfo.numSubscribers = c.getInt(c.getColumnIndex("num_followers"));
-        blogInfo.organizationId = c.getInt(c.getColumnIndex("organization_id"));
-        blogInfo.numUnseenPosts = c.getInt(c.getColumnIndex("unseen_count"));
+        blogInfo.blogId = c.getLong(c.getColumnIndexOrThrow("blog_id"));
+        blogInfo.feedId = c.getLong(c.getColumnIndexOrThrow("feed_id"));
+        blogInfo.setUrl(c.getString(c.getColumnIndexOrThrow("blog_url")));
+        blogInfo.setImageUrl(c.getString(c.getColumnIndexOrThrow("image_url")));
+        blogInfo.setFeedUrl(c.getString(c.getColumnIndexOrThrow("feed_url")));
+        blogInfo.setName(c.getString(c.getColumnIndexOrThrow("name")));
+        blogInfo.setDescription(c.getString(c.getColumnIndexOrThrow("description")));
+        blogInfo.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_private")));
+        blogInfo.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_jetpack")));
+        blogInfo.isFollowing = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow("is_following")));
+        blogInfo.isNotificationsEnabled = SqlUtils.sqlToBool(c.getInt(c.getColumnIndexOrThrow(
+                "is_notifications_enabled")));
+        blogInfo.numSubscribers = c.getInt(c.getColumnIndexOrThrow("num_followers"));
+        blogInfo.organizationId = c.getInt(c.getColumnIndexOrThrow("organization_id"));
+        blogInfo.numUnseenPosts = c.getInt(c.getColumnIndexOrThrow("unseen_count"));
 
         return blogInfo;
     }

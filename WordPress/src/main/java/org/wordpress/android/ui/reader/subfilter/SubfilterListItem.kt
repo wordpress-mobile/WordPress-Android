@@ -75,6 +75,6 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         override val onClickAction: (filter: SubfilterListItem) -> Unit,
         val tag: ReaderTag
     ) : SubfilterListItem(TAG, true) {
-        override val label: UiString = UiStringText(tag.tagTitle)
+        override val label: UiString = UiStringText(tag.label)
     }
 }

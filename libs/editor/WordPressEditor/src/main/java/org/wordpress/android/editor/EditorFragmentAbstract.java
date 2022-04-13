@@ -8,6 +8,7 @@ import android.view.DragEvent;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
@@ -30,9 +31,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
     public abstract void showNotice(String message);
-    public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract void showContentInfo() throws EditorFragmentNotAddedException;
+    public abstract Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
+            EditorFragmentNotAddedException;
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
@@ -47,6 +49,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void removeMedia(String mediaId);
     // Called from EditPostActivity to let the block editor know when a media selection is cancelled
     public abstract void mediaSelectionCancelled();
+    public abstract void showEditorHelp();
 
 
     public enum MediaType {
@@ -217,6 +220,12 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
         void onReplaceStoryEditedBlockActionSent();
         void onReplaceStoryEditedBlockActionReceived();
+        boolean showPreview();
+        Map<String, Double> onRequestBlockTypeImpressions();
+        void onSetBlockTypeImpressions(Map<String, Double> impressions);
+        void onContactCustomerSupport();
+        void onGotoCustomerSupportOptions();
+        void onSendEventToHost(String eventName, Map<String, Object> properties);
     }
 
     /**

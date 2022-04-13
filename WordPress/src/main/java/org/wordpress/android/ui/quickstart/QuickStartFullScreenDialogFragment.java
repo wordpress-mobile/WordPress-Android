@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -22,11 +24,12 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
-import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +52,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     private QuickStartTaskType mTasksType = CUSTOMIZE;
 
     @Inject protected QuickStartStore mQuickStartStore;
+    @Inject protected SelectedSiteRepository mSelectedSiteRepository;
 
     public static Bundle newBundle(QuickStartTaskType type) {
         Bundle bundle = new Bundle();
@@ -75,26 +79,26 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         RecyclerView list = rootView.findViewById(R.id.list);
         List<QuickStartTask> tasksUncompleted = new ArrayList<>();
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
-        int site = AppPrefs.getSelectedSite();
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
 
         mQuickStartCompleteView = rootView.findViewById(R.id.quick_start_complete_view);
 
         switch (mTasksType) {
             case CUSTOMIZE:
-                tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
-                tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
+                tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, CUSTOMIZE));
+                tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(selectedSiteLocalId, CUSTOMIZE));
                 setCompleteViewImage(R.drawable.img_illustration_site_brush_191dp);
                 AnalyticsTracker.track(Stat.QUICK_START_TYPE_CUSTOMIZE_VIEWED);
                 break;
             case GROW:
-                tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, GROW));
-                tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, GROW));
+                tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, GROW));
+                tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(selectedSiteLocalId, GROW));
                 setCompleteViewImage(R.drawable.img_illustration_site_about_182dp);
                 AnalyticsTracker.track(Stat.QUICK_START_TYPE_GROW_VIEWED);
                 break;
             case UNKNOWN:
-                tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
-                tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
+                tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, CUSTOMIZE));
+                tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(selectedSiteLocalId, CUSTOMIZE));
                 setCompleteViewImage(R.drawable.img_illustration_site_brush_191dp);
                 break;
         }
@@ -152,9 +156,11 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     @Override
     public void onTaskTapped(QuickStartTask task) {
         AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
-        Bundle result = new Bundle();
-        result.putSerializable(RESULT_TASK, task);
-        mDialogController.confirm(result);
+        if (!showSnackbarIfNeeded(task)) {
+            Bundle result = new Bundle();
+            result.putSerializable(RESULT_TASK, task);
+            mDialogController.confirm(result);
+        }
     }
 
     @Override
@@ -168,16 +174,16 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     @Override
     public void onSkipTaskTapped(QuickStartTask task) {
         AnalyticsTracker.track(QuickStartUtils.getQuickStartListSkippedTracker(task));
-        mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), task, true);
+        int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
+        mQuickStartStore.setDoneTask(selectedSiteLocalId, task, true);
 
         if (mQuickStartAdapter != null) {
-            int site = AppPrefs.getSelectedSite();
-
-            List<QuickStartTask> uncompletedTasks = mQuickStartStore.getUncompletedTasksByType(site, mTasksType);
+            List<QuickStartTask> uncompletedTasks =
+                    mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, mTasksType);
 
             mQuickStartAdapter.updateContent(
                     uncompletedTasks,
-                    mQuickStartStore.getCompletedTasksByType(site, mTasksType));
+                    mQuickStartStore.getCompletedTasksByType(selectedSiteLocalId, mTasksType));
 
             if (uncompletedTasks.isEmpty() && !mQuickStartAdapter.isCompletedTasksListExpanded()) {
                 toggleCompletedView(true);
@@ -201,7 +207,10 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 break;
         }
 
-        if (mQuickStartStore.getUncompletedTasksByType(AppPrefs.getSelectedSite(), mTasksType).isEmpty()) {
+        if (mQuickStartStore.getUncompletedTasksByType(
+                mSelectedSiteRepository.getSelectedSiteLocalId(),
+                mTasksType
+        ).isEmpty()) {
             toggleCompletedView(!isExpanded);
         }
     }
@@ -216,6 +225,15 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             AniUtils.fadeIn(mQuickStartCompleteView, Duration.SHORT);
         } else {
             AniUtils.fadeOut(mQuickStartCompleteView, Duration.SHORT);
+        }
+    }
+
+    private boolean showSnackbarIfNeeded(QuickStartTask task) {
+        if (task == QuickStartTask.CREATE_SITE) {
+            WPSnackbar.make(requireView(), R.string.quick_start_list_create_site_message, Snackbar.LENGTH_LONG).show();
+            return true;
+        } else {
+            return false;
         }
     }
 }

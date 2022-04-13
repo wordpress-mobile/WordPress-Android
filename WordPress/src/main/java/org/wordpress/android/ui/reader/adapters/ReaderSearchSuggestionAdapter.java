@@ -65,8 +65,8 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         if (sqlCursor.moveToFirst()) {
             // first populate the matrix from the db cursor...
             do {
-                long id = sqlCursor.getLong(sqlCursor.getColumnIndex(ReaderSearchTable.COL_ID));
-                String query = sqlCursor.getString(sqlCursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+                long id = sqlCursor.getLong(sqlCursor.getColumnIndexOrThrow(ReaderSearchTable.COL_ID));
+                String query = sqlCursor.getString(sqlCursor.getColumnIndexOrThrow(ReaderSearchTable.COL_QUERY));
                 matrixCursor.addRow(new Object[]{id, query});
             } while (sqlCursor.moveToNext());
 
@@ -97,7 +97,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     public String getSuggestion(int position) {
         Cursor cursor = (Cursor) getItem(position);
         if (cursor != null) {
-            return cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+            return cursor.getString(cursor.getColumnIndexOrThrow(ReaderSearchTable.COL_QUERY));
         } else {
             return null;
         }
@@ -135,7 +135,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         SuggestionViewHolder holder = new SuggestionViewHolder(view);
         view.setTag(holder);
 
-        long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(ReaderSearchTable.COL_ID));
         if (id == CLEAR_ALL_ROW_ID) {
             view.setBackgroundColor(mClearAllBgColor);
             view.setOnClickListener(v -> {
@@ -155,10 +155,10 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         SuggestionViewHolder holder = (SuggestionViewHolder) view.getTag();
 
-        final String query = cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+        final String query = cursor.getString(cursor.getColumnIndexOrThrow(ReaderSearchTable.COL_QUERY));
         holder.mTxtSuggestion.setText(query);
 
-        long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow(ReaderSearchTable.COL_ID));
         if (id != CLEAR_ALL_ROW_ID) {
             holder.mImgDelete.setOnClickListener(v -> {
                 if (mOnSuggestionDeleteClickListener != null) {

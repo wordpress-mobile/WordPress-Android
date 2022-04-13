@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs
 
 import org.wordpress.android.fluxc.model.JetpackCapability
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
@@ -77,6 +78,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.shouldShowStoriesIntro()
         set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
 
+    var shouldScheduleCreateSiteNotification: Boolean
+        get() = AppPrefs.shouldScheduleCreateSiteNotification()
+        set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -132,8 +137,6 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setStatsWidgetHasData(hasData, appWidgetId)
     }
 
-    fun getSelectedSite(): Int = AppPrefs.getSelectedSite()
-
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
@@ -183,6 +186,14 @@ class AppPrefsWrapper @Inject constructor() {
         return AppPrefs.isBloggingRemindersShown(siteId)
     }
 
+    fun setShouldShowWeeklyRoundupNotification(siteId: Long, shouldShow: Boolean) {
+        AppPrefs.setShouldShowWeeklyRoundupNotification(siteId, shouldShow)
+    }
+
+    fun shouldShowWeeklyRoundupNotification(siteId: Long): Boolean {
+        return AppPrefs.shouldShowWeeklyRoundupNotification(siteId)
+    }
+
     fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =
             AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
 
@@ -190,6 +201,25 @@ class AppPrefsWrapper @Inject constructor() {
             AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
 
     fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
+
+    fun getSelectedSite() = AppPrefs.getSelectedSite()
+
+    fun setSelectedSite(siteLocalId: Int) = AppPrefs.setSelectedSite(siteLocalId)
+
+    fun isQuickStartNoticeRequired() = AppPrefs.isQuickStartNoticeRequired()
+
+    fun setQuickStartNoticeRequired(shown: Boolean) = AppPrefs.setQuickStartNoticeRequired(shown)
+
+    fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
+
+    fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.setMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setInitialScreenFromMySiteDefaultTabExperimentVariant(variant: String) =
+            AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
+
+    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
 
     companion object {
         private const val LIGHT_MODE_ID = 0

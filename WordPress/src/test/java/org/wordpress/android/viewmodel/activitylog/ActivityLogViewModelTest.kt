@@ -1224,6 +1224,29 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun `given status is multisite, when query restore status, then reload events for multisite`() = test {
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
+                .thenReturn(flow { emit(RestoreRequestState.Multisite) })
+        initRestoreProgressMocks()
+
+        viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = false,
+                        isRestoreHidden = true,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
     fun `given status is a progress, when query restore status, then reload events for progress`() = test {
         val progress = RestoreRequestState.Progress(REWIND_ID, 50)
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(progress) })
@@ -1446,6 +1469,7 @@ class ActivityLogViewModelTest {
         backupProgressWithDate: Boolean = false,
         emptyList: Boolean = false,
         rewindDisabled: Boolean = true,
+        isRestoreHidden: Boolean = false,
         isLastPageAndFreeSite: Boolean = false,
         canLoadMore: Boolean = false,
         withFooter: Boolean = false
@@ -1469,12 +1493,12 @@ class ActivityLogViewModelTest {
             }
         }
         if (!emptyList) {
-            firstItem(rewindDisabled).let {
+            firstItem(rewindDisabled, isRestoreHidden).let {
                 list.add(ActivityLogListItem.Header(it.formattedDate))
                 list.add(it)
             }
-            list.add(secondItem(rewindDisabled))
-            thirdItem(rewindDisabled).let {
+            list.add(secondItem(rewindDisabled, isRestoreHidden))
+            thirdItem(rewindDisabled, isRestoreHidden).let {
                 list.add(ActivityLogListItem.Header(it.formattedDate))
                 list.add(it)
             }
@@ -1492,19 +1516,22 @@ class ActivityLogViewModelTest {
         return list
     }
 
-    private fun firstItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
+    private fun firstItem(rewindDisabled: Boolean, isRestoreHidden: Boolean) = ActivityLogListItem.Event(
             model = activityList[0],
-            rewindDisabled = rewindDisabled
+            rewindDisabled = rewindDisabled,
+            isRestoreHidden = isRestoreHidden
     )
 
-    private fun secondItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
+    private fun secondItem(rewindDisabled: Boolean, isRestoreHidden: Boolean) = ActivityLogListItem.Event(
             model = activityList[1],
-            rewindDisabled = rewindDisabled
+            rewindDisabled = rewindDisabled,
+            isRestoreHidden = isRestoreHidden
     )
 
-    private fun thirdItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
+    private fun thirdItem(rewindDisabled: Boolean, isRestoreHidden: Boolean) = ActivityLogListItem.Event(
             model = activityList[2],
-            rewindDisabled = rewindDisabled
+            rewindDisabled = rewindDisabled,
+            isRestoreHidden = isRestoreHidden
     )
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
@@ -1526,7 +1553,8 @@ class ActivityLogViewModelTest {
             rewindId = null,
             date = Date(),
             isButtonVisible = true,
-            buttonIcon = ActivityLogListItem.Icon.DEFAULT
+            buttonIcon = ActivityLogListItem.Icon.DEFAULT,
+            isRestoreHidden = false
     )
 
     private fun backupDownloadCompleteEvent() = BackupDownloadEvent(

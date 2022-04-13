@@ -190,6 +190,18 @@ public class ReaderUtils {
         }
     }
 
+    public static String getTextForCommentSnippet(Context context, int numComments) {
+        switch (numComments) {
+            case 0:
+                return context.getString(R.string.comments);
+            case 1:
+                return context.getString(R.string.reader_short_comment_count_one);
+            default:
+                String count = FormatUtils.formatInt(numComments);
+                return String.format(context.getString(R.string.reader_short_comment_count_multi), count);
+        }
+    }
+
     /*
      * returns true if a ReaderPost and ReaderComment exist for the passed Ids
      */

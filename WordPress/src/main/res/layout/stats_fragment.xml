@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include android:id="@+id/disabled_view" layout="@layout/stats_disabled_view" />
+
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/pullToRefresh"
             android:layout_width="match_parent"
@@ -17,7 +19,7 @@
             android:layout_below="@id/toolbar"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.viewpager.widget.ViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/statsPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

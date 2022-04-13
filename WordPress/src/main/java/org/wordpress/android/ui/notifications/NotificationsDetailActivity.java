@@ -54,9 +54,10 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
-import org.wordpress.android.util.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -526,7 +527,13 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             return;
         }
 
-        ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
+        ReaderActivityLauncher.showReaderComments(
+                this,
+                siteId,
+                postId,
+                commentId,
+                ThreadedCommentsActionSource.COMMENT_NOTIFICATION.getSourceDescription()
+        );
     }
 
     private void setProgressVisible(boolean visible) {

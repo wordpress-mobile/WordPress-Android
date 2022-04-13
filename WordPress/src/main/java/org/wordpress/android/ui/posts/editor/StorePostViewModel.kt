@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
@@ -57,6 +56,9 @@ class StorePostViewModel
     private val _onFinish = MutableLiveData<Event<ActivityFinishState>>()
     val onFinish: LiveData<Event<ActivityFinishState>> = _onFinish
 
+    @Volatile
+    var isSavingPostOnEditorExit = false
+
     private val _savingProgressDialogVisibility = MutableLiveData<DialogVisibility>().apply {
         postValue(Hidden)
     }
@@ -81,7 +83,7 @@ class StorePostViewModel
         return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
                     editPostRepository.getPost(),
-                    siteStore.getSiteByLocalId(editPostRepository.localSiteId)
+                    requireNotNull(siteStore.getSiteByLocalId(editPostRepository.localSiteId))
             )
             uploadService.uploadPost(context, editPostRepository.id, isFirstTimePublish)
             SAVED_ONLINE
@@ -89,8 +91,6 @@ class StorePostViewModel
             SAVED_LOCALLY
         }
     }
-
-    fun isAutosavePending(): Boolean = saveJob?.isActive ?: false
 
     fun savePostWithDelay() {
         saveJob?.cancel()
@@ -100,7 +100,7 @@ class StorePostViewModel
                 delay(CHANGE_SAVE_DELAY)
             }
             debounceCounter = 0
-            _onSavePostTriggered.value = Event(Unit)
+            if (!isSavingPostOnEditorExit) _onSavePostTriggered.value = Event(Unit)
         }
     }
 

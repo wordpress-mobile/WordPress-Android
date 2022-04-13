@@ -26,7 +26,7 @@ class LayoutsAdapter(context: Context) : RecyclerView.Adapter<LayoutViewHolder>(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutViewHolder.from(parent)
 
     override fun getItemCount(): Int = layouts.size
 

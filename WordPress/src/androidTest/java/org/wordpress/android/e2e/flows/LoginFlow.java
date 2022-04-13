@@ -2,18 +2,20 @@ package org.wordpress.android.e2e.flows;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.view.View;
 import android.widget.EditText;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Matchers;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
+import org.wordpress.android.e2e.pages.HelpAndSupportScreen;
 
 import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -48,16 +50,34 @@ public class LoginFlow {
         return this;
     }
 
-    public void confirmLogin() {
+    public void confirmLogin(boolean isSelfHosted) {
         // If we get bumped to the "enter your username and password" screen, fill it in
         if (atLeastOneElementWithIdIsDisplayed(R.id.login_password_row)) {
             enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD);
         }
 
-        ViewInteraction continueButton = onView(withId(R.id.bottom_button));
+        if (!BuildConfig.IS_JETPACK_APP) {
+            // New Epilogue Screen - Choose the first site from the list of site.
+            // See LoginEpilogueFragment
+            ViewInteraction sitesList = onView(withId(R.id.recycler_view));
+            waitForElementToBeDisplayed(sitesList);
+            sitesList.perform(actionOnItemAtPosition(1, click()));
 
-        waitForElementToBeDisplayed(continueButton);
-        clickOn(continueButton);
+            if (!isSelfHosted) {
+                // Quick Start Prompt Dialog - Click the "No thanks" negative button to continue.
+                // See QuickStartPromptDialogFragment
+                ViewInteraction negativeButton = onView(withId(R.id.quick_start_prompt_dialog_button_negative));
+                waitForElementToBeDisplayed(negativeButton);
+                clickOn(negativeButton);
+            }
+        } else {
+            // Epilogue Screen - Click the "Done" bottom button to continue.
+            // See LoginEpilogueFragment
+            ViewInteraction continueButton = onView(withId(R.id.bottom_button));
+
+            waitForElementToBeDisplayed(continueButton);
+            clickOn(continueButton);
+        }
 
         waitForElementToBeDisplayed(R.id.nav_sites);
     }
@@ -69,7 +89,7 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow openMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
+    public LoginFlow openMagicLink() {
         // Magic Link Sent Screen – Should see "Check email" button
         // See LoginMagicLinkSentFragment
         waitForElementToBeDisplayed(R.id.login_open_email_client);
@@ -78,16 +98,16 @@ public class LoginFlow {
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("wordpress://magic-login?token=valid_token"))
                 .setPackage(getApplicationContext().getPackageName());
-        magicLinkActivityTestRule.launchActivity(intent);
+        ActivityScenario.launch(intent);
 
         return this;
     }
 
     public LoginFlow enterUsernameAndPassword(String username, String password) {
         ViewInteraction usernameElement = onView(allOf(isDescendantOfA(withId(R.id.login_username_row)),
-                Matchers.<View>instanceOf(EditText.class)));
+                Matchers.instanceOf(EditText.class)));
         ViewInteraction passwordElement = onView(allOf(isDescendantOfA(withId(R.id.login_password_row)),
-                Matchers.<View>instanceOf(EditText.class)));
+                Matchers.instanceOf(EditText.class)));
         populateTextField(usernameElement, username + "\n");
         populateTextField(passwordElement, password + "\n");
         clickOn(R.id.bottom_button);
@@ -107,5 +127,10 @@ public class LoginFlow {
         populateTextField(R.id.input, siteAddress);
         clickOn(R.id.bottom_button);
         return this;
+    }
+
+    public HelpAndSupportScreen tapHelp() {
+        clickOn(onView(withId(R.id.help)));
+        return new HelpAndSupportScreen();
     }
 }

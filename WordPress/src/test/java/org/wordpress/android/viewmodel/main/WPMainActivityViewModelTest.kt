@@ -4,12 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -20,11 +22,13 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -32,7 +36,9 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
-import org.wordpress.android.ui.mysite.QuickStartRepository
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -40,10 +46,10 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 
 @RunWith(MockitoJUnitRunner::class)
+@InternalCoroutinesApi
 class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
 
@@ -53,11 +59,13 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
     @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
-    @Mock lateinit var onQuickStartCompletedEventObserver: Observer<Unit>
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
     @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var siteStore: SiteStore
+    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -93,15 +101,15 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
-                mySiteImprovementsFeatureConfig,
                 quickStartRepository,
+                selectedSiteRepository,
+                accountStore,
+                siteStore,
+                mySiteDefaultTabExperiment,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver
-        )
-        viewModel.completeBottomSheetQuickStartTask.observeForever(
-                onQuickStartCompletedEventObserver
         )
         viewModel.onFocusPointVisibilityChange.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
@@ -111,7 +119,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         // mainActions is MediatorLiveData and needs observer in order for us to access it's value
         viewModel.mainActions.observeForever { }
         viewModel.fabUiState.observeForever { fabUiState = it }
-        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(false)
 
         loginFlowTriggered = false
         switchTabTriggered = false
@@ -120,7 +127,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     /* FAB VISIBILITY */
 
     @Test
-    fun `given wordpress app, when page changed to my site, then fab is visible`() {
+    fun `given fab enabled, when page changed to my site, then fab is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -129,7 +136,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when page changed away from my site, then fab is hidden`() {
+    fun `given fab enabled, when page changed away from my site, then fab is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -138,7 +145,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when my site page is resumed, then fab is visible`() {
+    fun `given fab enabled, when my site page is resumed, then fab is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -147,7 +154,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when non my site page is resumed, then fab is hidden`() {
+    fun `given fab enabled, when non my site page is resumed, then fab is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -156,8 +163,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed to my site, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed to my site, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -165,8 +172,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed away from my site, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed away from my site, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -174,8 +181,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when my site page is resumed, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when my site page is resumed, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -183,8 +190,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when non my site page is resumed, then fab is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when non my site page is resumed, then fab is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -194,7 +201,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     /* FAB TOOLTIP VISIBILITY */
 
     @Test
-    fun `given wordpress app, when page changed to my site, then fab tooltip is visible`() {
+    fun `given fab enabled, when page changed to my site, then fab tooltip is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -203,7 +210,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when page changed away from my site, then fab tooltip is hidden`() {
+    fun `given fab enabled, when page changed away from my site, then fab tooltip is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -212,7 +219,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when my site page is resumed, then fab tooltip is visible`() {
+    fun `given fab enabled, when my site page is resumed, then fab tooltip is visible`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
@@ -221,7 +228,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when non my site page is resumed, then fab tooltip is hidden`() {
+    fun `given fab enabled, when non my site page is resumed, then fab tooltip is hidden`() {
         startViewModelWithDefaultParameters()
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
@@ -230,8 +237,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed to my site, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed to my site, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -239,8 +246,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when page changed away from my site, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when page changed away from my site, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onPageChanged(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -248,8 +255,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when my site page is resumed, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
@@ -257,8 +264,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given jetpack app, when non my site page is resumed, then fab tooltip is hidden`() {
-        startViewModelWithDefaultParameters(isJetpackApp = true)
+    fun `given fab disabled, when non my site page is resumed, then fab tooltip is hidden`() {
+        startViewModelWithDefaultParameters(isCreateFabEnabled = false)
 
         viewModel.onResume(isOnMySitePageWithValidSite = false, site = initSite(hasFullAccessToContent = true))
 
@@ -272,7 +279,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onTooltipTapped(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -281,7 +288,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
         viewModel.onFabClicked(initSite(hasFullAccessToContent = false))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -290,7 +297,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
         viewModel.onFabClicked(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -298,7 +305,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onFabLongPressed(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
-        assertThat(fabUiState?.isFabTooltipVisible).isFalse()
+        assertThat(fabUiState?.isFabTooltipVisible).isFalse
     }
 
     @Test
@@ -307,7 +314,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = PUBLISH_POST
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isTrue()
+        assertThat(fabUiState?.isFocusPointVisible).isTrue
     }
 
     @Test
@@ -316,7 +323,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = UPDATE_SITE_TITLE
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isFalse()
+        assertThat(fabUiState?.isFocusPointVisible).isFalse
     }
 
     @Test
@@ -325,7 +332,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = null
         viewModel.onPageChanged(isOnMySitePageWithValidSite = true, site = initSite(hasFullAccessToContent = true))
 
-        assertThat(fabUiState?.isFocusPointVisible).isFalse()
+        assertThat(fabUiState?.isFocusPointVisible).isFalse
     }
 
     @Test
@@ -359,7 +366,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet does not show quick start focus point by default`() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
         )
@@ -368,8 +375,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `CREATE_NEW_POST action in bottom sheet with active Quick Start completes task and hides the focus point`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        activeTask.value = PUBLISH_POST
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
         )
@@ -377,8 +385,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
-        verify(onQuickStartCompletedEventObserver).onChanged(anyOrNull())
-        verify(quickStartRepository, never()).completeTask(any(), any())
+        verify(quickStartRepository).completeTask(any())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
@@ -386,24 +393,24 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository when my site improvements turned on`() {
-        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+        activeTask.value = PUBLISH_POST
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
 
         verify(quickStartRepository).completeTask(PUBLISH_POST)
-        verifyZeroInteractions(onQuickStartCompletedEventObserver)
     }
 
     @Test
     fun `actions that are not CREATE_NEW_POST will not complete quick start task`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        activeTask.value = PUBLISH_POST
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
         )
@@ -411,7 +418,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
-        verify(onQuickStartCompletedEventObserver, never()).onChanged(anyOrNull())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
@@ -432,7 +438,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
     }
 
     @Test
@@ -441,7 +447,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue()
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
     }
 
     @Test
@@ -594,22 +600,22 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given wordpress app, when app is launched, then feature announcement is shown`() = test {
+    fun `given whats new feature enabled, when app is launched, then feature announcement is shown`() = test {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
                 featureAnnouncement
         )
 
-        startViewModelWithDefaultParameters(false)
+        startViewModelWithDefaultParameters(true)
         resumeViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
     }
 
     @Test
-    fun `given jetpack app, when app is launched, then feature announcement is not shown`() = test {
-        startViewModelWithDefaultParameters(true)
+    fun `given whats new feature disabled, when app is launched, then feature announcement is not shown`() = test {
+        startViewModelWithDefaultParameters(isWhatsNewFeatureEnabled = false)
         resumeViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
@@ -665,8 +671,57 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(viewModel.mainActions.value!!.map { it.actionType }).isEqualTo(expectedOrder)
     }
 
-    private fun startViewModelWithDefaultParameters(isJetpackApp: Boolean = false) {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
+    @Test
+    fun `hasMultipleSites should be true when there are more than one site`() {
+        whenever(siteStore.sitesCount).thenReturn(2)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(true)
+    }
+
+    @Test
+    fun `hasMultipleSites should be false when there is only one site`() {
+        whenever(siteStore.sitesCount).thenReturn(1)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(false)
+    }
+
+    @Test
+    fun `hasMultipleSites should be false when there are no site`() {
+        whenever(siteStore.sitesCount).thenReturn(0)
+        assertThat(viewModel.hasMultipleSites).isEqualTo(false)
+    }
+
+    @Test
+    fun `firstSite should return the first site available in the list of sites`() {
+        val sites = mock<ArrayList<SiteModel>>()
+        whenever(siteStore.sites).thenReturn(sites)
+        val siteModel = mock<SiteModel>()
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(sites.get(0)).thenReturn(siteModel)
+
+        assertThat(viewModel.firstSite).isEqualTo(siteModel)
+    }
+
+    @Test
+    fun `firstSite should return null when there are no sites`() {
+        whenever(siteStore.hasSite()).thenReturn(false)
+
+        assertThat(viewModel.firstSite).isEqualTo(null)
+    }
+
+    @Test
+    fun `given my site default tab experiment, when requested, then check and set for variant is executed `() {
+        startViewModelWithDefaultParameters()
+
+        viewModel.checkAndSetVariantForMySiteDefaultTabExperiment()
+
+        verify(mySiteDefaultTabExperiment, atLeastOnce()).checkAndSetVariantIfNeeded()
+    }
+
+    private fun startViewModelWithDefaultParameters(
+        isWhatsNewFeatureEnabled: Boolean = true,
+        isCreateFabEnabled: Boolean = true
+    ) {
+        whenever(buildConfigWrapper.isWhatsNewFeatureEnabled).thenReturn(isWhatsNewFeatureEnabled)
+        whenever(buildConfigWrapper.isCreateFabEnabled).thenReturn(isCreateFabEnabled)
         viewModel.start(site = initSite(hasFullAccessToContent = true, supportsStories = true))
     }
 
