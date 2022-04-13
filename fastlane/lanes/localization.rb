@@ -289,8 +289,7 @@ platform :android do
       repository: 'wordpress-mobile/gutenberg-mobile',
       strings_file_path: 'bundle/android/strings.xml',
       github_release_prefix: '',
-      exclusions: [],
-      merge_tool: File.join(ENV['PROJECT_ROOT_FOLDER'], 'tools', 'merge_strings_xml.py')
+      exclusions: []
     },
     {
       name: 'Login Library',
@@ -353,16 +352,12 @@ platform :android do
         UI.user_error! 'Abort.' unless UI.confirm(error_message)
       else
         UI.message("`strings.xml` file for #{lib[:name]} downloaded to #{download_path}.")
-        if lib.key?(:merge_tool)
-          sh(lib[:merge_tool], lib[:name], download_path)
-        else
-          lib_to_merge = [{
-            library: lib[:name],
-            strings_path: download_path,
-            exclusions: lib[:exclusions]
-          }]
-          an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
-        end
+        lib_to_merge = [{
+          library: lib[:name],
+          strings_path: download_path,
+          exclusions: lib[:exclusions]
+        }]
+        an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
       end
     end

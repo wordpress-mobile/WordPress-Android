@@ -21,7 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
-import org.wordpress.android.ui.mysite.tabs.MySiteTabExperimentVariant;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -170,8 +170,8 @@ public class AppPrefs {
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
-        // Used to store the variant for the my site default tab experiment
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT
+        // Used to indicate if the variant has been assigned for the My Site Tab experiment
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED
     }
 
     /**
@@ -266,6 +266,9 @@ public class AppPrefs {
 
         // Tracks which block types are considered "new" via impression counts
         GUTENBERG_BLOCK_TYPE_IMPRESSIONS,
+
+        // Used to identify the App Settings for initial screen that is updated when the variant is assigned
+        wp_pref_initial_screen,
     }
 
     private static SharedPreferences prefs() {
@@ -1345,14 +1348,28 @@ public class AppPrefs {
         return capabilities;
     }
 
-    public static void setMySiteDefaultTabExperimentVariant(String variant) {
-        setString(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT, variant);
+    public static boolean isMySiteDefaultTabExperimentVariantAssigned() {
+        return getBoolean(
+                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
+                false
+        );
     }
 
-    public static String getMySiteDefaultTabExperimentVariant() {
+    public static void setMySiteDefaultTabExperimentVariantAssigned() {
+        setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
+    }
+
+    public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
+        // This supports the MySiteDefaultTab AB Experiment.
+        // AppSettings are undeletable across logouts and keys are all lower case.
+        // This method will be removed when the experiment has completed and thus
+        // the settings will be maintained only from the AppSettings view
+        setString(UndeletablePrefKey.wp_pref_initial_screen, variant);
+    }
+
+    public static String getMySiteInitialScreen() {
         return getString(
-                DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT,
-                MySiteTabExperimentVariant.NONEXISTENT.getLabel()
-        );
+                UndeletablePrefKey.wp_pref_initial_screen,
+                MySiteTabType.SITE_MENU.getLabel());
     }
 }

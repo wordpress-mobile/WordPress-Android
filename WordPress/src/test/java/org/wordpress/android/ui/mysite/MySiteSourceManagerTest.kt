@@ -26,7 +26,6 @@ import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrati
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 
@@ -47,7 +46,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     @Mock lateinit var siteIconProgressSource: SiteIconProgressSource
     @Mock lateinit var selectedSiteSource: SelectedSiteSource
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
-    @Mock lateinit var builderConfigWrapper: BuildConfigWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var siteModel: SiteModel
     private lateinit var mySiteSourceManager: MySiteSourceManager
@@ -77,7 +75,6 @@ class MySiteSourceManagerTest : BaseUnitTest() {
                 cardsSource,
                 siteIconProgressSource,
                 mySiteDashboardPhase2FeatureConfig,
-                builderConfigWrapper,
                 selectedSiteRepository
         )
 
@@ -138,26 +135,13 @@ class MySiteSourceManagerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given with site local id and wordpress app, when build, then all sources are built`() {
+    fun `given with site local id, when build, then all sources are built`() {
         val coroutineScope = testScope()
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        whenever(builderConfigWrapper.isJetpackApp).thenReturn(false)
 
         mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
 
         allRefreshedMySiteSources.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
-    }
-
-    @Test
-    fun `given with site local id and jetpack app, when build, then all sources except cards source are built`() {
-        val coroutineScope = testScope()
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        whenever(builderConfigWrapper.isJetpackApp).thenReturn(true)
-
-        mySiteSourceManager.build(coroutineScope, SITE_LOCAL_ID)
-
-        allRefreshedMySiteSourcesExceptCardsSource.forEach { verify(it).build(coroutineScope, SITE_LOCAL_ID) }
-        verify(cardsSource, times(0)).build(coroutineScope, SITE_LOCAL_ID)
     }
 
     @Test

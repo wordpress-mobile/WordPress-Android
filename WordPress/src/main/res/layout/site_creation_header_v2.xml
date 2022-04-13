@@ -13,7 +13,7 @@
         android:letterSpacing="0.01"
         android:paddingBottom="@dimen/margin_large"
         app:fixWidowWords="true"
-        android:text="@string/new_site_creation_intents_header_title" />
+        tools:text="@string/new_site_creation_intents_header_title" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
@@ -22,5 +22,5 @@
         android:lineSpacingExtra="5sp"
         android:letterSpacing="0.01"
         app:fixWidowWords="true"
-        android:text="@string/new_site_creation_intents_header_subtitle" />
+        tools:text="@string/new_site_creation_intents_header_subtitle" />
 </LinearLayout>

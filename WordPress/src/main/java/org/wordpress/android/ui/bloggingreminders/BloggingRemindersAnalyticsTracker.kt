@@ -82,7 +82,8 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
     enum class Source(val trackingName: String) {
         PUBLISH_FLOW("publish_flow"),
         BLOG_SETTINGS("blog_settings"),
-        NOTIFICATION_SETTINGS("notification_settings")
+        NOTIFICATION_SETTINGS("notification_settings"),
+        BLOGGING_PROMPTS_ONBOARDING("blogging_prompts_onboarding"),
     }
 
     companion object {
