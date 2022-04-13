@@ -539,12 +539,12 @@ class PagesViewModel
             val clip = ClipData.newPlainText("${page.localId}", pageLink)
             clipboard.setPrimaryClip(clip)
             _showSnackbarMessage.postValue(SnackbarMessageHolder((UiStringRes(R.string.media_edit_copy_url_toast))))
-        } catch (e: Exception) {
+        } catch (e: SecurityException) {
             /**
              * Ignore any exceptions here as certain devices have bugs and will fail.
              * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
              */
-            AppLog.e(PAGES, e)
+            AppLog.e(AppLog.T.PAGES, e)
             _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
         }
     }
@@ -1036,4 +1036,3 @@ class PagesViewModel
         PageStatus.PRIVATE -> R.string.pages_private
     }
 }
-
