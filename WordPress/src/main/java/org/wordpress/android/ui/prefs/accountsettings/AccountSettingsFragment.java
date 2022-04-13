@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs;
+package org.wordpress.android.ui.prefs.accountsettings;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -41,6 +41,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
+import org.wordpress.android.ui.prefs.DetailListPreference;
+import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
