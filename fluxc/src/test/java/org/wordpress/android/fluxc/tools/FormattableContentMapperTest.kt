@@ -126,14 +126,20 @@ class FormattableContentMapperTest {
     }
 
     @Test
-    fun `getting non numerical ID from FormattableRange returns null `() {
+    fun `getting ID from FormattableRange returns correct value depending on value type `() {
         val notificationCommentBodyResponse = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/comment-response.json")
         val formattableContent = formattableContentMapper.mapToFormattableContent(notificationCommentBodyResponse)
         assertEquals(4, formattableContent.ranges!!.size)
+        // ID is missing
+        with(formattableContent.ranges!![0]) {
+            assertEquals(null, this.id)
+        }
+        // ID is numerical
         with(formattableContent.ranges!![1]) {
             assertEquals(16, this.id)
         }
+        // ID is non-numerical
         with(formattableContent.ranges!![2]) {
             assertEquals(null, this.id)
         }
