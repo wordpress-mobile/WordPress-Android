@@ -21,7 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -1370,6 +1370,6 @@ public class AppPrefs {
     public static String getMySiteInitialScreen() {
         return getString(
                 UndeletablePrefKey.wp_pref_initial_screen,
-                MySiteTabType.SITE_MENU.getLabel());
+                MySiteDefaultTabExperiment.VARIANT_MENU);
     }
 }
