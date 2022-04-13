@@ -27,13 +27,13 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+const val ONE_SITE = 1
 class AccountSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
-
     private val sitesAccessedViaWPComRest: List<SiteViewModel> by lazy {
         accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
             SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
@@ -81,7 +81,7 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private fun cancelPendingEmailChange() {
-        onAccountSettingsChange {  accountsSettingsRepository.cancelPendingEmailChange() }
+        onAccountSettingsChange { accountsSettingsRepository.cancelPendingEmailChange() }
     }
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
@@ -222,12 +222,12 @@ class AccountSettingsViewModel @Inject constructor(
     data class SiteViewModel(val siteName: String, val siteId: Long, val homeURLOrHostName: String)
 
     data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>) {
+        val canShowChoosePrimarySiteDialog
+            get() = sites.size > ONE_SITE
         val siteNames
             get() = sites.map { it.siteName }.toTypedArray()
-
         val siteIds
             get() = sites.map { it.siteId.toString() }.toTypedArray()
-
         val homeURLOrHostNames
             get() = sites.map { it.siteName }.toTypedArray()
     }
