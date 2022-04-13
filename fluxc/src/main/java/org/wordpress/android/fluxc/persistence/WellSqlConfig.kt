@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 172
+        return 173
     }
 
     override fun getDbName(): String {
@@ -1844,6 +1844,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 171 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DELETE FROM WCOrderSummaryModel")
                     db.execSQL("DELETE FROM WCOrderShipmentTrackingModel")
+                }
+                172 -> migrate(version) {
+                    db.execSQL("ALTER TABLE EditorTheme ADD QUOTE_BLOCK_V2 BOOLEAN")
                 }
             }
         }
