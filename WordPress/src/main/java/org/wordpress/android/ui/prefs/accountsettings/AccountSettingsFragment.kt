@@ -6,7 +6,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.Preference.OnPreferenceChangeListener
-import android.preference.PreferenceFragment
 import android.text.InputType
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -21,6 +20,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collect
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
@@ -39,19 +39,27 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.DetailListPreference
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.EMAIL
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.PASSWORD
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.URL
+import org.wordpress.android.ui.prefs.PreferenceFragmentLifeCycleOwner
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.UserNameSettingsUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class AccountSettingsFragment : PreferenceFragment(),
+class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         OnPreferenceChangeListener,
         OnConfirmListener {
     private var mUsernamePreference: Preference? = null
@@ -61,7 +69,8 @@ class AccountSettingsFragment : PreferenceFragment(),
     private var mChangePasswordPreference: EditTextPreferenceWithValidation? = null
     private var mChangePasswordProgressDialog: ProgressDialog? = null
     private var mEmailSnackbar: Snackbar? = null
-
+    @Inject
+    private lateinit var uiHelpers: UiHelpers
     @Inject
     private var viewModel: AccountSettingsViewModel? = null
 
@@ -116,10 +125,100 @@ class AccountSettingsFragment : PreferenceFragment(),
         return coordinatorView
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        refreshAccountDetails()
+    override fun onStart() {
+        super.onStart()
+        observeAccountSettingsViewState()
     }
+
+    private fun observeAccountSettingsViewState() {
+        this.lifecycleScope.launchWhenStarted{
+            viewModel?.accountSettingsUiState?.collect { updateAccountSettings(it) }
+
+        }
+    }
+
+    private fun updateAccountSettings(accountSettingsUiState: AccountSettingsUiState) {
+        updateUserNamePreferenceUi(accountSettingsUiState.userNameSettingsUiState)
+        updateEmailPreferenceUi(accountSettingsUiState.emailSettingsUiState)
+        mWebAddressPreference?.summary = accountSettingsUiState.webAddressSettingsUiState.webAddress
+        updatePrimarySitePreference(accountSettingsUiState.primarySiteSettingsUiState)
+        updateChangePasswordPreference(accountSettingsUiState.changePasswordSettingsUiState)
+        accountSettingsUiState.error?.let {
+            showToastMessage(it)
+        }
+    }
+
+    private fun updateChangePasswordPreference(changePasswordSettingsUiState: AccountSettingsViewModel.ChangePasswordSettingsUiState) {
+        showChangePasswordProgressDialog(changePasswordSettingsUiState.showChangePasswordProgressDialog)
+    }
+
+    private fun updateUserNamePreferenceUi( userNameSettingUiState : UserNameSettingsUiState){
+        mUsernamePreference?.apply {
+            summary = userNameSettingUiState.userName
+            isEnabled = userNameSettingUiState.canUserNameBeChanged
+        }
+        if(userNameSettingUiState.showUserNameConfirmedSnackBar){
+            showUserNameSnackBar(userNameSettingUiState.newUserChangeConfirmedSnackBarMessageHolder)
+        }
+    }
+
+    private fun updateEmailPreferenceUi( emailSettingsUiState : EmailSettingsUiState){
+        mEmailPreference?.apply {
+            summary = emailSettingsUiState.email
+            isEnabled = emailSettingsUiState.hasPendingEmailChange.not()
+        }
+        if(emailSettingsUiState.hasPendingEmailChange){
+            showSnackBar(emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder)
+        }else{
+            dismissSnackBar()
+        }
+    }
+
+    private fun updatePrimarySitePreference(primarySiteSettingsUiState: PrimarySiteSettingsUiState?) {
+        primarySiteSettingsUiState?.let { state ->
+            mPrimarySitePreference?.apply {
+                value = (state.primarySite?.siteId ?: "").toString()
+                summary = state.primarySite?.siteName
+                entries = state.siteNames
+                entryValues = state.siteIds
+                setDetails(state.homeURLOrHostNames)
+                refreshAdapter()
+            }
+        } ?: run {
+            mPrimarySitePreference?.apply {
+                refreshAdapter()
+            }
+        }
+    }
+
+    private fun showToastMessage(toastMessage: String) {
+        ToastUtils.showToast(activity, toastMessage, LONG)
+        AppLog.e(SETTINGS, toastMessage)
+    }
+
+    private fun showUserNameSnackBar(userName: SnackbarMessageHolder){
+        WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context,userName.message),
+                userName.duration).show()
+    }
+    private fun showSnackBar(snackBarMessage: SnackbarMessageHolder) {
+        if (mEmailSnackbar == null) {
+            mEmailSnackbar = WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context,snackBarMessage.message), BaseTransientBottomBar.LENGTH_INDEFINITE)
+            snackBarMessage.buttonTitle?.let { mEmailSnackbar?.setAction( uiHelpers.getTextOfUiString( context, snackBarMessage.buttonTitle)) { snackBarMessage.buttonAction } }
+            val textView = mEmailSnackbar?.view?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            textView?.maxLines = 4
+        }
+        mEmailSnackbar?.let{
+            if (!it.isShown) {
+                mEmailSnackbar?.show()
+            }
+        }
+
+    }
+
+    private fun dismissSnackBar(){
+        mEmailSnackbar?.dismiss()
+    }
+
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         when(preference){
