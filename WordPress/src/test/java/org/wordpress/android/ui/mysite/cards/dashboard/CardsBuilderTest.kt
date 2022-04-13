@@ -143,9 +143,9 @@ class CardsBuilderTest : BaseUnitTest() {
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         showErrorCard = showErrorCard,
                         onErrorRetryClick = { },
-                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock()),
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
-                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock())
+                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock())
                 )
         )
     }

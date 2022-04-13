@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-11-08 12:47:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: el_GR
 -->
 <resources>
@@ -241,7 +241,6 @@ Language: el_GR
     <string name="notification_settings_followed_dialog_title">Ειδοποιήσεις</string>
     <string name="notification_settings_followed_dialog_email_posts_instantly">Άμεσα</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Εγκατάσταση πρόσθετου</string>
-    <string name="comment_title">%s στο %s</string>
     <string name="notification_settings_category_followed_sites">Ακολουθούμενοι ιστότοποι</string>
     <string name="notification_channel_general_title">Γενικά</string>
     <string name="notification_channel_important_title">Σημαντικό</string>
@@ -643,12 +642,19 @@ Language: el_GR
     <string name="error_fetch_email_followers_list">Αδυναμία ανάκτησης ακολούθων μέσω e-mail</string>
     <string name="error_fetch_followers_list">Αδυναμία ανάκτησης ακολούθων ιστοτόπου</string>
     <string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
+    <string name="visual_editor">Κειμενογράφος</string>
+    <string name="image_thumbnail">Μικρογραφία εικόνας</string>
     <string name="image_settings_save_toast">Οι αλλαγές αποθηκεύτηκαν</string>
     <string name="image_caption">Λεζάντα</string>
+    <string name="image_alt_text">Εναλλακτικό κείμενο</string>
     <string name="image_link_to">Σύνδεση στο</string>
     <string name="image_width">Πλάτος</string>
     <string name="image_settings_dismiss_dialog_title">Απόρριψη μη αποθηκευμένων αλλαγών;</string>
     <string name="stop_upload_dialog_title">Διακοπή μεταφόρτωσης;</string>
+    <string name="alert_error_adding_media">Παρουσιάστηκε σφάλμα κατά την εισαγωγή πολυμέσων</string>
+    <string name="alert_action_while_uploading">Αυτή την στιγμή μεταφορτώνετε πολυμέσα. Παρακαλώ περιμένετε μέχρι να ολοκληρωθεί.</string>
+    <string name="alert_insert_image_html_mode">Δεν μπορείτε να προσθέσετε πολυμέσα απευθείας σε λειτουργία HTML. Παρακαλώ επιστρέψτε σε λειτουργία κειμενογράφου.</string>
+    <string name="uploading_gallery_placeholder">Μεταφόρτωση συλλογής…</string>
     <string name="tap_to_try_again">Πατήστε για να δοκιμάσετε ξανά!</string>
     <string name="invite_error_some_failed">Η πρόσκληση στάλθηκε αλλά παρουσιάστηκε(αν) σφάλμα(τα)!</string>
     <string name="invite_sent">Η πρόσκληση στάλθηκε επιτυχώς</string>
@@ -1111,7 +1117,9 @@ Language: el_GR
     <string name="media_error_no_permission">Δεν έχετε δικαίωμα προβολής της βιβλιοθήκης πολυμέσων</string>
     <string name="cannot_delete_multi_media_items">Μερικά πολυμέσα δεν ήταν δυνατόν να διαγραφούν αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.</string>
     <string name="link_enter_url_text">Κείμενο συνδέσμου (προαιρετικά)</string>
+    <string name="create_a_link">Δημιουργία συνδέσμου</string>
     <string name="local_draft">Τοπικό προσχέδιο</string>
+    <string name="horizontal_alignment">Οριζόντια ευθυγράμμιση</string>
     <string name="file_not_found">Αδυναμία εύρεσης του αρχείου πολυμέσων για μεταφόρτωση. Μήπως διαγράφηκε ή μετακινήθηκε;</string>
     <string name="comment_status_approved">Εγκεκριμένα</string>
     <string name="comment_status_unapproved">Σε εκκρεμότητα</string>
@@ -1207,12 +1215,17 @@ Language: el_GR
     <string name="password">Κωδικός</string>
     <string name="log_in">Σύνδεση</string>
     <string name="reader">Αναγνώστης</string>
+    <string name="featured">Ορίστε ως χαρακτηριστική εικόνα</string>
+    <string name="featured_in_post">Συμπεριλάβετε την εικόνα στο περιεχόμενο του άρθρου</string>
     <string name="no_network_title">Το διαδίκτυο δεν είναι διαθέσιμο</string>
     <string name="pages">Σελίδες</string>
+    <string name="caption">Λεζάντα (προαιρετική)</string>
+    <string name="width">Πλάτος</string>
     <string name="posts">Άρθρα</string>
     <string name="anonymous">Ανώνυμος</string>
     <string name="ok">ΟΚ</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Γίνεται μεταφόρτωση</string>
     <string name="version">Έκδοση</string>
     <string name="tos">Όροι Χρήσης</string>
     <string name="app_title">WordPress για Android</string>

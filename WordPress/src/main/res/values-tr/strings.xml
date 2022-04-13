@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-03-25 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: tr
 -->
 <resources>
@@ -328,7 +328,6 @@ Language: tr
     <string name="gutenberg_native_one">Bir</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
-    <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>
     <string name="gutenberg_native_four">Dört</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
@@ -605,8 +604,6 @@ Language: tr
     <string name="threat_item_sub_header_file_signature">Tehdir bulundu %s</string>
     <string name="threat_item_sub_header_core_file">WordPress içinde güvenlik açığı bulundu</string>
     <string name="threat_item_sub_header_misc_vulnerability">Gizemli güvenlik açığı</string>
-    <string name="threat_item_header_vulnerable_theme">Savunmasız tema: %s (sürüm %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Savunmasız eklenti: %s (sürüm %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: kötü amaçlı kod deseni</string>
     <string name="threat_item_header_database_threat">Veritabanı %s tehditleri</string>
     <string name="threat_item_header_infected_core_file">%s: enfekte çekirdek dosyası</string>
@@ -616,7 +613,6 @@ Language: tr
     <string name="scan_in_minutes_ago">%s dakika önce</string>
     <string name="scan_in_hours_ago">%s saat önce</string>
     <string name="scan_this_site">bu site</string>
-    <string name="scan_idle_last_scan_description">Son Jetpack taraması çalıştı %s ve herhangi bir risk bulunmadı. %s</string>
     <string name="scan_idle_threats_found_title">Siteniz risk altında olabilir</string>
     <string name="scan_idle_no_threats_found_title">Hiç endişe etmeyin</string>
     <string name="scan_again">Yeniden tara</string>
@@ -624,7 +620,6 @@ Language: tr
     <string name="scan_state_icon">Tarama durumu simgesi</string>
     <string name="backup">Yedek</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Etkinlik türü filtresi (%s tür seçili)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (%s öğe gösteriliyor)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Etkinlik türü filtresi</string>
     <string name="activity_log_activity_type_empty_subtitle">Seçili tarih aralığında bir etkinlik kayıt edilmemiş.</string>
     <string name="activity_log_activity_type_empty_title">Kullanılabilir etkinlik yok</string>
@@ -974,7 +969,6 @@ Language: tr
     <string name="pages_cannot_be_started">Şu anda sayfaları açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="pages_set_as_posts_page">Yazılar Sayfası Yap</string>
     <string name="pages_set_as_homepage">Ana Sayfa olarak ayarla</string>
-    <string name="suggestion_invalid">%s geçerli bir %s değil</string>
     <string name="site_settings_select_page">Sayfa seç</string>
     <string name="site_settings_posts_page">Yazılar sayfası</string>
     <string name="site_settings_static_homepage">Sabit ana sayfa</string>
@@ -1274,7 +1268,6 @@ Language: tr
     <string name="local_post_autosave_revision_available">Bu yazıda kaydedilmeyen değişiklikler yaptınız</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Bu uygulamadan sürüm</string>
     <string name="dialog_confirm_autosave_restore_button">Başka cihazdan sürüm</string>
-    <string name="dialog_confirm_autosave_body_second_part">Bu uygulamadan\n%s tarihinde kaydedildi\n\nBaşka cihazdan\n%s tarihinde kaydedildi\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Yakın zamanda bu yazınıda değişiklikler yaptınız ancak değişiklikleri kaydetmediniz. Yüklenecek sürümü seçin:\n\n</string>
     <string name="dialog_confirm_autosave_title">Hangi sürümü düzenlemekl istersiniz?</string>
     <string name="button_delete_permanently">Kalıcı Olarak Sil</string>
@@ -1324,7 +1317,6 @@ Language: tr
     <string name="share_desc">Paylaş</string>
     <string name="navigate_back_desc">Geri dön</string>
     <string name="navigate_forward_desc">İleri git</string>
-    <string name="calendar_scheduled_post_description">\"%s\", WordPress uygulamanızdaki \"%s\" hedefinde yayımlanmak üzere planlandı \n %s</string>
     <string name="calendar_scheduled_post_title">WordPress Zamanlanmış Gönderi: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" 10 dakika içinde yayımlanacak</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" 1 saat içinde yayımlanacak</string>
@@ -1427,6 +1419,7 @@ Language: tr
     <string name="stats_management_news_card_message">Hangi istatistikleri göreceğinizi seçin ve en çok önem verdiğiniz verilere odaklanın. İstatistiklerinizi özelleştirmek için \"Yönelimler\" altındaki %1$s öğesine dokunun.</string>
     <string name="stats_manage_your_stats">İstatistiklerinizi yönetin</string>
     <string name="history_fetching_revisions">Eski srümler getiriliyor…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Ortam ekleme başarısız.\nSeçenekler için dokunun.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Ortam eklenemedi.\nTekrar denemek için lütfen dokunun.</string>
     <string name="editor_uploading_draft">Taslağınız karşıya yükleniyor</string>
     <string name="post_uploading_draft">Taslak karşıya yükleniyor</string>
@@ -1573,7 +1566,6 @@ Language: tr
     <string name="toast_conflict_updating_post">Gönderi güncelleniyor</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Web’i At</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Yereli At</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Yerel\n%s tarihinde kaydedildi\n\nWeb\n%s tarihinde kaydedildi\n</string>
     <string name="dialog_confirm_load_remote_post_body">Bu gönderinin birbiriyle çakışan iki sürümü var. Atmak istediğiniz sürümü seçin.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Senkron sorununu çöz</string>
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
@@ -1858,7 +1850,6 @@ Language: tr
     <string name="notification_settings_category_followed_sites">Takip edilen siteler</string>
     <string name="content_description_person_reading_device_notification">Cihaz bildirimlerini okuyan kişi</string>
     <string name="content_description_people_looking_charts">Grafiklere ve çizelgelere bakan kişiler</string>
-    <string name="comment_title">%s, %s üzerinde</string>
     <string name="dialog_confirm_delete_permanently_post">Bu yazıyı kalıcı olarak silmek istediğinizden emin misiniz?</string>
     <string name="notification_channel_important_title">Önemli</string>
     <string name="notification_channel_general_title">Genel</string>
@@ -2249,6 +2240,7 @@ Language: tr
     <string name="post_title">Başlık</string>
     <string name="menu_redo">Geri al</string>
     <string name="menu_undo">Yinele</string>
+    <string name="media_insert_unimplemented">Özür dileriz! Özellik henüz devreye alınmadı :(</string>
     <string name="error_media_small">Ortam dosyası görüntülemek için çok küçük</string>
     <string name="editor_dropped_unsupported_files">Uyarı: Bırakılan tüm ögeler desteklenmiyor!</string>
     <string name="editor_dropped_title_images_not_allowed">Başlık alanına görsel bırakmaya izin verilmiyor</string>
@@ -2476,12 +2468,19 @@ Language: tr
     <string name="error_fetch_email_followers_list">Sitenin e-posta takipçileri getirilemedi</string>
     <string name="error_fetch_followers_list">Site takipçileri getirilemedi</string>
     <string name="editor_failed_uploads_switch_html">Bazı ortam yüklemeleri başarısız oldu. HTML moduna geçebilirsiniz\n        Tüm başarısız yüklemeleri kaldırılıp devam edilsin mi?</string>
+    <string name="image_thumbnail">Görsel küçük resm</string>
+    <string name="visual_editor">Görsel düzenleyici</string>
     <string name="image_width">Genişlik</string>
     <string name="image_link_to">Bağlantı</string>
+    <string name="image_alt_text">Alternatif metin</string>
     <string name="image_caption">Altyazı</string>
     <string name="image_settings_save_toast">Değişiklikler kaydedildi</string>
     <string name="image_settings_dismiss_dialog_title">Kaydedilmemiş değişiklikler atılsın mı?</string>
     <string name="stop_upload_dialog_title">Yükleme durdurulsun mu?</string>
+    <string name="alert_error_adding_media">Ortam eklenirken bir hata oluştu</string>
+    <string name="alert_action_while_uploading">Şu anda medya yüklüyorsunuz. Lütfen bu işlem tamamlanıncaya kadar bekleyin.</string>
+    <string name="alert_insert_image_html_mode">Ortam HTML modunda doğrudan ekleyemiyor. Lütfen tekrar görsel moduna geçin.</string>
+    <string name="uploading_gallery_placeholder">Galeri yükleniyor…</string>
     <string name="tap_to_try_again">Tekrar denemek için dokunun!</string>
     <string name="invite_sent">Davet başarıyla gönderildi</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2964,8 +2963,10 @@ Language: tr
     <string name="delete_post">Yazıyı silinsin mi?</string>
     <string name="post_settings">Yazı ayarları</string>
     <string name="file_not_found">Yükleme için dosya bulunamadı. Silindi veya taşındı mı?</string>
+    <string name="horizontal_alignment">Yatay hizalama</string>
     <string name="local_draft">Yerel taslak</string>
     <string name="page_settings">Sayfa ayarları</string>
+    <string name="create_a_link">Bağlantı oluştur</string>
     <string name="link_enter_url_text">Bağlantı yazısı (opsiyonel)</string>
     <string name="cannot_delete_multi_media_items">Bazı medyalar silinemedi. Daha sonra tekrar deneyin</string>
     <string name="media_error_no_permission">Medya kütüphanesini görüntüleme yetkiniz yok</string>
@@ -3042,6 +3043,10 @@ Language: tr
     <string name="username">Kullanıcı adı</string>
     <string name="password">Parola</string>
     <string name="reader">Okuyucu</string>
+    <string name="featured_in_post">Görseli yazı içeriğine ekle</string>
+    <string name="featured">Öne çıkan görsel olarak kullan</string>
+    <string name="width">Genişlik</string>
+    <string name="caption">Başlık (seçime bağlı)</string>
     <string name="pages">Sayfalar</string>
     <string name="posts">Yazılar</string>
     <string name="anonymous">Anonim</string>
@@ -3049,6 +3054,7 @@ Language: tr
     <string name="done">bitti</string>
     <string name="ok">Tamam</string>
     <string name="link_enter_url">Adres</string>
+    <string name="uploading">Yükleniyor…</string>
     <string name="tos">Hizmet şartları</string>
     <string name="version">Sürüm</string>
     <string name="app_title">Android için WordPress</string>
