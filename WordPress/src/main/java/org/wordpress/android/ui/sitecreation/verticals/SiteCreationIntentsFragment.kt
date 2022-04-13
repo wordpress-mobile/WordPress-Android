@@ -68,7 +68,7 @@ class SiteCreationIntentsFragment : Fragment() {
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
-        siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
+        siteCreationIntentsTitlebar.appBarTitle.isInvisible = !displayUtils.isPhoneLandscape()
         recyclerView.itemAnimator = null
         recyclerView.adapter = SiteCreationIntentsAdapter()
         siteCreationIntentsHeader.title?.setText(R.string.new_site_creation_intents_header_title)
@@ -129,8 +129,6 @@ class SiteCreationIntentsFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
-    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
 
     companion object {
         const val TAG = "site_creation_intents_fragment_tag"
