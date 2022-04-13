@@ -377,7 +377,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet does  show prompt card when FF is ON`() {
+    fun `bottom sheet does show prompt card when FF is ON`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMP }

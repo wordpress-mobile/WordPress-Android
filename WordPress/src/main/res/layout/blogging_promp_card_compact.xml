@@ -38,7 +38,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/prompt_content"
             style="@style/MySiteCardItemTitle"
