@@ -98,7 +98,9 @@ class SiteCreationSiteNameFragment : Fragment() {
     }
 
     private fun SiteCreationSiteNameFragmentBinding.updateUiState(uiState: SiteNameUiState) {
-        continueButtonContainer.isVisible = uiState.isContinueButtonEnabled
+        // Using isVisible would make the condition easier read, But it produces a UI bug causing
+        // the continue button to briefly appear the first time a character is entered in the input.
+        continueButtonContainer.isInvisible = !uiState.isContinueButtonEnabled || isPhoneLandscape()
     }
 
     override fun onDestroyView() {
