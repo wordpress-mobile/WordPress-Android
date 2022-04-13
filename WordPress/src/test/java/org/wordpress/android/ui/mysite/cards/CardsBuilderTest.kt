@@ -201,7 +201,7 @@ class CardsBuilderTest {
                 ),
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
                         onErrorRetryClick = mock(),
-                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock()),
+                        todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock())
                 ),
@@ -210,7 +210,8 @@ class CardsBuilderTest {
                         onPagesClick = mock(),
                         onPostsClick = mock(),
                         onMediaClick = mock(),
-                        onStatsClick = mock()
+                        onStatsClick = mock(),
+                        activeTask = activeTask
                 )
         )
     }

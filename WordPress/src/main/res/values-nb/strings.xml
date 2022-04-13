@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 20:19:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0-rc.4
 Language: nb_NO
 -->
 <resources>
@@ -120,7 +120,6 @@ Language: nb_NO
     <string name="scan_in_hours_ago">%s time(r) siden</string>
     <string name="scan_this_site">dette nettstedet</string>
     <string name="backup">Sikkerhetskopi</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (viser %s elementer)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Aktivitetstype-filter</string>
     <string name="activity_log_activity_type_filter_active_label">Aktivitetstype (%s)</string>
     <string name="backup_item_sqls">Nettstedsdatabase</string>
@@ -346,7 +345,6 @@ Language: nb_NO
     <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
-    <string name="suggestion_invalid">%s er ikke en gyldig %s</string>
     <string name="site_settings_select_page">Velg side</string>
     <string name="site_settings_posts_page">Innleggsside</string>
     <string name="site_settings_static_homepage">Statisk hjemmeside</string>
@@ -617,7 +615,6 @@ Language: nb_NO
     <string name="local_post_autosave_revision_available">Du har gjort endringer som ikke er lagret på dette innlegget</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Versjonen fra denne appen</string>
     <string name="dialog_confirm_autosave_restore_button">Versjonen fra en annen enhet</string>
-    <string name="dialog_confirm_autosave_body_second_part">Fra denne appen\nLagret %s\n\nFra annen enhet\nLagret %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Du gjorde nylig endringer på dette innlegget, men lagret dem ikke. Velg en versjon å laste:\n</string>
     <string name="dialog_confirm_autosave_title">Hvilken versjon vil du redigere?</string>
     <string name="button_delete_permanently">Slett permanent</string>
@@ -667,7 +664,6 @@ Language: nb_NO
     <string name="share_desc">Del</string>
     <string name="navigate_back_desc">Gå tilbake</string>
     <string name="navigate_forward_desc">Gå forover</string>
-    <string name="calendar_scheduled_post_description">\"%s\" planlagt for publisering den \"%s\" i din WordPress-app\n%s</string>
     <string name="calendar_scheduled_post_title">WordPress planlagt innlegg: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" vil bli publiser om 10 minutter</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" vil bli publisert om en time</string>
@@ -767,6 +763,7 @@ Language: nb_NO
     <string name="stats_management_news_card_message">Vekg hvilken statistikk å se og fokuser på de data du bryr deg mest om. Trykk %1$s i bunnen av innsikter for å tilpasse din statistikk.</string>
     <string name="stats_manage_your_stats">Behandle din statistikk</string>
     <string name="history_fetching_revisions">Henter revisjoner…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Mislyktes i å sette inn menia.\nVennligst trykk for alternativer.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Mislyktes i å sette inn media.\nVennligst trykk for å prøve igjen.</string>
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
@@ -911,7 +908,6 @@ Language: nb_NO
     <string name="toast_conflict_updating_post">Oppdaterer innlegg</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Forkast nettversjon</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Forkast lokal versjon</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Lokal\nLagret den %s\n\nNett\nLagret den %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Dette innlegget har to versjoner som er i konflikt. Velg den versjonen du vil forkaste\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Løs synkroniseringskonflikt</string>
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
@@ -1185,7 +1181,6 @@ Language: nb_NO
     <string name="notification_settings_category_followed_sites">Fulgte nettsteder</string>
     <string name="content_description_person_reading_device_notification">Person som leser på en enhet med varsler</string>
     <string name="content_description_people_looking_charts">Folk som ser på grafer og diagrammer</string>
-    <string name="comment_title">%s på %s</string>
     <string name="dialog_confirm_delete_permanently_post">Er du sikker på at du vil slette dette innlegget permanent?</string>
     <string name="notification_channel_important_title">Viktig</string>
     <string name="notification_channel_general_title">Generelt</string>
@@ -1563,6 +1558,7 @@ Language: nb_NO
     <string name="post_title">Tittel</string>
     <string name="menu_redo">Gjør på nytt</string>
     <string name="menu_undo">Omgjør</string>
+    <string name="media_insert_unimplemented">Våre beklagelser! Denne egenskapen er ikke implementert ennå :(</string>
     <string name="error_media_small">Mediet er for lite til å vises</string>
     <string name="editor_dropped_unsupported_files">Advarsel: Ikke alle sluppede gjenstander er støttet!</string>
     <string name="editor_dropped_title_images_not_allowed">Å slippe bilder i tittelfeltet er ikke tillat</string>
@@ -1790,12 +1786,19 @@ Language: nb_NO
     <string name="error_fetch_email_followers_list">Kunne ikke hente inn nettstedets E-postfølgere</string>
     <string name="error_fetch_followers_list">Kunne ikke hente inn nettstedets følgere</string>
     <string name="editor_failed_uploads_switch_html">Noen medieopplastninger har mislyktes. Du kan ikke bytte til HTML-modus i\n  denne tilstanden. Vil du fjerne alle mislykkede opplastninger og fortsette?</string>
+    <string name="image_thumbnail">Miniatyrbilde</string>
+    <string name="visual_editor">Visuell redigerer</string>
     <string name="image_width">Bredde</string>
     <string name="image_link_to">Lenke til</string>
+    <string name="image_alt_text">Alternativ tekst</string>
     <string name="image_caption">Bildetekst</string>
     <string name="image_settings_save_toast">Endringene er lagret</string>
     <string name="image_settings_dismiss_dialog_title">Vil du forkaste ulagrede endringer?</string>
     <string name="stop_upload_dialog_title">Vil du avbryte opplastningen?</string>
+    <string name="alert_error_adding_media">En feil oppstod under innsmetting av medie</string>
+    <string name="alert_action_while_uploading">Du laster for øyeblikket opp medier. Vennligst vent på at dette blir ferdig.</string>
+    <string name="alert_insert_image_html_mode">Kan ikke sette inn medier direkte når du er i HTML-modus. Vennligst bytt tilbake til visuell modus.</string>
+    <string name="uploading_gallery_placeholder">Laster opp et galleri …</string>
     <string name="tap_to_try_again">Trykk for å prøve igjen!</string>
     <string name="invite_sent">Invitasjonenssendingen var vellykket</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2275,8 +2278,10 @@ Language: nb_NO
     <string name="delete_post">Slette innlegg?</string>
     <string name="post_settings">Innleggsinnstillinger</string>
     <string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
+    <string name="horizontal_alignment">Loddrett posisjonering</string>
     <string name="local_draft">Lokalt utkast</string>
     <string name="page_settings">Sideinnstillinger</string>
+    <string name="create_a_link">Lag en lenke</string>
     <string name="link_enter_url_text">Lenketekst (valgfritt)</string>
     <string name="cannot_delete_multi_media_items">Noen medier kan ikke bli slettet for øyeblikket. Prøv igjen senere.</string>
     <string name="media_error_no_permission">Du har ikke tillatelse til å se mediebiblioteket</string>
@@ -2351,6 +2356,10 @@ Language: nb_NO
     <string name="username">Brukernavn</string>
     <string name="password">Passord</string>
     <string name="reader">Nettleser</string>
+    <string name="featured_in_post">Legg til bilde i innlegget</string>
+    <string name="featured">Bruk som fremhevet bilde</string>
+    <string name="width">Bredde</string>
+    <string name="caption">Bildetekst (valgfritt)</string>
     <string name="pages">Sider</string>
     <string name="posts">Innlegg</string>
     <string name="anonymous">Anonym</string>
@@ -2358,6 +2367,7 @@ Language: nb_NO
     <string name="done">fullført</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Laster opp …</string>
     <string name="tos">Lisens</string>
     <string name="version">Versjon</string>
     <string name="app_title">WordPress for Android</string>

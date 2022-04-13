@@ -28,6 +28,13 @@ class CardsTrackerTest {
     }
 
     @Test
+    fun `when today's stats card get more views link is clicked, then today's stats nudge event is tracked`() {
+        cardsTracker.trackTodaysStatsCardGetMoreViewsNudgeClicked()
+
+        verifyCardItemClickedTracked(Type.STATS, StatsSubtype.TODAYS_STATS_NUDGE.label)
+    }
+
+    @Test
     fun `when today's stats card footer link is clicked, then today's stats card footer click event is tracked`() {
         cardsTracker.trackTodaysStatsCardFooterLinkClicked()
 

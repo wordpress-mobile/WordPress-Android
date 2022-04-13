@@ -441,6 +441,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_ACTION_MEDIA_TAPPED:
                 predefinedEventProperties.put("button", "media");
                 break;
+            case QUICK_LINK_RIBBON_PAGES_TAPPED:
+                predefinedEventProperties.put("button", "pages");
+                break;
+            case QUICK_LINK_RIBBON_POSTS_TAPPED:
+                predefinedEventProperties.put("button", "posts");
+                break;
+            case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+                predefinedEventProperties.put("button", "media");
+                break;
+            case QUICK_LINK_RIBBON_STATS_TAPPED:
+                predefinedEventProperties.put("button", "stats");
+                break;
             case WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED:
                 predefinedEventProperties.put("button", "create_new_site");
                 break;
@@ -1896,6 +1908,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_ACTION_POSTS_TAPPED:
             case QUICK_ACTION_MEDIA_TAPPED:
                 return "quick_action_tapped";
+            case QUICK_LINK_RIBBON_PAGES_TAPPED:
+            case QUICK_LINK_RIBBON_POSTS_TAPPED:
+            case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+            case QUICK_LINK_RIBBON_STATS_TAPPED:
+                return "quick_action_ribbon_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
                 return "auto_upload_post_invoked";
             case AUTO_UPLOAD_PAGE_INVOKED:

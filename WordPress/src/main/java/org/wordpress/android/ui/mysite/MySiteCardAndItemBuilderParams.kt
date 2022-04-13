@@ -31,7 +31,8 @@ sealed class MySiteCardAndItemBuilderParams {
         val onQuickActionStatsClick: () -> Unit,
         val onQuickActionPagesClick: () -> Unit,
         val onQuickActionPostsClick: () -> Unit,
-        val onQuickActionMediaClick: () -> Unit
+        val onQuickActionMediaClick: () -> Unit,
+        val enableFocusPoints: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class QuickLinkRibbonBuilderParams(
@@ -39,7 +40,9 @@ sealed class MySiteCardAndItemBuilderParams {
         val onPagesClick: () -> Unit,
         val onPostsClick: () -> Unit,
         val onMediaClick: () -> Unit,
-        val onStatsClick: () -> Unit
+        val onStatsClick: () -> Unit,
+        val activeTask: QuickStartTask?,
+        val enableFocusPoints: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class DomainRegistrationCardBuilderParams(
@@ -64,6 +67,7 @@ sealed class MySiteCardAndItemBuilderParams {
     data class TodaysStatsCardBuilderParams(
         val todaysStatsCard: TodaysStatsCardModel?,
         val onTodaysStatsCardClick: () -> Unit,
+        val onGetMoreViewsClick: () -> Unit,
         val onFooterLinkClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
