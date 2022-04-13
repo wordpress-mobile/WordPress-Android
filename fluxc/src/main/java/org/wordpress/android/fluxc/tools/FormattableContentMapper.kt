@@ -86,7 +86,7 @@ data class FormattableRange(
     // we only use numerical ID at the moment, and can safely ignore non-numerical values
     val id: Long?
         get() = try {
-            stringId?.toLong() ?: 0
+            stringId?.toLong()
         } catch (e: NumberFormatException) {
             null
         }
