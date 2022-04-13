@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.FullScreenDialogFragment
-import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment
@@ -50,7 +49,6 @@ import org.wordpress.android.util.AppLog.T.SETTINGS
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
-import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import javax.inject.Inject
 
 class AccountSettingsFragment : PreferenceFragment(),
@@ -124,25 +122,12 @@ class AccountSettingsFragment : PreferenceFragment(),
     }
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        if (newValue == null) {
-            return false
-        }
-        if (preference === mEmailPreference) {
-            viewModel?.onEmailChanged(newValue.toString())
-            showPendingEmailChangeSnackbar(newValue.toString())
-            mEmailPreference!!.isEnabled = false
-            return false
-        } else if (preference === mPrimarySitePreference) {
-            changePrimaryBlogPreference(newValue.toString().toLong())
-            viewModel?.onPrimarySiteChanged(newValue.toString().toLong())
-            return false
-        } else if (preference === mWebAddressPreference) {
-            mWebAddressPreference!!.summary = newValue.toString()
-            viewModel?.onWebAddressChanged(newValue.toString())
-            return false
-        } else if (preference === mChangePasswordPreference) {
-            showChangePasswordProgressDialog(true)
-            viewModel?.onPasswordChanged(newValue.toString())
+        when(preference){
+            mUsernamePreference -> showUsernameChangerFragment(newValue.toString(),viewModel?.accountSettingsUiState?.value?.userNameSettingsUiState?.displayName ?: "")
+            mEmailPreference -> viewModel?.onEmailChanged(newValue.toString())
+            mPrimarySitePreference -> viewModel?.onPrimarySiteChanged(newValue.toString().toLong())
+            mWebAddressPreference -> viewModel?.onWebAddressChanged(newValue.toString())
+            mChangePasswordPreference -> viewModel?.onPasswordChanged(newValue.toString())
         }
         return true
     }
@@ -285,19 +270,11 @@ class AccountSettingsFragment : PreferenceFragment(),
     private fun checkIfUsernameCanBeChanged() {
         val account = mAccountStore!!.account
         mUsernamePreference!!.isEnabled = account.usernameCanBeChanged
-        mUsernamePreference!!.onPreferenceClickListener = Preference.OnPreferenceClickListener { preference: Preference? ->
-            showUsernameChangerFragment()
-            true
-        }
     }
 
-    private fun showUsernameChangerFragment() {
-        val account = mAccountStore!!.account
-        val bundle: Bundle = BaseUsernameChangerFullScreenDialogFragment.newBundle(
-                account.displayName,
-                account.userName
-        )
-        Builder(activity)
+    private fun showUsernameChangerFragment(userName: String, displayName: String) {
+        val bundle: Bundle = BaseUsernameChangerFullScreenDialogFragment.newBundle(displayName, userName)
+        FullScreenDialogFragment.Builder(activity)
                 .setTitle(string.username_changer_title)
                 .setAction(string.username_changer_action)
                 .setOnConfirmListener(this)
@@ -306,29 +283,15 @@ class AccountSettingsFragment : PreferenceFragment(),
                 .setOnDismissListener(null)
                 .setContent(SettingsUsernameChangerFragment::class.java, bundle)
                 .build()
-                .show(
-                        (activity as AppCompatActivity).supportFragmentManager,
-                        FullScreenDialogFragment.TAG
-                )
+                .show((activity as AppCompatActivity).supportFragmentManager,
+                        FullScreenDialogFragment.TAG)
     }
 
     override fun onConfirm(result: Bundle?) {
-        if (result != null) {
-            val username = result.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)
-            if (username != null) {
-                make(
-                        view!!,
-                        String.format(
-                                getString(string.settings_username_changer_toast_content),
-                                username
-                        ),
-                        Snackbar.LENGTH_LONG
-                ).show()
-                mUsernamePreference!!.summary = username
-            }
+        result?.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)?.let {
+            viewModel?.onUsernameChangeConfirmedFromServer(it)
         }
     }
-
     /*
      * AsyncTask which loads sites from database for primary site preference
      */
