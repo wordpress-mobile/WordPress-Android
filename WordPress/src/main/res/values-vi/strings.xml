@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-26 07:44:04+0000
+Translation-Revision-Date: 2022-03-24 04:01:15+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: vi_VN
 -->
 <resources>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Màu phối này có thể gây khó đọc. Hãy thử sử dụng màu nền sáng hơn hoặc màu văn bản tối hơn.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Màu này có thể gây khó đọc cho mọi người. Thử dùng màu nền tối hơn hoặc chữ sáng hơn.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Không thể chèn media.\nNhấn để biết thêm thông tin.</string>
+    <string name="new_site_creation_intents_header_subtitle">Chọn một thẻ từ danh sách bên dưới hoặc tự nhập</string>
+    <string name="new_site_creation_intents_header_title">Nội dung blog của bạn là gì?</string>
+    <string name="notification_channel_weekly_roundup_title">Tóm Tắt Tuần</string>
+    <string name="my_site_dashboard_tab_title">Tổng quan</string>
+    <string name="adding_cat">Thêm chuyên mục</string>
+    <string name="login_select_email_client">Bạn dùng ứng dụng email nào?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Xảy ra lỗi khi giao tiếp với blog. Mã lỗi HTTP 401.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC bị chặn trên blog này (mã lỗi 401). Nếu tiếp tục đăng nhập thất bại, nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Không thể đọc blog WordPress trên URL này. Nhấn biểu tượng trợ giúp để xem câu hỏi thường gặp.</string>
+    <string name="login_error_xml_rpc_services_disabled">Dịch vụ XML-RPC bị chặn trên blog này.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tên miền WordPress.com không chứa những ký tự này. Chỉ có chữ và số được cho phép.</string>
     <string name="my_site_error_within_card_subtitle">Kiểm tra kết nối mạng và thử lại.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Xem thống kê</string>
@@ -80,7 +94,7 @@ Language: vi_VN
     <string name="gutenberg_native_copy_url_from_the_clipboard_s">Chép URL từ bộ nhớ tạm, %s</string>
     <string name="me_btn_about">Về WordPress</string>
     <string name="my_site_post_card_link_go_to_scheduled_posts">Xem bài viết đã lên lịch</string>
-    <string name="my_site_post_card_link_go_to_drafts">Xem bản nháp</string>
+    <string name="my_site_post_card_link_go_to_drafts">Xem các bản nháp</string>
     <string name="my_site_post_card_link_create_post">Viết bài mới</string>
     <string name="my_site_create_next_post_excerpt">Đăng thường xuyên để thu hút độc giả!</string>
     <string name="my_site_create_next_post_title">Tạo bài viết kế tiếp</string>
@@ -243,8 +257,8 @@ Language: vi_VN
     <string name="set_your_blogging_reminders_title">Nhắc đăng bài</string>
     <string name="blogging_reminders_notification_text">Hôm nay là ngày bạn đăng bài</string>
     <string name="blogging_reminders_notification_title">Hãy đăng bài trên %s</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Chưa hỗ trợ chỉnh sửa những khối có thể sử dụng lại trên WordPress iOS</string>
-    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Chưa hỗ trợ chỉnh sửa những khối có thể sử dụng lại trên WordPress Android</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_ios">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress iOS</string>
+    <string name="gutenberg_native_editing_reusable_blocks_is_not_yet_supported_on_wordpress_for_and">Chưa hỗ trợ chỉnh sửa những khối có thể dùng lại trên WordPress Android</string>
     <string name="gutenberg_native_alternatively_you_can_detach_and_edit_these_blocks_separately_by">Bạn có thể tách và chỉnh sửa các khối này bằng cách nhấn \"Chuyển sang khối thường\".</string>
     <string name="blogging_reminders_done">Xong</string>
     <string name="blogging_reminders_notify_me">Nhắc tôi</string>
@@ -310,10 +324,10 @@ Language: vi_VN
     <string name="gutenberg_native_preview_post">Xem trước bài viết</string>
     <string name="gutenberg_native_preview_page">Xem trước trang</string>
     <string name="gutenberg_native_retry">Thử lại</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Một</string>
     <string name="gutenberg_native_no_preview_available">Không có bản xem trước</string>
     <string name="gutenberg_native_text_color">Màu chữ</string>
-    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Khoảng giãn cách</string>
     <string name="gutenberg_native_four">Bốn</string>
     <string name="gutenberg_native_custom_url">URL tùy chỉnh</string>
@@ -361,7 +375,7 @@ Language: vi_VN
     <string name="jetpack_brute_force_allowlist_title">Luôn cho phép những IP</string>
     <string name="site_settings_denylist_title">Cấm bình luận</string>
     <string name="gutenberg_native_add_button_text">Thêm chữ trên nút</string>
-    <string name="reader_title_interests">Theo dõi chủ đề</string>
+    <string name="reader_title_interests">Theo dõi thẻ</string>
     <string name="stories_intro_main_subtitle">Một cách mới để viết và đăng nội dung trên blog của bạn.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Bỏ qua</string>
     <string name="activity_log_backup_download_notice_download_action">Tải về</string>
@@ -495,7 +509,7 @@ Language: vi_VN
     <string name="backup_download_complete_failed_action_button">Xong</string>
     <string name="backup_download_complete_failed_title">Tải về thất bại</string>
     <string name="web_preview_tablet">Máy tính bảng</string>
-    <string name="web_preview_mobile">Di động</string>
+    <string name="web_preview_mobile">Điện thoại</string>
     <string name="quick_start_card_menu_remove">Không hiện lại</string>
     <string name="quick_start_card_menu_pin">Ghim lại</string>
     <string name="quick_start_dialog_review_pages_message_short">Chọn %1$s Trang %2$s để xem danh sách trang.</string>
@@ -590,8 +604,6 @@ Language: vi_VN
     <string name="threat_item_sub_header_file_signature">Tìm thấy mối đe dọa %s</string>
     <string name="threat_item_sub_header_core_file">Tìm thấy lỗ hổng bảo mật trong WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Lỗ hổng bảo mật khác</string>
-    <string name="threat_item_header_vulnerable_theme">Chủ đề có lỗ hổng bảo mật: %s (phiên bản %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Plugin có lỗ hổng bảo mật: %s (phiên bản %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: mã độc</string>
     <string name="threat_item_header_database_threat">Mối đe dọa %s cơ sở dữ liệu</string>
     <string name="threat_item_header_infected_core_file">%s: lõi tập tin bị nhiễm</string>
@@ -601,7 +613,6 @@ Language: vi_VN
     <string name="scan_in_minutes_ago">%s phút trước</string>
     <string name="scan_in_hours_ago">%s giờ trước</string>
     <string name="scan_this_site">blog này</string>
-    <string name="scan_idle_last_scan_description">Lần cuối Jetpack quét %s và không tìm thấy mối đe dọa nào. %s</string>
     <string name="scan_idle_threats_found_title">Blog của bạn có thể gặp rủi ro</string>
     <string name="scan_idle_no_threats_found_title">Đừng lo lắng quá</string>
     <string name="scan_again">Quét lại</string>
@@ -609,7 +620,6 @@ Language: vi_VN
     <string name="scan_state_icon">Biểu tượng trạng thái quét</string>
     <string name="backup">Sao lưu</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Lọc hoạt động (đã chọn %s loại)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (đang hiện %s mục)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Lọc hoạt động</string>
     <string name="activity_log_activity_type_empty_subtitle">Không có hoạt động nào trong phạm vi ngày đã chọn.</string>
     <string name="activity_log_activity_type_empty_title">Chưa có hoạt động nào</string>
@@ -671,7 +681,7 @@ Language: vi_VN
     <string name="dialog_edit_story_limited_title">Giới hạn chỉnh sửa Story</string>
     <string name="cannot_retry_deleted_media_item_fatal">Media đã bị xóa. Thử tạo lại Story khác.</string>
     <string name="color_picker_label_background">Nền</string>
-    <string name="color_picker_label_text">Văn bản</string>
+    <string name="color_picker_label_text">Chữ</string>
     <string name="dialog_discard_story_ok_button_edit">Bỏ qua</string>
     <string name="dialog_discard_story_message_edit">Những thay đổi sẽ không được lưu.</string>
     <string name="dialog_discard_story_title_edit">Bỏ qua thay đổi?</string>
@@ -684,8 +694,8 @@ Language: vi_VN
     <string name="hpp_error_title">Không dùng được bố cục khi rớt mạng</string>
     <string name="continue_site_credentials">Tiếp tục với định giá đã lưu</string>
     <string name="login_find_your_connected_email">Tìm email đã kết nối</string>
-    <string name="reader_discover_no_posts_button_text">Theo dõi chủ đề</string>
-    <string name="reader_discover_no_posts_subtitle">Thử theo dõi nhiều chủ đề hơn để mở rộng kết quả tìm kiếm</string>
+    <string name="reader_discover_no_posts_button_text">Theo dõi thẻ</string>
+    <string name="reader_discover_no_posts_subtitle">Thử theo dõi nhiều thẻ hơn để mở rộng kết quả tìm kiếm</string>
     <string name="reader_discover_no_posts_title">Không có bài viết mới</string>
     <string name="reader_discover_empty_title">Chào mừng!</string>
     <string name="scan">Quét</string>
@@ -694,7 +704,6 @@ Language: vi_VN
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; thích bài viết của bạn</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Đã mở menu khối có thể cuộn. Chọn một khối.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Đã đóng menu khối có thể cuộn.</string>
-    <string name="hpp_skip_button">Bỏ qua</string>
     <string name="hpp_choose_button">Chọn</string>
     <string name="hpp_subtitle">Chọn bố cục trang chủ yêu thích. Bạn có thể sửa và tùy biến nó sau này.</string>
     <string name="hpp_title">Chọn một thiết kế</string>
@@ -749,7 +758,7 @@ Language: vi_VN
     <string name="photo_picker_wordpress_media_library">Chọn từ Thư viện Media WordPress</string>
     <string name="reader_label_toolbar_back">Quay lại</string>
     <string name="reader_discover_empty_button_text">Bắt Đầu</string>
-    <string name="reader_discover_empty_subtitle">Theo dõi chủ đề để khám phá những trang mới</string>
+    <string name="reader_discover_empty_subtitle">Theo dõi thẻ để khám phá những trang blog mới</string>
     <string name="reader_post_details_header_by_author_name">Bởi</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Không thể đánh dấu nguồn dẫn về này là spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Bỏ đánh dấu là spam</string>
@@ -820,7 +829,7 @@ Language: vi_VN
     <string name="story_saving_untitled">Chưa có tựa đề</string>
     <string name="dialog_discard_story_ok_button">Hủy</string>
     <string name="dialog_discard_story_message">Story của bạn sẽ không được lưu thành nháp.</string>
-    <string name="dialog_discard_story_title">Hủy bỏ story?</string>
+    <string name="dialog_discard_story_title">Hủy story?</string>
     <string name="dialog_discard_page_ok_button">Xóa</string>
     <string name="dialog_discard_errored_page_message">Chưa lưu slide này. Nếu bạn xóa slide, những sửa đổi trên đó sẽ bị mất hết.</string>
     <string name="dialog_discard_page_message">Slide này sẽ bị xóa khỏi story.</string>
@@ -907,7 +916,7 @@ Language: vi_VN
     <string name="gutenberg_native_block_copied">Đã chép khối</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Chỉ có quản trị viên mới có quyền đổi tiêu đề blog.</string>
     <string name="my_site_title_changer_dialog_hint">Tiêu đề blog xuất hiện trên thanh tiêu đề trình duyệt và hiển thị ở phần đầu trang của hầu hết các chủ đề.</string>
-    <string name="reader_title_tag_preview">Chủ đề</string>
+    <string name="reader_title_tag_preview">Thẻ</string>
     <string name="error_update_site_title_network">Không thể đổi tiêu đề blog. Kiểm tra kết nối mạng và thử lại.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Thay đổi chưa được lưu</string>
     <string name="gutenberg_native_open_link_in_a_browser">Mở liên kết trong trình duyệt</string>
@@ -915,7 +924,7 @@ Language: vi_VN
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Điều hướng đến tùy chỉnh màu gradient</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Điều hướng đến tùy chỉnh bộ chọn màu</string>
     <string name="gutenberg_native_gradient_type">Kiểu Gradient</string>
-    <string name="gutenberg_native_go_back">Trở về</string>
+    <string name="gutenberg_native_go_back">Trở lại</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Nhấn hai lần để chọn tùy chọn</string>
     <string name="gutenberg_native_customize_gradient">Tùy chỉnh Gradient</string>
     <string name="pages_list_author">Trang tác giả</string>
@@ -939,8 +948,8 @@ Language: vi_VN
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Lưu Nháp</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Không thể sửa những bài trong thùng rác. Hãy thay đổi trạng thái thành \"Nháp\" để sửa.</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Chuyển về nháp?</string>
-    <string name="reader_label_choose_your_interests">Chọn chủ đề</string>
-    <string name="reader_choose_interests_content_description">Chọn chủ đề</string>
+    <string name="reader_label_choose_your_interests">Chọn thẻ bạn thích</string>
+    <string name="reader_choose_interests_content_description">Chọn thẻ bạn thích</string>
     <string name="reader_btn_done">Xong</string>
     <string name="reader_btn_select_few_interests">Chọn vài mục để tiếp tục</string>
     <string name="post_status_post_published">Đã đăng</string>
@@ -958,11 +967,10 @@ Language: vi_VN
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Nhấn hai lần để mở Menu Dưới xem tùy chọn</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Nhấn hai lần để mở Menu Hành Động xem tùy chọn</string>
     <string name="pages_cannot_be_started">Chúng tôi không thể mở trang. Hãy thử lại sau</string>
-    <string name="pages_set_as_posts_page">Cài làm trang Bài Viết</string>
+    <string name="pages_set_as_posts_page">Cài làm trang bài viết</string>
     <string name="pages_set_as_homepage">Cài làm trang chủ</string>
-    <string name="suggestion_invalid">%s là %s không hợp lệ</string>
     <string name="site_settings_select_page">Chọn Trang</string>
-    <string name="site_settings_posts_page">Trang Bài Viết</string>
+    <string name="site_settings_posts_page">Trang bài viết</string>
     <string name="site_settings_static_homepage">Trang chủ</string>
     <string name="site_settings_classic_blog">Blog Cổ Điển</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Trang chủ và Trang bài viết không thể là một.</string>
@@ -974,8 +982,8 @@ Language: vi_VN
     <string name="site_settings_homepage_settings_description">Chọn trang chủ sẽ hiển thị bài viết gần đây (blog cổ điển) hay một trang riêng.</string>
     <string name="site_settings_homepage_settings">Cài đặt trang chủ</string>
     <string name="site_settings_homepage">Trang chủ</string>
-    <string name="page_posts_page_update_failed">Cập nhật Bài Viết thất bại</string>
-    <string name="page_posts_page_successfully_updated">Cập nhật Bài Viết thành công</string>
+    <string name="page_posts_page_update_failed">Cập nhật trang bài viết thất bại</string>
+    <string name="page_posts_page_successfully_updated">Cập nhật trang bài viết thành công</string>
     <string name="page_homepage_update_failed">Cập nhật trang chủ thất bại</string>
     <string name="page_homepage_successfully_updated">Cập nhật trang chủ thành công</string>
     <string name="page_cannot_set_posts_page">Chọn \"Trang chủ\" trong Cài đặt Blog để kích hoạt trang Bài Viết</string>
@@ -1083,7 +1091,7 @@ Language: vi_VN
     <string name="post_list_tab_trashed_posts">Thùng rác</string>
     <string name="post_list_tab_scheduled_posts">Lên lịch</string>
     <string name="post_list_tab_published_posts">Đã đăng</string>
-    <string name="sharing_facebook_account_must_have_pages">Kết nối Facebook không được. Không thể kết nối Trang Cá Nhân, chỉ kết nối được Trang Doanh Nghiệp.</string>
+    <string name="sharing_facebook_account_must_have_pages">Với Facebook, Publicize không thể kết nối Trang Cá Nhân, chỉ kết nối được Trang Doanh Nghiệp.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Chưa kết nối</string>
     <string name="notifications_tab_title_likes">Lượt thích</string>
     <string name="notifications_tab_title_follows">Theo dõi</string>
@@ -1100,21 +1108,21 @@ Language: vi_VN
     <string name="reader_bottom_sheet_content_description">Chọn Thẻ hoặc Blog, cửa sổ Pop Up</string>
     <string name="reader_btn_select_filter_content_description">Chọn Blog hoặc Thẻ để lọc bài viết</string>
     <string name="reader_btn_remove_filter_content_description">Xóa bộ lọc hiện tại</string>
-    <string name="reader_title_subs">Chủ đề &amp; Blog</string>
+    <string name="reader_title_subs">Thẻ &amp; Blog</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Đăng nhập WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Đăng nhập WordPress.com để đọc bài viết mới nhất thuộc chủ đề mà bạn theo dõi</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Đăng nhập WordPress.com để đọc bài viết mới nhất từ những thẻ mà bạn theo dõi</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Đăng nhập WordPress.com để đọc bài viết mới nhất từ những blog mà bạn theo dõi</string>
     <string name="gutenberg_native_replace_current_block">Thay thế khối hiện tại</string>
     <string name="gutenberg_native_add_to_end">Thêm đến Hết</string>
     <string name="gutenberg_native_add_to_beginning">Thêm đến Bắt Đầu</string>
     <string name="gutenberg_native_add_block_before">Thêm khối trước</string>
     <string name="gutenberg_native_add_block_after">Thêm khối sau</string>
-    <string name="reader_filter_empty_tags_action">Thêm chủ đề</string>
+    <string name="reader_filter_empty_tags_action">Thêm thẻ</string>
     <string name="reader_filter_empty_sites_action">Theo dõi blog</string>
-    <string name="reader_filter_empty_tags_list">Bạn có thể theo dõi các bài viết có cùng chủ đề bằng cách thêm chủ đề</string>
+    <string name="reader_filter_empty_tags_list">Bạn có thể theo dõi các bài viết có cùng đề tài bằng cách thêm thẻ</string>
     <string name="reader_filter_empty_sites_list">Đọc bài viết mới nhất từ blog bạn theo dõi</string>
     <string name="reader_filter_main_title">Đang theo dõi</string>
-    <string name="reader_filter_cta">Lọc</string>
+    <string name="reader_filter_cta">Bộ lọc</string>
     <string name="gutenberg_native_video_caption_s">Chú thích video. %s</string>
     <string name="gutenberg_native_edit_video">Sửa video</string>
     <string name="gutenberg_native_edit_media">Sửa media</string>
@@ -1162,7 +1170,7 @@ Language: vi_VN
     <string name="reader_my_likes_display_name">Đã thích</string>
     <string name="reader_discover_display_name">Khám phá</string>
     <string name="reader_save_for_later_display_name">Đã lưu</string>
-    <string name="reader_filter_tags_title">Chủ đề</string>
+    <string name="reader_filter_tags_title">Thẻ</string>
     <string name="reader_filter_sites_title">Blog</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -1202,7 +1210,6 @@ Language: vi_VN
     <string name="gutenberg_native_image_caption_s">Chú thích ảnh. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ẩn bàn phím</string>
     <string name="gutenberg_native_help_icon">Biểu tượng trợ giúp</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Chèn media thất bại.\nNhấn để xem tùy chọn.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Nhấn hai lần để trở lại thay đổi cuối cùng</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Nhấn hai lần để chuyển đổi thiết lập</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Nhấn hai lần để chọn ảnh</string>
@@ -1261,7 +1268,6 @@ Language: vi_VN
     <string name="local_post_autosave_revision_available">Bạn đã thực hiện các thay đổi chưa được lưu đối với bài viết này</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Phiên bản từ ứng dụng này</string>
     <string name="dialog_confirm_autosave_restore_button">Phiên bản từ thiết bị khác</string>
-    <string name="dialog_confirm_autosave_body_second_part">Từ ứng dụng này\nLưu vào %s\n\nTừ thiết bị khác\nLưu vào %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Bạn đã thay đổi nội dung nhưng chưa lưu. Chọn một phiên bản để nạp:\n\n</string>
     <string name="dialog_confirm_autosave_title">Bạn muốn chỉnh sửa phiên bản nào?</string>
     <string name="button_delete_permanently">Xóa vĩnh viễn</string>
@@ -1311,7 +1317,6 @@ Language: vi_VN
     <string name="share_desc">Chia sẻ</string>
     <string name="navigate_back_desc">Trở lại</string>
     <string name="navigate_forward_desc">Quay lại</string>
-    <string name="calendar_scheduled_post_description">Đã lên lịch đăng \"%s\" trên \"%s\" bằng ứng dụng WordPress \n %s</string>
     <string name="calendar_scheduled_post_title">Bài viết WordPress đã lên lịch: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">Sẽ đăng \"%s\" trong 10 phút nữa</string>
     <string name="notification_post_will_be_published_in_one_hour">Sẽ đăng \"%s\" trong 1 giờ nữa</string>
@@ -1511,7 +1516,7 @@ Language: vi_VN
     <string name="quick_start_dialog_explore_plans_message_short">Nhấn %1$s Gói dịch vụ %2$s để xem gói hiện tại của bạn và những gói khác.</string>
     <string name="quick_start_dialog_check_stats_message_short">Nhấn %1$s Thống Kê %2$s để xem hiệu suất blog.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
-    <string name="quick_start_dialog_publish_post_message">Đăng và chuyển và nháp.</string>
+    <string name="quick_start_dialog_publish_post_message">Tạo nháp và đăng một bài viết.</string>
     <string name="quick_start_dialog_explore_plans_title">Tìm hiểu các gói</string>
     <string name="quick_start_dialog_explore_plans_message">Học về marketing và công cụ SEO trong các gói nâng cấp.</string>
     <string name="quick_start_dialog_enable_sharing_title">Bật chia sẻ bài viết</string>
@@ -1542,7 +1547,7 @@ Language: vi_VN
     <string name="notification_new_site_creation_title">Tạo Blog</string>
     <string name="new_site_creation_create_site_button">Tạo Blog</string>
     <string name="new_site_creation_domain_header_subtitle">Đây là nơi mà mọi người tìm thấy bạn trên internet.</string>
-    <string name="new_site_creation_empty_domain_list_message">Không có địa chỉ nào trùng khớp với tìm kiếm của bạn</string>
+    <string name="new_site_creation_empty_domain_list_message">Không có địa chỉ nào trùng khớp</string>
     <string name="site_creation_error_generic_subtitle">Lỗi giao tiếp với máy chủ, xin thử lại</string>
     <string name="site_creation_error_generic_title">Có lỗi xảy ra</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Có lỗi xảy ra</string>
@@ -1554,19 +1559,18 @@ Language: vi_VN
     <string name="local_post_is_conflicted">Xung đột phiên bản</string>
     <string name="preference_crash_reports_summary">Cho phép tự động báo cáo lỗi để cải thiện ứng dụng.</string>
     <string name="preference_crash_reports">Báo cáo lỗi</string>
-    <string name="snackbar_conflict_undo">Trở về</string>
+    <string name="snackbar_conflict_undo">Lùi lại</string>
     <string name="snackbar_conflict_web_version_discarded">Đã hủy bỏ phiên bản web</string>
     <string name="snackbar_conflict_local_version_discarded">Đã hủy bỏ phiên bản điện thoại</string>
     <string name="toast_conflict_updating_post">Đang cập nhật bài viết</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Hủy bản Web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Hủy bản Điện Thoại</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Điện thoại\nĐã lưu vào %s\n\nWeb\nĐã lưu vào %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Bài viết này có hai phiên bản xung đột. Chọn phiên bản mà bạn muốn hủy.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Giải quyết xung đột đồng bộ</string>
     <string name="stats_no_data_for_period">Chưa có dữ liệu</string>
     <string name="preference_strip_image_location">Xóa định vị vị trí khỏi ảnh</string>
     <string name="stats_cannot_be_started">Không thể mở thống kê vào lúc này. Hãy thử lại sau</string>
-    <string name="gif_picker_empty_search_list">Không có media trùng khớp với tìm kiếm của bạn</string>
+    <string name="gif_picker_empty_search_list">Không có media nào trùng khớp</string>
     <string name="gif_picker_initial_empty_text">Tìm GIF để thêm vào Thư viện Media!</string>
     <string name="stats_author_views_label">Lượt xem</string>
     <string name="stats_author_label">Tác giả</string>
@@ -1656,11 +1660,11 @@ Language: vi_VN
     <string name="pages_empty_scheduled">Bạn không có trang đã lên lịch</string>
     <string name="pages_empty_drafts">Bạn chưa có bản nháp nào</string>
     <string name="pages_empty_published">Bạn chưa có trang nào</string>
-    <string name="pages_search_suggestion">Trang tìm kiếm</string>
-    <string name="pages_empty_search_result">Không trang nào khớp với tìm kiếm</string>
+    <string name="pages_search_suggestion">Tìm trang</string>
+    <string name="pages_empty_search_result">Không có trang nào trùng khớp</string>
     <string name="pages_delete_permanently">Xóa vĩnh viễn</string>
-    <string name="pages_move_to_trash">Cho vào Thùng Rác</string>
-    <string name="pages_move_to_draft">Chuyển về bản Nháp</string>
+    <string name="pages_move_to_trash">Cho vào thùng rác</string>
+    <string name="pages_move_to_draft">Chuyển về bản nháp</string>
     <string name="pages_set_parent">Chọn trang mẹ</string>
     <string name="pages_view">Xem</string>
     <string name="pages_trashed">Thùng rác</string>
@@ -1669,8 +1673,8 @@ Language: vi_VN
     <string name="pages_published">Đã đăng</string>
     <string name="login_error_sms_throttled">Chúng tôi đã gửi mã xác minh SMS quá nhiều lần - hãy tạm dừng và yêu cầu mã mới sau một phút.</string>
     <string name="login_error_email_not_found_v2">Không có tài khoản WordPress.com nào kết nối với tài khoản Google này.</string>
-    <string name="site_picker_remove_site_empty">Không blog nào khớp với tìm kiếm</string>
-    <string name="reader_empty_followed_blogs_search_title">Không blog nào khớp với tìm kiếm</string>
+    <string name="site_picker_remove_site_empty">Không có blog nào trùng khớp</string>
+    <string name="reader_empty_followed_blogs_search_title">Không có blog nào trùng khớp</string>
     <string name="page_parent_changed">Trang mẹ đã bị thay đổi</string>
     <string name="page_permanently_deleted">Đã xóa trang vĩnh viễn</string>
     <string name="page_moved_to_scheduled">Đã lên lịch đăng trang</string>
@@ -1696,7 +1700,7 @@ Language: vi_VN
     <string name="quick_start_dialog_publish_post_message_short">Nhấn %1$s Viết bài %2$s để tạo 1 bài viết mới</string>
     <string name="quick_start_dialog_need_help_button_negative">Để sau</string>
     <string name="quick_start_dialog_follow_sites_title">Theo dõi các blog khác</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Nhấn %1$s Tìm kiếm %2$s để tìm các blog có chủ đề tương tự</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Nhấn %1$s Tìm kiếm %2$s để tìm các blog có đề tài tương tự</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Nhấn %1$s Đọc %2$s để tiếp tục</string>
     <string name="quick_start_dialog_follow_sites_message">Tìm những blog truyền cảm hứng cho bạn và nhận thông báo khi họ đăng bài mới.</string>
     <string name="quick_start_button_positive">Bắt đầu</string>
@@ -1704,8 +1708,8 @@ Language: vi_VN
     <string name="quick_start_button_negative">Để sau</string>
     <string name="content_description_more">Thêm</string>
     <string name="my_site_create_new_site_title">Bạn chưa có blog nào</string>
-    <string name="reader_empty_followed_tags_title">Chưa theo dõi chủ đề nào</string>
-    <string name="reader_empty_followed_tags_subtitle">Thêm chủ đề ở đây để tìm bài viết liên quan những chủ đề mà bạn yêu thích</string>
+    <string name="reader_empty_followed_tags_title">Chưa theo dõi thẻ nào</string>
+    <string name="reader_empty_followed_tags_subtitle">Thêm thẻ ở đây để tìm bài viết liên quan những đề tài mà bạn yêu thích</string>
     <string name="login_to_to_connect_jetpack">Đăng nhập tài khoản WordPress.com mà bạn có kết nối Jetpack.</string>
     <string name="install_jetpack_retry">Thử lại</string>
     <string name="install_jetpack_continue">Cài ngay</string>
@@ -1719,13 +1723,13 @@ Language: vi_VN
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="stats_jetpack_connection_setup_info">Để xem Thống Kê trên trang WordPress, bạn phải cài đặt plugin Jetpack.</string>
-    <string name="themes_empty_list">Không có chủ đề nào khớp với tìm kiếm</string>
+    <string name="themes_empty_list">Không có chủ đề nào trùng khớp</string>
     <string name="reader_label_post_search_explainer">Bạn muốn tìm đọc gì?</string>
-    <string name="site_settings_tags_empty_title_search">Không có thẻ nào khớp với tìm kiếm</string>
+    <string name="site_settings_tags_empty_title_search">Không có thẻ nào trùng khớp</string>
     <string name="site_settings_tags_empty_title">Bạn chưa có thẻ nào</string>
     <string name="site_settings_tags_empty_subtitle">Thêm những thẻ thường dùng gần đây để chọn nhanh chúng khi gắn thẻ bài viết của bạn</string>
     <string name="site_settings_tags_empty_button">Tạo thẻ</string>
-    <string name="media_empty_search_list">Không có media nào khớp với tìm kiếm</string>
+    <string name="media_empty_search_list">Không có media nào trùng khớp</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Đăng xuất WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Những thay đổi với bài viết chưa được cập nhật trên blog của bạn. Đăng xuất sẽ khiến những thay đổi đó biến mất. Vẫn đăng xuất?</string>
     <string name="people_empty_list_filtered_viewers">Chưa có độc giả</string>
@@ -1845,7 +1849,6 @@ Language: vi_VN
     <string name="notification_settings_category_followed_sites">Blog mà tôi theo dõi</string>
     <string name="content_description_person_reading_device_notification">Một người đọc thiết bị với thông báo</string>
     <string name="content_description_people_looking_charts">Mọi người thích nhìn đồ thị và biểu đồ</string>
-    <string name="comment_title">%s trong %s</string>
     <string name="dialog_confirm_delete_permanently_post">Bạn chắc chắn muốn xóa vĩnh viễn bài viết này?</string>
     <string name="notification_channel_important_title">Quan trọng</string>
     <string name="notification_channel_general_title">Chung</string>
@@ -2463,12 +2466,19 @@ Language: vi_VN
     <string name="error_fetch_email_followers_list">Không thể tải danh sách người theo dõi qua email</string>
     <string name="error_fetch_followers_list">Không thể tải danh sách người theo dõi</string>
     <string name="editor_failed_uploads_switch_html">Một số media tải lên đã bị lỗi. Bạn không thể chuyển sang chế độ HTML \n      trong tình huống này. Xóa những media tải lên bị lỗi và tiếp tục?</string>
+    <string name="image_thumbnail">Hình thu nhỏ Ảnh</string>
+    <string name="visual_editor">Trình biên tập trực quan</string>
     <string name="image_width">Chiều rộng</string>
     <string name="image_link_to">Liên kết tới</string>
+    <string name="image_alt_text">Văn bản thay thế</string>
     <string name="image_caption">Chú thích</string>
     <string name="image_settings_save_toast">Các thay đổi đã lưu</string>
     <string name="image_settings_dismiss_dialog_title">Hủy các thay đổi chưa lưu?</string>
     <string name="stop_upload_dialog_title">Ngừng tải lên?</string>
+    <string name="alert_error_adding_media">Một lỗi đã xảy ra trong khi chèn media</string>
+    <string name="alert_action_while_uploading">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
+    <string name="alert_insert_image_html_mode">Không thể chèn media trực tiếp trong chế độ HTML. Vui lòng chuyển sang chế độ trực quan.</string>
+    <string name="uploading_gallery_placeholder">Đang tải lên bộ sưu tập …</string>
     <string name="tap_to_try_again">Nhấn để thử lại!</string>
     <string name="invite_sent">Lời mời đã được gửi thành công</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2538,6 +2548,7 @@ Language: vi_VN
     <string name="comments_empty_list_filtered_trashed">Thùng rác trống</string>
     <string name="comments_empty_list_filtered_pending">Không có bình luận đang chờ</string>
     <string name="comments_empty_list_filtered_approved">Không có bình luận đã duyệt</string>
+    <string name="button_skip">Bỏ qua</string>
     <string name="xmlrpc_missing_method_error">Không thể kết nối. Máy chủ này không có các phương thức XML-RPC cần thiết.</string>
     <string name="alignment_center">Giữa</string>
     <string name="post_format_video">Video</string>
@@ -2684,7 +2695,7 @@ Language: vi_VN
     <string name="site_settings_receive_pingbacks_title">Cho phép được đăng lại</string>
     <string name="site_settings_send_pingbacks_title">Cho phép bản thân đăng lại</string>
     <string name="site_settings_allow_comments_title">Cho phép bình luận</string>
-    <string name="site_settings_default_format_title">Định dạng mặc định</string>
+    <string name="site_settings_default_format_title">Kiểu bài viết mặc định</string>
     <string name="site_settings_default_category_title">Chuyên mục mặc định</string>
     <string name="site_settings_address_title">Địa chỉ</string>
     <string name="site_settings_tagline_title">Khẩu hiệu</string>
@@ -2719,12 +2730,12 @@ Language: vi_VN
     <string name="theme_support">Hỗ trợ</string>
     <string name="theme_details">Chi tiết</string>
     <string name="theme_view">Xem</string>
-    <string name="theme_try_and_customize">Thử &amp; Tùy chỉnh</string>
+    <string name="theme_try_and_customize">Thử &amp; Tùy biến</string>
     <string name="theme_activate">Kích hoạt</string>
     <string name="active">Kích hoạt</string>
     <string name="support">Hỗ trợ</string>
     <string name="details">Chi tiết</string>
-    <string name="customize">Tùy chỉnh</string>
+    <string name="customize">Tùy biến</string>
     <string name="current_theme">Chủ đề hiện tại</string>
     <string name="page_updated">Trang đã cập nhật</string>
     <string name="post_updated">Bài viết đã cập nhật</string>
@@ -2748,11 +2759,11 @@ Language: vi_VN
     <string name="reader_discover_attribution_blog">Đăng trên %s</string>
     <string name="reader_discover_attribution_author">Bởi %s</string>
     <string name="reader_discover_attribution_author_and_blog">Được viết bởi %1$s vào %2$s</string>
-    <string name="reader_short_like_count_multi">%s Lượt thích</string>
+    <string name="reader_short_like_count_multi">%s thích</string>
     <string name="reader_short_like_count_one">1 thích</string>
     <string name="reader_short_like_count_none">Thích</string>
-    <string name="reader_label_follow_count">%,d theo dõi</string>
-    <string name="reader_menu_tags">Sửa các chủ đề và blog</string>
+    <string name="reader_label_follow_count">%,d người theo dõi</string>
+    <string name="reader_menu_tags">Sửa các thẻ và blog</string>
     <string name="reader_title_post_detail">Bài viết theo dõi</string>
     <string name="notifications_push_summary">Những thông báo trên thiết bị của bạn.</string>
     <string name="notifications_email_summary">Những thông báo được gửi đến email.</string>
@@ -2795,7 +2806,7 @@ Language: vi_VN
     <string name="site_picker_edit_visibility">Hiện/Ẩn blog</string>
     <string name="site_picker_title">Chọn Blog</string>
     <string name="my_site_btn_view_site">Xem blog</string>
-    <string name="my_site_btn_view_admin">Quản trị trang</string>
+    <string name="my_site_btn_view_admin">Quản trị blog</string>
     <string name="my_site_btn_switch_site">Chuyển blog</string>
     <string name="my_site_btn_site_settings">Cài đặt blog</string>
     <string name="my_site_btn_blog_posts">Bài viết</string>
@@ -2837,7 +2848,7 @@ Language: vi_VN
     <string name="stats_followers_a_minute_ago">1 phút trước</string>
     <string name="stats_followers_seconds_ago">giây trước</string>
     <string name="stats_view_followers">Người theo dõi</string>
-    <string name="stats_view_publicize">Công khai hóa</string>
+    <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Bài viết &amp; Trang</string>
     <string name="stats_view_countries">Quốc gia</string>
@@ -2845,7 +2856,7 @@ Language: vi_VN
     <string name="stats_visitors">Truy cập</string>
     <string name="stats_views">Lượt xem</string>
     <string name="stats_timeframe_years">Năm</string>
-    <string name="themes_fetching">Đang tải chủ đề…</string>
+    <string name="themes_fetching">Đang nạp chủ đề…</string>
     <string name="ssl_certificate_details">Chi tiết</string>
     <string name="cab_selected">Đã chọn %d</string>
     <string name="browse_our_faq_button">Câu hỏi thường gặp</string>
@@ -2859,9 +2870,9 @@ Language: vi_VN
     <string name="error_refresh_unauthorized_posts">Bạn không có quyền xem hoặc sửa bài viết</string>
     <string name="error_refresh_unauthorized_pages">Bạn không có quyền xem hoặc sửa trang</string>
     <string name="more">Thêm</string>
-    <string name="older_month">1 tháng trước</string>
-    <string name="older_last_week">1 tuần trước</string>
-    <string name="older_two_days">2 ngày trước</string>
+    <string name="older_month">Cũ hơn một tháng</string>
+    <string name="older_last_week">Cũ hơn một tuần</string>
+    <string name="older_two_days">Cũ hơn 2 ngày</string>
     <string name="help_and_support">Trợ giúp</string>
     <string name="mnu_comment_liked">Đã thích</string>
     <string name="comment">Bình luận</string>
@@ -2882,7 +2893,7 @@ Language: vi_VN
     <string name="reader_toast_err_get_blog_info">Không thể hiện blog này</string>
     <string name="reader_label_followed_blog">Đã theo dõi blog</string>
     <string name="reader_hint_add_tag_or_url">Nhập URL hoặc thẻ bạn thích</string>
-    <string name="reader_page_followed_blogs">Blog đang theo dõi</string>
+    <string name="reader_page_followed_blogs">Blog theo dõi</string>
     <string name="reader_page_followed_tags">Thẻ theo dõi</string>
     <string name="reader_title_blog_preview">Đọc Blog</string>
     <string name="ssl_certificate_ask_trust">Nếu bạn thường kết nối bình thường với trang web này, lỗi này có thể là ai do đó đang cố gắng mạo danh trang web, và bạn không nên tiếp tục. Bạn có chắc chắn tin tưởng chứng chỉ?</string>
@@ -2950,8 +2961,10 @@ Language: vi_VN
     <string name="delete_post">Xóa bài viết?</string>
     <string name="post_settings">Cài đặt bài viết</string>
     <string name="file_not_found">Không tìm thấy tập tin để tải lên. Nó đã bị xóa hoặc dời đi?</string>
+    <string name="horizontal_alignment">Canh ngang</string>
     <string name="local_draft">Bản nháp trên điện thoại</string>
     <string name="page_settings">Cài đặt trang</string>
+    <string name="create_a_link">Tạo một liên kết</string>
     <string name="link_enter_url_text">Văn bản liên kết (tùy chọn)</string>
     <string name="cannot_delete_multi_media_items">Không thể xóa một vài media tại thời điểm này. Thử lại sau.</string>
     <string name="media_error_no_permission">Bạn không có quyền xem thư viện media</string>
@@ -3013,7 +3026,7 @@ Language: vi_VN
     <string name="media_gallery_type_squares">Hình vuông</string>
     <string name="themes">Chủ đề</string>
     <string name="discard">Hủy bỏ</string>
-    <string name="manage">Quản trị viên</string>
+    <string name="manage">Quản lý</string>
     <string name="more_notifications">và %d thông báo nữa.</string>
     <string name="new_notifications">%d thông báo mới</string>
     <string name="follows">Lượt theo dõi</string>
@@ -3028,6 +3041,10 @@ Language: vi_VN
     <string name="username">Tên người dùng</string>
     <string name="password">Mật khẩu</string>
     <string name="reader">Người đọc</string>
+    <string name="featured_in_post">Bao gồm ảnh trong nội dung bài viết</string>
+    <string name="featured">Sử dụng như là hình ảnh đặc trưng</string>
+    <string name="width">Chiều rộng</string>
+    <string name="caption">Tiêu đề (tùy chọn)</string>
     <string name="pages">Trang</string>
     <string name="posts">Bài viết</string>
     <string name="anonymous">Ẩn danh</string>
@@ -3035,6 +3052,7 @@ Language: vi_VN
     <string name="done">xong</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Đang tải lên…</string>
     <string name="tos">Điều khoản dịch vụ</string>
     <string name="version">Phiên bản</string>
     <string name="app_title">WordPress cho Android</string>

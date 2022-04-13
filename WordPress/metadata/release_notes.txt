@@ -1,7 +1,3 @@
-- Theme, default and custom color palettes
-- Helpful login error messages on self-hosted sites
-- Email app selection when verifying email at signup/login
-- No nested Reader comments if parent comment is deleted
-- Images display after changing orientation mid-capture
-- Fix for progress bar for My Site icon edits
-- Reorganized list of default Insights
+This release is short and sweet: after deleting a site, you might’ve noticed that same site sticking around in your My Site list until you restarted the app.
+
+We’ve fixed that—deleted sites now disappear right away. So long, farewell.

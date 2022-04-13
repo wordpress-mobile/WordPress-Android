@@ -1,135 +1,118 @@
 <en-US>
-- Sign up through WordPress.com and create sites in Jetpack
-- Use the Reader in Jetpack
-- See notifications in new comment editor
-- Get a fix for the flickering Page/Site preview
-- Keep editor story blocks from closing when memory is low
+- We tweaked the upload error text in media upload blocks.
+- Animated GIFs now come with a GIF badge.
+- Block setting changes to ordered lists now appear in the editor.
+- You can disable Weekly Roundup notifications for all sites in App Info.
 </en-US>
 <ar>
-19.3:
-- التسجيل من خلال ووردبريس.كوم وإنشاء مواقع في Jetpack
-- استخدام القارئ في Jetpack
-- الاطلاع على التنبيهات في محرِّر التعليقات الجديد
-- الحصول على إصلاح لصفحة الوميض/معاينة الموقع
-- منع مكوِّنات قصة المحرِّر من الإغلاق عندما تكون الذاكرة منخفضة
+19.5:
+- قمنا بتعديل نص خطأ الرفع في مكوِّنات رفع الوسائط.
+- تأتي صور GIF المتحركة الآن مزوَّدة بشارة GIF.
+- تظهر الآن تغييرات إعداد المكوِّن على القوائم المرتبة في المحرِّر.
+- يمكنك تعطيل تنبيهات الموجز الأسبوعي لجميع المواقع في معلومات التطبيق.
 </ar>
 <de-DE>
-19.3:
-– Auf WordPress.com registrieren und Websites in Jetpack erstellen
-– Den Reader in Jetpack nutzen
-– Benachrichtigungen im neuen Kommentar-Editor anzeigen
-– Fehlerkorrektur für das Flimmern der Seiten-/Websitevorschau
-– Story-Blocks im Editor werden bei geringem Speicherplatz nicht mehr geschlossen
+19.5:
+- Wir haben den Text bei Upload-Fehlern in Blöcken zum Hochladen von Medien aktualisiert.
+- Animierte GIFs haben jetzt ein GIF-Badge.
+- Änderungen an den Blockeinstellungen für sortierte Listen werden jetzt im Editor angezeigt.
+- Du kannst die Benachrichtigungen mit wöchentlichen Zusammenfassungen für alle Websites unter „App-Info“ deaktivieren.
 </de-DE>
 <es-ES>
-19.3:
-- Regístrate a través de WordPress.com y crea sitios en Jetpack.
-- Utiliza el Lector en Jetpack.
-- Consulta las notificaciones en el nuevo editor de comentarios.
-- Consigue una corrección para el parpadeo de la vista previa de página o sitio.
-- Evita que se cierren los bloques de historias del editor cuando haya poca memoria.
+19.5:
+- Hemos modificado el texto que informa de un error de subida en los bloques de subida de medios.
+- Ahora, los GIF animados vienen con una insignia de GIF.
+- Ahora, los cambios que realices en los ajustes del bloque para las listas ordenadas aparecerán en el editor.
+- Puedes desactivar las notificaciones del Resumen semanal para todos los sitios en Información de la aplicación.
 </es-ES>
 <fr-FR>
-19,3 :
-- Inscrivez-vous WordPress.com et créez des sites dans Jetpack
-- Utilisez le lecteur dans Jetpack
-- Les notifications s’affichent dans le nouvel éditeur de commentaires
-- Correction du vacillement de l’aperçu des pages/du site
-- L’éditeur du bloc Story ne peut plus se fermer lorsque la mémoire est faible
+19.5 :
+- Nous avons apporté quelques retouches au message d’erreur concernant le chargement de contenu multimédia dans les blocs.
+- Les GIF animés affichent désormais un badge distinctif.
+- La structure des blocs a changé pour permettre l’affichage des listes ordonnées dans l’éditeur.
+- Vous pouvez désactiver les notifications de résumé hebdomadaire pour tous vos sites depuis la section d’informations de l’application.
 </fr-FR>
 <iw-IL>
-19.3:
-- להירשם דרך WordPress.com וליצור אתרים ב-Jetpack
-- להשתמש ב-Reader ב-Jetpack
-- להציג הודעות בעורך התגובות
-- לתקן את התצוגה המקדימה המהבהבת של עמודים/אתרים
-- למנוע סגירת בלוקים של סטורי של עורכים כשאין הרבה מקום בזיכרון
+19.5:
+- שינינו את הטקסט בשגיאת ההעלאה בבלוקים של העלאת מדיה.
+- קובצי GIF מונפשים כעת מופיעים עם עיטור 'GIF'.
+- שינויים בהגדרות הבלוק לרשימות מסודרות מופיעים כעת בעורך.
+- אפשר להשבית את ההודעות של 'סיכום שבועי' לכל האתרים דרך 'פרטי האפליקציה'.
 </iw-IL>
 <id>
-19.3:
-- Daftar melalui WordPress.com dan buat situs di Jetpack
-- Gunakan Pembaca di Jetpack
-- Lihat pemberitahuan di editor komentar baru
-- Perbaiki efek pratinjau Halaman/Situs yang mengganggu
-- Jaga blok cerita editor tetap terbuka saat memori rendah
+19.5:
+- Kami menyesuaikan teks error saat mengunggah di blok unggah media.
+- Animasi GIF kini dilengkapi lencana GIF.
+- Perubahan pengaturan blok pada daftar berurutan kini ditampilkan di editor.
+- Anda dapat menonaktifkan pemberitahuan Ringkasan Mingguan untuk semua situs di Info Aplikasi.
 </id>
 <it-IT>
-19.3:
-- Iscriviti tramite WordPress.com e crea siti in Jetpack
-- Usa il Reader in Jetpack
-- Visualizza le notifiche nel nuovo editor dei commenti
-- Ottieni una correzione allo sfarfallio dell'anteprima di Pagina/Sito
-- Impedisci la chiusura dei blocchi Storia dell'editor quando la memoria non è sufficiente
+19.5:
+- Abbiamo fatto piccole modifiche al testo dell'errore di caricamento nei blocchi per il caricamento di elementi multimediali.
+- Le GIF animate ora sono dotate di un badge GIF.
+- Le modifiche delle impostazioni del blocco negli elenchi ordinati ora appaiono nell'editor.
+- Puoi disattivare le notifiche del Resoconto settimanale per tutti i siti nelle Info sull'app.
 </it-IT>
 <ja-JP>
-19.3:
-- WordPress.com から登録して Jetpack でサイトを作成
-- Jetpack で Reader を使用
-- 新しいコメントエディターで通知を確認
-- ページまたはサイトのプレビューでのちらつきを修正
-- メモリ不足でエディターのストーリーブロックが閉じる問題を修正
+19.5:
+- メディアアップロードブロックのアップロードエラーテキストを微調整しました。
+- アニメーション GIF に GIF バッジが表示されるようになりました。
+- 番号つきリストに対するブロック設定の変更がエディターに表示されるようになりました。
+- 1週間のまとめ通知をすべてのサイトに対してアプリ情報で無効にできます。
 </ja-JP>
 <ko-KR>
-19.3:
-- 워드프레스닷컴을 통해 가입하고 젯팩에서 사이트 생성
-- 젯팩에서 리더 사용
-- 새 댓글 편집기에 알림 표시
-- 페이지/사이트 미리보기 명멸 문제 해결
-- 메모리 부족 시 편집기 스토리 블록 종료 방지
+19.5:
+- 미디어 업로드 블록의 업로드 오류 텍스트를 조정했습니다.
+- 이제는 GIF 애니메이션에 GIF 배지가 표시됩니다.
+- 순서 있는 목록의 블록 설정 변경 사항이 이제는 편집기에 표시됩니다.
+- 앱 정보에서 모든 사이트에 대한 주간 총정리 알림을 비활성화하실 수 있습니다.
 </ko-KR>
 <nl-NL>
-19.3:
-- Meld je aan via WordPress.com en maak in Jetpack een site aan
-- Gebruik de Reader in Jetpack
-- Zie meldingen in de nieuwe opmerkingseditor
-- Los het knipperen van de voorbeeldweergave van een pagina of site op
-- Stop het sluiten van verhaalblokken in de editor bij een laag geheugen
+19.5:
+- We hebben de tekst van uploadfouten in media-uploadblokken aangepast.
+- Bewegende GIF's zijn nu voorzien van een GIF-badge.
+- Gewijzigde blokinstellingen naar geordende lijsten verschijnen nu in de editor.
+- Je kunt meldingen voor het Wekelijkse overzicht uitschakelen voor alle sites onder App-info.
 </nl-NL>
 <pt-BR>
-19.3:
-- Inscreva-se no WordPress.com e crie sites no Jetpack
-- Use o leitor no Jetpack
-- Veja as notificações no novo editor de comentários
-- Corrija a oscilação na visualização da página/site
-- Evite que os blocos de story do editor fechem quando há pouca memória
+19.5:
+- Ajustamos o texto do erro de upload nos blocos de upload de mídia.
+- GIFs animados agora vêm com um emblema de GIF.
+- Agora as alterações de configuração de bloco em listas ordenadas aparecem no editor.
+- É possível desativar as notificações do resumo semanal para todos os sites nas informações do aplicativo.
 </pt-BR>
 <ru-RU>
-19.3:
-— Регистрация через WordPress.com и создание сайтов в приложении Jetpack
-— Использование Обозревателя в приложении Jetpack
-— Просмотр уведомлений в новом редакторе комментариев
-— Исправленный эффект мерцания на странице предварительного просмотра
-— Блоки с историей редактора не закрываются при недостаточном объеме памяти
+19.5:
+— Мы немного изменили текст ошибки загрузки в блоках загрузки медиафайлов.
+— Анимированные изображения GIF теперь отмечены значком GIF.
+— Изменения в упорядоченных списках в настройках блоков теперь отображаются в редакторе.
+— Вы можете отключить уведомления о сводке за неделю для всех сайтов в разделе информации о приложении.
 </ru-RU>
 <sv-SE>
-19.3:
-- Registrera dig via WordPress.com och skapa webbplatser med Jetpack
-- Använd läsaren i Jetpack
-- Se notiser i den nya kommentarsredigeraren
-- Få en korrigering av den flimrande sid-/webbplatsförhandsgranskningen
-- Se till att redigerarens berättelseblock inte stängs vid lågt minne
+19.5:
+- Vi har ändrat texten för uppladdningsfel i mediauppladdningsblock.
+- Animerade GIF-bilder har nu ett GIF-märke.
+- Blockinställningsändringar av sorterade listor visas nu i redigeraren.
+- Du kan inaktivera veckosammanfattningsnotiser för alla webbplatser i Appinformation.
 </sv-SE>
 <tr-TR>
-19.3:
-- - WordPress.com üzerinden kaydolun ve Jetpack'te siteler oluşturun
-- Jetpack'te Okuyucuyu kullanın
-- Yeni yorum düzenleyicide bildirimleri görün
-- Titreyen Sayfa/Site önizlemesi için bir düzeltme alın
-- Bellek azaldığında düzenleyici hikaye bloklarının kapanmasını önleyin
+19.5:
+- Medya yükleme bloklarındaki yükleme hatası metninde ince ayar yaptık.
+- Hareketli GIF'lerde artık bir GIF rozeti görüntüleniyor.
+- Sıralı listelerdeki blok ayarı değişiklikleri artık düzenleyicide de görünüyor.
+- Uygulama Bilgisi'nde tüm siteler için Haftalık Özet bildirimlerini devre dışı bırakabilirsiniz.
 </tr-TR>
 <zh-CN>
-19.3：
-- 通过 WordPress.com 注册并在 Jetpack 中创建站点
-- 在 Jetpack 中使用阅读器
-- 在新的评论编辑器中查看通知
-- 修复了页面/站点预览闪烁的问题
-- 防止内存不足时编辑器故事区块关闭
+19.5：
+- 我们调整了媒体上传区块中的上传错误文本。
+- 现在，动画 GIF 带有 GIF 徽章。
+- 现在，对有序列表的区块设置更改显示在编辑器中。
+- 您可以在“应用程序信息”中为所有站点禁用每周综述通知。 
 </zh-CN>
 <zh-TW>
-19.3：
-- 透過 WordPress.com 登入並在 Jetpack 中建立網站
-- 在 Jetpack 中使用閱讀器
-- 在新的留言編輯器中查看通知
-- 修正頁面/網站預覽的閃爍問題
-- 防止編輯器動態區塊在記憶體不足時關閉
+19.5：
+- 我們調整了媒體上傳區塊的上傳錯誤文字。
+- GIF 動畫現在會附上 GIF 徽章。
+- 對已排序清單的區塊設定變更現在會顯示於編輯器中。
+- 你可在「應用程式資訊」中停用所有網站的每週綜合整理通知。
 </zh-TW>

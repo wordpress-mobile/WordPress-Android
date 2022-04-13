@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-02-20 17:49:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: eu_ES
 -->
 <resources>
@@ -102,12 +102,18 @@ Language: eu_ES
     <string name="error_remove_viewer">Ezin izan da ikuslea kendu</string>
     <string name="error_fetch_email_followers_list">Ezin izan dira guneko e-posta jarraitzaileak eskuratu</string>
     <string name="error_fetch_followers_list">Ezin izan dira guneko jarraitzaileak eskuratu</string>
+    <string name="visual_editor">Editore bisuala</string>
     <string name="image_settings_save_toast">Aldaketak gorde dira</string>
+    <string name="image_alt_text">Testu alternatiboa</string>
     <string name="image_link_to">Estekatu:</string>
     <string name="image_width">Zabalera</string>
     <string name="image_caption">Izenburua</string>
     <string name="image_settings_dismiss_dialog_title">Gorde gabeko aldaketa baztertu?</string>
     <string name="stop_upload_dialog_title">Karga gelditu?</string>
+    <string name="alert_error_adding_media">Errore bat gertatu da mediak txertatzean</string>
+    <string name="alert_action_while_uploading">Mediak kargatzen ari zara. Mesedez itxaron kargak dirauen artean.</string>
+    <string name="alert_insert_image_html_mode">Ezin da media zuzenean txertatu HTML moduan. Itzuli modu bisualera, mesedez.</string>
+    <string name="uploading_gallery_placeholder">Galeria igotzen…</string>
     <string name="invite_sent">Gonbidapena ondo bidali da</string>
     <string name="tap_to_try_again">Egin tap berriro saiatzeko!</string>
     <string name="invite_error_some_failed">Gonbidapena bidalita baina errorea(k) gertatu da/dira!</string>
@@ -149,6 +155,7 @@ Language: eu_ES
     <string name="me_btn_app_settings">App-aren ezarpenak</string>
     <string name="editor_remove_failed_uploads">Ezabatu huts egin duten kargak</string>
     <string name="site_settings_advanced_header">Aurreratua</string>
+    <string name="button_skip">Saltatu</string>
     <string name="post_format_status">Egoera</string>
     <string name="post_format_video">Bideoa</string>
     <string name="alignment_center">Erdira</string>
@@ -383,8 +390,10 @@ Language: eu_ES
     <string name="local_changes">Aldaketa lokalak</string>
     <string name="wordpress_blog">WordPress-eko bloga</string>
     <string name="select_categories">Kategoriak aukeratu</string>
+    <string name="create_a_link">Esteka sortu</string>
     <string name="local_draft">Zirriborro lokala</string>
     <string name="view_in_browser">Nabigatzailean ikusi</string>
+    <string name="horizontal_alignment">Lerrokatze horizontala</string>
     <string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
     <string name="content_required">Iruzkina beharrezkoa da</string>
     <string name="toast_comment_unedited">Iruzkina ez da aldatu</string>
@@ -473,13 +482,18 @@ Language: eu_ES
     <string name="log_in">Saioa hasi</string>
     <string name="username">Erabiltzaile-izena</string>
     <string name="reader">Irakurlea</string>
+    <string name="featured">Nabarmendutako irudi bezala erabili</string>
     <string name="no_network_title">Ez dago sarerik eskuragarri</string>
     <string name="pages">Orrialdeak</string>
+    <string name="width">Zabalera</string>
     <string name="anonymous">Anonimoa</string>
+    <string name="featured_in_post">Txertatu irudia mezuaren edukian</string>
+    <string name="caption">Legenda (hautazkoa)</string>
     <string name="posts">Bidalketak</string>
     <string name="ok">Ados</string>
     <string name="done">egina</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Igotzen…</string>
     <string name="app_title">WordPress Android-erako</string>
     <string name="tos">Zerbitzuaren baldintzak</string>
     <string name="version">Bertsioa:</string>

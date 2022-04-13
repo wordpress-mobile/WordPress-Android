@@ -36,7 +36,7 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         return position;
     }
 
-    ParentCategorySpinnerAdapter(Context context, int resource, List<CategoryNode> objects) {
+    public ParentCategorySpinnerAdapter(Context context, int resource, List<CategoryNode> objects) {
         super();
         mContext = context;
         mObjects = objects;

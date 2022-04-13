@@ -53,7 +53,7 @@ private const val DOMAIN = ".wordpress.com"
 private const val URL = "$SUB_DOMAIN$DOMAIN"
 private const val REMOTE_SITE_ID = 1L
 private const val LOCAL_SITE_ID = 2
-private val SITE_CREATION_STATE = SiteCreationState(1, defaultTemplateSlug, URL)
+private val SITE_CREATION_STATE = SiteCreationState(segmentId = 1, siteDesign = defaultTemplateSlug, domain = URL)
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
@@ -102,6 +102,7 @@ class SitePreviewViewModelTest {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)
         whenever(urlUtils.addUrlSchemeIfNeeded(URL, true)).thenReturn(URL)
+        whenever(urlUtils.removeScheme(URL)).thenReturn(URL)
         whenever(siteStore.getSiteBySiteId(REMOTE_SITE_ID)).thenReturn(createLocalDbSiteModelId())
     }
 
@@ -335,7 +336,7 @@ class SitePreviewViewModelTest {
     }
 
     private fun createServiceSuccessState(): SiteCreationServiceState {
-        return SiteCreationServiceState(SUCCESS, REMOTE_SITE_ID)
+        return SiteCreationServiceState(SUCCESS, Pair(REMOTE_SITE_ID, URL))
     }
 
     private fun createLocalDbSiteModelId(): SiteModel {

@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.NOTIFICATION_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
@@ -29,7 +30,6 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
-import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -69,7 +69,7 @@ class BloggingRemindersViewModel @Inject constructor(
                 PROLOGUE -> prologueBuilder.buildUiItems()
                 PROLOGUE_SETTINGS -> prologueBuilder.buildUiItemsForSettings()
                 SELECTION -> daySelectionBuilder.buildSelection(
-                        bloggingRemindersModel, this::selectDay, this::selectTime
+                        bloggingRemindersModel, this::selectDay, this::selectTime, this::togglePromptSwitch
                 )
                 EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
@@ -149,6 +149,12 @@ class BloggingRemindersViewModel @Inject constructor(
         _isTimePickerShowing.value = Event(true)
     }
 
+    private fun togglePromptSwitch() {
+        _bloggingRemindersModel.value?.let { currentState ->
+            _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = !currentState.isPromptIncluded)
+        }
+    }
+
     fun onChangeTime(hour: Int, minute: Int) {
         _isTimePickerShowing.value = Event(false)
         val currentState = _bloggingRemindersModel.value!!
@@ -175,9 +181,11 @@ class BloggingRemindersViewModel @Inject constructor(
                             bloggingRemindersModel.siteId,
                             bloggingRemindersModel.hour,
                             bloggingRemindersModel.minute,
-                            bloggingRemindersModel.toReminderConfig())
+                            bloggingRemindersModel.toReminderConfig()
+                    )
                     analyticsTracker.trackRemindersScheduled(
-                            daysCount, bloggingRemindersModel.getNotificationTime24hour())
+                            daysCount, bloggingRemindersModel.getNotificationTime24hour()
+                    )
                 } else {
                     reminderScheduler.cancelBySiteId(bloggingRemindersModel.siteId)
                     analyticsTracker.trackRemindersCancelled()
@@ -230,6 +238,10 @@ class BloggingRemindersViewModel @Inject constructor(
         onSettingsItemClicked(siteStore.getLocalIdForRemoteSiteId(remoteSiteId), NOTIFICATION_SETTINGS)
     }
 
+    fun onBloggingPromptSchedulingRequested(siteId: Int) {
+        showBottomSheet(siteId, PROLOGUE, BLOGGING_PROMPTS_ONBOARDING)
+    }
+
     private fun onSettingsItemClicked(siteId: Int, source: Source) {
         launch {
             val screen = if (bloggingRemindersStore.hasModifiedBloggingReminders(siteId)) {
@@ -254,9 +266,9 @@ class BloggingRemindersViewModel @Inject constructor(
             WeeklyReminder(this.enabledDays)
 
     enum class Screen(val trackingName: String) {
-        PROLOGUE("main"),
-        PROLOGUE_SETTINGS("main"),
-        SELECTION("day_picker"),
+        PROLOGUE("main"), // displayed after post is published
+        PROLOGUE_SETTINGS("main"), // displayed from Site Settings before showing cadence selector
+        SELECTION("day_picker"), // cadence selector
         EPILOGUE("all_set")
     }
 

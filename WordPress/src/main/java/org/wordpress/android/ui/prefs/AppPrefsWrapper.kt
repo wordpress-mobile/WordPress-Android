@@ -212,6 +212,15 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
 
+    fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.setMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setInitialScreenFromMySiteDefaultTabExperimentVariant(variant: String) =
+            AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
+
+    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

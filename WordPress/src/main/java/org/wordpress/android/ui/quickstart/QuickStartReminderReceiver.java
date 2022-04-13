@@ -71,7 +71,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent notificationContentIntent =
                 PendingIntent.getActivity(context, NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID,
-                        resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        resultIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Notification notification = new NotificationCompat.Builder(context,

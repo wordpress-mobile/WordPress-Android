@@ -14,6 +14,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.S
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Locale
 import javax.inject.Inject
@@ -41,7 +42,8 @@ class SiteCreationTracker @Inject constructor(
         PREVIEW_MODE("preview_mode"),
         LOCATION("location"),
         FILTER("filter"),
-        SELECTED_FILTERS("selected_filters")
+        SELECTED_FILTERS("selected_filters"),
+        VERTICAL_SLUG("vertical_slug")
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -237,6 +239,36 @@ class SiteCreationTracker @Inject constructor(
                         FILTER.key to filter,
                         SELECTED_FILTERS.key to selectedFilters.joinToString()
                 )
+        )
+    }
+
+    fun trackSiteIntentQuestionViewed() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_VIEWED)
+    }
+
+    fun trackSiteIntentQuestionCanceled() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_CANCELED)
+    }
+
+    fun trackSiteIntentQuestionSkipped() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_SKIPPED)
+    }
+
+    fun trackSiteIntentQuestionSearchFocused() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED)
+    }
+
+    fun trackSiteIntentQuestionCustomVerticalSelected(searchInput: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED,
+                mapOf(SEARCH_TERM.key to searchInput)
+        )
+    }
+
+    fun trackSiteIntentQuestionVerticalSelected(verticalSlug: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED,
+                mapOf(VERTICAL_SLUG.key to verticalSlug)
         )
     }
 }

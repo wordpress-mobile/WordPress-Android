@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
@@ -30,7 +31,18 @@ sealed class MySiteCardAndItemBuilderParams {
         val onQuickActionStatsClick: () -> Unit,
         val onQuickActionPagesClick: () -> Unit,
         val onQuickActionPostsClick: () -> Unit,
-        val onQuickActionMediaClick: () -> Unit
+        val onQuickActionMediaClick: () -> Unit,
+        val enableFocusPoints: Boolean = false
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class QuickLinkRibbonBuilderParams(
+        val siteModel: SiteModel,
+        val onPagesClick: () -> Unit,
+        val onPostsClick: () -> Unit,
+        val onMediaClick: () -> Unit,
+        val onStatsClick: () -> Unit,
+        val activeTask: QuickStartTask?,
+        val enableFocusPoints: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class DomainRegistrationCardBuilderParams(
@@ -48,12 +60,14 @@ sealed class MySiteCardAndItemBuilderParams {
         val showErrorCard: Boolean = false,
         val onErrorRetryClick: () -> Unit,
         val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
-        val postCardBuilderParams: PostCardBuilderParams
+        val postCardBuilderParams: PostCardBuilderParams,
+        val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams
     ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
         val todaysStatsCard: TodaysStatsCardModel?,
         val onTodaysStatsCardClick: () -> Unit,
+        val onGetMoreViewsClick: () -> Unit,
         val onFooterLinkClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
@@ -74,5 +88,10 @@ sealed class MySiteCardAndItemBuilderParams {
         val backupAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
         val onClick: (ListItemAction) -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class BloggingPromptCardBuilderParams(
+        val bloggingPrompt: BloggingPrompt?,
+        val onShareClick: (message: String) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 }

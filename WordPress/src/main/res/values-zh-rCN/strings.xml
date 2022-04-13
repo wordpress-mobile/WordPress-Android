@@ -1,12 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-02 22:14:11+0000
+Translation-Revision-Date: 2022-04-08 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0-rc.4
 Language: zh_CN
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 只允许使用字母数字字符。</string>
+    <string name="featured_image_removed_notice">已作为特色图片移除</string>
+    <string name="featured_image_confirmation_notice">设为特色图片</string>
+    <string name="featured_image_replace_dialog_cancel">保留当前图片</string>
+    <string name="featured_image_replace_dialog_confirm">替换特色图片</string>
+    <string name="featured_image_replace_dialog_description">您已经设置特色图片。 想要替换为新图片吗？</string>
+    <string name="featured_image_replace_dialog_title">是否替换当前特色图片？</string>
+    <string name="dialog_dismiss_try_block_editor">忽略</string>
+    <string name="dialog_body_try_block_editor">我们将很快移除经典编辑器。同时，经典编辑器将无法用于撰写新文章，但这不会影响您编辑任何现有文章或页面。 我们建议您立即在站点设置中启用“区块编辑器”。</string>
+    <string name="dialog_title_try_block_editor">试试新的区块编辑器</string>
+    <string name="menu_toolbar_title">编辑“%s”区块</string>
+    <string name="long_post_dlg_saving">正在保存</string>
+    <string name="retry_failed_upload_retry_all">全部重试</string>
+    <string name="retry_failed_upload_remove">移除上传</string>
+    <string name="retry_failed_upload_yes">重试</string>
+    <string name="retry_failed_upload_title">无法上传文件</string>
+    <string name="stop_upload_dialog_button_no">否</string>
+    <string name="stop_upload_dialog_button_yes">是</string>
+    <string name="dialog_button_cancel">取消</string>
+    <string name="dialog_button_ok">确定</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_title">插入链接</string>
+    <string name="editor_title_beta">测试版</string>
+    <string name="toast_content_info_editor_not_ready">编辑器仍在加载</string>
+    <string name="toast_content_info_failed">无法获取内容结构</string>
+    <string name="dialog_content_info_body">区块数：%1$d\n字数：%2$d\n字符数：%3$d</string>
+    <string name="dialog_content_info_title">内容结构</string>
+    <string name="media_bar_description_library">从 WordPress 媒体库中选择媒体</string>
+    <string name="media_bar_description_gallery">从图库中选择媒体</string>
+    <string name="media_bar_description_camera">使用相机拍摄照片或视频</string>
+    <string name="pixel_suffix">%d 像素</string>
+    <string name="stop_save_dialog_ok_button">确定</string>
+    <string name="stop_save_dialog_message">请等待所有文件均已保存</string>
+    <string name="stop_save_dialog_title">正在保存文件</string>
+    <string name="post_content">内容</string>
+    <string name="blogging_prompts_onboarding_card_prompt">将您的生活拍成电影。</string>
+    <string name="blogging_prompts_onboarding_remind_me">提醒我</string>
+    <string name="blogging_prompts_onboarding_try_it_now">立即试用</string>
+    <string name="blogging_prompts_onboarding_content_note_content">您可以在“我的站点”&gt;“设置”&gt;“博客提醒”中了解更多信息并随时设置提醒</string>
+    <string name="blogging_prompts_onboarding_content_note_title">注意：</string>
+    <string name="blogging_prompts_onboarding_content_bottom">我们每天会在您的仪表盘上显示新提示，助力您获取源源不断的创作灵感！</string>
+    <string name="blogging_prompts_onboarding_content_top">优秀作家的良好养成方式是形成写作习惯并与他人共享 - 这正是提示功能的用武之处！</string>
+    <string name="blogging_prompts_onboarding_header_title">提示功能简介</string>
+    <string name="blogging_prompt_set_reminders">设置提醒</string>
+    <string name="blogging_reminders_prompt_subtitle">提醒将包括每日提示</string>
+    <string name="blogging_reminders_prompt_title">包括每日提示</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">定期发布，吸引新读者。 告诉我们您什么时候想写作，我们会给您发提醒！</string>
+    <string name="set_your_blogging_prompts_title">养成习惯，成为优秀的作家</string>
+    <string name="site_creation_intent_writing_poetry">写作和诗歌</string>
+    <string name="site_creation_intent_travel">旅行</string>
+    <string name="site_creation_intent_technology">科技</string>
+    <string name="site_creation_intent_sports">体育</string>
+    <string name="site_creation_intent_real_estate">不动产</string>
+    <string name="site_creation_intent_politics">政治</string>
+    <string name="site_creation_intent_photography">摄影</string>
+    <string name="site_creation_intent_personal">个人版</string>
+    <string name="site_creation_intent_people">人员</string>
+    <string name="site_creation_intent_parenting">育儿</string>
+    <string name="site_creation_intent_news">新闻</string>
+    <string name="site_creation_intent_music">音乐</string>
+    <string name="site_creation_intent_local_services">本地服务</string>
+    <string name="site_creation_intent_lifestyle">生活方式</string>
+    <string name="site_creation_intent_interior_design">室内设计</string>
+    <string name="site_creation_intent_health">健康</string>
+    <string name="site_creation_intent_gaming">游戏</string>
+    <string name="site_creation_intent_food">食物</string>
+    <string name="site_creation_intent_fitness_exercise">健身与运动</string>
+    <string name="site_creation_intent_film_television">电影与电视</string>
+    <string name="site_creation_intent_finance">金融</string>
+    <string name="site_creation_intent_fashion">时尚</string>
+    <string name="site_creation_intent_diy">DIY</string>
+    <string name="site_creation_intent_education">教育</string>
+    <string name="site_creation_intent_community_nonprofit">社区与非营利组织</string>
+    <string name="site_creation_intent_business">商业</string>
+    <string name="site_creation_intent_books">书籍</string>
+    <string name="site_creation_intent_beauty">美容</string>
+    <string name="site_creation_intent_automotive">汽车</string>
+    <string name="site_creation_intent_art">艺术</string>
+    <string name="new_site_creation_intents_input_hint">例如 时尚、诗歌、政治</string>
+    <string name="new_site_creation_intents_title">站点主题</string>
+    <string name="quick_start_site_menu_tab_message_short">轻点“&lt;b&gt;%1$s&lt;/b&gt;”继续。</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">从仪表盘中移除</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">跳过此提示</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">查看更多提示</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">%d 条回复</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">共享博客提示</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ 已回复</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">回复提示</string>
+    <string name="my_site_blogging_prompt_card_title">提示</string>
+    <string name="my_site_all_tab_title">所有</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">提醒和提示</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此颜色搭配可能不便于用户阅读。 不妨尝试使用较浅的背景颜色和/或较深的文本颜色。</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此颜色搭配可能不便于用户阅读。 不妨尝试使用较深的背景颜色和/或较浅的文本颜色。</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">未能插入媒体。\n点按获取更多信息。</string>
+    <string name="new_site_creation_intents_header_subtitle">请从以下列表中选择主题或输入自己的主题</string>
+    <string name="new_site_creation_intents_header_title">您的网站是关于什么的？</string>
+    <string name="notification_channel_weekly_roundup_title">每周综述</string>
+    <string name="my_site_dashboard_tab_title">首页</string>
+    <string name="adding_cat">添加分类</string>
+    <string name="login_select_email_client">您使用哪款电子邮件应用程序？</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">与站点通信时出现问题。 返回了 HTTP 错误代码 401。</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 调用似乎已被该站点屏蔽（错误代码 401）。 如果尝试登录失败，可点击帮助图标查看常见问题解答。</string>
+    <string name="login_error_xml_rpc_cannot_read_site">无法通过该 URL 读取 WordPress 站点。 点击帮助图标查看常见问题解答。</string>
+    <string name="login_error_xml_rpc_services_disabled">本站点禁用 XML-RPC 服务。</string>
+    <string name="my_site_menu_tab_title">站点菜单</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 允许使用以下字符：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">请检查您网络连接并刷新页面。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">转至统计数据</string>
     <string name="my_site_todays_stat_card_title">今日统计</string>
@@ -310,10 +414,10 @@ Language: zh_CN
     <string name="gutenberg_native_preview_post">预览文章</string>
     <string name="gutenberg_native_preview_page">预览页面</string>
     <string name="gutenberg_native_retry">重试</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">一</string>
     <string name="gutenberg_native_no_preview_available">无可用预览</string>
     <string name="gutenberg_native_text_color">文字颜色</string>
-    <string name="gutenberg_native_s_link">%s 链接</string>
     <string name="gutenberg_native_padding">内边距</string>
     <string name="gutenberg_native_four">四</string>
     <string name="gutenberg_native_custom_url">自定义 URL</string>
@@ -590,8 +694,8 @@ Language: zh_CN
     <string name="threat_item_sub_header_file_signature">已发现威胁 %s</string>
     <string name="threat_item_sub_header_core_file">在 WordPress 中发现漏洞</string>
     <string name="threat_item_sub_header_misc_vulnerability">其他漏洞</string>
-    <string name="threat_item_header_vulnerable_theme">易受攻击的主题：%s（版本 %s）</string>
-    <string name="threat_item_header_vulnerable_plugin">易受攻击的插件：%s（版本%s）</string>
+    <string name="threat_item_header_vulnerable_theme">易受攻击的主题：%1$s（版本 %2$s）</string>
+    <string name="threat_item_header_vulnerable_plugin">易受攻击的插件：%1$s（版本%2$s）</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s：恶意代码模式</string>
     <string name="threat_item_header_database_threat">数据库 %s 威胁</string>
     <string name="threat_item_header_infected_core_file">%s：已感染的核心文件</string>
@@ -601,7 +705,7 @@ Language: zh_CN
     <string name="scan_in_minutes_ago">%s分钟以前</string>
     <string name="scan_in_hours_ago">%s小时以前</string>
     <string name="scan_this_site">此站点</string>
-    <string name="scan_idle_last_scan_description">上次 Jetpack 扫描运行了 %s，没有发现任何风险。 %s</string>
+    <string name="scan_idle_last_scan_description">上次 Jetpack Scan 运行了 %1$s，没有发现任何风险。 %2$s</string>
     <string name="scan_idle_threats_found_title">您的站点可能存在风险</string>
     <string name="scan_idle_no_threats_found_title">不必担心</string>
     <string name="scan_again">重新扫描</string>
@@ -609,7 +713,7 @@ Language: zh_CN
     <string name="scan_state_icon">“扫描状态”图标</string>
     <string name="backup">备份</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">活动类型过滤器（已选择 %s 类型）</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s（显示 %s 个项目）</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s（显示 %2$s 个项目）</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">活动类型过滤器</string>
     <string name="activity_log_activity_type_empty_subtitle">已选择的日期范围内未记录任何活动。</string>
     <string name="activity_log_activity_type_empty_title">无可用的活动</string>
@@ -694,7 +798,6 @@ Language: zh_CN
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; 喜欢了您的文章</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">滚动区块菜单打开。 选择区块。</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">滚动区块菜单关闭。</string>
-    <string name="hpp_skip_button">跳过</string>
     <string name="hpp_choose_button">选择</string>
     <string name="hpp_subtitle">选择您喜欢的主页布局。 您可以稍后对其进行编辑和自定义。</string>
     <string name="hpp_title">选择设计</string>
@@ -960,7 +1063,7 @@ Language: zh_CN
     <string name="pages_cannot_be_started">目前我们无法打开页面。请稍后重试</string>
     <string name="pages_set_as_posts_page">设为文章页面</string>
     <string name="pages_set_as_homepage">设为主页</string>
-    <string name="suggestion_invalid">%s 不是有效的 %s</string>
+    <string name="suggestion_invalid">%1$s 不是有效的 %2$s</string>
     <string name="site_settings_select_page">选择页面</string>
     <string name="site_settings_posts_page">文章页面</string>
     <string name="site_settings_static_homepage">静态主页</string>
@@ -1202,7 +1305,6 @@ Language: zh_CN
     <string name="gutenberg_native_image_caption_s">图片说明。%s</string>
     <string name="gutenberg_native_hide_keyboard">隐藏键盘</string>
     <string name="gutenberg_native_help_icon">“帮助”图标</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">无法插入媒体。\n请轻按以查看选项。</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">轻按两下以撤销上次的更改</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">轻按两下以切换设置</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">轻按两下以选择图片</string>
@@ -1261,7 +1363,7 @@ Language: zh_CN
     <string name="local_post_autosave_revision_available">您对此文章所做的更改未保存</string>
     <string name="dialog_confirm_autosave_dont_restore_button">来自此应用程序的版本</string>
     <string name="dialog_confirm_autosave_restore_button">来自其他设备的版本</string>
-    <string name="dialog_confirm_autosave_body_second_part">来自此应用程序\n在 %s保存\n\n来自其他设备\n在 %s保存\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">来自此应用程序\n保存时间：%1$s\n\n来自其他设备\n保存时间：%2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">您最近对此文章做了更改，但没有保存这些更改。选择要加载的版本：\n\n</string>
     <string name="dialog_confirm_autosave_title">您想要编辑哪个版本？</string>
     <string name="button_delete_permanently">永久删除</string>
@@ -1311,7 +1413,7 @@ Language: zh_CN
     <string name="share_desc">共享</string>
     <string name="navigate_back_desc">返回</string>
     <string name="navigate_forward_desc">前进</string>
-    <string name="calendar_scheduled_post_description">“%s”计划于“%s”在您的 WordPress 应用程序中发布\n%s</string>
+    <string name="calendar_scheduled_post_description">“%1$s”计划于“%2$s”在您的 WordPress 应用程序中发布\n %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress 定时文章：“%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">“%s”将于 10 分钟后发布</string>
     <string name="notification_post_will_be_published_in_one_hour">“%s”将于 1 小时后发布</string>
@@ -1414,6 +1516,7 @@ Language: zh_CN
     <string name="stats_management_news_card_message">选择要查看的统计数据，重点关注您最关心的数据。点按“数据分析”底部的“%1$s”，以自定义您的统计数据。</string>
     <string name="stats_manage_your_stats">管理您的统计数据</string>
     <string name="history_fetching_revisions">正在获取修订版…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">无法插入媒体。\n请轻点以查看选项。</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">无法插入媒体。\n请轻按以重试。</string>
     <string name="editor_uploading_draft">正在上传您的草稿</string>
     <string name="post_uploading_draft">正在上传草稿</string>
@@ -1560,7 +1663,7 @@ Language: zh_CN
     <string name="toast_conflict_updating_post">正在更新文章</string>
     <string name="dialog_confirm_load_remote_post_discard_web">放弃 Web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">放弃本地</string>
-    <string name="dialog_confirm_load_remote_post_body_2">本地\n已保存在 %s\n\nWeb\n已保存在 %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">本地\n保存时间：%1$s\n\nWeb\n保存时间：%2$s\n</string>
     <string name="dialog_confirm_load_remote_post_body">此文章有两个冲突的版本。请选择您想放弃的版本。\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">解决同步冲突</string>
     <string name="stats_no_data_for_period">没有此时间段的数据</string>
@@ -1845,7 +1948,7 @@ Language: zh_CN
     <string name="notification_settings_category_followed_sites">关注的站点</string>
     <string name="content_description_person_reading_device_notification">用户正在阅读设备上的通知</string>
     <string name="content_description_people_looking_charts">用户正在查看图形和图表</string>
-    <string name="comment_title">%s 对 %s 的评论</string>
+    <string name="comment_title">%1$s 于 %2$s</string>
     <string name="dialog_confirm_delete_permanently_post">是否确定要永久删除此文章？</string>
     <string name="notification_channel_important_title">重要提示</string>
     <string name="notification_channel_general_title">常规</string>
@@ -2236,6 +2339,7 @@ Language: zh_CN
     <string name="post_title">标题</string>
     <string name="menu_redo">重做</string>
     <string name="menu_undo">撤消</string>
+    <string name="media_insert_unimplemented">抱歉! 功能尚未实现 :(</string>
     <string name="error_media_small">媒体过小，无法显示</string>
     <string name="editor_dropped_unsupported_files">警告：并非所有拖入的项目都支持!</string>
     <string name="editor_dropped_title_images_not_allowed">不允许将图片拖入标题</string>
@@ -2463,12 +2567,19 @@ Language: zh_CN
     <string name="error_fetch_email_followers_list">无法检索站点电子邮件粉丝</string>
     <string name="error_fetch_followers_list">无法检索站点粉丝</string>
     <string name="editor_failed_uploads_switch_html">部分媒体上传失败。在此状态下，您无法切换\n到 HTML 模式。删除所有失败的上传并继续？</string>
+    <string name="image_thumbnail">图片缩略图</string>
+    <string name="visual_editor">可视化编辑器</string>
     <string name="image_width">宽度</string>
     <string name="image_link_to">链接到</string>
+    <string name="image_alt_text">替代文本</string>
     <string name="image_caption">标题</string>
     <string name="image_settings_save_toast">更改已保存</string>
     <string name="image_settings_dismiss_dialog_title">放弃未保存的更改？</string>
     <string name="stop_upload_dialog_title">停止上传？</string>
+    <string name="alert_error_adding_media">插入媒体时出错</string>
+    <string name="alert_action_while_uploading">您目前正在上传媒体。请等待，直到此任务完成。</string>
+    <string name="alert_insert_image_html_mode">无法在 HTML 模式中直接插入媒体。请切换回可视模式。</string>
+    <string name="uploading_gallery_placeholder">正在上传图库…</string>
     <string name="tap_to_try_again">轻按即可重试！</string>
     <string name="invite_sent">已成功发送邀请</string>
     <string name="invite_error_for_username">%1$s：%2$s</string>
@@ -2538,6 +2649,7 @@ Language: zh_CN
     <string name="comments_empty_list_filtered_trashed">无已移至回收站的评论</string>
     <string name="comments_empty_list_filtered_pending">无待审评论</string>
     <string name="comments_empty_list_filtered_approved">无已批准的评论</string>
+    <string name="button_skip">跳过</string>
     <string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML-RPC 方法。</string>
     <string name="alignment_center">居中</string>
     <string name="post_format_video">视频</string>
@@ -2950,8 +3062,10 @@ Language: zh_CN
     <string name="delete_post">删除文章？</string>
     <string name="post_settings">文章设置</string>
     <string name="file_not_found">无法找到要上传到文件。是否已删除或被移走?</string>
+    <string name="horizontal_alignment">水平对齐</string>
     <string name="local_draft">本地草稿</string>
     <string name="page_settings">页面设置</string>
+    <string name="create_a_link">创建一个链接</string>
     <string name="link_enter_url_text">链接文字 (可选)</string>
     <string name="cannot_delete_multi_media_items">一些媒体文件现在不能删除.请稍后再试.</string>
     <string name="media_error_no_permission">您无权查看媒体库</string>
@@ -3028,6 +3142,10 @@ Language: zh_CN
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="reader">阅读器</string>
+    <string name="featured_in_post">在文章内容中包含图片</string>
+    <string name="featured">用作精选图片</string>
+    <string name="width">宽度</string>
+    <string name="caption">说明 (可选)</string>
     <string name="pages">页面</string>
     <string name="posts">文章</string>
     <string name="anonymous">匿名</string>
@@ -3035,6 +3153,7 @@ Language: zh_CN
     <string name="done">完成</string>
     <string name="ok">确定</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">正在上传…</string>
     <string name="tos">服务条款</string>
     <string name="version">版本</string>
     <string name="app_title">WordPress for Android</string>

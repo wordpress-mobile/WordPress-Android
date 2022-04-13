@@ -1,7 +1,0 @@
-19.3:
-– Benachrichtigungen im neuen Kommentar-Editor
-– Korrekte Zeitzone für in der App erstellte Websites
-– Bearbeitung von Reader-Kommentaren durch Administratoren und Redakteure
-– Keine Auswirkung von geringem Speicherplatz auf Story-Blocks im Editor
-– Fehlermeldung bei neuen Website-URLs mit nicht-englischen Zeichen
-– Ausgewählte Fehlerkorrekturen und Designverbesserungen

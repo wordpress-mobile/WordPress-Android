@@ -1,7 +1,0 @@
-- Theme/default/custom color palettes
-- Email verification app selection
-- No nested comments if parent comment deleted
-- Images adjust after mid-capture reorientation
-- Progress bar fix for My Site icon edits
-- Reorganized default Insights list
-- Keyboard won’t cover up login errors

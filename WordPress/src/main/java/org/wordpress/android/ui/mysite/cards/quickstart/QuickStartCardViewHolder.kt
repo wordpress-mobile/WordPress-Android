@@ -20,7 +20,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.Qui
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class QuickStartCardViewHolder(
     parent: ViewGroup,

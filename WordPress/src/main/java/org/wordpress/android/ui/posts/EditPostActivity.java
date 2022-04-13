@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.posts;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -184,7 +182,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppBarLayoutExtensionsKt;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -1941,8 +1939,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onHistoryItemClicked(@NonNull Revision revision, @NonNull List<Revision> revisions) {
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
+        final long postId = mEditPostRepository.getRemotePostId();
+        ActivityLauncher.viewHistoryDetailForResult(
+                this, mRevision, getRevisionsIds(revisions), postId, mSite.getSiteId()
+        );
+    }
 
-        ActivityLauncher.viewHistoryDetailForResult(this, mRevision, revisions);
+    private long[] getRevisionsIds(@NonNull final List<Revision> revisions) {
+        final long[] idsArray = new long[revisions.size()];
+        for (int i = 0; i < revisions.size(); i++) {
+            final Revision current = revisions.get(i);
+            idsArray[i] = current.getRevisionId();
+        }
+        return idsArray;
     }
 
     private void loadRevision() {
@@ -3058,13 +3067,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            requestTemporaryPermissions(dragEvent);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private void requestTemporaryPermissions(DragEvent dragEvent) {
         requestDragAndDropPermissions(dragEvent);
     }
 

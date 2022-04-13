@@ -1,6 +1,0 @@
-19.3:
-- Iscriviti tramite WordPress.com e crea siti in Jetpack
-- Usa il Reader in Jetpack
-- Visualizza le notifiche nel nuovo editor dei commenti
-- Ottieni una correzione allo sfarfallio dell'anteprima di Pagina/Sito
-- Impedisci la chiusura dei blocchi Storia dell'editor quando la memoria non è sufficiente

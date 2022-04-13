@@ -7,7 +7,7 @@ import org.wordpress.android.databinding.StatsWidgetSiteSelectorItemBinding
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel.SiteUiModel
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class StatsWidgetSiteViewHolder(
     parent: ViewGroup,

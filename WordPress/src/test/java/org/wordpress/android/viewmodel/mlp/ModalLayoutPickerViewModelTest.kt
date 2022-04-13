@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -42,6 +43,7 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageReques
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Create
 
 @RunWith(MockitoJUnitRunner::class)
+@InternalCoroutinesApi
 class ModalLayoutPickerViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()

@@ -16,11 +16,13 @@ class CardsTracker @Inject constructor(
     enum class Type(val label: String) {
         ERROR("error"),
         STATS("stats"),
-        POST("post")
+        POST("post"),
+        BLOGGING_PROMPT("blogging_prompt")
     }
 
     enum class StatsSubtype(val label: String) {
-        TODAYS_STATS("todays_stats")
+        TODAYS_STATS("todays_stats"),
+        TODAYS_STATS_NUDGE("todays_stats_nudge")
     }
 
     enum class PostSubtype(val label: String) {
@@ -28,6 +30,10 @@ class CardsTracker @Inject constructor(
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
+    }
+
+    fun trackTodaysStatsCardGetMoreViewsNudgeClicked() {
+        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS_NUDGE.label)
     }
 
     fun trackTodaysStatsCardFooterLinkClicked() {
@@ -89,6 +95,7 @@ fun DashboardCardType.toTypeValue(): Type {
         DashboardCardType.POST_CARD_ERROR -> Type.ERROR
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
+        DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
     }
 }
 
