@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
-import android.annotation.SuppressLint
 import android.app.ProgressDialog
-import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.Preference.OnPreferenceChangeListener
@@ -25,7 +23,6 @@ import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.R.xml
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
@@ -45,7 +42,6 @@ import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.U
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.widgets.WPSnackbar
@@ -54,17 +50,15 @@ import javax.inject.Inject
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         OnPreferenceChangeListener,
         OnConfirmListener {
-    private var mUsernamePreference: Preference? = null
-    private var mEmailPreference: EditTextPreferenceWithValidation? = null
-    private var mPrimarySitePreference: DetailListPreference? = null
-    private var mWebAddressPreference: EditTextPreferenceWithValidation? = null
-    private var mChangePasswordPreference: EditTextPreferenceWithValidation? = null
+    private lateinit var mUsernamePreference: Preference
+    private lateinit var mEmailPreference: EditTextPreferenceWithValidation
+    private lateinit var mPrimarySitePreference: DetailListPreference
+    private lateinit var mWebAddressPreference: EditTextPreferenceWithValidation
+    private lateinit var mChangePasswordPreference: EditTextPreferenceWithValidation
     private var mChangePasswordProgressDialog: ProgressDialog? = null
-    private var mEmailSnackbar: Snackbar? = null
-    @Inject
-    private lateinit var uiHelpers: UiHelpers
-    @Inject
-    private var viewModel: AccountSettingsViewModel? = null
+    private lateinit var mEmailSnackbar: Snackbar
+    @Inject private lateinit var uiHelpers: UiHelpers
+    @Inject private lateinit var viewModel: AccountSettingsViewModel
 
     @Inject
     var mSiteStore: SiteStore? = null
@@ -78,21 +72,21 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         mPrimarySitePreference = findPreference(getString(string.pref_key_primary_site)) as DetailListPreference
         mWebAddressPreference = findPreference(getString(string.pref_key_web_address)) as EditTextPreferenceWithValidation
         mChangePasswordPreference = findPreference(getString(string.pref_key_change_password)) as EditTextPreferenceWithValidation
-        mEmailPreference!!.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-        mEmailPreference!!.setValidationType(EMAIL)
-        mWebAddressPreference!!.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
-        mWebAddressPreference!!.setValidationType(URL)
-        mWebAddressPreference!!.setDialogMessage(string.web_address_dialog_hint)
-        mChangePasswordPreference!!.editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-        mChangePasswordPreference!!.setValidationType(PASSWORD)
-        mChangePasswordPreference!!.setDialogMessage(string.change_password_dialog_hint)
-        mEmailPreference!!.onPreferenceChangeListener = this
-        mPrimarySitePreference!!.onPreferenceChangeListener = this
-        mWebAddressPreference!!.onPreferenceChangeListener = this
-        mChangePasswordPreference!!.onPreferenceChangeListener = this
-        setTextAlignment(mEmailPreference!!.editText)
-        setTextAlignment(mWebAddressPreference!!.editText)
-        setTextAlignment(mChangePasswordPreference!!.editText)
+        mEmailPreference.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        mEmailPreference.setValidationType(EMAIL)
+        mWebAddressPreference.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
+        mWebAddressPreference.setValidationType(URL)
+        mWebAddressPreference.setDialogMessage(string.web_address_dialog_hint)
+        mChangePasswordPreference.editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+        mChangePasswordPreference.setValidationType(PASSWORD)
+        mChangePasswordPreference.setDialogMessage(string.change_password_dialog_hint)
+        mEmailPreference.onPreferenceChangeListener = this
+        mPrimarySitePreference.onPreferenceChangeListener = this
+        mWebAddressPreference.onPreferenceChangeListener = this
+        mChangePasswordPreference.onPreferenceChangeListener = this
+        setTextAlignment(mEmailPreference.editText)
+        setTextAlignment(mWebAddressPreference.editText)
+        setTextAlignment(mChangePasswordPreference.editText)
     }
 
     override fun onCreateView(
@@ -103,7 +97,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         val coordinatorView = inflater.inflate(layout.preference_coordinator, container, false)
         val coordinator: CoordinatorLayout = coordinatorView.findViewById(R.id.coordinator)
         val preferenceView = super.onCreateView(inflater, coordinator, savedInstanceState)
-        val listOfPreferences = preferenceView!!.findViewById<ListView>(android.R.id.list)
+        val listOfPreferences = preferenceView?.findViewById<ListView>(android.R.id.list)
         if (listOfPreferences != null) {
             ViewCompat.setNestedScrollingEnabled(listOfPreferences, true)
         }
@@ -186,6 +180,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context,userName.message),
                 userName.duration).show()
     }
+
     private fun showSnackBar(snackBarMessage: SnackbarMessageHolder) {
         if (mEmailSnackbar == null) {
             mEmailSnackbar = WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context,snackBarMessage.message), BaseTransientBottomBar.LENGTH_INDEFINITE)
@@ -204,7 +199,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private fun dismissSnackBar(){
         mEmailSnackbar?.dismiss()
     }
-
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         when(preference){
@@ -229,49 +223,22 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun showChangePasswordProgressDialog(show: Boolean) {
-        if (show && mChangePasswordProgressDialog == null) {
-            mChangePasswordProgressDialog = ProgressDialog(activity)
-            mChangePasswordProgressDialog!!.setCancelable(false)
-            mChangePasswordProgressDialog!!.isIndeterminate = true
-            mChangePasswordProgressDialog!!.setMessage(getString(string.change_password_dialog_message))
-            mChangePasswordProgressDialog!!.show()
-        } else if (!show && mChangePasswordProgressDialog != null) {
-            mChangePasswordProgressDialog!!.dismiss()
+        if(!show){
+            mChangePasswordProgressDialog?.let { it.dismiss() }
             mChangePasswordProgressDialog = null
+            return
         }
+        createChangePasswordDialogIfNull()
+        mChangePasswordProgressDialog?.show()
     }
 
-    // BaseTransientBottomBar.LENGTH_LONG is pointing to Snackabr.LENGTH_LONG which confuses checkstyle
-    @SuppressLint("WrongConstant") private fun showPendingEmailChangeSnackbar(newEmail: String) {
-        if (view != null) {
-            if (mEmailSnackbar == null || !mEmailSnackbar!!.isShown) {
-                val clickListener = View.OnClickListener { cancelPendingEmailChange() }
-                mEmailSnackbar = Snackbar
-                        .make(view!!, "", BaseTransientBottomBar.LENGTH_INDEFINITE)
-                        .setAction(getString(string.button_discard), clickListener)
-                val textView = mEmailSnackbar!!.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                textView.maxLines = 4
+    private fun createChangePasswordDialogIfNull() {
+        if (mChangePasswordProgressDialog == null) {
+            mChangePasswordProgressDialog = ProgressDialog(activity).apply{
+                setCancelable(false)
+                isIndeterminate = true
+                setMessage(getString(string.change_password_dialog_message))
             }
-            // instead of creating a new snackbar, update the current one to avoid the jumping animation
-            mEmailSnackbar!!.setText(getString(string.pending_email_change_snackbar, newEmail))
-            if (!mEmailSnackbar!!.isShown) {
-                mEmailSnackbar!!.show()
-            }
-        }
-    }
-
-    private fun changePrimaryBlogPreference(siteRemoteId: Long) {
-        mPrimarySitePreference!!.value = siteRemoteId.toString()
-        val site = mSiteStore!!.getSiteBySiteId(siteRemoteId)
-        if (site != null) {
-            mPrimarySitePreference!!.summary = SiteUtils.getSiteNameOrHomeURL(site)
-            mPrimarySitePreference!!.refreshAdapter()
-        }
-    }
-
-    private fun cancelPendingEmailChange() {
-        if (mEmailSnackbar != null && mEmailSnackbar!!.isShown) {
-            mEmailSnackbar!!.dismiss()
         }
     }
 
@@ -293,62 +260,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     override fun onConfirm(result: Bundle?) {
         result?.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)?.let {
             viewModel?.onUsernameChangeConfirmedFromServer(it)
-        }
-    }
-    /*
-     * AsyncTask which loads sites from database for primary site preference
-     */
-    @SuppressLint("StaticFieldLeak")
-    private inner class LoadSitesTask : AsyncTask<Void?, Void?, Void?>() {
-        override fun onPreExecute() {
-            super.onPreExecute()
-        }
-
-        override fun onCancelled() {
-            super.onCancelled()
-        }
-
-        protected override fun doInBackground(vararg params: Void?): Void? {
-            val sites = mSiteStore!!.sitesAccessedViaWPComRest
-            mPrimarySitePreference!!.entries = getSiteNamesFromSites(
-                    sites
-            )
-            mPrimarySitePreference!!.entryValues = getSiteIdsFromSites(
-                    sites
-            )
-            mPrimarySitePreference!!.setDetails(getHomeURLOrHostNamesFromSites(sites))
-            return null
-        }
-
-        override fun onPostExecute(results: Void?) {
-            super.onPostExecute(results)
-            mPrimarySitePreference!!.refreshAdapter()
-        }
-    }
-
-    companion object {
-        fun getSiteNamesFromSites(sites: List<SiteModel>): Array<String> {
-            val blogNames: MutableList<String> = ArrayList()
-            for (site in sites) {
-                blogNames.add(SiteUtils.getSiteNameOrHomeURL(site))
-            }
-            return blogNames.toTypedArray()
-        }
-
-        fun getHomeURLOrHostNamesFromSites(sites: List<SiteModel>): Array<String> {
-            val urls: MutableList<String> = ArrayList()
-            for (site in sites) {
-                urls.add(SiteUtils.getHomeURLOrHostName(site))
-            }
-            return urls.toTypedArray()
-        }
-
-        fun getSiteIdsFromSites(sites: List<SiteModel>): Array<String> {
-            val ids: MutableList<String> = ArrayList()
-            for (site in sites) {
-                ids.add(site.siteId.toString())
-            }
-            return ids.toTypedArray()
         }
     }
 }
