@@ -28,15 +28,12 @@ import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.R.xml
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_POST_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
-import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
@@ -50,7 +47,6 @@ import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.Validatio
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.URL
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
@@ -70,9 +66,6 @@ class AccountSettingsFragment : PreferenceFragment(),
 
     @Inject
     private var viewModel: AccountSettingsViewModel? = null
-
-    @Inject
-    var mDispatcher: Dispatcher? = null
 
     @Inject
     var mAccountStore: AccountStore? = null
@@ -130,43 +123,26 @@ class AccountSettingsFragment : PreferenceFragment(),
         refreshAccountDetails()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (NetworkUtils.isNetworkAvailable(activity)) {
-            mDispatcher!!.dispatch(AccountActionBuilder.newFetchSettingsAction())
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mDispatcher!!.register(this)
-    }
-
-    override fun onStop() {
-        mDispatcher!!.unregister(this)
-        super.onStop()
-    }
-
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         if (newValue == null) {
             return false
         }
         if (preference === mEmailPreference) {
-            updateEmail(newValue.toString())
+            viewModel?.onEmailChanged(newValue.toString())
             showPendingEmailChangeSnackbar(newValue.toString())
             mEmailPreference!!.isEnabled = false
             return false
         } else if (preference === mPrimarySitePreference) {
             changePrimaryBlogPreference(newValue.toString().toLong())
-            updatePrimaryBlog(newValue.toString())
+            viewModel?.onPrimarySiteChanged(newValue.toString().toLong())
             return false
         } else if (preference === mWebAddressPreference) {
             mWebAddressPreference!!.summary = newValue.toString()
-            updateWebAddress(newValue.toString())
+            viewModel?.onWebAddressChanged(newValue.toString())
             return false
         } else if (preference === mChangePasswordPreference) {
             showChangePasswordProgressDialog(true)
-            updatePassword(newValue.toString())
+            viewModel?.onPasswordChanged(newValue.toString())
         }
         return true
     }
@@ -244,41 +220,9 @@ class AccountSettingsFragment : PreferenceFragment(),
     }
 
     private fun cancelPendingEmailChange() {
-        val payload = PushAccountSettingsPayload()
-        payload.params = HashMap()
-        payload.params["user_email_change_pending"] = "false"
-        mDispatcher!!.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
         if (mEmailSnackbar != null && mEmailSnackbar!!.isShown) {
             mEmailSnackbar!!.dismiss()
         }
-    }
-
-    private fun updateEmail(newEmail: String) {
-        val payload = PushAccountSettingsPayload()
-        payload.params = HashMap()
-        payload.params["user_email"] = newEmail
-        mDispatcher!!.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
-    }
-
-    private fun updatePrimaryBlog(blogId: String) {
-        val payload = PushAccountSettingsPayload()
-        payload.params = HashMap()
-        payload.params["primary_site_ID"] = blogId
-        mDispatcher!!.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
-    }
-
-    fun updateWebAddress(newWebAddress: String?) {
-        val payload = PushAccountSettingsPayload()
-        payload.params = HashMap()
-        payload.params["user_URL"] = newWebAddress
-        mDispatcher!!.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
-    }
-
-    fun updatePassword(newPassword: String?) {
-        val payload = PushAccountSettingsPayload()
-        payload.params = HashMap()
-        payload.params["password"] = newPassword
-        mDispatcher!!.dispatch(AccountActionBuilder.newPushSettingsAction(payload))
     }
 
     @Subscribe(threadMode = MAIN) fun onAccountChanged(event: OnAccountChanged) {
