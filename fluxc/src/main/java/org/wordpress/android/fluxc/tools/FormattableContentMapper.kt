@@ -82,7 +82,7 @@ data class FormattableRange(
     @SerializedName("value") val value: String? = null,
     @SerializedName("indices") val indices: List<Int>? = null
 ) {
-    // IS in json response is string, and can be non numerical.
+    // ID in json response is string, and can be non numerical.
     // we only use numerical ID at the moment, and can safely ignore non-numerical values
     val id: Long?
         get() = try {
