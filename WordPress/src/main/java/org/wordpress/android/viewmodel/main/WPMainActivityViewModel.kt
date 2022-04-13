@@ -35,6 +35,7 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
@@ -58,6 +59,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -134,14 +136,18 @@ class WPMainActivityViewModel @Inject constructor(
 
     private fun loadMainActions(site: SiteModel?) {
         val actionsList = ArrayList<MainActionListItem>()
-        actionsList.add(
-                AnswerBloggingPromptAction(
-                        actionType = ANSWER_BLOGGING_PROMP,
-                        promptTitle = UiStringText("Cast the movie of your life"),
-                        isAnswered = false,
-                        onClickAction = null
-                )
-        )
+
+        if (bloggingPromptsFeatureConfig.isEnabled()) {
+            actionsList.add(
+                    AnswerBloggingPromptAction(
+                            actionType = ANSWER_BLOGGING_PROMP,
+                            promptTitle = UiStringText("Cast the movie of your life"),
+                            isAnswered = false,
+                            onClickAction = ::onAnswerPromptActionClicked
+                    )
+            )
+        }
+
         actionsList.add(
                 CreateAction(
                         actionType = NO_ACTION,
@@ -194,6 +200,12 @@ class WPMainActivityViewModel @Inject constructor(
                 _showQuickStarInBottomSheet.postValue(false)
             }
         }
+    }
+
+    private fun onAnswerPromptActionClicked() {
+        // TODO @klymyam add analytics
+        _isBottomSheetShowing.postValue(Event(false))
+        _createAction.postValue(ANSWER_BLOGGING_PROMP)
     }
 
     private fun disableTooltip(site: SiteModel?) {
