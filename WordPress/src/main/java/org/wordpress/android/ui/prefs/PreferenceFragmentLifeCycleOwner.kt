@@ -8,8 +8,10 @@ import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
 import androidx.lifecycle.Lifecycle.Event.ON_START
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.coroutineScope
 
 /**
  * LifecycleOwner is a single method interface that denotes that the class has a Lifecycle.
@@ -21,6 +23,9 @@ import androidx.lifecycle.LifecycleRegistry
  */
 class PreferenceFragmentLifeCycleOwner : PreferenceFragment(), LifecycleOwner {
     private lateinit var lifecycleRegistry: LifecycleRegistry
+
+    val lifecycleScope: LifecycleCoroutineScope
+        get() = lifecycle.coroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
