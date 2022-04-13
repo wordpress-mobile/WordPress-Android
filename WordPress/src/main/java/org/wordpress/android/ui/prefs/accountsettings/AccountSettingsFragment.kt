@@ -23,7 +23,6 @@ import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.R.xml
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment
@@ -50,18 +49,16 @@ import javax.inject.Inject
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         OnPreferenceChangeListener,
         OnConfirmListener {
+    @set:Inject lateinit var uiHelpers: UiHelpers
+    @set:Inject lateinit var viewModel: AccountSettingsViewModel
     private lateinit var mUsernamePreference: Preference
     private lateinit var mEmailPreference: EditTextPreferenceWithValidation
     private lateinit var mPrimarySitePreference: DetailListPreference
     private lateinit var mWebAddressPreference: EditTextPreferenceWithValidation
     private lateinit var mChangePasswordPreference: EditTextPreferenceWithValidation
     private var mChangePasswordProgressDialog: ProgressDialog? = null
-    private lateinit var mEmailSnackbar: Snackbar
-    @Inject private lateinit var uiHelpers: UiHelpers
-    @Inject private lateinit var viewModel: AccountSettingsViewModel
+    private var mEmailSnackbar: Snackbar? = null
 
-    @Inject
-    var mSiteStore: SiteStore? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity.application as WordPress).component().inject(this)
@@ -92,7 +89,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle
+        savedInstanceState: Bundle?
     ): View? {
         val coordinatorView = inflater.inflate(layout.preference_coordinator, container, false)
         val coordinator: CoordinatorLayout = coordinatorView.findViewById(R.id.coordinator)
