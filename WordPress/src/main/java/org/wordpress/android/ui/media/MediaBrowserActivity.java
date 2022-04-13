@@ -454,7 +454,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         final String mimeType = getContentResolver().getType(videoUri);
         final boolean isVideo = mMediaUtilsWrapper.isVideoMimeType(mimeType);
 
-        if (isVideo && !mSite.isVideoPressSupported()) {
+        if (isVideo && (mSite.getHasFreePlan() || !mSite.isVideoPressSupported())) {
             if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, videoUri)) {
                 fetchMediaAndDoNext(videoUri, requestCode, mimeType);
             } else {
@@ -478,7 +478,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     private void checkRecordedVideoDurationBeforeUploadAndTrack() {
         Uri uri = MediaUtils.getLastRecordedVideoUri(this);
 
-        if (!mSite.isVideoPressSupported()) {
+        if (mSite.getHasFreePlan() || !mSite.isVideoPressSupported()) {
             if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, uri)) {
                 queueFileForUpload(uri, getContentResolver().getType(uri));
             } else {
