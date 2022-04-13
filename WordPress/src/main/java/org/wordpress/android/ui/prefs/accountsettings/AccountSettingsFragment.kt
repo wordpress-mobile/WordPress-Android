@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.preference.Preference
 import android.preference.Preference.OnPreferenceChangeListener
 import android.text.InputType
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -21,19 +20,12 @@ import androidx.core.view.ViewCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.R.xml
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR
-import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR
-import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_POST_ERROR
-import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
@@ -73,9 +65,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private lateinit var uiHelpers: UiHelpers
     @Inject
     private var viewModel: AccountSettingsViewModel? = null
-
-    @Inject
-    var mAccountStore: AccountStore? = null
 
     @Inject
     var mSiteStore: SiteStore? = null
@@ -255,26 +244,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         }
     }
 
-    private fun refreshAccountDetails() {
-        val account = mAccountStore!!.account
-        mUsernamePreference!!.summary = account.userName
-        mEmailPreference!!.summary = account.email
-        mWebAddressPreference!!.summary = account.webAddress
-        changePrimaryBlogPreference(account.primarySiteId)
-        checkIfEmailChangeIsPending()
-        checkIfUsernameCanBeChanged()
-    }
-
-    private fun checkIfEmailChangeIsPending() {
-        val account = mAccountStore!!.account
-        if (account.pendingEmailChange) {
-            showPendingEmailChangeSnackbar(account.newEmail)
-        } else if (mEmailSnackbar != null && mEmailSnackbar!!.isShown) {
-            mEmailSnackbar!!.dismiss()
-        }
-        mEmailPreference!!.isEnabled = !account.pendingEmailChange
-    }
-
     // BaseTransientBottomBar.LENGTH_LONG is pointing to Snackabr.LENGTH_LONG which confuses checkstyle
     @SuppressLint("WrongConstant") private fun showPendingEmailChangeSnackbar(newEmail: String) {
         if (view != null) {
@@ -307,68 +276,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         if (mEmailSnackbar != null && mEmailSnackbar!!.isShown) {
             mEmailSnackbar!!.dismiss()
         }
-    }
-
-    @Subscribe(threadMode = MAIN) fun onAccountChanged(event: OnAccountChanged) {
-        if (!isAdded) {
-            return
-        }
-
-        // When account change is caused by password change, progress dialog will be shown (i.e. not null).
-        if (mChangePasswordProgressDialog != null) {
-            showChangePasswordProgressDialog(false)
-            if (event.isError) {
-                // We usually rely on event.error.type and provide our own localized message.
-                // This case is exceptional because:
-                // 1. The server-side error type is generic, but patching this server-side is quite involved
-                // 2. We know the error string return from the server has decent localization
-                val errorMessage = if (!TextUtils.isEmpty(event.error.message)) event.error.message else getString(
-                        string.error_post_account_settings
-                )
-                ToastUtils.showToast(activity, errorMessage, LONG)
-                AppLog.e(SETTINGS, event.error.message)
-            } else {
-                ToastUtils.showToast(activity, string.change_password_confirmation, LONG)
-                refreshAccountDetails()
-            }
-        } else {
-            if (event.isError) {
-                when (event.error.type) {
-                    SETTINGS_FETCH_GENERIC_ERROR -> ToastUtils.showToast(
-                            activity, string.error_fetch_account_settings,
-                            LONG
-                    )
-                    SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR -> ToastUtils.showToast(
-                            activity, string.error_disabled_apis,
-                            LONG
-                    )
-                    SETTINGS_POST_ERROR -> {
-                        // We usually rely on event.error.type and provide our own localized message.
-                        // This case is exceptional because:
-                        // 1. The server-side error type is generic, but patching this server-side is quite involved
-                        // 2. We know the error string return from the server has decent localization
-                        val errorMessage = if (!TextUtils.isEmpty(event.error.message)) event.error.message else getString(
-                                string.error_post_account_settings
-                        )
-                        ToastUtils.showToast(activity, errorMessage, LONG)
-                        // we optimistically show the email change snackbar, if that request fails, we should
-                        // remove the snackbar
-                        checkIfEmailChangeIsPending()
-                    }
-                }
-            } else {
-                refreshAccountDetails()
-            }
-        }
-    }
-
-    /**
-     * If the username can be changed then the control can be clicked to open to the
-     * Username Changer screen.
-     */
-    private fun checkIfUsernameCanBeChanged() {
-        val account = mAccountStore!!.account
-        mUsernamePreference!!.isEnabled = account.usernameCanBeChanged
     }
 
     private fun showUsernameChangerFragment(userName: String, displayName: String) {
