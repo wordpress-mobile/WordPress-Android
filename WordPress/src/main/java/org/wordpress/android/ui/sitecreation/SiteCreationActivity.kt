@@ -175,7 +175,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
-            SITE_NAME -> SiteCreationSiteNameFragment()
+            SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
             SITE_DESIGNS -> HomePagePickerFragment()
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle

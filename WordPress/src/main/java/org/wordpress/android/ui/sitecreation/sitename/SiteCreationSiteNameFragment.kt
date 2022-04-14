@@ -14,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationSiteNameFragmentBinding
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel.SiteNameUiState
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -27,6 +28,7 @@ class SiteCreationSiteNameFragment : Fragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
+    @Inject internal lateinit var htmlMessageUtils: HtmlMessageUtils
 
     private lateinit var viewModel: SiteCreationSiteNameViewModel
     private var binding: SiteCreationSiteNameFragmentBinding? = null
@@ -59,8 +61,14 @@ class SiteCreationSiteNameFragment : Fragment() {
         }
     }
 
+    val siteIntent: String?
+        get() = arguments?.getString(ARG_SITE_INTENT)
+
     private fun SiteCreationSiteNameFragmentBinding.setupUi() {
-        siteCreationSiteNameHeader.title?.setText(R.string.new_site_creation_site_name_header_title)
+        siteCreationSiteNameHeader.title?.text = htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                R.string.new_site_creation_site_name_header_title,
+                siteIntent?.let { "<span style='color:#0675C4;'>$it</span>" }.orEmpty()
+        )
         siteCreationSiteNameHeader.subtitle?.setText(R.string.new_site_creation_site_name_header_subtitle)
         siteCreationSiteNameTitlebar.appBarTitle.setText(R.string.new_site_creation_site_name_title)
         siteCreationSiteNameTitlebar.appBarTitle.isInvisible = !displayUtils.isPhoneLandscape()
@@ -108,6 +116,18 @@ class SiteCreationSiteNameFragment : Fragment() {
     }
 
     companion object {
+        private const val ARG_SITE_INTENT = "arg_site_intent"
+
+        fun newInstance(siteIntent: String?): SiteCreationSiteNameFragment {
+            val bundle = Bundle().apply {
+                putString(ARG_SITE_INTENT, siteIntent)
+            }
+
+            return SiteCreationSiteNameFragment().apply {
+                arguments = bundle
+            }
+        }
+
         const val TAG = "site_creation_site_name_fragment_tag"
     }
 }
