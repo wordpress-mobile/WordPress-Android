@@ -1155,8 +1155,7 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
-        } else if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE && site.isWPComAtomic()
-                   && !site.isPrivateWPComAtomic()) {
+        } else if (site.isWPComAtomic() && !site.isPrivateWPComAtomic()) {
             openAtomicBlogPostPreview(
                     context,
                     url,
