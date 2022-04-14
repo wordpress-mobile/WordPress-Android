@@ -6,12 +6,12 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegendsBlue
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegendsPurple
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips.Chip
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Views
@@ -56,31 +56,43 @@ class ViewsAndVisitorsMapper
 
     @Suppress("LongParameterList")
     fun buildTitle(
+        dates: List<PeriodData>,
+        statsGranularity: StatsGranularity = DAYS,
         selectedItem: PeriodData,
-        previousItem: PeriodData?,
         selectedPosition: Int,
         startValue: Int = MILLION,
-        statsGranularity: StatsGranularity = DAYS
     ): ValuesItem {
-        val value = selectedItem.getValue(selectedPosition) ?: 0
-        val previousValue = previousItem?.getValue(selectedPosition) ?: 0
+        val values = dates.map {
+            val value = when (SelectedType.valueOf(selectedPosition)) {
+                Views -> it.views
+                Visitors -> it.visitors
+                else -> 0L
+            }
+            value.toInt()
+        }
+
+        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 7) else emptyList()
+        val prevWeekCount = prevWeekData.fold(0) { acc, next -> acc + next }
+
+        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(7, values.size) else emptyList()
+        val thisWeekCount = thisWeekData.fold(0) { acc, next -> acc + next }
 
         return ValuesItem(
                 selectedItem = selectedPosition,
-                value1 = statsUtils.toFormattedString(value, startValue),
+                value1 = statsUtils.toFormattedString(thisWeekCount, startValue),
                 unit1 = units[selectedPosition],
                 contentDescription1 = resourceProvider.getString(
                         string.stats_overview_content_description,
-                        value,
+                        thisWeekCount,
                         resourceProvider.getString(units[selectedPosition]),
                         statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
                         ""
                 ),
-                value2 = statsUtils.toFormattedString(previousValue, startValue),
+                value2 = statsUtils.toFormattedString(prevWeekCount, startValue),
                 unit2 = units[selectedPosition],
                 contentDescription2 = resourceProvider.getString(
                         string.stats_overview_content_description,
-                        previousValue,
+                        prevWeekCount,
                         resourceProvider.getString(units[selectedPosition]),
                         statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
                         ""
@@ -132,8 +144,8 @@ class ViewsAndVisitorsMapper
     fun buildChart(
         dates: List<PeriodData>,
         statsGranularity: StatsGranularity,
-        onBarSelected: (String?) -> Unit,
-        onBarChartDrawn: (visibleBarCount: Int) -> Unit,
+        onLineSelected: (String?) -> Unit,
+        onLineChartDrawn: (visibleBarCount: Int) -> Unit,
         selectedType: Int,
         selectedItemPeriod: String
     ): List<BlockListItem> {
@@ -143,25 +155,13 @@ class ViewsAndVisitorsMapper
                 Visitors -> it.visitors
                 else -> 0L
             }
-            Bar(
+            Line(
                     statsDateFormatter.printGranularDate(it.period, statsGranularity),
                     it.period,
                     value.toInt()
             )
         }
-        // Only show overlapping visitors when we are showing views
-        val shouldShowVisitors = selectedType == 0
-        val overlappingItems = if (shouldShowVisitors) {
-            dates.map {
-                Bar(
-                        statsDateFormatter.printGranularDate(it.period, statsGranularity),
-                        it.period,
-                        it.visitors.toInt()
-                )
-            }
-        } else {
-            null
-        }
+
         val result = mutableListOf<BlockListItem>()
 
         val entryType = when (SelectedType.valueOf(selectedType)) {
@@ -169,64 +169,85 @@ class ViewsAndVisitorsMapper
             else -> R.string.stats_views
         }
 
-        val overlappingType = if (shouldShowVisitors) {
-            R.string.stats_visitors
-        } else {
-            null
-        }
-
-        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
+        val contentDescriptions = statsUtils.getLineChartEntryContentDescriptions(
                 entryType,
-                chartItems,
-                overlappingType,
-                overlappingItems
+                chartItems
         )
 
         result.add(
-                BarChartItem(
-                        chartItems,
-                        overlappingEntries = overlappingItems,
-                        selectedItem = selectedItemPeriod,
-                        onBarSelected = onBarSelected,
-                        onBarChartDrawn = onBarChartDrawn,
+                LineChartItem(
+                        selectedType = selectedType,
+                        entries = chartItems,
+                        selectedItemPeriod = selectedItemPeriod,
+                        onLineSelected = onLineSelected,
+                        onLineChartDrawn = onLineChartDrawn,
                         entryContentDescriptions = contentDescriptions
                 )
         )
         return result
     }
 
-    fun buildInformation(): Text {
-        return Text(resourceProvider.getString(R.string.stats_insights_views_and_visitors_message))
+    fun buildInformation(
+        dates: List<PeriodData>,
+        selectedPosition: Int
+    ): Text {
+        val values = dates.map {
+            val value = when (SelectedType.valueOf(selectedPosition)) {
+                Views -> it.views
+                Visitors -> it.visitors
+                else -> 0L
+            }
+            value
+        }
+
+        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 7) else emptyList()
+        val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
+
+        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(7, values.size) else emptyList()
+        val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
+
+        val positive = thisWeekCount >= (prevWeekCount ?: 0)
+        val change = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = true)
+        val unformattedChange = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = false)
+
+        return Text(
+                resourceProvider.getString(
+                        R.string.stats_insights_views_and_visitors_message,
+                        resourceProvider.getString(units[selectedPosition]),
+                        change.toString(),
+                        if (positive) {
+                            resourceProvider.getString(R.string.stats_insights_views_and_visitors_higher)
+                        } else {
+                            resourceProvider.getString(R.string.stats_insights_views_and_visitors_lower)
+                        }
+                ),
+                color = listOf(change.toString())
+        )
     }
 
     fun buildChips(
-        selectedItem: PeriodData?,
-        onColumnSelected: (position: Int) -> Unit,
+        onChipSelected: (position: Int) -> Unit,
         selectedPosition: Int
     ): Chips {
-        val views = selectedItem?.views ?: 0
-        val visitors = selectedItem?.visitors ?: 0
         return Chips(
                 listOf(
                         Chip(
                                 string.stats_views,
-                                statsUtils.toFormattedString(views),
                                 contentDescriptionHelper.buildContentDescription(
                                         string.stats_views,
-                                        views
+                                        0
                                 )
                         ),
                         Chip(
                                 string.stats_visitors,
-                                statsUtils.toFormattedString(visitors),
                                 contentDescriptionHelper.buildContentDescription(
                                         string.stats_visitors,
-                                        visitors
+                                        1
                                 )
                         )
                 ),
                 selectedPosition,
-                onColumnSelected
+                onChipSelected
         )
     }
 }

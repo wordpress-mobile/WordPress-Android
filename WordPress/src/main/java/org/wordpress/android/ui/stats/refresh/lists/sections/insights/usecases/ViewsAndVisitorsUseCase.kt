@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
@@ -159,7 +159,6 @@ class ViewsAndVisitorsUseCase
             }
 
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
-            val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
             val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
@@ -169,19 +168,14 @@ class ViewsAndVisitorsUseCase
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
-            selectedDateProvider.selectDate(
-                    selectedDate,
-                    availableDates.takeLast(visibleBarCount),
-                    statsGranularity
-            )
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
+
             items.add(
                     viewsAndVisitorsMapper.buildTitle(
+                            domainModel.dates,
+                            statsGranularity = statsGranularity,
                             selectedItem,
-                            previousItem,
-                            uiState.selectedPosition,
-                            statsGranularity = statsGranularity
+                            uiState.selectedPosition
                     )
             )
             items.addAll(
@@ -195,12 +189,14 @@ class ViewsAndVisitorsUseCase
                     )
             )
             items.add(
-                    viewsAndVisitorsMapper.buildInformation()
+                    viewsAndVisitorsMapper.buildInformation(
+                            domainModel.dates,
+                            uiState.selectedPosition
+                    )
             )
             items.add(
                     viewsAndVisitorsMapper.buildChips(
-                            selectedItem,
-                            this::onColumnSelected,
+                            this::onChipSelected,
                             uiState.selectedPosition
                     )
             )
@@ -235,7 +231,7 @@ class ViewsAndVisitorsUseCase
         }
     }
 
-    private fun onColumnSelected(position: Int) {
+    private fun onChipSelected(position: Int) {
         analyticsTracker.trackGranular(
                 AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
                 statsGranularity
@@ -265,7 +261,7 @@ class ViewsAndVisitorsUseCase
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 ViewsAndVisitorsUseCase(
-                        WEEKS,
+                        DAYS,
                         visitsAndViewsStore,
                         selectedDateProvider,
                         statsSiteProvider,
