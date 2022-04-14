@@ -133,8 +133,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun initTabType() {
         mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
             MySiteTabType.fromString(
-                    this.arguments?.getString(KEY_MY_SITE_TAB_TYPE, MySiteTabType.SITE_MENU.label)
-                            ?: MySiteTabType.SITE_MENU.label
+                    this.arguments?.getString(KEY_MY_SITE_TAB_TYPE, MySiteTabType.SITE_MENU.trackingLabel)
+                            ?: MySiteTabType.SITE_MENU.trackingLabel
             )
         } else {
             MySiteTabType.ALL
@@ -574,7 +574,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         @JvmStatic
         fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {
             arguments = Bundle().apply {
-                putString(KEY_MY_SITE_TAB_TYPE, mySiteTabType.label)
+                putString(KEY_MY_SITE_TAB_TYPE, mySiteTabType.trackingLabel)
             }
         }
     }

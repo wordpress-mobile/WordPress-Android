@@ -2031,7 +2031,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper, atLeastOnce()).track(
                 Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.label)
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
         )
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_SITE_MENU_SHOWN)
     }
@@ -2044,7 +2044,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper, atLeastOnce()).track(
                 Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.label)
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
         )
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
     }

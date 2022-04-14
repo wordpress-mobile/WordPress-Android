@@ -1132,7 +1132,7 @@ class MySiteViewModel @Inject constructor(
         if (event.currentTab == MySiteTabType.ALL) {
             analyticsTrackerWrapper.track(event.stat, event.properties ?: emptyMap())
         } else {
-            val props: MutableMap<String, Any> = mutableMapOf(event.key to event.currentTab.label)
+            val props: MutableMap<String, Any> = mutableMapOf(event.key to event.currentTab.trackingLabel)
             if (!event.properties.isNullOrEmpty()) {
                 props.putAll(event.properties)
             }
@@ -1170,10 +1170,16 @@ class MySiteViewModel @Inject constructor(
 
     private fun trackTabChanged(isSiteMenu: Boolean) {
         if (isSiteMenu) {
-            analyticsTrackerWrapper.track(Stat.MY_SITE_TAB_TAPPED, mapOf(MY_SITE_TAB to MySiteTabType.SITE_MENU.label))
+            analyticsTrackerWrapper.track(
+                    Stat.MY_SITE_TAB_TAPPED,
+                    mapOf(MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
+            )
             analyticsTrackerWrapper.track(Stat.MY_SITE_SITE_MENU_SHOWN)
         } else {
-            analyticsTrackerWrapper.track(Stat.MY_SITE_TAB_TAPPED, mapOf(MY_SITE_TAB to MySiteTabType.DASHBOARD.label))
+            analyticsTrackerWrapper.track(
+                    Stat.MY_SITE_TAB_TAPPED,
+                    mapOf(MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
+            )
             analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_SHOWN)
         }
     }

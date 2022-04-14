@@ -1365,7 +1365,7 @@ public class AppPrefs {
         // AppSettings are undeletable across logouts and keys are all lower case.
         // This method will be removed when the experiment has completed and thus
         // the settings will be maintained only from the AppSettings view{
-        String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getLabel())
+        String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getTrackingLabel())
                 ? MySiteDefaultTabExperiment.VARIANT_MENU : MySiteDefaultTabExperiment.VARIANT_HOME;
         setString(UndeletablePrefKey.wp_pref_initial_screen, initialScreen);
     }

@@ -430,8 +430,8 @@ public class AppSettingsFragment extends PreferenceFragment
             getActivity().recreate();
         } else if (preference == mInitialScreenPreference) {
             String trackValue = newValue.equals(MySiteDefaultTabExperiment.VARIANT_MENU)
-                    ? MySiteTabType.SITE_MENU.getLabel()
-                    : MySiteTabType.DASHBOARD.getLabel();
+                    ? MySiteTabType.SITE_MENU.getTrackingLabel()
+                    : MySiteTabType.DASHBOARD.getTrackingLabel();
             Map<String, Object> properties = new HashMap<>();
             properties.put("selected", trackValue);
             AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
