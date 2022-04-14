@@ -57,7 +57,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
     ): Boolean {
         val allowedUris = uriList.filter {
             // filter out long video files on free sites
-            if ((site.hasFreePlan && !site.isVideoPressSupported) &&
+            if ((site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) &&
                     mediaUtilsWrapper.isVideoFile(it) &&
                     !mediaUtilsWrapper.isAllowedVideoDurationForFreeSites(context, it)) {
                 // put out a notice to the user that the particular video file was rejected
