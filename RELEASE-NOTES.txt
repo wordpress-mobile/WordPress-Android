@@ -4,6 +4,7 @@
 -----
 * [***] My Site: your My Site screen now has two tabs, "Site Menu" and "Home". Under "Home", you'll find contextual cards with some highlights of whats going on with your site. Check your drafts or scheduled posts, your today's stats or go directly to another section of the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/15989]
 * [*] Site creation: Adds a new screen asking the user the intent of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16306]
+* [*] App Settings: updated look and functionality of Locale Picker [#16331]
 
 19.6
 -----
@@ -182,7 +183,6 @@
 
 17.7
 -----
-* [*] App Settings: updated look and functionality of Locale Picker [#14836]
 * [*] Block editor: Tablet view fixes for inserter button. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3602]
 * [**] Block editor: Fixed an issue where pressing enter inside a text-based block was not creating a new block when using Gboard [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3590]
 * [*] Block editor: Tweaks to the badge component's styling, including change of background color and reduced padding. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3642]
