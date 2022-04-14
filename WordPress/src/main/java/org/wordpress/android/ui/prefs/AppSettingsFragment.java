@@ -435,7 +435,7 @@ public class AppSettingsFragment extends PreferenceFragment
             Map<String, Object> properties = new HashMap<>();
             properties.put("selected", trackValue);
             AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
-            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded((String) newValue);
+            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(trackValue);
         }
         return true;
     }
