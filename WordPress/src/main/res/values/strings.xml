@@ -3212,8 +3212,8 @@
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
-    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
-    <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own.</string>
+    <string name="new_site_creation_intents_input_hint">E.g. Fashion, Poetry, Politics</string>
     <string name="new_site_creation_site_name_title">Site name</string>
     <string name="new_site_creation_site_name_header_title">Give your website a name</string>
     <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later</string>

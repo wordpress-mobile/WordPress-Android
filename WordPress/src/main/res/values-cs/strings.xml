@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-30 19:42:29+0000
+Translation-Revision-Date: 2022-04-11 20:12:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: cs_CZ
 -->
 <resources>
@@ -606,6 +606,8 @@ Language: cs_CZ
     <string name="threat_item_sub_header_vulnerable_plugin">V pluginu byla nalezena chyba zabezpečení</string>
     <string name="threat_item_sub_header_vulnerable_theme">V šabloně byla nalezena chyba zabezpečení</string>
     <string name="threat_details">Podrobnosti o hrozbě</string>
+    <string name="threat_item_header_vulnerable_plugin">Zranitelný plugin:  %1$s (verze  %2$s)</string>
+    <string name="threat_item_header_vulnerable_theme">Zranitelné šablona:  %1$s (verze  %2$s)</string>
     <string name="scan_this_site">tento web</string>
     <string name="scan_in_hours_ago">před %s hodinami</string>
     <string name="scan_in_minutes_ago">před %s minutami</string>
@@ -613,6 +615,7 @@ Language: cs_CZ
     <string name="threats_fix_all">Opravit vše</string>
     <string name="threat_item_header_threat_found">Hrozba nalezena</string>
     <string name="threat_item_header_infected_core_file">%s: infikovaný soubor v jádru</string>
+    <string name="scan_idle_last_scan_description">Poslední skenování Jetpack proběhlo %1$s a všechno vypadalo skvěle. %2$s</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Filtr typu aktivity (%s vybrané typy)</string>
     <string name="backup">Záloha</string>
     <string name="scan_state_icon">Ikona stavu skenování</string>
@@ -624,6 +627,7 @@ Language: cs_CZ
     <string name="activity_log_activity_type_empty_title">Nejsou k dispozici žádné aktivity</string>
     <string name="activity_log_activity_type_empty_subtitle">Ve vybraném časovém období nebyly zaznamenány žádné aktivity.</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Filtr typu aktivity</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (zobrazeno %2$s položek)</string>
     <string name="activity_log_date_range_filter_label_content_description">Filtr časového období</string>
     <string name="activity_log_activity_type_filter_active_label">Typ aktivity (%s)</string>
     <string name="activity_log_activity_type_error_title">Žádné spojení </string>
@@ -974,6 +978,7 @@ Language: cs_CZ
     <string name="pages_set_as_homepage">Nastavit jako domovskou stránku</string>
     <string name="pages_set_as_posts_page">Nastavit jako stránku příspěvků</string>
     <string name="pages_cannot_be_started">V tuto chvíli nemůžeme otevřít stránky. Prosím zkuste to znovu později</string>
+    <string name="suggestion_invalid">%1$s není platný %2$s</string>
     <string name="site_settings_accept_homepage">Příjmout</string>
     <string name="site_settings_homepage_settings">Nastavení domovské stránky</string>
     <string name="site_settings_homepage_settings_description">Vyberte si z domovské stránky, která zobrazuje vaše nejnovější příspěvky (klasický blog), nebo pevné / statické stránky.</string>
@@ -1272,6 +1277,7 @@ Language: cs_CZ
     <string name="dialog_confirm_autosave_body_first_part">V tomto příspěvku jste nedávno provedli změny, ale neuložili jste je. Vyberte verzi, kterou chcete načíst:\n\n</string>
     <string name="dialog_confirm_autosave_restore_button">Verze z jiného zařízení</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Verze z této aplikace</string>
+    <string name="dialog_confirm_autosave_body_second_part">Z této aplikace\nUloženo na %1$s\n\nZ jiného zařízení\nUloženo na %2$s\n</string>
     <string name="post_waiting_for_connection_private">Až bude zařízení zpět online, zveřejníme váš soukromý příspěvek.</string>
     <string name="post_waiting_for_connection_draft">Váš koncept uložíme, až bude zařízení zpět online.</string>
     <string name="post_waiting_for_connection_publish_cancel">Tyto změny nebudeme publikovat.</string>
@@ -1319,6 +1325,7 @@ Language: cs_CZ
     <string name="navigate_forward_desc">Jít vpřed</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" bude publikován za 10 minut</string>
     <string name="calendar_scheduled_post_title">Naplánovaný příspěvek WordPress: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší aplikaci WordPress \"%3$s\"</string>
     <string name="post_notification_when_published">Při zveřejnění</string>
     <string name="post_notification_error">Nelze vytvořit oznámení, pokud je datum publikování v minulosti.</string>
     <string name="notification_scheduled_post">Naplánovaný příspěvek</string>
@@ -1567,6 +1574,7 @@ Language: cs_CZ
     <string name="dialog_confirm_load_remote_post_title">Vyřešte konflikt synchronizace</string>
     <string name="dialog_confirm_load_remote_post_body">Tento příspěvek má dvě verze, které jsou v konfliktu. Vyberte verzi, kterou chcete zahodit.\n\n</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Zahodit místní</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Místní\nUloženo na %1$s\n\nWeb\nUloženo na %2$s\n</string>
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
     <string name="stats_no_data_for_period">Pro toto období nejsou k dispozici žádné údaje</string>
     <string name="stats_cannot_be_started">Statistiku v tuto chvíli nemůžeme otevřít. Prosím zkuste to znovu později</string>
@@ -1850,6 +1858,7 @@ Language: cs_CZ
     <string name="notification_settings_category_followed_sites">Sledované weby </string>
     <string name="content_description_person_reading_device_notification">Čtecí zařízení s upozorněním</string>
     <string name="content_description_people_looking_charts">Lidé, kteří se dívají na grafy</string>
+    <string name="comment_title">%1$s na %2$s</string>
     <string name="notification_channel_important_title">Důležité</string>
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použijte tuto fotku</string>

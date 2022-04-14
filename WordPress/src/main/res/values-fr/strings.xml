@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-08 10:54:10+0000
+Translation-Revision-Date: 2022-04-08 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: fr
 -->
 <resources>
@@ -20,39 +20,43 @@ Language: fr
     <string name="retry_failed_upload_retry_all">Réessayer tout</string>
     <string name="retry_failed_upload_remove">Supprimer l’importation</string>
     <string name="retry_failed_upload_yes">Réessayer</string>
-    <string name="retry_failed_upload_title">Impossible d’importer le fichier</string>
+    <string name="retry_failed_upload_title">Impossible de charger le fichier</string>
     <string name="stop_upload_dialog_button_no">Non</string>
     <string name="stop_upload_dialog_button_yes">Oui</string>
     <string name="dialog_button_cancel">Annuler</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_edit_hint">http(s)://</string>
     <string name="dialog_title">Insérer le lien</string>
     <string name="editor_title_beta">Bêta</string>
-    <string name="toast_content_info_editor_not_ready">L’éditeur est en cours de chargement</string>
+    <string name="toast_content_info_editor_not_ready">L’éditeur est toujours en cours de chargement</string>
     <string name="toast_content_info_failed">Impossible d’obtenir la structure du contenu</string>
     <string name="dialog_content_info_body">Blocs : %1$d\nMots : %2$d\nCaractères : %3$d</string>
     <string name="dialog_content_info_title">Structure du contenu</string>
-    <string name="media_bar_description_library">Choisissez un média depuis la bibliothèque des médias WordPress</string>
-    <string name="media_bar_description_gallery">Choisissez un média depuis la galerie</string>
+    <string name="media_bar_description_library">Choisir un média depuis la bibliothèque de médias WordPress</string>
+    <string name="media_bar_description_gallery">Choisir un média depuis la galerie</string>
     <string name="media_bar_description_camera">Prendre une photo ou une vidéo avec l’appareil photo</string>
     <string name="pixel_suffix">%d pixels</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
     <string name="stop_save_dialog_message">Veuillez patienter jusqu’à ce que tous les fichiers soient enregistrés</string>
     <string name="stop_save_dialog_title">Enregistrement des fichiers en cours</string>
     <string name="post_content">Contenu</string>
     <string name="blogging_prompts_onboarding_card_prompt">Produisez le film de votre vie.</string>
     <string name="blogging_prompts_onboarding_remind_me">Me rappeler</string>
-    <string name="blogging_prompts_onboarding_try_it_now">Essayez maintenant</string>
-    <string name="blogging_prompts_onboarding_content_note_content">Pour en savoir plus et configurer des rappels à tout moment, accédez à Mon site &gt; Réglages &gt; Rappels de blogging.</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Essayer maintenant</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Pour en savoir plus et configurer des rappels à tout moment, accédez à Mon site &gt; Réglages &gt; Rappels de blog.</string>
     <string name="blogging_prompts_onboarding_content_note_title">Remarque :</string>
     <string name="blogging_prompts_onboarding_content_bottom">Chaque jour, nous vous présenterons une nouvelle incitation sur votre tableau de bord pour vous aider à solliciter votre créativité !</string>
-    <string name="blogging_prompts_onboarding_content_top">Pour devenir meilleur écrivain, il faut écrire chaque jour et partager son travail avec les autres. C’est là que Prompts rentre en jeu !</string>
+    <string name="blogging_prompts_onboarding_content_top">Pour améliorer vos compétences rédactionnelles, vous devez écrire régulièrement et partager votre travail. C’est là que Prompts entre en jeu !</string>
     <string name="blogging_prompts_onboarding_header_title">Présentation de Prompts</string>
     <string name="blogging_prompt_set_reminders">Définir des rappels</string>
-    <string name="blogging_reminders_prompt_subtitle">Le rappel comprendra un message quotidien</string>
-    <string name="blogging_reminders_prompt_title">Inclure un message quotidien</string>
+    <string name="blogging_reminders_prompt_subtitle">Le rappel comprendra une incitation quotidienne</string>
+    <string name="blogging_reminders_prompt_title">Inclure une incitation quotidienne</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Publier régulièrement attire de nouveaux lecteurs. Dites-nous quand vous souhaitez écrire et nous vous enverrons un rappel !</string>
-    <string name="set_your_blogging_prompts_title">Devenez un meilleur écrivain en écrivant régulièrement</string>
+    <string name="set_your_blogging_prompts_title">Améliorez vos compétences rédactionnelles en écrivant régulièrement</string>
     <string name="site_creation_intent_writing_poetry">Écriture et poésie</string>
     <string name="site_creation_intent_travel">Voyages</string>
     <string name="site_creation_intent_technology">Technologie</string>
+    <string name="site_creation_intent_sports">Sports</string>
     <string name="site_creation_intent_real_estate">Immobilier</string>
     <string name="site_creation_intent_politics">Politique</string>
     <string name="site_creation_intent_photography">Photographie</string>
@@ -69,6 +73,7 @@ Language: fr
     <string name="site_creation_intent_food">Alimentation</string>
     <string name="site_creation_intent_fitness_exercise">Bien-être et sport</string>
     <string name="site_creation_intent_film_television">Cinéma et télévision</string>
+    <string name="site_creation_intent_finance">Finance</string>
     <string name="site_creation_intent_fashion">Mode</string>
     <string name="site_creation_intent_diy">Bricolage</string>
     <string name="site_creation_intent_education">Enseignement</string>
@@ -77,19 +82,20 @@ Language: fr
     <string name="site_creation_intent_books">Littérature</string>
     <string name="site_creation_intent_beauty">Beauté</string>
     <string name="site_creation_intent_automotive">Automobile</string>
+    <string name="site_creation_intent_art">Art</string>
     <string name="new_site_creation_intents_input_hint">Par ex. Mode, Poésie, Politique</string>
     <string name="new_site_creation_intents_title">Thème du site</string>
     <string name="quick_start_site_menu_tab_message_short">Appuyez sur &lt;b&gt;%1$s&lt;/b&gt; pour continuer.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Supprimer du tableau de bord</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Ignorer ce message</string>
-    <string name="my_site_blogging_prompt_card_menu_view_more">Afficher plus de messages</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Ignorer cette incitation</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Afficher plus d’incitations</string>
     <string name="my_site_blogging_prompt_card_number_of_answers">%d réponses</string>
-    <string name="my_site_blogging_prompt_card_share_chooser_title">Partager l’invitation à bloguer</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Partager l’incitation à bloguer</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Vous avez répondu</string>
-    <string name="my_site_blogging_prompt_card_answer_prompt">Répondre au message</string>
-    <string name="my_site_blogging_prompt_card_title">Messages</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Répondre à l’incitation</string>
+    <string name="my_site_blogging_prompt_card_title">Incitations</string>
     <string name="my_site_all_tab_title">Tout</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Rappels et messages</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Rappels et incitations</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Cette combinaison de couleurs peut gêner la lecture chez certaines personnes. Essayez une couleur d’arrière-plan plus claire et/ou une couleur de texte plus foncée.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Cette combinaison de couleurs peut être difficile à lire pour certaines personnes. Essayez une couleur d’arrière-plan plus foncée et/ou une couleur de texte plus claire.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Échec d’insertion du média.\nAppuyez pour plus d’informations.</string>
@@ -1357,7 +1363,7 @@ Language: fr
     <string name="local_post_autosave_revision_available">Les modifications que vous avez apportées à cet article n\'ont pas été enregistrées</string>
     <string name="dialog_confirm_autosave_dont_restore_button">La version de cette application</string>
     <string name="dialog_confirm_autosave_restore_button">La version d\'un autre appareil</string>
-    <string name="dialog_confirm_autosave_body_second_part">Depuis cette application\nEnregistré sur %1$s\n\nDepuis une autre appareil\nEnregistré sur %2$s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Depuis cette application\nEnregistré sur %1$s\n\nDepuis un autre appareil\nEnregistré sur %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Vous avez récemment apporté des modifications à cet article, mais ne les avez pas enregistrées. Choisissez une version à charger :\n\n</string>
     <string name="dialog_confirm_autosave_title">Quelle version souhaitez-vous modifier ?</string>
     <string name="button_delete_permanently">Supprimer définitivement</string>
@@ -1407,7 +1413,7 @@ Language: fr
     <string name="share_desc">Partager</string>
     <string name="navigate_back_desc">Retour</string>
     <string name="navigate_forward_desc">Continuer</string>
-    <string name="calendar_scheduled_post_description">La publication « %1$s » sera publié le « %2$s » sur l’application WordPress \n %3$s</string>
+    <string name="calendar_scheduled_post_description">L’article « %1$s » sera publié le « %2$s » sur l’application WordPress \n %3$s</string>
     <string name="calendar_scheduled_post_title">Articles WordPress planifiés « %s »</string>
     <string name="notification_post_will_be_published_in_ten_minutes">« %s » sera publié dans 10 minutes</string>
     <string name="notification_post_will_be_published_in_one_hour">« %s » sera publié dans 1 heure</string>
