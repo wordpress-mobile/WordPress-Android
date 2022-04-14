@@ -105,8 +105,6 @@ import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.DASHBOARD
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.SITE_MENU
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -188,7 +186,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val emailAddress = "test@email.com"
     private val postId = 100
     private val localHomepageId = 1
-    private val home = "home"
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -486,29 +483,29 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + initial screen is home, when site is selected, then default tab is dashboard`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(home)
+        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.DASHBOARD.label)
 
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home
+                initialScreen = MySiteTabType.DASHBOARD.label
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(DASHBOARD), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD), false))
     }
 
     @Test
     fun `given tabs enabled + initial screen is site_menu, when site is selected, then default tab is site menu`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(SITE_MENU.label)
+        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.SITE_MENU.label)
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label
+                initialScreen = MySiteTabType.SITE_MENU.label
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* CREATE SITE - DEFAULT TAB */
@@ -518,7 +515,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label
+                initialScreen = MySiteTabType.SITE_MENU.label
         )
 
         viewModel.onCreateSiteResult()
@@ -527,7 +524,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         /* First time default tab is set when My Site screen is shown and site is selected.
            When site is created then again it sets the default tab. */
         assertThat(tabNavigation.last())
-                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
+                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* AVATAR */
@@ -1924,7 +1921,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home
+                initialScreen = MySiteTabType.DASHBOARD.label
         )
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -1940,7 +1937,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label
+                initialScreen = MySiteTabType.SITE_MENU.label
         )
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -1978,7 +1975,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home
+                initialScreen = MySiteTabType.DASHBOARD.label
         )
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
@@ -2032,7 +2029,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper, atLeastOnce()).track(
                 Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.label)
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
         )
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_SITE_MENU_SHOWN)
     }
@@ -2045,7 +2042,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper, atLeastOnce()).track(
                 Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.label)
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
         )
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
     }
@@ -2067,7 +2064,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label,
+                initialScreen = MySiteTabType.SITE_MENU.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2084,7 +2081,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home,
+                initialScreen = MySiteTabType.DASHBOARD.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2101,7 +2098,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label,
+                initialScreen = MySiteTabType.SITE_MENU.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2118,7 +2115,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home,
+                initialScreen = MySiteTabType.DASHBOARD.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2415,7 +2412,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
-        initialScreen: String = SITE_MENU.label
+        initialScreen: String = MySiteTabType.SITE_MENU.label
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(

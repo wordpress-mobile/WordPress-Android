@@ -21,8 +21,8 @@ class MySiteDefaultTabExperiment @Inject constructor(
             if (!isVariantAssigned()) {
                 setVariantAssigned()
                 when (mySiteDefaultTabExperimentVariationDashboardFeatureConfig.isDashboardVariant()) {
-                    true -> setExperimentVariant(VARIANT_HOME)
-                    false -> setExperimentVariant(VARIANT_SITE_MENU)
+                    true -> setExperimentVariant(MySiteTabType.DASHBOARD.trackingLabel)
+                    false -> setExperimentVariant(MySiteTabType.SITE_MENU.trackingLabel)
                 }
                 analyticsTrackerWrapper.setInjectExperimentProperties(getVariantMapForTracking())
                 analyticsTrackerWrapper.track(Stat.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED)
@@ -58,18 +58,15 @@ class MySiteDefaultTabExperiment @Inject constructor(
 
     private fun getVariantTrackingLabel(): String {
         if (!isVariantAssigned()) return NONEXISTENT
-        return if (appPrefsWrapper.getMySiteInitialScreen() == VARIANT_HOME) {
-            VARIANT_DASHBOARD
+        return if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.DASHBOARD.label) {
+            MySiteTabType.DASHBOARD.trackingLabel
         } else {
-            VARIANT_SITE_MENU
+            MySiteTabType.SITE_MENU.trackingLabel
         }
     }
 
     companion object {
         private const val DEFAULT_TAB_EXPERIMENT = "default_tab_experiment"
-        private const val VARIANT_DASHBOARD = "dashboard"
-        private const val VARIANT_SITE_MENU = "site_menu"
-        private const val VARIANT_HOME = "home"
         private const val NONEXISTENT = "nonexistent"
     }
 }
