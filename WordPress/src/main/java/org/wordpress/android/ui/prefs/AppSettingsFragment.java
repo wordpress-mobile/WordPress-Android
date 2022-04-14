@@ -429,7 +429,7 @@ public class AppSettingsFragment extends PreferenceFragment
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
         } else if (preference == mInitialScreenPreference) {
-            String trackValue = newValue.equals(MySiteDefaultTabExperiment.VARIANT_MENU)
+            String trackValue = newValue.equals(MySiteTabType.SITE_MENU.getLabel())
                     ? MySiteTabType.SITE_MENU.getTrackingLabel()
                     : MySiteTabType.DASHBOARD.getTrackingLabel();
             Map<String, Object> properties = new HashMap<>();

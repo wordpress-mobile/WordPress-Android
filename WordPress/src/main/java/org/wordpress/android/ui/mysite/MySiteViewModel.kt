@@ -71,7 +71,6 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -187,7 +186,7 @@ class MySiteViewModel @Inject constructor(
 
     private val defaultABExperimentTab: MySiteTabType
         get() = if (isMySiteTabsEnabled) {
-            if (appPrefsWrapper.getMySiteInitialScreen() == MySiteDefaultTabExperiment.VARIANT_MENU) {
+            if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.SITE_MENU.label) {
                 MySiteTabType.SITE_MENU
             } else {
                 MySiteTabType.DASHBOARD

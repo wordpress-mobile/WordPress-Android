@@ -21,7 +21,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
-import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
@@ -1366,13 +1365,14 @@ public class AppPrefs {
         // This method will be removed when the experiment has completed and thus
         // the settings will be maintained only from the AppSettings view{
         String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getTrackingLabel())
-                ? MySiteDefaultTabExperiment.VARIANT_MENU : MySiteDefaultTabExperiment.VARIANT_HOME;
+                ? MySiteTabType.SITE_MENU.getLabel() : MySiteTabType.DASHBOARD.getLabel();
         setString(UndeletablePrefKey.wp_pref_initial_screen, initialScreen);
     }
 
     public static String getMySiteInitialScreen() {
         return getString(
                 UndeletablePrefKey.wp_pref_initial_screen,
-                MySiteDefaultTabExperiment.VARIANT_MENU);
+                MySiteTabType.SITE_MENU.getLabel()
+        );
     }
 }

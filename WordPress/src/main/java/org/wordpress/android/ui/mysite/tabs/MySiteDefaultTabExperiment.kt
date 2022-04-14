@@ -58,7 +58,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
 
     private fun getVariantTrackingLabel(): String {
         if (!isVariantAssigned()) return NONEXISTENT
-        return if (appPrefsWrapper.getMySiteInitialScreen() == VARIANT_HOME) {
+        return if (appPrefsWrapper.getMySiteInitialScreen() == MySiteTabType.DASHBOARD.label) {
             MySiteTabType.DASHBOARD.trackingLabel
         } else {
             MySiteTabType.SITE_MENU.trackingLabel
@@ -67,8 +67,6 @@ class MySiteDefaultTabExperiment @Inject constructor(
 
     companion object {
         private const val DEFAULT_TAB_EXPERIMENT = "default_tab_experiment"
-        const val VARIANT_HOME = "home"
-        const val VARIANT_MENU = "menu"
         private const val NONEXISTENT = "nonexistent"
     }
 }
