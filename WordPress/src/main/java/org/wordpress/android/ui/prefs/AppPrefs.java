@@ -22,6 +22,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -1363,8 +1364,10 @@ public class AppPrefs {
         // This supports the MySiteDefaultTab AB Experiment.
         // AppSettings are undeletable across logouts and keys are all lower case.
         // This method will be removed when the experiment has completed and thus
-        // the settings will be maintained only from the AppSettings view
-        setString(UndeletablePrefKey.wp_pref_initial_screen, variant);
+        // the settings will be maintained only from the AppSettings view{
+        String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getLabel())
+                ? MySiteDefaultTabExperiment.VARIANT_MENU : MySiteDefaultTabExperiment.VARIANT_HOME;
+        setString(UndeletablePrefKey.wp_pref_initial_screen, initialScreen);
     }
 
     public static String getMySiteInitialScreen() {

@@ -88,7 +88,7 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         verify(
                 appPrefsWrapper,
                 atLeastOnce()
-        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteDefaultTabExperiment.VARIANT_MENU)
+        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteTabType.SITE_MENU.label)
     }
 
     @Test
