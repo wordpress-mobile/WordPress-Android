@@ -230,7 +230,7 @@ class SiteRestClient @Inject constructor(
         if (siteTitle != null) {
             body["blog_title"] = siteTitle
         }
-        body["blog_name"] = siteName ?: if (siteTitle?.containsAlphaNumericCharacters == true) siteTitle else username
+        body["blog_name"] = siteName ?: siteTitle ?: username
         siteName ?: run {
             body["find_available_url"] = "1"
             options["site_creation_flow"] = "with-design-picker"
@@ -277,9 +277,6 @@ class SiteRestClient @Inject constructor(
             }
         }
     }
-
-    private val String.containsAlphaNumericCharacters: Boolean
-        get() = this.replace("[^a-zA-Z0-9]".toRegex(), "").isNotEmpty()
 
     fun fetchSiteEditors(site: SiteModel) {
         val params = mutableMapOf<String, String>()
