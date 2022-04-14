@@ -20,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -62,6 +63,7 @@ sealed class BlockListItem(val type: Type) {
         CHIPS,
         LINK,
         BAR_CHART,
+        LINE_CHART,
         CHART_LEGEND,
         CHART_LEGENDS_BLUE,
         CHART_LEGENDS_PURPLE,
@@ -178,6 +180,7 @@ sealed class BlockListItem(val type: Type) {
         val textResource: Int? = null,
         val links: List<Clickable>? = null,
         val bolds: List<String>? = null,
+        val color: List<String>? = null,
         val isLast: Boolean = false
     ) : BlockListItem(TEXT) {
         data class Clickable(
@@ -205,7 +208,7 @@ sealed class BlockListItem(val type: Type) {
         override val itemId: Int
             get() = chips.hashCode()
 
-        data class Chip(val header: Int, val value: String, val contentDescription: String)
+        data class Chip(val header: Int, val contentDescription: String)
     }
 
     data class Link(
@@ -230,6 +233,20 @@ sealed class BlockListItem(val type: Type) {
         val entryContentDescriptions: List<String>
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
+
+    data class LineChartItem(
+        val selectedType: Int,
+        val entries: List<Line>,
+        val selectedItemPeriod: String? = null,
+        val onLineSelected: ((period: String?) -> Unit)? = null,
+        val onLineChartDrawn: ((visibleLineCount: Int) -> Unit)? = null,
+        val entryContentDescriptions: List<String>
+    ) : BlockListItem(LINE_CHART) {
+        data class Line(val label: String, val id: String, val value: Int)
 
         override val itemId: Int
             get() = entries.hashCode()
