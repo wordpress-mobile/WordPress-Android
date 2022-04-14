@@ -201,7 +201,7 @@ class SiteRestClient @Inject constructor(
      * Note: The [siteTitle] can be used only if it contains latin alphanumeric characters
      *
      * In the cases 2 and 3 two extra parameters are passed:
-     * - `site_creation_flow` with value `with-design-picker`
+     * - `options.site_creation_flow` with value `with-design-picker`
      * - `find_available_url` with value `1`
      *
      * @return the response of the API call  as [NewSiteResponsePayload]
@@ -219,6 +219,8 @@ class SiteRestClient @Inject constructor(
     ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
         val body = mutableMapOf<String, Any>()
+        val options = mutableMapOf<String, Any>()
+
         body["lang_id"] = language
         body["public"] = visibility.value().toString()
         body["validate"] = if (dryRun) "1" else "0"
@@ -230,12 +232,10 @@ class SiteRestClient @Inject constructor(
         }
         body["blog_name"] = siteName ?: if (siteTitle?.containsAlphaNumericCharacters == true) siteTitle else username
         siteName ?: run {
-            body["site_creation_flow"] = "with-design-picker"
             body["find_available_url"] = "1"
+            options["site_creation_flow"] = "with-design-picker"
         }
 
-        // Add site options if available
-        val options = mutableMapOf<String, Any>()
         if (segmentId != null) {
             options["site_segment"] = segmentId
         }
@@ -246,6 +246,7 @@ class SiteRestClient @Inject constructor(
             options["timezone_string"] = timeZoneId
         }
 
+        // Add site options if available
         if (options.isNotEmpty()) {
             body["options"] = options
         }
