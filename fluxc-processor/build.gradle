@@ -15,8 +15,8 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
     implementation fluxcAnnotationsProjectDependency
-    implementation sharedLibs.autoService
-    kapt sharedLibs.autoService
+    implementation sharedLibs.google.autoService
+    kapt sharedLibs.google.autoService
     implementation sharedLibs.squareup.javapoet
 }
 
