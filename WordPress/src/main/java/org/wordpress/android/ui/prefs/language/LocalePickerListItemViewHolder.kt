@@ -3,7 +3,7 @@ package org.wordpress.android.ui.prefs.language
 import android.view.ViewGroup
 import org.wordpress.android.databinding.LocalePickerListItemBinding
 import org.wordpress.android.ui.prefs.language.LocalePickerListItem.LocaleRow
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class LocalePickerListItemViewHolder(
     parent: ViewGroup
