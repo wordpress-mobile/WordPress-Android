@@ -460,29 +460,23 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             RequestCodes.CREATE_SITE -> {
                 viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
-                        data.getIntExtra(
-                                SitePickerActivity.KEY_SITE_LOCAL_ID,
-                                SelectedSiteRepository.UNAVAILABLE
-                        )
+                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false)
                 )
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
-                            data.getIntExtra(
-                                    SitePickerActivity.KEY_SITE_LOCAL_ID,
-                                    SelectedSiteRepository.UNAVAILABLE
-                            )
+                            data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                            data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false)
                     )
                 }
             }
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
-                        data.getIntExtra(
-                                SitePickerActivity.KEY_SITE_LOCAL_ID,
-                                SelectedSiteRepository.UNAVAILABLE
-                        )
+                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false)
                 )
             }
         }
