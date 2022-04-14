@@ -198,8 +198,6 @@ class SiteRestClient @Inject constructor(
      * 2. If the [siteName] is not provided the [siteTitle] is passed and the API generates the domain from it
      * 3. If neither the [siteName] or the [siteTitle] is passed the [username] is used by the API to generate a domain
      *
-     * Note: The [siteTitle] can be used only if it contains latin alphanumeric characters
-     *
      * In the cases 2 and 3 two extra parameters are passed:
      * - `options.site_creation_flow` with value `with-design-picker`
      * - `find_available_url` with value `1`
