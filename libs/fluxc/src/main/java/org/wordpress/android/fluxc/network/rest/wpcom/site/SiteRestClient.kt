@@ -198,10 +198,8 @@ class SiteRestClient @Inject constructor(
      * 2. If the [siteName] is not provided the [siteTitle] is passed and the API generates the domain from it
      * 3. If neither the [siteName] or the [siteTitle] is passed the [username] is used by the API to generate a domain
      *
-     * Note: The [siteTitle] can be used only if it contains latin alphanumeric characters
-     *
      * In the cases 2 and 3 two extra parameters are passed:
-     * - `site_creation_flow` with value `with-design-picker`
+     * - `options.site_creation_flow` with value `with-design-picker`
      * - `find_available_url` with value `1`
      *
      * @return the response of the API call  as [NewSiteResponsePayload]
@@ -219,6 +217,8 @@ class SiteRestClient @Inject constructor(
     ): NewSiteResponsePayload {
         val url = WPCOMREST.sites.new_.urlV1_1
         val body = mutableMapOf<String, Any>()
+        val options = mutableMapOf<String, Any>()
+
         body["lang_id"] = language
         body["public"] = visibility.value().toString()
         body["validate"] = if (dryRun) "1" else "0"
@@ -228,14 +228,12 @@ class SiteRestClient @Inject constructor(
         if (siteTitle != null) {
             body["blog_title"] = siteTitle
         }
-        body["blog_name"] = siteName ?: if (siteTitle?.containsAlphaNumericCharacters == true) siteTitle else username
+        body["blog_name"] = siteName ?: siteTitle ?: username
         siteName ?: run {
-            body["site_creation_flow"] = "with-design-picker"
             body["find_available_url"] = "1"
+            options["site_creation_flow"] = "with-design-picker"
         }
 
-        // Add site options if available
-        val options = mutableMapOf<String, Any>()
         if (segmentId != null) {
             options["site_segment"] = segmentId
         }
@@ -246,6 +244,7 @@ class SiteRestClient @Inject constructor(
             options["timezone_string"] = timeZoneId
         }
 
+        // Add site options if available
         if (options.isNotEmpty()) {
             body["options"] = options
         }
@@ -276,9 +275,6 @@ class SiteRestClient @Inject constructor(
             }
         }
     }
-
-    private val String.containsAlphaNumericCharacters: Boolean
-        get() = this.replace("[^a-zA-Z0-9]".toRegex(), "").isNotEmpty()
 
     fun fetchSiteEditors(site: SiteModel) {
         val params = mutableMapOf<String, String>()
