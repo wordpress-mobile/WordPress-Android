@@ -105,8 +105,6 @@ import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.DASHBOARD
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.SITE_MENU
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -496,7 +494,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(DASHBOARD), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD), false))
     }
 
     @Test
@@ -509,7 +507,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* CREATE SITE - DEFAULT TAB */
@@ -528,7 +526,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         /* First time default tab is set when My Site screen is shown and site is selected.
            When site is created then again it sets the default tab. */
         assertThat(tabNavigation.last())
-                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
+                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* AVATAR */
