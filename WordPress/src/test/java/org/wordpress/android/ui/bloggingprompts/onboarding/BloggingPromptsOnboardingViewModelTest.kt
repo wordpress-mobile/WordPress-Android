@@ -4,58 +4,76 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
-    private val uiStateMapper: BloggingPromptsOnboardingUiStateMapper = mock()
+    private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper()
     private val siteStore: SiteStore = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
     private val classToTest = BloggingPromptsOnboardingViewModel(siteStore, uiStateMapper, selectedSiteRepository)
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
 
+    private val viewStates = mutableListOf<BloggingPromptsOnboardingUiState>()
+
     @Before
     fun setup() {
         classToTest.action.observeForever(actionObserver)
+        classToTest.uiState.observeForever { if (it != null) viewStates.add(it) }
     }
 
     @Test
-    fun `Should trigger Ready state when start is called`() {
+    fun `Should trigger Ready state when start is called`() = runBlocking {
         classToTest.start(ONBOARDING)
-        verify(uiStateMapper).mapReady(ONBOARDING)
+        val startState = viewStates[0]
+        assertNotNull(startState)
+        assertTrue(startState is Ready)
     }
 
     @Test
-    fun `Should trigger OpenEditor action when onTryNow is called`() {
+    fun `Should trigger OpenEditor action when onTryNow is called`() = runBlocking {
         classToTest.start(ONBOARDING)
-        classToTest.onPrimaryButtonClick()
+
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
         verify(actionObserver).onChanged(OpenEditor)
     }
 
     @Test
-    fun `Should trigger OpenSitePicker if Remind Me is clicked and user has more than 1 site`() = test {
+    fun `Should trigger OpenSitePicker if Remind Me is clicked and user has more than 1 site`() = runBlocking {
+        classToTest.start(ONBOARDING)
         val selectedSiteModel = SiteModel()
         whenever(siteStore.sitesCount).thenReturn(2)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
-        classToTest.onSecondaryButtonClick()
+
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+        startState.onSecondaryButtonClick()
         verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
     }
 
     @Test
-    fun `Should trigger OpenRemindersIntro if Remind Me is clicked and user has only 1 site`() = test {
+    fun `Should trigger OpenRemindersIntro if Remind Me is clicked and user has only 1 site`() = runBlocking {
+        classToTest.start(ONBOARDING)
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
-        classToTest.onSecondaryButtonClick()
+
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+        startState.onSecondaryButtonClick()
         verify(actionObserver).onChanged(OpenRemindersIntro(123))
     }
 
