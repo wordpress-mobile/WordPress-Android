@@ -177,7 +177,7 @@ class MySiteViewModel @Inject constructor(
     val isMySiteTabsEnabled: Boolean
         get() = mySiteDashboardTabsFeatureConfig.isEnabled() &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
-                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
+                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
     val orderedTabTypes: List<MySiteTabType>
         get() = if (isMySiteTabsEnabled) {
