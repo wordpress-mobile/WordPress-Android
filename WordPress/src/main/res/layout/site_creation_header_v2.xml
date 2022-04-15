@@ -13,6 +13,7 @@
         android:letterSpacing="0.01"
         android:paddingBottom="@dimen/margin_large"
         app:fixWidowWords="true"
+        app:autoSizeTextType="uniform"
         tools:text="@string/new_site_creation_intents_header_title" />
 
     <org.wordpress.android.widgets.WPTextView
