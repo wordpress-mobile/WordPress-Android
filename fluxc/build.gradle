@@ -101,16 +101,8 @@ dependencies {
     implementation sharedLibs.kotlinx.coroutines.android
 
     // Encrypted Logging
-    api(sharedLibs.lazysodium.android) {
-        artifact {
-            type = "aar"
-        }
-    }
-    api(sharedLibs.jna) {
-        artifact {
-            type = "aar"
-        }
-    }
+    api "com.goterl:lazysodium-android:5.0.2@aar"
+    api "net.java.dev.jna:jna:5.5.0@aar"
 }
 
 project.afterEvaluate {
