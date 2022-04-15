@@ -455,9 +455,7 @@ class MySiteViewModel @Inject constructor(
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick,
-                        activeTask = activeTask,
-                        enableFocusPoints = enableQuickLinkRibbonFocusPoints()
+                        onStatsClick = this::onQuickLinkRibbonStatsClick
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -502,10 +500,6 @@ class MySiteViewModel @Inject constructor(
                         listOf()
                 )
         )
-    }
-
-    private fun enableQuickLinkRibbonFocusPoints(): Boolean {
-        return defaultABExperimentTab == MySiteTabType.DASHBOARD
     }
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
