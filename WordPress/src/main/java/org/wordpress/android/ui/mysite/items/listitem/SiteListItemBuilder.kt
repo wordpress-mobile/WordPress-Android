@@ -111,7 +111,7 @@ class SiteListItemBuilder @Inject constructor(
     fun buildPagesItemIfAvailable(
         site: SiteModel,
         onClick: (ListItemAction) -> Unit,
-        showFocusPoint: Boolean = false
+        showFocusPoint: Boolean
     ): ListItem? {
         return if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) {
             ListItem(
