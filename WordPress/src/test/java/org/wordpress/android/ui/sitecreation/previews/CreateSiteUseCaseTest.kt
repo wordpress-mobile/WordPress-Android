@@ -15,8 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.AccountModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
@@ -33,7 +31,6 @@ private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         "domain",
         SITE_TITLE
 )
-private const val USERNAME = "username"
 private const val LANGUAGE_ID = "lang_id"
 private const val TIMEZONE_ID = "timezone_id"
 
@@ -45,16 +42,12 @@ class CreateSiteUseCaseTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: SiteStore
     @Mock private lateinit var urlUtilsWrapper: UrlUtilsWrapper
-    @Mock private lateinit var accountStore: AccountStore
-    @Mock lateinit var accountModel: AccountModel
     private lateinit var useCase: CreateSiteUseCase
     private lateinit var event: OnNewSiteCreated
 
     @Before
     fun setUp() {
-        whenever(accountStore.account).thenReturn(accountModel)
-        whenever(accountModel.userName).thenReturn(USERNAME)
-        useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper, accountStore)
+        useCase = CreateSiteUseCase(dispatcher, store, urlUtilsWrapper)
         event = OnNewSiteCreated(newSiteRemoteId = 123)
     }
 
@@ -80,7 +73,6 @@ class CreateSiteUseCaseTest {
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
         assertThat(payload.siteTitle).isEqualTo(SITE_TITLE)
-        assertThat(payload.username).isEqualTo(USERNAME)
     }
 
     @Test
