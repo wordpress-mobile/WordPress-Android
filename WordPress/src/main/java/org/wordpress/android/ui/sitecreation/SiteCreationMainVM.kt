@@ -18,6 +18,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.experiments.SiteNameABExperiment
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -45,7 +46,8 @@ typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreati
 
 class SiteCreationMainVM @Inject constructor(
     private val tracker: SiteCreationTracker,
-    private val wizardManager: WizardManager<SiteCreationStep>
+    private val wizardManager: WizardManager<SiteCreationStep>,
+    private val siteNameABExperiment: SiteNameABExperiment
 ) : ViewModel() {
     private var isStarted = false
     private var siteCreationCompleted = false
@@ -77,6 +79,7 @@ class SiteCreationMainVM @Inject constructor(
         if (isStarted) return
         if (savedInstanceState == null) {
             tracker.trackSiteCreationAccessed()
+            tracker.trackSiteNameExperimentVariation(siteNameABExperiment.getVariation())
             siteCreationState = SiteCreationState()
         } else {
             siteCreationCompleted = savedInstanceState.getBoolean(KEY_SITE_CREATION_COMPLETED, false)
