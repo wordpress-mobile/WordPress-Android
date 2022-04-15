@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.mysite.items
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -31,9 +29,12 @@ class SiteItemsBuilder @Inject constructor(
     }
 
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
-        val showViewSiteFocusPoint = params.activeTask == VIEW_SITE
-        val showEnablePostSharingFocusPoint = params.activeTask == ENABLE_POST_SHARING
-        val showExplorePlansFocusPoint = params.activeTask == EXPLORE_PLANS
+        val showViewSiteFocusPoint = params.activeTask == QuickStartTask.VIEW_SITE
+        val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
+        val showExplorePlansFocusPoint = params.activeTask == QuickStartTask.EXPLORE_PLANS
+        val showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS
+        val showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartTask.REVIEW_PAGES
 
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(params.site, showExplorePlansFocusPoint, params.onClick),
@@ -41,7 +42,8 @@ class SiteItemsBuilder @Inject constructor(
                 ListItem(
                         R.drawable.ic_stats_alt_white_24dp,
                         UiStringRes(R.string.stats),
-                        onClick = ListItemInteraction.create(ListItemAction.STATS, params.onClick)
+                        onClick = ListItemInteraction.create(ListItemAction.STATS, params.onClick),
+                        showFocusPoint = showStatsFocusPoint
                 ),
                 siteListItemBuilder.buildActivityLogItemIfAvailable(params.site, params.onClick),
                 siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable),
@@ -58,7 +60,7 @@ class SiteItemsBuilder @Inject constructor(
                         UiStringRes(R.string.media),
                         onClick = ListItemInteraction.create(ListItemAction.MEDIA, params.onClick)
                 ),
-                siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
                 ListItem(
                         R.drawable.ic_comment_white_24dp,
                         UiStringRes(R.string.my_site_btn_comments),

@@ -108,12 +108,17 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
-    fun buildPagesItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+    fun buildPagesItemIfAvailable(
+        site: SiteModel,
+        onClick: (ListItemAction) -> Unit,
+        showFocusPoint: Boolean = false
+    ): ListItem? {
         return if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) {
             ListItem(
                     R.drawable.ic_pages_white_24dp,
                     UiStringRes(R.string.my_site_btn_site_pages),
-                    onClick = ListItemInteraction.create(PAGES, onClick)
+                    onClick = ListItemInteraction.create(PAGES, onClick),
+                    showFocusPoint = showFocusPoint
             )
         } else null
     }
