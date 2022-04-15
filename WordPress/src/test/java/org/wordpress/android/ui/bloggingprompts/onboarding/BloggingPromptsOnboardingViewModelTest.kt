@@ -13,6 +13,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
@@ -29,13 +30,13 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should trigger Ready state when start is called`() {
-        classToTest.start()
-        verify(uiStateMapper).mapReady()
+        classToTest.start(ONBOARDING)
+        verify(uiStateMapper).mapReady(ONBOARDING)
     }
 
     @Test
     fun `Should trigger OpenEditor action when onTryNow is called`() {
-        classToTest.start()
+        classToTest.start(ONBOARDING)
         classToTest.onPrimaryButtonClick()
         verify(actionObserver).onChanged(OpenEditor)
     }
