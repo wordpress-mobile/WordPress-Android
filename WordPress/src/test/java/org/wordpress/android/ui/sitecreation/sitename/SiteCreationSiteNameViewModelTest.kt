@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.sitecreation.sitename
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.CoroutineDispatcher
 import org.junit.Before
@@ -49,5 +51,12 @@ class SiteCreationSiteNameViewModelTest {
         viewModel.onSiteNameChanged("site name")
         viewModel.onSiteNameEntered()
         verify(analyticsTracker).trackSiteNameEntered("site name")
+    }
+
+    @Test
+    fun `when the the site name is blank the analytics event is not emitted`() {
+        viewModel.onSiteNameChanged("")
+        viewModel.onSiteNameEntered()
+        verify(analyticsTracker, never()).trackSiteNameEntered(any())
     }
 }
