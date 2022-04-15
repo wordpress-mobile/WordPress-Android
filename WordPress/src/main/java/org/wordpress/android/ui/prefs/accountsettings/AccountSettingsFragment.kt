@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import android.preference.Preference.OnPreferenceClickListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
@@ -47,8 +48,7 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
-        OnPreferenceChangeListener,
-        OnConfirmListener {
+        OnPreferenceChangeListener, OnConfirmListener, OnPreferenceClickListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
     @set:Inject lateinit var viewModel: AccountSettingsViewModel
     private lateinit var mUsernamePreference: Preference
@@ -77,6 +77,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         mChangePasswordPreference.editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
         mChangePasswordPreference.setValidationType(PASSWORD)
         mChangePasswordPreference.setDialogMessage(string.change_password_dialog_hint)
+        mUsernamePreference.onPreferenceClickListener = this
         mEmailPreference.onPreferenceChangeListener = this
         mPrimarySitePreference.onPreferenceChangeListener = this
         mWebAddressPreference.onPreferenceChangeListener = this
@@ -109,7 +110,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     private fun observeAccountSettingsViewState() {
         this.lifecycleScope.launchWhenStarted{
-            viewModel?.accountSettingsUiState?.collect { updateAccountSettings(it) }
+            viewModel.accountSettingsUiState.collect { updateAccountSettings(it) }
 
         }
     }
@@ -117,7 +118,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     private fun updateAccountSettings(accountSettingsUiState: AccountSettingsUiState) {
         updateUserNamePreferenceUi(accountSettingsUiState.userNameSettingsUiState)
         updateEmailPreferenceUi(accountSettingsUiState.emailSettingsUiState)
-        mWebAddressPreference?.summary = accountSettingsUiState.webAddressSettingsUiState.webAddress
+        mWebAddressPreference.summary = accountSettingsUiState.webAddressSettingsUiState.webAddress
         updatePrimarySitePreference(accountSettingsUiState.primarySiteSettingsUiState)
         updateChangePasswordPreference(accountSettingsUiState.changePasswordSettingsUiState)
         accountSettingsUiState.error?.let {
@@ -130,7 +131,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun updateUserNamePreferenceUi( userNameSettingUiState : UserNameSettingsUiState){
-        mUsernamePreference?.apply {
+        mUsernamePreference.apply {
             summary = userNameSettingUiState.userName
             isEnabled = userNameSettingUiState.canUserNameBeChanged
         }
@@ -140,7 +141,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun updateEmailPreferenceUi( emailSettingsUiState : EmailSettingsUiState){
-        mEmailPreference?.apply {
+        mEmailPreference.apply {
             summary = emailSettingsUiState.email
             isEnabled = emailSettingsUiState.hasPendingEmailChange.not()
         }
@@ -153,7 +154,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     private fun updatePrimarySitePreference(primarySiteSettingsUiState: PrimarySiteSettingsUiState?) {
         primarySiteSettingsUiState?.let { state ->
-            mPrimarySitePreference?.apply {
+            mPrimarySitePreference.apply {
                 value = (state.primarySite?.siteId ?: "").toString()
                 summary = state.primarySite?.siteName
                 entries = state.siteNames
@@ -162,7 +163,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 refreshAdapter()
             }
         } ?: run {
-            mPrimarySitePreference?.apply {
+            mPrimarySitePreference.apply {
                 refreshAdapter()
             }
         }
@@ -197,13 +198,20 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         mEmailSnackbar?.dismiss()
     }
 
+    override fun onPreferenceClick(preference: Preference?): Boolean {
+        if(preference == mUsernamePreference){
+            showUsernameChangerFragment(viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
+                    viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName )
+        }
+        return true
+    }
+
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         when(preference){
-            mUsernamePreference -> showUsernameChangerFragment(newValue.toString(),viewModel?.accountSettingsUiState?.value?.userNameSettingsUiState?.displayName ?: "")
-            mEmailPreference -> viewModel?.onEmailChanged(newValue.toString())
-            mPrimarySitePreference -> viewModel?.onPrimarySiteChanged(newValue.toString().toLong())
-            mWebAddressPreference -> viewModel?.onWebAddressChanged(newValue.toString())
-            mChangePasswordPreference -> viewModel?.onPasswordChanged(newValue.toString())
+            mEmailPreference -> viewModel.onEmailChanged(newValue.toString())
+            mPrimarySitePreference -> viewModel.onPrimarySiteChanged(newValue.toString().toLong())
+            mWebAddressPreference -> viewModel.onWebAddressChanged(newValue.toString())
+            mChangePasswordPreference -> viewModel.onPasswordChanged(newValue.toString())
         }
         return true
     }
@@ -221,7 +229,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     private fun showChangePasswordProgressDialog(show: Boolean) {
         if(!show){
-            mChangePasswordProgressDialog?.let { it.dismiss() }
+            mChangePasswordProgressDialog?.dismiss()
             mChangePasswordProgressDialog = null
             return
         }
@@ -256,7 +264,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     override fun onConfirm(result: Bundle?) {
         result?.getString(BaseUsernameChangerFullScreenDialogFragment.RESULT_USERNAME)?.let {
-            viewModel?.onUsernameChangeConfirmedFromServer(it)
+            viewModel.onUsernameChangeConfirmedFromServer(it)
         }
     }
 }
