@@ -38,26 +38,23 @@ class SiteCreationSiteNameViewModel @Inject constructor(
 
     fun start() {
         if (isInitialized) return
-        // TODO: analyticsTracker.trackSiteNameViewed()
-        Log.d("siteNameWip", "Site name viewed")
+        analyticsTracker.trackSiteNameViewed()
         isInitialized = true
     }
 
     fun onSkipPressed() {
-        // TODO: analyticsTracker.trackSiteNameSkipped()
-        Log.d("siteNameWip", "Site name skipped")
+        analyticsTracker.trackSiteNameSkipped()
         _onSkipButtonPressed.call()
     }
 
     fun onBackPressed() {
-        // TODO: analyticsTracker.trackSiteNameCancelled()
-        Log.d("siteNameWip", "Site name cancelled")
+        analyticsTracker.trackSiteNameCanceled()
         _onBackButtonPressed.call()
     }
 
     fun onSiteNameEntered() {
-        // TODO: analyticsTracker.trackSiteNameEntered(siteName?) maybe we don't want to track the names here?
         uiState.value?.siteName.let {
+            analyticsTracker.trackSiteNameEntered(it)
             if (it.isNullOrBlank()) return
             Log.d("siteNameWip", "Site name entered: $it")
             _onSiteNameEntered.value = it
