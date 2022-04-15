@@ -36,7 +36,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     @Test
     fun `Should trigger OpenEditor action when onTryNow is called`() {
         classToTest.start()
-        classToTest.onTryNowClick()
+        classToTest.onPrimaryButtonClick()
         verify(actionObserver).onChanged(OpenEditor)
     }
 
@@ -45,7 +45,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val selectedSiteModel = SiteModel()
         whenever(siteStore.sitesCount).thenReturn(2)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
-        classToTest.onRemindMeClick()
+        classToTest.onSecondaryButtonClick()
         verify(actionObserver).onChanged(OpenSitePicker(selectedSiteModel))
     }
 
@@ -54,7 +54,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val siteModel = SiteModel().apply { id = 123 }
         whenever(siteStore.sitesCount).thenReturn(1)
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
-        classToTest.onRemindMeClick()
+        classToTest.onSecondaryButtonClick()
         verify(actionObserver).onChanged(OpenRemindersIntro(123))
     }
 

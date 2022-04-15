@@ -78,6 +78,7 @@ import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
@@ -685,7 +686,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     ActivityLauncher.showSignInForResultWpComOnly(this);
                     break;
                 case ARG_BLOGGING_PROMPTS_ONBOARDING:
-                    BloggingPromptsOnboardingDialogFragment.newInstance().show(
+                    BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
                             getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
                     );
                     break;
