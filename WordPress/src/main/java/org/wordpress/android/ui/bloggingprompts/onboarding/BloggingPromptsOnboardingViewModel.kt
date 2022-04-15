@@ -29,18 +29,18 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
 
     fun start(type: DialogType) {
         dialogType = type
-        _uiState.value = uiStateMapper.mapReady(dialogType)
+        _uiState.value = uiStateMapper.mapReady(dialogType, ::onPrimaryButtonClick, ::onSecondaryButtonClick)
     }
 
-    fun onPrimaryButtonClick() {
-        val action = when(dialogType){
+    private fun onPrimaryButtonClick() {
+        val action = when (dialogType) {
             ONBOARDING -> OpenEditor   // TODO send BloggingPrompt with OpenEditor action when prompt store is ready
             INFORMATION -> DismissDialog
         }
         _action.value = action
     }
 
-    fun onSecondaryButtonClick() {
+    private fun onSecondaryButtonClick() {
         if (siteStore.sitesCount > 1) {
             _action.value = OpenSitePicker(selectedSiteRepository.getSelectedSite())
         } else {
