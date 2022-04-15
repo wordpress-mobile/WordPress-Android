@@ -151,7 +151,6 @@ open class SiteStore
     /**
      * Holds the new site parameters for site creation
      *
-     * @param username The username of the user
      * @param siteName The domain of the site
      * @param siteTitle The title of the site
      * @param language The language of the site
@@ -162,7 +161,6 @@ open class SiteStore
      * @param dryRun If set to true the call only validates the parameters passed
      */
     data class NewSitePayload(
-        @JvmField val username: String,
         @JvmField val siteName: String?,
         @JvmField val siteTitle: String?,
         @JvmField val language: String,
@@ -173,40 +171,36 @@ open class SiteStore
         @JvmField val dryRun: Boolean
     ) : Payload<BaseNetworkError>() {
         constructor(
-            username: String,
             siteName: String?,
             language: String,
             visibility: SiteVisibility,
             dryRun: Boolean
-        ) : this(username, siteName, null, language, null, visibility, null, null, dryRun)
+        ) : this(siteName, null, language, null, visibility, null, null, dryRun)
 
         constructor(
-            username: String,
             siteName: String?,
             language: String,
             visibility: SiteVisibility,
             segmentId: Long?,
             dryRun: Boolean
-        ) : this(username, siteName, null, language, null, visibility, segmentId, null, dryRun)
+        ) : this(siteName, null, language, null, visibility, segmentId, null, dryRun)
 
         constructor(
-            username: String,
             siteName: String?,
             language: String,
             timeZoneId: String,
             visibility: SiteVisibility,
             dryRun: Boolean
-        ) : this(username, siteName, null, language, timeZoneId, visibility, null, null, dryRun)
+        ) : this(siteName, null, language, timeZoneId, visibility, null, null, dryRun)
 
         constructor(
-            username: String,
             siteName: String?,
             siteTitle: String?,
             language: String,
             timeZoneId: String,
             visibility: SiteVisibility,
             dryRun: Boolean
-        ) : this(username, siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun)
+        ) : this(siteName, siteTitle, language, timeZoneId, visibility, null, null, dryRun)
     }
 
     data class FetchedPostFormatsPayload(
@@ -1495,7 +1489,6 @@ open class SiteStore
     @VisibleForTesting
     suspend fun createNewSite(payload: NewSitePayload): OnNewSiteCreated {
         val result = siteRestClient.newSite(
-                payload.username,
                 payload.siteName,
                 payload.siteTitle,
                 payload.language,

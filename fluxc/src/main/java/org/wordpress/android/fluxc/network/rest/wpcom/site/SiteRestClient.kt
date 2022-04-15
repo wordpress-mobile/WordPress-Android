@@ -182,7 +182,6 @@ class SiteRestClient @Inject constructor(
 
     /**
      * Calls the API at https://public-api.wordpress.com/rest/v1.1/sites/new/ to create a new site
-     * @param username The username of the user
      * @param siteName The domain of the site
      * @param siteTitle The title of the site
      * @param language The language of the site
@@ -196,7 +195,7 @@ class SiteRestClient @Inject constructor(
      *
      * 1. If the [siteName] is provided it is used as a domain
      * 2. If the [siteName] is not provided the [siteTitle] is passed and the API generates the domain from it
-     * 3. If neither the [siteName] or the [siteTitle] is passed the [username] is used by the API to generate a domain
+     * 3. If neither the [siteName] or the [siteTitle] is passed the api generates a domain of the form siteXXXXXX
      *
      * In the cases 2 and 3 two extra parameters are passed:
      * - `options.site_creation_flow` with value `with-design-picker`
@@ -205,7 +204,6 @@ class SiteRestClient @Inject constructor(
      * @return the response of the API call  as [NewSiteResponsePayload]
      */
     suspend fun newSite(
-        username: String,
         siteName: String?,
         siteTitle: String?,
         language: String,
@@ -228,7 +226,7 @@ class SiteRestClient @Inject constructor(
         if (siteTitle != null) {
             body["blog_title"] = siteTitle
         }
-        body["blog_name"] = siteName ?: siteTitle ?: username
+        body["blog_name"] = siteName ?: siteTitle ?: ""
         siteName ?: run {
             body["find_available_url"] = "1"
             options["site_creation_flow"] = "with-design-picker"
