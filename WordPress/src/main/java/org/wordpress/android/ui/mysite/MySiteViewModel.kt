@@ -633,6 +633,7 @@ class MySiteViewModel @Inject constructor(
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
+                    quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
                     quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }
