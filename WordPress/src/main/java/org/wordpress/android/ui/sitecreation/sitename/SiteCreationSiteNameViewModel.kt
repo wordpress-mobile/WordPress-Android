@@ -53,8 +53,8 @@ class SiteCreationSiteNameViewModel @Inject constructor(
 
     fun onSiteNameEntered() {
         uiState.value?.siteName.let {
-            analyticsTracker.trackSiteNameEntered(it)
             if (it.isNullOrBlank()) return
+            analyticsTracker.trackSiteNameEntered(it)
             _onSiteNameEntered.value = it
         }
     }
