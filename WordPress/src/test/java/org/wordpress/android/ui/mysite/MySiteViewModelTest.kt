@@ -884,7 +884,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
-        initSelectedSite()
+        initSelectedSite(isSiteUsingWpComRestApi = false)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -912,7 +912,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
-        initSelectedSite()
+        initSelectedSite(isSiteUsingWpComRestApi = false)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -1610,8 +1610,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         site.setIsJetpackConnected(false)
         site.setIsWPCom(false)
+        site.origin = SiteModel.ORIGIN_XMLRPC
 
-        invokeItemClickAction(ListItemAction.STATS)
+        invokeItemClickAction(ListItemAction.STATS, isSiteUsingWpComRestApi = false)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
@@ -2301,7 +2302,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isSiteUsingWpComRestApi = false)
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
@@ -2394,7 +2395,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun invokeItemClickAction(action: ListItemAction) {
+    private fun invokeItemClickAction(
+        action: ListItemAction,
+        isSiteUsingWpComRestApi: Boolean = true
+    ) {
         var clickAction: ((ListItemAction) -> Unit)? = null
         doAnswer {
             val params = (it.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
@@ -2402,7 +2406,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             listOf<MySiteCardAndItem>()
         }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
 
-        initSelectedSite()
+        initSelectedSite(isSiteUsingWpComRestApi = isSiteUsingWpComRestApi)
 
         assertThat(clickAction).isNotNull
         clickAction!!.invoke(action)
@@ -2414,7 +2418,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
-        initialScreen: String = MySiteTabType.SITE_MENU.label
+        initialScreen: String = MySiteTabType.SITE_MENU.label,
+        isSiteUsingWpComRestApi: Boolean = true
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -2426,6 +2431,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
         whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(initialScreen)
+        if (isSiteUsingWpComRestApi) {
+            site.setIsWPCom(true)
+            site.setIsJetpackConnected(true)
+            site.origin = SiteModel.ORIGIN_WPCOM_REST
+        }
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         selectedSite.value = SelectedSite(site)
