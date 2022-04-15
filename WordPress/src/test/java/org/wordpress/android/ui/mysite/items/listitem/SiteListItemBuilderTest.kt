@@ -294,7 +294,7 @@ class SiteListItemBuilderTest {
     fun `pages item not built when not self-hosted admin and cannot edit pages`() {
         setupPagesItem(isSelfHostedAdmin = false, canEditPages = false)
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint = false)
 
         assertThat(item).isNull()
     }
@@ -302,19 +302,21 @@ class SiteListItemBuilderTest {
     @Test
     fun `pages item built when self-hosted admin`() {
         setupPagesItem(isSelfHostedAdmin = true)
+        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint)
 
-        assertThat(item).isEqualTo(PAGES_ITEM)
+        assertThat(item).isEqualTo(PAGES_ITEM.copy(showFocusPoint = showFocusPoint))
     }
 
     @Test
     fun `pages item built when can edit pages`() {
         setupPagesItem(canEditPages = true)
+        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION, showFocusPoint)
 
-        assertThat(item).isEqualTo(PAGES_ITEM)
+        assertThat(item).isEqualTo(PAGES_ITEM.copy(showFocusPoint = showFocusPoint))
     }
 
     private fun setupPagesItem(isSelfHostedAdmin: Boolean = false, canEditPages: Boolean = false) {

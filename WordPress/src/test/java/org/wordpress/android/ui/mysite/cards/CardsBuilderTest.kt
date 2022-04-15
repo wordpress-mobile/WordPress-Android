@@ -9,10 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -142,19 +140,19 @@ class CardsBuilderTest {
         assertThat(cards.findDashboardCards()).isNotNull
     }
 
-    /*  QUICK LINK RIBBONS */
+    /*  QUICK LINK RIBBON */
     @Test
     fun `given mySiteDashboardTabsFeatureConfig disabled, when cards are built, then quick link ribbon not built`() {
         val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
 
-        assertThat(cards.findQuickLinkRibbons()).isNull()
+        assertThat(cards.findQuickLinkRibbon()).isNull()
     }
 
     @Test
     fun `given mySiteDashboardTabsFeatureConfig enabled, when cards are built, then quick link ribbons built`() {
         val cards = buildCards(isMySiteTabsBuildConfigEnabled = true)
 
-        assertThat(cards.findQuickLinkRibbons()).isNotNull
+        assertThat(cards.findQuickLinkRibbon()).isNotNull
     }
 
     private fun List<MySiteCardAndItem>.findQuickActionsCard() =
@@ -167,11 +165,10 @@ class CardsBuilderTest {
     private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
             this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
-    private fun List<MySiteCardAndItem>.findQuickLinkRibbons() =
+    private fun List<MySiteCardAndItem>.findQuickLinkRibbon() =
         this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
     private fun buildCards(
-        activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
@@ -184,7 +181,6 @@ class CardsBuilderTest {
         return cardsBuilder.build(
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
-                        activeTask = activeTask,
                         onQuickActionMediaClick = mock(),
                         onQuickActionPagesClick = mock(),
                         onQuickActionPostsClick = mock(),
@@ -210,15 +206,14 @@ class CardsBuilderTest {
                         onPagesClick = mock(),
                         onPostsClick = mock(),
                         onMediaClick = mock(),
-                        onStatsClick = mock(),
-                        activeTask = activeTask
+                        onStatsClick = mock()
                 )
         )
     }
 
     private fun setUpQuickActionsBuilder() {
         doAnswer {
-            initQuickActionsCard(it)
+            initQuickActionsCard()
         }.whenever(quickActionsCardBuilder).build(any())
     }
 
@@ -253,20 +248,14 @@ class CardsBuilderTest {
         )
     }
 
-    private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
-        return QuickActionsCard(
-                title = UiStringText(""),
-                onStatsClick = mock(),
-                onPagesClick = mock(),
-                onPostsClick = mock(),
-                onMediaClick = mock(),
-                showPages = false,
-                showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS,
-                showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                        params.activeTask == QuickStartTask.REVIEW_PAGES
-        )
-    }
+    private fun initQuickActionsCard() = QuickActionsCard(
+            title = UiStringText(""),
+            onStatsClick = mock(),
+            onPagesClick = mock(),
+            onPostsClick = mock(),
+            onMediaClick = mock(),
+            showPages = false
+    )
 
     private fun initQuickStartCard() = QuickStartCard(
             title = UiStringText(""),
