@@ -19,12 +19,15 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.experiments.Variation
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.util.experiments.SiteNameABExperiment
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -51,6 +54,7 @@ class SiteCreationMainVMTest {
     @Mock lateinit var savedInstanceState: Bundle
     @Mock lateinit var wizardManager: WizardManager<SiteCreationStep>
     @Mock lateinit var siteCreationStep: SiteCreationStep
+    @Mock lateinit var siteNameABExperiment: SiteNameABExperiment
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -62,7 +66,7 @@ class SiteCreationMainVMTest {
             wizardManagerNavigatorLiveData.value = siteCreationStep
             Unit
         }
-        viewModel = SiteCreationMainVM(tracker, wizardManager)
+        viewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
         viewModel.start(null)
         viewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
         viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
@@ -72,6 +76,22 @@ class SiteCreationMainVMTest {
         whenever(wizardManager.stepsCount).thenReturn(STEP_COUNT)
         // clear invocations since viewModel.start() calls wizardManager.showNextStep
         clearInvocations(wizardManager)
+    }
+
+    @Test
+    fun siteCreationSiteNameExperimentControlTracked() {
+        whenever(siteNameABExperiment.getVariation()).thenReturn(Control)
+        viewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
+        viewModel.start(null)
+        verify(tracker).trackSiteNameExperimentVariation(Control)
+    }
+
+    @Test
+    fun siteCreationSiteNameExperimentTreatmentTracked() {
+        whenever(siteNameABExperiment.getVariation()).thenReturn(Variation.fromName("wpandroid_site_name_v1"))
+        viewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
+        viewModel.start(null)
+        verify(tracker).trackSiteNameExperimentVariation(Variation.fromName("wpandroid_site_name_v1"))
     }
 
     @Test
@@ -197,7 +217,7 @@ class SiteCreationMainVMTest {
                 .thenReturn(expectedState)
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
-        val newViewModel = SiteCreationMainVM(tracker, wizardManager)
+        val newViewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
         newViewModel.start(savedInstanceState)
 
         /* we need to simulate navigation to the next step (Domain selection, see comment above) as
@@ -218,7 +238,7 @@ class SiteCreationMainVMTest {
                 .thenReturn(SiteCreationState())
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
-        val newViewModel = SiteCreationMainVM(tracker, wizardManager)
+        val newViewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
         newViewModel.start(savedInstanceState)
 
         verify(wizardManager).setCurrentStepIndex(index)

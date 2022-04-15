@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.ui.layoutpicker.LayoutPickerTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
@@ -18,7 +19,6 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.T
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VERTICAL_SLUG
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.experiments.SiteNameABExperiment
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,10 +31,7 @@ private const val DESIGN_ERROR_CONTEXT = "design"
 private const val SITE_CREATION_LOCATION = "site_creation"
 
 @Singleton
-class SiteCreationTracker @Inject constructor(
-    val tracker: AnalyticsTrackerWrapper,
-    private val siteNameABExperiment: SiteNameABExperiment
-) : LayoutPickerTracker {
+class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
         SEGMENT_NAME("segment_name"),
@@ -295,10 +292,10 @@ class SiteCreationTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_ENTERED, mapOf(SITE_NAME.key to siteName))
     }
 
-    fun trackSiteIntentQuestionExperimentVariation() {
+    fun trackSiteNameExperimentVariation(variation: Variation) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT,
-                mapOf(VARIATION.key to siteNameABExperiment.getVariation())
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_EXPERIMENT,
+                mapOf(VARIATION.key to variation)
         )
     }
 
