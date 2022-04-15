@@ -435,6 +435,30 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given site not using wpcom rest api, when site is selected, then tabs are not visible`() {
+        site.setIsJetpackConnected(false)
+
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isSiteUsingWpComRestApi = false
+        )
+
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
+    }
+
+    @Test
+    fun `given site using wpcom rest api, when site is selected, then tabs are not visible`() {
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isSiteUsingWpComRestApi = true
+        )
+
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue()
+    }
+
+    @Test
     fun `given my site tabs build, when site is selected, then site header is visible`() {
         initSelectedSite()
 
