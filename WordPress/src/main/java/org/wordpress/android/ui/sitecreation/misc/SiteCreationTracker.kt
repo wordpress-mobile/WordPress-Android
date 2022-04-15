@@ -31,6 +31,7 @@ private const val DESIGN_ERROR_CONTEXT = "design"
 private const val SITE_CREATION_LOCATION = "site_creation"
 
 @Singleton
+@Suppress("TooManyFunctions")
 class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
     private enum class PROPERTY(val key: String) {
         TEMPLATE("template"),
