@@ -119,7 +119,7 @@ android {
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
-        buildConfigField "boolean", "SITE_NAME", "false"
+        buildConfigField "boolean", "SITE_NAME", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS_NOTIFICATION", "false"
@@ -367,7 +367,7 @@ dependencies {
     })
 
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.firebase:firebase-messaging:21.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.3'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
