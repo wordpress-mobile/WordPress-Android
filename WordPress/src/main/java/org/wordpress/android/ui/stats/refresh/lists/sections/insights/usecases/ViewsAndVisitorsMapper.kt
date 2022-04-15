@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
+@Suppress("MagicNumber")
 class ViewsAndVisitorsMapper
 @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
@@ -54,13 +55,12 @@ class ViewsAndVisitorsMapper
             string.stats_timeframe_previous_week
         )
 
-    @Suppress("LongParameterList")
     fun buildTitle(
         dates: List<PeriodData>,
         statsGranularity: StatsGranularity = DAYS,
         selectedItem: PeriodData,
         selectedPosition: Int,
-        startValue: Int = MILLION,
+        startValue: Int = MILLION
     ): ValuesItem {
         val values = dates.map {
             val value = when (SelectedType.valueOf(selectedPosition)) {
@@ -100,7 +100,6 @@ class ViewsAndVisitorsMapper
         )
     }
 
-    @Suppress("MagicNumber")
     private fun buildChange(
         previousValue: Long?,
         value: Long,

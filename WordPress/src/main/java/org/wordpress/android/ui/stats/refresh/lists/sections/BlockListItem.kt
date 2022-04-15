@@ -89,7 +89,7 @@ sealed class BlockListItem(val type: Type) {
     data class TitleWithMore(
         @StringRes val textResource: Int? = null,
         val text: String? = null,
-        val navigationAction: ListItemInteraction? = null,
+        val navigationAction: ListItemInteraction? = null
     ) : BlockListItem(TITLE_WITH_MORE)
 
     data class BigTitle(
@@ -128,7 +128,7 @@ sealed class BlockListItem(val type: Type) {
         val contentDescription1: String,
         val value2: String,
         @StringRes val unit2: Int,
-        val contentDescription2: String,
+        val contentDescription2: String
     ) : BlockListItem(VALUES_ITEM)
 
     data class ListItem(

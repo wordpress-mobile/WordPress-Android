@@ -31,11 +31,11 @@ import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper.LineChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.LineChartLabelFormatter
 
-private const val MIN_COLUMN_COUNT = 5
 private const val MIN_VALUE = 6f
 
 private typealias LineCount = Int
 
+@Suppress("MagicNumber")
 class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_line_chart_item
@@ -74,16 +74,21 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
+    @Suppress("LongMethod", "ComplexMethod")
     private fun LineChart.draw(
         item: LineChartItem
-    ) : LineCount {
+    ): LineCount {
         resetChart()
 
         val maxYValue = item.entries.maxByOrNull { it.value }!!.value
 
         val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
 
-        val prevWeekData = if (hasData && item.entries.size > 7) item.entries.subList(1, 7) else emptyList()
+        val prevWeekData = if (hasData && item.entries.size > 7) {
+            item.entries.subList(1, 7)
+        } else {
+            emptyList()
+        }
         val hasPrevWeekData = prevWeekData.isNotEmpty() && prevWeekData.any { it.value > 0 }
         val prevWeekDataSet = if (hasPrevWeekData) {
             val mappedEntries = prevWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
@@ -92,7 +97,12 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             buildEmptyDataSet(context, item.selectedType, item.entries.size)
         }
 
-        val thisWeekData = if (hasData && item.entries.size > 7) item.entries.subList(7, item.entries.size) else emptyList()
+        val thisWeekData = if (hasData && item.entries.size > 7) {
+            item.entries.subList(7, item.entries.size)
+        } else {
+            emptyList()
+        }
+
         val hasThisWeekData = thisWeekData.isNotEmpty() && thisWeekData.any { it.value > 0 }
         val thisWeekDataSet = if (hasThisWeekData) {
             val mappedEntries = thisWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
@@ -106,15 +116,6 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSets.add(thisWeekDataSet)
         dataSets.add(prevWeekDataSet)
         data = LineData(dataSets)
-
-        val greyColor = ContextCompat.getColor(
-                context,
-                R.color.neutral_30
-        )
-        val lightGreyColor = ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_gridline
-        )
 
         axisLeft.apply {
             valueFormatter = LargeValueFormatter()
@@ -130,8 +131,8 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 roundUp(maxYValue.toFloat())
             }
             setLabelCount(5, true)
-            textColor = greyColor
-            gridColor = lightGreyColor
+            textColor = ContextCompat.getColor(context, R.color.neutral_30)
+            gridColor = ContextCompat.getColor(context, R.color.stats_bar_chart_gridline)
             textSize = 10f
             gridLineWidth = 1f
         }
@@ -148,11 +149,11 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawGridLines(false)
 
             setDrawLabels(true)
-            setLabelCount(3, true) //
+            setLabelCount(3, true)
             position = BOTTOM
             valueFormatter = LineChartLabelFormatter(thisWeekData)
 
-            removeAllLimitLines() // removes vertical lines on the left and right
+            removeAllLimitLines()
         }
         setPinchZoom(false)
         setScaleEnabled(false)
@@ -192,13 +193,8 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
         val dataSet = LineDataSet(emptyValues, "Empty")
         dataSet.setGradientColor(
-                ContextCompat.getColor(
-                        context,
-                        R.color.primary_5
-                ), ContextCompat.getColor(
-                context,
-                android.R.color.transparent
-        )
+                ContextCompat.getColor(context, R.color.primary_5),
+                ContextCompat.getColor(context, android.R.color.transparent)
         )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
@@ -292,8 +288,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     return limit.toFloat()
                 }
             }
-            return 100F
+            100F
         }
     }
 }
-

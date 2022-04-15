@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import android.graphics.Rect
 import android.os.Bundle
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat

@@ -168,7 +168,7 @@ class StatsUtils
 
     fun getLineChartEntryContentDescriptions(
         @StringRes entryType: Int,
-        entries: List<Line>,
+        entries: List<Line>
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()
         entries.forEachIndexed { index, bar ->
