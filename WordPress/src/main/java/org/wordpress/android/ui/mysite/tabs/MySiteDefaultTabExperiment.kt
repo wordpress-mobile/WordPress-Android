@@ -44,10 +44,10 @@ class MySiteDefaultTabExperiment @Inject constructor(
         }
     }
 
-    private fun isExperimentRunning() =
+    fun isExperimentRunning() =
             mySiteDashboardTabsFeatureConfig.isEnabled() && mySiteDefaultTabExperimentFeatureConfig.isEnabled()
 
-    private fun isVariantAssigned() = appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()
+    fun isVariantAssigned() = appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()
 
     private fun setVariantAssigned() = appPrefsWrapper.setMySiteDefaultTabExperimentVariantAssigned()
 

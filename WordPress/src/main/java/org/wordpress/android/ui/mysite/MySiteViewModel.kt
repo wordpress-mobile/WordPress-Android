@@ -456,7 +456,8 @@ class MySiteViewModel @Inject constructor(
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
                         onStatsClick = this::onQuickLinkRibbonStatsClick
-                )
+                ),
+                isMySiteTabsEnabled
         )
         val dynamicCards = dynamicCardsBuilder.build(
                 quickStartCategories,
