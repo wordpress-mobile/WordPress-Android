@@ -1102,9 +1102,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
-        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId)
+        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId, false)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1113,7 +1113,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1124,7 +1124,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1135,7 +1135,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
         assertThat(navigationActions).containsExactly(
                 SiteNavigationAction.ShowQuickStartDialog(
@@ -1160,7 +1160,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.startQuickStart()
 
-        verify(quickStartUtilsWrapper).startQuickStart(site.id)
+        verify(quickStartUtilsWrapper).startQuickStart(site.id, false)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1821,7 +1821,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
 
         verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenHomepage(site, localHomepageId))
@@ -1831,7 +1831,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor feature is not enabled, then the home page editor is not shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(false)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
 
         assertThat(navigationActions).isEmpty()
     }

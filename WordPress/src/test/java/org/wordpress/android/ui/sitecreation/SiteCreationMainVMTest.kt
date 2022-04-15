@@ -108,7 +108,7 @@ class SiteCreationMainVMTest {
 
     @Test
     fun wizardFinishedInvokedOnSitePreviewCompleted() {
-        val state = SiteCreationCompleted(LOCAL_SITE_ID)
+        val state = SiteCreationCompleted(LOCAL_SITE_ID, false)
         viewModel.onSitePreviewScreenFinished(state)
 
         val captor = ArgumentCaptor.forClass(CreateSiteState::class.java)

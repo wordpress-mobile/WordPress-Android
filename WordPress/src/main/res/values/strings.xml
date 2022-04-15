@@ -3215,8 +3215,9 @@
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own.</string>
     <string name="new_site_creation_intents_input_hint">E.g. Fashion, Poetry, Politics</string>
     <string name="new_site_creation_site_name_title">Site name</string>
-    <string name="new_site_creation_site_name_header_title">Give your website a name</string>
-    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later</string>
+    <!-- translators: Give your Photography website a name -->
+    <string name="new_site_creation_site_name_header_title">Give your %s website a name</string>
+    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
