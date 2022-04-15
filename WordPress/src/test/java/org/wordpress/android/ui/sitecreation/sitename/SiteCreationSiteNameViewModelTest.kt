@@ -10,7 +10,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.util.LocaleManagerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationSiteNameViewModelTest {
@@ -18,7 +17,6 @@ class SiteCreationSiteNameViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var analyticsTracker: SiteCreationTracker
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var dispatcher: CoroutineDispatcher
 
     private lateinit var viewModel: SiteCreationSiteNameViewModel

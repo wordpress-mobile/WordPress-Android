@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.sitename
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -56,7 +55,6 @@ class SiteCreationSiteNameViewModel @Inject constructor(
         uiState.value?.siteName.let {
             analyticsTracker.trackSiteNameEntered(it)
             if (it.isNullOrBlank()) return
-            Log.d("siteNameWip", "Site name entered: $it")
             _onSiteNameEntered.value = it
         }
     }
