@@ -1,0 +1,4 @@
+19.6:
+Esta versão é bem simples: após excluir um site, você deve ter percebido que ele ainda aparecia na lista Meu site até o aplicativo ser reiniciado.
+
+Corrigimos isso. Agora os sites excluídos somem na hora. Isso é tudo, até mais.
