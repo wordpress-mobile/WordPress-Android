@@ -296,7 +296,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     fun trackSiteNameExperimentVariation(variation: Variation) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_EXPERIMENT,
-                mapOf(VARIATION.key to variation)
+                mapOf(VARIATION.key to variation.name)
         )
     }
 
