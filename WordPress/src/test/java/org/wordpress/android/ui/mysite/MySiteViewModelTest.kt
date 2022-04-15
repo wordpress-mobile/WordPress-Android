@@ -448,7 +448,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site using wpcom rest api, when site is selected, then tabs are not visible`() {
+    fun `given site using wpcom rest api, when site is selected, then tabs are visible`() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
