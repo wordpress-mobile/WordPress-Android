@@ -283,7 +283,7 @@ class SiteItemsBuilderTest {
                     siteListItemBuilder.buildPagesItemIfAvailable(
                             siteModel,
                             SITE_ITEM_ACTION,
-                            showPagesFocusPoint,
+                            showPagesFocusPoint
                     )
             ).thenReturn(
                     PAGES_ITEM.copy(showFocusPoint = showPagesFocusPoint)

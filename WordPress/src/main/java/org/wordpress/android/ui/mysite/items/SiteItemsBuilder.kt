@@ -28,6 +28,7 @@ class SiteItemsBuilder @Inject constructor(
         null
     }
 
+    @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         val showViewSiteFocusPoint = params.activeTask == QuickStartTask.VIEW_SITE
         val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
