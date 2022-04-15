@@ -70,7 +70,7 @@ class BloggingReminderBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             }
 
-            viewModel.isBloggingPromptHelpDialogVisible.observeEvent(viewLifecycleOwner) { isShowing: Boolean ->
+            viewModel.showBloggingPromptHelpDialogVisible.observeEvent(viewLifecycleOwner) { isShowing: Boolean ->
                 if (isShowing) {
                     BloggingPromptsOnboardingDialogFragment.newInstance(INFORMATION).show(
                             parentFragmentManager, BloggingPromptsOnboardingDialogFragment.TAG

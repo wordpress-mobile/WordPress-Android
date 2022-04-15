@@ -53,8 +53,8 @@ class BloggingRemindersViewModel @Inject constructor(
     private val _isTimePickerShowing = MutableLiveData<Event<Boolean>>()
     val isTimePickerShowing = _isTimePickerShowing as LiveData<Event<Boolean>>
 
-    private val _isBloggingPromptHelpDialogVisible = MutableLiveData<Event<Boolean>>()
-    val isBloggingPromptHelpDialogVisible = _isBloggingPromptHelpDialogVisible as LiveData<Event<Boolean>>
+    private val _showBloggingPromptHelpDialogVisible = MutableLiveData<Event<Boolean>>()
+    val showBloggingPromptHelpDialogVisible = _showBloggingPromptHelpDialogVisible as LiveData<Event<Boolean>>
 
     private val _selectedScreen = MutableLiveData<Screen>()
     private val selectedScreen = _selectedScreen.perform { onScreenChanged(it) }
@@ -76,7 +76,7 @@ class BloggingRemindersViewModel @Inject constructor(
                         this::selectDay,
                         this::selectTime,
                         this::togglePromptSwitch,
-                        this::showPromptHelp
+                        this::showBloggingPromptDialog
                 )
                 EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
@@ -162,8 +162,8 @@ class BloggingRemindersViewModel @Inject constructor(
         }
     }
 
-    private fun showPromptHelp() {
-        _isBloggingPromptHelpDialogVisible.value = Event(true)
+    private fun showBloggingPromptDialog() {
+        _showBloggingPromptHelpDialogVisible.value = Event(true)
     }
 
     fun onChangeTime(hour: Int, minute: Int) {
