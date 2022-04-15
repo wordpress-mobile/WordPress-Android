@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -184,7 +183,6 @@ class CardsBuilderTest {
         return cardsBuilder.build(
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
-                        activeTask = activeTask,
                         onQuickActionMediaClick = mock(),
                         onQuickActionPagesClick = mock(),
                         onQuickActionPostsClick = mock(),
@@ -218,7 +216,7 @@ class CardsBuilderTest {
 
     private fun setUpQuickActionsBuilder() {
         doAnswer {
-            initQuickActionsCard(it)
+            initQuickActionsCard()
         }.whenever(quickActionsCardBuilder).build(any())
     }
 
@@ -253,20 +251,14 @@ class CardsBuilderTest {
         )
     }
 
-    private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
-        return QuickActionsCard(
-                title = UiStringText(""),
-                onStatsClick = mock(),
-                onPagesClick = mock(),
-                onPostsClick = mock(),
-                onMediaClick = mock(),
-                showPages = false,
-                showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS,
-                showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                        params.activeTask == QuickStartTask.REVIEW_PAGES
-        )
-    }
+    private fun initQuickActionsCard() = QuickActionsCard(
+            title = UiStringText(""),
+            onStatsClick = mock(),
+            onPagesClick = mock(),
+            onPostsClick = mock(),
+            onMediaClick = mock(),
+            showPages = false
+    )
 
     private fun initQuickStartCard() = QuickStartCard(
             title = UiStringText(""),

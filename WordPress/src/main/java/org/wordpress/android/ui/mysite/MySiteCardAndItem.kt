@@ -72,10 +72,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onPagesClick: ListItemInteraction,
             val onPostsClick: ListItemInteraction,
             val onMediaClick: ListItemInteraction,
-            val showPages: Boolean = true,
-            val showStatsFocusPoint: Boolean = false,
-            val showPagesFocusPoint: Boolean = false
-        ) : Card(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
+            val showPages: Boolean = true
+        ) : Card(QUICK_ACTIONS_CARD)
 
         data class QuickLinkRibbon(
             val quickLinkRibbonItems: List<QuickLinkRibbonItem>,

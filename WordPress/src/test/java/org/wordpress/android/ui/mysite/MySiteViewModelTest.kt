@@ -2513,9 +2513,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
                 onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
                 onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
-                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                showPagesFocusPoint = false,
-                showStatsFocusPoint = false
+                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages
         )
     }
 

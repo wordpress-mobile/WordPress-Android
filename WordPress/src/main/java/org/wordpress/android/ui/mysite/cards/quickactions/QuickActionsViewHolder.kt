@@ -34,8 +34,5 @@ class QuickActionsViewHolder(
         val pagesVisibility = if (card.showPages) View.VISIBLE else View.GONE
         quickActionPagesButton.visibility = pagesVisibility
         quickActionPagesLabel.visibility = pagesVisibility
-
-        quickStartStatsFocusPoint.setVisibleOrGone(card.showStatsFocusPoint)
-        quickStartPagesFocusPoint.setVisibleOrGone(card.showPagesFocusPoint)
     }
 }

@@ -9,7 +9,6 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickActionsCardBuilderParams
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -49,58 +48,22 @@ class QuickActionsCardBuilderTest : BaseUnitTest() {
         assertThat(quickActionsCard.onMediaClick).isNotNull
     }
 
-    /* FOCUS POINT*/
-    @Test
-    fun `given stats active task, when card is built, then stats focus point should be true`() {
-        val quickActionsCard = buildQuickActionsCard(showStatsFocusPoint = true)
-
-        assertThat(quickActionsCard.showStatsFocusPoint).isEqualTo(true)
-    }
-
-    @Test
-    fun `given pages active task, when card is built, then pages focus point should be true`() {
-        val quickActionsCard = buildQuickActionsCard(showPagesFocusPoint = true)
-
-        assertThat(quickActionsCard.showPagesFocusPoint).isEqualTo(true)
-    }
-
-    @Test
-    fun `given enable focus point is false, when card is built, then active focus point should false`() {
-        val quickActionsCard = buildQuickActionsCard(showPagesFocusPoint = true, enableFocusPoints = false)
-
-        assertThat(quickActionsCard.showPagesFocusPoint).isEqualTo(false)
-        assertThat(quickActionsCard.activeQuickStartItem).isEqualTo(false)
-    }
-
     private fun buildQuickActionsCard(
-        showPages: Boolean = true,
-        showStatsFocusPoint: Boolean = false,
-        showPagesFocusPoint: Boolean = false,
-        enableFocusPoints: Boolean = true
+        showPages: Boolean = true
     ): QuickActionsCard {
         setShowPages(showPages)
         return builder.build(
             QuickActionsCardBuilderParams(
                 siteModel,
-                setActiveTask(showStatsFocusPoint, showPagesFocusPoint),
                 onStatsClick,
                 onPagesClick,
                 onPostsClick,
-                onMediaClick,
-                enableFocusPoints = enableFocusPoints
+                onMediaClick
             )
         )
     }
 
     private fun setShowPages(showPages: Boolean) {
         whenever(siteModel.isSelfHostedAdmin).thenReturn(showPages)
-    }
-
-    private fun setActiveTask(showStats: Boolean, showPages: Boolean): QuickStartTask? {
-        return when {
-            showStats -> QuickStartTask.CHECK_STATS
-            showPages -> QuickStartTask.EDIT_HOMEPAGE
-            else -> null
-        }
     }
 }

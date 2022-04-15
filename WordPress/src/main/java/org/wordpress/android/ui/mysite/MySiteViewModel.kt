@@ -397,12 +397,10 @@ class MySiteViewModel @Inject constructor(
         val cardsResult = cardsBuilder.build(
                 QuickActionsCardBuilderParams(
                         siteModel = site,
-                        activeTask = activeTask,
                         onQuickActionStatsClick = this::quickActionStatsClick,
                         onQuickActionPagesClick = this::quickActionPagesClick,
                         onQuickActionPostsClick = this::quickActionPostsClick,
-                        onQuickActionMediaClick = this::quickActionMediaClick,
-                        enableFocusPoints = enableQuickActionCardFocusPoints()
+                        onQuickActionMediaClick = this::quickActionMediaClick
                 ),
                 DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
@@ -504,10 +502,6 @@ class MySiteViewModel @Inject constructor(
                         listOf()
                 )
         )
-    }
-
-    private fun enableQuickActionCardFocusPoints(): Boolean {
-        return defaultABExperimentTab != MySiteTabType.DASHBOARD
     }
 
     private fun enableQuickLinkRibbonFocusPoints(): Boolean {
