@@ -12,6 +12,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.S
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SITE_NAME
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.VARIATION
@@ -46,7 +47,8 @@ class SiteCreationTracker @Inject constructor(
         FILTER("filter"),
         SELECTED_FILTERS("selected_filters"),
         VERTICAL_SLUG("vertical_slug"),
-        VARIATION("variation")
+        VARIATION("variation"),
+        SITE_NAME("site_name")
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -289,8 +291,8 @@ class SiteCreationTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_SKIPPED)
     }
 
-    fun trackSiteNameEntered() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_ENTERED)
+    fun trackSiteNameEntered(siteName: String?) {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_NAME_ENTERED, mapOf(SITE_NAME.key to siteName))
     }
 
     fun trackSiteIntentQuestionExperimentVariation() {
