@@ -33,10 +33,11 @@ class AccountSettingsRepository @Inject constructor(
     val account: AccountModel
         get() = accountStore.account
 
-    fun getSitesAccessedViaWPComRest(): List<SiteModel> = siteStore.sitesAccessedViaWPComRest
+    suspend fun getSitesAccessedViaWPComRest(): List<SiteModel> = withContext(ioDispatcher) {
+        siteStore.sitesAccessedViaWPComRest }
 
-    fun getSite(siteRemoteId: Long): SiteModel? {
-        return siteStore.getSiteBySiteId(siteRemoteId)
+    suspend fun getSite(siteRemoteId: Long): SiteModel? = withContext(ioDispatcher) {
+        siteStore.getSiteBySiteId(siteRemoteId)
     }
 
     suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
