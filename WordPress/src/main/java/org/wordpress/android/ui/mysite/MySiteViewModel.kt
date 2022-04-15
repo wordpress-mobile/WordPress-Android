@@ -397,12 +397,10 @@ class MySiteViewModel @Inject constructor(
         val cardsResult = cardsBuilder.build(
                 QuickActionsCardBuilderParams(
                         siteModel = site,
-                        activeTask = activeTask,
                         onQuickActionStatsClick = this::quickActionStatsClick,
                         onQuickActionPagesClick = this::quickActionPagesClick,
                         onQuickActionPostsClick = this::quickActionPostsClick,
-                        onQuickActionMediaClick = this::quickActionMediaClick,
-                        enableFocusPoints = enableQuickActionCardFocusPoints()
+                        onQuickActionMediaClick = this::quickActionMediaClick
                 ),
                 DomainRegistrationCardBuilderParams(
                         isDomainCreditAvailable = isDomainCreditAvailable,
@@ -457,9 +455,7 @@ class MySiteViewModel @Inject constructor(
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick,
-                        activeTask = activeTask,
-                        enableFocusPoints = enableQuickLinkRibbonFocusPoints()
+                        onStatsClick = this::onQuickLinkRibbonStatsClick
                 )
         )
         val dynamicCards = dynamicCardsBuilder.build(
@@ -504,14 +500,6 @@ class MySiteViewModel @Inject constructor(
                         listOf()
                 )
         )
-    }
-
-    private fun enableQuickActionCardFocusPoints(): Boolean {
-        return defaultABExperimentTab != MySiteTabType.DASHBOARD
-    }
-
-    private fun enableQuickLinkRibbonFocusPoints(): Boolean {
-        return defaultABExperimentTab == MySiteTabType.DASHBOARD
     }
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
@@ -645,6 +633,7 @@ class MySiteViewModel @Inject constructor(
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
+                    quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
                     quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }

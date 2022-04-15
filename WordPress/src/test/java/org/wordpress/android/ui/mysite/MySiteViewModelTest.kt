@@ -2436,7 +2436,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun setUpCardsBuilder() {
         doAnswer {
             val quickActionsCard = initQuickActionsCard(it)
-            val quickLinkRibbons = initQuickLinkRibbons(it)
+            val quickLinkRibbon = initQuickLinkRibbon(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
@@ -2449,7 +2449,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             if (mySiteDashboardPhase2FeatureConfig.isEnabled())
                 listOfCards.add(dashboardCards)
             if (mySiteDashboardTabsFeatureConfig.isEnabled())
-                listOfCards.add(quickLinkRibbons)
+                listOfCards.add(quickLinkRibbon)
             listOfCards
         }.whenever(cardsBuilder).build(
                 quickActionsCardBuilderParams = any(),
@@ -2513,23 +2513,17 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
                 onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
                 onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
-                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                showPagesFocusPoint = false,
-                showStatsFocusPoint = false
+                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages
         )
     }
 
-    private fun initQuickLinkRibbons(mockInvocation: InvocationOnMock): QuickLinkRibbon {
+    private fun initQuickLinkRibbon(mockInvocation: InvocationOnMock): QuickLinkRibbon {
         val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonBuilderParams>()).first()
         quickLinkRibbonPagesClickAction = params.onPagesClick
         quickLinkRibbonPostsClickAction = params.onPostsClick
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
-        return QuickLinkRibbon(
-            quickLinkRibbonItems = mock(),
-            showStatsFocusPoint = false,
-            showPagesFocusPoint = false
-        )
+        return QuickLinkRibbon(quickLinkRibbonItems = mock())
     }
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
