@@ -169,14 +169,14 @@ class CardsBuilderTest {
 
     /*  QUICK LINK RIBBON */
     @Test
-    fun `given mySiteDashboardTabsFeatureConfig disabled, when cards are built, then quick link ribbon not built`() {
-        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
+    fun `given tabs disabled, when cards are built, then quick link ribbon not built`() {
+        val cards = buildCards(isMySiteTabsEnabled = false)
 
         assertThat(cards.findQuickLinkRibbon()).isNull()
     }
 
     @Test
-    fun `given mySiteDashboardTabsFeatureConfig enabled, when cards are built, then quick link ribbons built`() {
+    fun `given tabs enabled, when cards are built, then quick link ribbons built`() {
         val cards = buildCards(isMySiteTabsEnabled = true)
 
         assertThat(cards.findQuickLinkRibbon()).isNotNull
