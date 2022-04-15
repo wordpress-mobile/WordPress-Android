@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-12 16:50:39+0000
+Translation-Revision-Date: 2022-04-15 16:07:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: en_GB
@@ -83,7 +83,7 @@ Language: en_GB
     <string name="site_creation_intent_beauty">Beauty</string>
     <string name="site_creation_intent_automotive">Automotive</string>
     <string name="site_creation_intent_art">Art</string>
-    <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
+    <string name="new_site_creation_intents_input_hint">E.g. Fashion, Poetry, Politics</string>
     <string name="new_site_creation_intents_title">Site topic</string>
     <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
@@ -99,7 +99,7 @@ Language: en_GB
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">This colour combination may be hard for people to read. Try using a brighter background colour and/or a darker text colour.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">This colour combination may be hard for people to read. Try using a darker background colour and/or a brighter text colour.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Failed to insert media.\nTap for more info.</string>
-    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own.</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
     <string name="my_site_dashboard_tab_title">Home</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-05 06:16:10+0000
+Translation-Revision-Date: 2022-04-14 12:06:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: sv_SE
@@ -99,7 +99,7 @@ Language: sv_SE
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Denna färgkombination kan vara svår för människor att läsa. Försök använda en ljusare bakgrundsfärg och/eller en mörkare textfärg.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Denna färgkombination kan vara svår för människor att läsa. Försök använda en mörkare bakgrundsfärg och/eller en ljusare textfärg.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Misslyckades att infoga media.\nTryck för mer information.</string>
-    <string name="new_site_creation_intents_header_subtitle">Välj ett ämne från listan nedan eller skriv ditt eget</string>
+    <string name="new_site_creation_intents_header_subtitle">Välj ett ämne från listan nedan eller skriv ditt eget.</string>
     <string name="new_site_creation_intents_header_title">Vad handlar din webbplats om?</string>
     <string name="notification_channel_weekly_roundup_title">Veckosammanfattning</string>
     <string name="my_site_dashboard_tab_title">Hem</string>

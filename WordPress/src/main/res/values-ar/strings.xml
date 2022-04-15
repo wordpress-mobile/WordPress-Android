@@ -82,7 +82,6 @@ Language: ar
     <string name="site_creation_intent_beauty">الجمال</string>
     <string name="site_creation_intent_automotive">السيارات</string>
     <string name="site_creation_intent_art">الفن</string>
-    <string name="new_site_creation_intents_input_hint">على سبيل المثال، الموضة والشعر والسياسة</string>
     <string name="new_site_creation_intents_title">موضوع الموقع</string>
     <string name="quick_start_site_menu_tab_message_short">انقر على &lt;b&gt;%1$s&lt;/b&gt; للمتابعة.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">إزالة من لوحة التحكم</string>
@@ -98,7 +97,6 @@ Language: ar
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">فشل في إدراج وسائط.\nانقر للحصول على مزيد من المعلومات.</string>
-    <string name="new_site_creation_intents_header_subtitle">اختيار موضوع من القائمة الواردة أدناه أو كتابة موضوعك الخاص</string>
     <string name="new_site_creation_intents_header_title">ما الذي يدور موقعك حوله؟</string>
     <string name="notification_channel_weekly_roundup_title">موجز أسبوعي</string>
     <string name="my_site_dashboard_tab_title">الرئيسية</string>
