@@ -1379,6 +1379,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt != null
                 },
+                any(),
                 any()
         )
     }
@@ -1394,6 +1395,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt == null
                 },
+                any(),
                 any()
         )
     }
@@ -2456,7 +2458,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 domainRegistrationCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
                 dashboardCardsBuilderParams = any(),
-                quickLinkRibbonsBuilderParams = any()
+                quickLinkRibbonsBuilderParams = any(),
+                isMySiteTabsEnabled = any()
         )
 
         doAnswer {
