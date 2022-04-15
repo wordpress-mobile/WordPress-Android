@@ -217,6 +217,7 @@ class MySiteViewModel @Inject constructor(
     val onShare = _onShare
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
+    private var shouldMarkUpdateSiteTitleTaskComplete = false
 
     val state: LiveData<MySiteUiState> =
             selectedSiteRepository.siteSelected.switchMap { siteLocalId ->
@@ -1019,11 +1020,11 @@ class MySiteViewModel @Inject constructor(
         selectDefaultTabIfNeeded()
     }
 
-    fun performFirstStepAfterSiteCreation(siteLocalId: Int) {
+    fun performFirstStepAfterSiteCreation(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
             checkAndStartLandOnTheEditor()
         } else {
-            checkAndStartQuickStart(siteLocalId)
+            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         }
     }
 
@@ -1039,17 +1040,18 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun checkAndStartQuickStart(siteLocalId: Int) {
+    fun checkAndStartQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            startQuickStart(siteLocalId)
+            startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         } else {
+            shouldMarkUpdateSiteTitleTaskComplete = isSiteTitleTaskCompleted
             showQuickStartDialog(selectedSiteRepository.getSelectedSite())
         }
     }
 
-    private fun startQuickStart(siteLocalId: Int) {
+    private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
-            quickStartUtilsWrapper.startQuickStart(siteLocalId)
+            quickStartUtilsWrapper.startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
             mySiteSourceManager.refreshQuickStart()
         }
     }
@@ -1075,10 +1077,12 @@ class MySiteViewModel @Inject constructor(
 
     fun startQuickStart() {
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
-        startQuickStart(selectedSiteRepository.getSelectedSiteLocalId())
+        startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
+        shouldMarkUpdateSiteTitleTaskComplete = false
     }
 
     fun ignoreQuickStart() {
+        shouldMarkUpdateSiteTitleTaskComplete = false
         analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
