@@ -71,8 +71,6 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get(BloggingPromptsOnboardingViewModel::class.java)
-        setupTryNowButton()
-        setupRemindMeButton()
         setupHeaderTitle()
         setupHeaderIcon()
         setupUiStateObserver()
@@ -91,14 +89,6 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     "$context must implement ${BloggingPromptsReminderSchedulerListener::class.simpleName}"
             )
         }
-    }
-
-    private fun setupTryNowButton() {
-        setPrimaryButtonListener { viewModel.onPrimaryButtonClick() }
-    }
-
-    private fun setupRemindMeButton() {
-        setSecondaryButtonListener { viewModel.onSecondaryButtonClick() }
     }
 
     private fun setupHeaderTitle() {
@@ -136,9 +126,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
 
             setPrimaryButtonText(readyState.primaryButtonLabel)
             togglePrimaryButtonVisibility(readyState.isPrimaryButtonVisible)
+            setPrimaryButtonListener { readyState.onPrimaryButtonClick }
 
             setSecondaryButtonText(readyState.secondaryButtonLabel)
             toggleSecondaryButtonVisibility(readyState.isSecondaryButtonVisible)
+            setSecondaryButtonListener { readyState.onSecondaryButtonClick }
 
             contentBottom.text = getString(readyState.contentBottomRes)
             contentNote.text = buildSpannedString {
