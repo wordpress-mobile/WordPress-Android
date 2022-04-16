@@ -652,7 +652,6 @@
     <!-- Site Intent Question -->
     <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_large</dimen>
     <dimen name="siq_header_scroll_snap_threshold">-96dp</dimen>
-    <dimen name="siq_bottom_shadow_height">@dimen/margin_medium</dimen>
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
@@ -693,8 +692,15 @@
     <dimen name="blogging_reminders_days_middle_margin">7dp</dimen>
 
     <dimen name="app_bar_with_site_info_height">146dp</dimen>
-    <dimen name="app_bar_with_no_site_info_height">56dp</dimen>
-    <dimen name="app_bar_with_site_info_tabs_height">186dp</dimen>
+    <dimen name="app_bar_with_no_site_info_height">62dp</dimen>
+    <dimen name="app_bar_with_site_info_tabs_height">206dp</dimen>
     <dimen name="toolbar_bottom_margin_with_no_tabs">0dp</dimen>
-    <dimen name="toolbar_bottom_margin_with_tabs">110dp</dimen>
+    <dimen name="toolbar_bottom_margin_with_tabs">168dp</dimen>
+
+    <!-- quick link ribbon -->
+    <dimen name="quick_link_ribbon_padding_start">18dp</dimen>
+    <dimen name="quick_link_ribbon_icon_size">24dp</dimen>
+    <dimen name="quick_link_ribbon_corner_radius">4dp</dimen>
+    <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
+
 </resources>

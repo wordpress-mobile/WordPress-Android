@@ -34,6 +34,7 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.MySiteAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItemDecoration
 import org.wordpress.android.ui.mysite.MySiteViewModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.MySiteTrackWithTabSource
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
@@ -129,7 +130,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 .get(DynamicCardMenuViewModel::class.java)
     }
 
-    // todo: annmarie - if we keep this, then think about instance state
     private fun initTabType() {
         mySiteTabType = if (viewModel.isMySiteTabsEnabled) {
             MySiteTabType.fromString(
@@ -316,8 +316,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is SiteNavigationAction.OpenTodaysStats ->
-            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.DAY)
+        is SiteNavigationAction.OpenStatsInsights ->
+            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
+        is SiteNavigationAction.OpenTodaysStatsGetMoreViewsExternalUrl ->
+            ActivityLauncher.openUrlExternal(requireActivity(), action.url)
     }
 
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
@@ -379,7 +381,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         super.onPause()
         activity?.let {
             if (!it.isChangingConfigurations) {
-                viewModel.clearActiveQuickStartTask()
                 viewModel.dismissQuickStartNotice()
             }
         }
@@ -457,29 +458,25 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             }
             RequestCodes.LOGIN_EPILOGUE,
             RequestCodes.CREATE_SITE -> {
+                viewModel.onCreateSiteResult()
                 viewModel.performFirstStepAfterSiteCreation(
-                        data.getIntExtra(
-                                SitePickerActivity.KEY_SITE_LOCAL_ID,
-                                SelectedSiteRepository.UNAVAILABLE
-                        )
+                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false)
                 )
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    viewModel.onCreateSiteResult()
                     viewModel.performFirstStepAfterSiteCreation(
-                            data.getIntExtra(
-                                    SitePickerActivity.KEY_SITE_LOCAL_ID,
-                                    SelectedSiteRepository.UNAVAILABLE
-                            )
+                            data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                            data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false)
                     )
                 }
             }
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
-                        data.getIntExtra(
-                                SitePickerActivity.KEY_SITE_LOCAL_ID,
-                                SelectedSiteRepository.UNAVAILABLE
-                        )
+                        data.getIntExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, SelectedSiteRepository.UNAVAILABLE),
+                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false)
                 )
             }
         }
@@ -603,5 +600,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
     fun handleScrollTo(scrollTo: Int) {
         (binding?.recyclerView?.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(scrollTo, 0)
+    }
+
+    fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
+        viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
 }

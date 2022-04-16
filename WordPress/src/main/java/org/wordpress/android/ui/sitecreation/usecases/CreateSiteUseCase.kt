@@ -45,12 +45,15 @@ class CreateSiteUseCase @Inject constructor(
          * time of this comment, changing FluxC's Payload might end up affecting the old site creation flow,
          * so the workaround is applied here instead.
          */
-        val domain = if (isWordPressComSubDomain(siteData.domain)) {
-            urlUtilsWrapper.extractSubDomain(siteData.domain)
-        } else siteData.domain
+        val domain = when {
+            siteData.domain.isNullOrEmpty() -> null
+            isWordPressComSubDomain(siteData.domain) -> urlUtilsWrapper.extractSubDomain(siteData.domain)
+            else -> siteData.domain
+        }
         return suspendCoroutine { cont ->
             val newSitePayload = NewSitePayload(
                     domain,
+                    siteData.title,
                     languageWordPressId,
                     timeZoneId,
                     siteVisibility,

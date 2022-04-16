@@ -441,6 +441,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_ACTION_MEDIA_TAPPED:
                 predefinedEventProperties.put("button", "media");
                 break;
+            case QUICK_LINK_RIBBON_PAGES_TAPPED:
+                predefinedEventProperties.put("button", "pages");
+                break;
+            case QUICK_LINK_RIBBON_POSTS_TAPPED:
+                predefinedEventProperties.put("button", "posts");
+                break;
+            case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+                predefinedEventProperties.put("button", "media");
+                break;
+            case QUICK_LINK_RIBBON_STATS_TAPPED:
+                predefinedEventProperties.put("button", "stats");
+                break;
             case WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED:
                 predefinedEventProperties.put("button", "create_new_site");
                 break;
@@ -1403,14 +1415,24 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_intent_question_canceled";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_SKIPPED:
                 return "enhanced_site_creation_intent_question_skipped";
-            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CONTINUE_PRESSED:
-                return "enhanced_site_creation_intent_question_continue_pressed";
+            case ENHANCED_SITE_CREATION_INTENT_QUESTION_CUSTOM_VERTICAL_SELECTED:
+                return "enhanced_site_creation_intent_question_custom_vertical_selected";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_VERTICAL_SELECTED:
                 return "enhanced_site_creation_intent_question_vertical_selected";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_SEARCH_FOCUSED:
                 return "enhanced_site_creation_intent_question_search_focused";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT:
                 return "enhanced_site_creation_intent_question_experiment";
+            case ENHANCED_SITE_CREATION_SITE_NAME_EXPERIMENT:
+                return "enhanced_site_creation_site_name_experiment";
+            case ENHANCED_SITE_CREATION_SITE_NAME_VIEWED:
+                return "enhanced_site_creation_site_name_viewed";
+            case ENHANCED_SITE_CREATION_SITE_NAME_CANCELED:
+                return "enhanced_site_creation_site_name_canceled";
+            case ENHANCED_SITE_CREATION_SITE_NAME_SKIPPED:
+                return "enhanced_site_creation_site_name_skipped";
+            case ENHANCED_SITE_CREATION_SITE_NAME_ENTERED:
+                return "enhanced_site_creation_site_name_entered";
             case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
                 return "layout_picker_preview_mode_changed";
             case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:
@@ -1896,6 +1918,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_ACTION_POSTS_TAPPED:
             case QUICK_ACTION_MEDIA_TAPPED:
                 return "quick_action_tapped";
+            case QUICK_LINK_RIBBON_PAGES_TAPPED:
+            case QUICK_LINK_RIBBON_POSTS_TAPPED:
+            case QUICK_LINK_RIBBON_MEDIA_TAPPED:
+            case QUICK_LINK_RIBBON_STATS_TAPPED:
+                return "quick_action_ribbon_tapped";
             case AUTO_UPLOAD_POST_INVOKED:
                 return "auto_upload_post_invoked";
             case AUTO_UPLOAD_PAGE_INVOKED:
@@ -2174,6 +2201,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_site_menu_shown";
             case MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED:
                 return "my_site_default_tab_experiment_variant_assigned";
+            case APP_SETTINGS_INITIAL_SCREEN_CHANGED:
+                return "app_settings_initial_screen_changed";
         }
         return null;
     }

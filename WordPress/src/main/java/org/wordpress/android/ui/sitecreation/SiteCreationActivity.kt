@@ -20,7 +20,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.INTENTS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_NAME
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
@@ -31,6 +32,9 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
+import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment
+import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel
+import org.wordpress.android.ui.sitecreation.sitename.SiteNameScreenListener
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel
 import org.wordpress.android.ui.sitecreation.verticals.IntentsScreenListener
@@ -38,12 +42,14 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragme
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class SiteCreationActivity : LocaleAwareActivity(),
         IntentsScreenListener,
+        SiteNameScreenListener,
         DomainsScreenListener,
         SitePreviewScreenListener,
         OnHelpClickedListener,
@@ -51,9 +57,11 @@ class SiteCreationActivity : LocaleAwareActivity(),
         BasicDialogNegativeClickInterface {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
+    @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     private lateinit var mainViewModel: SiteCreationMainVM
     private lateinit var hppViewModel: HomePagePickerViewModel
     private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
+    private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +71,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
         siteCreationIntentsViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(SiteCreationIntentsViewModel::class.java)
+        siteCreationSiteNameViewModel = ViewModelProvider(this, viewModelFactory)
+                .get(SiteCreationSiteNameViewModel::class.java)
         mainViewModel.start(savedInstanceState)
         hppViewModel.loadSavedState(savedInstanceState)
 
@@ -81,18 +91,20 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
             createSiteState?.let {
                 val intent = Intent()
-                val (siteCreated, localSiteId) = when (createSiteState) {
+                val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
                     // site creation flow was canceled
-                    is SiteNotCreated -> Pair(false, null)
+                    is SiteNotCreated -> Triple(false, null, false)
                     is SiteNotInLocalDb -> {
                         // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
                         // this with a Snackbar message.
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
-                        Pair(true, null)
+                        Triple(true, null, createSiteState.isSiteTitleTaskComplete)
                     }
-                    is SiteCreationCompleted -> Pair(true, createSiteState.localSiteId)
+                    is SiteCreationCompleted -> Triple(true, createSiteState.localSiteId,
+                            createSiteState.isSiteTitleTaskComplete)
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
+                intent.putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, titleTaskComplete)
                 setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
                 finish()
             }
@@ -118,6 +130,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
         siteCreationIntentsViewModel.onSkipButtonPressed.observe(this, Observer {
             mainViewModel.onSiteIntentSkipped()
         })
+        siteCreationSiteNameViewModel.onBackButtonPressed.observe(this, Observer {
+            mainViewModel.onBackPressed()
+        })
+        siteCreationSiteNameViewModel.onSkipButtonPressed.observe(this, Observer {
+            ActivityUtils.hideKeyboard(this)
+            mainViewModel.onSiteNameSkipped()
+        })
         hppViewModel.onBackButtonPressed.observe(this, Observer {
             mainViewModel.onBackPressed()
         })
@@ -128,6 +147,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onIntentSelected(intent: String) {
         mainViewModel.onSiteIntentSelected(intent)
+        if (!siteNameFeatureConfig.isEnabled()) {
+            ActivityUtils.hideKeyboard(this)
+        }
+    }
+
+    override fun onSiteNameEntered(siteName: String) {
+        mainViewModel.onSiteNameEntered(siteName)
         ActivityUtils.hideKeyboard(this)
     }
 
@@ -151,7 +177,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
-            SEGMENTS -> HomePagePickerFragment()
+            SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
+            SITE_DESIGNS -> HomePagePickerFragment()
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle
             )

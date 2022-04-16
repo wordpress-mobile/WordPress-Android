@@ -1,182 +1,118 @@
 <en-US>
-- Theme/default/custom color palettes
-- Email app choice when verifying email at signup/login
-- No nested comments if parent comment is deleted
-- Images adjust after new mid-capture orientation
-- Progress bar fix for My Site icon edits
-- Reorganized default Insights list
-- Keyboard won’t cover login error message
-- Logout button only has to be pressed once
+- We tweaked the upload error text in media upload blocks.
+- Animated GIFs now come with a GIF badge.
+- Block setting changes to ordered lists now appear in the editor.
+- You can disable Weekly Roundup notifications for all sites in App Info.
 </en-US>
 <ar>
-19.4:
-- لوحات ألوان القالب/الافتراضية/المخصصة
-- اختيار تطبيق البريد الإلكتروني عند التحقُّق من البريد الإلكتروني عند التسجيل/ تسجيل الدخول
-- لا توجد تعليقات متداخلة إذا تم حذف التعليق الأصلي
-- ضبط الصور بعد اتجاه منتصف الالتقاط الجديد
-- إصلاح خاص بشريط التقدم لعمليات تحرير أيقونة موقعي
-- قائمة بالرؤى الافتراضية مُعاد تنظيمها
-- لن تستر لوحة المفاتيح رسالة خطأ تسجيل الدخول
-- يتعيَّن الضغط على زر تسجيل الخروج مرة واحدة فقط
+19.5:
+- قمنا بتعديل نص خطأ الرفع في مكوِّنات رفع الوسائط.
+- تأتي صور GIF المتحركة الآن مزوَّدة بشارة GIF.
+- تظهر الآن تغييرات إعداد المكوِّن على القوائم المرتبة في المحرِّر.
+- يمكنك تعطيل تنبيهات الموجز الأسبوعي لجميع المواقع في معلومات التطبيق.
 </ar>
 <de-DE>
-19.4:
-- Theme-/Standard-/individuelle Farbpaletten
-- App-Auswahl bei E-Mail-Verifizierung
-- Keine verschachtelten Kommentare bei Löschung des übergeordneten Kommentars
-- Bilder werden nach Neuausrichtung der mittleren Aufnahme angepasst
-- Problem der Fortschrittsleiste bei Bearbeitungen des Website-Icons behoben
-- Liste der Standardeinsichten umstrukturiert
-- Fehlermeldung bei Anmeldung wird auf der Tastatur nicht verborgen
-- Abmelde-Button muss nur einmal gedrückt werden
+19.5:
+- Wir haben den Text bei Upload-Fehlern in Blöcken zum Hochladen von Medien aktualisiert.
+- Animierte GIFs haben jetzt ein GIF-Badge.
+- Änderungen an den Blockeinstellungen für sortierte Listen werden jetzt im Editor angezeigt.
+- Du kannst die Benachrichtigungen mit wöchentlichen Zusammenfassungen für alle Websites unter „App-Info“ deaktivieren.
 </de-DE>
 <es-ES>
-19.4:
-- Paletas de color temáticas/por defecto/personalizadas
-- Selección de la aplicación de verificación del correo electrónico
-- Si el comentario padre se borra, no hay comentarios anidados
-- Las imágenes se ajustan tras hacer un cambio de orientación en mitad de la captura
-- Se ha corregido la barra de progreso para las ediciones de iconos de Mi Sitio
-- Se ha reorganizado la lista de Detalles por defecto
-- El teclado no tapa los mensajes de error de inicio de sesión
+19.5:
+- Hemos modificado el texto que informa de un error de subida en los bloques de subida de medios.
+- Ahora, los GIF animados vienen con una insignia de GIF.
+- Ahora, los cambios que realices en los ajustes del bloque para las listas ordenadas aparecerán en el editor.
+- Puedes desactivar las notificaciones del Resumen semanal para todos los sitios en Información de la aplicación.
 </es-ES>
 <fr-FR>
-19.4 :
-- Palettes colorées thématiques/par défaut/perso
-- Sélection de l’appli pour la vérification de l’adresse e-mail
-- Pas de commentaires imbriqués possibles si le parent a été supprimé
-- Ajustement des images après leur réorientation à mi-capture
-- Barre de progression améliorée pour les modifications de l’icône du site
-- Liste par défaut des tendances réorganisée
-- Plus de masquage des erreurs de connexion par le clavier
+19.5 :
+- Nous avons apporté quelques retouches au message d’erreur concernant le chargement de contenu multimédia dans les blocs.
+- Les GIF animés affichent désormais un badge distinctif.
+- La structure des blocs a changé pour permettre l’affichage des listes ordonnées dans l’éditeur.
+- Vous pouvez désactiver les notifications de résumé hebdomadaire pour tous vos sites depuis la section d’informations de l’application.
 </fr-FR>
 <iw-IL>
-19.4:
-- Theme/default/custom color palettes
-- Email app choice when verifying email at signup/login
-- No nested comments if parent comment is deleted
-- Images adjust after new mid-capture orientation
-- Progress bar fix for My Site icon edits
-- Reorganized default Insights list
-- Keyboard won’t cover login error message
-- Logout button only has to be pressed once
+19.5:
+- שינינו את הטקסט בשגיאת ההעלאה בבלוקים של העלאת מדיה.
+- קובצי GIF מונפשים כעת מופיעים עם עיטור 'GIF'.
+- שינויים בהגדרות הבלוק לרשימות מסודרות מופיעים כעת בעורך.
+- אפשר להשבית את ההודעות של 'סיכום שבועי' לכל האתרים דרך 'פרטי האפליקציה'.
 </iw-IL>
 <id>
-19.4:
-- Palet warna kustom/asal/tema
-- Pilihan aplikasi email untuk verifikasi saat mendaftar/login
-- Tidak ada komentar cabang jika komentar induk dihapus
-- Penyesuaian gambar setelah reorientasi baru di tengah pemotretan
-- Bilah progres disempurnakan untuk menyunting ikon Situs saya
-- Susunan ulang daftar asal Wawasan
-- Keyboard tidak akan menutupi pesan error saat login
-- Tombol logout cukup ditekan satu kali saja
+19.5:
+- Kami menyesuaikan teks error saat mengunggah di blok unggah media.
+- Animasi GIF kini dilengkapi lencana GIF.
+- Perubahan pengaturan blok pada daftar berurutan kini ditampilkan di editor.
+- Anda dapat menonaktifkan pemberitahuan Ringkasan Mingguan untuk semua situs di Info Aplikasi.
 </id>
 <it-IT>
-19.4:
-- Palette di colori temi/predefinite/personalizzate
-- Selezione app di verifica e-mail
-- Nessun commento nidificato se il commento principale è eliminato
-- Modifica delle immagini dopo il nuovo orientamento a metà dell'acquisizione
-- Correzione barra di avanzamento per modifiche all'icona Il mio sito
-- Elenco Panoramica predefinita riorganizzato
-- La tastiera non coprirà il messaggio di errore di accesso
-- Il pulsante di disconnessione deve essere premuto una volta
+19.5:
+- Abbiamo fatto piccole modifiche al testo dell'errore di caricamento nei blocchi per il caricamento di elementi multimediali.
+- Le GIF animate ora sono dotate di un badge GIF.
+- Le modifiche delle impostazioni del blocco negli elenchi ordinati ora appaiono nell'editor.
+- Puoi disattivare le notifiche del Resoconto settimanale per tutti i siti nelle Info sull'app.
 </it-IT>
 <ja-JP>
-19.4:
-- テーマ / デフォルト / カスタムカラーパレット
-- 登録またはログイン時のメール認証におけるメールアプリ選択
-- 親コメントが削除された場合ネストされたコメントの表示なし
-- 新しいキャプチャ中の向き設定後の画像調整
-- 「参加サイト」アイコン編集用の進捗バーの修正
-- デフォルトの「統計概要」リストの再編成
-- キーボードによるログインエラーメッセージの覆い隠しの修正
-- 「ログアウト」ボタンを押すのは1度のみ
+19.5:
+- メディアアップロードブロックのアップロードエラーテキストを微調整しました。
+- アニメーション GIF に GIF バッジが表示されるようになりました。
+- 番号つきリストに対するブロック設定の変更がエディターに表示されるようになりました。
+- 1週間のまとめ通知をすべてのサイトに対してアプリ情報で無効にできます。
 </ja-JP>
 <ko-KR>
-19.4:
-- 테마/기본/사용자 정의 색상 팔레트
-- 가입/로그인 시 이메일을 확인할 때 이메일 앱 선택
-- 상위 댓글이 삭제되는 경우 중첩된 댓글 없음
-- 새로운 캡처 중간 방향 지정 후 이미지 조정
-- 내 사이트 아이콘 편집 진행률 표시줄 수정
-- 재구성한 기본 인사이트 목록
-- 키보드가 로그인 오류 메시지를 가리지 않음
-- 로그아웃 버튼을 한 번만 눌러야 함
+19.5:
+- 미디어 업로드 블록의 업로드 오류 텍스트를 조정했습니다.
+- 이제는 GIF 애니메이션에 GIF 배지가 표시됩니다.
+- 순서 있는 목록의 블록 설정 변경 사항이 이제는 편집기에 표시됩니다.
+- 앱 정보에서 모든 사이트에 대한 주간 총정리 알림을 비활성화하실 수 있습니다.
 </ko-KR>
 <nl-NL>
-19.4:
-- Thema-/standaard/persoonlijke kleurpaletten
-- Kies een app voor e-mailverificatie
-- Geen geneste reacties als de bovenliggende reactie is verwijderd
-- Afbeeldingen passen zich aan als ze opnieuw worden georiënteerd tijdens het vastleggen
-- Probleem met de voortgangsbalk van het bewerken van het pictogram Mijn site opgelost
-- De Inzichtenlijst gereorganiseerd
-- Het toetsenbord bedekt de foutmelding niet meer
-- De knop voor het uitloggen hoeft maar één keer te worden ingedrukt
+19.5:
+- We hebben de tekst van uploadfouten in media-uploadblokken aangepast.
+- Bewegende GIF's zijn nu voorzien van een GIF-badge.
+- Gewijzigde blokinstellingen naar geordende lijsten verschijnen nu in de editor.
+- Je kunt meldingen voor het Wekelijkse overzicht uitschakelen voor alle sites onder App-info.
 </nl-NL>
 <pt-BR>
-19.4:
-- Paletas de cores personalizadas/padrão/de tema
-- Escolha do aplicativo de e-mail ao verificar o e-mail no login
-- Nenhum comentário aninhado se o comentário principal for excluído
-- Ajuste de imagens após nova orientação no meio da captura
-- Correção da barra de progresso para edições do ícone Meu site
-- Reorganização da lista de informações padrão
-- Correção da sobreposição do teclado em mensagens de erro de login
-- Botão de logout só precisa ser pressionado uma vez
+19.5:
+- Ajustamos o texto do erro de upload nos blocos de upload de mídia.
+- GIFs animados agora vêm com um emblema de GIF.
+- Agora as alterações de configuração de bloco em listas ordenadas aparecem no editor.
+- É possível desativar as notificações do resumo semanal para todos os sites nas informações do aplicativo.
 </pt-BR>
 <ru-RU>
-19.4:
-— Палитры темы и пользовательских цветов, палитры по умолчанию
-— Возможность выбора приложения для проверки адреса эл. почты
-— В случае удаления родительского комментария вложенные комментарии удаляются
-— Добавлена подстройка изображений после изменения ориентации в процессе захвата
-— Исправлена шкала хода выполнения для правок значка "Мой сайт"
-— Переупорядочен список обзоров по умолчанию
-— Ошибки при входе не скрываются клавиатурой
+19.5:
+— Мы немного изменили текст ошибки загрузки в блоках загрузки медиафайлов.
+— Анимированные изображения GIF теперь отмечены значком GIF.
+— Изменения в упорядоченных списках в настройках блоков теперь отображаются в редакторе.
+— Вы можете отключить уведомления о сводке за неделю для всех сайтов в разделе информации о приложении.
 </ru-RU>
 <sv-SE>
-19.4:
-- Temafärgpaletter/standardfärgpaletter/anpassade färgpaletter
-- Val av app för e-postverifiering
-- Inga inbäddade kommentarer om den överordnade kommentaren är borttagen
-- Bilder justeras efter omorientering vid tagning
-- Förloppsindikatorn för redigeringar av ikonen Min webbplats har åtgärdats
-- Standardlistan för Insikter har arrangerats om
-- Tangentbordet döljer inte längre inloggningsfel
+19.5:
+- Vi har ändrat texten för uppladdningsfel i mediauppladdningsblock.
+- Animerade GIF-bilder har nu ett GIF-märke.
+- Blockinställningsändringar av sorterade listor visas nu i redigeraren.
+- Du kan inaktivera veckosammanfattningsnotiser för alla webbplatser i Appinformation.
 </sv-SE>
 <tr-TR>
-19.4:
-- Tema/varsayılan/özel renk paletleri
-- Kayıt/oturum açma sırasında e-postayı doğrularken e-posta uygulaması seçimi
-- Üst yorum silindiğinde artık iç içe yorum görünmez
-- Yakalama ortasındaki yeni yönlendirmeden sonra görüntüler ayarlanır
-- Sitem simgesi düzenlemeleri için ilerleme çubuğu düzeltmesi
-- Varsayılan Tek Bakışta listesinde düzenlemeler
-- Klavye artık oturum açma hata mesajını örtmez
-- Artık çıkış düğmesine yalnızca bir kez basmak yeterlidir
+19.5:
+- Medya yükleme bloklarındaki yükleme hatası metninde ince ayar yaptık.
+- Hareketli GIF'lerde artık bir GIF rozeti görüntüleniyor.
+- Sıralı listelerdeki blok ayarı değişiklikleri artık düzenleyicide de görünüyor.
+- Uygulama Bilgisi'nde tüm siteler için Haftalık Özet bildirimlerini devre dışı bırakabilirsiniz.
 </tr-TR>
 <zh-CN>
-19.4：
-- 主题/默认/自定义调色盘
-- 当在注册/登录步骤验证电子邮件时选择电子邮件应用
-- 如果父级评论被删除，则没有嵌套评论
-- 中期捕获转向后的图像调整
--“我的站点”图标编辑的进度条修复
-- 重新组织的默认数据分析列表
-- 键盘无法掩盖登录错误
-- 注销按钮仅需按一次
+19.5：
+- 我们调整了媒体上传区块中的上传错误文本。
+- 现在，动画 GIF 带有 GIF 徽章。
+- 现在，对有序列表的区块设置更改显示在编辑器中。
+- 您可以在“应用程序信息”中为所有站点禁用每周综述通知。 
 </zh-CN>
 <zh-TW>
-19.4：
-- 佈景主題/預設/自訂調色盤
-- 註冊/登入驗證電子郵件時的電子郵件應用程式選項
-- 如上層留言遭刪除，則無巢狀留言
-- 在新中途擷取定位後調整圖片
-- 修正「我的網站」圖示編輯的進度列
-- 重新排列預設洞察報告清單
-- 鍵盤無法覆蓋登入錯誤訊息
-- 登出按鈕只需按一次
+19.5：
+- 我們調整了媒體上傳區塊的上傳錯誤文字。
+- GIF 動畫現在會附上 GIF 徽章。
+- 對已排序清單的區塊設定變更現在會顯示於編輯器中。
+- 你可在「應用程式資訊」中停用所有網站的每週綜合整理通知。
 </zh-TW>

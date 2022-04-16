@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-02-14 03:28:36+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0
 Language: sr_RS
 -->
 <resources>
@@ -328,7 +328,6 @@ Language: sr_RS
     <string name="site_settings_posts_page">Страница чланака</string>
     <string name="site_settings_static_homepage">Статична почетна страница</string>
     <string name="site_settings_classic_blog">Класичан блог</string>
-    <string name="suggestion_invalid">%s није исправан %s</string>
     <string name="site_settings_accept_homepage">Прихвати</string>
     <string name="site_settings_failed_to_load_pages">Неуспело учитавање страница</string>
     <string name="site_settings_homepage_settings">Подешавања почетне странице</string>
@@ -944,7 +943,6 @@ Language: sr_RS
     <string name="notification_settings_followed_dialog_email_posts_daily">Дневно</string>
     <string name="notification_settings_followed_dialog_notification_posts_switch">Нови чланци</string>
     <string name="notification_settings_followed_dialog_email_posts_switch">ошаљи ми нове чланке електронском поштом</string>
-    <string name="comment_title">%s на %s</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Сви моји праћени сајтови</string>
     <string name="notification_settings_category_followed_sites">Праћени сајтови</string>
     <string name="dialog_confirm_delete_permanently_post">Да ли сте сигурни да желите да трајно обришете овај чланак?</string>
@@ -1877,6 +1875,7 @@ Language: sr_RS
     <string name="image_settings">Подешавања слике</string>
     <string name="cannot_delete_multi_media_items">Неки медији тренутно не могу бити обрисани. Пробајте поново касније.</string>
     <string name="link_enter_url_text">Текст везе (опционо)</string>
+    <string name="create_a_link">Направите везу</string>
     <string name="local_draft">Локални нацрт</string>
     <string name="post_settings">Подешавања чланка</string>
     <string name="wordpress_blog">Вордпрес блог</string>
@@ -1886,6 +1885,7 @@ Language: sr_RS
     <string name="view_in_browser">Погледајте у прегледачу веба</string>
     <string name="reader_title_applog">Белешка апликације</string>
     <string name="fatal_db_error">Дошло је до грешке током прављења базе података апликације. Покушајте поново са инсталацијом апликације.</string>
+    <string name="horizontal_alignment">Водоравно поравнање</string>
     <string name="mnu_comment_spam">Непожељни коментар</string>
     <string name="comment_status_spam">Непожељни коментар</string>
     <string name="post_not_found">Дошло је до грешке током учитавања чланка. Освежите списак чланака и пробајте поново.</string>
@@ -1967,9 +1967,13 @@ Language: sr_RS
     <string name="log_in">Пријавите се</string>
     <string name="reader">Читач</string>
     <string name="pages">Стране</string>
+    <string name="featured">Користи као препоручену слику</string>
     <string name="no_network_title">Нема доступне мреже</string>
+    <string name="caption">Натпис (опционо)</string>
+    <string name="width">Ширина</string>
     <string name="posts">Чланци</string>
     <string name="anonymous">Анониман</string>
+    <string name="featured_in_post">Укључи слику у садржај чланка</string>
     <string name="ok">У реду</string>
     <string name="done">обављено</string>
     <string name="link_enter_url">URL</string>

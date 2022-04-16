@@ -15,7 +15,6 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
@@ -31,7 +30,6 @@ class MySiteSourceManager @Inject constructor(
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
-    private val buildConfigWrapper: BuildConfigWrapper,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -47,7 +45,6 @@ class MySiteSourceManager @Inject constructor(
 
     private val showDashboardCards: Boolean
         get() = mySiteDashboardPhase2FeatureConfig.isEnabled() &&
-                !buildConfigWrapper.isJetpackApp &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
 
     private val allSupportedMySiteSources: List<MySiteSource<*>>

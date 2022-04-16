@@ -8,6 +8,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
@@ -107,6 +109,8 @@ class SiteItemsBuilderTest {
         )
     }
 
+    /* QUICK START - FOCUS POINT */
+
     @Test
     fun `passes parameter to show focus point to plan item`() {
         val showPlansFocusPoint = true
@@ -121,6 +125,37 @@ class SiteItemsBuilderTest {
         )
 
         assertThat(buildSiteItems.first()).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint))
+    }
+
+    @Test
+    fun `passes parameter to show focus point to pages item`() {
+        val showPagesFocusPoint = true
+        setupHeaders(addPagesItem = true, showPagesFocusPoint = showPagesFocusPoint)
+
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = EDIT_HOMEPAGE
+                )
+        )
+
+        assertThat(buildSiteItems).contains(PAGES_ITEM.copy(showFocusPoint = showPagesFocusPoint))
+    }
+
+    @Test
+    fun `passes parameter to show focus point to stats item`() {
+        setupHeaders()
+
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = CHECK_STATS
+                )
+        )
+
+        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = true))
     }
 
     /* INFO ITEM */
@@ -194,7 +229,8 @@ class SiteItemsBuilderTest {
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
         addScanItem: Boolean = false,
-        showPlansFocusPoint: Boolean = false
+        showPlansFocusPoint: Boolean = false,
+        showPagesFocusPoint: Boolean = false
     ) {
         if (addJetpackHeader) {
             whenever(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)).thenReturn(
@@ -243,8 +279,14 @@ class SiteItemsBuilderTest {
             )
         }
         if (addPagesItem) {
-            whenever(siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
-                    PAGES_ITEM
+            whenever(
+                    siteListItemBuilder.buildPagesItemIfAvailable(
+                            siteModel,
+                            SITE_ITEM_ACTION,
+                            showPagesFocusPoint
+                    )
+            ).thenReturn(
+                    PAGES_ITEM.copy(showFocusPoint = showPagesFocusPoint)
             )
         }
         if (addAdminItem) {

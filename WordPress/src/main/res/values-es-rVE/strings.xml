@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-03-22 13:39:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0
 Language: es_VE
 -->
 <resources>
@@ -328,7 +328,6 @@ Language: es_VE
     <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible.</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
-    <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>
     <string name="gutenberg_native_four">Cuatro</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
@@ -605,8 +604,6 @@ Language: es_VE
     <string name="threat_item_sub_header_file_signature">Amenaza encontrada %s</string>
     <string name="threat_item_sub_header_core_file">Se ha encontrado una vulnerabilidad en WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Varias vulnerabilidades</string>
-    <string name="threat_item_header_vulnerable_theme">Tema vulnerable: %s (versión %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Plugin vulnerable: %s (versión %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: patrón de código malicioso</string>
     <string name="threat_item_header_database_threat">Amenazas de base de datos %s</string>
     <string name="threat_item_header_infected_core_file">%s: archivo principal infectado</string>
@@ -616,7 +613,6 @@ Language: es_VE
     <string name="scan_in_minutes_ago">hace %s minuto(s)</string>
     <string name="scan_in_hours_ago">hace %s hora(s)</string>
     <string name="scan_this_site">este sitio</string>
-    <string name="scan_idle_last_scan_description">La última exploración de Jetpack se ejecutó %s y no encontró ningún riesgo. %s</string>
     <string name="scan_idle_threats_found_title">Puede que tu sitio web esté desprotegido</string>
     <string name="scan_idle_no_threats_found_title">No te preocupes</string>
     <string name="scan_again">Analizar de nuevo</string>
@@ -624,7 +620,6 @@ Language: es_VE
     <string name="scan_state_icon">Icono de estado del análisis</string>
     <string name="backup">Copias de seguridad</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Filtro de tipo de actividad (%s tipos seleccionados)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (mostrando %s elementos)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Filtro de tipo de actividad</string>
     <string name="activity_log_activity_type_empty_subtitle">No se han registrado actividades en el rango de fechas seleccionado.</string>
     <string name="activity_log_activity_type_empty_title">No hay actividades disponibles</string>
@@ -974,7 +969,6 @@ Language: es_VE
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="pages_set_as_posts_page">Establecer como página de entradas</string>
     <string name="pages_set_as_homepage">Establecer como página de inicio</string>
-    <string name="suggestion_invalid">%s no es una %s válida</string>
     <string name="site_settings_select_page">Seleccionar la página</string>
     <string name="site_settings_posts_page">Página de entradas</string>
     <string name="site_settings_static_homepage">Página de inicio estática</string>
@@ -1274,7 +1268,6 @@ Language: es_VE
     <string name="local_post_autosave_revision_available">Has hecho cambios no guardados en esta entrada</string>
     <string name="dialog_confirm_autosave_dont_restore_button">La versión desde esta aplicación</string>
     <string name="dialog_confirm_autosave_restore_button">La versión desde otro dispositivo</string>
-    <string name="dialog_confirm_autosave_body_second_part">Desde esta aplicación\nGuardado en %s\n\nDesde otro dispositivo\nGuardado en %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Recientemente has hecho cambios en esta entrada, pero no los has guardado. Elige una versión para cargar:\n\n</string>
     <string name="dialog_confirm_autosave_title">¿Qué versión te gustaría editar?</string>
     <string name="button_delete_permanently">Borrar permanentemente</string>
@@ -1324,7 +1317,6 @@ Language: es_VE
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
-    <string name="calendar_scheduled_post_description">«%s» programado para publicar el «%s» en tu aplicación de WordPress\n%s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» se publicará en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» se publicará en 1 hora</string>
@@ -1427,6 +1419,7 @@ Language: es_VE
     <string name="stats_management_news_card_message">Elige qué estadísticas ver, y céntrate en los datos que más te preocupen. Toca en %1$s al fondo de las estadísticas para personalizarlas.</string>
     <string name="stats_manage_your_stats">Gestiona tus estadísticas</string>
     <string name="history_fetching_revisions">Recuperando revisiones…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Fallo al insertar los medios.\nPor favor, toca para ver las opciones.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo al insertar los medios.\nPor favor, toca para volver a intentarlo.</string>
     <string name="editor_uploading_draft">Tu borrador se está subiendo</string>
     <string name="post_uploading_draft">Subiendo borrador</string>
@@ -1573,7 +1566,6 @@ Language: es_VE
     <string name="toast_conflict_updating_post">Actualizando contenido</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Descartar web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Descartar local</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Local\nGuardado el %s\n\nWeb\nGuardado el %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Este contenido tiene dos versiones en conflicto. Selecciona qué versión quieres descartar.\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolver conflicto de sincronización</string>
     <string name="stats_no_data_for_period">No hay datos en este periodo</string>
@@ -1858,7 +1850,6 @@ Language: es_VE
     <string name="notification_settings_category_followed_sites">Sitios seguidos</string>
     <string name="content_description_person_reading_device_notification">Dispositivo de lectura personal con avisos</string>
     <string name="content_description_people_looking_charts">Gente mirando gráficos y tablas</string>
-    <string name="comment_title">%s en %s</string>
     <string name="dialog_confirm_delete_permanently_post">¿Seguro que quieres eliminar definitivamente esta publicación?</string>
     <string name="notification_channel_important_title">Importante</string>
     <string name="notification_channel_general_title">General</string>
@@ -2476,12 +2467,19 @@ Language: es_VE
     <string name="error_fetch_email_followers_list">No se pudieron recuperar los correos electrónicos de los seguidores del sitio</string>
     <string name="error_fetch_followers_list">No se pudieron recuperar los seguidores del sitio</string>
     <string name="editor_failed_uploads_switch_html">Algunas subidas de medios han fallado. Puedes cambiar al modo HTML \ncuando esto pasa. ¿Borramos todas las subidas fallidas y seguimos?</string>
+    <string name="image_thumbnail">Miniatura de la imagen</string>
+    <string name="visual_editor">Editor visual</string>
     <string name="image_width">Ancho</string>
     <string name="image_link_to">Enlazado a</string>
+    <string name="image_alt_text">Texto alternativo</string>
     <string name="image_caption">Leyenda</string>
     <string name="image_settings_save_toast">Cambios guardados</string>
     <string name="image_settings_dismiss_dialog_title">¿Descartar cambios sin guardar?</string>
     <string name="stop_upload_dialog_title">¿Parar la subida?</string>
+    <string name="alert_error_adding_media">Hubo un error al insertar el archivo multimedia</string>
+    <string name="alert_action_while_uploading">Ahora mismo estás subiendo medios. Por favor, espera hasta que termine.</string>
+    <string name="alert_insert_image_html_mode">No se pueden insertar medios directamente en el modo HTML. Por favor, cambia al modo visual.</string>
+    <string name="uploading_gallery_placeholder">Subiendo galería…</string>
     <string name="tap_to_try_again">¡Toca para probar de nuevo!</string>
     <string name="invite_sent">Invitación enviada con éxito</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2964,8 +2962,10 @@ Language: es_VE
     <string name="delete_post">¿Borrar entrada?</string>
     <string name="post_settings">Ajustes de entrada</string>
     <string name="file_not_found">No ha sido posible encontrar el archivo a cargar. ¿Se ha borrado o cambiado de ubicación?</string>
+    <string name="horizontal_alignment">Alineación horizontal</string>
     <string name="local_draft">Borrador local</string>
     <string name="page_settings">Ajustes de página</string>
+    <string name="create_a_link">Crear un enlace</string>
     <string name="link_enter_url_text">Texto del enlace (opcional)</string>
     <string name="cannot_delete_multi_media_items">Algunos medios no se han podido borrar en este momento. Inténtalo de nuevo más tarde.</string>
     <string name="media_error_no_permission">No tienes permiso para ver la librería multimedia</string>
@@ -3042,6 +3042,10 @@ Language: es_VE
     <string name="username">Nombre de usuario</string>
     <string name="password">Contraseña</string>
     <string name="reader">Lector</string>
+    <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
+    <string name="featured">Usar como imagen destacada</string>
+    <string name="width">Ancho</string>
+    <string name="caption">Leyenda (opcional)</string>
     <string name="pages">Páginas</string>
     <string name="posts">Entradas</string>
     <string name="anonymous">Anónimo</string>
@@ -3049,6 +3053,7 @@ Language: es_VE
     <string name="done">hecho</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Subiendo…</string>
     <string name="tos">Términos del servicio</string>
     <string name="version">Versión</string>
     <string name="app_title">WordPress para Android</string>

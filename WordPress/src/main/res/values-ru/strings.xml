@@ -1,11 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-25 18:54:07+0000
+Translation-Revision-Date: 2022-04-07 12:54:09+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0
 Language: ru
 -->
 <resources>
+    <string name="featured_image_removed_notice">Больше не избранное изображение</string>
+    <string name="featured_image_confirmation_notice">Установить как избранное изображение</string>
+    <string name="featured_image_replace_dialog_cancel">Оставить текущее</string>
+    <string name="featured_image_replace_dialog_confirm">Заменить избранное изображение</string>
+    <string name="featured_image_replace_dialog_description">Вы уже установили избранное изображение. Хотите заменить его на новое?</string>
+    <string name="featured_image_replace_dialog_title">Заменить текущее избранное изображение?</string>
+    <string name="dialog_dismiss_try_block_editor">Закрыть</string>
+    <string name="dialog_body_try_block_editor">Мы скоро отключим классический редактор для новых записей, это не затронет имеющиеся записи и страницы. Включите редактор блоков в настройках сайта сейчас.</string>
+    <string name="dialog_title_try_block_editor">Попробуйте редактор блоков</string>
+    <string name="menu_toolbar_title">Редактировать блок %s</string>
+    <string name="long_post_dlg_saving">Сохранение</string>
+    <string name="retry_failed_upload_retry_all">Попробовать снова для всех</string>
+    <string name="retry_failed_upload_remove">Удалить загрузку</string>
+    <string name="retry_failed_upload_yes">Повторить</string>
+    <string name="retry_failed_upload_title">Не удалось загрузить файл</string>
+    <string name="stop_upload_dialog_button_no">Нет</string>
+    <string name="stop_upload_dialog_button_yes">Да</string>
+    <string name="dialog_button_cancel">Отмена</string>
+    <string name="dialog_button_ok">ОК</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_title">Вставить ссылку</string>
+    <string name="editor_title_beta">Бета-версия</string>
+    <string name="toast_content_info_editor_not_ready">Редактор ещё загружается</string>
+    <string name="toast_content_info_failed">Не удалось получить структуру содержимого</string>
+    <string name="dialog_content_info_body">Блоки: %1$d\nСлова: %2$d\nСимволы: %3$d</string>
+    <string name="dialog_content_info_title">Структура содержимого</string>
+    <string name="media_bar_description_library">Выбрать материалы из библиотеки файлов WordPress</string>
+    <string name="media_bar_description_gallery">Выбрать файл из галереи</string>
+    <string name="media_bar_description_camera">Сделать снимок или видео при помощи камеры</string>
+    <string name="pixel_suffix">%d пикс.</string>
+    <string name="stop_save_dialog_ok_button">ОК</string>
+    <string name="stop_save_dialog_message">Дождитесь сохранения всех файлов</string>
+    <string name="stop_save_dialog_title">Идёт сохранение файлов</string>
+    <string name="post_content">Содержимое</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Создайте историю своей жизни.</string>
+    <string name="blogging_prompts_onboarding_remind_me">Напомнить</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Попробовать сейчас</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Узнать подробности, а также настроить напоминания можно в любой момент в разделе \"Мой сайт\" &gt; \"Настройки\" &gt; \"Напоминания о блоге\"</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Примечание:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">Ежедневно на консоли будет отображаться новая подсказка, чтобы помочь вам настроиться на творческий лад!</string>
+    <string name="blogging_prompts_onboarding_content_top">Чтобы развивать свои писательские способности, следует выработать привычку писать и делиться написанным с читателями. Именно для этого будут полезны подсказки!</string>
+    <string name="blogging_prompts_onboarding_header_title">Представляем подсказки</string>
+    <string name="blogging_prompt_set_reminders">Установить напоминания</string>
+    <string name="blogging_reminders_prompt_subtitle">Напоминания будут включать в себя ежедневную подсказку</string>
+    <string name="blogging_reminders_prompt_title">Включить ежедневную подсказку</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Регулярные публикации привлекают внимание новых читателей. Расскажите нам, в какое время вы хотите писать, и мы отправим вам напоминание!</string>
+    <string name="set_your_blogging_prompts_title">Улучшите свои писательские способности, выработав привычку писать</string>
+    <string name="site_creation_intent_writing_poetry">Поэзия и проза</string>
+    <string name="site_creation_intent_travel">Путешествия</string>
+    <string name="site_creation_intent_technology">Технологии</string>
+    <string name="site_creation_intent_sports">Спорт</string>
+    <string name="site_creation_intent_real_estate">Недвижимость</string>
+    <string name="site_creation_intent_politics">Политика</string>
+    <string name="site_creation_intent_photography">Фотография</string>
+    <string name="site_creation_intent_personal">Personal</string>
+    <string name="site_creation_intent_people">Люди</string>
+    <string name="site_creation_intent_parenting">Воспитание детей</string>
+    <string name="site_creation_intent_news">Новости</string>
+    <string name="site_creation_intent_music">Музыка</string>
+    <string name="site_creation_intent_local_services">Местные услуги</string>
+    <string name="site_creation_intent_lifestyle">Образ жизни</string>
+    <string name="site_creation_intent_interior_design">Дизайн интерьеров</string>
+    <string name="site_creation_intent_health">Здоровье</string>
+    <string name="site_creation_intent_gaming">Индустрия игр</string>
+    <string name="site_creation_intent_food">Еда</string>
+    <string name="site_creation_intent_fitness_exercise">Специалисты в области Fitness &amp; Exercise</string>
+    <string name="site_creation_intent_film_television">Кино и телевидение</string>
+    <string name="site_creation_intent_finance">Финансы</string>
+    <string name="site_creation_intent_fashion">Мода</string>
+    <string name="site_creation_intent_diy">Сделай сам</string>
+    <string name="site_creation_intent_education">Образование</string>
+    <string name="site_creation_intent_community_nonprofit">Общество и некоммерческая деятельность</string>
+    <string name="site_creation_intent_business">Бизнес</string>
+    <string name="site_creation_intent_books">Книги</string>
+    <string name="site_creation_intent_beauty">Красота</string>
+    <string name="site_creation_intent_automotive">Автомобили</string>
+    <string name="site_creation_intent_art">Искусство</string>
+    <string name="new_site_creation_intents_input_hint">Пример. Мода, поэзия, политика</string>
+    <string name="new_site_creation_intents_title">Тема сайта</string>
+    <string name="quick_start_site_menu_tab_message_short">Нажмите &lt;b&gt;%1$s&lt;/b&gt;, чтобы продолжить.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Удалить с консоли</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Пропустить эту подсказку</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Смотреть другие подсказки</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">Ответы: %d</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Поделиться подсказкой о ведении блога</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Ответ дан</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Подсказка по ответам</string>
+    <string name="my_site_blogging_prompt_card_title">Подсказки</string>
+    <string name="my_site_all_tab_title">Все</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Напоминания и подсказки</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Это сочетание цветов может затруднить чтение. Попробуйте использовать более яркий цвет фона и/или более темный цвет текста.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Это сочетание цветов может затруднить чтение. Попробуйте использовать более темный цвет фона и/или более яркий цвет текста.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Не удалось вставить медиафайл.\nКоснитесь, чтобы получить больше информации.</string>
@@ -328,7 +418,6 @@ Language: ru
     <string name="gutenberg_native_one">Один</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
-    <string name="gutenberg_native_s_link">ссылка на %s</string>
     <string name="gutenberg_native_padding">Отступ</string>
     <string name="gutenberg_native_four">Четыре</string>
     <string name="gutenberg_native_custom_url">Произвольный URL</string>
@@ -605,8 +694,8 @@ Language: ru
     <string name="threat_item_sub_header_file_signature">Обнаружена угроза %s</string>
     <string name="threat_item_sub_header_core_file">В WordPress обнаружена уязвимость</string>
     <string name="threat_item_sub_header_misc_vulnerability">Прочие уязвимости</string>
-    <string name="threat_item_header_vulnerable_theme">Уязвимая тема: %s (версия %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Уязвимый плагин: %s (версия %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Уязвимая тема: %1$s (версия %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Уязвимый плагин: %1$s (версия %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: шаблон вредоносного кода</string>
     <string name="threat_item_header_database_threat">Угроза базы данных %s</string>
     <string name="threat_item_header_infected_core_file">%s: заражены файлы ядра</string>
@@ -616,7 +705,7 @@ Language: ru
     <string name="scan_in_minutes_ago">%s минут(ы) назад</string>
     <string name="scan_in_hours_ago">%s час(-a,-ов) назад</string>
     <string name="scan_this_site">этот сайт</string>
-    <string name="scan_idle_last_scan_description">Последняя проверка Jetpack была %s и всё выглядело замечательно, %s</string>
+    <string name="scan_idle_last_scan_description">Последняя проверка Jetpack была %1$s, и всё выглядело замечательно. %2$s</string>
     <string name="scan_idle_threats_found_title">Ваш сайт может быть под угрозой</string>
     <string name="scan_idle_no_threats_found_title">Ни о чем не волнуйтесь</string>
     <string name="scan_again">Повтор проверки</string>
@@ -624,7 +713,7 @@ Language: ru
     <string name="scan_state_icon">Значок состояния проверки</string>
     <string name="backup">Резервные копии</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Фильтр типа активности (выбрано %s типов)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (показ %s элементов)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (показ %2$s элем.)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Фильтр типа активности</string>
     <string name="activity_log_activity_type_empty_subtitle">Нет зарегистрированных действий в выбранном диапазоне дат.</string>
     <string name="activity_log_activity_type_empty_title">Пока нет активности</string>
@@ -974,7 +1063,7 @@ Language: ru
     <string name="pages_cannot_be_started">Невозможно открыть страницы в данный момент. Пожалуйста, попробуйте позже.</string>
     <string name="pages_set_as_posts_page">Выбрать в качестве страницы записей</string>
     <string name="pages_set_as_homepage">Установить в качестве главной страницы</string>
-    <string name="suggestion_invalid">%s не является действительным %s</string>
+    <string name="suggestion_invalid">%1$s не является действительным %2$s</string>
     <string name="site_settings_select_page">Выберите страницу</string>
     <string name="site_settings_posts_page">Страница записей</string>
     <string name="site_settings_static_homepage">Статическая главная страница</string>
@@ -1274,7 +1363,7 @@ Language: ru
     <string name="local_post_autosave_revision_available">Вы внесли но не сохранили изменения в эту запись</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Версия из этого приложения</string>
     <string name="dialog_confirm_autosave_restore_button">Версия с другого устройства</string>
-    <string name="dialog_confirm_autosave_body_second_part">Из приложения\nсохранение от %s\n\nС другого устройства\nсохранение от %s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Из этого приложения\nСохранено %1$s\n\nС другого устройства\nСохранено %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Вы недавно внесли изменения в эту запись, но не сохранили их. Выберите версию для загрузки:\n\n</string>
     <string name="dialog_confirm_autosave_title">Какой вариант вы хотите отредактировать?</string>
     <string name="button_delete_permanently">Удалить навсегда</string>
@@ -1324,7 +1413,7 @@ Language: ru
     <string name="share_desc">Поделиться</string>
     <string name="navigate_back_desc">Назад</string>
     <string name="navigate_forward_desc">Вперед</string>
-    <string name="calendar_scheduled_post_description">\"%s\" запланирована к публикации в \"%s\" в приложении WordPress\n%s</string>
+    <string name="calendar_scheduled_post_description">Публикация \"%1$s\" запланирована на \"%2$s\" в приложении WordPress \n %3$s</string>
     <string name="calendar_scheduled_post_title">Запланирована запись: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" будет опубликована через 10 минут</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" будет опубликована через 1 час</string>
@@ -1427,6 +1516,7 @@ Language: ru
     <string name="stats_management_news_card_message">Выберите статистику для просмотра, акцентируйте те данные, которые вам наиболее интересны. Нажмите %1$s внизу статистики для её настройки.</string>
     <string name="stats_manage_your_stats">Управление статистикой</string>
     <string name="history_fetching_revisions">Получение редакций…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Ошибка вставки медиафайла.\nНажмите для выбора вариантов.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Ошибка вставки медиафайла.\nНажмите для повтора.</string>
     <string name="editor_uploading_draft">Выполняется загрузка черновика</string>
     <string name="post_uploading_draft">Загрузка черновика</string>
@@ -1573,7 +1663,7 @@ Language: ru
     <string name="toast_conflict_updating_post">Обновление записи</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Отменить веб изменения</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Отменить локальные изменения</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Локальная\nСохранена %s\n\nВеб\nСохранена %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Локальный\nСохранено %1$s\n\nВеб-версия\nСохранено %2$s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Эта запись имеет две конфликтующие версии. Выберите версию, изменения в которой будут потеряны.\n \n\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Решить конфликт рассинхронизации</string>
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
@@ -1858,7 +1948,7 @@ Language: ru
     <string name="notification_settings_category_followed_sites">Сайты с подпиской</string>
     <string name="content_description_person_reading_device_notification">Персональные устройства чтения с уведомлениями</string>
     <string name="content_description_people_looking_charts">Люди, смотрящие на графики и диаграммы</string>
-    <string name="comment_title">%s в %s</string>
+    <string name="comment_title">%1$s %2$s</string>
     <string name="dialog_confirm_delete_permanently_post">Точно хотите навсегда удалить эту запись?</string>
     <string name="notification_channel_important_title">Важное</string>
     <string name="notification_channel_general_title">Общее</string>
@@ -2249,6 +2339,7 @@ Language: ru
     <string name="post_title">Заголовок</string>
     <string name="menu_redo">Повторить</string>
     <string name="menu_undo">Отменить</string>
+    <string name="media_insert_unimplemented">К сожалению, эта функция ещё не реализована :(</string>
     <string name="error_media_small">Медиафайл слишком мал, и его невозможно отобразить.</string>
     <string name="editor_dropped_unsupported_files">Внимание! Некоторые файлы, которые вы перетащили, не поддерживаются!</string>
     <string name="editor_dropped_title_images_not_allowed">В заголовок нельзя перетаскивать изображения.</string>
@@ -2476,12 +2567,19 @@ Language: ru
     <string name="error_fetch_email_followers_list">Не удалось получить список подписчиков по электронной почте</string>
     <string name="error_fetch_followers_list">Не удалось получить список читателей сайта</string>
     <string name="editor_failed_uploads_switch_html">Некоторые загрузки завершились с ошибкой. В этом состоянии нельзя\nпереключиться в режим HTML. Удалить неудачные загрузки и продолжить?</string>
+    <string name="image_thumbnail">Миниатюра</string>
+    <string name="visual_editor">Визуальный редактор</string>
     <string name="image_width">Ширина</string>
     <string name="image_link_to">Ссылка</string>
+    <string name="image_alt_text">Атрибут alt</string>
     <string name="image_caption">Подпись</string>
     <string name="image_settings_save_toast">Изменения сохранены</string>
     <string name="image_settings_dismiss_dialog_title">Отменить несохранённые изменения?</string>
     <string name="stop_upload_dialog_title">Остановить загрузку?</string>
+    <string name="alert_error_adding_media">При добавлении файла произошла ошибка</string>
+    <string name="alert_action_while_uploading">Сейчас идёт загрузка файла. Подождите, пока процесс завершится.</string>
+    <string name="alert_insert_image_html_mode">В режиме HTML нельзя вставлять файлы. Переключитесь обратно в визуальный режим.</string>
+    <string name="uploading_gallery_placeholder">Загрузка галереи…</string>
     <string name="tap_to_try_again">Тапните, чтобы попробовать ещё раз!</string>
     <string name="invite_sent">Приглашение успешно отправлено</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2964,8 +3062,10 @@ Language: ru
     <string name="delete_post">Удалить запись?</string>
     <string name="post_settings">Настройки записи</string>
     <string name="file_not_found">Не удалось найти файл для загрузки. Возможно он был удален или перемещен?</string>
+    <string name="horizontal_alignment">Горизонтальное выравнивание</string>
     <string name="local_draft">Локальные черновики</string>
     <string name="page_settings">Настройки страницы</string>
+    <string name="create_a_link">Создать ссылку</string>
     <string name="link_enter_url_text">Текст ссылки(необязательно)</string>
     <string name="cannot_delete_multi_media_items">Некоторые медиа-файлы не могут быть удалены сейчас. Попробуйте позже.</string>
     <string name="media_error_no_permission">У вас нет прав для просмотра медиа-библиотеки</string>
@@ -3042,6 +3142,10 @@ Language: ru
     <string name="username">Имя</string>
     <string name="password">Пароль</string>
     <string name="reader">Читать</string>
+    <string name="featured_in_post">Включить изображение в текст записи</string>
+    <string name="featured">Использовать как миниатюру</string>
+    <string name="width">Ширина</string>
+    <string name="caption">Подпись (необязательно)</string>
     <string name="pages">Страницы</string>
     <string name="posts">Записи</string>
     <string name="anonymous">Аноним</string>
@@ -3049,6 +3153,7 @@ Language: ru
     <string name="done">Готово</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Загрузка</string>
     <string name="tos">Условия сервиса</string>
     <string name="version">Версия</string>
     <string name="app_title">WordPress для Android</string>

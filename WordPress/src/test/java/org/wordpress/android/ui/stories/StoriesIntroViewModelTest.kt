@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@InternalCoroutinesApi
 class StoriesIntroViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoriesIntroViewModel
     @Mock lateinit var onDialogClosedObserver: Observer<Unit>

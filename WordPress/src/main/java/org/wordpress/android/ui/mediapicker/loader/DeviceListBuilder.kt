@@ -30,9 +30,9 @@ class DeviceListBuilder(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val site: SiteModel?,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val mediaTypes: Set<MediaType>,
+    override val mediaTypes: Set<MediaType>,
     private val pageSize: Int
-) : MediaSource {
+) : MediaSource, MediaSourceWithTypes {
     private val mimeTypes = MimeTypes()
     private val cache = mutableMapOf<MediaType, Result>()
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-18 11:42:34+0000
+Translation-Revision-Date: 2022-04-01 15:29:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0
 Language: nl
 -->
 <resources>
@@ -315,10 +315,10 @@ Language: nl
     <string name="gutenberg_native_preview_post">Voorbeeld bericht</string>
     <string name="gutenberg_native_preview_page">Voorbeeld pagina</string>
     <string name="gutenberg_native_retry">Probeer het opnieuw</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Eén</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
     <string name="gutenberg_native_text_color">Tekstkleur</string>
-    <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Vier</string>
     <string name="gutenberg_native_custom_url">Aangepaste URL</string>
@@ -595,8 +595,6 @@ Language: nl
     <string name="threat_item_sub_header_file_signature">Bedreiging gevonden %s</string>
     <string name="threat_item_sub_header_core_file">Kwetsbaarheid gevonden in WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Verschillende kwetsbaarheden</string>
-    <string name="threat_item_header_vulnerable_theme">Kwetsbaar thema: %s (versie %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Kwetsbare plugin: %s (versie %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: kwaadaardig codepatroon</string>
     <string name="threat_item_header_database_threat">Database %s bedreigingen</string>
     <string name="threat_item_header_infected_core_file">%s: geinfecteerd core bestand</string>
@@ -606,7 +604,6 @@ Language: nl
     <string name="scan_in_minutes_ago">%s minuut(en) geleden</string>
     <string name="scan_in_hours_ago">%s uur(en) geleden</string>
     <string name="scan_this_site">deze site</string>
-    <string name="scan_idle_last_scan_description">De laatste Jetpack scan liep op %s en we vonden geen risico\'s. %s</string>
     <string name="scan_idle_threats_found_title">Je site loopt mogelijk een risico</string>
     <string name="scan_idle_no_threats_found_title">Maak je nergens zorgen over</string>
     <string name="scan_again">Scan opnieuw</string>
@@ -614,7 +611,6 @@ Language: nl
     <string name="scan_state_icon">Scanstatus pictogram</string>
     <string name="backup">Back-up</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activiteittype filter (%s types geselecteerd)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (weergeven %s items)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activiteittype filter</string>
     <string name="activity_log_activity_type_empty_subtitle">Geen activiteiten waargenomen in het geselecteerde datumbereik.</string>
     <string name="activity_log_activity_type_empty_title">Geen activiteiten beschikbaar</string>
@@ -964,7 +960,6 @@ Language: nl
     <string name="pages_cannot_be_started">We kunnen momenteel geen pagina\'s openen. Probeer het later opnieuw</string>
     <string name="pages_set_as_posts_page">Instellen als berichtpagina</string>
     <string name="pages_set_as_homepage">Instellen als homepage</string>
-    <string name="suggestion_invalid">%s is geen geldige %s</string>
     <string name="site_settings_select_page">Selecteer pagina</string>
     <string name="site_settings_posts_page">Berichtenpagina</string>
     <string name="site_settings_static_homepage">Statische homepage</string>
@@ -1264,7 +1259,6 @@ Language: nl
     <string name="local_post_autosave_revision_available">Je hebt niet-opgeslagen wijzigingen in dit bericht</string>
     <string name="dialog_confirm_autosave_dont_restore_button">De versie van deze applicatie</string>
     <string name="dialog_confirm_autosave_restore_button">De versie van een ander apparaat</string>
-    <string name="dialog_confirm_autosave_body_second_part">Vanaf deze applicatie\nOpgeslagen op %s\n\nVanaf een ander apparaat\nOpgeslagen op %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Je hebt onlangs wijzigingen gedaan in dit bericht, maar hebt deze niet opgeslagen. Kies een versie om te laden:\n\n</string>
     <string name="dialog_confirm_autosave_title">Welke versie wil je bewerken?</string>
     <string name="button_delete_permanently">Permanent verwijderen</string>
@@ -1314,7 +1308,6 @@ Language: nl
     <string name="share_desc">Delen</string>
     <string name="navigate_back_desc">Terugkeren</string>
     <string name="navigate_forward_desc">Doorgaan</string>
-    <string name="calendar_scheduled_post_description">\'%s\' ingepland voor publicatie op \'%s\' in je WordPress app \n %s</string>
     <string name="calendar_scheduled_post_title">Ingepland WordPress bericht: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" wordt over 10 minuten gepubliceerd</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" wordt over 1 uur gepubliceerd</string>
@@ -1417,6 +1410,7 @@ Language: nl
     <string name="stats_management_news_card_message">Kies welke statistieken je wilt bekijken en richt je op de gegevens die voor jou het belangrijkst zijn. Tik op %1$s onderaan Inzichten om je statistieken te personaliseren.</string>
     <string name="stats_manage_your_stats">Je statistieken beheren</string>
     <string name="history_fetching_revisions">Revisies worden opgehaald…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Invoegen van media mislukt.\nTik voor opties.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Invoegen van media mislukt.\nTik om het opnieuw te proberen.</string>
     <string name="editor_uploading_draft">Je concept wordt geüpload</string>
     <string name="post_uploading_draft">Bezig met uploaden concept</string>
@@ -1563,7 +1557,6 @@ Language: nl
     <string name="toast_conflict_updating_post">Bericht updaten</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Negeer web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Negeer lokaal</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Lokaal \nOpgeslagen op%s\nWeb\nOpgeslagen op%s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Dit bericht heeft twee versies die met elkaar in conflict zijn. Selecteer de versie die je wil negeren. \n \n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Sync conflict oplossen</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
@@ -1848,7 +1841,6 @@ Language: nl
     <string name="notification_settings_category_followed_sites">Gevolgde sites</string>
     <string name="content_description_person_reading_device_notification">Persoon leesapparaat met meldingen</string>
     <string name="content_description_people_looking_charts">Mensen die naar grafieken en tabellen kijken</string>
-    <string name="comment_title">%s op %s</string>
     <string name="dialog_confirm_delete_permanently_post">Weet je zeker dat je dit bericht permanent wilt verwijderen?</string>
     <string name="notification_channel_important_title">Belangrijk</string>
     <string name="notification_channel_general_title">Algemeen</string>
@@ -2239,6 +2231,7 @@ Language: nl
     <string name="post_title">Titel</string>
     <string name="menu_redo">Opnieuw doen</string>
     <string name="menu_undo">Ongedaan maken</string>
+    <string name="media_insert_unimplemented">Excuses! Functie nog niet geïmplementeerd :(</string>
     <string name="error_media_small">Media te klein om weer te geven</string>
     <string name="editor_dropped_unsupported_files">Waarschuwing: niet alle versleepte items worden ondersteund!</string>
     <string name="editor_dropped_title_images_not_allowed">Afbeeldingen naar de titel slepen is niet toegestaan</string>
@@ -2466,12 +2459,19 @@ Language: nl
     <string name="error_fetch_email_followers_list">E-mailvolgers site ophalen mislukt</string>
     <string name="error_fetch_followers_list">Sitevolgers ophalen mislukt</string>
     <string name="editor_failed_uploads_switch_html">Enkele media konden niet worden geüpload. Je kunt niet overschakelen naar HTML.\n in deze staat. Alle mislukte uploads verwijderen en doorgaan?</string>
+    <string name="image_thumbnail">Miniatuurweergave afbeelding</string>
+    <string name="visual_editor">Visual Editor</string>
     <string name="image_width">Breedte</string>
     <string name="image_link_to">Link naar</string>
+    <string name="image_alt_text">Alt. tekst</string>
     <string name="image_caption">Bijschrift</string>
     <string name="image_settings_save_toast">Wijzigingen opgeslagen</string>
     <string name="image_settings_dismiss_dialog_title">Niet-opgeslagen wijzigingen verwijderen?</string>
     <string name="stop_upload_dialog_title">Stoppen met uploaden?</string>
+    <string name="alert_error_adding_media">Er is een fout opgetreden bij het invoeren van media</string>
+    <string name="alert_action_while_uploading">Je bent media aan het uploaden. Wacht totdat dit is afgerond.</string>
+    <string name="alert_insert_image_html_mode">Kan media niet direct invoeren in HTML. Schakel terug naar de visuele modus.</string>
+    <string name="uploading_gallery_placeholder">Galerij wordt geüpload …</string>
     <string name="tap_to_try_again">Tik om het opnieuw te proberen!</string>
     <string name="invite_sent">Uitnodiging verzonden</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2954,8 +2954,10 @@ Language: nl
     <string name="delete_post">Verwijder bericht?</string>
     <string name="post_settings">Berichtinstellingen</string>
     <string name="file_not_found">Kan het bestand voor upload niet vinden. Is het verplaatst of verwijderd?</string>
+    <string name="horizontal_alignment">Horizontale uitlijning</string>
     <string name="local_draft">Lokaal concept</string>
     <string name="page_settings">Pagina instellingen</string>
+    <string name="create_a_link">Een link maken</string>
     <string name="link_enter_url_text">Linktekst (optioneel)</string>
     <string name="cannot_delete_multi_media_items">Sommige media kan niet worden verwijderd. Probeer het later opnieuw.</string>
     <string name="media_error_no_permission">Je hebt geen rechten om de mediabibliotheek te bekijken</string>
@@ -3032,6 +3034,10 @@ Language: nl
     <string name="username">Gebruikersnaam</string>
     <string name="password">Wachtwoord</string>
     <string name="reader">Reader</string>
+    <string name="featured_in_post">Plaats afbeelding in bericht</string>
+    <string name="featured">Gebruiken als uitgelichte afbeelding</string>
+    <string name="width">Breedte</string>
+    <string name="caption">Onderschrift (optioneel)</string>
     <string name="pages">Pagina\'s</string>
     <string name="posts">Berichten</string>
     <string name="anonymous">Anoniem</string>
@@ -3039,6 +3045,7 @@ Language: nl
     <string name="done">Klaar</string>
     <string name="ok">Ok</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Uploaden …</string>
     <string name="tos">Eindgebruikersovereenkomst</string>
     <string name="version">Versie</string>
     <string name="app_title">WordPress voor Android</string>

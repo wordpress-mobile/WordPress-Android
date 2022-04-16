@@ -27,11 +27,18 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class QuickActionsCardBuilderParams(
         val siteModel: SiteModel,
-        val activeTask: QuickStartTask?,
         val onQuickActionStatsClick: () -> Unit,
         val onQuickActionPagesClick: () -> Unit,
         val onQuickActionPostsClick: () -> Unit,
         val onQuickActionMediaClick: () -> Unit
+    ) : MySiteCardAndItemBuilderParams()
+
+    data class QuickLinkRibbonBuilderParams(
+        val siteModel: SiteModel,
+        val onPagesClick: () -> Unit,
+        val onPostsClick: () -> Unit,
+        val onMediaClick: () -> Unit,
+        val onStatsClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class DomainRegistrationCardBuilderParams(
@@ -56,6 +63,7 @@ sealed class MySiteCardAndItemBuilderParams {
     data class TodaysStatsCardBuilderParams(
         val todaysStatsCard: TodaysStatsCardModel?,
         val onTodaysStatsCardClick: () -> Unit,
+        val onGetMoreViewsClick: () -> Unit,
         val onFooterLinkClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
