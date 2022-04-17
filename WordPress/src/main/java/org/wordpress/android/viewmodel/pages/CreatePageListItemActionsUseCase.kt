@@ -35,6 +35,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
             SCHEDULED -> mutableSetOf(
                     VIEW_PAGE,
                     SET_PARENT,
+                    COPY_LINK,
                     MOVE_TO_DRAFT,
                     MOVE_TO_TRASH
             ).apply {
@@ -70,7 +71,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                     }
                 }
             }
-            DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY).apply {
+            DRAFTS -> mutableSetOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK).apply {
                 if (canCancelPendingAutoUpload(uploadUiState)) {
                     add(CANCEL_AUTO_UPLOAD)
                 }
