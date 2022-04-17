@@ -192,7 +192,6 @@ class SiteRestClientTest {
         initNewSiteResponse(data)
 
         val dryRun = false
-        val username = "username"
         val siteName = "Site name"
         val siteTitle = "site title"
         val language = "CZ"
@@ -202,7 +201,6 @@ class SiteRestClientTest {
         val timeZoneId = "Europe/London"
 
         val result = restClient.newSite(
-            username,
             siteName,
             siteTitle,
             language,
@@ -250,7 +248,6 @@ class SiteRestClientTest {
         initNewSiteResponse(data)
 
         val dryRun = false
-        val username = "username"
         val siteName = null
         val siteTitle = "site title"
         val language = "CZ"
@@ -260,7 +257,6 @@ class SiteRestClientTest {
         val timeZoneId = "Europe/London"
 
         val result = restClient.newSite(
-            username,
             siteName,
             siteTitle,
             language,
@@ -284,12 +280,12 @@ class SiteRestClientTest {
                 "public" to "1",
                 "validate" to "0",
                 "find_available_url" to "1",
-                "site_creation_flow" to "with-design-picker",
                 "client_id" to appId,
                 "client_secret" to appSecret,
                 "options" to mapOf<String, Any>(
                     "site_segment" to segmentId,
                     "template" to siteDesign,
+                    "site_creation_flow" to "with-design-picker",
                     "timezone_string" to timeZoneId
                 )
             )
@@ -310,7 +306,6 @@ class SiteRestClientTest {
         initNewSiteResponse(data)
 
         val dryRun = false
-        val username = "username"
         val siteName = null
         val siteTitle = null
         val language = "CZ"
@@ -320,7 +315,6 @@ class SiteRestClientTest {
         val timeZoneId = "Europe/London"
 
         val result = restClient.newSite(
-            username,
             siteName,
             siteTitle,
             language,
@@ -338,17 +332,17 @@ class SiteRestClientTest {
             .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/new/")
         assertThat(bodyCaptor.lastValue).isEqualTo(
             mapOf(
-                "blog_name" to username,
+                "blog_name" to "",
                 "lang_id" to language,
                 "public" to "1",
                 "validate" to "0",
                 "find_available_url" to "1",
-                "site_creation_flow" to "with-design-picker",
                 "client_id" to appId,
                 "client_secret" to appSecret,
                 "options" to mapOf<String, Any>(
                     "site_segment" to segmentId,
                     "template" to siteDesign,
+                    "site_creation_flow" to "with-design-picker",
                     "timezone_string" to timeZoneId
                 )
             )
@@ -369,7 +363,6 @@ class SiteRestClientTest {
         initNewSiteResponse(data)
 
         val dryRun = true
-        val username = "username"
         val siteName = "Site name"
         val siteTitle = null
         val language = "CZ"
@@ -377,7 +370,6 @@ class SiteRestClientTest {
         val timeZoneId = "Europe/London"
 
         val result = restClient.newSite(
-            username,
             siteName,
             siteTitle,
             language,
