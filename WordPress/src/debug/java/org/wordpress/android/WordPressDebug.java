@@ -8,6 +8,9 @@ import org.wordpress.android.modules.DaggerAppComponentDebug;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
 public class WordPressDebug extends WordPressApp {
     @Override
     public void onCreate() {
