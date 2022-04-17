@@ -2,7 +2,6 @@ package org.wordpress.android.support;
 
 import android.app.Instrumentation;
 
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -23,14 +22,11 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
-import org.wordpress.android.modules.AppComponentTest;
-import org.wordpress.android.modules.DaggerAppComponentTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
 import java.io.IOException;
@@ -50,9 +46,6 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
-    protected WordPress mAppContext;
-    protected AppComponentTest mMockedAppComponent;
-
     public static final int WIREMOCK_PORT = 8080;
 
     @Rule
@@ -77,11 +70,6 @@ public class BaseTest {
 
     @Before
     public void setup() {
-        mAppContext = ApplicationProvider.getApplicationContext();
-        mMockedAppComponent = DaggerAppComponentTest.builder()
-                                                    .application(mAppContext)
-                                                    .build();
-
         Matcher<? super AccessibilityCheckResult> nonErrorLevelMatcher =
                 Matchers.allOf(matchesTypes(
                         anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
