@@ -6,6 +6,7 @@ import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -377,7 +378,7 @@ class StatsModule {
 
     @Provides
     @Singleton
-    fun provideSharedPrefs(context: Context): SharedPreferences {
+    fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 }

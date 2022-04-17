@@ -8,6 +8,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider
 import javax.inject.Singleton
@@ -19,7 +20,7 @@ abstract class CrashLoggingModule {
         @Provides
         @Singleton
         fun provideCrashLogging(
-            context: Context,
+            @ApplicationContext context: Context,
             crashLoggingDataProvider: CrashLoggingDataProvider
         ): CrashLogging {
             return CrashLoggingProvider.createInstance(context, crashLoggingDataProvider)

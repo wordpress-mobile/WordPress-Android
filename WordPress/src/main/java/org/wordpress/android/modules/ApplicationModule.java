@@ -46,6 +46,7 @@ import dagger.Provides;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.ContributesAndroidInjector;
 import dagger.hilt.InstallIn;
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
 @InstallIn(SingletonComponent.class)
@@ -119,12 +120,12 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
+    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(@ApplicationContext Context context) {
         return new ConnectionStatusLiveData.Factory(context).create();
     }
 
     @Provides
-    static TenorGifClient provideTenorGifClient(Context context) {
+    static TenorGifClient provideTenorGifClient(@ApplicationContext Context context) {
         ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
         builder.apiKey(BuildConfig.TENOR_API_KEY);
         ApiClient.init(context, builder);
