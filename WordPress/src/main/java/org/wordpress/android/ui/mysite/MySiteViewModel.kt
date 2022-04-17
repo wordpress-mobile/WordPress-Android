@@ -1220,7 +1220,8 @@ class MySiteViewModel @Inject constructor(
 
     data class TabsUiState(
         val showTabs: Boolean = false,
-        val tabUiStates: List<TabUiState>
+        val tabUiStates: List<TabUiState>,
+        val shouldUpdateViewPager: Boolean = false
     ) {
         data class TabUiState(
             val label: UiString,
