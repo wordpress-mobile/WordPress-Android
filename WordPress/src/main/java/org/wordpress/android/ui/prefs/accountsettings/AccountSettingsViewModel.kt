@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,13 +34,13 @@ class AccountSettingsViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
-
+    var fetchNewSettingsJob :Job? = null
     init {
         viewModelScope.launch {
             getSitesAccessedViaWPComRest()
         }
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            viewModelScope.launch {
+            fetchNewSettingsJob = viewModelScope.launch {
                 val onAccountChanged = accountsSettingsRepository.fetchNewSettings()
                 if (onAccountChanged.isError) {
                     handleError(onAccountChanged.error)
@@ -159,6 +160,7 @@ class AccountSettingsViewModel @Inject constructor(
         updateAccountSettings: suspend () -> OnAccountChanged
     ) {
         optimisticallyChangeUiState?.invoke()
+        fetchNewSettingsJob?.cancel()
         viewModelScope.launch {
             val onAccountChangedEvent = updateAccountSettings.invoke()
             if (onAccountChangedEvent.isError) {
