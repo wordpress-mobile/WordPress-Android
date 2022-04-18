@@ -12,7 +12,7 @@ sealed class MainActionListItem {
         CREATE_NEW_PAGE,
         CREATE_NEW_POST,
         CREATE_NEW_STORY,
-        ANSWER_BLOGGING_PROMP
+        ANSWER_BLOGGING_PROMPT
     }
 
     data class CreateAction(

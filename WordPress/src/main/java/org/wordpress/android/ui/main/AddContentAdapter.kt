@@ -44,7 +44,7 @@ class AddContentAdapter(context: Context) : Adapter<AddContentViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddContentViewHolder<*> {
         return when (viewType) {
-            ActionType.ANSWER_BLOGGING_PROMP.ordinal -> CompactBloggingPromptCardViewHolder(parent, uiHelpers)
+            ActionType.ANSWER_BLOGGING_PROMPT.ordinal -> CompactBloggingPromptCardViewHolder(parent, uiHelpers)
             else -> ActionListItemViewHolder(parent, imageManager)
         }
     }

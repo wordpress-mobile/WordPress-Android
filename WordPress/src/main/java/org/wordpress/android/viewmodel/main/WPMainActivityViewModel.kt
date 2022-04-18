@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMP
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
@@ -140,7 +140,7 @@ class WPMainActivityViewModel @Inject constructor(
         if (bloggingPromptsFeatureConfig.isEnabled()) {
             actionsList.add(
                     AnswerBloggingPromptAction(
-                            actionType = ANSWER_BLOGGING_PROMP,
+                            actionType = ANSWER_BLOGGING_PROMPT,
                             promptTitle = UiStringText("Cast the movie of your life"),
                             isAnswered = false,
                             onClickAction = ::onAnswerPromptActionClicked
@@ -205,7 +205,7 @@ class WPMainActivityViewModel @Inject constructor(
     private fun onAnswerPromptActionClicked() {
         // TODO @klymyam add analytics
         _isBottomSheetShowing.postValue(Event(false))
-        _createAction.postValue(ANSWER_BLOGGING_PROMP)
+        _createAction.postValue(ANSWER_BLOGGING_PROMPT)
     }
 
     private fun disableTooltip(site: SiteModel?) {

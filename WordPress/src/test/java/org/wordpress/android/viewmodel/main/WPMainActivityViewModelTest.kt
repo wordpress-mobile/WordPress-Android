@@ -30,7 +30,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMP
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
@@ -372,7 +372,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet does not show prompt card when FF is OFF`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         startViewModelWithDefaultParameters()
-        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMP }
+        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
         assertThat(hasBloggingPromptAction).isFalse()
     }
 
@@ -380,7 +380,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet does show prompt card when FF is ON`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
-        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMP }
+        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
         assertThat(hasBloggingPromptAction).isTrue()
     }
 
@@ -389,11 +389,11 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val action = viewModel.mainActions.value?.firstOrNull {
-            it.actionType == ANSWER_BLOGGING_PROMP
+            it.actionType == ANSWER_BLOGGING_PROMPT
         } as AnswerBloggingPromptAction?
         assertThat(action).isNotNull
         action!!.onClickAction?.invoke()
-        assertThat(viewModel.createAction.value).isEqualTo(ANSWER_BLOGGING_PROMP)
+        assertThat(viewModel.createAction.value).isEqualTo(ANSWER_BLOGGING_PROMPT)
     }
 
     @Test
