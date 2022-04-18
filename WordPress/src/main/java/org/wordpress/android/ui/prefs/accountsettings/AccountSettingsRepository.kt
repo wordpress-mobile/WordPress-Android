@@ -5,6 +5,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -28,6 +29,7 @@ class AccountSettingsRepository @Inject constructor(
         dispatcher.register(this)
     }
 
+    private var fetchNewSettingscontinuation: Continuation<OnAccountChanged>? = null
     private var continuation: Continuation<OnAccountChanged>? = null
 
     val account: AccountModel
@@ -42,7 +44,7 @@ class AccountSettingsRepository @Inject constructor(
 
     suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
         suspendCancellableCoroutine {
-            continuation = it
+            fetchNewSettingscontinuation = it
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
         }
     }
@@ -85,8 +87,13 @@ class AccountSettingsRepository @Inject constructor(
 
     @Subscribe
     fun onAccountChanged(event: OnAccountChanged) {
-        continuation?.resume(event)
-        continuation = null
+        if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            fetchNewSettingscontinuation?.resume(event)
+            fetchNewSettingscontinuation = null
+        } else if (event.causeOfChange == AccountAction.PUSHED_SETTINGS) {
+            continuation?.resume(event)
+            continuation = null
+        }
     }
 
     fun onCleanUp() {
