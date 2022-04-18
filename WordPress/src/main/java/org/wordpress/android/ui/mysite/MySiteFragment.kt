@@ -53,9 +53,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private var binding: MySiteFragmentBinding? = null
     private var siteTitle: String? = null
-    private var tabLayoutMediator: TabLayoutMediator? = null
-    private val isTabMediatorAttached: Boolean
-        get() = tabLayoutMediator?.isAttached == true
 
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -146,8 +143,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     private fun MySiteFragmentBinding.setupViewPager() {
-        val adapter = MySiteTabsAdapter(this@MySiteFragment, viewModel.orderedTabTypes)
-        viewPager.adapter = adapter
         viewPager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
@@ -266,13 +261,15 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         header.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 
-    private fun MySiteFragmentBinding.attachTabLayoutMediator(state: TabsUiState) {
-        tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager, MySiteTabConfigurationStrategy(state.tabUiStates))
-        tabLayoutMediator?.attach()
+    private fun MySiteFragmentBinding.updateViewPagerAdapterAndMediatorIfNeeded(state: TabsUiState) {
+        if (viewPager.adapter == null || state.shouldUpdateViewPager) {
+            viewPager.adapter = MySiteTabsAdapter(this@MySiteFragment, state.tabUiStates)
+            TabLayoutMediator(tabLayout, viewPager, MySiteTabConfigurationStrategy(state.tabUiStates)).attach()
+        }
     }
 
     private fun MySiteFragmentBinding.updateTabs(state: TabsUiState) {
-        if (!isTabMediatorAttached) attachTabLayoutMediator(state)
+        updateViewPagerAdapterAndMediatorIfNeeded(state)
         state.tabUiStates.forEachIndexed { index, tabUiState ->
             val tab = tabLayout.getTabAt(index) as TabLayout.Tab
             updateTab(tab, tabUiState)
@@ -347,8 +344,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-        tabLayoutMediator?.detach()
-        tabLayoutMediator = null
     }
 
     companion object {
