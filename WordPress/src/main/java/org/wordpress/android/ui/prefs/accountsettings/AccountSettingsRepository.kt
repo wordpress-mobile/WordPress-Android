@@ -30,7 +30,7 @@ class AccountSettingsRepository @Inject constructor(
     }
 
     private var fetchNewSettingscontinuation: Continuation<OnAccountChanged>? = null
-    private var continuation: Continuation<OnAccountChanged>? = null
+    private var continuationList = mutableListOf<Continuation<OnAccountChanged>>()
 
     val account: AccountModel
         get() = accountStore.account
@@ -77,7 +77,7 @@ class AccountSettingsRepository @Inject constructor(
     private suspend fun updateAccountSettings(addPayload: (PushAccountSettingsPayload) -> Unit): OnAccountChanged =
             withContext(ioDispatcher) {
                 suspendCancellableCoroutine {
-                    continuation = it
+                    continuationList.add(it)
                     val payload = PushAccountSettingsPayload()
                     payload.params = HashMap()
                     addPayload(payload)
@@ -91,8 +91,8 @@ class AccountSettingsRepository @Inject constructor(
             fetchNewSettingscontinuation?.resume(event)
             fetchNewSettingscontinuation = null
         } else if (event.causeOfChange == AccountAction.PUSHED_SETTINGS) {
-            continuation?.resume(event)
-            continuation = null
+            continuationList.get(0)?.resume(event)
+            continuationList.removeAt(0)
         }
     }
 
