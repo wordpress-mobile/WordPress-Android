@@ -34,13 +34,10 @@ class AccountSettingsViewModel @Inject constructor(
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
 
-    private val sitesAccessedViaWPComRest: List<SiteViewModel> by lazy {
-        accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
-            SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
-        }
-    }
-
     init {
+        viewModelScope.launch {
+            getSitesAccessedViaWPComRest()
+        }
         if (networkUtilsWrapper.isNetworkAvailable()) {
             viewModelScope.launch {
                 val onAccountChanged = accountsSettingsRepository.fetchNewSettings()
@@ -56,8 +53,9 @@ class AccountSettingsViewModel @Inject constructor(
     val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
 
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
-        val primarySiteViewModel = sitesAccessedViaWPComRest
-                .firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId }
+        val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
+        val primarySiteViewModel = siteViewModels
+                ?.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId }
         val account = accountsSettingsRepository.account
         return AccountSettingsUiState(
                 userNameSettingsUiState = UserNameSettingsUiState(
@@ -72,12 +70,21 @@ class AccountSettingsViewModel @Inject constructor(
                 ) { cancelPendingEmailChange() },
                 primarySiteSettingsUiState = PrimarySiteSettingsUiState(
                         primarySiteViewModel,
-                        sitesAccessedViaWPComRest
+                        siteViewModels
                 ),
                 webAddressSettingsUiState = WebAddressSettingsUiState(account.webAddress),
                 changePasswordSettingsUiState = ChangePasswordSettingsUiState(false),
                 error = null
         )
+    }
+
+    suspend fun getSitesAccessedViaWPComRest() {
+        val siteViewModels = accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
+            SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
+        }
+        _accountSettingsUiState.update {
+            it.copy(primarySiteSettingsUiState = it.primarySiteSettingsUiState?.copy(sites = siteViewModels))
+        }
     }
 
     private fun cancelPendingEmailChange() {
@@ -221,15 +228,15 @@ class AccountSettingsViewModel @Inject constructor(
 
     data class SiteViewModel(val siteName: String, val siteId: Long, val homeURLOrHostName: String)
 
-    data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>) {
+    data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>?) {
         val siteNames
-            get() = sites.map { it.siteName }.toTypedArray()
+            get() = sites?.map { it.siteName }?.toTypedArray()
 
         val siteIds
-            get() = sites.map { it.siteId.toString() }.toTypedArray()
+            get() = sites?.map { it.siteId.toString() }?.toTypedArray()
 
         val homeURLOrHostNames
-            get() = sites.map { it.siteName }.toTypedArray()
+            get() = sites?.map { it.siteName }?.toTypedArray()
     }
 
     data class WebAddressSettingsUiState(val webAddress: String)
@@ -239,7 +246,7 @@ class AccountSettingsViewModel @Inject constructor(
     data class AccountSettingsUiState(
         val userNameSettingsUiState: UserNameSettingsUiState,
         val emailSettingsUiState: EmailSettingsUiState,
-        val primarySiteSettingsUiState: PrimarySiteSettingsUiState?,
+        val primarySiteSettingsUiState: PrimarySiteSettingsUiState,
         val webAddressSettingsUiState: WebAddressSettingsUiState,
         val changePasswordSettingsUiState: ChangePasswordSettingsUiState,
         val error: String?
