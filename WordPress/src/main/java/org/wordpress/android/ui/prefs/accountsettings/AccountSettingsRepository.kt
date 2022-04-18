@@ -85,8 +85,19 @@ class AccountSettingsRepository @Inject constructor(
                 }
             }
 
+    /**
+     * Both fetch new settings and update settings, return the same response event `onAccountChanged.
+     * Only way to differentiate both the calls is `event.causeOfChange`.
+     * But causeOfChange is null when the server responds with the error. There is no other way to find
+     * AccountAction type and resume the respective continuations. So for error, we are resuming the first available
+     * continuation.
+     */
     @Subscribe
     fun onAccountChanged(event: OnAccountChanged) {
+        if (event.causeOfChange == null || event.causeOfChange.toString().isBlank()) {
+            getContinuationFromQueue()?.resume(event)
+            return
+        }
         if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
             fetchNewSettingscontinuation?.resume(event)
             fetchNewSettingscontinuation = null
@@ -94,6 +105,22 @@ class AccountSettingsRepository @Inject constructor(
             continuationList.get(0)?.resume(event)
             continuationList.removeAt(0)
         }
+    }
+
+    /**
+     * This method returns the first available continuation.
+     * First it checks for fetch new settings continuation and then it checks continuation list
+     * populated with push settings continuation.
+     */
+    private fun getContinuationFromQueue(): Continuation<OnAccountChanged>? {
+        fetchNewSettingscontinuation?.let {
+            fetchNewSettingscontinuation = null
+            return it
+        }
+        if (continuationList.isNotEmpty()) {
+            return continuationList.removeAt(0)
+        }
+        return null
     }
 
     fun onCleanUp() {
