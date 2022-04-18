@@ -459,6 +459,39 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 job.cancel()
             }
 
+    @Test
+    fun `when there are multiple sites, the user should be shown list of sites to choose primary site when requested`() =
+            test {
+                viewModel = AccountSettingsViewModel(
+                        resourceProvider,
+                        networkUtilsWrapper,
+                        TEST_DISPATCHER,
+                        accountsSettingsRepository
+                )
+
+                val mUiState = viewModel.accountSettingsUiState.value
+                mUiState.primarySiteSettingsUiState?.canShowChoosePrimarySiteDialog?.let {
+                    Assertions.assertThat(it).isEqualTo(true)
+                }
+            }
+
+    @Test
+    fun `when there are one or no sites, the user should not be shown empty dialog or dialog with one site as there is no option to choose from`() =
+            test {
+                whenever(accountsSettingsRepository.getSitesAccessedViaWPComRest()).thenReturn(listOf())
+                viewModel = AccountSettingsViewModel(
+                        resourceProvider,
+                        networkUtilsWrapper,
+                        TEST_DISPATCHER,
+                        accountsSettingsRepository
+                )
+
+                val mUiState = viewModel.accountSettingsUiState.value
+                mUiState.primarySiteSettingsUiState?.canShowChoosePrimarySiteDialog?.let {
+                    Assertions.assertThat(it).isEqualTo(false)
+                }
+            }
+
     //Web Address default
     @Test
     fun `If Web Address is available, Should show Web Address with the account information from AccountSettingsRepository`() =
