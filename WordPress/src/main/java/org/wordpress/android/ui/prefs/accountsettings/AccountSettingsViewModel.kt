@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,16 +34,13 @@ class AccountSettingsViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
-
-    private val sitesAccessedViaWPComRest: List<SiteViewModel> by lazy {
-        accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
-            SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
-        }
-    }
-
+    var fetchNewSettingsJob :Job? = null
     init {
+        viewModelScope.launch {
+            getSitesAccessedViaWPComRest()
+        }
         if (networkUtilsWrapper.isNetworkAvailable()) {
-            viewModelScope.launch {
+            fetchNewSettingsJob = viewModelScope.launch {
                 val onAccountChanged = accountsSettingsRepository.fetchNewSettings()
                 if (onAccountChanged.isError) {
                     handleError(onAccountChanged.error)
@@ -56,8 +54,9 @@ class AccountSettingsViewModel @Inject constructor(
     val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
 
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
-        val primarySiteViewModel = sitesAccessedViaWPComRest
-                .firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId }
+        val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
+        val primarySiteViewModel = siteViewModels
+                ?.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId }
         val account = accountsSettingsRepository.account
         return AccountSettingsUiState(
                 userNameSettingsUiState = UserNameSettingsUiState(
@@ -72,12 +71,21 @@ class AccountSettingsViewModel @Inject constructor(
                 ) { cancelPendingEmailChange() },
                 primarySiteSettingsUiState = PrimarySiteSettingsUiState(
                         primarySiteViewModel,
-                        sitesAccessedViaWPComRest
+                        siteViewModels
                 ),
                 webAddressSettingsUiState = WebAddressSettingsUiState(account.webAddress),
                 changePasswordSettingsUiState = ChangePasswordSettingsUiState(false),
                 error = null
         )
+    }
+
+    suspend fun getSitesAccessedViaWPComRest() {
+        val siteViewModels = accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
+            SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
+        }
+        _accountSettingsUiState.update {
+            it.copy(primarySiteSettingsUiState = it.primarySiteSettingsUiState?.copy(sites = siteViewModels))
+        }
     }
 
     private fun cancelPendingEmailChange() {
@@ -152,6 +160,7 @@ class AccountSettingsViewModel @Inject constructor(
         updateAccountSettings: suspend () -> OnAccountChanged
     ) {
         optimisticallyChangeUiState?.invoke()
+        fetchNewSettingsJob?.cancel()
         viewModelScope.launch {
             val onAccountChangedEvent = updateAccountSettings.invoke()
             if (onAccountChangedEvent.isError) {
@@ -221,15 +230,15 @@ class AccountSettingsViewModel @Inject constructor(
 
     data class SiteViewModel(val siteName: String, val siteId: Long, val homeURLOrHostName: String)
 
-    data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>) {
+    data class PrimarySiteSettingsUiState(val primarySite: SiteViewModel? = null, val sites: List<SiteViewModel>?) {
         val siteNames
-            get() = sites.map { it.siteName }.toTypedArray()
+            get() = sites?.map { it.siteName }?.toTypedArray()
 
         val siteIds
-            get() = sites.map { it.siteId.toString() }.toTypedArray()
+            get() = sites?.map { it.siteId.toString() }?.toTypedArray()
 
         val homeURLOrHostNames
-            get() = sites.map { it.siteName }.toTypedArray()
+            get() = sites?.map { it.siteName }?.toTypedArray()
     }
 
     data class WebAddressSettingsUiState(val webAddress: String)
@@ -239,7 +248,7 @@ class AccountSettingsViewModel @Inject constructor(
     data class AccountSettingsUiState(
         val userNameSettingsUiState: UserNameSettingsUiState,
         val emailSettingsUiState: EmailSettingsUiState,
-        val primarySiteSettingsUiState: PrimarySiteSettingsUiState?,
+        val primarySiteSettingsUiState: PrimarySiteSettingsUiState,
         val webAddressSettingsUiState: WebAddressSettingsUiState,
         val changePasswordSettingsUiState: ChangePasswordSettingsUiState,
         val error: String?
