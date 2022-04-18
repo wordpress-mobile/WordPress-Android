@@ -12,9 +12,11 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -35,15 +37,17 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should trigger Ready state when start is called`() = runBlocking {
+    fun `Should provide a Ready UI state when start is called`() = runBlocking {
         classToTest.start(ONBOARDING)
         val startState = viewStates[0]
         assertNotNull(startState)
         assertTrue(startState is Ready)
     }
 
+    // ONBOARDING dialog type actions
+
     @Test
-    fun `Should trigger OpenEditor action when onTryNow is called`() = runBlocking {
+    fun `Should trigger OpenEditor action when primary button is tapped`() = runBlocking {
         classToTest.start(ONBOARDING)
 
         val startState = viewStates[0]
@@ -82,5 +86,16 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         val selectedSiteLocalId = 123
         classToTest.onSiteSelected(selectedSiteLocalId)
         verify(actionObserver).onChanged(OpenRemindersIntro(selectedSiteLocalId))
+    }
+
+    // INFORMATION dialog type actions
+
+    @Test
+    fun `Should trigger DismissDialog action when primary button is tapped`() = runBlocking {
+        classToTest.start(INFORMATION)
+
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+        verify(actionObserver).onChanged(DismissDialog)
     }
 }
