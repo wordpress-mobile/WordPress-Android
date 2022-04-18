@@ -472,7 +472,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                                     }
                     )
             )
-        }.whenever(daySelectionBuilder).buildSelection(any(), any(), any(), any(),any())
+        }.whenever(daySelectionBuilder).buildSelection(any(), any(), any(), any(), any())
 
         doAnswer {
             val model = it.getArgument<BloggingRemindersUiModel>(0)

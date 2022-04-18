@@ -34,7 +34,7 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
 
     private fun onPrimaryButtonClick() {
         val action = when (dialogType) {
-            ONBOARDING -> OpenEditor   // TODO send BloggingPrompt with OpenEditor action when prompt store is ready
+            ONBOARDING -> OpenEditor // TODO send BloggingPrompt with OpenEditor action when prompt store is ready
             INFORMATION -> DismissDialog
         }
         _action.value = action

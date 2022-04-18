@@ -62,7 +62,7 @@ sealed class BloggingRemindersItem(val type: Type) {
     data class PromptSwitch(
         val isToggled: Boolean,
         val onClick: ListItemInteraction,
-        val onHelpCLick: ListItemInteraction,
+        val onHelpCLick: ListItemInteraction
     ) : BloggingRemindersItem(PROMPT_SWITCH)
 
     data class Tip(val title: UiString, val message: UiString) : BloggingRemindersItem(TIP)

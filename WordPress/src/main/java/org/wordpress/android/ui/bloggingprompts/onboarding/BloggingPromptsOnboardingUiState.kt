@@ -16,6 +16,6 @@ sealed class BloggingPromptsOnboardingUiState {
         val onPrimaryButtonClick: () -> Unit,
         @StringRes val secondaryButtonLabel: Int,
         val isSecondaryButtonVisible: Boolean,
-        val onSecondaryButtonClick: () -> Unit,
+        val onSecondaryButtonClick: () -> Unit
     ) : BloggingPromptsOnboardingUiState()
 }
