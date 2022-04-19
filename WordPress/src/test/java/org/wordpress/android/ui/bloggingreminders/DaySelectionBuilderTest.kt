@@ -323,7 +323,7 @@ class DaySelectionBuilderTest {
         )
 
         val switch = uiModel.find { it is PromptSwitch }
-        (switch as PromptSwitch).onHelpCLick.click()
+        (switch as PromptSwitch).onHelpClick.click()
 
         assertThat(bloggingPromptDialogShown).isTrue()
     }
