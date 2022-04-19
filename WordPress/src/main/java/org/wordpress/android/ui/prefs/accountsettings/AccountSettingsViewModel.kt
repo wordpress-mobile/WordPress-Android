@@ -253,4 +253,9 @@ class AccountSettingsViewModel @Inject constructor(
         val changePasswordSettingsUiState: ChangePasswordSettingsUiState,
         val error: String?
     )
+
+    override fun onCleared() {
+        accountsSettingsRepository.onCleanUp()
+        super.onCleared()
+    }
 }
