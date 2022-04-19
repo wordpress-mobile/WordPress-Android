@@ -34,7 +34,7 @@ class AccountSettingsViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
-    var fetchNewSettingsJob :Job? = null
+    var fetchNewSettingsJob: Job? = null
     init {
         viewModelScope.launch {
             getSitesAccessedViaWPComRest()
@@ -79,17 +79,22 @@ class AccountSettingsViewModel @Inject constructor(
         )
     }
 
-    suspend fun getSitesAccessedViaWPComRest() {
+    private suspend fun getSitesAccessedViaWPComRest() {
         val siteViewModels = accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
             SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
         }
-        _accountSettingsUiState.update {
-            it.copy(primarySiteSettingsUiState = it.primarySiteSettingsUiState?.copy(sites = siteViewModels))
+        _accountSettingsUiState.update { state ->
+            state.copy(
+                    primarySiteSettingsUiState = PrimarySiteSettingsUiState(
+                         siteViewModels.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId },
+                         siteViewModels
+                    )
+            )
         }
     }
 
     private fun cancelPendingEmailChange() {
-        onAccountSettingsChange {  accountsSettingsRepository.cancelPendingEmailChange() }
+        onAccountSettingsChange { accountsSettingsRepository.cancelPendingEmailChange() }
     }
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
@@ -238,7 +243,7 @@ class AccountSettingsViewModel @Inject constructor(
             get() = sites?.map { it.siteId.toString() }?.toTypedArray()
 
         val homeURLOrHostNames
-            get() = sites?.map { it.siteName }?.toTypedArray()
+            get() = sites?.map { it.homeURLOrHostName }?.toTypedArray()
     }
 
     data class WebAddressSettingsUiState(val webAddress: String)
