@@ -91,11 +91,12 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     // INFORMATION dialog type actions
 
     @Test
-    fun `Should trigger DismissDialog action when primary button is tapped`() = runBlocking {
-        classToTest.start(INFORMATION)
+    fun `Should trigger DismissDialog action when primary button is tapped and dialog type is INFORMATION`() =
+            runBlocking {
+                classToTest.start(INFORMATION)
 
-        val startState = viewStates[0]
-        (startState as Ready).onPrimaryButtonClick()
-        verify(actionObserver).onChanged(DismissDialog)
-    }
+                val startState = viewStates[0]
+                (startState as Ready).onPrimaryButtonClick()
+                verify(actionObserver).onChanged(DismissDialog)
+            }
 }
