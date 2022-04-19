@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-07 11:54:09+0000
+Translation-Revision-Date: 2022-04-14 12:08:36+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: id
 -->
 <resources>
@@ -25,7 +25,9 @@ Language: id
     <string name="stop_upload_dialog_button_yes">Ya</string>
     <string name="dialog_button_cancel">Batalkan</string>
     <string name="dialog_button_ok">Oke</string>
+    <string name="dialog_edit_hint">http(s)://</string>
     <string name="dialog_title">Sisipkan Tautan</string>
+    <string name="editor_title_beta">Beta</string>
     <string name="toast_content_info_editor_not_ready">Editor sedang memuat</string>
     <string name="toast_content_info_failed">Gagal untuk mendapatkan struktur konten</string>
     <string name="dialog_content_info_body">Blok: %1$d\nkata: %2$d\nKarakter: %3$d</string>
@@ -33,6 +35,7 @@ Language: id
     <string name="media_bar_description_library">Pilih media dari Pustaka Media WordPress</string>
     <string name="media_bar_description_gallery">Pilih media dari galeri</string>
     <string name="media_bar_description_camera">Ambil foto atau video dengan kamera</string>
+    <string name="pixel_suffix">%dpx</string>
     <string name="stop_save_dialog_ok_button">Oke</string>
     <string name="stop_save_dialog_message">Mohon tunggu sampai semua file telah tersimpan</string>
     <string name="stop_save_dialog_title">File tersimpan</string>
@@ -54,8 +57,10 @@ Language: id
     <string name="site_creation_intent_travel">perjalanan</string>
     <string name="site_creation_intent_technology">Teknologi</string>
     <string name="site_creation_intent_sports">Olahraga</string>
+    <string name="site_creation_intent_real_estate">Real Estat</string>
     <string name="site_creation_intent_politics">Politik</string>
     <string name="site_creation_intent_photography">Fotografi</string>
+    <string name="site_creation_intent_personal">Pribadi</string>
     <string name="site_creation_intent_people"> Orang</string>
     <string name="site_creation_intent_parenting">Pengasuhan</string>
     <string name="site_creation_intent_news">Berita</string>
@@ -78,7 +83,7 @@ Language: id
     <string name="site_creation_intent_beauty">Kecantikan</string>
     <string name="site_creation_intent_automotive">Otomotif</string>
     <string name="site_creation_intent_art">Seni</string>
-    <string name="new_site_creation_intents_input_hint">Contohnya. Fasion, Puisi, Politik</string>
+    <string name="new_site_creation_intents_input_hint">Contohnya: Fesyen, Puisi, Politik</string>
     <string name="new_site_creation_intents_title">Topik situs</string>
     <string name="quick_start_site_menu_tab_message_short">Ketuk untuk melanjutkan.&lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hapus dari dasbor</string>
@@ -94,7 +99,7 @@ Language: id
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih terang dan/atau warna teks yang lebih gelap.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih gelap dan/atau warna teks yang lebih terang.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Gagal menyisipkan media.\nKetuk untuk info selengkapnya.</string>
-    <string name="new_site_creation_intents_header_subtitle">Ketikkan topik Anda atau pilih dari daftar di bawah</string>
+    <string name="new_site_creation_intents_header_subtitle">Pilih topik dari daftar berikut atau ketik sendiri.</string>
     <string name="new_site_creation_intents_header_title">Apa isi situs Anda?</string>
     <string name="notification_channel_weekly_roundup_title">Ringkasan Mingguan</string>
     <string name="my_site_dashboard_tab_title">Beranda</string>
@@ -2334,6 +2339,7 @@ Language: id
     <string name="post_title">Judul</string>
     <string name="menu_redo">Ulangi</string>
     <string name="menu_undo">Urungkan</string>
+    <string name="media_insert_unimplemented">Maaf! Fitur belum diterapkan :(</string>
     <string name="error_media_small">Media terlalu kecil untuk ditampilkan</string>
     <string name="editor_dropped_unsupported_files">Peringatan: tidak semua item yang dimasukkan didukung!</string>
     <string name="editor_dropped_title_images_not_allowed">Meletakkan gambar pada Judul tidak diizinkan</string>

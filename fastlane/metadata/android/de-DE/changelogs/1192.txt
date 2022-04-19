@@ -1,5 +1,0 @@
-19.5:
-- Wir haben den Text bei Upload-Fehlern in Blöcken zum Hochladen von Medien aktualisiert.
-- Animierte GIFs haben jetzt ein GIF-Badge.
-- Änderungen an den Blockeinstellungen für sortierte Listen werden jetzt im Editor angezeigt.
-- Du kannst die Benachrichtigungen mit wöchentlichen Zusammenfassungen für alle Websites unter „App-Info“ deaktivieren.

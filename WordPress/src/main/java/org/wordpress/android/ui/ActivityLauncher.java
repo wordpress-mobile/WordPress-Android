@@ -88,8 +88,8 @@ import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -1351,6 +1351,21 @@ public class ActivityLauncher {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        if (notificationType != null) {
+            intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
+        }
+        return intent;
+    }
+
+    @NonNull
+    public static Intent createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
+            final Context context,
+            @Nullable final NotificationType notificationType
+    ) {
+        final Intent intent = new Intent(context, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_BLOGGING_PROMPTS_ONBOARDING, true);
         if (notificationType != null) {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }

@@ -4,6 +4,8 @@ import androidx.work.DelegatingWorkerFactory
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.UploadWorker
+import org.wordpress.android.workers.notification.local.LocalNotificationHandlerFactory
+import org.wordpress.android.workers.notification.local.LocalNotificationWorker
 import org.wordpress.android.workers.reminder.ReminderNotifier
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import org.wordpress.android.workers.reminder.ReminderWorker

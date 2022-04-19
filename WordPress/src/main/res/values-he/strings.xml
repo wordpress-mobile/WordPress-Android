@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-04-07 15:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: he_IL
 -->
 <resources>
@@ -82,7 +82,6 @@ Language: he_IL
     <string name="site_creation_intent_beauty">טיפוח היופי</string>
     <string name="site_creation_intent_automotive">רכב</string>
     <string name="site_creation_intent_art">אומנות</string>
-    <string name="new_site_creation_intents_input_hint">לדוגמה, אופנה, שירה ופוליטיקה</string>
     <string name="new_site_creation_intents_title">נושא האתר</string>
     <string name="quick_start_site_menu_tab_message_short">יש להקיש &lt;b&gt;%1$s&lt;/b&gt; להמשך.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
@@ -98,7 +97,6 @@ Language: he_IL
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">ייתכן ששילוב הצבעים הזה יהיה מאתגר לקריאה עבור אנשים מסוימים. אנחנו ממליצים לנסות צבע רקע בהיר יותר ו/או צבע טקסט כהה יותר.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">ייתכן ששילוב הצבעים הזה יהיה מאתגר לקריאה עבור אנשים מסוימים. אנחנו ממליצים לנסות צבע רקע כהה יותר ו/או צבע טקסט בהיר יותר.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">ההוספה של המדיה נכשלה.\nיש להקיש לפרטים נוספים.</string>
-    <string name="new_site_creation_intents_header_subtitle">יש לבחור נושא מהרשימה שלמטה או להקליד נושא משלך</string>
     <string name="new_site_creation_intents_header_title">במה עוסק האתר שלך?</string>
     <string name="notification_channel_weekly_roundup_title">סיכום שבועי</string>
     <string name="my_site_dashboard_tab_title">עמוד הבית</string>

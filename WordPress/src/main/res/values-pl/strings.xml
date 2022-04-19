@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-08 06:43:15+0000
+Translation-Revision-Date: 2022-04-11 06:12:11+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: pl
 -->
 <resources>
@@ -394,10 +394,10 @@ Language: pl
     <string name="backup_item_sqls_hint">(SQL)</string>
     <string name="backup_item_content_hint">(z wyłączeniem motywów, wtyczek, i przesłanych plików)</string>
     <string name="restore_warning_description_with_two_parameters">Czy jesteś pewien/pewna że chcesz przywrócić witrynę do stanu z %1$s o %2$s?\nWszystko co zostało zmienione od tego czasu zostanie utracone.</string>
-    <string name="gutenberg_native_uploading">Przesyłanie… </string>
     <string name="backup_item_contents">Katalog WP-content</string>
     <string name="backup_item_roots">Root WordPressa</string>
     <string name="backup_download_details_choose_items_header">Elementy zawarte w tej paczce do pobrania</string>
+    <string name="gutenberg_native_uploading">Przesyłanie…</string>
     <string name="gutenberg_native_replace_file">Zastąp plik</string>
     <string name="gutenberg_native_replace_audio">Zastąp plik dźwiękowy</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem podczas otwierania pliku dźwiękowego</string>
@@ -2042,7 +2042,7 @@ Language: pl
     <string name="uploading_subtitle_media_only_one">Pozostał 1 plik</string>
     <string name="uploading_subtitle_media_only">Pozostało %1$d z %2$d plików</string>
     <string name="uploading_subtitle_posts_only_one">Pozostał 1 wpis</string>
-    <string name="uploading_title">Przesyłanie… </string>
+    <string name="uploading_title">Przesyłanie…</string>
     <string name="media_files_uploaded_write_post">Zredaguj wpis</string>
     <string name="media_all_files_uploaded_successfully">Przesłano z sukcesem %d plików</string>
     <string name="media_files_uploaded_successfully">, przesłano %d  z sukcesem</string>
@@ -2692,7 +2692,7 @@ Language: pl
     <string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które obserwujesz. </string>
     <string name="notifications_empty_comments">Brak komentarzy</string>
     <string name="notifications_empty_unread">Jesteś na bieżąco!</string>
-    <string name="reader_short_comment_count_multi">%s Komentarzy</string>
+    <string name="reader_short_comment_count_multi">%s komentarzy</string>
     <string name="reader_short_comment_count_one">Jeden komentarz</string>
     <string name="reader_hint_comment_on_post">Dodaj komentarz do wpisu…</string>
     <string name="reader_discover_visit_blog">Odwiedź %s</string>

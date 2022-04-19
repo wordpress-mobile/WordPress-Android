@@ -119,12 +119,14 @@ android {
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
-        buildConfigField "boolean", "SITE_NAME", "false"
+        buildConfigField "boolean", "SITE_NAME", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
+        buildConfigField "boolean", "BLOGGING_PROMPTS_NOTIFICATION", "false"
         buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT", "false"
         buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD", "false"
         buildConfigField "boolean", "STATS_REVAMP_V2", "false"
+        buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -454,13 +456,17 @@ dependencies {
         }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
+        exclude group: 'com.android.support', module: 'support-annotations'
     }
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
-    implementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
-    testImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
-    debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
+
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
@@ -482,7 +488,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
-    implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
+    implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
 
     lintChecks 'org.wordpress:lint:1.1.0'
 
@@ -493,8 +499,8 @@ dependencies {
     kapt project(':libs:WordPressProcessors')
 
     // Debug
-    debugImplementation 'com.facebook.stetho:stetho:1.5.1'
-    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    debugImplementation 'com.facebook.stetho:stetho:1.6.0'
+    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.6.0'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
@@ -516,7 +522,9 @@ dependencies {
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
 
-    implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
+    implementation ("com.google.android.exoplayer:exoplayer:$exoPlayerVersion") {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 configurations.all {

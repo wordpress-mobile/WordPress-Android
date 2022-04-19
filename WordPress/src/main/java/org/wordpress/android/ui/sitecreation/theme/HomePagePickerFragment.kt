@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -88,7 +89,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setupUi() {
-        homePagePickerTitlebar.title.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
+        homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
         modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
         modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.setText(R.string.hpp_subtitle)
     }
@@ -177,13 +178,11 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setScrollListener() {
-        if (isPhoneLandscape()) return // Always visible
+        if (displayUtils.isPhoneLandscape()) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
         viewModel.onAppBarOffsetChanged(0, scrollThreshold)
     }
-
-    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
 }
