@@ -14,5 +14,6 @@ class QuickLinkRibbonItemViewHolder(
         quickLinkItem.setText(item.label)
         quickLinkItem.setIconResource(item.icon)
         quickLinkItem.setOnClickListener { item.onClick.click() }
+        quickStartFocusPoint.setVisibleOrGone(item.showFocusPoint)
     }
 }

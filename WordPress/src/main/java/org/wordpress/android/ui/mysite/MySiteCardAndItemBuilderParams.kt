@@ -38,7 +38,9 @@ sealed class MySiteCardAndItemBuilderParams {
         val onPagesClick: () -> Unit,
         val onPostsClick: () -> Unit,
         val onMediaClick: () -> Unit,
-        val onStatsClick: () -> Unit
+        val onStatsClick: () -> Unit,
+        val activeTask: QuickStartTask?,
+        val enableFocusPoints: Boolean = false
     ) : MySiteCardAndItemBuilderParams()
 
     data class DomainRegistrationCardBuilderParams(

@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -197,6 +198,7 @@ class CardsBuilderTest {
 
     private fun buildCards(
         isQuickActionEnabled: Boolean = true,
+        activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
@@ -238,7 +240,8 @@ class CardsBuilderTest {
                         onPagesClick = mock(),
                         onPostsClick = mock(),
                         onMediaClick = mock(),
-                        onStatsClick = mock()
+                        onStatsClick = mock(),
+                        activeTask = activeTask
                 ),
                 isMySiteTabsEnabled
         )
