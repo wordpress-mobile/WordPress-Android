@@ -71,11 +71,11 @@ class ViewsAndVisitorsMapper
             value.toInt()
         }
 
-        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 7) else emptyList()
-        val prevWeekCount = prevWeekData.fold(0) { acc, next -> acc + next }
+        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 8) else emptyList()
+        val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
 
-        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(7, values.size) else emptyList()
-        val thisWeekCount = thisWeekData.fold(0) { acc, next -> acc + next }
+        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(8, values.size) else emptyList()
+        val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
 
         return ValuesItem(
                 selectedItem = selectedPosition,
@@ -199,10 +199,10 @@ class ViewsAndVisitorsMapper
             value
         }
 
-        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 7) else emptyList()
+        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 8) else emptyList()
         val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
 
-        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(7, values.size) else emptyList()
+        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(8, values.size) else emptyList()
         val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
 
         val positive = thisWeekCount >= (prevWeekCount ?: 0)
@@ -210,7 +210,7 @@ class ViewsAndVisitorsMapper
         val unformattedChange = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = false)
 
         return Text(
-                resourceProvider.getString(
+                text = resourceProvider.getString(
                         R.string.stats_insights_views_and_visitors_message,
                         resourceProvider.getString(units[selectedPosition]),
                         change.toString(),

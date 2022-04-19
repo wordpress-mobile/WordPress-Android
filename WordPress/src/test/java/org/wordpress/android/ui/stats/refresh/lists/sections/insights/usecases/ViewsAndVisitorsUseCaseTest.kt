@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -35,7 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
@@ -54,7 +53,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var title: ValueItem
+    @Mock lateinit var title: ValuesItem
     @Mock lateinit var chips: Chips
     @Mock lateinit var barChartItem: BarChartItem
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -79,7 +78,6 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
                 statsSiteProvider,
                 statsDateFormatter,
                 viewsAndVisitorsMapper,
-                popupMenuHandler,
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
                 analyticsTrackerWrapper,
@@ -89,12 +87,12 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
-        whenever(viewsAndVisitorsMapper.buildTitle(any(), isNull(), any(), any(), any(), any())).thenReturn(title)
+        whenever(viewsAndVisitorsMapper.buildTitle(any(), any(), any(), any(), any())).thenReturn(title)
         whenever(viewsAndVisitorsMapper
                 .buildChart(any(), any(), any(), any(), any(), any()))
                 .thenReturn(listOf(barChartItem))
-        whenever(viewsAndVisitorsMapper.buildInformation()).thenReturn(Text(""))
-        whenever(viewsAndVisitorsMapper.buildChips(any(), any(), any())).thenReturn(chips)
+        whenever(viewsAndVisitorsMapper.buildInformation(any(), any())).thenReturn(Text(""))
+        whenever(viewsAndVisitorsMapper.buildChips(any(), any())).thenReturn(chips)
         whenever(resourceProvider.getString(string.stats_loading_card)).thenReturn("Loading")
     }
 

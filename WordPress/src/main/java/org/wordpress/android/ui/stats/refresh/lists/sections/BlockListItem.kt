@@ -123,12 +123,12 @@ sealed class BlockListItem(val type: Type) {
 
     data class ValuesItem(
         val selectedItem: Int,
-        val value1: String,
+        val value1: String? = null,
         @StringRes val unit1: Int,
-        val contentDescription1: String,
-        val value2: String,
+        val contentDescription1: String? = null,
+        val value2: String? = null,
         @StringRes val unit2: Int,
-        val contentDescription2: String
+        val contentDescription2: String? = null
     ) : BlockListItem(VALUES_ITEM)
 
     data class ListItem(
