@@ -79,12 +79,17 @@ class AccountSettingsViewModel @Inject constructor(
         )
     }
 
-    suspend fun getSitesAccessedViaWPComRest() {
+    private suspend fun getSitesAccessedViaWPComRest() {
         val siteViewModels = accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
             SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
         }
-        _accountSettingsUiState.update {
-            it.copy(primarySiteSettingsUiState = it.primarySiteSettingsUiState?.copy(sites = siteViewModels))
+        _accountSettingsUiState.update { state ->
+            state.copy(
+                    primarySiteSettingsUiState = PrimarySiteSettingsUiState(
+                            siteViewModels.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId },
+                            siteViewModels
+                    )
+            )
         }
     }
 
