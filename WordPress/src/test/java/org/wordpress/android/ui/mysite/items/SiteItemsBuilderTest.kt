@@ -178,7 +178,6 @@ class SiteItemsBuilderTest {
         assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
     }
 
-
     /* INFO ITEM */
 
     @Test
