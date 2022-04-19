@@ -31,8 +31,8 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
@@ -55,7 +55,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var title: ValuesItem
     @Mock lateinit var chips: Chips
-    @Mock lateinit var barChartItem: BarChartItem
+    @Mock lateinit var lineChartItem: LineChartItem
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
@@ -90,7 +90,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         whenever(viewsAndVisitorsMapper.buildTitle(any(), any(), any(), any(), any())).thenReturn(title)
         whenever(viewsAndVisitorsMapper
                 .buildChart(any(), any(), any(), any(), any(), any()))
-                .thenReturn(listOf(barChartItem))
+                .thenReturn(listOf(lineChartItem))
         whenever(viewsAndVisitorsMapper.buildInformation(any(), any())).thenReturn(Text(""))
         whenever(viewsAndVisitorsMapper.buildChips(any(), any())).thenReturn(chips)
         whenever(resourceProvider.getString(string.stats_loading_card)).thenReturn("Loading")
@@ -112,9 +112,9 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         Assertions.assertThat(result.type).isEqualTo(VIEWS_AND_VISITORS)
         Assertions.assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            Assertions.assertThat(this[1]).isEqualTo(title)
-            Assertions.assertThat(this[2]).isEqualTo(barChartItem)
-            Assertions.assertThat(this[4]).isEqualTo(chips)
+            Assertions.assertThat(this[2]).isEqualTo(title)
+            Assertions.assertThat(this[3]).isEqualTo(lineChartItem)
+            Assertions.assertThat(this[5]).isEqualTo(chips)
         }
         verify(statsWidgetUpdaters, times(2)).updateViewsWidget(siteId)
     }

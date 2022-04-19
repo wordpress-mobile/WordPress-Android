@@ -29,7 +29,7 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
     private val prevWeekViews: Long = 333
     private val thisWeekVisitors: Long = 145
     private val prevWeekVisitors: Long = 136
-    private val selectedItem = PeriodData(period="2022-04-19", views=21, visitors=9, likes=3, reblogs=0, comments=2, posts=0)
+    private val selectedItem = PeriodData("2022-04-19", 21, 9, 3, 0, 2, 0)
     private val viewsTitle = "Views"
     private val visitorsTitle = "Visitors"
     private val printedDate = "19. 04. 2022"
@@ -111,21 +111,21 @@ class ViewsAndVisitorsMapperTest : BaseUnitTest() {
 
     private fun buildPeriodData(): List<PeriodData> {
         return listOf(
-                PeriodData(period="2022-04-05", views=82, visitors=35, likes=4, reblogs=0, comments=0, posts=2),
-                PeriodData(period="2022-04-06", views=48, visitors=13, likes=1, reblogs=0, comments=2, posts=1),
-                PeriodData(period="2022-04-07", views=39, visitors=17, likes=1, reblogs=0, comments=2, posts=2),
-                PeriodData(period="2022-04-08", views=79, visitors=28, likes=6, reblogs=0, comments=4, posts=3),
-                PeriodData(period="2022-04-09", views=15, visitors=11, likes=1, reblogs=0, comments=0, posts=0),
-                PeriodData(period="2022-04-10", views=3, visitors=3, likes=1, reblogs=0, comments=0, posts=1),
-                PeriodData(period="2022-04-11", views=57, visitors=26, likes=7, reblogs=0, comments=1, posts=2),
-                PeriodData(period="2022-04-12", views=92, visitors=38, likes=12, reblogs=0, comments=8, posts=2),
-                PeriodData(period="2022-04-13", views=62, visitors=25, likes=5, reblogs=0, comments=4, posts=0),
-                PeriodData(period="2022-04-14", views=197, visitors=39, likes=16, reblogs=0, comments=8, posts=15),
-                PeriodData(period="2022-04-15", views=99, visitors=35, likes=21, reblogs=0, comments=23, posts=1),
-                PeriodData(period="2022-04-16", views=8, visitors=5, likes=1, reblogs=0, comments=0, posts=0),
-                PeriodData(period="2022-04-17", views=7, visitors=4, likes=0, reblogs=0, comments=0, posts=0),
-                PeriodData(period="2022-04-18", views=78, visitors=28, likes=3, reblogs=0, comments=13, posts=2),
-                PeriodData(period="2022-04-19", views=21, visitors=9, likes=3, reblogs=0, comments=2, posts=0)
+                PeriodData("2022-04-05", 82, 35, 4, 0, 0, 2),
+                PeriodData("2022-04-06", 48, 13, 1, 0, 2, 1),
+                PeriodData("2022-04-07", 39, 17, 1, 0, 2, 2),
+                PeriodData("2022-04-08", 79, 28, 6, 0, 4, 3),
+                PeriodData("2022-04-09", 15, 11, 1, 0, 0, 0),
+                PeriodData("2022-04-10", 3, 3, 1, 0, 0, 1),
+                PeriodData("2022-04-11", 57, 26, 7, 0, 1, 2),
+                PeriodData("2022-04-12", 92, 38, 12, 0, 8, 2),
+                PeriodData("2022-04-13", 62, 25, 5, 0, 4, 0),
+                PeriodData("2022-04-14", 197, 39, 16, 0, 8, 15),
+                PeriodData("2022-04-15", 99, 35, 21, 0, 23, 1),
+                PeriodData("2022-04-16", 8, 5, 1, 0, 0, 0),
+                PeriodData("2022-04-17", 7, 4, 0, 0, 0, 0),
+                PeriodData("2022-04-18", 78, 28, 3, 0, 13, 2),
+                PeriodData("2022-04-19", 21, 9, 3, 0, 2, 0)
         )
     }
 }
