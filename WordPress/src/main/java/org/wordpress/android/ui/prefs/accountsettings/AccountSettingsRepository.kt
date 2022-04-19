@@ -5,6 +5,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -28,20 +29,22 @@ class AccountSettingsRepository @Inject constructor(
         dispatcher.register(this)
     }
 
-    private var continuation: Continuation<OnAccountChanged>? = null
+    private var fetchNewSettingscontinuation: Continuation<OnAccountChanged>? = null
+    private var continuationList = mutableListOf<Continuation<OnAccountChanged>>()
 
     val account: AccountModel
         get() = accountStore.account
 
-    fun getSitesAccessedViaWPComRest(): List<SiteModel> = siteStore.sitesAccessedViaWPComRest
+    suspend fun getSitesAccessedViaWPComRest(): List<SiteModel> = withContext(ioDispatcher) {
+        siteStore.sitesAccessedViaWPComRest }
 
-    fun getSite(siteRemoteId: Long): SiteModel? {
-        return siteStore.getSiteBySiteId(siteRemoteId)
+    suspend fun getSite(siteRemoteId: Long): SiteModel? = withContext(ioDispatcher) {
+        siteStore.getSiteBySiteId(siteRemoteId)
     }
 
     suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
         suspendCancellableCoroutine {
-            continuation = it
+            fetchNewSettingscontinuation = it
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
         }
     }
@@ -74,7 +77,7 @@ class AccountSettingsRepository @Inject constructor(
     private suspend fun updateAccountSettings(addPayload: (PushAccountSettingsPayload) -> Unit): OnAccountChanged =
             withContext(ioDispatcher) {
                 suspendCancellableCoroutine {
-                    continuation = it
+                    continuationList.add(it)
                     val payload = PushAccountSettingsPayload()
                     payload.params = HashMap()
                     addPayload(payload)
@@ -82,10 +85,42 @@ class AccountSettingsRepository @Inject constructor(
                 }
             }
 
+    /**
+     * Both fetch new settings and update settings, return the same response event `onAccountChanged.
+     * Only way to differentiate both the calls is `event.causeOfChange`.
+     * But causeOfChange is null when the server responds with the error. There is no other way to find
+     * AccountAction type and resume the respective continuations. So for error, we are resuming the first available
+     * continuation.
+     */
     @Subscribe
     fun onAccountChanged(event: OnAccountChanged) {
-        continuation?.resume(event)
-        continuation = null
+        if (event.causeOfChange == null || event.causeOfChange.toString().isBlank()) {
+            getContinuationFromQueue()?.resume(event)
+            return
+        }
+        if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            fetchNewSettingscontinuation?.resume(event)
+            fetchNewSettingscontinuation = null
+        } else if (event.causeOfChange == AccountAction.PUSHED_SETTINGS) {
+            continuationList.get(0)?.resume(event)
+            continuationList.removeAt(0)
+        }
+    }
+
+    /**
+     * This method returns the first available continuation.
+     * First it checks for fetch new settings continuation and then it checks continuation list
+     * populated with push settings continuation.
+     */
+    private fun getContinuationFromQueue(): Continuation<OnAccountChanged>? {
+        fetchNewSettingscontinuation?.let {
+            fetchNewSettingscontinuation = null
+            return it
+        }
+        if (continuationList.isNotEmpty()) {
+            return continuationList.removeAt(0)
+        }
+        return null
     }
 
     fun onCleanUp() {

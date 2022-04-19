@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import android.preference.Preference.OnPreferenceClickListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
@@ -49,8 +50,7 @@ import javax.inject.Inject
 
 const val SNACKBAR_NO_OF_LINES_FOUR = 4
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
-        OnPreferenceChangeListener,
-        OnConfirmListener {
+        OnPreferenceChangeListener, OnConfirmListener, OnPreferenceClickListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
     @set:Inject lateinit var viewModel: AccountSettingsViewModel
     private lateinit var mUsernamePreference: Preference
@@ -81,6 +81,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         mChangePasswordPreference.editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
         mChangePasswordPreference.setValidationType(PASSWORD)
         mChangePasswordPreference.setDialogMessage(string.change_password_dialog_hint)
+        mUsernamePreference.onPreferenceClickListener = this
         mEmailPreference.onPreferenceChangeListener = this
         mPrimarySitePreference.onPreferenceChangeListener = this
         mWebAddressPreference.onPreferenceChangeListener = this
@@ -213,12 +214,18 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         mEmailSnackbar?.dismiss()
     }
 
-    override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        when (preference) {
-            mUsernamePreference -> showUsernameChangerFragment(
-                    newValue.toString(),
+    override fun onPreferenceClick(preference: Preference?): Boolean {
+        if (preference == mUsernamePreference) {
+            showUsernameChangerFragment(
+                    viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
                     viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName
             )
+        }
+        return true
+    }
+
+    override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
+        when (preference) {
             mEmailPreference -> viewModel.onEmailChanged(newValue.toString())
             mPrimarySitePreference -> viewModel.onPrimarySiteChanged(newValue.toString().toLong())
             mWebAddressPreference -> viewModel.onWebAddressChanged(newValue.toString())
@@ -269,8 +276,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 .setOnDismissListener(null)
                 .setContent(SettingsUsernameChangerFragment::class.java, bundle)
                 .build()
-                .show(
-                        (activity as AppCompatActivity).supportFragmentManager,
+                .show((activity as AppCompatActivity).supportFragmentManager,
                         FullScreenDialogFragment.TAG
                 )
     }
