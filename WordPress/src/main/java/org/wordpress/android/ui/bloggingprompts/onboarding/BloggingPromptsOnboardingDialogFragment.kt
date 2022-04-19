@@ -126,11 +126,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
 
             setPrimaryButtonText(readyState.primaryButtonLabel)
             togglePrimaryButtonVisibility(readyState.isPrimaryButtonVisible)
-            setPrimaryButtonListener { readyState.onPrimaryButtonClick }
+            setPrimaryButtonListener { readyState.onPrimaryButtonClick() }
 
             setSecondaryButtonText(readyState.secondaryButtonLabel)
             toggleSecondaryButtonVisibility(readyState.isSecondaryButtonVisible)
-            setSecondaryButtonListener { readyState.onSecondaryButtonClick }
+            setSecondaryButtonListener { readyState.onSecondaryButtonClick() }
 
             contentBottom.text = getString(readyState.contentBottomRes)
             contentNote.text = buildSpannedString {

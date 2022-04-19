@@ -16,8 +16,8 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
     @Suppress("MagicNumber")
     fun mapReady(
         dialogType: DialogType,
-        primaryButtonListener: () -> Unit,
-        secondaryButtonListener: () -> Unit
+        onPrimaryButtonClick: () -> Unit,
+        onSecondaryButtonClick: () -> Unit
     ): Ready {
         val dummyRespondent = BloggingPromptRespondent(
                 54279365,
@@ -61,10 +61,10 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
                 contentNoteContent = R.string.blogging_prompts_onboarding_content_note_content,
                 primaryButtonLabel = primaryButtonLabel,
                 isPrimaryButtonVisible = true,
-                onPrimaryButtonClick = primaryButtonListener,
+                onPrimaryButtonClick = onPrimaryButtonClick,
                 secondaryButtonLabel = R.string.blogging_prompts_onboarding_remind_me,
                 isSecondaryButtonVisible = dialogType == ONBOARDING,
-                onSecondaryButtonClick = secondaryButtonListener
+                onSecondaryButtonClick = onSecondaryButtonClick
         )
     }
 }
