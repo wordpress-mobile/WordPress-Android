@@ -472,6 +472,8 @@ class MySiteViewModel @Inject constructor(
                         activeTask = activeTask,
                         backupAvailable = backupAvailable,
                         scanAvailable = scanAvailable,
+                        enableStatsFocusPoint = enableSiteMenuFocusPoints(),
+                        enablePagesFocusPoint = enableSiteMenuFocusPoints(),
                         onClick = this::onItemClick
                 )
         )
@@ -504,6 +506,10 @@ class MySiteViewModel @Inject constructor(
 
     private fun enableQuickLinkRibbonFocusPoints(): Boolean {
         return defaultABExperimentTab == MySiteTabType.DASHBOARD
+    }
+
+    private fun enableSiteMenuFocusPoints(): Boolean {
+        return defaultABExperimentTab != MySiteTabType.DASHBOARD
     }
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
