@@ -96,7 +96,6 @@ class HomePagePickerFragment : Fragment() {
         modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.setText(R.string.hpp_subtitle)
         if (siteNameFeatureConfig.isEnabled()) {
             homePagePickerBottomToolbar.chooseButton.setText(R.string.hpp_choose_and_create_site)
-            homePagePickerTitlebar.skipButton.setText(R.string.hpp_skip_and_create_site)
         }
     }
 
