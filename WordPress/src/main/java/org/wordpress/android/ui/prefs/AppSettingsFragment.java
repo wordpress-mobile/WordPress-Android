@@ -92,24 +92,15 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private Preference mWhatsNew;
 
-    @Inject
-    SiteStore mSiteStore;
-    @Inject
-    AccountStore mAccountStore;
-    @Inject
-    Dispatcher mDispatcher;
-    @Inject
-    ContextProvider mContextProvider;
-    @Inject
-    FeatureAnnouncementProvider mFeatureAnnouncementProvider;
-    @Inject
-    BuildConfigWrapper mBuildConfigWrapper;
-    @Inject
-    UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
-    @Inject
-    MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
-    @Inject
-    MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
+    @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
+    @Inject Dispatcher mDispatcher;
+    @Inject ContextProvider mContextProvider;
+    @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
+    @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
+    @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
+    @Inject MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
