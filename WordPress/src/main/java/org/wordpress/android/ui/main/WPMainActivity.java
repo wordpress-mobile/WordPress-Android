@@ -403,8 +403,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         } else if (getIntent().getBooleanExtra(ARG_BLOGGING_PROMPTS_ONBOARDING, false)
                    && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            new BloggingPromptsOnboardingDialogFragment()
-                    .show(getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG);
+            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
+                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
+            );
         }
 
         if (isGooglePlayServicesAvailable(this)) {
