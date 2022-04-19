@@ -128,7 +128,7 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `passes parameter to show focus point to pages item`() {
+    fun `given pages focus point enabled, when card built, showFocusPoint should be true`() {
         val showPagesFocusPoint = true
         setupHeaders(addPagesItem = true, showPagesFocusPoint = showPagesFocusPoint)
 
@@ -145,7 +145,7 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `passes parameter to show focus point to stats item`() {
+    fun `given stats focus point enabled, when card built, showFocusPoint should be true`() {
         setupHeaders()
         val enableStatsFocusPoint = true
 
@@ -162,7 +162,7 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `given passes parameter to show focus point to stats item`() {
+    fun `given stats focus point disabled, when card built, showFocusPoint should be false `() {
         setupHeaders()
         val enableStatsFocusPoint = false
 
