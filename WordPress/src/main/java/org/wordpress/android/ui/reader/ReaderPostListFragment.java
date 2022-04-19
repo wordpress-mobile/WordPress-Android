@@ -125,6 +125,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarItem.Action;
+import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -505,18 +507,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void showSnackbar(SnackbarMessageHolder holder) {
-        Snackbar snackbar = WPSnackbar.make(
-                getSnackbarParent(),
-                mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
-                Snackbar.LENGTH_LONG
+        if (!isAdded() || getView() == null) return;
+        mSnackbarSequencer.enqueue(
+                new SnackbarItem(
+                        new Info(
+                                getSnackbarParent(),
+                                holder.getMessage(),
+                                holder.getDuration(),
+                                holder.isImportant()
+                        ),
+                        holder.getButtonTitle() != null
+                                ? new Action(holder.getButtonTitle(), view -> holder.getButtonAction().invoke()) : null
+                )
         );
-        if (holder.getButtonTitle() != null) {
-            snackbar.setAction(
-                    mUiHelpers.getTextOfUiString(requireContext(), holder.getButtonTitle()),
-                    v -> holder.getButtonAction().invoke()
-            );
-        }
-        snackbar.show();
     }
 
     private void addWebViewCachingFragment(Long blogId, Long postId) {
