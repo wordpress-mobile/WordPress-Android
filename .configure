@@ -1,7 +1,7 @@
 {
   "project_name": "WordPress-Android",
-  "branch": "wpandroid-drop-jetifier",
-  "pinned_hash": "d6d98bf9b7133aa7ae18ce8f2a41ef58bb344305",
+  "branch": "trunk",
+  "pinned_hash": "15876d597d86d75685c5c702078276d75e74f4a7",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
