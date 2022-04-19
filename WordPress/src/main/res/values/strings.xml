@@ -3436,7 +3436,7 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
-    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add blocks</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add Blocks</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
@@ -4077,6 +4077,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="initial_screen_entry_value_home" translatable="false">home</string>
     <string name="initial_screen_entry_value_menu" translatable="false">menu</string>
     <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_menu</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Add blocks</string>
     <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/initial_screen_home</item>
         <item>@string/initial_screen_menu</item>
