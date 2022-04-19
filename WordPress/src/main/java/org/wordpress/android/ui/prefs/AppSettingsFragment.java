@@ -128,7 +128,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
                         return true;
                     }
-                });
+                }
+        );
         updateAnalyticsSyncUI();
 
         mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
@@ -596,7 +597,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else {
             throw new IllegalArgumentException(
                     "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
-                            + "using support fragment manager from AppCompatActivity.");
+                    + "using support fragment manager from AppCompatActivity.");
         }
     }
 
