@@ -36,6 +36,7 @@ import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.Validatio
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.URL
 import org.wordpress.android.ui.prefs.PreferenceFragmentLifeCycleOwner
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.ChangePasswordSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.EmailSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.PrimarySiteSettingsUiState
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.UserNameSettingsUiState
@@ -46,7 +47,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
-
+const val SNACKBAR_NO_OF_LINES_FOUR = 4
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         OnPreferenceChangeListener, OnConfirmListener, OnPreferenceClickListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
@@ -67,8 +68,10 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         mUsernamePreference = findPreference(getString(string.pref_key_username))
         mEmailPreference = findPreference(getString(string.pref_key_email)) as EditTextPreferenceWithValidation
         mPrimarySitePreference = findPreference(getString(string.pref_key_primary_site)) as DetailListPreference
-        mWebAddressPreference = findPreference(getString(string.pref_key_web_address)) as EditTextPreferenceWithValidation
-        mChangePasswordPreference = findPreference(getString(string.pref_key_change_password)) as EditTextPreferenceWithValidation
+        mWebAddressPreference = findPreference(getString(string.pref_key_web_address))
+                as EditTextPreferenceWithValidation
+        mChangePasswordPreference = findPreference(getString(string.pref_key_change_password))
+                as EditTextPreferenceWithValidation
         mEmailPreference.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         mEmailPreference.setValidationType(EMAIL)
         mWebAddressPreference.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
@@ -109,9 +112,8 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun observeAccountSettingsViewState() {
-        this.lifecycleScope.launchWhenStarted{
+        this.lifecycleScope.launchWhenStarted {
             viewModel.accountSettingsUiState.collect { updateAccountSettings(it) }
-
         }
     }
 
@@ -126,28 +128,28 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         }
     }
 
-    private fun updateChangePasswordPreference(changePasswordSettingsUiState: AccountSettingsViewModel.ChangePasswordSettingsUiState) {
+    private fun updateChangePasswordPreference(changePasswordSettingsUiState: ChangePasswordSettingsUiState) {
         showChangePasswordProgressDialog(changePasswordSettingsUiState.showChangePasswordProgressDialog)
     }
 
-    private fun updateUserNamePreferenceUi( userNameSettingUiState : UserNameSettingsUiState){
+    private fun updateUserNamePreferenceUi(userNameSettingUiState: UserNameSettingsUiState) {
         mUsernamePreference.apply {
             summary = userNameSettingUiState.userName
             isEnabled = userNameSettingUiState.canUserNameBeChanged
         }
-        if(userNameSettingUiState.showUserNameConfirmedSnackBar){
+        if (userNameSettingUiState.showUserNameConfirmedSnackBar) {
             showUserNameSnackBar(userNameSettingUiState.newUserChangeConfirmedSnackBarMessageHolder)
         }
     }
 
-    private fun updateEmailPreferenceUi( emailSettingsUiState : EmailSettingsUiState){
+    private fun updateEmailPreferenceUi(emailSettingsUiState: EmailSettingsUiState) {
         mEmailPreference.apply {
             summary = emailSettingsUiState.email
             isEnabled = emailSettingsUiState.hasPendingEmailChange.not()
         }
-        if(emailSettingsUiState.hasPendingEmailChange){
+        if (emailSettingsUiState.hasPendingEmailChange) {
             showSnackBar(emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder)
-        }else{
+        } else {
             dismissSnackBar()
         }
     }
@@ -174,40 +176,52 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         AppLog.e(SETTINGS, toastMessage)
     }
 
-    private fun showUserNameSnackBar(userName: SnackbarMessageHolder){
-        WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context,userName.message),
+    private fun showUserNameSnackBar(userName: SnackbarMessageHolder) {
+        WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context, userName.message),
                 userName.duration).show()
     }
 
     private fun showSnackBar(snackBarMessage: SnackbarMessageHolder) {
         if (mEmailSnackbar == null) {
-            mEmailSnackbar = WPSnackbar.make(view!!, uiHelpers.getTextOfUiString(context,snackBarMessage.message), BaseTransientBottomBar.LENGTH_INDEFINITE)
-            snackBarMessage.buttonTitle?.let { mEmailSnackbar?.setAction( uiHelpers.getTextOfUiString( context, snackBarMessage.buttonTitle)) { snackBarMessage.buttonAction } }
+            mEmailSnackbar = WPSnackbar.make(
+                    view!!,
+                    uiHelpers.getTextOfUiString(context, snackBarMessage.message),
+                    BaseTransientBottomBar.LENGTH_INDEFINITE
+            )
+            snackBarMessage.buttonTitle?.let {
+                mEmailSnackbar?.setAction(
+                        uiHelpers.getTextOfUiString(
+                                context,
+                                snackBarMessage.buttonTitle
+                        )
+                ) { snackBarMessage.buttonAction }
+            }
             val textView = mEmailSnackbar?.view?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-            textView?.maxLines = 4
+            textView?.maxLines = SNACKBAR_NO_OF_LINES_FOUR
         }
-        mEmailSnackbar?.let{
+        mEmailSnackbar?.let {
             if (!it.isShown) {
                 mEmailSnackbar?.show()
             }
         }
-
     }
 
-    private fun dismissSnackBar(){
+    private fun dismissSnackBar() {
         mEmailSnackbar?.dismiss()
     }
 
     override fun onPreferenceClick(preference: Preference?): Boolean {
-        if(preference == mUsernamePreference){
-            showUsernameChangerFragment(viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
-                    viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName )
+        if (preference == mUsernamePreference) {
+            showUsernameChangerFragment(
+                    viewModel.accountSettingsUiState.value.userNameSettingsUiState.userName,
+                    viewModel.accountSettingsUiState.value.userNameSettingsUiState.displayName
+            )
         }
         return true
     }
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        when(preference){
+        when (preference) {
             mEmailPreference -> viewModel.onEmailChanged(newValue.toString())
             mPrimarySitePreference -> viewModel.onPrimarySiteChanged(newValue.toString().toLong())
             mWebAddressPreference -> viewModel.onWebAddressChanged(newValue.toString())
@@ -228,7 +242,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
     }
 
     private fun showChangePasswordProgressDialog(show: Boolean) {
-        if(!show){
+        if (!show) {
             mChangePasswordProgressDialog?.dismiss()
             mChangePasswordProgressDialog = null
             return
@@ -239,7 +253,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     private fun createChangePasswordDialogIfNull() {
         if (mChangePasswordProgressDialog == null) {
-            mChangePasswordProgressDialog = ProgressDialog(activity).apply{
+            mChangePasswordProgressDialog = ProgressDialog(activity).apply {
                 setCancelable(false)
                 isIndeterminate = true
                 setMessage(getString(string.change_password_dialog_message))
@@ -259,7 +273,8 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 .setContent(SettingsUsernameChangerFragment::class.java, bundle)
                 .build()
                 .show((activity as AppCompatActivity).supportFragmentManager,
-                        FullScreenDialogFragment.TAG)
+                        FullScreenDialogFragment.TAG
+                )
     }
 
     override fun onConfirm(result: Bundle?) {
