@@ -12,7 +12,7 @@ import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
+import org.wordpress.android.util.config.BloggingPromptsNotificationConfig
 import org.wordpress.android.util.extensions.hasOptedInBloggingPromptsReminders
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -25,7 +25,7 @@ class AnswerPromptReminderNotifier @Inject constructor(
     val accountStore: AccountStore,
     val reminderNotificationManager: ReminderNotificationManager,
     val analyticsTracker: BloggingRemindersAnalyticsTracker,
-    val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    val bloggingPromptsNotificationConfig: BloggingPromptsNotificationConfig
 ) {
     fun notify(siteId: Int) {
         val notificationId = REMINDER_NOTIFICATION_ID + siteId
@@ -72,10 +72,10 @@ class AnswerPromptReminderNotifier @Inject constructor(
 
     fun shouldNotify(siteId: Int): Boolean {
         val hasAccessToken = accountStore.hasAccessToken()
-        val isBloggingPromptsFeatureEnabled = bloggingPromptsFeatureConfig.isEnabled()
+        val isBloggingPromptsNotificationEnabled = bloggingPromptsNotificationConfig.isEnabled()
         val siteModel = siteStore.getSiteByLocalId(siteId)
         val hasOptedInBloggingPromptsReminders = siteModel != null && siteModel.hasOptedInBloggingPromptsReminders
-        return hasAccessToken && isBloggingPromptsFeatureEnabled && hasOptedInBloggingPromptsReminders
+        return hasAccessToken && isBloggingPromptsNotificationEnabled && hasOptedInBloggingPromptsReminders
     }
 
     companion object {
