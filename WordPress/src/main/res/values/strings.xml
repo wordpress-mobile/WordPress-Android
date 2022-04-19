@@ -4016,6 +4016,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
 
     <!-- WordPressEditor module -->
     <string name="post_content" tools:ignore="UnusedResources">Content</string>

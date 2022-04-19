@@ -26,7 +26,7 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     }
 
     fun onTryNowClick() {
-        // TODO send BloggingPrompt with OpenEditor action when prompt store is ready
+        // TODO @RenanLukas send BloggingPrompt with OpenEditor action when prompt store is ready
         _action.value = OpenEditor
     }
 

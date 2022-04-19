@@ -15,7 +15,9 @@ data class ReminderNotification(
     val autoCancel: Boolean = true,
     val colorized: Boolean = true,
     val color: Int,
-    val smallIcon: Int
+    val smallIcon: Int,
+    val firstAction: NotificationCompat.Action? = null,
+    val secondAction: NotificationCompat.Action? = null
 ) {
     fun asNotificationCompatBuilder(context: Context): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, channel)
@@ -28,5 +30,7 @@ data class ReminderNotification(
                 .setColorized(colorized)
                 .setColor(color)
                 .setSmallIcon(smallIcon)
+                .addAction(firstAction)
+                .addAction(secondAction)
     }
 }
