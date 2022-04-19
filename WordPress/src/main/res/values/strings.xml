@@ -3011,6 +3011,7 @@
     <string name="preview_type_desc">Select preview type</string>
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
 
     <string name="content_description_more">More</string>
 
@@ -3436,7 +3437,7 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
-    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add blocks</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add Blocks</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
@@ -4012,6 +4013,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_got_it">Got it</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
@@ -4079,6 +4081,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="initial_screen_entry_value_home" translatable="false">home</string>
     <string name="initial_screen_entry_value_menu" translatable="false">menu</string>
     <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_menu</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Add blocks</string>
     <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/initial_screen_home</item>
         <item>@string/initial_screen_menu</item>
