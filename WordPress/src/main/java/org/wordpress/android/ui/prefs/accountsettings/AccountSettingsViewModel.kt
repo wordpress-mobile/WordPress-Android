@@ -238,7 +238,7 @@ class AccountSettingsViewModel @Inject constructor(
             get() = sites?.map { it.siteId.toString() }?.toTypedArray()
 
         val homeURLOrHostNames
-            get() = sites?.map { it.siteName }?.toTypedArray()
+            get() = sites?.map { it.homeURLOrHostName }?.toTypedArray()
     }
 
     data class WebAddressSettingsUiState(val webAddress: String)
