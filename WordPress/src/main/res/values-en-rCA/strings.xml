@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-15 00:23:35+0000
+Translation-Revision-Date: 2022-04-13 09:11:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: en_CA
 -->
 <resources>
+    <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we’ll send you a reminder!</string>
+    <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
+    <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
+    <string name="site_creation_intent_lifestyle">Lifestyle</string>
+    <string name="site_creation_intent_interior_design">Interior Design</string>
+    <string name="site_creation_intent_health">Health</string>
+    <string name="site_creation_intent_gaming">Gaming</string>
+    <string name="site_creation_intent_food">Food</string>
+    <string name="site_creation_intent_fitness_exercise">Fitness &amp; Exercise</string>
+    <string name="site_creation_intent_film_television">Film &amp; Television</string>
+    <string name="site_creation_intent_finance">Finance</string>
+    <string name="site_creation_intent_fashion">Fashion</string>
+    <string name="site_creation_intent_diy">DIY</string>
+    <string name="site_creation_intent_education">Education</string>
+    <string name="site_creation_intent_community_nonprofit">Community &amp; Non-Profit</string>
+    <string name="site_creation_intent_automotive">Automotive</string>
+    <string name="site_creation_intent_art">Art</string>
+    <string name="new_site_creation_intents_input_hint">Eg. Fashion, Poetry, Politics</string>
+    <string name="new_site_creation_intents_title">Site topic</string>
+    <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
+    <string name="site_creation_intent_business">Business</string>
+    <string name="site_creation_intent_books">Books</string>
+    <string name="site_creation_intent_beauty">Beauty</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">%d answers</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
+    <string name="my_site_blogging_prompt_card_title">Prompts</string>
+    <string name="my_site_all_tab_title">All</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Reminders and prompts</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">This colour combination may be hard for people to read. Try using a brighter background colour and/or a darker text colour.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">This colour combination may be hard for people to read. Try using a darker background colour and/or a brighter text colour.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Failed to insert media.\nTap for more info.</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own</string>
+    <string name="new_site_creation_intents_header_title">What’s your website about?</string>
+    <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
+    <string name="my_site_dashboard_tab_title">Home</string>
+    <string name="adding_cat">Adding category</string>
     <string name="login_select_email_client">Which email app do you use?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">There was a problem communicating with the site. An HTTP error code 401 was returned.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC calls seem blocked on this site (error code 401). If attempt to login fails tap on help icon to view the FAQ.</string>

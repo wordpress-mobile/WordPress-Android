@@ -434,13 +434,13 @@ public class AppSettingsFragment extends PreferenceFragment
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
         } else if (preference == mInitialScreenPreference) {
-            String trackValue = (((String) newValue).equals(MySiteTabType.SITE_MENU.getLabel()))
-                    ? (String) newValue
-                    : MySiteTabType.DASHBOARD.getLabel();
+            String trackValue = newValue.equals(MySiteTabType.SITE_MENU.getLabel())
+                    ? MySiteTabType.SITE_MENU.getTrackingLabel()
+                    : MySiteTabType.DASHBOARD.getTrackingLabel();
             Map<String, Object> properties = new HashMap<>();
             properties.put("selected", trackValue);
             AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
-            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded((String) newValue);
+            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(trackValue);
         }
         return true;
     }

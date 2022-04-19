@@ -225,7 +225,7 @@ class SitePreviewViewModel @Inject constructor(
             SUCCESS -> {
                 val remoteSiteId = (event.payload as Pair<*, *>).first as Long
                 urlWithoutScheme = urlUtils.removeScheme(event.payload.second as String).trimEnd('/')
-                createSiteState = SiteNotInLocalDb(remoteSiteId)
+                createSiteState = SiteNotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
                 startPreLoadingWebView()
                 fetchNewlyCreatedSiteModel(remoteSiteId)
                 _onSiteCreationCompleted.asyncCall()
@@ -252,9 +252,9 @@ class SitePreviewViewModel @Inject constructor(
                 val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                     "Site successfully fetched but has not been found in the local db."
                 }
-                CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
+                CreateSiteState.SiteCreationCompleted(siteBySiteId.id, !siteTitle.isNullOrBlank())
             } else {
-                SiteNotInLocalDb(remoteSiteId)
+                SiteNotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
             }
         }
     }
@@ -434,12 +434,12 @@ class SitePreviewViewModel @Inject constructor(
          * before the request is finished.
          */
         @Parcelize
-        data class SiteNotInLocalDb(val remoteSiteId: Long) : CreateSiteState()
+        data class SiteNotInLocalDb(val remoteSiteId: Long, val isSiteTitleTaskComplete: Boolean) : CreateSiteState()
 
         /**
          * The site has been successfully created and stored into local db.
          */
         @Parcelize
-        data class SiteCreationCompleted(val localSiteId: Int) : CreateSiteState()
+        data class SiteCreationCompleted(val localSiteId: Int, val isSiteTitleTaskComplete: Boolean) : CreateSiteState()
     }
 }

@@ -1,11 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-24 17:54:07+0000
+Translation-Revision-Date: 2022-04-10 08:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: ar
 -->
 <resources>
+    <string name="featured_image_removed_notice">تمت الإزالة كصورة بارزة</string>
+    <string name="featured_image_confirmation_notice">تعيين كصورة بارزة</string>
+    <string name="featured_image_replace_dialog_cancel">الاحتفاظ بالحالي</string>
+    <string name="featured_image_replace_dialog_confirm">استبدال صورة بارزة</string>
+    <string name="featured_image_replace_dialog_description">لديك صورة بارزة معيَّنة بالفعل. هل ترغب في استبدالها بصورة جديدة؟</string>
+    <string name="featured_image_replace_dialog_title">هل تريد استبدال الصورة البارزة الحالية؟</string>
+    <string name="dialog_dismiss_try_block_editor">تجاهُل</string>
+    <string name="dialog_body_try_block_editor">سنقوم بإزالة المحرِّر التقليدي الخاص بالمقالات الجديدة قريبًا، ولكن لن يؤثر ذلك في تحرير أي من مقالاتك أو صفحاتك الحالية. احصل على السبق عن طريق تمكين محرِّر المكوِّن الآن في إعدادات الموقع.</string>
+    <string name="dialog_title_try_block_editor">تجربة محرر المكوِّنات الجديد</string>
+    <string name="menu_toolbar_title">تحرير مكوِّن %s</string>
+    <string name="long_post_dlg_saving">الحفظ</string>
+    <string name="retry_failed_upload_retry_all">محاولة الجميع مرة أخرى</string>
+    <string name="retry_failed_upload_remove">إزالة الرفع</string>
+    <string name="retry_failed_upload_yes">إعادة المحاولة</string>
+    <string name="retry_failed_upload_title">يتعذر رفع الملف</string>
+    <string name="stop_upload_dialog_button_no">لا</string>
+    <string name="stop_upload_dialog_button_yes">نعم</string>
+    <string name="dialog_button_cancel">إلغاء</string>
+    <string name="dialog_button_ok">موافق</string>
+    <string name="dialog_title">إدراج رابط</string>
+    <string name="editor_title_beta">بيتا</string>
+    <string name="toast_content_info_editor_not_ready">لا يزال يقوم المحرِّر بالتحميل</string>
+    <string name="toast_content_info_failed">فشل الحصول على بنية المحتوى</string>
+    <string name="dialog_content_info_body">المكوِّنات: ⁦%1$d⁩\nالكلمات: ⁦%2$d⁩\nالأحرف: ⁦%3$d⁩</string>
+    <string name="dialog_content_info_title">بنية المحتوى</string>
+    <string name="media_bar_description_library">انتقاء وسائط من مكتبة وسائط ووردبريس</string>
+    <string name="media_bar_description_gallery">انتقاء وسائط من معرض</string>
+    <string name="media_bar_description_camera">التقاط صورة أو مقطع فيديو باستخدام كاميرا</string>
+    <string name="pixel_suffix">%d بكسل</string>
+    <string name="stop_save_dialog_ok_button">موافق</string>
+    <string name="stop_save_dialog_message">يرجى الانتظار حتى يتم حفظ جميع الملفات</string>
+    <string name="stop_save_dialog_title">حفظ الملفات</string>
+    <string name="post_content">المحتوى</string>
+    <string name="blogging_prompts_onboarding_card_prompt">قم ببناء فيلم حياتك.</string>
+    <string name="blogging_prompts_onboarding_remind_me">ذكِّرني</string>
+    <string name="blogging_prompts_onboarding_try_it_now">تجربته الآن</string>
+    <string name="blogging_prompts_onboarding_content_note_content">يمكنك معرفة المزيد وإعداد التذكيرات في أي وقت في موقعي &gt; الإعدادات &gt; تذكيرات التدوين.</string>
+    <string name="blogging_prompts_onboarding_content_note_title">ملاحظة:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">سنظهر لك مطالبة جديدة يوميًا على لوحة التحكم الخاصة بك للمساعدة على تدفق القدرات الإبداعية!</string>
+    <string name="blogging_prompts_onboarding_content_top">تتمثَّل أفضل طريقة لتصبح كاتبًا أفضل في إنشاء عادة كتابة والمشاركة مع الآخرين — حيث تتوافر المطالبات!</string>
+    <string name="blogging_prompts_onboarding_header_title">تقديم المطالبات</string>
+    <string name="blogging_prompt_set_reminders">تعيين التذكيرات</string>
+    <string name="blogging_reminders_prompt_subtitle">سيتضمن التذكير مطالبة يومية</string>
+    <string name="blogging_reminders_prompt_title">يتضمن مطالبة يومية</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">يجذب النشر بانتظام قراء جدد. أخبرنا متى تريد الكتابة وسنرسل إليك تذكيرًا!</string>
+    <string name="set_your_blogging_prompts_title">يمكنك أن تصبح كاتبًا أفضل عن طريق إنشاء عادة</string>
+    <string name="site_creation_intent_writing_poetry">الكتابة والشعر</string>
+    <string name="site_creation_intent_travel">السفر</string>
+    <string name="site_creation_intent_technology">التكنولوجيا</string>
+    <string name="site_creation_intent_sports">الرياضة</string>
+    <string name="site_creation_intent_real_estate">عقارات</string>
+    <string name="site_creation_intent_politics">السياسة</string>
+    <string name="site_creation_intent_photography">التصوير الفوتوغرافي</string>
+    <string name="site_creation_intent_personal">شخصي</string>
+    <string name="site_creation_intent_people">الأشخاص</string>
+    <string name="site_creation_intent_parenting">الأبوة والأمومة</string>
+    <string name="site_creation_intent_news">الأخبار</string>
+    <string name="site_creation_intent_music">الموسيقى</string>
+    <string name="site_creation_intent_local_services">الخدمات المحلية</string>
+    <string name="site_creation_intent_lifestyle">نمط الحياة</string>
+    <string name="site_creation_intent_interior_design">التصميم الداخلي</string>
+    <string name="site_creation_intent_health">الصحة</string>
+    <string name="site_creation_intent_gaming">ممارسة الألعاب</string>
+    <string name="site_creation_intent_food">طعام</string>
+    <string name="site_creation_intent_fitness_exercise">اللياقة البدنية والتمرين</string>
+    <string name="site_creation_intent_film_television">الفيلم والتليفزيون</string>
+    <string name="site_creation_intent_finance">تمويل</string>
+    <string name="site_creation_intent_fashion">الموضة</string>
+    <string name="site_creation_intent_diy">افعلها بنفسك</string>
+    <string name="site_creation_intent_education">تعليم</string>
+    <string name="site_creation_intent_community_nonprofit">المجتمع وغير ربحي</string>
+    <string name="site_creation_intent_business">الأعمال</string>
+    <string name="site_creation_intent_books">الكتب</string>
+    <string name="site_creation_intent_beauty">الجمال</string>
+    <string name="site_creation_intent_automotive">السيارات</string>
+    <string name="site_creation_intent_art">الفن</string>
+    <string name="new_site_creation_intents_input_hint">على سبيل المثال، الموضة والشعر والسياسة</string>
+    <string name="new_site_creation_intents_title">موضوع الموقع</string>
+    <string name="quick_start_site_menu_tab_message_short">انقر على &lt;b&gt;%1$s&lt;/b&gt; للمتابعة.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">إزالة من لوحة التحكم</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">تخطي هذه المطالبة</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">عرض مزيد من المطالبات</string>
+    <string name="my_site_blogging_prompt_card_number_of_answers">%d من الإجابات</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">مشاركة مطالبة التدوين</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ تم الرد</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">الرد على المطالبة</string>
+    <string name="my_site_blogging_prompt_card_title">المطالبات</string>
+    <string name="my_site_all_tab_title">الكل</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">التذكيرات والمطالبات</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">فشل في إدراج وسائط.\nانقر للحصول على مزيد من المعلومات.</string>
@@ -606,6 +695,8 @@ Language: ar
     <string name="threat_item_sub_header_misc_vulnerability">ثغرات أمنية متنوعة</string>
     <string name="threat_item_header_database_threat">تهديدات قاعدة البيانات %s</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: نمط شفرة برمجية ضارة</string>
+    <string name="threat_item_header_vulnerable_theme">قالب معرَّض للتهديدات: ⁦%1$s⁩ (الإصدار ⁦%2$s⁩)</string>
+    <string name="threat_item_header_vulnerable_plugin">إضافة معرَّضة للتهديدات: ⁦%1$s⁩ (الإصدار ⁦%2$s⁩)</string>
     <string name="scan_this_site">هذا الموقع</string>
     <string name="threat_item_header_threat_found">تم العثور على تهديد</string>
     <string name="threat_item_header_infected_core_file">%s: ملف أساسي (core file) مصاب</string>
@@ -613,6 +704,7 @@ Language: ar
     <string name="scan_in_few_seconds">قبل بضع ثوانٍ</string>
     <string name="scan_in_minutes_ago">قبل %s دقيقة</string>
     <string name="scan_in_hours_ago">قبل %s ساعة</string>
+    <string name="scan_idle_last_scan_description">تم تشغيل Jetpack scan آخر مرة في ⁦%1$s⁩ ولم يتم العثور على أي مخاطر. %2$s</string>
     <string name="backup">النسخ الاحتياطي</string>
     <string name="scan_state_icon">أيقونة حالة الفحص</string>
     <string name="scan_now">الفحص الآن</string>
@@ -624,6 +716,7 @@ Language: ar
     <string name="activity_log_activity_type_empty_title">لا توجد أنشطة متاحة</string>
     <string name="activity_log_activity_type_empty_subtitle">لم تُسجّل أي أنشطة في مدى التاريخ المحدد.</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">عامل تصفية نوع النشاط</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">⁦%1$s⁩ (عرض ⁦%2$s⁩ من العناصر)</string>
     <string name="activity_log_activity_type_error_title">لا يوجد اتصال</string>
     <string name="activity_log_activity_type_filter_active_label">نوع النشاط (%s)</string>
     <string name="activity_log_date_range_filter_label_content_description">عامل تصفية نطاق التاريخ</string>
@@ -974,6 +1067,7 @@ Language: ar
     <string name="site_settings_select_page">تحديد صفحة</string>
     <string name="site_settings_classic_blog">المدونة التقليدية</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">يتعذر أن تتشابه الصفحة الرئيسية المحدَّدة مع صفحة المقالات.</string>
+    <string name="suggestion_invalid">يُعد ⁦%1$s⁩ ليس ⁦%2$s⁩ صالحًا</string>
     <string name="site_settings_accept_homepage">موافقة</string>
     <string name="site_settings_failed_update_homepage_settings">فشل تحديث إعدادات الصفحة الرئيسية، تحقَّق من اتصالك بالإنترنت</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">يتعذر حفظ إعدادات الصفحة الرئيسية قبل تحميل الصفحات</string>
@@ -1272,6 +1366,7 @@ Language: ar
     <string name="dialog_confirm_autosave_title">ما الإصدار الذي ترغب في تحريره؟</string>
     <string name="post_waiting_for_connection_draft_cancel">لن نحفظ أحدث التغييرات في مسودتك.</string>
     <string name="button_delete_permanently">حذف بشكل دائم</string>
+    <string name="dialog_confirm_autosave_body_second_part">من هذا التطبيق\nتم الحفظ بتاريخ ⁦%1$s⁩\n\nمن جهاز آخر\nتم الحفظ بتاريخ ⁦%2$s⁩\n</string>
     <string name="post_waiting_for_connection_scheduled_cancel">لن نقم بجدولة هذه التغييرات.</string>
     <string name="post_waiting_for_connection_pending_cancel">لن نرسل هذه التغييرات للمعاينة. </string>
     <string name="post_waiting_for_connection_publish_cancel"> لن ننشر هذه التغييرات.</string>
@@ -1319,6 +1414,7 @@ Language: ar
     <string name="navigate_forward_desc">التقدم للأمام</string>
     <string name="notification_post_will_be_published_in_ten_minutes">سيتم نشر \"%s\" خلال 10 دقائق</string>
     <string name="calendar_scheduled_post_title">مقالة ووردبريس مجدولة: \"%s\"</string>
+    <string name="calendar_scheduled_post_description">تمت جدولة \"⁦%1$s⁩\" للنشر في \"⁦%2$s⁩\" في تطبيق ووردبريس الخاص بك\n %3$s</string>
     <string name="notification_scheduled_post">مقالة مجدولة</string>
     <string name="notification_scheduled_post_one_hour_reminder">مقالة مجدولة: تذكير ساعة واحدة</string>
     <string name="notification_scheduled_post_ten_minute_reminder">مقالة مجدولة: تذكير 10 دقائق</string>
@@ -1568,6 +1664,7 @@ Language: ar
     <string name="dialog_confirm_load_remote_post_discard_local">تجاهل محلي</string>
     <string name="dialog_confirm_load_remote_post_body">تحتوي هذه المقالة على إصدارين متعارضين. حدّد الإصدار الذي ترغب في تجاهله.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">حل تعارض المزامنة</string>
+    <string name="dialog_confirm_load_remote_post_body_2">محلي\nتم الحفظ بتاريخ ⁦%1$s⁩\n\nالويب\nتم الحفظ بتاريخ ⁦%2$s⁩\n</string>
     <string name="stats_no_data_for_period">لا توجد بيانات لهذه الفترة</string>
     <string name="preference_strip_image_location">إزالة موقع من الوسائط</string>
     <string name="stats_cannot_be_started">يتعذر علينا فتح الإحصاءات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
@@ -1851,6 +1948,7 @@ Language: ar
     <string name="content_description_people_looking_charts">الأشخاص الذين ينظرون إلى الرسومات والمخططات</string>
     <string name="dialog_confirm_delete_permanently_post">هل ترغب بالتأكيد في حذف هذه المقالة بشكل دائم؟</string>
     <string name="notification_settings_category_followed_sites">مواقع تمّت متابعتها</string>
+    <string name="comment_title">⁦%1$s⁩ في ⁦%2$s⁩</string>
     <string name="notification_channel_important_title">مهم</string>
     <string name="notification_channel_general_title">عام</string>
     <string name="photo_picker_use_photo">استخدام هذه الصورة</string>

@@ -1363,13 +1363,16 @@ public class AppPrefs {
         // This supports the MySiteDefaultTab AB Experiment.
         // AppSettings are undeletable across logouts and keys are all lower case.
         // This method will be removed when the experiment has completed and thus
-        // the settings will be maintained only from the AppSettings view
-        setString(UndeletablePrefKey.wp_pref_initial_screen, variant);
+        // the settings will be maintained only from the AppSettings view{
+        String initialScreen = variant.equals(MySiteTabType.SITE_MENU.getTrackingLabel())
+                ? MySiteTabType.SITE_MENU.getLabel() : MySiteTabType.DASHBOARD.getLabel();
+        setString(UndeletablePrefKey.wp_pref_initial_screen, initialScreen);
     }
 
     public static String getMySiteInitialScreen() {
         return getString(
                 UndeletablePrefKey.wp_pref_initial_screen,
-                MySiteTabType.SITE_MENU.getLabel());
+                MySiteTabType.SITE_MENU.getLabel()
+        );
     }
 }
