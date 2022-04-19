@@ -483,6 +483,7 @@
     <ID>TooManyFunctions:WPWebViewViewModel.kt$WPWebViewViewModel : ViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:ZendeskHelper.kt$ZendeskHelper</ID>
     <ID>TooManyFunctions:AccountSettingsRepository.kt$AccountSettingsRepository</ID>
+    <ID>TooManyFunctions:AccountSettingsViewModel.kt$AccountSettingsViewModel : ScopedViewModel</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val activityViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val headerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:HomePagePickerViewModel.kt$const val defaultTemplateSlug = "default"</ID>

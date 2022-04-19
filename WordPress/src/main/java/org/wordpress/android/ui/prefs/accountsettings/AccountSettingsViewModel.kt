@@ -34,7 +34,7 @@ class AccountSettingsViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private var accountsSettingsRepository: AccountSettingsRepository
 ) : ScopedViewModel(mainDispatcher) {
-    var fetchNewSettingsJob :Job? = null
+    var fetchNewSettingsJob: Job? = null
     init {
         viewModelScope.launch {
             getSitesAccessedViaWPComRest()
@@ -86,15 +86,15 @@ class AccountSettingsViewModel @Inject constructor(
         _accountSettingsUiState.update { state ->
             state.copy(
                     primarySiteSettingsUiState = PrimarySiteSettingsUiState(
-                            siteViewModels.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId },
-                            siteViewModels
+                         siteViewModels.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId },
+                         siteViewModels
                     )
             )
         }
     }
 
     private fun cancelPendingEmailChange() {
-        onAccountSettingsChange {  accountsSettingsRepository.cancelPendingEmailChange() }
+        onAccountSettingsChange { accountsSettingsRepository.cancelPendingEmailChange() }
     }
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
