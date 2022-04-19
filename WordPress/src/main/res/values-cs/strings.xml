@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-30 19:42:29+0000
+Translation-Revision-Date: 2022-04-11 20:12:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0
 Language: cs_CZ
 -->
 <resources>
@@ -327,7 +327,6 @@ Language: cs_CZ
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
-    <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_text_color">Barva textu</string>
     <string name="gutenberg_native_padding">Odsazení</string>
     <string name="gutenberg_native_four">Čtyři</string>
@@ -591,8 +590,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -601,15 +600,14 @@ Language: cs_CZ
     <string name="threat_fix_current_not_fixable_header">Řešení hrozby</string>
     <string name="threat_item_header_database_threat">%s hrozby databáze</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: vzor škodlivého kódu</string>
-    <string name="threat_item_header_vulnerable_plugin">Zranitelný plugin: %s (verze %s)</string>
-    <string name="threat_item_header_vulnerable_theme">Zranitelné šablona: %s (verze %s)</string>
     <string name="threat_item_sub_header_misc_vulnerability">Různé zranitelnosti</string>
     <string name="threat_item_sub_header_core_file">Zranitelnost nalezená ve WordPressu</string>
     <string name="threat_item_sub_header_file_signature">Threat found %s</string>
     <string name="threat_item_sub_header_vulnerable_plugin">V pluginu byla nalezena chyba zabezpečení</string>
     <string name="threat_item_sub_header_vulnerable_theme">V šabloně byla nalezena chyba zabezpečení</string>
     <string name="threat_details">Podrobnosti o hrozbě</string>
-    <string name="scan_idle_last_scan_description">Poslední skenování Jetpack proběhlo %s a všechno vypadalo skvěle. %s</string>
+    <string name="threat_item_header_vulnerable_plugin">Zranitelný plugin:  %1$s (verze  %2$s)</string>
+    <string name="threat_item_header_vulnerable_theme">Zranitelné šablona:  %1$s (verze  %2$s)</string>
     <string name="scan_this_site">tento web</string>
     <string name="scan_in_hours_ago">před %s hodinami</string>
     <string name="scan_in_minutes_ago">před %s minutami</string>
@@ -617,6 +615,7 @@ Language: cs_CZ
     <string name="threats_fix_all">Opravit vše</string>
     <string name="threat_item_header_threat_found">Hrozba nalezena</string>
     <string name="threat_item_header_infected_core_file">%s: infikovaný soubor v jádru</string>
+    <string name="scan_idle_last_scan_description">Poslední skenování Jetpack proběhlo %1$s a všechno vypadalo skvěle. %2$s</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Filtr typu aktivity (%s vybrané typy)</string>
     <string name="backup">Záloha</string>
     <string name="scan_state_icon">Ikona stavu skenování</string>
@@ -628,7 +627,7 @@ Language: cs_CZ
     <string name="activity_log_activity_type_empty_title">Nejsou k dispozici žádné aktivity</string>
     <string name="activity_log_activity_type_empty_subtitle">Ve vybraném časovém období nebyly zaznamenány žádné aktivity.</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Filtr typu aktivity</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (zobrazeno %s položek)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (zobrazeno %2$s položek)</string>
     <string name="activity_log_date_range_filter_label_content_description">Filtr časového období</string>
     <string name="activity_log_activity_type_filter_active_label">Typ aktivity (%s)</string>
     <string name="activity_log_activity_type_error_title">Žádné spojení </string>
@@ -979,7 +978,7 @@ Language: cs_CZ
     <string name="pages_set_as_homepage">Nastavit jako domovskou stránku</string>
     <string name="pages_set_as_posts_page">Nastavit jako stránku příspěvků</string>
     <string name="pages_cannot_be_started">V tuto chvíli nemůžeme otevřít stránky. Prosím zkuste to znovu později</string>
-    <string name="suggestion_invalid">%s není platný %s</string>
+    <string name="suggestion_invalid">%1$s není platný %2$s</string>
     <string name="site_settings_accept_homepage">Příjmout</string>
     <string name="site_settings_homepage_settings">Nastavení domovské stránky</string>
     <string name="site_settings_homepage_settings_description">Vyberte si z domovské stránky, která zobrazuje vaše nejnovější příspěvky (klasický blog), nebo pevné / statické stránky.</string>
@@ -1276,9 +1275,9 @@ Language: cs_CZ
     <string name="button_delete_permanently">Trvale odstranit</string>
     <string name="dialog_confirm_autosave_title">Kterou verzi chcete upravit?</string>
     <string name="dialog_confirm_autosave_body_first_part">V tomto příspěvku jste nedávno provedli změny, ale neuložili jste je. Vyberte verzi, kterou chcete načíst:\n\n</string>
-    <string name="dialog_confirm_autosave_body_second_part">Z této aplikace\nUloženo na %s\n\nZ jiného zařízení\nUloženo na %s\n</string>
     <string name="dialog_confirm_autosave_restore_button">Verze z jiného zařízení</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Verze z této aplikace</string>
+    <string name="dialog_confirm_autosave_body_second_part">Z této aplikace\nUloženo na %1$s\n\nZ jiného zařízení\nUloženo na %2$s\n</string>
     <string name="post_waiting_for_connection_private">Až bude zařízení zpět online, zveřejníme váš soukromý příspěvek.</string>
     <string name="post_waiting_for_connection_draft">Váš koncept uložíme, až bude zařízení zpět online.</string>
     <string name="post_waiting_for_connection_publish_cancel">Tyto změny nebudeme publikovat.</string>
@@ -1326,7 +1325,7 @@ Language: cs_CZ
     <string name="navigate_forward_desc">Jít vpřed</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" bude publikován za 10 minut</string>
     <string name="calendar_scheduled_post_title">Naplánovaný příspěvek WordPress: \"%s\"</string>
-    <string name="calendar_scheduled_post_description">Publikování \"%s\" je naplánováno na \"%s\" ve vaší aplikaci WordPress \"%s\"</string>
+    <string name="calendar_scheduled_post_description">Publikování \"%1$s\" je naplánováno na \"%2$s\" ve vaší aplikaci WordPress \"%3$s\"</string>
     <string name="post_notification_when_published">Při zveřejnění</string>
     <string name="post_notification_error">Nelze vytvořit oznámení, pokud je datum publikování v minulosti.</string>
     <string name="notification_scheduled_post">Naplánovaný příspěvek</string>
@@ -1574,8 +1573,8 @@ Language: cs_CZ
     <string name="preference_crash_reports_summary">Povolte automatické zprávy o selhání, které nám pomohou zlepšit výkon aplikace.</string>
     <string name="dialog_confirm_load_remote_post_title">Vyřešte konflikt synchronizace</string>
     <string name="dialog_confirm_load_remote_post_body">Tento příspěvek má dvě verze, které jsou v konfliktu. Vyberte verzi, kterou chcete zahodit.\n\n</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Místní\nUloženo na %s\n\nWeb\nUloženo na %s\n</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Zahodit místní</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Místní\nUloženo na %1$s\n\nWeb\nUloženo na %2$s\n</string>
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
     <string name="stats_no_data_for_period">Pro toto období nejsou k dispozici žádné údaje</string>
     <string name="stats_cannot_be_started">Statistiku v tuto chvíli nemůžeme otevřít. Prosím zkuste to znovu později</string>
@@ -1859,7 +1858,7 @@ Language: cs_CZ
     <string name="notification_settings_category_followed_sites">Sledované weby </string>
     <string name="content_description_person_reading_device_notification">Čtecí zařízení s upozorněním</string>
     <string name="content_description_people_looking_charts">Lidé, kteří se dívají na grafy</string>
-    <string name="comment_title">%s na %s</string>
+    <string name="comment_title">%1$s na %2$s</string>
     <string name="notification_channel_important_title">Důležité</string>
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použijte tuto fotku</string>
@@ -2476,12 +2475,19 @@ Language: cs_CZ
     <string name="error_fetch_email_followers_list">Nepodařilo se načít e-maily fanoušků</string>
     <string name="error_fetch_followers_list">Nepodařilo se načít webové stránky fanoušků</string>
     <string name="editor_failed_uploads_switch_html">Některá média se nenahrála. Nelze přepnout do režimu HTML\n        v tomhle stavu. Chcete odstranit všechny neúspěšně nahrané soubory a pak pokračovat?</string>
+    <string name="visual_editor">Vizuální editor</string>
+    <string name="image_thumbnail">Náhled</string>
     <string name="image_settings_save_toast">Změny byly uloženy</string>
+    <string name="image_alt_text">Alt text</string>
     <string name="image_caption">Titulek</string>
     <string name="image_link_to">Odkaz na</string>
     <string name="image_width">Šířka</string>
     <string name="image_settings_dismiss_dialog_title">Zahodit neuložené změny?</string>
     <string name="stop_upload_dialog_title">Zastavit nahrávání?</string>
+    <string name="alert_error_adding_media">Během vkládání média se vyskytla neočekávaná chyba</string>
+    <string name="alert_action_while_uploading">Momentálně se nahrávají média. Počkejte, dokud se to nedokončí.</string>
+    <string name="alert_insert_image_html_mode">Média se nedaří vložit přímo v režimu HTML. Přejděte do editoru.</string>
+    <string name="uploading_gallery_placeholder">Nahrávám galerii…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Pozvánka odeslána, ale vyskytla se chyba(y)!</string>
     <string name="invite_sent">Pozvánka úspěšně odeslána.</string>
@@ -2927,6 +2933,7 @@ Language: cs_CZ
     <string name="connection_error">Ztráta spojení</string>
     <string name="cancel_edit">Zrušit úpravy</string>
     <string name="link_enter_url_text">Text odkazu</string>
+    <string name="create_a_link">Vytvořit odkaz</string>
     <string name="page_settings">Nastavení stránky</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Koš</string>
@@ -2950,6 +2957,7 @@ Language: cs_CZ
     <string name="media_gallery_type_thumbnail_grid">Mřížka náhledů</string>
     <string name="media_error_no_permission">Nemáte oprávnění pro zobrazení mediální knihovny</string>
     <string name="cannot_delete_multi_media_items">Některá média momentálně nelze odstranit. Zkuste to později.</string>
+    <string name="horizontal_alignment">Vodorovné zarovnání</string>
     <string name="file_not_found">Nepodařilo se najít mediální soubor pro nahrávání. Nebyl odstraněný nebo přesunutý?</string>
     <string name="comment_status_approved">Schváleno</string>
     <string name="mnu_comment_approve">Schválit</string>
@@ -3042,13 +3050,18 @@ Language: cs_CZ
     <string name="username">Uživatelské jméno</string>
     <string name="log_in">Přihlásit</string>
     <string name="reader">Čtenář</string>
+    <string name="featured_in_post">Vložit obrázek do obsahu příspěvku</string>
     <string name="no_network_title">Síť není dostupná</string>
     <string name="pages">Stránky</string>
     <string name="posts">Příspěvky</string>
     <string name="anonymous">Anonymní</string>
+    <string name="width">Šířka</string>
+    <string name="caption">Popis (nepovinné)</string>
+    <string name="featured">Použít jako náhledový obrázek</string>
     <string name="ok">OK</string>
     <string name="done">hotovo</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Nahrávám…</string>
     <string name="app_title">WordPress pro Android</string>
     <string name="version">Verze</string>
     <string name="tos">Podmínky služby</string>

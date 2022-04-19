@@ -1,4 +1,4 @@
-package org.wordpress.android.workers
+package org.wordpress.android.workers.notification.local
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -6,18 +6,26 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.workers.LocalNotification.Type.CREATE_SITE
+import org.wordpress.android.workers.notification.bloggingprompts.BloggingPromptsOnboardingNotificationHandler
+import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationHandler
+import org.wordpress.android.workers.notification.local.LocalNotification.Type.CREATE_SITE
 
 @RunWith(MockitoJUnitRunner::class)
 class LocalNotificationHandlerFactoryTest {
     @Mock
     lateinit var createSiteNotificationHandler: CreateSiteNotificationHandler
 
+    @Mock
+    lateinit var bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler
+
     lateinit var localNotificationHandlerFactory: LocalNotificationHandlerFactory
 
     @Before
     fun setUp() {
-        localNotificationHandlerFactory = LocalNotificationHandlerFactory(createSiteNotificationHandler)
+        localNotificationHandlerFactory = LocalNotificationHandlerFactory(
+                createSiteNotificationHandler,
+                bloggingPromptsOnboardingNotificationHandler
+        )
     }
 
     @Test

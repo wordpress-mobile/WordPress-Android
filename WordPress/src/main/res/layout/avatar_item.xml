@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/liker_avatar"
+        android:id="@+id/avatar"
         style="@style/ReaderImageView.Avatar.Small"
         android:layout_gravity="center_vertical"
         android:background="@drawable/bg_oval_stroke_liker_2dp"

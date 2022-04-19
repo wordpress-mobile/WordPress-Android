@@ -1,9 +1,9 @@
-package org.wordpress.android.workers
+package org.wordpress.android.workers.notification.local
 
 import android.content.Context
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import org.wordpress.android.workers.LocalNotification.Type
+import org.wordpress.android.workers.notification.local.LocalNotification.Type
 import javax.inject.Inject
 
 class LocalNotificationScheduler(private val workManager: WorkManager) {

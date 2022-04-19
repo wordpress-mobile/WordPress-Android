@@ -9,10 +9,17 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
+import org.wordpress.android.ui.avatars.AvatarItemDecorator
+import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
@@ -21,12 +28,17 @@ import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFra
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import java.lang.IllegalStateException
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel
     private val sitePickerLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -92,7 +104,24 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             contentTop.text = getString(readyState.contentTopRes)
             cardCoverView.setOnClickListener { /*do nothing*/ }
             promptCard.promptContent.text = getString(readyState.promptRes)
-            promptCard.numberOfAnswers.text = getString(readyState.answersRes, readyState.answersCount)
+
+            val layoutManager = FlexboxLayoutManager(
+                    context,
+                    FlexDirection.ROW,
+                    FlexWrap.NOWRAP
+            ).apply { justifyContent = JustifyContent.CENTER }
+            promptCard.answeredUsersRecycler.addItemDecoration(
+                    AvatarItemDecorator(RtlUtils.isRtl(context), requireContext(), AVATAR_LEFT_OFFSET_DIMEN)
+            )
+            promptCard.answeredUsersRecycler.layoutManager = layoutManager
+
+            val adapter = TrainOfAvatarsAdapter(
+                    imageManager,
+                    uiHelpers
+            )
+            promptCard.answeredUsersRecycler.adapter = adapter
+            adapter.loadData(readyState.respondents)
+
             contentBottom.text = getString(readyState.contentBottomRes)
             contentNote.text = buildSpannedString {
                 bold { append("${getString(readyState.contentNoteTitle)} ") }

@@ -82,8 +82,9 @@ class QuickStartRepository
     private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
     private val _onQuickStartSiteMenuStep = MutableLiveData<QuickStartSiteMenuStep?>()
     private var _isQuickStartNoticeShown: Boolean = false
-    private val isMySiteTabsEnabled =
-            mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
+    private val isMySiteTabsEnabled = mySiteDashboardTabsFeatureConfig.isEnabled() &&
+            buildConfigWrapper.isMySiteTabsEnabled &&
+            selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val onQuickStartSiteMenuStep = _onQuickStartSiteMenuStep as LiveData<QuickStartSiteMenuStep?>
@@ -294,8 +295,8 @@ class QuickStartRepository
         QuickStartTask.ENABLE_POST_SHARING,
         QuickStartTask.EXPLORE_PLANS,
         QuickStartTask.CHECK_STATS,
-        QuickStartTask.EDIT_HOMEPAGE,
-        QuickStartTask.REVIEW_PAGES -> true
+        QuickStartTask.REVIEW_PAGES,
+        QuickStartTask.EDIT_HOMEPAGE -> true
         else -> false
     }
 

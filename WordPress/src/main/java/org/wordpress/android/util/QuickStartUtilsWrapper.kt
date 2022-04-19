@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
@@ -109,8 +110,11 @@ class QuickStartUtilsWrapper
                 !QuickStartUtils.isQuickStartAvailableForTheSite(site)
     }
 
-    fun startQuickStart(siteLocalId: Int) {
+    fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         quickStartStore.setDoneTask(siteLocalId.toLong(), CREATE_SITE, true)
+        if (isSiteTitleTaskCompleted) {
+            quickStartStore.setDoneTask(siteLocalId.toLong(), UPDATE_SITE_TITLE, true)
+        }
         analyticsTrackerWrapper.track(QUICK_START_STARTED)
     }
 
