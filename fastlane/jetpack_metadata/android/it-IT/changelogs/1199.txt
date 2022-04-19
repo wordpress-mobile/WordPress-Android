@@ -1,0 +1,4 @@
+19.6:
+Questa è una versione breve e gradevole: dopo aver eliminato un sito, potresti aver notato che è rimasto nell'elenco Il mio sito fino a quando non hai riavviato l'app.
+
+Abbiamo risolto il problema: i siti eliminati ora scompaiono immediatamente. Addio.

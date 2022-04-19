@@ -83,7 +83,6 @@ Language: zh_TW
     <string name="site_creation_intent_beauty">美妝</string>
     <string name="site_creation_intent_automotive">汽車</string>
     <string name="site_creation_intent_art">藝術</string>
-    <string name="new_site_creation_intents_input_hint">例如： 時尚、詩歌、政治</string>
     <string name="new_site_creation_intents_title">網站主題</string>
     <string name="quick_start_site_menu_tab_message_short">點選「&lt;b&gt;%1$s&lt;/b&gt;」以繼續。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">從儀表板移除</string>
@@ -99,7 +98,6 @@ Language: zh_TW
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此色彩組合可能讓人難以閱讀。 請嘗試更亮的背景顏色和/或較深的文字顏色。</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此色彩組合可能讓人難以閱讀。 請嘗試更深的背景顏色和/或較亮的文字顏色。</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">無法插入媒體。\n點選以瞭解更多資訊。</string>
-    <string name="new_site_creation_intents_header_subtitle">請從下方清單選擇一個主題，或輸入你自己的主題</string>
     <string name="new_site_creation_intents_header_title">你的網站主題為何？</string>
     <string name="notification_channel_weekly_roundup_title">每週綜合整理</string>
     <string name="my_site_dashboard_tab_title">首頁</string>

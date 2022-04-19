@@ -1,0 +1,4 @@
+19.6:
+Rilis yang ringkas dan praktis: Anda mungkin melihat situs yang telah dihapus masih melekat di daftar Situs Saya sebelum aplikasi dimulai ulang.
+
+Kami sudah memperbaiki ini. Sekarang, situs yang telah dihapus akan langsung menghilang. Selamat tinggal.

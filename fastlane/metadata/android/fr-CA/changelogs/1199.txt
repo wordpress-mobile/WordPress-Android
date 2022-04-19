@@ -1,0 +1,4 @@
+19.6 :
+Cette version est brève, mais efficace : après avoir supprimé un site, vous avez peut-être remarqué que ce même site restait dans votre liste Mes sites jusqu’à ce que vous redémarriez l’application.
+
+Nous avons corrigé ce point : les sites supprimés disparaissent désormais directement. Bye bye !
