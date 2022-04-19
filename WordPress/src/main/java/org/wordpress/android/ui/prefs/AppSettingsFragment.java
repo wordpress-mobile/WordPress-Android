@@ -152,24 +152,30 @@ public class AppSettingsFragment extends PreferenceFragment
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
 
-        mOptimizedImage = (WPSwitchPreference) WPPrefUtils
-                .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
+        mOptimizedImage =
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
         mImageMaxSizePref = (DetailListPreference) WPPrefUtils
                 .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
-        mImageQualityPref = (DetailListPreference) WPPrefUtils
-                .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
-        mOptimizedVideo = (WPSwitchPreference) WPPrefUtils
-                .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
+        mImageQualityPref =
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
+        mOptimizedVideo =
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
 
-        mVideoWidthPref = (DetailListPreference) WPPrefUtils
-                .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
-        mVideoEncorderBitratePref = (DetailListPreference) WPPrefUtils
-                .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+        mVideoWidthPref =
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
+        mVideoEncorderBitratePref =
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
         mPrivacySettings = (PreferenceScreen) WPPrefUtils
                 .getPrefAndSetClickListener(this, R.string.pref_key_privacy_settings, this);
 
-        mStripImageLocation = (WPSwitchPreference) WPPrefUtils
-                .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
+        mStripImageLocation =
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -214,7 +220,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         final ListView listOfPreferences = view.findViewById(android.R.id.list);
@@ -225,44 +231,46 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private void removeExperimentalCategory() {
-        PreferenceCategory experimentalPreferenceCategory = (PreferenceCategory) findPreference(
-                getString(R.string.pref_key_experimental_section));
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
-                getString(R.string.pref_key_app_settings_root));
+        PreferenceCategory experimentalPreferenceCategory =
+                (PreferenceCategory) findPreference(getString(R.string.pref_key_experimental_section));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreferenceCategory);
     }
 
     private void removeDebugSettingsCategory() {
-        Preference experimentalPreference = findPreference(getString(R.string.pref_key_debug_settings));
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
-                getString(R.string.pref_key_app_settings_root));
+        Preference experimentalPreference =
+                findPreference(getString(R.string.pref_key_debug_settings));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreference);
     }
 
     private void removeAboutCategory() {
-        PreferenceCategory aboutPreferenceCategory = (PreferenceCategory) findPreference(
-                getString(R.string.pref_key_about_section));
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
-                getString(R.string.pref_key_app_settings_root));
+        PreferenceCategory aboutPreferenceCategory =
+                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(aboutPreferenceCategory);
     }
 
     private void removeWhatsNewPreference() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
-                getString(R.string.pref_key_app_settings_root));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(mWhatsNew);
     }
 
     private void addWhatsNewPreference() {
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
-                getString(R.string.pref_key_app_settings_root));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.addPreference(mWhatsNew);
     }
 
     private void removeInitialScreen() {
-        Preference initialScreenPreference = findPreference(getString(R.string.pref_key_initial_screen));
-        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(
-                getString(R.string.pref_key_app_settings_root));
+        Preference initialScreenPreference =
+                findPreference(getString(R.string.pref_key_initial_screen));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(initialScreenPreference);
     }
 
@@ -337,8 +345,7 @@ public class AppSettingsFragment extends PreferenceFragment
                     break;
             }
         } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
-            // no need to sync with remote here, or do anything else here, since the logic
-            // is already in WordPress.java
+            // no need to sync with remote here, or do anything else here, since the logic is already in WordPress.java
             updateAnalyticsSyncUI();
         }
     }
@@ -349,8 +356,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
         if (mAccountStore.hasAccessToken()) {
-            SwitchPreference tracksOptOutPreference = (SwitchPreference) findPreference(
-                    getString(R.string.pref_key_send_usage));
+            SwitchPreference tracksOptOutPreference =
+                    (SwitchPreference) findPreference(getString(R.string.pref_key_send_usage));
             tracksOptOutPreference.setChecked(!mAccountStore.getAccount().getTracksOptOut());
         }
     }
@@ -457,8 +464,7 @@ public class AppSettingsFragment extends PreferenceFragment
         WordPress.updateContextLocale();
         mContextProvider.refreshContext();
 
-        // Track language change on Analytics because we have both the device language
-        // and app selected language
+        // Track language change on Analytics because we have both the device language and app selected language
         // data in Tracks metadata.
         Map<String, Object> properties = new HashMap<>();
         properties.put("app_locale", Locale.getDefault());
@@ -604,7 +610,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else {
             throw new IllegalArgumentException(
                     "Parent activity is not AppCompatActivity. LocalePickerBottomSheet must be called "
-                            + "using support fragment manager from AppCompatActivity.");
+                    + "using support fragment manager from AppCompatActivity.");
         }
     }
 
