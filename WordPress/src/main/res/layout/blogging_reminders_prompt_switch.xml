@@ -39,6 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/blogging_reminders_prompt_help_button_desc"
         android:id="@+id/prompt_help_button"
         android:layout_width="16dp"
