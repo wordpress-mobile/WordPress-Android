@@ -8,4 +8,6 @@ sealed class BloggingPromptsOnboardingAction {
     data class OpenSitePicker(val selectedSite: SiteModel?) : BloggingPromptsOnboardingAction()
 
     data class OpenRemindersIntro(val selectedSiteLocalId: Int) : BloggingPromptsOnboardingAction()
+
+    object DismissDialog : BloggingPromptsOnboardingAction()
 }
