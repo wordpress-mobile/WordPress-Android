@@ -9,7 +9,6 @@ Language: cs_CZ
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Tato barevná kombinace může být špatně čitelná. Zkuste použít jasnější barvu pozadí a/nebo tmavší barvu textu.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Tato barevná kombinace může být obtížně čitelná. Zkuste použít tmavší barvu pozadí a/nebo světlejší barvu textu.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Médium se nepodařilo vložit.\nKlepnutím zobrazíte další informace.</string>
-    <string name="new_site_creation_intents_header_subtitle">Zvolit téma ze seznamu níže nebo napište své vlastní</string>
     <string name="new_site_creation_intents_header_title">O čem je váš web?</string>
     <string name="notification_channel_weekly_roundup_title">Týdenní shrnutí</string>
     <string name="my_site_dashboard_tab_title">Domů</string>

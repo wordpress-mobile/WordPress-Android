@@ -81,7 +81,6 @@ Language: tr
     <string name="site_creation_intent_beauty">Güzellik</string>
     <string name="site_creation_intent_automotive">Otomotiv</string>
     <string name="site_creation_intent_art">Sanat</string>
-    <string name="new_site_creation_intents_input_hint">Örneğin, Moda, Şiir, Politika</string>
     <string name="new_site_creation_intents_title">Site Konusu</string>
     <string name="quick_start_site_menu_tab_message_short">Devam etmek için &lt;b&gt;%1$s&lt;/b&gt; öğesine dokunun.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Panodan kaldır</string>
@@ -97,7 +96,6 @@ Language: tr
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Bu renk birleşiminde insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Bu renk birleşimi insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Medya eklenemedi.\nDaha fazla bilgi için dokunun.</string>
-    <string name="new_site_creation_intents_header_subtitle">Aşağıdaki listeden bir konu seçin veya kendi konunuzu yazın</string>
     <string name="new_site_creation_intents_header_title">Web siteniz ne hakkında?</string>
     <string name="notification_channel_weekly_roundup_title">Haftalık Özet</string>
     <string name="my_site_dashboard_tab_title">Başlangıç</string>
