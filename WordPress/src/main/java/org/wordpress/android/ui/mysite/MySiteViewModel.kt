@@ -22,9 +22,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
@@ -603,7 +600,9 @@ class MySiteViewModel @Inject constructor(
 
     private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask): Boolean {
         return when (quickStartTask) {
-            UPDATE_SITE_TITLE, UPLOAD_SITE_ICON, VIEW_SITE -> true
+            QuickStartTask.UPDATE_SITE_TITLE,
+            QuickStartTask.UPLOAD_SITE_ICON,
+            QuickStartTask.VIEW_SITE -> true
             else -> false
         }
     }
