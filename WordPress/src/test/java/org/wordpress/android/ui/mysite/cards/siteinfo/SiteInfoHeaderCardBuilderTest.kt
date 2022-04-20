@@ -58,7 +58,6 @@ class SiteInfoHeaderCardBuilderTest {
         assertThat(buildSiteInfoCard.showIconFocusPoint).isFalse()
     }
 
-
     @Test
     fun `given View Site active task, when card built, then showSubtitleFocusPoint is true`() {
         val buildSiteInfoCard = buildSiteInfoCard(

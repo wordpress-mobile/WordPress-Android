@@ -56,7 +56,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteCardAndItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint) {
+    ) : MySiteCardAndItem(
+            SITE_INFO_CARD,
+            activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
+    ) {
         sealed class IconState {
             object Progress : IconState()
             data class Visible(val url: String? = null) : IconState()

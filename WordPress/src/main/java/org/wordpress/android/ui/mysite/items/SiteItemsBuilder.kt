@@ -83,7 +83,7 @@ class SiteItemsBuilder @Inject constructor(
                         R.drawable.ic_globe_white_24dp,
                         UiStringRes(R.string.my_site_btn_view_site),
                         secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick),
+                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick)
                 ),
                 siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         )
