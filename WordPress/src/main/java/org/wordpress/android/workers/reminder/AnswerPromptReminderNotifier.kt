@@ -34,7 +34,7 @@ class AnswerPromptReminderNotifier @Inject constructor(
         val siteName = SiteUtils.getSiteNameOrHomeURL(site)
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
         val bloggingPrompt = BloggingPrompt(
-            text = "Cast the movie  of your life.",
+            text = "Cast the movie of your life.",
             template = "",
             respondents = emptyList()
         )

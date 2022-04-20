@@ -24,11 +24,11 @@ class ReminderWorker(
         val hour = inputData.getInt(REMINDER_HOUR, DEFAUlT_START_HOUR)
         val minute = inputData.getInt(REMINDER_MINUTE, DEFAULT_START_MINUTE)
         val reminderConfig = ReminderConfig.fromMap(inputData.keyValueMap)
-        if (reminderNotifier.shouldNotify(siteId)) {
-            reminderNotifier.notify(siteId)
-            scheduler.schedule(siteId, hour, minute, reminderConfig)
-        } else if (answerPromptReminderNotifier.shouldNotify(siteId)) {
+        if (answerPromptReminderNotifier.shouldNotify(siteId)) {
             answerPromptReminderNotifier.notify(siteId)
+            scheduler.schedule(siteId, hour, minute, reminderConfig)
+        } else if (reminderNotifier.shouldNotify(siteId)) {
+            reminderNotifier.notify(siteId)
             scheduler.schedule(siteId, hour, minute, reminderConfig)
         }
         Result.success()
