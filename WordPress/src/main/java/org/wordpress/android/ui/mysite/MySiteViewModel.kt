@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
@@ -587,7 +588,7 @@ class MySiteViewModel @Inject constructor(
         quickStartTask: QuickStartTask,
         position: Int
     ) {
-        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderQuickStartTask(
+        if (_activeTaskPosition.value?.first != quickStartTask && isValidQuickStartFocusPosition(
                         quickStartTask,
                         position
                 )) {
@@ -595,10 +596,17 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM &&
-                (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
+    private fun isValidQuickStartFocusPosition(quickStartTask: QuickStartTask, position: Int): Boolean {
+        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask))
+            return true
         else position >= 0
+    }
+
+    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask): Boolean {
+        return when (quickStartTask) {
+            UPDATE_SITE_TITLE, UPLOAD_SITE_ICON, VIEW_SITE -> true
+            else -> false
+        }
     }
 
     fun onTabChanged(position: Int) {
