@@ -454,7 +454,7 @@ class MySiteViewModel @Inject constructor(
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
                         onStatsClick = this::onQuickLinkRibbonStatsClick,
                         activeTask = activeTask,
-                        enableFocusPoints = enableQuickLinkRibbonFocusPoints()
+                        enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
                 ),
                 isMySiteTabsEnabled
         )
@@ -472,8 +472,8 @@ class MySiteViewModel @Inject constructor(
                         activeTask = activeTask,
                         backupAvailable = backupAvailable,
                         scanAvailable = scanAvailable,
-                        enableStatsFocusPoint = enableSiteMenuFocusPoints(),
-                        enablePagesFocusPoint = enableSiteMenuFocusPoints(),
+                        enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                        enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         onClick = this::onItemClick
                 )
         )
@@ -506,9 +506,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
 
-    private fun enableSiteMenuFocusPoints(): Boolean {
-        return defaultABExperimentTab != MySiteTabType.DASHBOARD
-    }
+    private fun shouldEnableSiteItemsFocusPoints() = defaultABExperimentTab != MySiteTabType.DASHBOARD
+
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
