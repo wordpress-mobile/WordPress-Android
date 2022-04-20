@@ -162,7 +162,7 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `given stats focus point disabled, when card built, showFocusPoint should be false `() {
+    fun `given stats focus point disabled, when card built, then showFocusPoint should be false`() {
         setupHeaders()
         val enableStatsFocusPoint = false
 
