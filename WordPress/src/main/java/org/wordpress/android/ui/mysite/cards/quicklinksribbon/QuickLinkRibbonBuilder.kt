@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.quicklinkribbons
+package org.wordpress.android.ui.mysite.cards.quicklinksribbon
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask

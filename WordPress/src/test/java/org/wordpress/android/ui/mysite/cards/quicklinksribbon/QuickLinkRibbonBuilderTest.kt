@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.quicklinkribbons
+package org.wordpress.android.ui.mysite.cards.quicklinksribbon
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
