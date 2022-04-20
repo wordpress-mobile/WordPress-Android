@@ -152,6 +152,13 @@ class QuickStartRepository
                 )
                 _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
             }
+            task == QuickStartTask.VIEW_SITE -> {
+                val shortQuickStartMessage = resourceProvider.getString(
+                        R.string.quick_start_dialog_view_site_message_short,
+                        SiteUtils.getHomeURLOrHostName(selectedSiteRepository.getSelectedSite())
+                )
+                _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
+            }
             else -> {
                 QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
                     _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
