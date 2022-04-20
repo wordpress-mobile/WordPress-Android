@@ -291,7 +291,6 @@ class QuickStartRepository
             quickStartTaskOrigin == MySiteTabType.DASHBOARD && task.showInSiteMenu()
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartTask.VIEW_SITE,
         QuickStartTask.ENABLE_POST_SHARING,
         QuickStartTask.EXPLORE_PLANS,
         QuickStartTask.CHECK_STATS,
