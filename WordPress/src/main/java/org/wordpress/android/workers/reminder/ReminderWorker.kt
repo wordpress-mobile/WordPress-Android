@@ -16,16 +16,16 @@ class ReminderWorker(
     val context: Context,
     val scheduler: ReminderScheduler,
     val reminderNotifier: ReminderNotifier,
-    val answerPromptReminderNotifier: AnswerPromptReminderNotifier,
-    workerParameters: WorkerParameters,
+    val promptReminderNotifier: PromptReminderNotifier,
+    workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result = coroutineScope {
         val siteId = inputData.getInt(REMINDER_SITE_ID, NO_SITE_ID)
         val hour = inputData.getInt(REMINDER_HOUR, DEFAUlT_START_HOUR)
         val minute = inputData.getInt(REMINDER_MINUTE, DEFAULT_START_MINUTE)
         val reminderConfig = ReminderConfig.fromMap(inputData.keyValueMap)
-        if (answerPromptReminderNotifier.shouldNotify(siteId)) {
-            answerPromptReminderNotifier.notify(siteId)
+        if (promptReminderNotifier.shouldNotify(siteId)) {
+            promptReminderNotifier.notify(siteId)
             scheduler.schedule(siteId, hour, minute, reminderConfig)
         } else if (reminderNotifier.shouldNotify(siteId)) {
             reminderNotifier.notify(siteId)
@@ -37,7 +37,7 @@ class ReminderWorker(
     class Factory(
         private val scheduler: ReminderScheduler,
         private val reminderNotifier: ReminderNotifier,
-        private val answerPromptReminderNotifier: AnswerPromptReminderNotifier
+        private val promptReminderNotifier: PromptReminderNotifier
     ) : WorkerFactory() {
         override fun createWorker(
             appContext: Context,
@@ -48,7 +48,7 @@ class ReminderWorker(
                 context = appContext,
                 scheduler = scheduler,
                 reminderNotifier = reminderNotifier,
-                answerPromptReminderNotifier = answerPromptReminderNotifier,
+                promptReminderNotifier = promptReminderNotifier,
                 workerParameters = workerParameters
             )
         } else {

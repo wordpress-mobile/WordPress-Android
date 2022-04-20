@@ -24,7 +24,3 @@ val SiteModel.stateLogInformation: String
             else -> "self_hosted"
         }
     }
-
-// TODO @RenanLukas replace with remote field after endpoint integration
-val SiteModel.hasOptedInBloggingPromptsReminders: Boolean
-    get() = true

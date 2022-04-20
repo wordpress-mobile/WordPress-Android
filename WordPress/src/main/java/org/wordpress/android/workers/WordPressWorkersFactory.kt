@@ -6,7 +6,7 @@ import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.UploadWorker
 import org.wordpress.android.workers.notification.local.LocalNotificationHandlerFactory
 import org.wordpress.android.workers.notification.local.LocalNotificationWorker
-import org.wordpress.android.workers.reminder.AnswerPromptReminderNotifier
+import org.wordpress.android.workers.reminder.PromptReminderNotifier
 import org.wordpress.android.workers.reminder.ReminderNotifier
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import org.wordpress.android.workers.reminder.ReminderWorker
@@ -21,12 +21,12 @@ class WordPressWorkersFactory @Inject constructor(
     reminderScheduler: ReminderScheduler,
     reminderNotifier: ReminderNotifier,
     weeklyRoundupNotifier: WeeklyRoundupNotifier,
-    answerPromptReminderNotifier: AnswerPromptReminderNotifier
+    promptReminderNotifier: PromptReminderNotifier
 ) : DelegatingWorkerFactory() {
     init {
         addFactory(UploadWorker.Factory(uploadStarter, siteStore))
         addFactory(LocalNotificationWorker.Factory(localNotificationHandlerFactory))
-        addFactory(ReminderWorker.Factory(reminderScheduler, reminderNotifier, answerPromptReminderNotifier))
+        addFactory(ReminderWorker.Factory(reminderScheduler, reminderNotifier, promptReminderNotifier))
         addFactory(WeeklyRoundupWorker.Factory(weeklyRoundupNotifier))
     }
 }
