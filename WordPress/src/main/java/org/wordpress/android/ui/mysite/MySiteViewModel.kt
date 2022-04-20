@@ -658,7 +658,6 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
-                    quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
