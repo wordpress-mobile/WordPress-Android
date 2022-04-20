@@ -908,8 +908,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void showQuickStartSnackbar() {
         Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
                 requireContext(),
-                R.string.quick_start_dialog_follow_sites_message_short_search,
-                R.drawable.ic_search_white_24dp
+                R.string.quick_start_dialog_follow_sites_message_short_settings,
+                R.drawable.ic_cog_white_24dp
         );
         mSnackbarSequencer.enqueue(
                 new SnackbarItem(

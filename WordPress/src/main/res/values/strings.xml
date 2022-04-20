@@ -3038,8 +3038,8 @@
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">Select %1$s Settings %2$s to add topics you like.</string>
     <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
