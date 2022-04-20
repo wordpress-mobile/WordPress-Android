@@ -62,20 +62,7 @@ class ViewsAndVisitorsMapper
         selectedPosition: Int,
         startValue: Int = MILLION
     ): ValuesItem {
-        val values = dates.map {
-            val value = when (SelectedType.valueOf(selectedPosition)) {
-                Views -> it.views
-                Visitors -> it.visitors
-                else -> 0L
-            }
-            value.toInt()
-        }
-
-        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 8) else emptyList()
-        val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
-
-        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(8, values.size) else emptyList()
-        val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
+        val (thisWeekCount, prevWeekCount) = mapDatesToWeeks(dates, selectedPosition)
 
         return ValuesItem(
                 selectedItem = selectedPosition,
@@ -190,20 +177,7 @@ class ViewsAndVisitorsMapper
         dates: List<PeriodData>,
         selectedPosition: Int
     ): Text {
-        val values = dates.map {
-            val value = when (SelectedType.valueOf(selectedPosition)) {
-                Views -> it.views
-                Visitors -> it.visitors
-                else -> 0L
-            }
-            value
-        }
-
-        val prevWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(1, 8) else emptyList()
-        val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
-
-        val thisWeekData = if (values.isNotEmpty() && values.size > 7) values.subList(8, values.size) else emptyList()
-        val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
+        val (thisWeekCount, prevWeekCount) = mapDatesToWeeks(dates, selectedPosition)
 
         val positive = thisWeekCount >= (prevWeekCount ?: 0)
         val change = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = true)
@@ -248,5 +222,26 @@ class ViewsAndVisitorsMapper
                 selectedPosition,
                 onChipSelected
         )
+    }
+
+    private fun mapDatesToWeeks(dates: List<PeriodData>, selectedPosition: Int): Pair<Long, Long> {
+        val values = dates.map {
+            val value = when (SelectedType.valueOf(selectedPosition)) {
+                Views -> it.views
+                Visitors -> it.visitors
+                else -> 0L
+            }
+            value.toInt()
+        }
+
+        val hasData = values.isNotEmpty() && values.size > 7
+
+        val prevWeekData = if (hasData) values.subList(0, 7) else values.subList(0, values.size)
+        val thisWeekData = if (hasData) values.subList(7, values.size) else emptyList()
+
+        val prevWeekCount = prevWeekData.fold(0L) { acc, next -> acc + next }
+        val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
+
+        return Pair(thisWeekCount, prevWeekCount)
     }
 }
