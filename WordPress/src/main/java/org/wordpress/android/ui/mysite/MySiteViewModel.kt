@@ -504,9 +504,7 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    private fun enableQuickLinkRibbonFocusPoints(): Boolean {
-        return defaultABExperimentTab == MySiteTabType.DASHBOARD
-    }
+    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
 
     private fun enableSiteMenuFocusPoints(): Boolean {
         return defaultABExperimentTab != MySiteTabType.DASHBOARD
