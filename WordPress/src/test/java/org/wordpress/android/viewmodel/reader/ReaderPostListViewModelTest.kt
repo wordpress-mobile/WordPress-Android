@@ -9,6 +9,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -26,6 +28,8 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var readerTracker: ReaderTracker
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var readerSeenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
+    @Mock private lateinit var quickStartRepository: QuickStartRepository
+    @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
 
     private lateinit var viewModel: ReaderPostListViewModel
 
@@ -36,6 +40,8 @@ class ReaderPostListViewModelTest {
                 reblogUseCase,
                 readerTracker,
                 readerSeenStatusToggleUseCase,
+                quickStartRepository,
+                selectedSiteRepository,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
