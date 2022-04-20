@@ -1,4 +1,14 @@
-*** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
+// PLEASE FOLLOW THIS FORMAT:
+// 
+// * [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
+// 
+// The priority indicator usually ranges from `*` (small impact/importance) to `***` (high importance), and will help pick the most important items when wordsmithing the final, editorialized release notes from the items listed here.
+// 
+// INTERNAL CHANGES:
+//
+// If your change is not user-facing (and thus should not be included in the final public-facing release notes) but still needs to be included in the Call for Testing
+// so that it is still beta-tested during that sprint (e.g. for features behind feature flags), use `[internal]` in place or after the priority indicator.
+//
 
 19.8
 -----
