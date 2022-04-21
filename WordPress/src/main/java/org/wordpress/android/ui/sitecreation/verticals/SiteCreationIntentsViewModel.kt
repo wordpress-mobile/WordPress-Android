@@ -104,8 +104,10 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun intentSelected(slug: String, vertical: String) {
         analyticsTracker.trackSiteIntentQuestionVerticalSelected(slug)
         _onIntentSelected.value = vertical
-        uiState.value?.let { updateUiState(
-                it.copy(vertical = vertical))
+        uiState.value?.let {
+            updateUiState(
+                    it.copy(vertical = vertical)
+            )
         }
     }
 
