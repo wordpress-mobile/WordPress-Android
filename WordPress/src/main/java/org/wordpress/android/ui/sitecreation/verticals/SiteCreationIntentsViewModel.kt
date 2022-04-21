@@ -18,6 +18,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+@Suppress("TooManyFunctions")
 class SiteCreationIntentsViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     private val searchResultsProvider: VerticalsSearchResultsProvider,
