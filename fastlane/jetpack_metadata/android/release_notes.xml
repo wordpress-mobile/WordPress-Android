@@ -1,118 +1,101 @@
 <en-US>
-- We tweaked the upload error text in media upload blocks.
-- Animated GIFs now come with a GIF badge.
-- Block setting changes to ordered lists now appear in the editor.
-- You can disable Weekly Roundup notifications for all sites in App Info.
+This release is short and sweet: after deleting a site, you might’ve noticed that same site sticking around in your My Site list until you restarted the app.
+
+We’ve fixed that—deleted sites now disappear right away. So long, farewell.
 </en-US>
 <ar>
-19.5:
-- قمنا بتعديل نص خطأ الرفع في مكوِّنات رفع الوسائط.
-- تأتي صور GIF المتحركة الآن مزوَّدة بشارة GIF.
-- تظهر الآن تغييرات إعداد المكوِّن على القوائم المرتبة في المحرِّر.
-- يمكنك تعطيل تنبيهات الموجز الأسبوعي لجميع المواقع في معلومات التطبيق.
+19.6:
+هذا الإصدار قصير ورائع: بعد حذف موقع، ربما تكون قد لاحظت بقاء الموقع نفسه في قائمة موقعي الخاصة بك حتى إعادة تشغيل التطبيق.
+
+أصلحنا ذلك الأمر—تختفي المواقع المحذوفة الآن على الفور. وداعًا.
 </ar>
 <de-DE>
-19.5:
-- Wir haben den Text bei Upload-Fehlern in Blöcken zum Hochladen von Medien aktualisiert.
-- Animierte GIFs haben jetzt ein GIF-Badge.
-- Änderungen an den Blockeinstellungen für sortierte Listen werden jetzt im Editor angezeigt.
-- Du kannst die Benachrichtigungen mit wöchentlichen Zusammenfassungen für alle Websites unter „App-Info“ deaktivieren.
+19.6:
+Dieses Release ist klein, aber fein: Du hast vielleicht bemerkt, dass eine Website nach dem Löschen in der „Meine Website“-Liste verbleibt, bis du die App neu startest.
+
+Wir haben das korrigiert: Gelöschte Websites werden jetzt sofort aus der Anzeige entfernt. Auf Wiedersehen!
 </de-DE>
 <es-ES>
-19.5:
-- Hemos modificado el texto que informa de un error de subida en los bloques de subida de medios.
-- Ahora, los GIF animados vienen con una insignia de GIF.
-- Ahora, los cambios que realices en los ajustes del bloque para las listas ordenadas aparecerán en el editor.
-- Puedes desactivar las notificaciones del Resumen semanal para todos los sitios en Información de la aplicación.
+19.6:
+Esta versión es breve y concisa: es posible que te hayas dado cuenta de que, al eliminar un sitio, sigue en tu lista de "Mis Sitios" hasta que reinicias la aplicación.
+
+Ya lo hemos corregido y ahora los sitios eliminados desaparecen de inmediato. Hasta pronto.
 </es-ES>
 <fr-FR>
-19.5 :
-- Nous avons apporté quelques retouches au message d’erreur concernant le chargement de contenu multimédia dans les blocs.
-- Les GIF animés affichent désormais un badge distinctif.
-- La structure des blocs a changé pour permettre l’affichage des listes ordonnées dans l’éditeur.
-- Vous pouvez désactiver les notifications de résumé hebdomadaire pour tous vos sites depuis la section d’informations de l’application.
+19.6 :
+Cette version est brève, mais efficace : après avoir supprimé un site, vous avez peut-être remarqué que ce même site restait dans votre liste Mes sites jusqu’à ce que vous redémarriez l’application.
+
+Nous avons corrigé ce point : désormais, les sites supprimés disparaissent directement. Bye bye !
 </fr-FR>
 <iw-IL>
-19.5:
-- שינינו את הטקסט בשגיאת ההעלאה בבלוקים של העלאת מדיה.
-- קובצי GIF מונפשים כעת מופיעים עם עיטור 'GIF'.
-- שינויים בהגדרות הבלוק לרשימות מסודרות מופיעים כעת בעורך.
-- אפשר להשבית את ההודעות של 'סיכום שבועי' לכל האתרים דרך 'פרטי האפליקציה'.
+19.6:
+השקנו עדכון קצר ולעניין: אחרי מחיקת האתר, לפעמים אותו האתר עדיין הופיע ברשימה 'האתר שלי' עד לפתיחה מחדש של האפליקציה.
+
+תיקנו את הבעיה הזאת – מעתה, אתרים שנמחקו ייעלמו באופן מיידי. שלום ולא להתראות.
 </iw-IL>
 <id>
-19.5:
-- Kami menyesuaikan teks error saat mengunggah di blok unggah media.
-- Animasi GIF kini dilengkapi lencana GIF.
-- Perubahan pengaturan blok pada daftar berurutan kini ditampilkan di editor.
-- Anda dapat menonaktifkan pemberitahuan Ringkasan Mingguan untuk semua situs di Info Aplikasi.
+19.6:
+Rilis yang ringkas dan praktis: Anda mungkin melihat situs yang telah dihapus masih melekat di daftar Situs Saya sebelum aplikasi dimulai ulang.
+
+Kami sudah memperbaiki ini. Sekarang, situs yang telah dihapus akan langsung menghilang. Selamat tinggal.
 </id>
 <it-IT>
-19.5:
-- Abbiamo fatto piccole modifiche al testo dell'errore di caricamento nei blocchi per il caricamento di elementi multimediali.
-- Le GIF animate ora sono dotate di un badge GIF.
-- Le modifiche delle impostazioni del blocco negli elenchi ordinati ora appaiono nell'editor.
-- Puoi disattivare le notifiche del Resoconto settimanale per tutti i siti nelle Info sull'app.
+19.6:
+Questa è una versione breve e gradevole: dopo aver eliminato un sito, potresti aver notato che è rimasto nell'elenco Il mio sito fino a quando non hai riavviato l'app.
+
+Abbiamo risolto il problema: i siti eliminati ora scompaiono immediatamente. Addio.
 </it-IT>
 <ja-JP>
-19.5:
-- メディアアップロードブロックのアップロードエラーテキストを微調整しました。
-- アニメーション GIF に GIF バッジが表示されるようになりました。
-- 番号つきリストに対するブロック設定の変更がエディターに表示されるようになりました。
-- 1週間のまとめ通知をすべてのサイトに対してアプリ情報で無効にできます。
+19.6:
+今回のリリースは簡潔です。サイトを削除しても、アプリを再起動するまで、参加サイトのリストに同じサイトが表示され続けることがありました。
+
+現在、削除されたサイトはすぐに消えるように修正されています。 消したはずのサイトが表示されることはもうありません。
 </ja-JP>
 <ko-KR>
-19.5:
-- 미디어 업로드 블록의 업로드 오류 텍스트를 조정했습니다.
-- 이제는 GIF 애니메이션에 GIF 배지가 표시됩니다.
-- 순서 있는 목록의 블록 설정 변경 사항이 이제는 편집기에 표시됩니다.
-- 앱 정보에서 모든 사이트에 대한 주간 총정리 알림을 비활성화하실 수 있습니다.
+19.6:
+이 릴리스는 간결합니다. 사이트를 삭제한 후 앱을 다시 시작할 때까지 동일한 사이트가 내 사이트 목록에 남아 있는 경우가 있었습니다.
+
+해당 문제를 해결했습니다. 이제는 삭제한 사이트가 바로 사라집니다. 더는 표시되지 않습니다.
 </ko-KR>
 <nl-NL>
-19.5:
-- We hebben de tekst van uploadfouten in media-uploadblokken aangepast.
-- Bewegende GIF's zijn nu voorzien van een GIF-badge.
-- Gewijzigde blokinstellingen naar geordende lijsten verschijnen nu in de editor.
-- Je kunt meldingen voor het Wekelijkse overzicht uitschakelen voor alle sites onder App-info.
+19.6:
+Deze release is kort maar toch fijn, want: het is je misschien opgevallen dat als je een site verwijdert, dat diezelfde site nog altijd in de lijst Mijn site staat totdat je de app opnieuw hebt opgestart.
+
+Dat hebben we verholpen. Verwijderde sites verdwijnen meteen. Doei!
 </nl-NL>
 <pt-BR>
-19.5:
-- Ajustamos o texto do erro de upload nos blocos de upload de mídia.
-- GIFs animados agora vêm com um emblema de GIF.
-- Agora as alterações de configuração de bloco em listas ordenadas aparecem no editor.
-- É possível desativar as notificações do resumo semanal para todos os sites nas informações do aplicativo.
+19.6:
+Esta versão é bem simples: após excluir um site, você deve ter percebido que ele ainda aparecia na lista Meu site até o aplicativo ser reiniciado.
+
+Corrigimos isso. Agora os sites excluídos somem na hora. Isso é tudo, até mais.
 </pt-BR>
 <ru-RU>
-19.5:
-— Мы немного изменили текст ошибки загрузки в блоках загрузки медиафайлов.
-— Анимированные изображения GIF теперь отмечены значком GIF.
-— Изменения в упорядоченных списках в настройках блоков теперь отображаются в редакторе.
-— Вы можете отключить уведомления о сводке за неделю для всех сайтов в разделе информации о приложении.
+19.6:
+В этом выпуске изменений немного. Удалив сайт, вы могли всё ещё видеть его в списке «Мой сайт» до перезагрузки приложения.
+
+Мы исправили это. Удалённые сайты исчезают сразу. Так что давай, пока!
 </ru-RU>
 <sv-SE>
-19.5:
-- Vi har ändrat texten för uppladdningsfel i mediauppladdningsblock.
-- Animerade GIF-bilder har nu ett GIF-märke.
-- Blockinställningsändringar av sorterade listor visas nu i redigeraren.
-- Du kan inaktivera veckosammanfattningsnotiser för alla webbplatser i Appinformation.
+19.6:
+Den här versionsuppdateringen är liten och enkel: du har kanske noterat att borttagna webbplatser har dröjt sig kvar i listan Mina webbplatser tills du har startat om appen.
+
+Vi har åtgärdat detta – borttagna webbplatser försvinner nu med en gång. Adjö och farväl.
 </sv-SE>
 <tr-TR>
-19.5:
-- Medya yükleme bloklarındaki yükleme hatası metninde ince ayar yaptık.
-- Hareketli GIF'lerde artık bir GIF rozeti görüntüleniyor.
-- Sıralı listelerdeki blok ayarı değişiklikleri artık düzenleyicide de görünüyor.
-- Uygulama Bilgisi'nde tüm siteler için Haftalık Özet bildirimlerini devre dışı bırakabilirsiniz.
+19.6:
+Bu sürüm kısa ve güzel: Bir siteyi sildikten sonra, uygulamayı yeniden başlatana kadar aynı sitenin Sitem listenizde kaldığını fark etmiş olabilirsiniz.
+
+Bu durumu düzelttik; silinen siteler artık hemen kayboluyor. Hem de kalıcı olarak.
 </tr-TR>
 <zh-CN>
-19.5：
-- 我们调整了媒体上传区块中的上传错误文本。
-- 现在，动画 GIF 带有 GIF 徽章。
-- 现在，对有序列表的区块设置更改显示在编辑器中。
-- 您可以在“应用程序信息”中为所有站点禁用每周综述通知。 
+19.6：
+此版本简单明了：您可能会发现，在删除某个站点后，如果不重启应用程序，“我的站点”列表中仍会显示此站点。
+
+我们已解决此问题。现在，删除的站点将立即消失。 再见了。
 </zh-CN>
 <zh-TW>
-19.5：
-- 我們調整了媒體上傳區塊的上傳錯誤文字。
-- GIF 動畫現在會附上 GIF 徽章。
-- 對已排序清單的區塊設定變更現在會顯示於編輯器中。
-- 你可在「應用程式資訊」中停用所有網站的每週綜合整理通知。
+19.6：
+此版本簡單扼要：你可能會在刪除網站之後，發現這個網站會一直留在「我的網站」清單中，直到重新啟動應用程式才消失。
+
+我們已修正此問題，刪除的網站現在會立即消失。 可以正式說再見了。
 </zh-TW>

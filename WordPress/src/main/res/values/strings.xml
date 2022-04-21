@@ -2219,7 +2219,7 @@
 
     <!-- My Site - Dashboard -->
     <string name="my_site_dashboard_tab_title">Home</string>
-    <string name="my_site_menu_tab_title">Site Menu</string>
+    <string name="my_site_menu_tab_title">Menu</string>
     <string name="my_site_all_tab_title">All</string>
     <string name="my_site_dashboard_update_error">Couldn\'t update dashboard.</string>
     <string name="my_site_dashboard_stale_message">The dashboard is not updated. Please check your connection and then pull to refresh.</string>
@@ -3011,6 +3011,7 @@
     <string name="preview_type_desc">Select preview type</string>
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
 
     <string name="content_description_more">More</string>
 
@@ -3037,10 +3038,10 @@
     <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
-    <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
-    <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
+    <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">Select %1$s Settings %2$s to add topics you like.</string>
+    <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
@@ -3215,8 +3216,9 @@
     <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own.</string>
     <string name="new_site_creation_intents_input_hint">E.g. Fashion, Poetry, Politics</string>
     <string name="new_site_creation_site_name_title">Site name</string>
-    <string name="new_site_creation_site_name_header_title">Give your website a name</string>
-    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later</string>
+    <!-- translators: Give your Photography website a name -->
+    <string name="new_site_creation_site_name_header_title">Give your %s website a name</string>
+    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
@@ -3435,7 +3437,7 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
-    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add blocks</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add Blocks</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
@@ -4011,6 +4013,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_got_it">Got it</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
@@ -4072,16 +4075,17 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Initial Screen -->
     <string name="initial_screen">Initial Screen</string>
     <string name="initial_screen_home" translatable="false">@string/my_site_dashboard_tab_title</string>
-    <string name="initial_screen_site_menu" translatable="false">@string/my_site_menu_tab_title</string>
+    <string name="initial_screen_menu" translatable="false">@string/my_site_menu_tab_title</string>
     <string name="initial_screen_entry_value_home" translatable="false">home</string>
-    <string name="initial_screen_entry_value_site_menu" translatable="false">site_menu</string>
-    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_site_menu</string>
+    <string name="initial_screen_entry_value_menu" translatable="false">menu</string>
+    <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_menu</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Add blocks</string>
     <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/initial_screen_home</item>
-        <item>@string/initial_screen_site_menu</item>
+        <item>@string/initial_screen_menu</item>
     </string-array>
     <string-array name="initial_screen_entry_values" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/initial_screen_entry_value_home</item>
-        <item>@string/initial_screen_entry_value_site_menu</item>
+        <item>@string/initial_screen_entry_value_menu</item>
     </string-array>
 </resources>

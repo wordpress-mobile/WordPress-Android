@@ -4,7 +4,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
@@ -23,8 +22,7 @@ import kotlin.coroutines.suspendCoroutine
 class CreateSiteUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused") private val siteStore: SiteStore,
-    private val urlUtilsWrapper: UrlUtilsWrapper,
-    private val accountStore: AccountStore
+    private val urlUtilsWrapper: UrlUtilsWrapper
 ) {
     private var continuation: Continuation<OnNewSiteCreated>? = null
 
@@ -54,7 +52,6 @@ class CreateSiteUseCase @Inject constructor(
         }
         return suspendCoroutine { cont ->
             val newSitePayload = NewSitePayload(
-                    accountStore.account.userName,
                     domain,
                     siteData.title,
                     languageWordPressId,

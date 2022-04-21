@@ -256,14 +256,14 @@ class SitePreviewViewModelTest {
     fun `CreateSiteState is SiteCreationCompleted on fetchFromRemote success`() = testWithSuccessResponse {
         initViewModel()
         viewModel.onSiteCreationServiceStateUpdated(createServiceSuccessState())
-        assertThat(getCreateSiteState()).isEqualTo(SiteCreationCompleted(LOCAL_SITE_ID))
+        assertThat(getCreateSiteState()).isEqualTo(SiteCreationCompleted(LOCAL_SITE_ID, false))
     }
 
     @Test
     fun `CreateSiteState is NotInLocalDb on fetchFromRemote failure`() = testWithErrorResponse {
         initViewModel()
         viewModel.onSiteCreationServiceStateUpdated(createServiceSuccessState())
-        assertThat(getCreateSiteState()).isEqualTo(SiteNotInLocalDb(REMOTE_SITE_ID))
+        assertThat(getCreateSiteState()).isEqualTo(SiteNotInLocalDb(REMOTE_SITE_ID, false))
     }
 
     @Test
@@ -302,7 +302,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `start pre-loading WebView when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID))
+                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
         assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
@@ -311,7 +311,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `fetch newly created SiteModel when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID))
+                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID, false))
         initViewModel(bundle)
 
         verify(fetchWpComUseCase).fetchSiteWithRetry(REMOTE_SITE_ID)
@@ -320,7 +320,7 @@ class SitePreviewViewModelTest {
     @Test
     fun `start pre-loading WebView when restoring from SiteCreationCompleted state`() {
         whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
-                .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID))
+                .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID, false))
         initViewModel(bundle)
 
         assertThat(viewModel.preloadPreview.value).isEqualTo(URL)

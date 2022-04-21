@@ -83,7 +83,6 @@ Language: fr
     <string name="site_creation_intent_beauty">Beauté</string>
     <string name="site_creation_intent_automotive">Automobile</string>
     <string name="site_creation_intent_art">Art</string>
-    <string name="new_site_creation_intents_input_hint">Par ex. Mode, Poésie, Politique</string>
     <string name="new_site_creation_intents_title">Thème du site</string>
     <string name="quick_start_site_menu_tab_message_short">Appuyez sur &lt;b&gt;%1$s&lt;/b&gt; pour continuer.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Supprimer du tableau de bord</string>
@@ -99,7 +98,6 @@ Language: fr
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Cette combinaison de couleurs peut gêner la lecture chez certaines personnes. Essayez une couleur d’arrière-plan plus claire et/ou une couleur de texte plus foncée.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Cette combinaison de couleurs peut être difficile à lire pour certaines personnes. Essayez une couleur d’arrière-plan plus foncée et/ou une couleur de texte plus claire.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Échec d’insertion du média.\nAppuyez pour plus d’informations.</string>
-    <string name="new_site_creation_intents_header_subtitle">Choisissez un thème dans la liste ci-dessous ou saisissez le vôtre</string>
     <string name="new_site_creation_intents_header_title">De quoi parle votre site Web ?</string>
     <string name="notification_channel_weekly_roundup_title">Résumé hebdomadaire</string>
     <string name="my_site_dashboard_tab_title">Accueil</string>
