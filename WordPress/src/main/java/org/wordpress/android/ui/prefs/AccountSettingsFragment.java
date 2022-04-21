@@ -29,6 +29,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -39,6 +41,8 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnShownListener;
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.util.AppLog;
@@ -51,12 +55,13 @@ import org.wordpress.android.widgets.WPSnackbar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 @SuppressWarnings("deprecation")
 public class AccountSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
-        OnConfirmListener {
+        OnConfirmListener, OnShownListener, OnDismissListener {
     private Preference mUsernamePreference;
     private EditTextPreferenceWithValidation mEmailPreference;
     private DetailListPreference mPrimarySitePreference;
@@ -64,6 +69,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     private EditTextPreferenceWithValidation mChangePasswordPreference;
     private ProgressDialog mChangePasswordProgressDialog;
     private Snackbar mEmailSnackbar;
+
+    private static final String SOURCE = "source";
+    private static final String SOURCE_ACCOUNT_SETTINGS = "account_settings";
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -373,7 +381,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                 .setOnConfirmListener(this)
                 .setHideActivityBar(true)
                 .setIsLifOnScroll(false)
-                .setOnDismissListener(null)
+                .setOnDismissListener(this)
+                .setOnShownListener(this)
                 .setContent(SettingsUsernameChangerFragment.class, bundle)
                 .build()
                 .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), FullScreenDialogFragment.TAG);
@@ -414,6 +423,18 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
             ids.add(String.valueOf(site.getSiteId()));
         }
         return ids.toArray(new String[ids.size()]);
+    }
+
+    @Override public void onShown() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CHANGE_USERNAME_DISPLAYED, props);
+    }
+
+    @Override public void onDismiss() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(Stat.CHANGE_USERNAME_DISMISSED, props);
     }
 
     /*

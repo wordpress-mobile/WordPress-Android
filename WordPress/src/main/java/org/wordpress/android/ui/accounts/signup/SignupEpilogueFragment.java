@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -452,6 +453,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     public void onDismiss() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_SIGNUP_EPILOGUE);
+        AnalyticsTracker.track(Stat.CHANGE_USERNAME_DISMISSED, props);
         mDialog = null;
     }
 
