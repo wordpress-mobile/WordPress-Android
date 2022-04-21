@@ -59,7 +59,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
             // filter out long video files on free sites
             if (site.hasFreePlan &&
                     mediaUtilsWrapper.isVideoFile(it) &&
-                    !mediaUtilsWrapper.isAllowedVideoDurationForFreeSites(context, site, it)) {
+                    mediaUtilsWrapper.isProhibitedVideoDuration(context, site, it)) {
                 // put out a notice to the user that the particular video file was rejected
                 editorMediaListener.showVideoDurationLimitWarning(it.path.toString())
                 return@filter false
