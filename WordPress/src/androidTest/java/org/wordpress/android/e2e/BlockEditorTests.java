@@ -13,6 +13,9 @@ import org.wordpress.android.support.BaseTest;
 
 import java.time.Instant;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class BlockEditorTests extends BaseTest {
     @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);

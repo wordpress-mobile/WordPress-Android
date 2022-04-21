@@ -47,8 +47,8 @@ import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
-import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
@@ -107,8 +107,11 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import dagger.multibindings.IntoMap;
 
+@InstallIn(SingletonComponent.class)
 @Module
 abstract class ViewModelModule {
     @Binds

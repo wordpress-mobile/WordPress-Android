@@ -207,8 +207,10 @@ class AppInitializer @Inject constructor(
         context = application
         startDate = SystemClock.elapsedRealtime()
 
-        // This call needs be made before accessing any methods in android.webkit package
-        setWebViewDataDirectorySuffixOnAndroidP()
+        if (!initialized) {
+            // This call needs be made before accessing any methods in android.webkit package
+            setWebViewDataDirectorySuffixOnAndroidP()
+        }
 
         wellSqlInitializer.init()
     }
@@ -236,22 +238,26 @@ class AppInitializer @Inject constructor(
 
         AppRatingDialog.init(application)
 
-        // EventBus setup
-        EventBus.TAG = "WordPress-EVENT"
-        EventBus.builder()
-                .logNoSubscriberMessages(false)
-                .sendNoSubscriberEvent(false)
-                .throwSubscriberException(true)
-                .installDefaultEventBus()
+        if (!initialized) {
+            // EventBus setup
+            EventBus.TAG = "WordPress-EVENT"
+            EventBus.builder()
+                    .logNoSubscriberMessages(false)
+                    .sendNoSubscriberEvent(false)
+                    .throwSubscriberException(true)
+                    .installDefaultEventBus()
+        }
 
         RestClientUtils.setUserAgent(userAgent)
 
-        zendeskHelper.setupZendesk(
-                application,
-                BuildConfig.ZENDESK_DOMAIN,
-                BuildConfig.ZENDESK_APP_ID,
-                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
-        )
+        if (!initialized) {
+            zendeskHelper.setupZendesk(
+                    application,
+                    BuildConfig.ZENDESK_DOMAIN,
+                    BuildConfig.ZENDESK_APP_ID,
+                    BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+            )
+        }
 
         val memoryAndConfigChangeMonitor = MemoryAndConfigChangeMonitor()
         application.registerComponentCallbacks(memoryAndConfigChangeMonitor)
@@ -282,7 +288,9 @@ class AppInitializer @Inject constructor(
         // setup the Credentials Client so we can clean it up on wpcom logout
         setupCredentialsClient()
 
-        initWorkManager()
+        if (!initialized) {
+            initWorkManager()
+        }
 
         // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
         // It will upload local draft or published posts with local changes to the server.
@@ -301,6 +309,8 @@ class AppInitializer @Inject constructor(
         debugCookieManager.sync()
 
         initAnalyticsExperimentPropertiesIfNeeded()
+
+        initialized = true
     }
 
     private fun initWorkManager() {
@@ -888,6 +898,10 @@ class AppInitializer @Inject constructor(
         private const val DEFAULT_TIMEOUT = 2 * 60 // 2 minutes
 
         @SuppressLint("StaticFieldLeak") var context: Context? = null
+
+        // This is for UI testing. AppInitializer is being created more than once for only UI tests. initialized
+        // prevents some static functions from being initialized twice and exceptions.
+        private var initialized = false
 
         private var bitmapCache: BitmapLruCache? = null
         private var sOAuthAuthenticator: OAuthAuthenticator? = null

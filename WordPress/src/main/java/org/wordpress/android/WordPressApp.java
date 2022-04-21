@@ -2,8 +2,6 @@ package org.wordpress.android;
 
 import androidx.annotation.NonNull;
 
-import org.wordpress.android.modules.DaggerAppComponent;
-
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
@@ -19,10 +17,6 @@ public class WordPressApp extends WordPress implements HasAndroidInjector {
     public void onCreate() {
         super.onCreate();
 
-        // Init Dagger
-        initDaggerComponent();
-        component().inject(this);
-
         mAppInitializer.init();
     }
 
@@ -32,11 +26,5 @@ public class WordPressApp extends WordPress implements HasAndroidInjector {
 
     @NonNull @Override public AppInitializer initializer() {
         return mAppInitializer;
-    }
-
-    protected void initDaggerComponent() {
-        appComponent = DaggerAppComponent.builder()
-                                         .application(this)
-                                         .build();
     }
 }

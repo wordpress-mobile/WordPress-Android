@@ -5,6 +5,7 @@ import android.app.Application
 import android.text.TextUtils
 import androidx.multidex.MultiDexApplication
 import com.android.volley.RequestQueue
+import dagger.hilt.EntryPoints
 import org.wordpress.android.AppInitializer.StoryNotificationTrackerProvider
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
@@ -19,11 +20,9 @@ abstract class WordPress : MultiDexApplication() {
     val storyNotificationTrackerProvider: StoryNotificationTrackerProvider
         get() = initializer().storyNotificationTrackerProvider
 
-    protected lateinit var appComponent: AppComponent
-
     abstract fun initializer(): AppInitializer
 
-    fun component() = appComponent
+    fun component(): AppComponent = EntryPoints.get(this, AppComponent::class.java)
 
     fun wordPressComSignOut() {
         initializer().wordPressComSignOut()
