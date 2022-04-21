@@ -2205,6 +2205,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_initial_screen_changed";
             case CHANGE_USERNAME_DISPLAYED:
                 return "change_username_displayed";
+            case CHANGE_USERNAME_DISMISSED:
+                return "change_username_dismissed";
+            case CHANGE_USERNAME_SEARCH_PERFORMED:
+                return "change_username_search_performed";
         }
         return null;
     }
