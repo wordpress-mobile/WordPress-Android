@@ -59,7 +59,7 @@ class ReaderPostListViewModelTest {
     /* QUICK START */
 
     @Test
-    fun `when quick start follow site task event received, then follow site setting step prompt shown`() {
+    fun `when quick start event received is follow site, then follow site setting step prompt shown`() {
         val observers = initObservers()
 
         viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
@@ -69,7 +69,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when quick start non follow site event received, then follow site setting step prompt not shown`() {
+    fun `when quick start event received is not follow site, then follow site setting step prompt not shown`() {
         val observers = initObservers()
 
         viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
@@ -78,7 +78,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `given site present, when quick start follow site event received, then follow site task is completed`() {
+    fun `given site present, when quick start event received is follow site, then follow site task is completed`() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
 
         viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
@@ -87,7 +87,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `given site present, when quick start non follow site event received, then follow site task not completed`() {
+    fun `given site present, when quick start event received not follow site, then follow site task not completed`() {
         viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
 
         verify(quickStartRepository, times(0)).completeTask(QuickStartTask.FOLLOW_SITE)
