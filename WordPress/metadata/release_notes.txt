@@ -1,7 +1,5 @@
-* [***] My Site: your My Site screen now has two tabs, "Site Menu" and "Home". Under "Home", you'll find contextual cards with some highlights of whats going on with your site. Check your drafts or scheduled posts, your today's stats or go directly to another section of the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/15989]
-* [*] Site creation: Adds a new screen asking the user the intent of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16306]
-* [*] Notifications: Fixed notification detail crash for comments with File block [https://github.com/wordpress-mobile/WordPress-Android/pull/16314]
-* [**] Block Editor: Quote block: Adds support for V2 behind a feature flag [https://github.com/WordPress/gutenberg/pull/40133]
-* [**] Block Editor: Update "add block" button's style in default editor view [https://github.com/WordPress/gutenberg/pull/39726]
-* [*] Block Editor: Remove banner error notification on upload failure [https://github.com/WordPress/gutenberg/pull/39694]
-
+- Added Site Menu and Home tabs to My Site screen
+- Made Add Block button more visible when block editor opens
+- Removed media/audio block upload error text
+- Added Site Intent screen to site creation process
+- Fixed crash caused by notification details for comments on GB File blocks
