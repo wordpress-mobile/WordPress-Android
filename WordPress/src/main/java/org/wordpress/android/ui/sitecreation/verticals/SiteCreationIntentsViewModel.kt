@@ -9,9 +9,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.FullItemsList
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.SearchResults
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -51,6 +52,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun onSkipPressed() {
         analyticsTracker.trackSiteIntentQuestionSkipped()
         _onSkipButtonPressed.call()
+        resetUiState()
     }
 
     fun onBackPressed() {
@@ -62,12 +64,19 @@ class SiteCreationIntentsViewModel @Inject constructor(
         uiState.value?.let { state ->
             analyticsTracker.trackSiteIntentQuestionCustomVerticalSelected(state.searchQuery.orEmpty())
             _onIntentSelected.value = state.searchQuery
+            updateUiState(
+                    state.copy(vertical = state.searchQuery)
+            )
         }
     }
 
     fun updateUiState(uiState: IntentsUiState) {
         _uiState.value = uiState
     }
+
+    fun resetUiState() = updateUiState(
+            IntentsUiState.resetToContent(defaultItems)
+    )
 
     fun initializeFromResources(resources: Resources) {
         if (isInitialized) return
@@ -94,6 +103,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
     fun intentSelected(slug: String, vertical: String) {
         analyticsTracker.trackSiteIntentQuestionVerticalSelected(slug)
         _onIntentSelected.value = vertical
+        uiState.value?.let { updateUiState(
+                it.copy(vertical = vertical))
+        }
     }
 
     /**
@@ -138,7 +150,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
             updateUiState(
                     state.copy(
                             searchQuery = query,
-                            content = IntentsUiState.Content.SearchResults(searchResults)
+                            content = SearchResults(searchResults)
                     )
             )
         }
@@ -148,6 +160,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         val isAppBarTitleVisible: Boolean = false,
         val isHeaderVisible: Boolean = true,
         val searchQuery: String? = null,
+        val vertical: String? = null,
         val content: Content
     ) {
         sealed class Content(
@@ -166,6 +179,10 @@ class SiteCreationIntentsViewModel @Inject constructor(
             ) : Content(items = items)
 
             object Empty : Content(emptyList())
+        }
+
+        companion object {
+            fun resetToContent(content: Content) = IntentsUiState(content = content)
         }
     }
 

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.verticals
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +12,13 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.textfield.TextInputEditText
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationIntentsFragmentBinding
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
@@ -30,6 +33,7 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private lateinit var viewModel: SiteCreationIntentsViewModel
     private var binding: SiteCreationIntentsFragmentBinding? = null
+    private var inputWatcher: TextWatcher? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -78,9 +82,25 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
         updateTitleVisibility(uiState.isAppBarTitleVisible)
-        if (!uiState.isHeaderVisible) input.requestFocus()
+
+        uiState.vertical
+                ?.let {
+                    input.requestFocus()
+                    ActivityUtils.showKeyboard(input)
+                }
+                ?: run {
+                    input.setTextUnobserved("")
+                    ActivityUtils.hideKeyboard(requireActivity())
+                }
+
         siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
         recyclerView.scrollToPosition(0)
+    }
+
+    private fun TextInputEditText.setTextUnobserved(text: CharSequence) {
+        removeTextChangedListener(inputWatcher)
+        setText(text)
+        addTextChangedListener(inputWatcher)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
@@ -94,8 +114,11 @@ class SiteCreationIntentsFragment : Fragment() {
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
-        viewModel.onIntentSelected.observe(viewLifecycleOwner, (requireActivity() as
-                IntentsScreenListener)::onIntentSelected)
+        viewModel.onIntentSelected.observe(viewLifecycleOwner) {
+            input.isFocusable = false
+            input.setTextUnobserved(it)
+            (requireActivity() as IntentsScreenListener).onIntentSelected(it)
+        }
         viewModel.initializeFromResources(resources)
         viewModel.start()
     }
@@ -112,7 +135,7 @@ class SiteCreationIntentsFragment : Fragment() {
     }
 
     private fun SiteCreationIntentsFragmentBinding.addSearchTextChangedListener() {
-        input.doOnTextChanged { text, _, _, _ ->
+        inputWatcher = input.doOnTextChanged { text, _, _, _ ->
             viewModel.onSearchTextChanged(text?.toString() ?: "")
         }
     }
