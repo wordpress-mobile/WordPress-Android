@@ -39,6 +39,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -338,6 +339,12 @@ class ReaderPostListViewModel @Inject constructor(
         @StringRes val shortMessagePrompt: Int,
         @DrawableRes val iconId: Int
     ) {
+        object FollowSiteDiscoverStepPrompt : QuickStartReaderPrompt(
+                QuickStartTask.FOLLOW_SITE,
+                R.string.quick_start_dialog_follow_sites_message_short_discover,
+                QuickStartUtils.ICON_NOT_SET
+        )
+
         object FollowSiteSettingsStepPrompt : QuickStartReaderPrompt(
                 QuickStartTask.FOLLOW_SITE,
                 R.string.quick_start_dialog_follow_sites_message_short_settings,
