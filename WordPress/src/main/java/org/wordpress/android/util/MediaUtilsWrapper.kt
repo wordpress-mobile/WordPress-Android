@@ -67,21 +67,23 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
         isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))
 
     fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri): Boolean {
-        if (site.isActiveModuleEnabled("videopress")) return false
+        if (isVideoFile(uri) && site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) {
+            val retriever = MediaMetadataRetriever()
 
-        val retriever = MediaMetadataRetriever()
+            try {
+                retriever.setDataSource(context, uri)
+            } catch (e: IllegalArgumentException) {
+                AppLog.d(T.MEDIA, "Cannot retrieve video file $e")
+            }
 
-        try {
-            retriever.setDataSource(context, uri)
-        } catch (e: IllegalArgumentException) {
-            AppLog.d(T.MEDIA, "Cannot retrieve video file $e")
+            val videoDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
+            retriever.release()
+
+            val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(DURATION_5_MIN, TimeUnit.MINUTES)
+            return allowedVideoDurationForFreeSites < videoDuration
         }
 
-        val videoDuration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0
-        retriever.release()
-
-        val allowedVideoDurationForFreeSites = TimeUnit.MILLISECONDS.convert(DURATION_5_MIN, TimeUnit.MINUTES)
-        return allowedVideoDurationForFreeSites < videoDuration
+        return false
     }
 
     companion object {

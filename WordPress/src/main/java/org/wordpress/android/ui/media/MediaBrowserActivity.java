@@ -452,14 +452,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private void getMediaFromDeviceAndTrack(Uri videoUri, int requestCode) {
         final String mimeType = getContentResolver().getType(videoUri);
-        final boolean isVideo = mMediaUtilsWrapper.isVideoMimeType(mimeType);
 
-        if (isVideo && mSite.getHasFreePlan()) {
-            if (!mMediaUtilsWrapper.isProhibitedVideoDuration(this, mSite, videoUri)) {
-                fetchMediaAndDoNext(videoUri, requestCode, mimeType);
-            } else {
-                ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
-            }
+        if (mMediaUtilsWrapper.isProhibitedVideoDuration(this, mSite, videoUri)) {
+            ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
         } else {
             fetchMediaAndDoNext(videoUri, requestCode, mimeType);
         }
@@ -478,12 +473,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     private void checkRecordedVideoDurationBeforeUploadAndTrack() {
         Uri uri = MediaUtils.getLastRecordedVideoUri(this);
 
-        if (mSite.getHasFreePlan()) {
-            if (!mMediaUtilsWrapper.isProhibitedVideoDuration(this, mSite, uri)) {
-                queueFileForUpload(uri, getContentResolver().getType(uri));
-            } else {
-                ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
-            }
+        if (mMediaUtilsWrapper.isProhibitedVideoDuration(this, mSite, uri)) {
+            ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
         } else {
             queueFileForUpload(uri, getContentResolver().getType(uri));
         }
