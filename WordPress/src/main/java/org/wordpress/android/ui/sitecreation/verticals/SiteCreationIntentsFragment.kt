@@ -89,6 +89,7 @@ class SiteCreationIntentsFragment : Fragment() {
                     ActivityUtils.showKeyboard(input)
                 }
                 ?: run {
+                    if (!uiState.searchQuery.isNullOrBlank()) return@run
                     input.setTextUnobserved("")
                     ActivityUtils.hideKeyboard(requireActivity())
                 }
