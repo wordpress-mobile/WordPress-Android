@@ -56,7 +56,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
@@ -125,6 +124,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarItem.Action;
+import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -208,7 +209,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     private AlertDialog mBookmarksSavedLocallyDialog;
-    private QuickStartEvent mQuickStartEvent;
 
     private ReaderPostListViewModel mViewModel;
     // This VM is initialized only on the Following tab
@@ -409,7 +409,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
-            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -468,6 +467,27 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 })
         );
 
+        mViewModel.getQuickStartPromptEvent().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(prompt -> {
+                    Spannable message = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
+                            requireContext(),
+                            prompt.getShortMessagePrompt(),
+                            prompt.getIconId()
+                    );
+                    showSnackbar(
+                            new SnackbarMessageHolder(
+                                    new UiStringText(message),
+                                    null,
+                                    () -> null,
+                                    (dismissEvent) -> null,
+                                    Snackbar.LENGTH_LONG,
+                                    true
+                            )
+                    );
+                    return Unit.INSTANCE;
+                })
+        );
+
         mViewModel.getPreloadPostEvents().observe(getViewLifecycleOwner(), event ->
                 event.applyIfNotHandled(holder -> {
                     addWebViewCachingFragment(holder.getBlogId(), holder.getPostId());
@@ -505,18 +525,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void showSnackbar(SnackbarMessageHolder holder) {
-        Snackbar snackbar = WPSnackbar.make(
-                getSnackbarParent(),
-                mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
-                Snackbar.LENGTH_LONG
+        if (!isAdded() || getView() == null) return;
+        mSnackbarSequencer.enqueue(
+                new SnackbarItem(
+                        new Info(
+                                getSnackbarParent(),
+                                holder.getMessage(),
+                                holder.getDuration(),
+                                holder.isImportant()
+                        ),
+                        holder.getButtonTitle() != null
+                                ? new Action(holder.getButtonTitle(), view -> holder.getButtonAction().invoke()) : null
+                )
         );
-        if (holder.getButtonTitle() != null) {
-            snackbar.setAction(
-                    mUiHelpers.getTextOfUiString(requireContext(), holder.getButtonTitle()),
-                    v -> holder.getButtonAction().invoke()
-            );
-        }
-        snackbar.show();
     }
 
     private void addWebViewCachingFragment(Long blogId, Long postId) {
@@ -895,27 +916,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        mQuickStartEvent = event;
+        mViewModel.onQuickStartEventReceived(event);
         EventBus.getDefault().removeStickyEvent(event);
-
-        if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
-            && isAdded() && getActivity() instanceof WPMainActivity) {
-            showQuickStartSnackbar();
-            if (getSelectedSite() != null) mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
-        }
-    }
-
-    private void showQuickStartSnackbar() {
-        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
-                requireContext(),
-                R.string.quick_start_dialog_follow_sites_message_short_search,
-                R.drawable.ic_search_white_24dp
-        );
-        mSnackbarSequencer.enqueue(
-                new SnackbarItem(
-                        new SnackbarItem.Info(getSnackbarParent(), new UiStringText(title), Snackbar.LENGTH_LONG)
-                )
-        );
     }
 
     @Override
@@ -950,7 +952,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, mIsTopLevel);
-        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
 
         if (isSearchTabsShowing()) {
             int tabPosition = getSearchTabsPosition();

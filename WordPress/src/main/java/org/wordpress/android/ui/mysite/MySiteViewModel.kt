@@ -175,7 +175,9 @@ class MySiteViewModel @Inject constructor(
     private var isSiteSelected = false
 
     val isMySiteTabsEnabled: Boolean
-        get() = mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
+        get() = mySiteDashboardTabsFeatureConfig.isEnabled() &&
+                buildConfigWrapper.isMySiteTabsEnabled &&
+                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
     val orderedTabTypes: List<MySiteTabType>
         get() = if (isMySiteTabsEnabled) {
@@ -316,16 +318,11 @@ class MySiteViewModel @Inject constructor(
         }
         // It is okay to use !! here because we are explicitly creating the lists
         return SiteSelected(
-                tabsUiState = tabsUiState ?: TabsUiState(
+                tabsUiState = tabsUiState?.copy(
                         showTabs = isMySiteTabsEnabled,
-                        tabUiStates = orderedTabTypes.map {
-                            TabUiState(
-                                    label = UiStringRes(it.stringResId),
-                                    tabType = it,
-                                    showQuickStartFocusPoint = false
-                            )
-                        }
-                ),
+                        tabUiStates = orderedTabTypes.mapToTabUiStates(),
+                        shouldUpdateViewPager = shouldUpdateViewPager()
+                ) ?: createTabsUiState(),
                 siteInfoToolbarViewParams = getSiteInfoToolbarViewParams(),
                 siteInfoHeaderState = SiteInfoHeaderState(
                         hasUpdates = hasSiteHeaderUpdates(siteInfo),
@@ -1180,6 +1177,26 @@ class MySiteViewModel @Inject constructor(
     private fun findUiStateForTab(tabType: MySiteTabType) =
             tabsUiState.value?.tabUiStates?.firstOrNull { it.tabType == tabType }
 
+    private fun createTabsUiState() = TabsUiState(
+            showTabs = isMySiteTabsEnabled,
+            tabUiStates = orderedTabTypes.mapToTabUiStates(),
+            shouldUpdateViewPager = shouldUpdateViewPager()
+    )
+
+    private fun List<MySiteTabType>.mapToTabUiStates() = map {
+        TabUiState(
+                label = UiStringRes(it.stringResId),
+                tabType = it,
+                showQuickStartFocusPoint = if (it == MySiteTabType.SITE_MENU) {
+                    findUiStateForTab(MySiteTabType.SITE_MENU)?.showQuickStartFocusPoint ?: false
+                } else {
+                    false
+                }
+        )
+    }
+
+    private fun shouldUpdateViewPager() = uiModel.value?.state?.tabsUiState?.tabUiStates?.size != orderedTabTypes.size
+
     private fun hasSiteHeaderUpdates(nextSiteInfoHeaderCard: SiteInfoHeaderCard): Boolean {
         return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
                 nextSiteInfoHeaderCard
@@ -1218,7 +1235,8 @@ class MySiteViewModel @Inject constructor(
 
     data class TabsUiState(
         val showTabs: Boolean = false,
-        val tabUiStates: List<TabUiState>
+        val tabUiStates: List<TabUiState>,
+        val shouldUpdateViewPager: Boolean = false
     ) {
         data class TabUiState(
             val label: UiString,

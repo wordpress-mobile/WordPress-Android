@@ -15,7 +15,6 @@ import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
@@ -28,7 +27,6 @@ class CardsBuilder @Inject constructor(
     private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
     private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
-    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 ) {
     fun build(
@@ -40,7 +38,7 @@ class CardsBuilder @Inject constructor(
         isMySiteTabsEnabled: Boolean
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
-        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+        if (isMySiteTabsEnabled) {
             cards.add(quickLinkRibbonBuilder.build(quickLinkRibbonsBuilderParams))
         }
         if (shouldShowQuickActionsCard(isMySiteTabsEnabled)) {

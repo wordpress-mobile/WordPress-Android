@@ -83,7 +83,6 @@ Language: pt_BR
     <string name="site_creation_intent_beauty">Beleza</string>
     <string name="site_creation_intent_automotive">Automotivo</string>
     <string name="site_creation_intent_art">Arte</string>
-    <string name="new_site_creation_intents_input_hint">Ex.: moda, poesia, política</string>
     <string name="new_site_creation_intents_title">Assunto do site</string>
     <string name="quick_start_site_menu_tab_message_short">Toque em &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remover do painel</string>
@@ -99,7 +98,6 @@ Language: pt_BR
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinação de cores pode dificultar a leitura para algumas pessoas. Tente usar uma cor de fundo mais clara e/ou uma cor de texto mais escura.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinação de cores pode dificultar a leitura para algumas pessoas. Tente usar uma cor de fundo mais escura e/ou uma cor de texto mais clara.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Falha ao inserir mídia.\nToque para saber mais.</string>
-    <string name="new_site_creation_intents_header_subtitle">Escolha um assunto na lista abaixo ou digite o seu próprio</string>
     <string name="new_site_creation_intents_header_title">Qual o propósito do seu site?</string>
     <string name="notification_channel_weekly_roundup_title">Resumo semanal</string>
     <string name="my_site_dashboard_tab_title">Início</string>

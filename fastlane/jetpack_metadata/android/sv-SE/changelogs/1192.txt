@@ -1,5 +1,0 @@
-19.5:
-- Vi har ändrat texten för uppladdningsfel i mediauppladdningsblock.
-- Animerade GIF-bilder har nu ett GIF-märke.
-- Blockinställningsändringar av sorterade listor visas nu i redigeraren.
-- Du kan inaktivera veckosammanfattningsnotiser för alla webbplatser i Appinformation.

@@ -3011,6 +3011,7 @@
     <string name="preview_type_desc">Select preview type</string>
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
 
     <string name="content_description_more">More</string>
 
@@ -3037,10 +3038,10 @@
     <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
-    <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
-    <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
+    <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">Select %1$s Settings %2$s to add topics you like.</string>
+    <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
@@ -3339,6 +3340,7 @@
     <string name="hpp_title">Choose a design</string>
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
     <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_choose_and_create_site">Create site</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
@@ -3436,7 +3438,7 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
-    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add blocks</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add Blocks</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
@@ -4012,6 +4014,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_got_it">Got it</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
@@ -4077,6 +4080,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="initial_screen_entry_value_home" translatable="false">home</string>
     <string name="initial_screen_entry_value_menu" translatable="false">menu</string>
     <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_menu</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Add blocks</string>
     <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/initial_screen_home</item>
         <item>@string/initial_screen_menu</item>
