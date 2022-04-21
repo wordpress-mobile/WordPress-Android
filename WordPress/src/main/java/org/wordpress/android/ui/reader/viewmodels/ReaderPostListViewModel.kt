@@ -58,7 +58,6 @@ class ReaderPostListViewModel @Inject constructor(
     private var isStarted = false
 
     private var readerViewModel: ReaderViewModel? = null
-    var quickStartEvent: QuickStartEvent? = null
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -321,7 +320,6 @@ class ReaderPostListViewModel @Inject constructor(
     /* QUICK START */
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
-        quickStartEvent = event
         if (event.task == QuickStartTask.FOLLOW_SITE) startQuickStartFollowSiteTaskSettingsStep()
     }
 

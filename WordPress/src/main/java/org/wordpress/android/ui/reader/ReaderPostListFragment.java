@@ -409,7 +409,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
-            mViewModel.setQuickStartEvent(savedInstanceState.getParcelable(QuickStartEvent.KEY));
         }
     }
 
@@ -953,7 +952,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, mIsTopLevel);
-        outState.putParcelable(QuickStartEvent.KEY, mViewModel.getQuickStartEvent());
 
         if (isSearchTabsShowing()) {
             int tabPosition = getSearchTabsPosition();
