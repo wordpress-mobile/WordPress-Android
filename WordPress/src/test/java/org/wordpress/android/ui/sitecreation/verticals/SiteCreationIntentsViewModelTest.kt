@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.util.Locale
 
@@ -52,6 +53,16 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
+    fun `when the skip button is pressed the ui state is reset to its initial value`() {
+        viewModel.initializeFromResources(resources)
+
+        viewModel.onSkipPressed()
+
+        val expectedState = IntentsUiState(content = viewModel.uiState.value!!.content)
+        assertThat(viewModel.uiState.value).isEqualTo(expectedState)
+    }
+
+    @Test
     fun `when the back button is pressed an analytics event is emitted`() {
         viewModel.onBackPressed()
         verify(analyticsTracker).trackSiteIntentQuestionCanceled()
@@ -63,6 +74,17 @@ class SiteCreationIntentsViewModelTest {
         viewModel.initializeFromResources(resources)
         viewModel.intentSelected(slug, slug)
         verify(analyticsTracker).trackSiteIntentQuestionVerticalSelected(slug)
+    }
+
+    @Test
+    fun `when an item is tapped the vertical is persisted`() {
+        val slug = "test1"
+        val vertical = "test vertical"
+        viewModel.initializeFromResources(resources)
+
+        viewModel.intentSelected(slug, vertical)
+
+        assertThat(viewModel.uiState.value?.vertical).isEqualTo(vertical)
     }
 
     @Test
@@ -95,6 +117,17 @@ class SiteCreationIntentsViewModelTest {
         viewModel.onSearchTextChanged(valueOfSearchInput)
         viewModel.onCustomVerticalSelected()
         verify(analyticsTracker).trackSiteIntentQuestionCustomVerticalSelected(eq(valueOfSearchInput))
+    }
+
+    @Test
+    fun `when the custom vertical is tapped its value is persisted`() {
+        val valueOfSearchInput = "test vertical"
+        viewModel.initializeFromResources(resources)
+        viewModel.onSearchTextChanged(valueOfSearchInput)
+
+        viewModel.onCustomVerticalSelected()
+
+        assertThat(viewModel.uiState.value?.vertical).isEqualTo(viewModel.uiState.value?.searchQuery)
     }
 
     @Test
