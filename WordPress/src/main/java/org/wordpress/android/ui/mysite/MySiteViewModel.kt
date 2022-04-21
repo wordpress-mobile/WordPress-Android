@@ -1147,7 +1147,16 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun selectDefaultTabIfNeeded() {
-        if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
+        if (!isMySiteTabsEnabled) return
+        // This logic checks if the current tab is the same as the tab
+        // set as initial screen, if yes then return
+        if (isDefaultABExperimentTabSet) {
+            _selectTab.value?.let { tab ->
+                val currentTab = tab.peekContent().position
+                if (currentTab == orderedTabTypes.indexOf(defaultABExperimentTab))
+                    return
+            }
+        }
         val index = orderedTabTypes.indexOf(defaultABExperimentTab)
         if (index != -1) {
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
