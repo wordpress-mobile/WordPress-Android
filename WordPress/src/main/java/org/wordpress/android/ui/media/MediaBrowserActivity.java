@@ -454,8 +454,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         final String mimeType = getContentResolver().getType(videoUri);
         final boolean isVideo = mMediaUtilsWrapper.isVideoMimeType(mimeType);
 
-        if (isVideo && mSite.getHasFreePlan() && !mSite.isActiveModuleEnabled("videopress")) {
-            if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, videoUri)) {
+        if (isVideo && mSite.getHasFreePlan()) {
+            if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, mSite, videoUri)) {
                 fetchMediaAndDoNext(videoUri, requestCode, mimeType);
             } else {
                 ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);
@@ -478,8 +478,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     private void checkRecordedVideoDurationBeforeUploadAndTrack() {
         Uri uri = MediaUtils.getLastRecordedVideoUri(this);
 
-        if (mSite.getHasFreePlan() && !mSite.isActiveModuleEnabled("videopress")) {
-            if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, uri)) {
+        if (mSite.getHasFreePlan()) {
+            if (mMediaUtilsWrapper.isAllowedVideoDurationForFreeSites(this, mSite, uri)) {
                 queueFileForUpload(uri, getContentResolver().getType(uri));
             } else {
                 ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, LONG);

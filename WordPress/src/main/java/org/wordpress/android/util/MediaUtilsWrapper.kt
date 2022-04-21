@@ -66,7 +66,9 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isVideoFile(mediaUri: Uri): Boolean =
         isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))
 
-    fun isAllowedVideoDurationForFreeSites(context: Context, uri: Uri): Boolean {
+    fun isAllowedVideoDurationForFreeSites(context: Context, site: SiteModel, uri: Uri): Boolean {
+        if (site.isActiveModuleEnabled("videopress")) return true
+
         val retriever = MediaMetadataRetriever()
 
         try {
