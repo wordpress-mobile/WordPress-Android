@@ -848,7 +848,8 @@ public final class AnalyticsTracker {
         MY_SITE_DASHBOARD_SHOWN,
         MY_SITE_SITE_MENU_SHOWN,
         MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
-        APP_SETTINGS_INITIAL_SCREEN_CHANGED
+        APP_SETTINGS_INITIAL_SCREEN_CHANGED,
+        CHANGE_USERNAME_DISPLAYED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
