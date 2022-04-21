@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.LineChartMarkerView
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType
@@ -46,6 +47,11 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     fun bind(item: LineChartItem) {
         chart.setNoDataText("")
+
+        val markerView = LineChartMarkerView(chart.context)
+        markerView.chartView = chart
+        chart.marker = markerView
+
         coroutineScope.launch {
             delay(50)
             val lineCount = chart.draw(item)
@@ -85,7 +91,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
 
         val prevWeekData = if (hasData && item.entries.size > 7) {
-            item.entries.subList(1, 7)
+            item.entries.subList(0, 7)
         } else {
             emptyList()
         }
@@ -190,7 +196,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun buildEmptyDataSet(context: Context, selectedType: Int, count: Int): LineDataSet {
-        val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
+        val emptyValues = (0 until count).map { index -> Entry(index.toFloat(), 1f, "empty") }
         val dataSet = LineDataSet(emptyValues, "Empty")
         dataSet.setGradientColor(
                 ContextCompat.getColor(context, R.color.primary_5),
@@ -205,7 +211,8 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun buildDataSet(context: Context, selectedType: Int, cut: List<Entry>): LineDataSet {
-        val dataSet = LineDataSet(cut, "Current week data")
+        val selectType = SelectedType.valueOf(selectedType).toString()
+        val dataSet = LineDataSet(cut, "Current week $selectType")
 
         dataSet.axisDependency = LEFT
 
