@@ -85,8 +85,10 @@ class SiteCreationIntentsFragment : Fragment() {
 
         uiState.vertical
                 ?.let {
-                    input.requestFocus()
-                    ActivityUtils.showKeyboard(input)
+                    it.also {
+                        input.requestFocus()
+                        ActivityUtils.showKeyboard(input)
+                    }
                 }
                 ?: run {
                     if (!uiState.searchQuery.isNullOrBlank()) return@run
