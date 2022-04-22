@@ -101,9 +101,11 @@ class SiteCreationIntentsFragment : Fragment() {
     }
 
     private fun TextInputEditText.setTextUnobserved(text: CharSequence) {
-        removeTextChangedListener(inputWatcher)
-        setText(text)
-        addTextChangedListener(inputWatcher)
+        inputWatcher?.let {
+            removeTextChangedListener(it)
+            setText(text)
+            addTextChangedListener(it)
+        }
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
