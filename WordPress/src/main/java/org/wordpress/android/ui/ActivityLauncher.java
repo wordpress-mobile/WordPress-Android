@@ -359,9 +359,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static Intent createMainActivityAndShowEditorIntent(@NonNull final Context context) {
+    public static Intent openEditorAndDismissNotificationIntent(
+            @NonNull final Context context, final int notificationId
+    ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         return intent;
     }
 

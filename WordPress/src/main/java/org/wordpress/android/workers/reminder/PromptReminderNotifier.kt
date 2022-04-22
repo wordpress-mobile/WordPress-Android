@@ -38,18 +38,20 @@ class PromptReminderNotifier @Inject constructor(
             template = "",
             respondents = emptyList()
         )
+        val openEditorRequestCode = notificationId + 1
         val openEditorPendingIntent = PendingIntent.getActivity(
             context,
-            notificationId,
+            openEditorRequestCode,
             // TODO @RenanLukas send BloggingPrompt with OpenEditor action when prompt store is ready
-            ActivityLauncher.createMainActivityAndShowEditorIntent(context),
+            ActivityLauncher.openEditorAndDismissNotificationIntent(context, notificationId),
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+        val dismissNotificationRequestCode = notificationId + 2
         val dismissNotificationPendingIntent = PendingIntent.getActivity(
-                context,
-                notificationId,
-                ActivityLauncher.createMainActivityDismissNotificationIntent(context, notificationId),
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            context,
+            dismissNotificationRequestCode,
+            ActivityLauncher.createMainActivityDismissNotificationIntent(context, notificationId),
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val answerPromptReminderNotification = ReminderNotification(
             channel = resourceProvider.getString(R.string.notification_channel_reminder_id),

@@ -65,9 +65,10 @@ class LocalNotificationWorker(
     private fun getFirstActionPendingIntent(notificationId: Int): PendingIntent {
         val type = Type.fromTag(inputData.getString(TYPE))
         val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
+        val firstActionRequestCode = notificationId + 1
         return PendingIntent.getActivity(
                 context,
-                0,
+                firstActionRequestCode,
                 handler?.buildFirstActionIntent(context, notificationId),
                 PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -76,9 +77,10 @@ class LocalNotificationWorker(
     private fun getSecondActionPendingIntent(notificationId: Int): PendingIntent {
         val type = Type.fromTag(inputData.getString(TYPE))
         val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
+        val secondActionRequestCode = notificationId + 2
         return PendingIntent.getActivity(
                 context,
-                0,
+                secondActionRequestCode,
                 handler?.buildSecondActionIntent(context, notificationId),
                 PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
