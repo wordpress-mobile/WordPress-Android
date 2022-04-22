@@ -50,6 +50,7 @@ class SiteItemsBuilder @Inject constructor(
                 siteListItemBuilder.buildBackupItemIfAvailable(params.onClick, params.backupAvailable),
                 siteListItemBuilder.buildScanItemIfAvailable(params.onClick, params.scanAvailable),
                 siteListItemBuilder.buildJetpackItemIfAvailable(params.site, params.onClick),
+                siteListItemBuilder.buildDomainsItemForJetpackIfAvailable(params.site, params.onClick),
                 CategoryHeaderItem(UiStringRes(R.string.my_site_header_publish)),
                 ListItem(
                         R.drawable.ic_posts_white_24dp,
