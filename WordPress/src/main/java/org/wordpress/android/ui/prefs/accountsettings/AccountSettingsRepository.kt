@@ -36,7 +36,8 @@ class AccountSettingsRepository @Inject constructor(
         get() = accountStore.account
 
     suspend fun getSitesAccessedViaWPComRest(): List<SiteModel> = withContext(ioDispatcher) {
-        siteStore.sitesAccessedViaWPComRest }
+        siteStore.sitesAccessedViaWPComRest
+    }
 
     suspend fun getSite(siteRemoteId: Long): SiteModel? = withContext(ioDispatcher) {
         siteStore.getSiteBySiteId(siteRemoteId)
@@ -64,12 +65,12 @@ class AccountSettingsRepository @Inject constructor(
         return updateAccountSettings(addPayload)
     }
 
-    suspend fun updateWebAddress(newWebAddress: String?): OnAccountChanged {
+    suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_URL"] = newWebAddress }
         return updateAccountSettings(addPayload)
     }
 
-    suspend fun updatePassword(newPassword: String?): OnAccountChanged {
+    suspend fun updatePassword(newPassword: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["password"] = newPassword }
         return updateAccountSettings(addPayload)
     }
