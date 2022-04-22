@@ -9,5 +9,6 @@ import kotlinx.parcelize.Parcelize
 data class SiteCreationServiceData(
     val segmentId: Long?,
     val siteDesign: String?,
-    val domain: String
+    val domain: String?,
+    val title: String?
 ) : Parcelable

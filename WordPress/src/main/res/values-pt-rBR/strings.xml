@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-06 18:59:04+0000
+Translation-Revision-Date: 2022-04-12 18:33:17+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: pt_BR
 -->
 <resources>
-    <string name="featured_image_removed_notice">Removido de imagem em destaque</string>
-    <string name="featured_image_confirmation_notice">Definir como imagem em destaque</string>
-    <string name="featured_image_replace_dialog_cancel">Manter a atual</string>
-    <string name="featured_image_replace_dialog_confirm">Substituir a imagem em destaque</string>
-    <string name="featured_image_replace_dialog_description">Já existe uma imagem em destaque. Gostaria de substituí-la pela nova imagem?</string>
-    <string name="featured_image_replace_dialog_title">Substituir a imagem em destaque atual?</string>
+    <string name="featured_image_removed_notice">Removido de imagem destacada</string>
+    <string name="featured_image_confirmation_notice">Definir como imagem destacada</string>
+    <string name="featured_image_replace_dialog_cancel">Manter atual</string>
+    <string name="featured_image_replace_dialog_confirm">Substituir imagem destacada</string>
+    <string name="featured_image_replace_dialog_description">Já existe uma imagem destacada configurada. Você gostaria de substituí-la pela nova imagem?</string>
+    <string name="featured_image_replace_dialog_title">Substituir imagem destacada atual?</string>
     <string name="dialog_dismiss_try_block_editor">Dispensar</string>
-    <string name="dialog_body_try_block_editor">Removeremos o editor clássico para novos posts em breve mas isso não alterará a edição de posts e páginas existentes. Você pode adiantar o processo ativando o editor de blocos agora nas configurações de seu site.</string>
+    <string name="dialog_body_try_block_editor">Removeremos o editor clássico para novos posts em breve, mas isso não afetará a edição de posts e páginas existentes. Você pode adiantar o processo ativando o editor de blocos agora mesmo nas configurações do site.</string>
     <string name="dialog_title_try_block_editor">Experimente o novo editor de blocos</string>
     <string name="menu_toolbar_title">Editar bloco %s</string>
     <string name="long_post_dlg_saving">Salvando</string>
-    <string name="retry_failed_upload_retry_all">Tentar todas novamente</string>
+    <string name="retry_failed_upload_retry_all">Tentar tudo novamente</string>
     <string name="retry_failed_upload_remove">Remover envio</string>
     <string name="retry_failed_upload_yes">Tentar novamente</string>
     <string name="retry_failed_upload_title">Não foi possível enviar o arquivo</string>
@@ -40,19 +40,19 @@ Language: pt_BR
     <string name="stop_save_dialog_message">Aguarde até que todos os arquivos sejam salvos</string>
     <string name="stop_save_dialog_title">Salvando arquivos</string>
     <string name="post_content">Conteúdo</string>
-    <string name="blogging_prompts_onboarding_card_prompt">Grave o filme de sua vida.</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Faça o filme da sua vida.</string>
     <string name="blogging_prompts_onboarding_remind_me">Lembre-me</string>
     <string name="blogging_prompts_onboarding_try_it_now">Experimente agora</string>
     <string name="blogging_prompts_onboarding_content_note_content">Você pode ler mais sobre lembretes e configurá-los a qualquer momento em Meu site &gt; Configurações &gt; Lembretes de publicação.</string>
     <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Mostraremos um novo aviso diariamente em seu painel para ajudar a manter a criatividade rolando!</string>
-    <string name="blogging_prompts_onboarding_content_top">A melhor forma de melhorar sua escrita é criando um hábito de publicação e compartilhamento com outras pessoas. Aí é onde os Lembretes podem ajudar!</string>
-    <string name="blogging_prompts_onboarding_header_title">Apresentando Lembretes</string>
+    <string name="blogging_prompts_onboarding_content_top">A melhor forma de aprimorar sua escrita é fazer dela um hábito e compartilhá-la com outras pessoas. É aí que entram as sugestões!</string>
+    <string name="blogging_prompts_onboarding_header_title">Apresentando as sugestões</string>
     <string name="blogging_prompt_set_reminders">Definir lembretes</string>
-    <string name="blogging_reminders_prompt_subtitle">Lembretes incluirão avisos diários</string>
-    <string name="blogging_reminders_prompt_title">Incluir avisos diários</string>
-    <string name="post_publishing_set_up_blogging_prompts_message">Publicar regularmente atrai mais leitores. Nos conte quando você deseja escrever que enviaremos lembretes!</string>
-    <string name="set_your_blogging_prompts_title">Melhore sua escrita criando um hábito</string>
+    <string name="blogging_reminders_prompt_subtitle">O lembrete incluirá uma sugestão diária</string>
+    <string name="blogging_reminders_prompt_title">Incluir sugestão diária</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Publicar com frequência atrai novos leitores. Informe quando você quer escrever e enviaremos um lembrete.</string>
+    <string name="set_your_blogging_prompts_title">Melhore sua escrita fazendo dela um hábito</string>
     <string name="site_creation_intent_writing_poetry">Literatura e poesia</string>
     <string name="site_creation_intent_travel">Viagem</string>
     <string name="site_creation_intent_technology">Tecnologia</string>
@@ -65,7 +65,7 @@ Language: pt_BR
     <string name="site_creation_intent_parenting">Criação de filhos</string>
     <string name="site_creation_intent_news">Notícias</string>
     <string name="site_creation_intent_music">Música</string>
-    <string name="site_creation_intent_local_services">Comércio local</string>
+    <string name="site_creation_intent_local_services">Serviços locais</string>
     <string name="site_creation_intent_lifestyle">Estilo de vida</string>
     <string name="site_creation_intent_interior_design">Design de interiores</string>
     <string name="site_creation_intent_health">Saúde</string>
@@ -75,31 +75,29 @@ Language: pt_BR
     <string name="site_creation_intent_film_television">Cinema e televisão</string>
     <string name="site_creation_intent_finance">Finanças</string>
     <string name="site_creation_intent_fashion">Moda</string>
-    <string name="site_creation_intent_diy">Faça você mesmo</string>
+    <string name="site_creation_intent_diy">DIY (faça você mesmo)</string>
     <string name="site_creation_intent_education">Educação</string>
-    <string name="site_creation_intent_community_nonprofit">Comunidade e ONGs</string>
+    <string name="site_creation_intent_community_nonprofit">Comunidade e trabalho beneficente</string>
     <string name="site_creation_intent_business">Negócios</string>
     <string name="site_creation_intent_books">Livros</string>
     <string name="site_creation_intent_beauty">Beleza</string>
     <string name="site_creation_intent_automotive">Automotivo</string>
     <string name="site_creation_intent_art">Arte</string>
-    <string name="new_site_creation_intents_input_hint">Ex. Moda, Poesia, Política</string>
     <string name="new_site_creation_intents_title">Assunto do site</string>
     <string name="quick_start_site_menu_tab_message_short">Toque em &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remover do painel</string>
-    <string name="my_site_blogging_prompt_card_menu_skip">Dispensar este aviso</string>
-    <string name="my_site_blogging_prompt_card_menu_view_more">Ver mais avisos</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Ignorar esta sugestão</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Visualizar mais sugestões</string>
     <string name="my_site_blogging_prompt_card_number_of_answers">%d respostas</string>
-    <string name="my_site_blogging_prompt_card_share_chooser_title">Compartilhar avisos de publicação</string>
-    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
-    <string name="my_site_blogging_prompt_card_answer_prompt">Responder aviso</string>
-    <string name="my_site_blogging_prompt_card_title">Avisos</string>
-    <string name="my_site_all_tab_title">Todos</string>
-    <string name="site_settings_blogging_reminders_and_prompts_title">Lembretes e avisos</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Compartilhar sugestão de publicação</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondida</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Responder sugestão</string>
+    <string name="my_site_blogging_prompt_card_title">Sugestões</string>
+    <string name="my_site_all_tab_title">Tudo</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Lembretes e sugestões</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinação de cores pode dificultar a leitura para algumas pessoas. Tente usar uma cor de fundo mais clara e/ou uma cor de texto mais escura.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinação de cores pode dificultar a leitura para algumas pessoas. Tente usar uma cor de fundo mais escura e/ou uma cor de texto mais clara.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Falha ao inserir mídia.\nToque para saber mais.</string>
-    <string name="new_site_creation_intents_header_subtitle">Escolha um assunto na lista abaixo ou digite o seu próprio</string>
     <string name="new_site_creation_intents_header_title">Qual o propósito do seu site?</string>
     <string name="notification_channel_weekly_roundup_title">Resumo semanal</string>
     <string name="my_site_dashboard_tab_title">Início</string>
@@ -705,7 +703,7 @@ Language: pt_BR
     <string name="scan_in_minutes_ago">%s minutos atrás</string>
     <string name="scan_in_hours_ago">%s hora(s) atrás</string>
     <string name="scan_this_site">este site</string>
-    <string name="scan_idle_last_scan_description">A última varredura do Jetpack rodou %1$s e não encontrou nenhuma ameaça. %2$s</string>
+    <string name="scan_idle_last_scan_description">A última varredura do Jetpack executou %1$s e não encontrou nenhum risco. %2$s</string>
     <string name="scan_idle_threats_found_title">Seu site pode estar em risco</string>
     <string name="scan_idle_no_threats_found_title">Não se preocupe com nada</string>
     <string name="scan_again">Examinar novamente</string>
@@ -1063,7 +1061,7 @@ Language: pt_BR
     <string name="pages_cannot_be_started">Não conseguimos abrir as páginas agora. Tente novamente mais tarde.</string>
     <string name="pages_set_as_posts_page">Definir como página de posts</string>
     <string name="pages_set_as_homepage">Definir como página inicial</string>
-    <string name="suggestion_invalid">%1$s não é um %2$s válido</string>
+    <string name="suggestion_invalid">%1$s não é um(a) %2$s válido(a)</string>
     <string name="site_settings_select_page">Selecionar página</string>
     <string name="site_settings_posts_page">Página de posts</string>
     <string name="site_settings_static_homepage">Página inicial estática</string>

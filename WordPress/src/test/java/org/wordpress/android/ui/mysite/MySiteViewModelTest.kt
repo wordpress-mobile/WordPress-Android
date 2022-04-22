@@ -105,8 +105,6 @@ import org.wordpress.android.ui.mysite.items.SiteItemsBuilder
 import org.wordpress.android.ui.mysite.items.SiteItemsTracker
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.DASHBOARD
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.SITE_MENU
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -188,7 +186,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val emailAddress = "test@email.com"
     private val postId = 100
     private val localHomepageId = 1
-    private val home = "home"
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -438,6 +435,30 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given site not using wpcom rest api, when site is selected, then tabs are not visible`() {
+        site.setIsJetpackConnected(false)
+
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isSiteUsingWpComRestApi = false
+        )
+
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
+    }
+
+    @Test
+    fun `given site using wpcom rest api, when site is selected, then tabs are visible`() {
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isSiteUsingWpComRestApi = true
+        )
+
+        assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue()
+    }
+
+    @Test
     fun `given my site tabs build, when site is selected, then site header is visible`() {
         initSelectedSite()
 
@@ -486,29 +507,29 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + initial screen is home, when site is selected, then default tab is dashboard`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(home)
+        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.DASHBOARD.label)
 
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home
+                initialScreen = MySiteTabType.DASHBOARD.label
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(DASHBOARD), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD), false))
     }
 
     @Test
     fun `given tabs enabled + initial screen is site_menu, when site is selected, then default tab is site menu`() {
-        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(SITE_MENU.label)
+        whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.SITE_MENU.label)
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label
+                initialScreen = MySiteTabType.SITE_MENU.label
         )
 
         assertThat(tabNavigation)
-                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
+                .containsOnly(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* CREATE SITE - DEFAULT TAB */
@@ -518,7 +539,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label
+                initialScreen = MySiteTabType.SITE_MENU.label
         )
 
         viewModel.onCreateSiteResult()
@@ -527,7 +548,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         /* First time default tab is set when My Site screen is shown and site is selected.
            When site is created then again it sets the default tab. */
         assertThat(tabNavigation.last())
-                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(SITE_MENU), false))
+                .isEqualTo(TabNavigation(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU), false))
     }
 
     /* AVATAR */
@@ -887,7 +908,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
-        initSelectedSite()
+        initSelectedSite(isSiteUsingWpComRestApi = false)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -915,7 +936,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
-        initSelectedSite()
+        initSelectedSite(isSiteUsingWpComRestApi = false)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -1105,9 +1126,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
-        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId)
+        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId, false)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1116,7 +1137,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1127,7 +1148,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1138,7 +1159,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId)
+        viewModel.checkAndStartQuickStart(siteLocalId, false)
 
         assertThat(navigationActions).containsExactly(
                 SiteNavigationAction.ShowQuickStartDialog(
@@ -1163,7 +1184,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.startQuickStart()
 
-        verify(quickStartUtilsWrapper).startQuickStart(site.id)
+        verify(quickStartUtilsWrapper).startQuickStart(site.id, false)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1243,7 +1264,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 onTodaysStatsCardClick.invoke()
 
-                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
             }
 
     @Test
@@ -1253,7 +1274,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
                 onTodaysStatsCardFooterLinkClick.invoke()
 
-                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenTodaysStats(site))
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
             }
 
     @Test
@@ -1382,6 +1403,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt != null
                 },
+                any(),
                 any()
         )
     }
@@ -1397,6 +1419,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt == null
                 },
+                any(),
                 any()
         )
     }
@@ -1611,8 +1634,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         site.setIsJetpackConnected(false)
         site.setIsWPCom(false)
+        site.origin = SiteModel.ORIGIN_XMLRPC
 
-        invokeItemClickAction(ListItemAction.STATS)
+        invokeItemClickAction(ListItemAction.STATS, isSiteUsingWpComRestApi = false)
 
         assertThat(navigationActions).containsExactly(SiteNavigationAction.ConnectJetpackForStats(site))
     }
@@ -1824,7 +1848,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
 
         verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenHomepage(site, localHomepageId))
@@ -1834,7 +1858,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor feature is not enabled, then the home page editor is not shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(false)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1924,7 +1948,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home
+                initialScreen = MySiteTabType.DASHBOARD.label
         )
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -1940,7 +1964,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label
+                initialScreen = MySiteTabType.SITE_MENU.label
         )
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -1978,7 +2002,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home
+                initialScreen = MySiteTabType.DASHBOARD.label
         )
 
         val items = (uiModels.last().state as SiteSelected).siteMenuCardsAndItems
@@ -2032,7 +2056,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper, atLeastOnce()).track(
                 Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.label)
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.SITE_MENU.trackingLabel)
         )
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_SITE_MENU_SHOWN)
     }
@@ -2045,7 +2069,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper, atLeastOnce()).track(
                 Stat.MY_SITE_TAB_TAPPED,
-                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.label)
+                mapOf(MySiteViewModel.MY_SITE_TAB to MySiteTabType.DASHBOARD.trackingLabel)
         )
         verify(analyticsTrackerWrapper, atLeastOnce()).track(Stat.MY_SITE_DASHBOARD_SHOWN)
     }
@@ -2067,7 +2091,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label,
+                initialScreen = MySiteTabType.SITE_MENU.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2084,7 +2108,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home,
+                initialScreen = MySiteTabType.DASHBOARD.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2101,7 +2125,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = SITE_MENU.label,
+                initialScreen = MySiteTabType.SITE_MENU.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2118,7 +2142,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite(
                 isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
-                initialScreen = home,
+                initialScreen = MySiteTabType.DASHBOARD.label,
                 isQuickStartDynamicCardEnabled = true
         )
 
@@ -2302,7 +2326,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isSiteUsingWpComRestApi = false)
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
@@ -2395,7 +2419,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun invokeItemClickAction(action: ListItemAction) {
+    private fun invokeItemClickAction(
+        action: ListItemAction,
+        isSiteUsingWpComRestApi: Boolean = true
+    ) {
         var clickAction: ((ListItemAction) -> Unit)? = null
         doAnswer {
             val params = (it.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
@@ -2403,7 +2430,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             listOf<MySiteCardAndItem>()
         }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
 
-        initSelectedSite()
+        initSelectedSite(isSiteUsingWpComRestApi = isSiteUsingWpComRestApi)
 
         assertThat(clickAction).isNotNull
         clickAction!!.invoke(action)
@@ -2415,7 +2442,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
-        initialScreen: String = SITE_MENU.label
+        initialScreen: String = MySiteTabType.SITE_MENU.label,
+        isSiteUsingWpComRestApi: Boolean = true
     ) {
         setUpDynamicCardsBuilder(isQuickStartDynamicCardEnabled)
         whenever(
@@ -2427,6 +2455,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
         whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(initialScreen)
+        if (isSiteUsingWpComRestApi) {
+            site.setIsWPCom(true)
+            site.setIsJetpackConnected(true)
+            site.origin = SiteModel.ORIGIN_WPCOM_REST
+        }
         onSiteSelected.value = siteLocalId
         onSiteChange.value = site
         selectedSite.value = SelectedSite(site)
@@ -2439,7 +2472,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun setUpCardsBuilder() {
         doAnswer {
             val quickActionsCard = initQuickActionsCard(it)
-            val quickLinkRibbons = initQuickLinkRibbons(it)
+            val quickLinkRibbon = initQuickLinkRibbon(it)
             val domainRegistrationCard = initDomainRegistrationCard(it)
             val quickStartCard = initQuickStartCard(it)
             val dashboardCards = initDashboardCards(it)
@@ -2452,14 +2485,15 @@ class MySiteViewModelTest : BaseUnitTest() {
             if (mySiteDashboardPhase2FeatureConfig.isEnabled())
                 listOfCards.add(dashboardCards)
             if (mySiteDashboardTabsFeatureConfig.isEnabled())
-                listOfCards.add(quickLinkRibbons)
+                listOfCards.add(quickLinkRibbon)
             listOfCards
         }.whenever(cardsBuilder).build(
                 quickActionsCardBuilderParams = any(),
                 domainRegistrationCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
                 dashboardCardsBuilderParams = any(),
-                quickLinkRibbonsBuilderParams = any()
+                quickLinkRibbonsBuilderParams = any(),
+                isMySiteTabsEnabled = any()
         )
 
         doAnswer {
@@ -2516,23 +2550,17 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onPagesClick = ListItemInteraction.create { params.onQuickActionPagesClick.invoke() },
                 onPostsClick = ListItemInteraction.create { params.onQuickActionPostsClick.invoke() },
                 onMediaClick = ListItemInteraction.create { params.onQuickActionMediaClick.invoke() },
-                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages,
-                showPagesFocusPoint = false,
-                showStatsFocusPoint = false
+                showPages = site.isSelfHostedAdmin || site.hasCapabilityEditPages
         )
     }
 
-    private fun initQuickLinkRibbons(mockInvocation: InvocationOnMock): QuickLinkRibbon {
+    private fun initQuickLinkRibbon(mockInvocation: InvocationOnMock): QuickLinkRibbon {
         val params = (mockInvocation.arguments.filterIsInstance<QuickLinkRibbonBuilderParams>()).first()
         quickLinkRibbonPagesClickAction = params.onPagesClick
         quickLinkRibbonPostsClickAction = params.onPostsClick
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
-        return QuickLinkRibbon(
-            quickLinkRibbonItems = mock(),
-            showStatsFocusPoint = false,
-            showPagesFocusPoint = false
-        )
+        return QuickLinkRibbon(quickLinkRibbonItems = mock())
     }
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
@@ -2654,7 +2682,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
-                answeredUsers = emptyList(),
+                respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit)

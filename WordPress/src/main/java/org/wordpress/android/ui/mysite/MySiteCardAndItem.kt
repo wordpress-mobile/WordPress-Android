@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
@@ -71,21 +72,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onPagesClick: ListItemInteraction,
             val onPostsClick: ListItemInteraction,
             val onMediaClick: ListItemInteraction,
-            val showPages: Boolean = true,
-            val showStatsFocusPoint: Boolean = false,
-            val showPagesFocusPoint: Boolean = false
-        ) : Card(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
+            val showPages: Boolean = true
+        ) : Card(QUICK_ACTIONS_CARD)
 
         data class QuickLinkRibbon(
-            val quickLinkRibbonItems: List<QuickLinkRibbonItem>,
-            val showPagesFocusPoint: Boolean = false,
-            val showStatsFocusPoint: Boolean = false
-        ) : Card(QUICK_LINK_RIBBON, activeQuickStartItem = showPagesFocusPoint || showStatsFocusPoint) {
+            val quickLinkRibbonItems: List<QuickLinkRibbonItem>
+        ) : Card(QUICK_LINK_RIBBON) {
             data class QuickLinkRibbonItem(
                 @StringRes val label: Int,
                 @DrawableRes val icon: Int,
-                val onClick: ListItemInteraction,
-                val showFocusPoint: Boolean = false
+                val onClick: ListItemInteraction
             )
         }
 
@@ -200,15 +196,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 ) : DashboardCard(dashboardCardType) {
                     data class BloggingPromptCardWithData(
                         val prompt: UiString,
-                        val answeredUsers: List<AnsweredUser>,
+                        val respondents: List<TrainOfAvatarsItem>,
                         val numberOfAnswers: Int,
                         val isAnswered: Boolean,
                         val onShareClick: (String) -> Unit
-                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD) {
-                        data class AnsweredUser(
-                            val avatarUrl: String?
-                        )
-                    }
+                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }
         }

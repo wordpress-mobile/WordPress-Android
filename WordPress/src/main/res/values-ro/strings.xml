@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-05 09:05:02+0000
+Translation-Revision-Date: 2022-04-14 18:18:36+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: ro
 -->
 <resources>
@@ -83,12 +83,12 @@ Language: ro
     <string name="site_creation_intent_beauty">Frumusețe</string>
     <string name="site_creation_intent_automotive">Automobile</string>
     <string name="site_creation_intent_art">Artă</string>
-    <string name="new_site_creation_intents_input_hint">De exemplu, modă, poezie, politică</string>
     <string name="new_site_creation_intents_title">Subiect site</string>
     <string name="quick_start_site_menu_tab_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a continua.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Înlătură din istoric panoul de control</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Sari peste acest îndemn</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Vezi mai multe îndemnuri</string>
+    <string name="new_site_creation_intents_input_hint">De exemplu: modă, poezie, politică</string>
     <string name="my_site_blogging_prompt_card_number_of_answers">%d răspunsuri</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Partajează îndemnul la blogging</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Am răspuns</string>
@@ -100,7 +100,7 @@ Language: ro
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Această combinație de culori poate să nu fie lizibilă pentru toți cititorii. Încearcă să folosești o culoare de fundal mai întunecată și/sau o culoare pentru text mai deschisă.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Inserarea media a eșuat.\nDă tap pentru mai multe informații.</string>
     <string name="new_site_creation_intents_header_title">Despre ce este site-ul tău web?</string>
-    <string name="new_site_creation_intents_header_subtitle">Alege un subiect din lista de mai jos sau creează tu unul</string>
+    <string name="new_site_creation_intents_header_subtitle">Alege un subiect din lista de mai jos sau creează tu unul.</string>
     <string name="notification_channel_weekly_roundup_title">Rezumat săptămânal</string>
     <string name="my_site_dashboard_tab_title">Prima pagină</string>
     <string name="adding_cat">Se adaugă categorie</string>

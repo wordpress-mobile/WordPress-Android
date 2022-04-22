@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-04-08 12:37:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: sq_AL
 -->
 <resources>
@@ -75,7 +75,6 @@ Language: sq_AL
     <string name="site_creation_intent_beauty">Bukuri</string>
     <string name="site_creation_intent_automotive">Biznes Automobilistik</string>
     <string name="site_creation_intent_art">Art</string>
-    <string name="new_site_creation_intents_input_hint">P.sh., Modë, Poezi, Politikë</string>
     <string name="new_site_creation_intents_title">Temë sajti</string>
     <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hiqe nga pulti</string>
@@ -85,7 +84,6 @@ Language: sq_AL
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të ndritshme dhe/ose një ngjyrë të errët teksti.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të errët dhe/ose një ngjyrë të ndritshme teksti.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">S’u arrit të futej media.\nPrekeni për më tepër hollësi.</string>
-    <string name="new_site_creation_intents_header_subtitle">Zgjidhni një temë nga lista më poshtë, ose shtypni tuajën</string>
     <string name="new_site_creation_intents_header_title">Për çfarë është sajti juaj?</string>
     <string name="notification_channel_weekly_roundup_title">Përmbledhje Javore</string>
     <string name="my_site_dashboard_tab_title">Kreu</string>

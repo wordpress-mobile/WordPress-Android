@@ -19,6 +19,7 @@ import org.wordpress.android.push.NotificationType.ACTIONS_RESULT
 import org.wordpress.android.push.NotificationType.AUTHENTICATION
 import org.wordpress.android.push.NotificationType.AUTOMATTCHER
 import org.wordpress.android.push.NotificationType.BADGE_RESET
+import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.push.NotificationType.BLOGGING_REMINDERS
 import org.wordpress.android.push.NotificationType.COMMENT
 import org.wordpress.android.push.NotificationType.COMMENT_LIKE
@@ -81,7 +82,8 @@ class SystemNotificationsTrackerTest {
             ZENDESK to "zendesk_message",
             BLOGGING_REMINDERS to "blogging_reminders",
             CREATE_SITE to "create_site",
-            WEEKLY_ROUNDUP to "weekly_roundup"
+            WEEKLY_ROUNDUP to "weekly_roundup",
+            BLOGGING_PROMPTS_ONBOARDING to "blogging_prompts_onboarding"
     )
 
     @Before
