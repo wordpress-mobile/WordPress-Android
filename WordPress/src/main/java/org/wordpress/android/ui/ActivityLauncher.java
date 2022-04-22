@@ -365,6 +365,14 @@ public class ActivityLauncher {
         return intent;
     }
 
+    public static Intent createMainActivityDismissNotificationIntent(
+        @NonNull final Context context, final int notificationId
+    ) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        return intent;
+    }
+
     public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);

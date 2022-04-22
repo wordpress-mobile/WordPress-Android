@@ -45,6 +45,12 @@ class PromptReminderNotifier @Inject constructor(
             ActivityLauncher.createMainActivityAndShowEditorIntent(context),
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+        val dismissNotificationPendingIntent = PendingIntent.getActivity(
+                context,
+                notificationId,
+                ActivityLauncher.createMainActivityDismissNotificationIntent(context, notificationId),
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         val answerPromptReminderNotification = ReminderNotification(
             channel = resourceProvider.getString(R.string.notification_channel_reminder_id),
             contentIntentBuilder = { openEditorPendingIntent },
@@ -61,6 +67,10 @@ class PromptReminderNotifier @Inject constructor(
             firstAction = NotificationCompat.Action.Builder(
                 0, resourceProvider.getString(R.string.blogging_prompts_answer_prompt_notification_answer_action),
                 openEditorPendingIntent
+            ).build(),
+            secondAction = NotificationCompat.Action.Builder(
+                0, resourceProvider.getString(R.string.blogging_prompts_notification_dismiss),
+                dismissNotificationPendingIntent
             ).build()
         )
 
