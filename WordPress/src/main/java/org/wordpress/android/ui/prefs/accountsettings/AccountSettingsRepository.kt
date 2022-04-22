@@ -29,8 +29,8 @@ class AccountSettingsRepository @Inject constructor(
         dispatcher.register(this)
     }
 
-    private var fetchNewSettingscontinuation: Continuation<OnAccountChanged>? = null
-    private var continuationList = mutableListOf<Continuation<OnAccountChanged>>()
+    private var fetchNewSettingsContinuation: Continuation<OnAccountChanged>? = null
+    private var pushSettingsContinuationList = mutableListOf<Continuation<OnAccountChanged>>()
 
     val account: AccountModel
         get() = accountStore.account
@@ -44,7 +44,7 @@ class AccountSettingsRepository @Inject constructor(
 
     suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
         suspendCancellableCoroutine {
-            fetchNewSettingscontinuation = it
+            fetchNewSettingsContinuation = it
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
         }
     }
@@ -77,7 +77,7 @@ class AccountSettingsRepository @Inject constructor(
     private suspend fun updateAccountSettings(addPayload: (PushAccountSettingsPayload) -> Unit): OnAccountChanged =
             withContext(ioDispatcher) {
                 suspendCancellableCoroutine {
-                    continuationList.add(it)
+                    pushSettingsContinuationList.add(it)
                     val payload = PushAccountSettingsPayload()
                     payload.params = HashMap()
                     addPayload(payload)
@@ -99,11 +99,11 @@ class AccountSettingsRepository @Inject constructor(
             return
         }
         if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
-            fetchNewSettingscontinuation?.resume(event)
-            fetchNewSettingscontinuation = null
+            fetchNewSettingsContinuation?.resume(event)
+            fetchNewSettingsContinuation = null
         } else if (event.causeOfChange == AccountAction.PUSHED_SETTINGS) {
-            continuationList.get(0)?.resume(event)
-            continuationList.removeAt(0)
+            pushSettingsContinuationList.get(0)?.resume(event)
+            pushSettingsContinuationList.removeAt(0)
         }
     }
 
@@ -113,12 +113,12 @@ class AccountSettingsRepository @Inject constructor(
      * populated with push settings continuation.
      */
     private fun getContinuationFromQueue(): Continuation<OnAccountChanged>? {
-        fetchNewSettingscontinuation?.let {
-            fetchNewSettingscontinuation = null
+        fetchNewSettingsContinuation?.let {
+            fetchNewSettingsContinuation = null
             return it
         }
-        if (continuationList.isNotEmpty()) {
-            return continuationList.removeAt(0)
+        if (pushSettingsContinuationList.isNotEmpty()) {
+            return pushSettingsContinuationList.removeAt(0)
         }
         return null
     }
