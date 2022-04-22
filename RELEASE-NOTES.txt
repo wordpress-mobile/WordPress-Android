@@ -2,7 +2,7 @@
 
 19.8
 -----
-
+* [*] On self-hosted sites, allow previewing unsaved changes to draft posts [https://github.com/wordpress-mobile/WordPress-Android/pull/16296]
 
 19.7
 -----
