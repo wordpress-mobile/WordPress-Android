@@ -123,7 +123,7 @@ class LocalNotificationWorker(
                     FIRST_ACTION_ICON to localNotification.firstActionIcon,
                     FIRST_ACTION_TITLE to localNotification.firstActionTitle,
                     SECOND_ACTION_ICON to localNotification.secondActionIcon,
-                    SECOND_ACTION_TITLE to localNotification.secondActionTitle,
+                    SECOND_ACTION_TITLE to localNotification.secondActionTitle
             )
         }
     }
