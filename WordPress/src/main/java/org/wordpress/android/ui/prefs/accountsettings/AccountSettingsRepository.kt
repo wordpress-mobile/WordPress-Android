@@ -20,17 +20,17 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 class AccountSettingsRepository @Inject constructor(
-    private var dispatcher: Dispatcher,
+    private val dispatcher: Dispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    private var accountStore: AccountStore,
-    private var siteStore: SiteStore
+    private val accountStore: AccountStore,
+    private val siteStore: SiteStore
 ) {
     init {
         dispatcher.register(this)
     }
 
     private var fetchNewSettingsContinuation: Continuation<OnAccountChanged>? = null
-    private var pushSettingsContinuationList = mutableListOf<Continuation<OnAccountChanged>>()
+    private val pushSettingsContinuationList = mutableListOf<Continuation<OnAccountChanged>>()
 
     val account: AccountModel
         get() = accountStore.account
