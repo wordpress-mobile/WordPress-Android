@@ -48,7 +48,10 @@ class SiteCreationIntentsViewModelTest {
 
     @Test
     fun `when the skip button is pressed an analytics event is emitted`() {
+        viewModel.initializeFromResources(resources)
+
         viewModel.onSkipPressed()
+
         verify(analyticsTracker).trackSiteIntentQuestionSkipped()
     }
 
