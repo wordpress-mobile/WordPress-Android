@@ -27,27 +27,33 @@ class LocalNotificationWorker(
 
         val localNotificationHandler = localNotificationHandlerFactory.buildLocalNotificationHandler(type)
         if (localNotificationHandler.shouldShowNotification()) {
-            NotificationManagerCompat.from(context).notify(id, localNotificationBuilder().build())
+            NotificationManagerCompat.from(context).notify(id, localNotificationBuilder(id).build())
             localNotificationHandler.onNotificationShown()
         }
 
         return Result.success()
     }
 
-    private fun localNotificationBuilder(): NotificationCompat.Builder {
+    private fun localNotificationBuilder(notificationId: Int): NotificationCompat.Builder {
         val title = inputData.getInt(TITLE, -1)
         val text = inputData.getInt(TEXT, -1)
         val icon = inputData.getInt(ICON, -1)
-        val actionIcon = inputData.getInt(ACTION_ICON, -1)
-        val actionTitle = inputData.getInt(ACTION_TITLE, -1)
+        val firstActionIcon = inputData.getInt(FIRST_ACTION_ICON, -1)
+        val firstActionTitle = inputData.getInt(FIRST_ACTION_TITLE, -1)
+        val secondActionIcon = inputData.getInt(SECOND_ACTION_ICON, -1)
+        val secondActionTitle = inputData.getInt(SECOND_ACTION_TITLE, -1)
 
         return NotificationCompat.Builder(context, context.getString(R.string.notification_channel_normal_id)).apply {
-            val pendingIntent = getPendingIntent()
-            setContentIntent(pendingIntent)
+            val firstActionPendingIntent = getFirstActionPendingIntent(notificationId)
+            setContentIntent(firstActionPendingIntent)
             setSmallIcon(icon)
             setContentTitle(context.getString(title))
             setContentText(context.getString(text))
-            addAction(actionIcon, context.getString(actionTitle), pendingIntent)
+            addAction(firstActionIcon, context.getString(firstActionTitle), firstActionPendingIntent)
+            val secondActionPendingIntent = getSecondActionPendingIntent(notificationId)
+            if (secondActionTitle != -1) {
+                addAction(secondActionIcon, context.getString(secondActionTitle), secondActionPendingIntent)
+            }
             priority = NotificationCompat.PRIORITY_DEFAULT
             setCategory(NotificationCompat.CATEGORY_REMINDER)
             setAutoCancel(true)
@@ -56,13 +62,24 @@ class LocalNotificationWorker(
         }
     }
 
-    private fun getPendingIntent(): PendingIntent {
+    private fun getFirstActionPendingIntent(notificationId: Int): PendingIntent {
         val type = Type.fromTag(inputData.getString(TYPE))
         val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
         return PendingIntent.getActivity(
                 context,
                 0,
-                handler?.buildIntent(context),
+                handler?.buildFirstActionIntent(context, notificationId),
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private fun getSecondActionPendingIntent(notificationId: Int): PendingIntent {
+        val type = Type.fromTag(inputData.getString(TYPE))
+        val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
+        return PendingIntent.getActivity(
+                context,
+                0,
+                handler?.buildSecondActionIntent(context, notificationId),
                 PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
@@ -89,8 +106,10 @@ class LocalNotificationWorker(
         private const val TITLE = "key_title"
         private const val TEXT = "key_text"
         private const val ICON = "key_icon"
-        private const val ACTION_ICON = "key_action_icon"
-        private const val ACTION_TITLE = "key_action_title"
+        private const val FIRST_ACTION_ICON = "key_first_action_icon"
+        private const val FIRST_ACTION_TITLE = "key_first_action_title"
+        private const val SECOND_ACTION_ICON = "key_second_action_icon"
+        private const val SECOND_ACTION_TITLE = "key_second_action_title"
 
         fun buildData(localNotification: LocalNotification): Data {
             return workDataOf(
@@ -99,8 +118,10 @@ class LocalNotificationWorker(
                     TITLE to localNotification.title,
                     TEXT to localNotification.text,
                     ICON to localNotification.icon,
-                    ACTION_ICON to localNotification.actionIcon,
-                    ACTION_TITLE to localNotification.actionTitle
+                    FIRST_ACTION_ICON to localNotification.firstActionIcon,
+                    FIRST_ACTION_TITLE to localNotification.firstActionTitle,
+                    SECOND_ACTION_ICON to localNotification.secondActionIcon,
+                    SECOND_ACTION_TITLE to localNotification.secondActionTitle,
             )
         }
     }

@@ -19,7 +19,7 @@ class CreateSiteNotificationHandler @Inject constructor(
         return accountStore.hasAccessToken() && !siteStore.hasSite()
     }
 
-    override fun buildIntent(context: Context): Intent {
+    override fun buildFirstActionIntent(context: Context, notificationId: Int): Intent {
         return ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(context, CREATE_SITE)
     }
 

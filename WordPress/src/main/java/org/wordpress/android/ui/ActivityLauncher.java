@@ -1374,12 +1374,14 @@ public class ActivityLauncher {
     @NonNull
     public static Intent createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
             final Context context,
-            @Nullable final NotificationType notificationType
+            @Nullable final NotificationType notificationType,
+            final int notificationId
     ) {
         final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_BLOGGING_PROMPTS_ONBOARDING, true);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         if (notificationType != null) {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }

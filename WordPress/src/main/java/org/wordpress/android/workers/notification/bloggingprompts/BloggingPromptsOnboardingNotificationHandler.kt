@@ -18,10 +18,14 @@ class BloggingPromptsOnboardingNotificationHandler @Inject constructor(
         return accountStore.hasAccessToken()
     }
 
-    override fun buildIntent(context: Context): Intent {
+    override fun buildFirstActionIntent(context: Context, notificationId: Int): Intent {
         return ActivityLauncher.createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
-                context, BLOGGING_PROMPTS_ONBOARDING
+                context, BLOGGING_PROMPTS_ONBOARDING, notificationId
         )
+    }
+
+    override fun buildSecondActionIntent(context: Context, notificationId: Int): Intent? {
+        return ActivityLauncher.createMainActivityDismissNotificationIntent(context, notificationId)
     }
 
     override fun onNotificationShown() {
