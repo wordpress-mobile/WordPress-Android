@@ -325,7 +325,6 @@ Language: nl
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
-    <string name="gutenberg_native_add_blocks">Voeg blokken toe</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
