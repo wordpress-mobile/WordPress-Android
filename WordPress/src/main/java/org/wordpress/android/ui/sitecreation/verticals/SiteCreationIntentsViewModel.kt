@@ -106,7 +106,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _onIntentSelected.value = vertical
         uiState.value?.let {
             updateUiState(
-                    it.copy(vertical = vertical)
+                    it.copy(vertical = it.searchQuery ?: vertical)
             )
         }
     }

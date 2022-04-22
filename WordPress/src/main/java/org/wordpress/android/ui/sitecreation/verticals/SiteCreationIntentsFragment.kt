@@ -121,7 +121,7 @@ class SiteCreationIntentsFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
         viewModel.onIntentSelected.observe(viewLifecycleOwner) {
             input.isFocusable = false
-            input.setTextUnobserved(it)
+            input.setTextUnobserved(viewModel.uiState.value?.searchQuery ?: it)
             (requireActivity() as IntentsScreenListener).onIntentSelected(it)
         }
         viewModel.initializeFromResources(resources)
