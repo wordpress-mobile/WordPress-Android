@@ -83,7 +83,7 @@ class SiteCreationIntentsFragment : Fragment() {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
         updateTitleVisibility(uiState.isAppBarTitleVisible)
 
-        uiState.inputValue
+        uiState.retainedInputValue
                 ?.let {
                     it.also {
                         input.requestFocus()
@@ -121,7 +121,7 @@ class SiteCreationIntentsFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { updateUiState(it) }
         viewModel.onIntentSelected.observe(viewLifecycleOwner) {
             input.isFocusable = false
-            input.setTextUnobserved(viewModel.uiState.value?.searchQuery ?: it)
+            input.setTextUnobserved(viewModel.uiState.value?.takeSearchQueryIfItExists() ?: it)
             (requireActivity() as IntentsScreenListener).onIntentSelected(it)
         }
         viewModel.initializeFromResources(resources)

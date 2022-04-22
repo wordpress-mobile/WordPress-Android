@@ -66,7 +66,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
             analyticsTracker.trackSiteIntentQuestionCustomVerticalSelected(state.searchQuery.orEmpty())
             _onIntentSelected.value = state.searchQuery
             updateUiState(
-                    state.copy(inputValue = state.searchQuery)
+                    state.copy(retainedInputValue = state.searchQuery)
             )
         }
     }
@@ -106,7 +106,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _onIntentSelected.value = vertical
         uiState.value?.let {
             updateUiState(
-                    it.copy(inputValue = it.searchQuery ?: vertical)
+                    it.copy(retainedInputValue = it.takeSearchQueryIfItExists() ?: vertical)
             )
         }
     }
@@ -163,7 +163,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         val isAppBarTitleVisible: Boolean = false,
         val isHeaderVisible: Boolean = true,
         val searchQuery: String? = null,
-        val inputValue: String? = null,
+        val retainedInputValue: String? = null,
         val content: Content
     ) {
         sealed class Content(
@@ -183,6 +183,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
 
             object Empty : Content(emptyList())
         }
+
+        fun takeSearchQueryIfItExists() = searchQuery.takeIf { !it.isNullOrBlank() }
 
         companion object {
             fun resetToContent(content: Content) = IntentsUiState(content = content)
