@@ -96,7 +96,7 @@ class AccountSettingsRepository @Inject constructor(
     @Subscribe
     fun onAccountChanged(event: OnAccountChanged) {
         if (event.causeOfChange == null || event.causeOfChange.toString().isBlank()) {
-            getContinuationFromQueue()?.resume(event)
+            getFirstAvailableContinuation()?.resume(event)
             return
         }
         if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
@@ -113,7 +113,7 @@ class AccountSettingsRepository @Inject constructor(
      * First it checks for fetch new settings continuation and then it checks continuation list
      * populated with push settings continuation.
      */
-    private fun getContinuationFromQueue(): Continuation<OnAccountChanged>? {
+    private fun getFirstAvailableContinuation(): Continuation<OnAccountChanged>? {
         fetchNewSettingsContinuation?.let {
             fetchNewSettingsContinuation = null
             return it
