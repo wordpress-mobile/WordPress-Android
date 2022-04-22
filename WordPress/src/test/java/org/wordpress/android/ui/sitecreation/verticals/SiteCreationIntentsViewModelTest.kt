@@ -91,6 +91,19 @@ class SiteCreationIntentsViewModelTest {
     }
 
     @Test
+    fun `when an item is tapped after searching the search query is persisted`() {
+        val slug = "parenting1"
+        val vertical = "parenting"
+        val searchQuery = "renting"
+        viewModel.initializeFromResources(resources)
+
+        viewModel.onSearchTextChanged(searchQuery)
+        viewModel.intentSelected(slug, vertical)
+
+        assertThat(viewModel.uiState.value?.vertical).isEqualTo(searchQuery)
+    }
+
+    @Test
     fun `when the user scroll beyond a threshold the title becomes visible`() {
         viewModel.initializeFromResources(resources)
         viewModel.onAppBarOffsetChanged(9, 10)
