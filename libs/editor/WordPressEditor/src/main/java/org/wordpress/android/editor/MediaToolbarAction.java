@@ -65,6 +65,11 @@ public enum MediaToolbarAction implements IToolbarAction {
         return false;
     }
 
+    @Override
+    public boolean isInlineAction() {
+        return false;
+    }
+
     public interface MediaToolbarButtonClickListener {
         void onMediaToolbarButtonClicked(MediaToolbarAction button);
     }
