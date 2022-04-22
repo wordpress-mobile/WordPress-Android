@@ -1,9 +1,14 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.8
+-----
+
+
 19.7
 -----
 * [*] Editor: Fix issue that caused previews on atomic sites to sometimes be out-of-date. [https://github.com/wordpress-mobile/WordPress-Android/pull/16332]
 
+* [*] [internal] Site creation: Adds a new screen asking the user the name of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16259]
 * [***] My Site: your My Site screen now has two tabs, "Site Menu" and "Home". Under "Home", you'll find contextual cards with some highlights of whats going on with your site. Check your drafts or scheduled posts, your today's stats or go directly to another section of the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/15989]
 * [*] Site creation: Adds a new screen asking the user the intent of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16306]
 * [*] Notifications: Fixed notification detail crash for comments with File block [https://github.com/wordpress-mobile/WordPress-Android/pull/16314]

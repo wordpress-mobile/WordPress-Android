@@ -83,7 +83,6 @@ Language: ja_JP
     <string name="site_creation_intent_beauty">美容</string>
     <string name="site_creation_intent_automotive">自動車</string>
     <string name="site_creation_intent_art">アート</string>
-    <string name="new_site_creation_intents_input_hint">例 ファッション、詩、政治</string>
     <string name="new_site_creation_intents_title">サイトのテーマ</string>
     <string name="quick_start_site_menu_tab_message_short">&lt;b&gt;%1$s&lt;/b&gt; をタップして続行します。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">ダッシュボードから削除</string>
@@ -99,7 +98,6 @@ Language: ja_JP
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">この色の組み合わせは読みにくい可能性があります。 背景色を明るくするか、文字の色を暗くしてみましょう。</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">この色の組み合わせは読みにくい可能性があります。 背景色を暗くするか、文字の色を明るくしてみましょう。</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">メディアの挿入に失敗しました。\nタップして詳細をご覧ください。</string>
-    <string name="new_site_creation_intents_header_subtitle">以下のリストからテーマを選択するか、自分で入力します</string>
     <string name="new_site_creation_intents_header_title">どのような内容のサイトですか？</string>
     <string name="notification_channel_weekly_roundup_title">1週間のまとめ</string>
     <string name="my_site_dashboard_tab_title">ホーム</string>

@@ -359,6 +359,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static Intent createMainActivityAndShowEditorIntent(@NonNull final Context context) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        return intent;
+    }
+
     public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);

@@ -1,0 +1,4 @@
+19.6:
+Esta versión es corta y dulce: después de borrar un sitio puede que te hayas dado cuenta de que ese mismo sitio sigue rondando por la lista de «Mis sitios» hasta que reinicias la aplicación.
+
+Hemos corregido eso—los sitios borrados ahora desaparecen al instante. Hasta la vista, pásalo bien.
