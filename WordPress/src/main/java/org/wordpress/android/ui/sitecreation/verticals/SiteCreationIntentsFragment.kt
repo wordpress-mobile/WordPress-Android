@@ -83,7 +83,7 @@ class SiteCreationIntentsFragment : Fragment() {
         (recyclerView.adapter as SiteCreationIntentsAdapter).update(uiState.content.items)
         updateTitleVisibility(uiState.isAppBarTitleVisible)
 
-        uiState.vertical
+        uiState.inputValue
                 ?.let {
                     it.also {
                         input.requestFocus()

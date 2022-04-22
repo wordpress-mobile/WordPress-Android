@@ -87,7 +87,7 @@ class SiteCreationIntentsViewModelTest {
 
         viewModel.intentSelected(slug, vertical)
 
-        assertThat(viewModel.uiState.value?.vertical).isEqualTo(vertical)
+        assertThat(viewModel.uiState.value?.inputValue).isEqualTo(vertical)
     }
 
     @Test
@@ -100,7 +100,7 @@ class SiteCreationIntentsViewModelTest {
         viewModel.onSearchTextChanged(searchQuery)
         viewModel.intentSelected(slug, vertical)
 
-        assertThat(viewModel.uiState.value?.vertical).isEqualTo(searchQuery)
+        assertThat(viewModel.uiState.value?.inputValue).isEqualTo(searchQuery)
     }
 
     @Test
@@ -143,7 +143,7 @@ class SiteCreationIntentsViewModelTest {
 
         viewModel.onCustomVerticalSelected()
 
-        assertThat(viewModel.uiState.value?.vertical).isEqualTo(viewModel.uiState.value?.searchQuery)
+        assertThat(viewModel.uiState.value?.inputValue).isEqualTo(viewModel.uiState.value?.searchQuery)
     }
 
     @Test
