@@ -171,7 +171,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is ListItemViewHolder -> holder.bind(item as ListItem)
             is TextViewHolder -> holder.bind(item as Text)
             is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
-            is ChipsViewHolder -> holder.bind(item as Chips, payloads)
+            is ChipsViewHolder -> holder.bind(item as Chips)
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem)
             is LineChartViewHolder -> holder.bind(item as LineChartItem)
