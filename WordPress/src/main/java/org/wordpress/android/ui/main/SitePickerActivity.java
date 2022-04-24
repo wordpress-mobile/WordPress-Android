@@ -78,6 +78,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         SearchView.OnQueryTextListener {
     public static final String KEY_SITE_LOCAL_ID = "local_id";
     public static final String KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched";
+    public static final String KEY_SITE_TITLE_TASK_COMPLETED = "key_site_title_task_completed";
 
     public static final String KEY_SITE_PICKER_MODE = "key_site_picker_mode";
 

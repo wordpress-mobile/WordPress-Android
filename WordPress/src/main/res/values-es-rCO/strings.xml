@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-22 13:39:41+0000
+Translation-Revision-Date: 2022-03-21 15:53:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: es_CO
 -->
 <resources>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más claro y/o un color de texto más oscuro.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de color puede ser difícil de leer para la gente. Intenta usar un color de fondo más oscuro y/o un color de texto más claro.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo al insertar los medios.\nToca para más información.</string>
-    <string name="new_site_creation_intents_header_subtitle">Elige una temática de las listadas a continuación o escribe la tuya propia</string>
     <string name="new_site_creation_intents_header_title">¿De qué trata tu web?</string>
     <string name="notification_channel_weekly_roundup_title">Resumen semanal</string>
     <string name="my_site_dashboard_tab_title">Inicio</string>

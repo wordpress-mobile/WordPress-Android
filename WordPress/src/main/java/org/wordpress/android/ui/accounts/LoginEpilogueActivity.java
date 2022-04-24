@@ -158,7 +158,14 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
                     SitePickerActivity.KEY_SITE_LOCAL_ID,
                     SelectedSiteRepository.UNAVAILABLE
             );
-            setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSiteLocalID));
+            boolean isTitleTaskCompleted = data.getBooleanExtra(
+                    SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED,
+                    false
+            );
+            setResult(RESULT_OK, new Intent()
+                    .putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSiteLocalID)
+                    .putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskCompleted)
+            );
             finish();
         }
     }

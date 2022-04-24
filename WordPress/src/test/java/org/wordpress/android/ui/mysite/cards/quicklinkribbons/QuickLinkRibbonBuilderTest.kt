@@ -9,7 +9,6 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -50,37 +49,8 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
         assertThat(quickLinkRibbon.quickLinkRibbonItems[3].onClick).isEqualTo(ListItemInteraction.create(onStatsClick))
     }
 
-    /* FOCUS POINT*/
-    @Test
-    fun `given stats active task, when card is built, then stats focus point should be true`() {
-        val quickLinkRibbon = buildQuickLinkRibbon(showStatsFocusPoint = true)
-
-        assertThat(quickLinkRibbon.quickLinkRibbonItems[3].showFocusPoint).isEqualTo(true)
-        assertThat(quickLinkRibbon.showStatsFocusPoint).isEqualTo(true)
-    }
-
-    @Test
-    fun `given pages active task, when card is built, then pages focus point should be true`() {
-        val quickLinkRibbon = buildQuickLinkRibbon(showPagesFocusPoint = true)
-
-        assertThat(quickLinkRibbon.quickLinkRibbonItems[0].showFocusPoint).isEqualTo(true)
-        assertThat(quickLinkRibbon.showPagesFocusPoint).isEqualTo(true)
-    }
-
-    @Test
-    fun `given enable focus point is false, when card is built, then active focus point should false`() {
-        val quickLinkRibbon = buildQuickLinkRibbon(showPagesFocusPoint = true, enableFocusPoints = false)
-
-        assertThat(quickLinkRibbon.quickLinkRibbonItems[0].showFocusPoint).isEqualTo(false)
-        assertThat(quickLinkRibbon.showPagesFocusPoint).isEqualTo(false)
-        assertThat(quickLinkRibbon.activeQuickStartItem).isEqualTo(false)
-    }
-
     private fun buildQuickLinkRibbon(
-        showPages: Boolean = true,
-        showPagesFocusPoint: Boolean = false,
-        showStatsFocusPoint: Boolean = false,
-        enableFocusPoints: Boolean = true
+        showPages: Boolean = true
     ): QuickLinkRibbon {
         setShowPages(showPages)
         return builder.build(
@@ -89,22 +59,12 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
                         onPagesClick,
                         onPostsClick,
                         onMediaClick,
-                        onStatsClick,
-                        setActiveTask(showPagesFocusPoint, showStatsFocusPoint),
-                        enableFocusPoints = enableFocusPoints
+                        onStatsClick
                 )
         )
     }
 
     private fun setShowPages(showPages: Boolean) {
         whenever(siteModel.isSelfHostedAdmin).thenReturn(showPages)
-    }
-
-    private fun setActiveTask(showPages: Boolean, showStats: Boolean): QuickStartStore.QuickStartTask? {
-        return when {
-            showPages -> QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-            showStats -> QuickStartStore.QuickStartTask.CHECK_STATS
-            else -> null
-        }
     }
 }

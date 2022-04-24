@@ -91,18 +91,20 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
             createSiteState?.let {
                 val intent = Intent()
-                val (siteCreated, localSiteId) = when (createSiteState) {
+                val (siteCreated, localSiteId, titleTaskComplete) = when (createSiteState) {
                     // site creation flow was canceled
-                    is SiteNotCreated -> Pair(false, null)
+                    is SiteNotCreated -> Triple(false, null, false)
                     is SiteNotInLocalDb -> {
                         // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
                         // this with a Snackbar message.
                         intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
-                        Pair(true, null)
+                        Triple(true, null, createSiteState.isSiteTitleTaskComplete)
                     }
-                    is SiteCreationCompleted -> Pair(true, createSiteState.localSiteId)
+                    is SiteCreationCompleted -> Triple(true, createSiteState.localSiteId,
+                            createSiteState.isSiteTitleTaskComplete)
                 }
                 intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localSiteId)
+                intent.putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, titleTaskComplete)
                 setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
                 finish()
             }
@@ -175,7 +177,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
-            SITE_NAME -> SiteCreationSiteNameFragment()
+            SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
             SITE_DESIGNS -> HomePagePickerFragment()
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle

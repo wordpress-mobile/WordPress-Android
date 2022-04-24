@@ -1,5 +1,0 @@
-19.5:
-- Abbiamo fatto piccole modifiche al testo dell'errore di caricamento nei blocchi per il caricamento di elementi multimediali.
-- Le GIF animate ora sono dotate di un badge GIF.
-- Le modifiche delle impostazioni del blocco negli elenchi ordinati ora appaiono nell'editor.
-- Puoi disattivare le notifiche del Resoconto settimanale per tutti i siti nelle Info sull'app.

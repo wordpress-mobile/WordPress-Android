@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-04-08 13:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: ko_KR
 -->
 <resources>
@@ -83,7 +83,6 @@ Language: ko_KR
     <string name="site_creation_intent_beauty">미용</string>
     <string name="site_creation_intent_automotive">자동차</string>
     <string name="site_creation_intent_art">예술</string>
-    <string name="new_site_creation_intents_input_hint">예: 패션, 시, 정치</string>
     <string name="new_site_creation_intents_title">사이트 주제</string>
     <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
@@ -99,7 +98,6 @@ Language: ko_KR
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 밝은 배경 색상 및/또는 더 어두운 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 어두운 배경 색상 및/또는 더 밝은 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">미디어를 삽입하지 못했습니다.\n자세히 알아보려면 누르세요.</string>
-    <string name="new_site_creation_intents_header_subtitle">아래 목록에 있는 주제 선택 또는 원하는 주제 입력</string>
     <string name="new_site_creation_intents_header_title">웹사이트의 주제가 무엇인가요?</string>
     <string name="notification_channel_weekly_roundup_title">주간 총정리</string>
     <string name="my_site_dashboard_tab_title">홈</string>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-04-08 09:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: it
 -->
 <resources>
@@ -83,7 +83,6 @@ Language: it
     <string name="site_creation_intent_beauty">Bellezza</string>
     <string name="site_creation_intent_automotive">Automobilismo</string>
     <string name="site_creation_intent_art">Arte</string>
-    <string name="new_site_creation_intents_input_hint">Ad esempio Moda, Poesia, Politica</string>
     <string name="new_site_creation_intents_title">Tema del sito</string>
     <string name="quick_start_site_menu_tab_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per continuare.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Rimuovi dalla bacheca</string>
@@ -99,7 +98,6 @@ Language: it
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più brillante e/o un colore di testo più scuro.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Questa combinazione di colori può essere difficile da leggere per le persone. Prova a usare un colore di sfondo più scuro e/o un colore di testo più brillante.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Impossibile inserire elementi multimediali.\nTocca per ulteriori informazioni.</string>
-    <string name="new_site_creation_intents_header_subtitle">Scegli un argomento dall\'elenco sottostante o digitane uno tuo</string>
     <string name="new_site_creation_intents_header_title">Qual è l\'argomento del tuo sito web?</string>
     <string name="notification_channel_weekly_roundup_title">Resoconto settimanale</string>
     <string name="adding_cat">Aggiunta della categoria</string>
