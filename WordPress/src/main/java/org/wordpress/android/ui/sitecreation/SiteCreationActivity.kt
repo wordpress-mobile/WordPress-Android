@@ -26,6 +26,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewScreenListener
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
@@ -73,7 +74,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 .get(SiteCreationIntentsViewModel::class.java)
         siteCreationSiteNameViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(SiteCreationSiteNameViewModel::class.java)
-        mainViewModel.start(savedInstanceState)
+        val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
+        mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
         hppViewModel.loadSavedState(savedInstanceState)
 
         observeVMState()
@@ -230,5 +232,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onBackPressed() {
         mainViewModel.onBackPressed()
+    }
+
+    companion object {
+        const val ARG_CREATE_SITE_SOURCE = "ARG_CREATE_SITE_SOURCE"
     }
 }
