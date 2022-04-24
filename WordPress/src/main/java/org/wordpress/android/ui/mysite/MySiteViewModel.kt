@@ -80,6 +80,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -984,7 +985,12 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onAddSitePressed() {
-        _onNavigation.value = Event(SiteNavigationAction.AddNewSite(accountStore.hasAccessToken()))
+        _onNavigation.value = Event(
+                SiteNavigationAction.AddNewSite(
+                        accountStore.hasAccessToken(),
+                        SiteCreationSource.MY_SITE_NO_SITES
+                )
+        )
         analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_ACTION_TAPPED)
     }
 
