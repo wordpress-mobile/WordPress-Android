@@ -28,6 +28,8 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -47,6 +49,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
@@ -63,6 +66,7 @@ import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.NavigateT
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -91,6 +95,9 @@ public class SitePickerActivity extends LocaleAwareActivity
     private static final String KEY_IS_IN_EDIT_MODE = "is_in_edit_mode";
     private static final String KEY_IS_SHOW_MENU_ENABLED = "is_show_menu_enabled";
     private static final String KEY_IS_HIDE_MENU_ENABLED = "is_hide_menu_enabled";
+
+    private static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
+    private static final String SOURCE = "source";
 
     private SitePickerAdapter mAdapter;
     private EmptyViewRecyclerView mRecycleView;
@@ -261,7 +268,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             startEditingVisibility();
             return true;
         } else if (itemId == R.id.menu_add) {
-            addSite(this, mAccountStore.hasAccessToken());
+            addSite(this, mAccountStore.hasAccessToken(), SiteCreationSource.MY_SITE);
             return true;
         } else if (itemId == R.id.continue_flow) {
             mViewModel.onContinueFlowSelected();
@@ -756,14 +763,14 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    public static void addSite(Activity activity, boolean hasAccessToken) {
+    public static void addSite(Activity activity, boolean hasAccessToken, SiteCreationSource source) {
         if (hasAccessToken) {
             if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
-                ActivityLauncher.newBlogForResult(activity);
+                ActivityLauncher.newBlogForResult(activity, source);
             } else {
                 // user is signed into wordpress app, so use the dialog to enable choosing whether to
                 // create a new wp.com blog or add a self-hosted one
-                showAddSiteDialog(activity);
+                showAddSiteDialog(activity, source);
             }
         } else {
             // user doesn't have an access token, so simply enable adding self-hosted
@@ -771,8 +778,11 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
     }
 
-    private static void showAddSiteDialog(Activity activity) {
+    private static void showAddSiteDialog(Activity activity, SiteCreationSource source) {
         DialogFragment dialog = new AddSiteDialog();
+        Bundle args = new Bundle();
+        args.putString(ARG_SITE_CREATION_SOURCE, source.getLabel());
+        dialog.setArguments(args);
         dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
     }
 
@@ -786,6 +796,8 @@ public class SitePickerActivity extends LocaleAwareActivity
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            SiteCreationSource source =
+                    SiteCreationSource.fromString(getArguments().getString(ARG_SITE_CREATION_SOURCE));
             CharSequence[] items =
                     {getString(R.string.site_picker_create_wpcom),
                             getString(R.string.site_picker_add_self_hosted)};
@@ -795,11 +807,13 @@ public class SitePickerActivity extends LocaleAwareActivity
                     new ArrayAdapter<>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items),
                     (dialog, which) -> {
                         if (which == 0) {
-                            ActivityLauncher.newBlogForResult(getActivity());
+                            ActivityLauncher.newBlogForResult(getActivity(), source);
                         } else {
                             ActivityLauncher.addSelfHostedSiteForResult(getActivity());
                         }
                     });
+
+            AnalyticsTracker.track(Stat.ADD_SITE_ALERT_DISPLAYED, Collections.singletonMap(SOURCE, source.getLabel()));
             return builder.create();
         }
     }
