@@ -109,6 +109,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -629,14 +630,18 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* EMPTY VIEW - ADD SITE */
-
     @Test
-    fun `add new site press is handled correctly`() {
+    fun `given empty site view, when add new site is tapped, then navigated to AddNewSite`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
         viewModel.onAddSitePressed()
 
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.AddNewSite(true))
+        assertThat(navigationActions).containsOnly(
+                SiteNavigationAction.AddNewSite(
+                        true,
+                        SiteCreationSource.MY_SITE_NO_SITES
+                )
+        )
     }
 
     /* ON RESUME */
