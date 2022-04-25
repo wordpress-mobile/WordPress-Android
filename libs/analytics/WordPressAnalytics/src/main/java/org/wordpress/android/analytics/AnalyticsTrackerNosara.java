@@ -2211,6 +2211,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "change_username_search_performed";
             case ADD_SITE_ALERT_DISPLAYED:
                 return "add_site_alert_displayed";
+            case SETTINGS_DID_CHANGE:
+                return "settings_did_change";
         }
         return null;
     }

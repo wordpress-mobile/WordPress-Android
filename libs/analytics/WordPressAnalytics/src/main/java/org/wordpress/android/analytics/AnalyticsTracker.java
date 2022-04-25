@@ -852,7 +852,8 @@ public final class AnalyticsTracker {
         CHANGE_USERNAME_DISPLAYED,
         CHANGE_USERNAME_DISMISSED,
         CHANGE_USERNAME_SEARCH_PERFORMED,
-        ADD_SITE_ALERT_DISPLAYED
+        ADD_SITE_ALERT_DISPLAYED,
+        SETTINGS_DID_CHANGE
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
