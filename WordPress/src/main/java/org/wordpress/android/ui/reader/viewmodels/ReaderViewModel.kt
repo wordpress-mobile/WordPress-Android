@@ -216,6 +216,9 @@ class ReaderViewModel @Inject constructor(
 
     fun onSettingsActionClicked() {
         if (isSettingsSupported()) {
+            if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
+                selectedSiteRepository.getSelectedSite()?.let { completeQuickStartFollowSiteTask() }
+            }
             _showSettings.value = Event(Unit)
         } else if (BuildConfig.DEBUG) {
             throw IllegalStateException("Settings should be hidden when isSettingsSupported returns false.")
@@ -257,7 +260,7 @@ class ReaderViewModel @Inject constructor(
     /* QUICK START */
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
-        if (event.task == QuickStartTask.FOLLOW_SITE) { checkAndStartQuickStartFollowSiteTaskNextStep() }
+        if (event.task == QuickStartTask.FOLLOW_SITE) checkAndStartQuickStartFollowSiteTaskNextStep()
     }
 
     private fun checkAndStartQuickStartFollowSiteTaskNextStep() {
@@ -276,10 +279,11 @@ class ReaderViewModel @Inject constructor(
 
     private fun startQuickStartFollowSiteTaskSettingsStep() {
         _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteSettingsStepPrompt)
-        selectedSiteRepository.getSelectedSite()?.let { completeQuickStartFollowSiteTask() }
+        launch { updateQuickStartFocusPointOnSettingsMenu(true) }
     }
 
     private fun completeQuickStartFollowSiteTask() {
+        updateQuickStartFocusPointOnSettingsMenu(false)
         quickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE)
     }
 
@@ -291,6 +295,19 @@ class ReaderViewModel @Inject constructor(
                 if (index == discoverTabIndex) tabUiState.copy(showQuickStartFocusPoint = show) else tabUiState
             }
             _uiState.postValue(currentUiState.copy(tabUiStates = updateTabUiStates))
+        }
+    }
+
+    private fun updateQuickStartFocusPointOnSettingsMenu(show: Boolean) {
+        val currentUiState = _uiState.value as? ContentUiState
+        currentUiState?.let {
+            _uiState.postValue(
+                    currentUiState.copy(
+                            settingsMenuItemUiState = it.settingsMenuItemUiState.copy(
+                                    showQuickStartFocusPoint = show
+                            )
+                    )
+            )
         }
     }
 
