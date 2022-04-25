@@ -160,6 +160,8 @@ class QuickStartRepository
         }
     }
 
+    fun isPendingTask(task: QuickStartTask) = task == pendingTask
+
     fun completeTask(task: QuickStartTask) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             if (task != activeTask.value && task != pendingTask) return
