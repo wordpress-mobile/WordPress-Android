@@ -24,4 +24,3 @@ enum class SiteCreationSource(val label: String) {
         }
     }
 }
-
