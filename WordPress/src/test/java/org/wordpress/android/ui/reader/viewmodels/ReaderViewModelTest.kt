@@ -163,14 +163,12 @@ class ReaderViewModelTest {
     @Test
     fun `Last selected tab is restored after restart`() = testWithNonEmptyTags {
         // Arrange
-        whenever(appPrefsWrapper.getReaderTag()).thenReturn(nonEmptyReaderTagList[3])
-
         var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
             tabNavigation = it.getContentIfNotHandled()
         }
         // Act
-        triggerReaderTabContentDisplay()
+        triggerReaderTabContentDisplay(selectedTabReaderTag = nonEmptyReaderTagList[3])
         // Assert
         assertThat(tabNavigation!!.position).isEqualTo(3)
     }
@@ -178,14 +176,12 @@ class ReaderViewModelTest {
     @Test
     fun `SelectTab is invoked when last selected tab is null`() = testWithNonMockedNonEmptyTags {
         // Arrange
-        whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
-
         var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
             tabNavigation = it.getContentIfNotHandled()
         }
         // Act
-        triggerReaderTabContentDisplay()
+        triggerReaderTabContentDisplay(selectedTabReaderTag = null)
         // Assert
         assertThat(tabNavigation!!.position).isGreaterThan(-1)
     }
@@ -419,7 +415,10 @@ class ReaderViewModelTest {
         val quickStartReaderPrompts: List<Event<QuickStartReaderPrompt>>
     )
 
-    private fun triggerReaderTabContentDisplay() {
+    private fun triggerReaderTabContentDisplay(
+        selectedTabReaderTag: ReaderTag? = null
+    ) {
+        whenever(appPrefsWrapper.getReaderTag()).thenReturn(selectedTabReaderTag)
         viewModel.start()
     }
 
@@ -437,9 +436,12 @@ class ReaderViewModelTest {
         }
     }
 
-    private fun <T> testWithNonMockedNonEmptyTags(block: suspend CoroutineScope.() -> T) {
+    private fun <T> testWithNonMockedNonEmptyTags(
+        readerTags: ReaderTagList = createNonMockedNonEmptyReaderTagList(),
+        block: suspend CoroutineScope.() -> T
+    ) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonMockedNonEmptyReaderTagList())
+            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(readerTags)
             block()
         }
     }
