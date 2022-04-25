@@ -142,6 +142,8 @@ public class SitePickerActivity extends LocaleAwareActivity
         initSwipeToRefreshHelper(findViewById(android.R.id.content));
         if (savedInstanceState != null) {
             mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
+        } else {
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_DISPLAYED);
         }
 
         if (mSitePickerMode.isReblogMode()) {
@@ -262,6 +264,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED);
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
