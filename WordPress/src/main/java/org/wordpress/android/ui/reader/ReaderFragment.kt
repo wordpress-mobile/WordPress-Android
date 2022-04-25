@@ -58,6 +58,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     private var searchMenuItem: MenuItem? = null
     private var settingsMenuItem: MenuItem? = null
+    private var settingsMenuItemFocusPoint: QuickStartFocusPoint? = null
 
     private var binding: ReaderFragmentLayoutBinding? = null
 
@@ -112,8 +113,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
         menu.findItem(R.id.menu_settings).apply {
             settingsMenuItem = this
+            settingsMenuItemFocusPoint = this.actionView.findViewById(R.id.menu_quick_start_focus_point)
             this.isVisible = viewModel.uiState.value?.settingsMenuItemUiState?.isVisible ?: false
-            this.actionView.findViewById<QuickStartFocusPoint>(R.id.menu_quick_start_focus_point).isVisible =
+            settingsMenuItemFocusPoint?.isVisible =
                     viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             this.actionView.setOnClickListener { viewModel.onSettingsActionClicked() }
         }
@@ -160,7 +162,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
                 settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
-                settingsMenuItem?.actionView?.findViewById<QuickStartFocusPoint>(R.id.menu_quick_start_focus_point)?.isVisible =
+                settingsMenuItemFocusPoint?.isVisible =
                         viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             }
         }
