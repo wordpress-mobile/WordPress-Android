@@ -25,7 +25,7 @@ enum class QuickStartMySitePrompts constructor(
             QuickStartTask.VIEW_SITE,
             -1,
             R.id.my_site_subtitle_label,
-            R.string.quick_start_dialog_view_site_message_short,
+            R.string.quick_start_dialog_view_your_site_message_short,
             QuickStartUtils.ICON_NOT_SET
     ),
     SHARE_SITE_TUTORIAL(
