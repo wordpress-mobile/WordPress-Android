@@ -112,6 +112,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         menu.findItem(R.id.menu_settings).apply {
             settingsMenuItem = this
             this.isVisible = viewModel.uiState.value?.settingsIconVisible ?: false
+            this.actionView.setOnClickListener { viewModel.onSettingsActionClicked() }
         }
     }
 
