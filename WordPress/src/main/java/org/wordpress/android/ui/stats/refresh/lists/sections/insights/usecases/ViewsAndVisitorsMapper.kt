@@ -181,7 +181,6 @@ class ViewsAndVisitorsMapper
 
         val positive = thisWeekCount >= (prevWeekCount ?: 0)
         val change = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = true)
-        val unformattedChange = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = false)
 
         return Text(
                 text = resourceProvider.getString(

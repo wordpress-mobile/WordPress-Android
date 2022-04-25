@@ -100,7 +100,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val mappedEntries = prevWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             buildPreviousWeekDataSet(context, mappedEntries)
         } else {
-            buildEmptyDataSet(context, item.selectedType, item.entries.size)
+            buildEmptyDataSet(context, item.entries.size)
         }
 
         val thisWeekData = if (hasData && item.entries.size > 7) {
@@ -114,7 +114,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val mappedEntries = thisWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
             buildDataSet(context, item.selectedType, mappedEntries)
         } else {
-            buildEmptyDataSet(context, item.selectedType, item.entries.size)
+            buildEmptyDataSet(context, item.entries.size)
         }
         item.onLineChartDrawn?.invoke(thisWeekDataSet.entryCount)
 
@@ -195,7 +195,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return item.entries.size
     }
 
-    private fun buildEmptyDataSet(context: Context, selectedType: Int, count: Int): LineDataSet {
+    private fun buildEmptyDataSet(context: Context, count: Int): LineDataSet {
         val emptyValues = (0 until count).map { index -> Entry(index.toFloat(), 1f, "empty") }
         val dataSet = LineDataSet(emptyValues, "Empty")
         dataSet.setGradientColor(

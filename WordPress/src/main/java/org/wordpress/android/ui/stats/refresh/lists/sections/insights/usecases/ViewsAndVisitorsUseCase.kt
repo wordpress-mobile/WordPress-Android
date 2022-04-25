@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_OVERVIEW_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -37,7 +37,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.ceil
 
-const val OVERVIEW_ITEMS_TO_LOAD = 15
+const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
 
 class ViewsAndVisitorsUseCase
 @Inject constructor(
@@ -88,7 +88,7 @@ class ViewsAndVisitorsUseCase
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
+                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
                 forced
         )
         val model = response.model
@@ -130,7 +130,7 @@ class ViewsAndVisitorsUseCase
                 val currentCalendar = localeManagerWrapper.getCurrentCalendar()
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
-                        STATS_OVERVIEW_ERROR,
+                        STATS_VIEWS_AND_VISITORS_ERROR,
                         mapOf(
                                 "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
                                 "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
@@ -219,7 +219,7 @@ class ViewsAndVisitorsUseCase
 
     private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
+                AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED,
                 statsGranularity
         )
         if (period != null && period != "empty") {
@@ -233,7 +233,7 @@ class ViewsAndVisitorsUseCase
 
     private fun onChipSelected(position: Int) {
         analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
+                AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_TYPE_TAPPED,
                 statsGranularity
         )
         updateUiState { it.copy(selectedPosition = position) }
