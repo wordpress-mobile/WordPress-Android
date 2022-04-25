@@ -1143,6 +1143,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Suppress("NestedBlockDepth")
     private fun selectDefaultTabIfNeeded() {
         if (!isMySiteTabsEnabled) return
         val index = orderedTabTypes.indexOf(defaultABExperimentTab)
