@@ -1,11 +1,8 @@
 package org.wordpress.android.e2e;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.support.BaseTest;
 
@@ -17,7 +14,9 @@ import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS;
 
-@RunWith(AndroidJUnit4.class)
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class LoginTests extends BaseTest {
     @Before
     public void setUp() {

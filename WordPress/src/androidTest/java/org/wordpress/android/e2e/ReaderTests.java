@@ -10,7 +10,9 @@ import org.junit.Test;
 import org.wordpress.android.e2e.pages.ReaderPage;
 import org.wordpress.android.support.BaseTest;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
 
+@HiltAndroidTest
 public class ReaderTests extends BaseTest {
     @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
