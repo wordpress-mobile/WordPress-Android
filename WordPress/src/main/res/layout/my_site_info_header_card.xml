@@ -102,8 +102,10 @@
         android:layout_gravity="center_vertical|center"
         android:contentDescription="@string/quick_start_focus_point_description"
         android:elevation="@dimen/quick_start_focus_point_elevation"
-        app:layout_constraintEnd_toEndOf="@id/site_info_container"
         app:layout_constraintBottom_toBottomOf="@id/site_info_container"
+        app:layout_constraintEnd_toEndOf="@id/site_info_container"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/blavatar_container"
         tools:ignore="RtlSymmetry" />
 
     <ImageButton
