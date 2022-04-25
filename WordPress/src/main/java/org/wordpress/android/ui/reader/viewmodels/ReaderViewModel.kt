@@ -30,6 +30,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.MenuItemUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -100,8 +101,8 @@ class ReaderViewModel @Inject constructor(
                 _uiState.value = ContentUiState(
                         tagList.map { TabUiState(label = UiStringText(it.label)) },
                         tagList,
-                        searchIconVisible = isSearchSupported(),
-                        settingsIconVisible = isSettingsSupported()
+                        searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
+                        settingsMenuItemUiState = MenuItemUiState(isVisible = isSettingsSupported())
                 )
                 if (!initialized) {
                     initialized = true
@@ -152,24 +153,29 @@ class ReaderViewModel @Inject constructor(
     }
 
     sealed class ReaderUiState(
-        open val searchIconVisible: Boolean,
-        open val settingsIconVisible: Boolean,
+        open val searchMenuItemUiState: MenuItemUiState,
+        open val settingsMenuItemUiState: MenuItemUiState,
         val appBarExpanded: Boolean = false,
         val tabLayoutVisible: Boolean = false
     ) {
         data class ContentUiState(
             val tabUiStates: List<TabUiState>,
             val readerTagList: ReaderTagList,
-            override val searchIconVisible: Boolean,
-            override val settingsIconVisible: Boolean
+            override val searchMenuItemUiState: MenuItemUiState,
+            override val settingsMenuItemUiState: MenuItemUiState
         ) : ReaderUiState(
-                searchIconVisible = searchIconVisible,
-                settingsIconVisible = settingsIconVisible,
+                searchMenuItemUiState = searchMenuItemUiState,
+                settingsMenuItemUiState = settingsMenuItemUiState,
                 appBarExpanded = true,
                 tabLayoutVisible = true
         ) {
             data class TabUiState(
                 val label: UiString,
+                val showQuickStartFocusPoint: Boolean = false
+            )
+
+            data class MenuItemUiState(
+                val isVisible: Boolean,
                 val showQuickStartFocusPoint: Boolean = false
             )
         }

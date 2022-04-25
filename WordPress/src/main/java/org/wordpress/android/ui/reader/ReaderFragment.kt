@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -107,11 +108,13 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         inflater.inflate(R.menu.reader_home, menu)
         menu.findItem(R.id.menu_search).apply {
             searchMenuItem = this
-            this.isVisible = viewModel.uiState.value?.searchIconVisible ?: false
+            this.isVisible = viewModel.uiState.value?.searchMenuItemUiState?.isVisible ?: false
         }
         menu.findItem(R.id.menu_settings).apply {
             settingsMenuItem = this
-            this.isVisible = viewModel.uiState.value?.settingsIconVisible ?: false
+            this.isVisible = viewModel.uiState.value?.settingsMenuItemUiState?.isVisible ?: false
+            this.actionView.findViewById<QuickStartFocusPoint>(R.id.menu_quick_start_focus_point).isVisible =
+                    viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             this.actionView.setOnClickListener { viewModel.onSettingsActionClicked() }
         }
     }
@@ -155,8 +158,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                     }
                 }
                 uiHelpers.updateVisibility(tabLayout, uiState.tabLayoutVisible)
-                searchMenuItem?.isVisible = uiState.searchIconVisible
-                settingsMenuItem?.isVisible = uiState.settingsIconVisible
+                searchMenuItem?.isVisible = uiState.searchMenuItemUiState.isVisible
+                settingsMenuItem?.isVisible = uiState.settingsMenuItemUiState.isVisible
+                settingsMenuItem?.actionView?.findViewById<QuickStartFocusPoint>(R.id.menu_quick_start_focus_point)?.isVisible =
+                        viewModel.uiState.value?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
             }
         }
 

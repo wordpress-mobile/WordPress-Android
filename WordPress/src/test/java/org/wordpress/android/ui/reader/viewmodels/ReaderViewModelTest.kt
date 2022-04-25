@@ -250,7 +250,7 @@ class ReaderViewModelTest {
         triggerReaderTabContentDisplay()
 
         // Assert
-        assertThat(state!!.searchIconVisible).isFalse()
+        assertThat(state!!.searchMenuItemUiState.isVisible).isFalse
     }
 
     @Test
@@ -265,7 +265,7 @@ class ReaderViewModelTest {
         triggerReaderTabContentDisplay()
 
         // Assert
-        assertThat(state!!.searchIconVisible).isTrue()
+        assertThat(state!!.searchMenuItemUiState.isVisible).isTrue()
     }
 
     @Test
@@ -295,7 +295,7 @@ class ReaderViewModelTest {
         triggerReaderTabContentDisplay()
 
         // Assert
-        assertThat(state!!.settingsIconVisible).isFalse()
+        assertThat(state!!.settingsMenuItemUiState.isVisible).isFalse
     }
 
     @Test
@@ -310,7 +310,7 @@ class ReaderViewModelTest {
         triggerReaderTabContentDisplay()
 
         // Assert
-        assertThat(state!!.settingsIconVisible).isTrue()
+        assertThat(state!!.settingsMenuItemUiState.isVisible).isTrue
     }
 
     @Test
