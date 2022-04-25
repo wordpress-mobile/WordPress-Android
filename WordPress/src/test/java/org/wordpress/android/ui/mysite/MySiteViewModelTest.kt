@@ -2492,7 +2492,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 domainRegistrationCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
                 dashboardCardsBuilderParams = any(),
-                quickLinkRibbonsBuilderParams = any(),
+                quickLinkRibbonBuilderParams = any(),
                 isMySiteTabsEnabled = any()
         )
 
@@ -2560,7 +2560,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickLinkRibbonPostsClickAction = params.onPostsClick
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
-        return QuickLinkRibbon(quickLinkRibbonItems = mock())
+        return QuickLinkRibbon(
+            quickLinkRibbonItems = mock(),
+            showStatsFocusPoint = false,
+            showPagesFocusPoint = false
+        )
     }
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(

@@ -293,10 +293,7 @@ class QuickStartRepository
     private fun QuickStartTask.showInSiteMenu() = when (this) {
         QuickStartTask.VIEW_SITE,
         QuickStartTask.ENABLE_POST_SHARING,
-        QuickStartTask.EXPLORE_PLANS,
-        QuickStartTask.CHECK_STATS,
-        QuickStartTask.REVIEW_PAGES,
-        QuickStartTask.EDIT_HOMEPAGE -> true
+        QuickStartTask.EXPLORE_PLANS -> true
         else -> false
     }
 

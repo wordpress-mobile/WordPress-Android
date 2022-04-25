@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.quicklinkribbons
+package org.wordpress.android.ui.mysite.cards.quicklinksribbon
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,5 +14,6 @@ class QuickLinkRibbonItemViewHolder(
         quickLinkItem.setText(item.label)
         quickLinkItem.setIconResource(item.icon)
         quickLinkItem.setOnClickListener { item.onClick.click() }
+        quickStartFocusPoint.setVisibleOrGone(item.showFocusPoint)
     }
 }
