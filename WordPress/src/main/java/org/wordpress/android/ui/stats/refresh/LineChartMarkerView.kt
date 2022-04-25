@@ -51,12 +51,17 @@ class LineChartMarkerView @Inject constructor(
                     else -> R.color.blue_50
                 }
 
+                val selectedType = when (dataSetType) {
+                    "Visitors" -> context.getString(R.string.stats_visitors)
+                    else -> context.getString(R.string.stats_views)
+                }
+
                 if (i == 0) {
                     thisWeekCount = y.toLong()
                     countView.text = context.getString(
                             R.string.stats_insights_views_and_visitors_tooltip_count,
                             y.toInt().toString(),
-                            dataSetType
+                            selectedType
                     )
 
                     dataSet.setDrawCircles(true)
