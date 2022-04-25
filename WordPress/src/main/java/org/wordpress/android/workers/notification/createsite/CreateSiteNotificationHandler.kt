@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationType.CREATE_SITE
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.workers.notification.local.LocalNotificationHandler
 import javax.inject.Inject
 
@@ -20,7 +21,11 @@ class CreateSiteNotificationHandler @Inject constructor(
     }
 
     override fun buildIntent(context: Context): Intent {
-        return ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(context, CREATE_SITE)
+        return ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(
+                context,
+                CREATE_SITE,
+                SiteCreationSource.NOTIFICATION
+        )
     }
 
     override fun onNotificationShown() {

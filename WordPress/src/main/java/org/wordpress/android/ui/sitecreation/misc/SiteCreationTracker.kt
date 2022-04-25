@@ -29,6 +29,7 @@ enum class SiteCreationErrorType {
 
 private const val DESIGN_ERROR_CONTEXT = "design"
 private const val SITE_CREATION_LOCATION = "site_creation"
+private const val SITE_CREATION_SOURCE = "source"
 
 @Singleton
 @Suppress("TooManyFunctions")
@@ -51,8 +52,11 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     private var designSelectionSkipped: Boolean = false
 
-    fun trackSiteCreationAccessed() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED)
+    fun trackSiteCreationAccessed(siteCreationSource: SiteCreationSource) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED,
+                mapOf(SITE_CREATION_SOURCE to siteCreationSource.label)
+        )
     }
 
     fun trackSegmentsViewed() {
