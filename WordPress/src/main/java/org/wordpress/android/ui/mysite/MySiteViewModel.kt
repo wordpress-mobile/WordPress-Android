@@ -748,6 +748,7 @@ class MySiteViewModel @Inject constructor(
 
     private fun switchSiteClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.MY_SITE_SITE_SWITCHER_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenSitePicker(selectedSite))
     }
 
