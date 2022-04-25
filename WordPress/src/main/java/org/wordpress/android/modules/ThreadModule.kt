@@ -2,6 +2,8 @@ package org.wordpress.android.modules
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +19,7 @@ const val UI_THREAD = "UI_THREAD"
 const val BG_THREAD = "BG_THREAD"
 const val IO_THREAD = "IO_THREAD"
 
+@InstallIn(SingletonComponent::class)
 @Module
 class ThreadModule {
     @Provides

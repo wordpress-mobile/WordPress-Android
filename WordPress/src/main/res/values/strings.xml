@@ -3011,6 +3011,7 @@
     <string name="preview_type_desc">Select preview type</string>
     <string name="close_dialog_button_desc">Close Dialog</string>
     <string name="fab_add_category_desc">Create Category</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
 
     <string name="content_description_more">More</string>
 
@@ -3029,7 +3030,7 @@
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
-    <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
+    <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
     <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
@@ -3048,7 +3049,7 @@
     <string name="quick_start_dialog_share_site_title">Share your site</string>
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Select %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
@@ -3066,7 +3067,7 @@
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
-    <string name="quick_start_list_check_stats_title">Check your stats</string>
+    <string name="quick_start_list_check_stats_title">Check your site stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_create_site_message">Site created! Complete another task.</string>
@@ -3340,6 +3341,7 @@
     <string name="hpp_title">Choose a design</string>
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
     <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_choose_and_create_site">Create site</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
@@ -3437,7 +3439,7 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
-    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add blocks</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources">Add Blocks</string>
     <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
@@ -4013,10 +4015,13 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
     <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_got_it">Got it</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
 
     <!-- WordPressEditor module -->
     <string name="post_content" tools:ignore="UnusedResources">Content</string>
@@ -4078,6 +4083,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="initial_screen_entry_value_home" translatable="false">home</string>
     <string name="initial_screen_entry_value_menu" translatable="false">menu</string>
     <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_menu</string>
+    <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Add blocks</string>
     <string-array name="initial_screen_entries" translatable="false" tools:ignore="InconsistentArrays">
         <item>@string/initial_screen_home</item>
         <item>@string/initial_screen_menu</item>

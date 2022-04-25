@@ -452,7 +452,9 @@ class MySiteViewModel @Inject constructor(
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick
+                        onStatsClick = this::onQuickLinkRibbonStatsClick,
+                        activeTask = activeTask,
+                        enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
                 ),
                 isMySiteTabsEnabled
         )
@@ -470,6 +472,8 @@ class MySiteViewModel @Inject constructor(
                         activeTask = activeTask,
                         backupAvailable = backupAvailable,
                         scanAvailable = scanAvailable,
+                        enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                        enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         onClick = this::onItemClick
                 )
         )
@@ -499,6 +503,10 @@ class MySiteViewModel @Inject constructor(
                 )
         )
     }
+
+    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
+
+    private fun shouldEnableSiteItemsFocusPoints() = defaultABExperimentTab != MySiteTabType.DASHBOARD
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
@@ -1138,10 +1146,19 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Suppress("NestedBlockDepth")
     private fun selectDefaultTabIfNeeded() {
-        if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
+        if (!isMySiteTabsEnabled) return
         val index = orderedTabTypes.indexOf(defaultABExperimentTab)
         if (index != -1) {
+            if (isDefaultABExperimentTabSet) {
+                // This logic checks if the current default tab is the same as the tab
+                // set as initial screen, if yes then return
+                _selectTab.value?.let { tab ->
+                    val currentDefaultTab = tab.peekContent().position
+                    if (currentDefaultTab == index) return
+                }
+            }
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
             isDefaultABExperimentTabSet = true
         }

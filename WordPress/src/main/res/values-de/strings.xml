@@ -76,7 +76,6 @@ Language: de
     <string name="site_creation_intent_books">Bücher</string>
     <string name="site_creation_intent_automotive">Automobil</string>
     <string name="site_creation_intent_art">Kunst</string>
-    <string name="new_site_creation_intents_input_hint">Z. B. Mode, Poesie, Politik</string>
     <string name="new_site_creation_intents_title">Website-Thema</string>
     <string name="quick_start_site_menu_tab_message_short">Tippe zum Fortfahren auf &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Aus Dashboard entfernen</string>
@@ -93,7 +92,6 @@ Language: de
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine dunklere Hintergrundfarbe und/oder eine hellere Textfarbe.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Das Einfügen des Mediums ist fehlgeschlagen.\nTippe für weitere Informationen.</string>
     <string name="new_site_creation_intents_header_title">Worum wird es auf deiner Website gehen?</string>
-    <string name="new_site_creation_intents_header_subtitle">Wähle ein Thema in der Liste unten oder gib ein eigenes ein</string>
     <string name="adding_cat">Kategorie wird hinzugefügt</string>
     <string name="my_site_dashboard_tab_title">Startseite</string>
     <string name="notification_channel_weekly_roundup_title">Wöchentliche Zusammenfassung</string>

@@ -33,9 +33,9 @@ class SiteItemsBuilder @Inject constructor(
         val showViewSiteFocusPoint = params.activeTask == QuickStartTask.VIEW_SITE
         val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
         val showExplorePlansFocusPoint = params.activeTask == QuickStartTask.EXPLORE_PLANS
-        val showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS
-        val showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartTask.REVIEW_PAGES
+        val showStatsFocusPoint = (params.activeTask == QuickStartTask.CHECK_STATS && params.enableStatsFocusPoint)
+        val showPagesFocusPoint = (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartTask.REVIEW_PAGES) && params.enablePagesFocusPoint
 
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(params.site, showExplorePlansFocusPoint, params.onClick),

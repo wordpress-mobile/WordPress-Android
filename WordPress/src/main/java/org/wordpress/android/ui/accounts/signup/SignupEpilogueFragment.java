@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -56,6 +57,7 @@ import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnShownListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
@@ -87,6 +89,7 @@ import java.net.URISyntaxException;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -94,7 +97,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW;
 
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
-        implements OnConfirmListener, OnDismissListener {
+        implements OnConfirmListener, OnDismissListener, OnShownListener {
     private EditText mEditTextDisplayName;
     private EditText mEditTextUsername;
     private FullScreenDialogFragment mDialog;
@@ -133,6 +136,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private static final String KEY_IS_UPDATING_PASSWORD = "KEY_IS_UPDATING_PASSWORD";
     private static final String KEY_HAS_UPDATED_PASSWORD = "KEY_HAS_UPDATED_PASSWORD";
     private static final String KEY_HAS_MADE_UPDATES = "KEY_HAS_MADE_UPDATES";
+
+    private static final String SOURCE = "source";
+    private static final String SOURCE_SIGNUP_EPILOGUE = "signup_epilogue";
 
     public static final String TAG = "signup_epilogue_fragment_tag";
 
@@ -447,7 +453,17 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     public void onDismiss() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_SIGNUP_EPILOGUE);
+        AnalyticsTracker.track(Stat.CHANGE_USERNAME_DISMISSED, props);
         mDialog = null;
+    }
+
+    @Override
+    public void onShown() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_SIGNUP_EPILOGUE);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CHANGE_USERNAME_DISPLAYED, props);
     }
 
     @Override
@@ -582,6 +598,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 .setToolbarTheme(R.style.ThemeOverlay_LoginFlow_Toolbar)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
+                .setOnShownListener(this)
                 .setContent(UsernameChangerFullScreenDialogFragment.class, bundle)
                 .build();
 

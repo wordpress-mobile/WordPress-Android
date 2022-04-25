@@ -7,6 +7,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.fluxc.model.experiments.Variation.Control
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -25,6 +26,7 @@ class ExPlat
     private val experiments: Lazy<Set<Experiment>>,
     private val experimentStore: ExperimentStore,
     private val appLog: AppLogWrapper,
+    private val accountStore: AccountStore,
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope
 ) {
     private val platform = Platform.WORDPRESS_ANDROID
@@ -70,7 +72,7 @@ class ExPlat
     }
 
     private fun refresh(refreshStrategy: RefreshStrategy) {
-        if (experimentNames.isNotEmpty()) {
+        if (experimentNames.isNotEmpty() && accountStore.hasAccessToken()) {
             getAssignments(refreshStrategy)
         }
     }

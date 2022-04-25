@@ -359,6 +359,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static Intent createMainActivityAndShowEditorIntent(@NonNull final Context context) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        return intent;
+    }
+
     public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
@@ -1155,8 +1161,7 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
-        } else if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE && site.isWPComAtomic()
-                   && !site.isPrivateWPComAtomic()) {
+        } else if (site.isWPComAtomic() && !site.isPrivateWPComAtomic()) {
             openAtomicBlogPostPreview(
                     context,
                     url,

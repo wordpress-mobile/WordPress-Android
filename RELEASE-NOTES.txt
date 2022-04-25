@@ -1,5 +1,10 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+19.8
+-----
+* [*] On self-hosted sites, allow previewing unsaved changes to draft posts [https://github.com/wordpress-mobile/WordPress-Android/pull/16296]
+* [*] Editor: Fix issue that caused previews on atomic sites to sometimes be out-of-date. [https://github.com/wordpress-mobile/WordPress-Android/pull/16332]
+
 19.7
 -----
 * [*] [internal] Site creation: Adds a new screen asking the user the name of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16259]
