@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -132,6 +133,10 @@ class ReaderViewModel @Inject constructor(
         }
         // Store most recently selected tab so we can restore the selection after restart
         appPrefsWrapper.setReaderTag(selectedTag)
+
+        if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
+            checkAndStartQuickStartFollowSiteTaskNextStep()
+        }
     }
 
     fun onCloseReaderInterests() {
@@ -242,7 +247,20 @@ class ReaderViewModel @Inject constructor(
     /* QUICK START */
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
-        if (event.task == QuickStartTask.FOLLOW_SITE) startQuickStartFollowSiteTaskSettingsStep()
+        if (event.task == QuickStartTask.FOLLOW_SITE) { checkAndStartQuickStartFollowSiteTaskNextStep() }
+    }
+
+    private fun checkAndStartQuickStartFollowSiteTaskNextStep() {
+        val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
+        if (isDiscover) {
+            startQuickStartFollowSiteTaskSettingsStep()
+        } else {
+            startQuickStartFollowSiteTaskDiscoverStep()
+        }
+    }
+
+    private fun startQuickStartFollowSiteTaskDiscoverStep() {
+        _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverStepPrompt)
     }
 
     private fun startQuickStartFollowSiteTaskSettingsStep() {
@@ -259,6 +277,12 @@ class ReaderViewModel @Inject constructor(
         @StringRes val shortMessagePrompt: Int,
         @DrawableRes val iconId: Int
     ) {
+        object FollowSiteDiscoverStepPrompt : QuickStartReaderPrompt(
+                QuickStartTask.FOLLOW_SITE,
+                R.string.quick_start_dialog_follow_sites_message_short_discover,
+                QuickStartUtils.ICON_NOT_SET
+        )
+
         object FollowSiteSettingsStepPrompt : QuickStartReaderPrompt(
                 QuickStartTask.FOLLOW_SITE,
                 R.string.quick_start_dialog_follow_sites_message_short_settings,
