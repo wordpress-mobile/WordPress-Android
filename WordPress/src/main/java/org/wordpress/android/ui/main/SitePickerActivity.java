@@ -67,8 +67,10 @@ import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -98,6 +100,11 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     private static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
     private static final String SOURCE = "source";
+    private static final String TRACK_PROPERTY_STATE = "state";
+    private static final String TRACK_PROPERTY_STATE_EDIT = "edit";
+    private static final String TRACK_PROPERTY_STATE_DONE = "done";
+    private static final String TRACK_PROPERTY_BLOG_ID = "blog_id";
+    private static final String TRACK_PROPERTY_VISIBLE = "visible";
 
     private SitePickerAdapter mAdapter;
     private EmptyViewRecyclerView mRecycleView;
@@ -268,6 +275,8 @@ public class SitePickerActivity extends LocaleAwareActivity
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLED_EDIT_TAPPED,
+                    Collections.singletonMap(TRACK_PROPERTY_STATE, TRACK_PROPERTY_STATE_EDIT));
             startEditingVisibility();
             return true;
         } else if (itemId == R.id.menu_add) {
@@ -502,6 +511,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             // Save the site
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
             siteList.add(siteModel);
+            trackVisibility(Long.toString(siteModel.getSiteId()), siteModel.isVisible());
         }
 
         updateVisibilityOfSitesOnRemote(siteList);
@@ -761,6 +771,8 @@ public class SitePickerActivity extends LocaleAwareActivity
             if (mHasChanges) {
                 saveSitesVisibility(mChangeSet);
             }
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLED_EDIT_TAPPED,
+                    Collections.singletonMap(TRACK_PROPERTY_STATE, TRACK_PROPERTY_STATE_DONE));
             getAdapter().setEnableEditMode(false, mSelectedPositions);
             mActionMode = null;
             mIsInEditMode = false;
@@ -846,5 +858,12 @@ public class SitePickerActivity extends LocaleAwareActivity
                 .getSnackbarDuration(this, getResources().getInteger(R.integer.site_creation_snackbar_duration));
         String message = getString(R.string.site_created_but_not_fetched_snackbar_message);
         WPDialogSnackbar.make(findViewById(R.id.coordinatorLayout), message, duration).show();
+    }
+
+    private void trackVisibility(String blogId, boolean isVisible) {
+        Map<String, String> props = new HashMap<>();
+        props.put(TRACK_PROPERTY_BLOG_ID, blogId);
+        props.put(TRACK_PROPERTY_VISIBLE, isVisible ? "1" : "0");
+        AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLE_BLOG_VISIBLE, props);
     }
 }
