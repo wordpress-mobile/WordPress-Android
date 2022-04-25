@@ -173,10 +173,10 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         payload.params = new HashMap<>();
         payload.params.put(restParamForTextView(textView), textView.getText().toString());
         mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
-        trackSettingDidChange(restParamForTextView(textView));
+        trackSettingsDidChange(restParamForTextView(textView));
     }
 
-    private void trackSettingDidChange(String fieldName) {
+    private void trackSettingsDidChange(String fieldName) {
         Map<String, String> props = new HashMap<>();
         props.put(TRACK_PROPERTY_FIELD_NAME, fieldName);
         props.put(TRACK_PROPERTY_PAGE, TRACK_PROPERTY_PAGE_MY_PROFILE);
