@@ -273,8 +273,11 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun startQuickStartFollowSiteTaskDiscoverStep() {
-        updateQuickStartFocusPointOnDiscoverTab(true)
-        _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverStepPrompt)
+        launch {
+            if (!initialized) delay(QUICK_START_DISCOVER_STEP_DELAY)
+            updateQuickStartFocusPointOnDiscoverTab(true)
+            _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverStepPrompt)
+        }
     }
 
     private fun startQuickStartFollowSiteTaskSettingsStep() {
@@ -327,6 +330,10 @@ class ReaderViewModel @Inject constructor(
                 R.string.quick_start_dialog_follow_sites_message_short_settings,
                 R.drawable.ic_cog_white_24dp
         )
+    }
+
+    companion object {
+        private const val QUICK_START_DISCOVER_STEP_DELAY = 2000L
     }
 }
 
