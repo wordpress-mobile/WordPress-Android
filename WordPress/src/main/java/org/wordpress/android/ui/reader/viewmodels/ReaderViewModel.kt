@@ -136,7 +136,10 @@ class ReaderViewModel @Inject constructor(
 
         if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
             val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
-            if (isDiscover) startQuickStartFollowSiteTaskSettingsStep()
+            if (isDiscover) {
+                updateQuickStartFocusPointOnDiscoverTab(false)
+                startQuickStartFollowSiteTaskSettingsStep()
+            }
         }
     }
 
@@ -261,6 +264,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun startQuickStartFollowSiteTaskDiscoverStep() {
+        updateQuickStartFocusPointOnDiscoverTab(true)
         _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverStepPrompt)
     }
 
@@ -271,6 +275,17 @@ class ReaderViewModel @Inject constructor(
 
     private fun completeQuickStartFollowSiteTask() {
         quickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE)
+    }
+
+    private fun updateQuickStartFocusPointOnDiscoverTab(show: Boolean) {
+        val currentUiState = _uiState.value as? ContentUiState
+        currentUiState?.let {
+            val discoverTabIndex = it.readerTagList.indexOf(it.readerTagList.find { readerTag -> readerTag.isDiscover })
+            val updateTabUiStates = it.tabUiStates.mapIndexed { index, tabUiState ->
+                if (index == discoverTabIndex) tabUiState.copy(showQuickStartFocusPoint = show) else tabUiState
+            }
+            _uiState.postValue(currentUiState.copy(tabUiStates = updateTabUiStates))
+        }
     }
 
     sealed class QuickStartReaderPrompt(

@@ -42,7 +42,9 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.widgets.QuickStartFocusPoint
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -226,7 +228,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         val customView = tab.customView ?: createTabCustomView(tab)
         with(customView) {
             val title = findViewById<TextView>(R.id.tab_label)
+            val quickStartFocusPoint = findViewById<QuickStartFocusPoint>(R.id.tab_quick_start_focus_point)
             title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
+            quickStartFocusPoint?.setVisible(tabUiState.showQuickStartFocusPoint)
         }
     }
 
