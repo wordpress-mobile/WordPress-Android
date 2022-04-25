@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt.FollowSiteDiscoverStepPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.viewmodel.Event
@@ -368,24 +369,30 @@ class ReaderViewModelTest {
     /* QUICK START */
 
     @Test
-    fun `when quick start event received is follow site, then follow site setting step prompt shown`() {
-        val observers = initObservers()
+    fun `given discover tab not selected, when quick start event is follow site, then discover tab step started`() {
+        val tagList = createNonMockedNonEmptyReaderTagList()
+        testWithNonMockedNonEmptyTags(tagList) {
+            val observers = initObservers()
+            triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[0])
 
-        viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
+            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
 
-        val quickStartReaderPrompt = observers.quickStartReaderPrompts.last().peekContent()
-        assertThat(quickStartReaderPrompt).isEqualTo(QuickStartReaderPrompt.FollowSiteSettingsStepPrompt)
+            assertQsFollowSiteDiscoverStepStarted(observers, tagList)
+        }
     }
 
     @Test
-    fun `when quick start event received is not follow site, then follow site setting step prompt not shown`() {
-        val observers = initObservers()
+    fun `given discover tab not selected, when quick start event not follow site, then discover step not started`() {
+        val tagList = createNonMockedNonEmptyReaderTagList()
+        testWithNonMockedNonEmptyTags() {
+            val observers = initObservers()
+            triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[0])
 
-        viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
+            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
 
-        assertThat(observers.quickStartReaderPrompts).isEmpty()
+            assertQsFollowSiteDiscoverStepNotStarted(observers, tagList)
+        }
     }
-
     @Test
     fun `given site present, when quick start event received is follow site, then follow site task is completed`() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
@@ -402,16 +409,47 @@ class ReaderViewModelTest {
         verify(quickStartRepository, times(0)).completeTask(QuickStartTask.FOLLOW_SITE)
     }
 
+    private fun assertQsFollowSiteDiscoverStepStarted(
+        observers: Observers,
+        tagList: ReaderTagList
+    ) {
+        with(observers) {
+            assertThat(quickStartReaderPrompts.last().peekContent()).isEqualTo(FollowSiteDiscoverStepPrompt)
+            assertThat(uiStates.last().findDiscoverTabQsFocusPoint(tagList)).isEqualTo(true)
+        }
+    }
+
+    private fun assertQsFollowSiteDiscoverStepNotStarted(
+        observers: Observers,
+        tagList: ReaderTagList
+    ) {
+        with(observers) {
+            assertThat(quickStartReaderPrompts).isEmpty()
+            assertThat(uiStates.last().findDiscoverTabQsFocusPoint(tagList)).isEqualTo(false)
+        }
+    }
+
+    private fun ReaderUiState.findDiscoverTabQsFocusPoint(readerTagList: ReaderTagList): Boolean {
+        val discoverTabIndex = readerTagList.indexOf(readerTagList.find { it.isDiscover })
+        return (this as? ContentUiState)?.tabUiStates?.get(discoverTabIndex)?.showQuickStartFocusPoint ?: false
+    }
+
     private fun initObservers(): Observers {
+        val uiStates = mutableListOf<ReaderUiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+
         val quickStartReaderPrompts = mutableListOf<Event<QuickStartReaderPrompt>>()
         viewModel.quickStartPromptEvent.observeForever {
             quickStartReaderPrompts.add(it)
         }
 
-        return Observers(quickStartReaderPrompts)
+        return Observers(uiStates, quickStartReaderPrompts)
     }
 
     private data class Observers(
+        val uiStates: List<ReaderUiState>,
         val quickStartReaderPrompts: List<Event<QuickStartReaderPrompt>>
     )
 
