@@ -29,7 +29,9 @@ class BloggingPromptsOnboardingNotificationSchedulerTest {
                 text = R.string.blogging_prompts_onboarding_notification_text,
                 icon = R.drawable.ic_wordpress_white_24dp,
                 firstActionIcon = -1,
-                firstActionTitle = R.string.blogging_prompts_onboarding_notification_action
+                firstActionTitle = R.string.blogging_prompts_onboarding_notification_action,
+                secondActionIcon = -1,
+                secondActionTitle = R.string.blogging_prompts_notification_dismiss
         )
         classToTest.scheduleBloggingPromptsOnboardingNotificationIfNeeded()
         verify(localnotificationScheduler).scheduleOneTimeNotification(expectedLocalNotification)
