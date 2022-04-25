@@ -271,6 +271,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             startEditingVisibility();
             return true;
         } else if (itemId == R.id.menu_add) {
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED);
             addSite(this, mAccountStore.hasAccessToken(), SiteCreationSource.MY_SITE);
             return true;
         } else if (itemId == R.id.continue_flow) {
