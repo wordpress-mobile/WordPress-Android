@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "com.automattic.android.publish-to-s3"
+    alias(sharedLibs.plugins.automattic.publishToS3)
 }
 
 java {

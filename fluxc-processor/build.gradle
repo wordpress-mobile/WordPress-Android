@@ -1,8 +1,8 @@
 plugins {
     id "java"
-    id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.kapt"
-    id "com.automattic.android.publish-to-s3"
+    alias(sharedLibs.plugins.kotlin.jvm)
+    alias(sharedLibs.plugins.kotlin.kapt)
+    alias(sharedLibs.plugins.automattic.publishToS3)
 }
 
 java {

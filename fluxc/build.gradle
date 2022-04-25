@@ -1,9 +1,9 @@
 plugins {
-    id "com.android.library"
-    id "org.jetbrains.kotlin.android"
-    id "org.jetbrains.kotlin.android.extensions"
-    id "org.jetbrains.kotlin.kapt"
-    id "com.automattic.android.publish-to-s3"
+    alias(sharedLibs.plugins.android.library)
+    alias(sharedLibs.plugins.kotlin.android)
+    alias(sharedLibs.plugins.kotlin.android.extensions)
+    alias(sharedLibs.plugins.kotlin.kapt)
+    alias(sharedLibs.plugins.automattic.publishToS3)
 }
 
 android {
