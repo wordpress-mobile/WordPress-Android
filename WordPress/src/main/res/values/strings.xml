@@ -1284,9 +1284,10 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
-    <string name="stats_insights_views_and_visitors_message">Your this week\'s %1$s are %2$s %3$s than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_higher">higher</string>
-    <string name="stats_insights_views_and_visitors_lower">lower</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Your this week\'s views are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Your this week\'s views are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Your this week\'s visitors are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Your this week\'s visitors are %1$s lower than the previous week.</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>

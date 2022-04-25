@@ -38,8 +38,8 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         textItem.color?.forEach { color ->
             spannableString.setSpan(
                     ForegroundColorSpan(
-                            if (color.first() == '-') ContextCompat.getColor(text.context, R.color.red_50)
-                                else ContextCompat.getColor(text.context, R.color.green_50)
+                            if (color.first() == '-') ContextCompat.getColor(text.context, R.color.stats_color_negative)
+                                else ContextCompat.getColor(text.context, R.color.stats_color_positive)
                     ),
                     loadedText.indexOf(color),
                     loadedText.indexOf(color) + color.length,

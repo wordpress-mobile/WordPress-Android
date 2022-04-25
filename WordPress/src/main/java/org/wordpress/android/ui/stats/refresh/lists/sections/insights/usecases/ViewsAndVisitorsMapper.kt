@@ -181,17 +181,25 @@ class ViewsAndVisitorsMapper
 
         val positive = thisWeekCount >= (prevWeekCount ?: 0)
         val change = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = true)
+        val stringRes = when (SelectedType.valueOf(selectedPosition)) {
+            Views -> {
+                when {
+                    positive -> R.string.stats_insights_views_and_visitors_views_positive
+                    else ->  R.string.stats_insights_views_and_visitors_views_negative
+                }
+            }
+            Visitors -> {
+                when {
+                    positive -> R.string.stats_insights_views_and_visitors_visitors_positive
+                    else -> R.string.stats_insights_views_and_visitors_visitors_negative
+                }
+            }
+            else -> R.string.stats_insights_views_and_visitors_views_positive
+        }
 
         return Text(
                 text = resourceProvider.getString(
-                        R.string.stats_insights_views_and_visitors_message,
-                        resourceProvider.getString(units[selectedPosition]),
-                        change.toString(),
-                        if (positive) {
-                            resourceProvider.getString(R.string.stats_insights_views_and_visitors_higher)
-                        } else {
-                            resourceProvider.getString(R.string.stats_insights_views_and_visitors_lower)
-                        }
+                        stringRes, change.toString()
                 ),
                 color = listOf(change.toString())
         )
