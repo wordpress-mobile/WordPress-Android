@@ -185,7 +185,7 @@ class ViewsAndVisitorsMapper
             Views -> {
                 when {
                     positive -> R.string.stats_insights_views_and_visitors_views_positive
-                    else ->  R.string.stats_insights_views_and_visitors_views_negative
+                    else -> R.string.stats_insights_views_and_visitors_views_negative
                 }
             }
             Visitors -> {
