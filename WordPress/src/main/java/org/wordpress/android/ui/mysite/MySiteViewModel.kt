@@ -593,8 +593,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun isValidQuickStartFocusPosition(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask))
-            return true
+        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask)) true
         else position >= 0
     }
 
