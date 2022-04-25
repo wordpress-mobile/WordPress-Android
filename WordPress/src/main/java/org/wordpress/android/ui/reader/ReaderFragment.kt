@@ -15,12 +15,16 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
@@ -251,5 +255,24 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.liftOnScrollTargetViewId = containerId
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(sticky = true, threadMode = MAIN)
+    fun onEvent(event: QuickStartEvent) {
+        if (!isAdded || view == null) {
+            return
+        }
+        viewModel.onQuickStartEventReceived(event)
+        EventBus.getDefault().removeStickyEvent(event)
     }
 }

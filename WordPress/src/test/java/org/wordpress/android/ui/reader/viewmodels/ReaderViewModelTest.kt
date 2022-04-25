@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +17,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTag.DISCOVER_PATH
 import org.wordpress.android.models.ReaderTag.FOLLOWING_PATH
@@ -23,11 +25,15 @@ import org.wordpress.android.models.ReaderTag.LIKED_PATH
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.viewmodel.Event
@@ -50,6 +56,8 @@ class ReaderViewModelTest {
     @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -63,7 +71,9 @@ class ReaderViewModelTest {
                 dateProvider,
                 loadReaderTabsUseCase,
                 readerTracker,
-                accountStore
+                accountStore,
+                quickStartRepository,
+                selectedSiteRepository
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -358,6 +368,56 @@ class ReaderViewModelTest {
         // Assert
         assertThat(tabNavigation!!.position).isEqualTo(3)
     }
+
+    /* QUICK START */
+
+    @Test
+    fun `when quick start event received is follow site, then follow site setting step prompt shown`() {
+        val observers = initObservers()
+
+        viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
+
+        val quickStartReaderPrompt = observers.quickStartReaderPrompts.last().peekContent()
+        assertThat(quickStartReaderPrompt).isEqualTo(QuickStartReaderPrompt.FollowSiteSettingsStepPrompt)
+    }
+
+    @Test
+    fun `when quick start event received is not follow site, then follow site setting step prompt not shown`() {
+        val observers = initObservers()
+
+        viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
+
+        assertThat(observers.quickStartReaderPrompts).isEmpty()
+    }
+
+    @Test
+    fun `given site present, when quick start event received is follow site, then follow site task is completed`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
+
+        viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
+
+        verify(quickStartRepository).completeTask(QuickStartTask.FOLLOW_SITE)
+    }
+
+    @Test
+    fun `given site present, when quick start event received not follow site, then follow site task not completed`() {
+        viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
+
+        verify(quickStartRepository, times(0)).completeTask(QuickStartTask.FOLLOW_SITE)
+    }
+
+    private fun initObservers(): Observers {
+        val quickStartReaderPrompts = mutableListOf<Event<QuickStartReaderPrompt>>()
+        viewModel.quickStartPromptEvent.observeForever {
+            quickStartReaderPrompts.add(it)
+        }
+
+        return Observers(quickStartReaderPrompts)
+    }
+
+    private data class Observers(
+        val quickStartReaderPrompts: List<Event<QuickStartReaderPrompt>>
+    )
 
     private fun triggerReaderTabContentDisplay() {
         viewModel.start()

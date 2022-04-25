@@ -1,23 +1,16 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
@@ -39,7 +32,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -50,8 +42,6 @@ class ReaderPostListViewModel @Inject constructor(
     private val reblogUseCase: ReblogUseCase,
     private val readerTracker: ReaderTracker,
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
-    private val quickStartRepository: QuickStartRepository,
-    private val selectedSiteRepository: SelectedSiteRepository,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -69,9 +59,6 @@ class ReaderPostListViewModel @Inject constructor(
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
-
-    private val _quickStartPromptEvent = MutableLiveData<Event<QuickStartReaderPrompt>>()
-    val quickStartPromptEvent = _quickStartPromptEvent as LiveData<Event<QuickStartReaderPrompt>>
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents = _preloadPostEvents
@@ -315,38 +302,5 @@ class ReaderPostListViewModel @Inject constructor(
         if (isFilterable) {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
-    }
-
-    /* QUICK START */
-
-    fun onQuickStartEventReceived(event: QuickStartEvent) {
-        if (event.task == QuickStartTask.FOLLOW_SITE) startQuickStartFollowSiteTaskSettingsStep()
-    }
-
-    private fun startQuickStartFollowSiteTaskSettingsStep() {
-        _quickStartPromptEvent.postValue(Event(QuickStartReaderPrompt.FollowSiteSettingsStepPrompt))
-        selectedSiteRepository.getSelectedSite()?.let { completeQuickStartFollowSiteTask() }
-    }
-
-    private fun completeQuickStartFollowSiteTask() {
-        quickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE)
-    }
-
-    sealed class QuickStartReaderPrompt(
-        val task: QuickStartTask,
-        @StringRes val shortMessagePrompt: Int,
-        @DrawableRes val iconId: Int
-    ) {
-        object FollowSiteDiscoverStepPrompt : QuickStartReaderPrompt(
-                QuickStartTask.FOLLOW_SITE,
-                R.string.quick_start_dialog_follow_sites_message_short_discover,
-                QuickStartUtils.ICON_NOT_SET
-        )
-
-        object FollowSiteSettingsStepPrompt : QuickStartReaderPrompt(
-                QuickStartTask.FOLLOW_SITE,
-                R.string.quick_start_dialog_follow_sites_message_short_settings,
-                R.drawable.ic_cog_white_24dp
-        )
     }
 }

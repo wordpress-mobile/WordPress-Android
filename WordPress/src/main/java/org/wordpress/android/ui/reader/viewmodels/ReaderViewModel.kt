@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -10,12 +12,17 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -42,7 +49,9 @@ class ReaderViewModel @Inject constructor(
     private val dateProvider: DateProvider,
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
     private val readerTracker: ReaderTracker,
-    private val accountStore: AccountStore
+    private val accountStore: AccountStore,
+    private val quickStartRepository: QuickStartRepository,
+    private val selectedSiteRepository: SelectedSiteRepository
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
@@ -69,6 +78,9 @@ class ReaderViewModel @Inject constructor(
 
     private val _closeReaderInterests = MutableLiveData<Event<Unit>>()
     val closeReaderInterests: LiveData<Event<Unit>> = _closeReaderInterests
+
+    private val _quickStartPromptEvent = MutableLiveData<Event<QuickStartReaderPrompt>>()
+    val quickStartPromptEvent = _quickStartPromptEvent as LiveData<Event<QuickStartReaderPrompt>>
 
     init {
         EventBus.getDefault().register(this)
@@ -225,6 +237,33 @@ class ReaderViewModel @Inject constructor(
             delay(TRACK_TAB_CHANGED_THROTTLE)
             readerTracker.trackReaderTabIfNecessary(ReaderTab.transformTagToTab(it))
         }
+    }
+
+    /* QUICK START */
+
+    fun onQuickStartEventReceived(event: QuickStartEvent) {
+        if (event.task == QuickStartTask.FOLLOW_SITE) startQuickStartFollowSiteTaskSettingsStep()
+    }
+
+    private fun startQuickStartFollowSiteTaskSettingsStep() {
+        _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteSettingsStepPrompt)
+        selectedSiteRepository.getSelectedSite()?.let { completeQuickStartFollowSiteTask() }
+    }
+
+    private fun completeQuickStartFollowSiteTask() {
+        quickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE)
+    }
+
+    sealed class QuickStartReaderPrompt(
+        val task: QuickStartTask,
+        @StringRes val shortMessagePrompt: Int,
+        @DrawableRes val iconId: Int
+    ) {
+        object FollowSiteSettingsStepPrompt : QuickStartReaderPrompt(
+                QuickStartTask.FOLLOW_SITE,
+                R.string.quick_start_dialog_follow_sites_message_short_settings,
+                R.drawable.ic_cog_white_24dp
+        )
     }
 }
 
