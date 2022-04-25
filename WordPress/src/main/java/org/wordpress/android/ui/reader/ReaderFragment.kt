@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
@@ -35,6 +36,12 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarItem.Action
+import org.wordpress.android.util.SnackbarItem.Info
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.observeEvent
 import java.util.EnumSet
 import javax.inject.Inject
@@ -42,6 +49,8 @@ import javax.inject.Inject
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Inject lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: ReaderViewModel
 
     private var searchMenuItem: MenuItem? = null
@@ -172,7 +181,37 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             closeReaderInterests()
         }
 
+        viewModel.quickStartPromptEvent.observeEvent(viewLifecycleOwner) { prompt ->
+            val message = quickStartUtilsWrapper.stylizeQuickStartPrompt(
+                    requireActivity(),
+                    prompt.shortMessagePrompt,
+                    prompt.iconId
+            )
+
+            showSnackbar(SnackbarMessageHolder(message = UiStringText(message), isImportant = false))
+        }
+
         viewModel.start()
+    }
+
+    private fun ReaderFragmentLayoutBinding.showSnackbar(holder: SnackbarMessageHolder) {
+        if (!isAdded || view == null) return
+        snackbarSequencer.enqueue(
+                SnackbarItem(
+                        info = Info(
+                                view = coordinatorLayout,
+                                textRes = holder.message,
+                                duration = holder.duration,
+                                isImportant = holder.isImportant
+                        ),
+                        action = holder.buttonTitle?.let {
+                            Action(
+                                    textRes = holder.buttonTitle,
+                                    clickListener = { holder.buttonAction() }
+                            )
+                        }
+                )
+        )
     }
 
     private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {

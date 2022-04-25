@@ -135,7 +135,8 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.setReaderTag(selectedTag)
 
         if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
-            checkAndStartQuickStartFollowSiteTaskNextStep()
+            val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
+            if (isDiscover) startQuickStartFollowSiteTaskSettingsStep()
         }
     }
 
