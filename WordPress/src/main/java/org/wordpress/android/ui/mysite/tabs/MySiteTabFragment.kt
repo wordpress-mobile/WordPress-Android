@@ -291,7 +291,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 action.site,
                 CTA_DOMAIN_CREDIT_REDEMPTION
         )
-        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
         is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
                 action.title,
                 action.message,
