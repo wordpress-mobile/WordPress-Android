@@ -859,7 +859,9 @@ public final class AnalyticsTracker {
         SITE_SWITCHER_TOGGLE_BLOG_VISIBLE,
         SITE_SWITCHER_TOGGLED_EDIT_TAPPED,
         SITE_SWITCHER_ADD_SITE_TAPPED,
-        SITE_SWITCHER_DISMISSED
+        SITE_SWITCHER_DISMISSED,
+        PEOPLE_MANAGEMENT_USER_INVITED,
+        PEOPLE_MANAGEMENT_FILTER_CHANGED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

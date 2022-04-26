@@ -2225,6 +2225,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_switcher_add_site_tapped";
             case SITE_SWITCHER_DISMISSED:
                 return "site_switcher_dismissed";
+            case PEOPLE_MANAGEMENT_USER_INVITED:
+                return "people_management_user_invited";
+            case PEOPLE_MANAGEMENT_FILTER_CHANGED:
+                return "people_management_filter_changed";
         }
         return null;
     }
