@@ -1,25 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-05 23:44:43+0000
+Translation-Revision-Date: 2022-04-21 19:49:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_add_blocks_11d0841f">Engadir bloques</string>
+    <string name="initial_screen">Pantalla inicial</string>
+    <string name="blogging_prompts_onboarding_notification_action">Aprender máis</string>
+    <string name="blogging_prompts_onboarding_notification_text">Convértete nun mellor escritor creando un hábito de escritura. Toca para máis información.</string>
+    <string name="blogging_prompts_onboarding_notification_title">Novo na aplicación móbil de WordPress: Estímulos</string>
+    <string name="new_site_creation_site_name_header_subtitle">Un bo nome é curto e fácil de recordar.\nPodes cambialo máis tarde.</string>
+    <string name="new_site_creation_site_name_header_title">Dálle á túa web %s un nome</string>
+    <string name="new_site_creation_site_name_title">Nome do sitio</string>
+    <string name="my_site_todays_stats_get_more_views_message">Estás interesado en crear unha audiencia? Revisa os nosos &lt;a href=\"%1$s\"&gt;mellores consellos&lt;/a&gt;.</string>
+    <string name="stats_insights_views_and_visitors_message">As túas visitas das últimas semanas son %1$s %2$s que as da semana anterior.</string>
+    <string name="stats_insights_views_and_visitors">Visitas e visitantes</string>
     <string name="featured_image_removed_notice">Eliminada como imaxe destacada</string>
     <string name="featured_image_confirmation_notice">Establecer como imaxe destacada</string>
     <string name="featured_image_replace_dialog_cancel">Manter actual</string>
     <string name="featured_image_replace_dialog_confirm">Reemplazar a imaxe destacada</string>
+    <string name="featured_image_replace_dialog_description">Xa tes establecida unha imaxe destacada. Queres remprazala coa nova imaxe?</string>
+    <string name="featured_image_replace_dialog_title">Remprazamos a imaxe destacada actual?</string>
+    <string name="dialog_dismiss_try_block_editor">Descartar</string>
+    <string name="dialog_body_try_block_editor">Pronto eliminaremos o editor clásico para as novas entradas, pero isto non afectará á edición de ningunha das túas entradas ou páxinas existentes. Adiántate agora activando o editor de bloques nos axustes do sitio.</string>
+    <string name="dialog_title_try_block_editor">Proba o novo editor de bloques</string>
+    <string name="menu_toolbar_title">Editar o bloque %s</string>
     <string name="long_post_dlg_saving">Gardando</string>
+    <string name="retry_failed_upload_retry_all">Reintentar todo</string>
+    <string name="retry_failed_upload_remove">Eliminar a subida</string>
+    <string name="retry_failed_upload_yes">Reintentar</string>
+    <string name="retry_failed_upload_title">Non se puido subir o arquivo</string>
+    <string name="stop_upload_dialog_button_no">Non</string>
     <string name="stop_upload_dialog_button_yes">Si</string>
     <string name="dialog_button_cancel">Cancelar</string>
     <string name="dialog_button_ok">Aceptar</string>
+    <string name="dialog_edit_hint">http(s)://</string>
     <string name="dialog_title">Inserir unha ligazón</string>
     <string name="editor_title_beta">Beta</string>
+    <string name="toast_content_info_editor_not_ready">O editor aínda está cargando</string>
+    <string name="toast_content_info_failed">Fallo ao obter a estrutura do contido</string>
+    <string name="dialog_content_info_body">Bloques: %1$d\nPalabras: %2$d\nCaracteres: %3$d</string>
+    <string name="dialog_content_info_title">Estrutura do contido</string>
+    <string name="media_bar_description_library">Elixe un medio da biblioteca de medios de WordPress</string>
+    <string name="media_bar_description_gallery">Elixe un medio da galería</string>
+    <string name="media_bar_description_camera">Fai unha foto ou un vídeo coa cámara</string>
+    <string name="pixel_suffix">%dpx</string>
     <string name="stop_save_dialog_ok_button">Aceptar</string>
+    <string name="stop_save_dialog_message">Por favor, espera ata que se teñan gardado todos os arquivos</string>
+    <string name="stop_save_dialog_title">Arquivos gardándose</string>
+    <string name="post_content">Contido</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Fai a película da túa vida.</string>
+    <string name="blogging_prompts_onboarding_remind_me">Recordarmo</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Próbao agora</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Podes aprender máis e configurar recordatorios en calquera momento en «O meu sitio &gt; Axustes &gt; Recordatorios de bloguear».</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">Mostrarémosche un novo estímulo cada día no teu escritorio para axudarche a que flúan eses fluídos creativos!</string>
+    <string name="blogging_prompts_onboarding_content_top">O mellor modo de converterte nun mellor escritor é crear un hábito de escritura e compartir con outros - aquí é onde entran os estímulos!</string>
+    <string name="blogging_prompts_onboarding_header_title">Presentando os estímulos</string>
+    <string name="blogging_prompt_set_reminders">Configurar recordatorios</string>
+    <string name="blogging_reminders_prompt_subtitle">O recordatorio incluirá un estímulo diario</string>
+    <string name="blogging_reminders_prompt_title">Incluír o estímulo diario</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Publicar con regularidade atrae novos lectores. Cóntanos cando queres escribir e enviarémosche un recordatorio!</string>
+    <string name="set_your_blogging_prompts_title">Convértete nun mellor escritor creando un hábito</string>
+    <string name="site_creation_intent_writing_poetry">Escritura e poesía</string>
+    <string name="site_creation_intent_travel">Viaxes</string>
+    <string name="site_creation_intent_technology">Tecnoloxía</string>
+    <string name="site_creation_intent_sports">Deportes</string>
+    <string name="site_creation_intent_real_estate">Inmobiliaria</string>
+    <string name="site_creation_intent_politics">Política</string>
+    <string name="site_creation_intent_photography">Fotografía</string>
+    <string name="site_creation_intent_personal">Persoal</string>
+    <string name="site_creation_intent_people">Xente</string>
+    <string name="site_creation_intent_parenting">Paternidade</string>
+    <string name="site_creation_intent_news">Noticias</string>
+    <string name="site_creation_intent_music">Música</string>
+    <string name="site_creation_intent_local_services">Servizos locais</string>
+    <string name="site_creation_intent_lifestyle">Estilo de vida</string>
+    <string name="site_creation_intent_interior_design">Deseño de interiores</string>
+    <string name="site_creation_intent_health">Saúde</string>
+    <string name="site_creation_intent_gaming">Xogos</string>
+    <string name="site_creation_intent_food">Comida</string>
+    <string name="site_creation_intent_fitness_exercise">Forma física e exercicio</string>
+    <string name="site_creation_intent_film_television">Películas e televisión</string>
+    <string name="site_creation_intent_finance">Finanzas</string>
+    <string name="site_creation_intent_fashion">Moda</string>
+    <string name="site_creation_intent_diy">Bricolaxe</string>
+    <string name="site_creation_intent_education">Educación</string>
+    <string name="site_creation_intent_community_nonprofit">Comunitario e ONG</string>
+    <string name="site_creation_intent_business">Negocios</string>
+    <string name="site_creation_intent_books">Libros</string>
+    <string name="site_creation_intent_beauty">Beleza</string>
+    <string name="site_creation_intent_automotive">Automoción</string>
+    <string name="site_creation_intent_art">Arte</string>
+    <string name="new_site_creation_intents_input_hint">P.ex.: Moda, poesía, política</string>
+    <string name="new_site_creation_intents_title">Temática do sitio</string>
+    <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Quitar do escritorio</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Omitir este estímulo</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Ver máis estímulos</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte o estímulo de bloguear</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Responder estímulo</string>
+    <string name="my_site_blogging_prompt_card_title">Estímulos</string>
+    <string name="my_site_all_tab_title">Todos</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Recordatorios e estímulos</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis clara e/ou unha cor de texto máis escura.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis escura e/ou unha cor de texto máis clara.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo ao inserir os medios.\nToca para máis información.</string>
+    <string name="new_site_creation_intents_header_subtitle">Elixe unha temática das listadas a continuación ou escribe a túa propia.</string>
     <string name="new_site_creation_intents_header_title">De que trata a túa web?</string>
     <string name="notification_channel_weekly_roundup_title">Resumo semanal</string>
     <string name="my_site_dashboard_tab_title">Inicio</string>
@@ -29,7 +119,7 @@ Language: gl_ES
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">As chamadas XML-RPC parecen bloqueadas neste sitio (código de erro 401). Se o intento de acceso falla, toca na icona de axuda para ver as FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Non se puido ler o sitio WordPress nesa URL. Toca na icona de axuda para ver as FAQ.</string>
     <string name="login_error_xml_rpc_services_disabled">Os servizos XML-RPC están desactivados neste sitio.</string>
-    <string name="my_site_menu_tab_title">Menú do sitio</string>
+    <string name="my_site_menu_tab_title">Menú</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">A túa busca inclúe caracteres non compatibles nos dominios de WordPress.com. Permítense os seguintes caracteres: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Comproba a túa conexión a Internet e actualiza a páxina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir ás estatísticas</string>
@@ -2259,6 +2349,7 @@ Language: gl_ES
     <string name="post_title">Título</string>
     <string name="menu_redo">Refacer</string>
     <string name="menu_undo">Desfacer</string>
+    <string name="media_insert_unimplemented">Desculpas! Esta característica aínda non está implementada :(</string>
     <string name="error_media_small">Medios demasiado pequenos para amosar</string>
     <string name="editor_dropped_unsupported_files">Advertencia: non todos os elementos arrastrados son compatibles!</string>
     <string name="editor_dropped_title_images_not_allowed">Non está permitido arrastrar imaxes no título</string>

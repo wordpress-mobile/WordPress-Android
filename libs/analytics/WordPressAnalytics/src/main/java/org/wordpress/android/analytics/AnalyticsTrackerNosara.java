@@ -2211,6 +2211,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "change_username_search_performed";
             case ADD_SITE_ALERT_DISPLAYED:
                 return "add_site_alert_displayed";
+            case MY_SITE_SITE_SWITCHER_TAPPED:
+                return "my_site_site_switcher_tapped";
+            case SITE_SWITCHER_DISPLAYED:
+                return "site_switcher_displayed";
+            case SITE_SWITCHER_SEARCH_PERFORMED:
+                return "site_switcher_search_performed";
+            case SITE_SWITCHER_TOGGLE_BLOG_VISIBLE:
+                return "site_switcher_toggle_blog_visible";
+            case SITE_SWITCHER_TOGGLED_EDIT_TAPPED:
+                return "site_switcher_toggled_edit_tapped";
+            case SITE_SWITCHER_ADD_SITE_TAPPED:
+                return "site_switcher_add_site_tapped";
+            case SITE_SWITCHER_DISMISSED:
+                return "site_switcher_dismissed";
             case SETTINGS_DID_CHANGE:
                 return "settings_did_change";
             case APP_SETTINGS_APPEARANCE_CHANGED:

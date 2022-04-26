@@ -22,8 +22,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
@@ -369,7 +367,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartTask.VIEW_SITE,
         QuickStartTask.ENABLE_POST_SHARING,
         QuickStartTask.EXPLORE_PLANS -> true
         else -> false
@@ -491,7 +488,7 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) { dynamicCards } else { listOf() },
+                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
@@ -499,7 +496,7 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) { dynamicCards } else { listOf() },
+                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
                         listOf()
                 )
         )
@@ -596,7 +593,7 @@ class MySiteViewModel @Inject constructor(
         quickStartTask: QuickStartTask,
         position: Int
     ) {
-        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderQuickStartTask(
+        if (_activeTaskPosition.value?.first != quickStartTask && isValidQuickStartFocusPosition(
                         quickStartTask,
                         position
                 )) {
@@ -604,10 +601,21 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM &&
-                (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
-        else position >= 0
+    private fun isValidQuickStartFocusPosition(quickStartTask: QuickStartTask, position: Int): Boolean {
+        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask)) {
+            true
+        } else {
+            position >= 0
+        }
+    }
+
+    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask): Boolean {
+        return when (quickStartTask) {
+            QuickStartTask.UPDATE_SITE_TITLE,
+            QuickStartTask.UPLOAD_SITE_ICON,
+            QuickStartTask.VIEW_SITE -> true
+            else -> false
+        }
     }
 
     fun onTabChanged(position: Int) {
@@ -661,7 +669,6 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
-                    quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
@@ -743,11 +750,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun urlClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
         _onNavigation.value = Event(SiteNavigationAction.OpenSite(selectedSite))
     }
 
     private fun switchSiteClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.MY_SITE_SITE_SWITCHER_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenSitePicker(selectedSite))
     }
 

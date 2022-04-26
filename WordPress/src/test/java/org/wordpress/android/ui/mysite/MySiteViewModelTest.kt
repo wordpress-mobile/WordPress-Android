@@ -853,9 +853,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site info card url click opens site`() = test {
+    fun `site info card url click opens site and completes View Site task`() = test {
         invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
+        verify(quickStartRepository).completeTask(QuickStartTask.VIEW_SITE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
     }
 
@@ -2535,6 +2536,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 url = siteUrl,
                 iconState = IconState.Visible(siteIcon),
                 showTitleFocusPoint = false,
+                showSubtitleFocusPoint = false,
                 showIconFocusPoint = false,
                 onTitleClick = ListItemInteraction.create { params.titleClick.invoke() },
                 onIconClick = ListItemInteraction.create { params.iconClick.invoke() },
