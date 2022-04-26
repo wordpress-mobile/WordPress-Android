@@ -848,7 +848,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site info card url click opens site and and completes View Site task`() = test {
+    fun `site info card url click opens site and completes View Site task`() = test {
         invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
         verify(quickStartRepository).completeTask(QuickStartTask.VIEW_SITE)
