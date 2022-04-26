@@ -285,7 +285,7 @@ class ReaderViewModel @Inject constructor(
 
     private fun startQuickStartFollowSiteTaskSettingsStep() {
         _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteSettingsStepPrompt)
-        launch { updateQuickStartFocusPointOnSettingsMenu(true) }
+        updateQuickStartFocusPointOnSettingsMenu(true)
     }
 
     private fun completeQuickStartFollowSiteTask() {
@@ -300,20 +300,16 @@ class ReaderViewModel @Inject constructor(
             val updateTabUiStates = it.tabUiStates.mapIndexed { index, tabUiState ->
                 if (index == discoverTabIndex) tabUiState.copy(showQuickStartFocusPoint = show) else tabUiState
             }
-            _uiState.postValue(currentUiState.copy(tabUiStates = updateTabUiStates, shouldUpdateViewPager = false))
+            _uiState.value = currentUiState.copy(tabUiStates = updateTabUiStates, shouldUpdateViewPager = false)
         }
     }
 
     private fun updateQuickStartFocusPointOnSettingsMenu(show: Boolean) {
         val currentUiState = _uiState.value as? ContentUiState
         currentUiState?.let {
-            _uiState.postValue(
-                    currentUiState.copy(
-                            settingsMenuItemUiState = it.settingsMenuItemUiState.copy(
-                                    showQuickStartFocusPoint = show
-                            ),
-                            shouldUpdateViewPager = false
-                    )
+            _uiState.value = currentUiState.copy(
+                    settingsMenuItemUiState = it.settingsMenuItemUiState.copy(showQuickStartFocusPoint = show),
+                    shouldUpdateViewPager = false
             )
         }
     }
