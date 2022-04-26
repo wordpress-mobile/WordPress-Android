@@ -2225,6 +2225,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_switcher_add_site_tapped";
             case SITE_SWITCHER_DISMISSED:
                 return "site_switcher_dismissed";
+            case SHARING_BUTTONS_EDIT_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_sharing_buttons_changed";
+            case SHARING_BUTTONS_EDIT_MORE_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_more_sharing_buttons_changed";
         }
         return null;
     }
