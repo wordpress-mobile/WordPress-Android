@@ -360,9 +360,13 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static Intent createMainActivityAndShowEditorIntent(@NonNull final Context context) {
+    public static Intent openEditorWithContentIntent(
+            @NonNull final Context context,
+            @NonNull final String content
+    ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_CONTENT, content);
         return intent;
     }
 
@@ -433,7 +437,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, reblogSource);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource, null);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
@@ -879,9 +883,10 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            @Nullable final String content
     ) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, content);
     }
 
     public static void addNewPostForResult(
@@ -889,7 +894,8 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            @Nullable final String content
     ) {
         if (site == null) {
             return;

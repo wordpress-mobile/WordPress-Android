@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import androidx.annotation.Nullable
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -67,7 +68,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked()
+        fun onNewPostButtonClicked(content: String?)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {

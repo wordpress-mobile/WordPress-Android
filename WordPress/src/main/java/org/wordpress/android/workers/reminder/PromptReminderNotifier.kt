@@ -35,14 +35,13 @@ class PromptReminderNotifier @Inject constructor(
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
         val bloggingPrompt = BloggingPrompt(
             text = "Cast the movie of your life.",
-            template = "",
+            content = "<!-- wp:pullquote -->\\n<figure class=\\\"wp-block-pullquote\\\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\\n<!-- /wp:pullquote -->",
             respondents = emptyList()
         )
         val openEditorPendingIntent = PendingIntent.getActivity(
             context,
             notificationId,
-            // TODO @RenanLukas send BloggingPrompt with OpenEditor action when prompt store is ready
-            ActivityLauncher.createMainActivityAndShowEditorIntent(context),
+            ActivityLauncher.openEditorWithContentIntent(context, bloggingPrompt.content),
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val answerPromptReminderNotification = ReminderNotification(
