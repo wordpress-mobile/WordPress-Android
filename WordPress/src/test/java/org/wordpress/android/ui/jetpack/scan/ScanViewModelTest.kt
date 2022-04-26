@@ -293,7 +293,10 @@ class ScanViewModelTest : BaseUnitTest() {
 
                 (observers.uiStates.last() as ErrorUiState).action?.invoke()
 
-                assertThat(observers.navigation.last().peekContent()).isEqualTo(VisitDashboard(Constants.URL_VISIT_DASHBOARD))
+                assertThat(
+                        observers.navigation.last()
+                                .peekContent()
+                ).isEqualTo(VisitDashboard(Constants.URL_VISIT_DASHBOARD))
             }
 
     @Test
@@ -322,9 +325,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 }
             }
 
-
     @Test
-    fun `given vault press active on site, when scan state is fetched, then app reaches VaultPressActiveOnSite state`() =
+    fun `given vault press active on site, when scan state is fetched, then app is in VaultPressActiveOnSite state`() =
             test {
                 val observers = initObservers()
 
