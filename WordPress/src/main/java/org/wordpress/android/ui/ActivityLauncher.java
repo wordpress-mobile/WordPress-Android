@@ -905,6 +905,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(EditPostActivity.EXTRA_CONTENT, content);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
