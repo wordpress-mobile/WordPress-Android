@@ -242,9 +242,15 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    fun onScreenInBackground() {
+    fun onScreenInBackground(isChangingConfigurations: Boolean?) {
         readerTracker.stop(MAIN_READER)
         wasPaused = true
+        if (isChangingConfigurations == false) {
+            clearQuickStartFocusPoints()
+            if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
+                quickStartRepository.clearPendingTask()
+            }
+        }
     }
 
     private fun isSearchSupported() = accountStore.hasAccessToken()
@@ -291,6 +297,11 @@ class ReaderViewModel @Inject constructor(
     private fun completeQuickStartFollowSiteTask() {
         updateQuickStartFocusPointOnSettingsMenu(false)
         quickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE)
+    }
+
+    private fun clearQuickStartFocusPoints() {
+        updateQuickStartFocusPointOnDiscoverTab(false)
+        updateQuickStartFocusPointOnSettingsMenu(false)
     }
 
     private fun updateQuickStartFocusPointOnDiscoverTab(show: Boolean) {
