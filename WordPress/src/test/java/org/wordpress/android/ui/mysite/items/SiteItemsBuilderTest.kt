@@ -16,6 +16,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsB
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
+import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
@@ -70,6 +71,7 @@ class SiteItemsBuilderTest {
                 addPeopleItem = true,
                 addPluginItem = true,
                 addShareItem = true,
+                addSiteDomainsItem = true,
                 addSiteSettingsItem = true,
                 addThemesItem = true,
                 addBackupItem = true,
@@ -91,6 +93,7 @@ class SiteItemsBuilderTest {
                 BACKUP_ITEM,
                 SCAN_ITEM,
                 JETPACK_ITEM,
+                DOMAINS_ITEM,
                 PUBLISH_HEADER,
                 POSTS_ITEM,
                 MEDIA_ITEM,
@@ -225,6 +228,7 @@ class SiteItemsBuilderTest {
         addPeopleItem: Boolean = false,
         addPluginItem: Boolean = false,
         addShareItem: Boolean = false,
+        addSiteDomainsItem: Boolean = false,
         addSiteSettingsItem: Boolean = false,
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
@@ -317,6 +321,11 @@ class SiteItemsBuilderTest {
         if (addThemesItem) {
             whenever(siteListItemBuilder.buildThemesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                     THEMES_ITEM
+            )
+        }
+        if (addSiteDomainsItem) {
+            whenever(siteListItemBuilder.buildDomainsItemForJetpackIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    DOMAINS_ITEM
             )
         }
     }
