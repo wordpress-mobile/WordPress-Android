@@ -2215,8 +2215,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "settings_did_change";
             case APP_SETTINGS_APPEARANCE_CHANGED:
                 return "app_settings_appearance_changed";
-            case APP_SETTINGS_PRIVATE_SETTINGS_TAPPED:
-                return "app_settings_private_settings_tapped";
+            case APP_SETTINGS_PRIVACY_SETTINGS_TAPPED:
+                return "app_settings_privacy_settings_tapped";
             case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
                 return "app_settings_open_device_settings_tapped";
             case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
