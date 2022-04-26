@@ -5,7 +5,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.store.ScanStore
@@ -63,6 +62,10 @@ class FetchScanStateUseCase @Inject constructor(
                 emit(Failure.MultisiteNotSupported)
                 return@flow
             }
+            if (scanStateModel.reason == ScanStateModel.Reason.VP_ACTIVE_ON_SITE) {
+                emit(Failure.VaultPressActiveOnSite)
+                return@flow
+            }
             emit(Success(scanStateModel))
 
             if (scanStateModel.state != ScanStateModel.State.SCANNING) {
@@ -93,6 +96,7 @@ class FetchScanStateUseCase @Inject constructor(
             object NetworkUnavailable : Failure()
             object RemoteRequestFailure : Failure()
             object MultisiteNotSupported : Failure()
+            object VaultPressActiveOnSite : Failure()
         }
     }
 }
