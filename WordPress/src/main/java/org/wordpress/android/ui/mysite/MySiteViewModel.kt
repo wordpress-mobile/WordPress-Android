@@ -483,7 +483,11 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) { dynamicCards } else { listOf() },
+                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
@@ -491,7 +495,11 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) { dynamicCards } else { listOf() },
+                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
+                            dynamicCards
+                        } else {
+                            listOf()
+                        },
                         listOf()
                 )
         )
@@ -593,8 +601,11 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun isValidQuickStartFocusPosition(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask)) true
-        else position >= 0
+        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask)) {
+            true
+        } else {
+            position >= 0
+        }
     }
 
     private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask): Boolean {
