@@ -1130,6 +1130,9 @@
     <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
     <string name="scan_multisite_not_supported_title">WordPress multisites are not supported</string>
     <string name="scan_multisite_not_supported_subtitle">We\'re sorry, Jetpack Scan is not compatible with multisite WordPress installations at this time.</string>
+    <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
+    <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
 
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>

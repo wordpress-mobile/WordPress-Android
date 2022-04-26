@@ -134,6 +134,9 @@ class ScanViewModel @Inject constructor(
                         is FetchScanState.Failure.MultisiteNotSupported ->
                             updateUiState(ErrorUiState.MultisiteNotSupported)
 
+                        is FetchScanState.Failure.VaultPressActiveOnSite ->
+                            updateUiState(ErrorUiState.VaultPressActiveOnSite(::onVisitDashboardClicked))
+
                         is FetchScanState.Failure.RemoteRequestFailure -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
                             scanStateModel?.takeIf { !isInvokedFromInit }
@@ -271,6 +274,10 @@ class ScanViewModel @Inject constructor(
         launch { fetchScanState(isRetry = true) }
     }
 
+    private fun onVisitDashboardClicked() {
+        // to-do @ajesh
+    }
+
     private fun onContactSupportClicked() {
         updateNavigationEvent(ShowContactSupport(site))
     }
@@ -390,6 +397,14 @@ class ScanViewModel @Inject constructor(
                 @ColorRes override val imageColorResId = R.color.gray
                 override val title = UiStringRes(R.string.scan_multisite_not_supported_title)
                 override val subtitle = UiStringRes(R.string.scan_multisite_not_supported_subtitle)
+            }
+
+            data class VaultPressActiveOnSite(override val action: () -> Unit) : ErrorUiState() {
+                @DrawableRes override val image = R.drawable.ic_shield_warning_white
+                @ColorRes override val imageColorResId = R.color.error_60
+                override val title = UiStringRes(R.string.scan_vault_press_active_on_site_title)
+                override val subtitle = UiStringRes(R.string.scan_vault_press_active_on_site_subtitle)
+                override val buttonText = UiStringRes(R.string.scan_vault_press_active_on_site_button_text)
             }
         }
     }
