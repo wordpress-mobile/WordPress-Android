@@ -21,6 +21,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
@@ -275,7 +276,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onVisitDashboardClicked() {
-        // to-do @ajesh
+        updateNavigationEvent(VisitDashboard(Constants.URL_VISIT_DASHBOARD))
     }
 
     private fun onContactSupportClicked() {
