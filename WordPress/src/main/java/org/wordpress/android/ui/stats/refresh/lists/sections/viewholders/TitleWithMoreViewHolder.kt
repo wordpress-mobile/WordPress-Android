@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.button.MaterialButton
@@ -16,12 +15,6 @@ class TitleWithMoreViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private val viewMore = itemView.findViewById<MaterialButton>(id.view_more_button)
     fun bind(item: TitleWithMore) {
         title.setTextOrHide(item.textResource, item.text)
-        if (item.moreAction != null) {
-            viewMore.visibility = View.VISIBLE
-            viewMore.setOnClickListener { item.moreAction.invoke(viewMore) }
-        } else {
-            viewMore.visibility = View.GONE
-            viewMore.setOnClickListener(null)
-        }
+        viewMore.setOnClickListener { item.navigationAction?.click() }
     }
 }

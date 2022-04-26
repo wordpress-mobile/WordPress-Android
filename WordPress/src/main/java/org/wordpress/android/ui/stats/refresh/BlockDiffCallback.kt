@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.TAB_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
@@ -15,6 +16,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_BLUE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_PURPLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHIPS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIALOG_BUTTONS
@@ -24,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -37,6 +41,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 
 class BlockDiffCallback(
@@ -58,6 +63,7 @@ class BlockDiffCallback(
                 COLUMNS,
                 CHIPS,
                 BAR_CHART,
+                LINE_CHART,
                 ACTIVITY_ITEM,
                 LIST_ITEM -> oldItem.itemId == newItem.itemId
                 LINK,
@@ -68,11 +74,14 @@ class BlockDiffCallback(
                 TITLE_WITH_MORE,
                 BIG_TITLE,
                 VALUE_ITEM,
+                VALUES_ITEM,
                 DIVIDER,
                 LOADING_ITEM,
                 MAP,
                 MAP_LEGEND,
                 CHART_LEGEND,
+                CHART_LEGENDS_BLUE,
+                CHART_LEGENDS_PURPLE,
                 REFERRED_ITEM,
                 QUICK_SCAN_ITEM,
                 DIALOG_BUTTONS,
@@ -107,6 +116,8 @@ class BlockDiffCallback(
                 return COLUMNS_VALUE_CHANGED
             newItem is BarChartItem && oldItem is BarChartItem && oldItem.selectedItem != newItem.selectedItem ->
                 return SELECTED_BAR_CHANGED
+            newItem is Chips && oldItem is Chips && oldItem.selectedColumn != newItem.selectedColumn ->
+                return SELECTED_COLUMN_CHANGED
             else -> null
         }
     }
