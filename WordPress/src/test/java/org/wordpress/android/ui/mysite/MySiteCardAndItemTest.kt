@@ -33,7 +33,7 @@ class MySiteCardAndItemTest {
     }
 
     @Test
-    fun `given site info block is active when focus point on subtitle`() {
+    fun `when focus point on subtitle, then site info block is active`() {
         val siteInfoCard = initSiteInfoCard(showSubtitleFocusPoint = true)
 
         assertThat(siteInfoCard.activeQuickStartItem).isTrue()
