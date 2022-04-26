@@ -30,6 +30,12 @@ msgid ""
 msgstr ""
 
 #. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_197"
+msgid ""
+"19.7:\n"
+"- Fake short notes for 19.7\n"
+msgstr ""
+
 #. translators: Short description of the Jetpack app to be displayed in the Play Store. Limit to 80 characters including spaces and commas!
 msgctxt "short-description"
 msgid "Powerful WordPress security and performance tools."

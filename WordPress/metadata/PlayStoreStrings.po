@@ -30,6 +30,12 @@ msgid ""
 msgstr ""
 
 #. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_197"
+msgid ""
+"19.7:\n"
+"- Fake short notes for 19.7\n"
+msgstr ""
+
 msgctxt "sample_post_content"
 msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."
 msgstr ""
