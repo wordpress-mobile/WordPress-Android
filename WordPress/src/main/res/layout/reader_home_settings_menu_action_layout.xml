@@ -28,8 +28,8 @@
         android:gravity="end"
         android:textAlignment="viewEnd"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:size="small" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
