@@ -15,7 +15,6 @@ import com.google.android.material.appbar.AppBarLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.HomePagePickerFragmentBinding
-import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
@@ -43,7 +42,6 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
-    private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -83,10 +81,6 @@ class HomePagePickerFragment : Fragment() {
             setupUi()
             setupViewModel()
             setupActionListeners()
-            previewModeSelectorPopup = PreviewModeSelectorPopup(
-                    requireActivity(),
-                    homePagePickerTitlebar.previewTypeSelectorButton
-            )
         }
     }
 
@@ -132,10 +126,6 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
-            previewModeSelectorPopup.show(viewModel)
-        })
-
         viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
             layoutsRecyclerView.smoothScrollToPosition(0)
         })
@@ -178,7 +168,6 @@ class HomePagePickerFragment : Fragment() {
         homePagePickerTitlebar.skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         homePagePickerTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
-        homePagePickerTitlebar.previewTypeSelectorButton.setOnClickListener { viewModel.onThumbnailModePressed() }
         setScrollListener()
     }
 
