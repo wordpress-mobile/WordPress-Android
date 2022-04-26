@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-21 15:54:08+0000
+Translation-Revision-Date: 2022-04-25 21:54:22+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0
 Language: fr
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">Créer un site</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Ajouter des blocs</string>
     <string name="initial_screen">Écran initial</string>
     <string name="blogging_prompts_onboarding_notification_action">Lire la suite</string>
