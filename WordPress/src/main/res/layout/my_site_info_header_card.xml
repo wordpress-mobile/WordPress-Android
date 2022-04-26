@@ -91,7 +91,24 @@
         android:contentDescription="@string/quick_start_focus_point_description"
         android:elevation="@dimen/quick_start_focus_point_elevation"
         app:layout_constraintEnd_toEndOf="@id/site_info_container"
-        app:layout_constraintTop_toTopOf="@id/site_info_container"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/site_info_container"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+
+    <org.wordpress.android.widgets.QuickStartFocusPoint
+        android:id="@+id/quick_start_sub_title_focus_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:contentDescription="@string/quick_start_focus_point_description"
+        android:elevation="@dimen/quick_start_focus_point_elevation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/site_info_container"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/site_info_container"
+        app:size="small"
         tools:ignore="RtlSymmetry" />
 
     <ImageButton

@@ -22,8 +22,6 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
@@ -80,6 +78,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.BuildConfigWrapper
@@ -368,7 +367,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartTask.VIEW_SITE,
         QuickStartTask.ENABLE_POST_SHARING,
         QuickStartTask.EXPLORE_PLANS -> true
         else -> false
@@ -452,7 +450,9 @@ class MySiteViewModel @Inject constructor(
                         onPagesClick = this::onQuickLinkRibbonPagesClick,
                         onPostsClick = this::onQuickLinkRibbonPostsClick,
                         onMediaClick = this::onQuickLinkRibbonMediaClick,
-                        onStatsClick = this::onQuickLinkRibbonStatsClick
+                        onStatsClick = this::onQuickLinkRibbonStatsClick,
+                        activeTask = activeTask,
+                        enableFocusPoints = shouldEnableQuickLinkRibbonFocusPoints()
                 ),
                 isMySiteTabsEnabled
         )
@@ -470,6 +470,8 @@ class MySiteViewModel @Inject constructor(
                         activeTask = activeTask,
                         backupAvailable = backupAvailable,
                         scanAvailable = scanAvailable,
+                        enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                        enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         onClick = this::onItemClick
                 )
         )
@@ -486,7 +488,7 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) { dynamicCards } else { listOf() },
+                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
@@ -494,11 +496,15 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) { dynamicCards } else { listOf() },
+                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
                         listOf()
                 )
         )
     }
+
+    private fun shouldEnableQuickLinkRibbonFocusPoints() = defaultABExperimentTab == MySiteTabType.DASHBOARD
+
+    private fun shouldEnableSiteItemsFocusPoints() = defaultABExperimentTab != MySiteTabType.DASHBOARD
 
     private fun getCardTypeExclusionFiltersForTab(tabType: MySiteTabType) = when (tabType) {
         MySiteTabType.SITE_MENU -> mutableListOf<Type>().apply {
@@ -587,7 +593,7 @@ class MySiteViewModel @Inject constructor(
         quickStartTask: QuickStartTask,
         position: Int
     ) {
-        if (_activeTaskPosition.value?.first != quickStartTask && isSiteHeaderQuickStartTask(
+        if (_activeTaskPosition.value?.first != quickStartTask && isValidQuickStartFocusPosition(
                         quickStartTask,
                         position
                 )) {
@@ -595,10 +601,21 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM &&
-                (quickStartTask == UPDATE_SITE_TITLE || quickStartTask == UPLOAD_SITE_ICON)) true
-        else position >= 0
+    private fun isValidQuickStartFocusPosition(quickStartTask: QuickStartTask, position: Int): Boolean {
+        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask)) {
+            true
+        } else {
+            position >= 0
+        }
+    }
+
+    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask): Boolean {
+        return when (quickStartTask) {
+            QuickStartTask.UPDATE_SITE_TITLE,
+            QuickStartTask.UPLOAD_SITE_ICON,
+            QuickStartTask.VIEW_SITE -> true
+            else -> false
+        }
     }
 
     fun onTabChanged(position: Int) {
@@ -652,7 +669,6 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
-                    quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
                     SiteNavigationAction.OpenSite(selectedSite)
                 }
                 ListItemAction.JETPACK_SETTINGS -> SiteNavigationAction.OpenJetpackSettings(selectedSite)
@@ -734,11 +750,13 @@ class MySiteViewModel @Inject constructor(
 
     private fun urlClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
         _onNavigation.value = Event(SiteNavigationAction.OpenSite(selectedSite))
     }
 
     private fun switchSiteClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        trackWithTabSourceIfNeeded(Stat.MY_SITE_SITE_SWITCHER_TAPPED)
         _onNavigation.value = Event(SiteNavigationAction.OpenSitePicker(selectedSite))
     }
 
@@ -984,7 +1002,12 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onAddSitePressed() {
-        _onNavigation.value = Event(SiteNavigationAction.AddNewSite(accountStore.hasAccessToken()))
+        _onNavigation.value = Event(
+                SiteNavigationAction.AddNewSite(
+                        accountStore.hasAccessToken(),
+                        SiteCreationSource.MY_SITE_NO_SITES
+                )
+        )
         analyticsTrackerWrapper.track(Stat.MY_SITE_NO_SITES_VIEW_ACTION_TAPPED)
     }
 
@@ -1138,10 +1161,19 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Suppress("NestedBlockDepth")
     private fun selectDefaultTabIfNeeded() {
-        if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
+        if (!isMySiteTabsEnabled) return
         val index = orderedTabTypes.indexOf(defaultABExperimentTab)
         if (index != -1) {
+            if (isDefaultABExperimentTabSet) {
+                // This logic checks if the current default tab is the same as the tab
+                // set as initial screen, if yes then return
+                _selectTab.value?.let { tab ->
+                    val currentDefaultTab = tab.peekContent().position
+                    if (currentDefaultTab == index) return
+                }
+            }
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
             isDefaultABExperimentTabSet = true
         }

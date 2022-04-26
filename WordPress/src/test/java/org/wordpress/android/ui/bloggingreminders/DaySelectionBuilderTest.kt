@@ -39,6 +39,7 @@ class DaySelectionBuilderTest {
     private var daySelected: DayOfWeek? = null
     private var confirmed = false
     private var promptSwitchToggled = false
+    private var bloggingPromptDialogShown = false
     private val hour = 10
     private val minute = 0
     private val onSelectDay: (DayOfWeek) -> Unit = {
@@ -50,6 +51,9 @@ class DaySelectionBuilderTest {
     }
     private val onConfirm: (BloggingRemindersUiModel?) -> Unit = {
         confirmed = true
+    }
+    private val onBloggingPromptHelpButtonClicked: () -> Unit = {
+        bloggingPromptDialogShown = true
     }
 
     @Before
@@ -79,7 +83,8 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         assertModel(uiModel, setOf(), dayLabel)
@@ -96,7 +101,8 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         assertModel(uiModel, setOf(WEDNESDAY, SUNDAY), dayLabel)
@@ -111,7 +117,8 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         DayOfWeek.values().forEachIndexed { index, day ->
@@ -206,7 +213,8 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         val potentialSwitches = uiModel.filterIsInstance<PromptSwitch>()
@@ -224,7 +232,8 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         val potentialSwitches = uiModel.filterIsInstance<PromptSwitch>()
@@ -244,7 +253,8 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         val potentialSwitches = uiModel.filterIsInstance<PromptSwitch>()
@@ -264,7 +274,8 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         val potentialSwitches = uiModel.filterIsInstance<PromptSwitch>()
@@ -284,13 +295,37 @@ class DaySelectionBuilderTest {
                 bloggingRemindersModel,
                 onSelectDay,
                 onSelectTime,
-                onPromptSwitchToggled
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
         )
 
         val switch = uiModel.find { it is PromptSwitch }
         (switch as PromptSwitch).onClick.click()
 
         assertThat(promptSwitchToggled).isTrue()
+    }
+
+    @Test
+    fun `click on a blogging prompt help button shows blogging prompt dialog`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val dayLabel = UiStringText("Twice a week")
+        whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
+                .thenReturn(dayLabel)
+
+        val uiModel = daySelectionBuilder.buildSelection(
+                bloggingRemindersModel,
+                onSelectDay,
+                onSelectTime,
+                onPromptSwitchToggled,
+                onBloggingPromptHelpButtonClicked
+        )
+
+        val switch = uiModel.find { it is PromptSwitch }
+        (switch as PromptSwitch).onHelpClick.click()
+
+        assertThat(bloggingPromptDialogShown).isTrue()
     }
 
     private fun assertModel(
