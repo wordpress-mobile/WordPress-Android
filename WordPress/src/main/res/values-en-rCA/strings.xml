@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-19 07:26:32+0000
+Translation-Revision-Date: 2022-04-24 13:01:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: en_CA
 -->
 <resources>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_edit_hint">http(s)://</string>
     <string name="stop_save_dialog_ok_button">OK</string>
     <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
+    <string name="dialog_title">Insert link</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="toast_content_info_editor_not_ready">Editor is still loading</string>
     <string name="stop_save_dialog_title">Files saving</string>
     <string name="post_content">Content</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
