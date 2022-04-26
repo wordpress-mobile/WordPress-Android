@@ -23,6 +23,7 @@ class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
     @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
     @Mock lateinit var siteModel: SiteModel
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
@@ -213,6 +214,36 @@ class SiteItemsBuilderTest {
         )
 
         assertThat(infoItem).isNull()
+    }
+
+    @Test
+    fun `given site domains flag is not enabled, when build site domains is invoked, then site domains is built`() {
+        whenever(siteListItemBuilder.buildDomainsItemForJetpackIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(null)
+
+        val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
+        )
+
+        assertThat(siteDomainsItems).doesNotContain(DOMAINS_ITEM)
+    }
+
+    @Test
+    fun `given site domains flag is enabled, when build site domains is invoked, then site domains is built`() {
+        whenever(siteListItemBuilder.buildDomainsItemForJetpackIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(DOMAINS_ITEM)
+
+        val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
+        )
+
+        assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
     }
 
     @Suppress("ComplexMethod", "LongMethod", "LongParameterList")

@@ -115,4 +115,3 @@ val DOMAINS_ITEM = ListItem(
         UiStringRes(R.string.my_site_btn_domains),
         onClick = ListItemInteraction.create(DOMAINS, SITE_ITEM_ACTION)
 )
-
