@@ -4069,7 +4069,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="initial_screen_entry_value_menu" translatable="false">menu</string>
     <string name="initial_screen_entry_value_default_key" translatable="false">@string/initial_screen_entry_value_menu</string>
     <string name="gutenberg_native_add_blocks_11d0841f" tools:ignore="UnusedResources">Add blocks</string>
-    <string name="login_notification_channel_id" tools:ignore="UnusedResources" a8c-src-lib="login">placeholder</string>
     <string name="notification_channel_normal_id" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="stories">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_id" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="stories">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_transient_id" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="stories">wpandroid_notification_transient_channel_id</string>
