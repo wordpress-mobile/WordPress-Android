@@ -9,18 +9,14 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import org.wordpress.android.R
-import org.wordpress.android.R.string
-import org.wordpress.android.ui.stats.refresh.utils.TEN_THOUSAND
-import java.text.DecimalFormat
-import java.util.Locale
-import java.util.TreeMap
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import javax.inject.Inject
-import kotlin.math.abs
 
 @Suppress("MagicNumber")
 class LineChartMarkerView @Inject constructor(
     context: Context
 ) : MarkerView(context, R.layout.stats_line_chart_marker) {
+    private lateinit var statsUtils: StatsUtils
     private val changeView = findViewById<TextView>(R.id.marker_text1)
     private val countView = findViewById<TextView>(R.id.marker_text2)
 
@@ -106,81 +102,8 @@ class LineChartMarkerView @Inject constructor(
 
     private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
         return when (isFormattedNumber) {
-            true -> toFormattedString(value)
+            true -> statsUtils.toFormattedString(value)
             false -> value.toString()
-        }
-    }
-
-    fun toFormattedString(
-        number: Long,
-        startValue: Int = TEN_THOUSAND
-    ): String {
-        val suffixes = TreeMap(
-                mapOf(
-                        1_000L to string.suffix_1_000,
-                        1_000_000L to string.suffix_1_000_000,
-                        1_000_000_000L to string.suffix_1_000_000_000,
-                        1_000_000_000_000L to string.suffix_1_000_000_000_000,
-                        1_000_000_000_000_000L to string.suffix_1_000_000_000_000_000,
-                        1_000_000_000_000_000_000L to string.suffix_1_000_000_000_000_000_000
-                )
-        )
-        val isNegative = number < 0
-        val safeNumber = abs(
-                if (number == java.lang.Long.MIN_VALUE) {
-                    number + 1
-                } else {
-                    number
-                }
-        )
-        if (safeNumber < startValue) {
-            return printNumber(safeNumber, isNegative)
-        }
-
-        val e = suffixes.floorEntry(safeNumber)
-        val divideBy = e?.key
-        val suffix = e?.value
-
-        val truncated = safeNumber / (divideBy!! / 10)
-        val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
-        return printNumber(truncated, isNegative, suffix, hasDecimal)
-    }
-
-    private fun printNumber(
-        number: Long,
-        isNegative: Boolean,
-        suffix: Int? = null,
-        hasDecimal: Boolean = false
-    ): String {
-        val formattedNumber =
-                DecimalFormat.getInstance(Locale.getDefault()).format(
-                        when {
-                            suffix != null && hasDecimal -> number / 10.0
-                            suffix != null -> number / 10
-                            else -> number
-                        }
-                )
-        return if (suffix != null) {
-            context.getString(
-                    suffix,
-                    handleNegativeNumber(
-                            formattedNumber,
-                            isNegative
-                    )
-            )
-        } else {
-            handleNegativeNumber(
-                    formattedNumber,
-                    isNegative
-            )
-        }
-    }
-
-    private fun handleNegativeNumber(number: String, isNegative: Boolean): String {
-        return if (isNegative) {
-            context.getString(R.string.negative_prefix, number)
-        } else {
-            number
         }
     }
 }
