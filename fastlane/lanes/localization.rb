@@ -123,7 +123,8 @@ platform :android do
     update_po_file_for_metadata_localization(
       po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
-      release_version: options[:version]
+      release_version: options[:version],
+      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
@@ -154,7 +155,8 @@ platform :android do
     update_po_file_for_metadata_localization(
       po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
-      release_version: options[:version]
+      release_version: options[:version],
+      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
@@ -383,12 +385,16 @@ platform :android do
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
   # Internally, this calls the `an_update_metadata_source` release toolkit action and adds Git management to it.
   #
-  def update_po_file_for_metadata_localization(po_path:, sources:, release_version:)
-    # TODO: This will eventually reimplement the logic from `android_update_metadata_source`
-    android_update_metadata_source(
+  def update_po_file_for_metadata_localization(po_path:, sources:, release_version:, commit_message:)
+    ensure_git_status_clean
+
+    an_update_metadata_source(
       po_file_path: po_path,
       source_files: sources,
       release_version: release_version
     )
+
+    git_add(path: po_path)
+    git_commit(path: po_path, message: commit_message, allow_nothing_to_commit: true)
   end
 end
