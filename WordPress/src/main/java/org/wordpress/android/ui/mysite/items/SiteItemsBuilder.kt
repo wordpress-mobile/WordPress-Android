@@ -78,7 +78,6 @@ class SiteItemsBuilder @Inject constructor(
                         params.onClick,
                         showEnablePostSharingFocusPoint
                 ),
-                siteListItemBuilder.buildDomainsItemIfAvailable(params.site, params.onClick),
                 siteListItemBuilder.buildSiteSettingsItemIfAvailable(params.site, params.onClick),
                 CategoryHeaderItem(UiStringRes(R.string.my_site_header_external)),
                 ListItem(
