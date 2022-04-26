@@ -2231,6 +2231,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_settings_max_video_size_changed";
             case APP_SETTINGS_VIDEO_QUALITY_CHANGED:
                 return "app_settings_video_quality_changed";
+            case PRIVACY_SETTINGS_OPENED:
+                return "privacy_settings_opened";
+            case PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED:
+                return "privacy_settings_report_crashes_toggled";
         }
         return null;
     }
