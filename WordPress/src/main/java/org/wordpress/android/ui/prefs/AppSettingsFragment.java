@@ -63,6 +63,7 @@ import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
 import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
@@ -99,6 +100,9 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
     @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
     @Inject MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
+
+    private static final String TRACK_STYLE = "style";
+    private static final String TRACK_ENABLED = "enabled";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -403,29 +407,39 @@ public class AppSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mImageMaxSizePref,
                     newValue.toString(),
                     getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED);
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
                     newValue.toString(),
                     getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_IMAGE_QUALITY_CHANGED);
         } else if (preference == mOptimizedVideo) {
             AppPrefs.setVideoOptimize((Boolean) newValue);
             mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_VIDEO_OPTIMIZATION_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mVideoWidthPref) {
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setVideoOptimizeWidth(newWidth);
             setDetailListPreferenceValue(mVideoWidthPref,
                     newValue.toString(),
                     getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_MAX_VIDEO_SIZE_CHANGED);
         } else if (preference == mVideoEncorderBitratePref) {
             AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
                     newValue.toString(),
                     getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_VIDEO_QUALITY_CHANGED);
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_REMOVE_LOCATION_FROM_MEDIA_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mAppThemePreference) {
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_APPEARANCE_CHANGED, Collections
+                    .singletonMap(TRACK_STYLE, (String) newValue));
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
         } else if (preference == mInitialScreenPreference) {
@@ -537,6 +551,7 @@ public class AppSettingsFragment extends PreferenceFragment
             startActivity(intent);
         }
 
+        AnalyticsTracker.track(Stat.APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED);
         return true;
     }
 
@@ -608,6 +623,7 @@ public class AppSettingsFragment extends PreferenceFragment
         if (dialog != null) {
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
+        AnalyticsTracker.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED);
         return true;
     }
 
