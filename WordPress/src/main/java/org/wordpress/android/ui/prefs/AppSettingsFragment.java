@@ -88,6 +88,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
+    private WPSwitchPreference mReportCrashPref;
 
     private Preference mWhatsNew;
 
@@ -121,6 +122,7 @@ public class AppSettingsFragment extends PreferenceFragment
                         if (newValue == null) {
                             return false;
                         }
+
                         boolean hasUserOptedOut = !(boolean) newValue;
                         AnalyticsUtils.updateAnalyticsPreference(
                                 getActivity(),
@@ -178,6 +180,8 @@ public class AppSettingsFragment extends PreferenceFragment
         mStripImageLocation =
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
+        mReportCrashPref = (WPSwitchPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_send_crash, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -450,6 +454,9 @@ public class AppSettingsFragment extends PreferenceFragment
             properties.put("selected", trackValue);
             AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
             mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(trackValue);
+        } else if (preference == mReportCrashPref) {
+            AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         }
         return true;
     }
@@ -615,15 +622,19 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handlePrivacyClick() {
+        AnalyticsTracker.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED);
+
         if (mPrivacySettings == null || !isAdded()) {
             return false;
         }
+
         String title = getString(R.string.preference_privacy_settings);
         Dialog dialog = mPrivacySettings.getDialog();
         if (dialog != null) {
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
-        AnalyticsTracker.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED);
+
+        AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_OPENED);
         return true;
     }
 
