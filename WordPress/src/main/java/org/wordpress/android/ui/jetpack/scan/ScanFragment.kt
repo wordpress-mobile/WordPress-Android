@@ -18,7 +18,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
-import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitDashboard
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitVaultPressDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
@@ -118,7 +118,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
                 is ShowJetpackSettings -> ActivityLauncher.openUrlExternal(context, events.url)
 
-                is VisitDashboard -> ActivityLauncher.openUrlExternal(context, events.url)
+                is VisitVaultPressDashboard -> ActivityLauncher.openUrlExternal(context, events.url)
             }
         }
     }

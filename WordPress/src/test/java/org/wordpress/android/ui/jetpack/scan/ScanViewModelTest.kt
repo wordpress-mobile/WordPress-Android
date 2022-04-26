@@ -33,7 +33,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
-import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitDashboard
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitVaultPressDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
@@ -285,7 +285,7 @@ class ScanViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `given vault press active error state, when visit dashboard is clicked, then visit dashboard url is shown`() =
+    fun `given vault press active error state, when button is clicked, then vault press dashboard url is shown`() =
             test {
                 whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
                 whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.VaultPressActiveOnSite))
@@ -296,7 +296,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(
                         observers.navigation.last()
                                 .peekContent()
-                ).isEqualTo(VisitDashboard(Constants.URL_VISIT_DASHBOARD))
+                ).isEqualTo(VisitVaultPressDashboard(Constants.URL_VISIT_VAULTPRESS_DASHBOARD))
             }
 
     @Test

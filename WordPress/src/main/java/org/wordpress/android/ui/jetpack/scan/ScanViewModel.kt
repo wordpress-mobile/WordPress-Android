@@ -21,7 +21,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
-import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitDashboard
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitVaultPressDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
@@ -136,7 +136,7 @@ class ScanViewModel @Inject constructor(
                             updateUiState(ErrorUiState.MultisiteNotSupported)
 
                         is FetchScanState.Failure.VaultPressActiveOnSite ->
-                            updateUiState(ErrorUiState.VaultPressActiveOnSite(::onVisitDashboardClicked))
+                            updateUiState(ErrorUiState.VaultPressActiveOnSite(::onVisitVaultPressDashboardClicked))
 
                         is FetchScanState.Failure.RemoteRequestFailure -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
@@ -275,8 +275,8 @@ class ScanViewModel @Inject constructor(
         launch { fetchScanState(isRetry = true) }
     }
 
-    private fun onVisitDashboardClicked() {
-        updateNavigationEvent(VisitDashboard(Constants.URL_VISIT_DASHBOARD))
+    private fun onVisitVaultPressDashboardClicked() {
+        updateNavigationEvent(VisitVaultPressDashboard(Constants.URL_VISIT_VAULTPRESS_DASHBOARD))
     }
 
     private fun onContactSupportClicked() {
