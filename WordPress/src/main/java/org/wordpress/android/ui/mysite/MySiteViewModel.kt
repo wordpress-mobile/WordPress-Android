@@ -483,11 +483,7 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.SITE_MENU).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) {
-                            dynamicCards
-                        } else {
-                            listOf()
-                        },
+                        if (shouldIncludeDynamicCards(MySiteTabType.SITE_MENU)) dynamicCards else listOf(),
                         siteItems
                 ),
                 MySiteTabType.DASHBOARD to orderForDisplay(
@@ -495,11 +491,7 @@ class MySiteViewModel @Inject constructor(
                         cardsResult.filterNot {
                             getCardTypeExclusionFiltersForTab(MySiteTabType.DASHBOARD).contains(it.type)
                         },
-                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) {
-                            dynamicCards
-                        } else {
-                            listOf()
-                        },
+                        if (shouldIncludeDynamicCards(MySiteTabType.DASHBOARD)) dynamicCards else listOf(),
                         listOf()
                 )
         )
