@@ -15,7 +15,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_OVERVIEW_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -146,7 +146,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
 
         loadData(true, forced)
 
-        verify(analyticsTrackerWrapper, never()).track(eq(STATS_OVERVIEW_ERROR), any<Map<String, *>>())
+        verify(analyticsTrackerWrapper, never()).track(eq(STATS_VIEWS_AND_VISITORS_ERROR), any<Map<String, *>>())
     }
 
     @Test
@@ -162,7 +162,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         loadData(true, forced)
 
         verify(analyticsTrackerWrapper).track(
-                STATS_OVERVIEW_ERROR, mapOf(
+                STATS_VIEWS_AND_VISITORS_ERROR, mapOf(
                 "stats_last_date" to "2020-12-13",
                 "stats_current_date" to "2020-12-15",
                 "stats_age_in_days" to 2,
