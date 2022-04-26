@@ -33,6 +33,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowJetpackSettings
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.VisitDashboard
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
@@ -284,6 +285,18 @@ class ScanViewModelTest : BaseUnitTest() {
             }
 
     @Test
+    fun `given vault press active error state, when visit dashboard is clicked, then visit dashboard url is shown`() =
+            test {
+                whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+                whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.VaultPressActiveOnSite))
+                val observers = init()
+
+                (observers.uiStates.last() as ErrorUiState).action?.invoke()
+
+                assertThat(observers.navigation.last().peekContent()).isEqualTo(VisitDashboard(Constants.URL_VISIT_DASHBOARD))
+            }
+
+    @Test
     fun `given multisite, when scan state is fetched, then app reaches multisite not supported state`() =
             test {
                 val observers = initObservers()
@@ -306,6 +319,33 @@ class ScanViewModelTest : BaseUnitTest() {
                     assertThat(imageColorResId).isEqualTo(R.color.gray)
                     assertThat(title).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_title))
                     assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_multisite_not_supported_subtitle))
+                }
+            }
+
+
+    @Test
+    fun `given vault press active on site, when scan state is fetched, then app reaches VaultPressActiveOnSite state`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.VaultPressActiveOnSite, observers = observers)
+
+                assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.VaultPressActiveOnSite::class.java)
+            }
+
+    @Test
+    fun `given vault press active on site, when scan state is fetched, then corresponding error ui is shown`() =
+            test {
+                val observers = initObservers()
+
+                fetchScanStateStatusForState(state = Failure.VaultPressActiveOnSite, observers = observers)
+
+                val state = observers.uiStates.last() as ErrorUiState
+                with(state) {
+                    assertThat(image).isEqualTo(R.drawable.ic_shield_warning_white)
+                    assertThat(imageColorResId).isEqualTo(R.color.error_60)
+                    assertThat(title).isEqualTo(UiStringRes(R.string.scan_vault_press_active_on_site_title))
+                    assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_vault_press_active_on_site_subtitle))
                 }
             }
 
