@@ -13,8 +13,6 @@
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="request_failed_message">There was a problem handling the request. Please try again later.</string>
-    <string name="sign_out_wpcom_confirm_with_changes">You have changes to posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Log out of WordPress?</string>
 
     <!-- form labels -->
@@ -1386,10 +1384,10 @@
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
 
     <!-- HTTP Authentication -->
-    <string name="httpuser" tools:ignore="UnusedResources">HTTP username</string>
-    <string name="httppassword" tools:ignore="UnusedResources">HTTP password</string>
+    <string name="httpuser">HTTP username</string>
+    <string name="httppassword">HTTP password</string>
     <string name="settings">Settings</string>
-    <string name="http_authorization_required" tools:ignore="UnusedResources">Authorization required</string>
+    <string name="http_authorization_required">Authorization required</string>
 
     <!-- post scheduling and password -->
     <string name="submit_for_review">Submit</string>
@@ -2809,7 +2807,7 @@
     <string name="login_magic_links_label" tools:ignore="UnusedResources">We\'ll email you a link that\'ll log you in instantly, no password needed.</string>
     <string name="login_magic_links_sent_label" tools:ignore="UnusedResources">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting" tools:ignore="UnusedResources">Requesting log-in email</string>
-    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources">Not seeing the email? Check your Spam or Junk Mail folder.</string>
+    <string name="magic_link_not_seeing_email_message" tools:ignore="UnusedResources">Changed for test purposes</string>
     <string name="magic_link_not_meaning_to_create_account" tools:ignore="UnusedResources">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
     <string name="login_get_link_by_email" tools:ignore="UnusedResources">Get a login link by email</string>
     <string name="enter_wpcom_password" tools:ignore="UnusedResources">Enter your WordPress.com password.</string>
@@ -2941,15 +2939,6 @@
     <string name="notification_channel_transient_title" tools:ignore="UnusedResources">Transient</string>
     <string name="notification_channel_reminder_title" tools:ignore="UnusedResources">Reminder</string>
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
-
-    <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
-    <string name="notification_channel_important_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_important_channel_id</string>
-    <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
-    <string name="notification_channel_reminder_id" translatable="false" tools:ignore="UnusedResources">wpandroid_notification_reminder_channel_id</string>
-    <string name="notification_channel_weekly_roundup_id" translatable="false">wpandroid_notification_weekly_roundup_channel_id</string>
-
-    <!-- Required by the login library - overwrites the placeholder value with a real channel -->
-    <string name="login_notification_channel_id" content_override="true" translatable="false" tools:ignore="UnusedResources">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -3406,7 +3395,7 @@
     <string name="dialog_insufficient_device_storage_error_message" tools:ignore="UnusedResources">We need to save the story on your device before it can be published. Review your storage settings and remove files to free up space.</string>
     <string name="dialog_insufficient_device_storage_error_ok_button" tools:ignore="UnusedResources">View Storage</string>
     <string name="toast_story_page_not_found" tools:ignore="UnusedResources">Couldn\'t find Story slide</string>
-    <string name="toast_capture_operation_in_progress" tools:ignore="UnusedResources">Operation in progress, try again</string>
+    <string name="toast_capture_operation_in_progress" tools:ignore="UnusedResources">Changed for test purposes</string>
     <string name="toast_error_saving_image" tools:ignore="UnusedResources">Error saving image</string>
     <string name="toast_error_saving_video" tools:ignore="UnusedResources">Video could not be saved</string>
     <string name="camera_error" tools:ignore="UnusedResources">This device doesn\'t support Camera2 API.</string>
