@@ -11,6 +11,12 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_198"
+msgid ""
+"19.8:\n"
+"Edited to test #16404 – WordPress long notes\n"
+msgstr ""
+
 msgctxt "release_note_197"
 msgid ""
 "19.7:\n"
@@ -21,15 +27,13 @@ msgid ""
 "- Fixed crash caused by notification details for comments on GB File blocks\n"
 msgstr ""
 
-msgctxt "release_note_196"
+#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_198"
 msgid ""
-"19.6:\n"
-"This release is short and sweet: after deleting a site, you might’ve noticed that same site sticking around in your My Site list until you restarted the app.\n"
-"\n"
-"We’ve fixed that—deleted sites now disappear right away. So long, farewell.\n"
+"19.8:\n"
+"Updated to test #16404 – WordPress short\n"
 msgstr ""
 
-#. translators: Shorter Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "release_note_short_197"
 msgid ""
 "19.7:\n"
