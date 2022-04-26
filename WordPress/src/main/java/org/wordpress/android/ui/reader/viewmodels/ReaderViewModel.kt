@@ -96,11 +96,13 @@ class ReaderViewModel @Inject constructor(
 
     private fun loadTabs() {
         launch {
+            val currentContentUiState = _uiState.value as? ContentUiState
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
                 _uiState.value = ContentUiState(
                         tagList.map { TabUiState(label = UiStringText(it.label)) },
                         tagList,
+                        shouldUpdateViewPager = currentContentUiState?.readerTagList?.equals(tagList) == false,
                         searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
                         settingsMenuItemUiState = MenuItemUiState(isVisible = isSettingsSupported())
                 )
@@ -161,6 +163,7 @@ class ReaderViewModel @Inject constructor(
         data class ContentUiState(
             val tabUiStates: List<TabUiState>,
             val readerTagList: ReaderTagList,
+            val shouldUpdateViewPager: Boolean,
             override val searchMenuItemUiState: MenuItemUiState,
             override val settingsMenuItemUiState: MenuItemUiState
         ) : ReaderUiState(
@@ -297,7 +300,7 @@ class ReaderViewModel @Inject constructor(
             val updateTabUiStates = it.tabUiStates.mapIndexed { index, tabUiState ->
                 if (index == discoverTabIndex) tabUiState.copy(showQuickStartFocusPoint = show) else tabUiState
             }
-            _uiState.postValue(currentUiState.copy(tabUiStates = updateTabUiStates))
+            _uiState.postValue(currentUiState.copy(tabUiStates = updateTabUiStates, shouldUpdateViewPager = false))
         }
     }
 
@@ -308,7 +311,8 @@ class ReaderViewModel @Inject constructor(
                     currentUiState.copy(
                             settingsMenuItemUiState = it.settingsMenuItemUiState.copy(
                                     showQuickStartFocusPoint = show
-                            )
+                            ),
+                            shouldUpdateViewPager = false
                     )
             )
         }

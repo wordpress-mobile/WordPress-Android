@@ -225,7 +225,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
-        updateViewPagerAdapterAndMediator(uiState)
+        if (viewPager.adapter == null || uiState.shouldUpdateViewPager) {
+            updateViewPagerAdapterAndMediator(uiState)
+        }
         uiState.tabUiStates.forEachIndexed { index, tabUiState ->
             val tab = tabLayout.getTabAt(index) as TabLayout.Tab
             updateTab(tab, tabUiState)
