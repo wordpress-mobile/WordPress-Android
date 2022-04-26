@@ -47,6 +47,7 @@ data class ScanStateModel(
 
     enum class Reason(val value: String?) {
         MULTISITE_NOT_SUPPORTED("multisite_not_supported"),
+        VP_ACTIVE_ON_SITE("vp_active_on_site"),
         NO_REASON(null),
         UNKNOWN("unknown");
 
