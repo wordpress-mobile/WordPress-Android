@@ -80,7 +80,8 @@ class MostPopularInsightsUseCase
         return items
     }
 
-    private fun buildTitle() = Title(R.string.stats_insights_popular, menuAction = this::onMenuClick)
+    private val fireEmojiTitle = "\uD83D\uDD25 ${resourceProvider.getString(R.string.stats_insights_popular)}"
+    private fun buildTitle() = Title(text = fireEmojiTitle, menuAction = null)
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)
