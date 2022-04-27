@@ -2730,8 +2730,10 @@
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
+    <string name="photo_picker_video_thumbnail_selected">Video selected</string>
     <string name="photo_picker_image_selected">,Selected</string>
     <string name="photo_picker_image_thumbnail_unselected">Image unselected</string>
+    <string name="photo_picker_video_thumbnail_unselected">Video unselected</string>
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_list_content_description">Photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>

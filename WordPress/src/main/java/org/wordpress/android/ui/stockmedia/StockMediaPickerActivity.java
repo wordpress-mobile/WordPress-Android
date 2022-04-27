@@ -719,7 +719,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
             notifySelectionCountChanged();
-            PhotoPickerUtils.announceSelectedImageForAccessibility(holder.mImageView, !isSelected);
+            PhotoPickerUtils.announceSelectedImageForAccessibility(holder.mImageView, false, !isSelected);
         }
 
         @SuppressWarnings("unused")

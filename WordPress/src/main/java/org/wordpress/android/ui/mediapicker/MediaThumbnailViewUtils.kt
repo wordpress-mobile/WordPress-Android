@@ -18,8 +18,10 @@ import org.wordpress.android.util.extensions.redirectContextClickToLongPressList
 import java.util.Locale
 
 class MediaThumbnailViewUtils(val imageManager: ImageManager) {
+    @Suppress("LongParameterList")
     fun setupListeners(
         imgThumbnail: ImageView,
+        isVideo: Boolean,
         isSelected: Boolean,
         toggleAction: ToggleAction,
         clickAction: ClickAction,
@@ -30,6 +32,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
             toggleAction.toggle()
             PhotoPickerUtils.announceSelectedImageForAccessibility(
                     imgThumbnail,
+                    isVideo,
                     !isSelected
             )
         }
@@ -64,6 +67,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
             toggleAction.toggle()
             PhotoPickerUtils.announceSelectedImageForAccessibility(
                     imgThumbnail,
+                    false,
                     !isSelected
             )
         }
