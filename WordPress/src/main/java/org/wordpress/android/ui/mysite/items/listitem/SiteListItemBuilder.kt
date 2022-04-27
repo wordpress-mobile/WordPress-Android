@@ -74,30 +74,17 @@ class SiteListItemBuilder @Inject constructor(
     }
 
     fun buildJetpackItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (isJetpackSettingsVisible(site)) {
+        val jetpackSettingsVisible = site.isJetpackConnected && // jetpack is installed and connected
+                !site.isWPComAtomic &&
+                siteUtilsWrapper.isAccessedViaWPComRest(site) && // is using .com login
+                site.hasCapabilityManageOptions // has permissions to manage the site
+        return if (jetpackSettingsVisible) {
             ListItem(
                     R.drawable.ic_cog_white_24dp,
                     UiStringRes(R.string.my_site_btn_jetpack_settings),
                     onClick = ListItemInteraction.create(JETPACK_SETTINGS, onClick)
             )
         } else null
-    }
-
-    fun buildDomainsItemForJetpackIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (siteDomainsFeatureConfig.isEnabled() && isJetpackSettingsVisible(site)) {
-            ListItem(
-                    R.drawable.ic_domains_white_24dp,
-                    UiStringRes(R.string.my_site_btn_domains),
-                    onClick = ListItemInteraction.create(DOMAINS, onClick)
-            )
-        } else null
-    }
-
-    private fun isJetpackSettingsVisible(site: SiteModel): Boolean {
-        return site.isJetpackConnected && // jetpack is installed and connected
-                !site.isWPComAtomic &&
-                siteUtilsWrapper.isAccessedViaWPComRest(site) && // is using .com login
-                site.hasCapabilityManageOptions // has permissions to manage the site
     }
 
     @Suppress("ComplexCondition")
