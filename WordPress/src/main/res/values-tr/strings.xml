@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-17 09:40:30+0000
+Translation-Revision-Date: 2022-04-22 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_add_blocks_11d0841f">Blok ekle</string>
+    <string name="initial_screen">İlk Ekran</string>
+    <string name="blogging_prompts_onboarding_notification_action">Daha fazlasını öğrenin</string>
+    <string name="blogging_prompts_onboarding_notification_text">Yazma alışkanlığı kazanarak daha iyi bir yazar olun. Daha fazlasını öğrenmek için dokunun.</string>
+    <string name="blogging_prompts_onboarding_notification_title">WordPress mobil uygulamasındaki yenilikler: İstemler</string>
+    <string name="new_site_creation_site_name_header_subtitle">İyi ad, kısa ve akılda kalıcı olan addır.\nBunu daha sonra değiştirebilirsiniz.</string>
+    <string name="new_site_creation_site_name_header_title">%s web sitenize bir ad verin </string>
+    <string name="new_site_creation_site_name_title">Site adı</string>
+    <string name="my_site_todays_stats_get_more_views_message">Kitlenizi oluşturmak mı istiyorsunuz? &lt;a href=\"%1$s\"&gt;En iyi ipuçlarımıza&lt;/a&gt; göz atın.</string>
+    <string name="stats_insights_views_and_visitors_message">Önceki haftaya göre son haftalardaki görüntülenme sayınız %1$s %2$s.</string>
+    <string name="stats_insights_views_and_visitors">Görüntüleme ve Ziyaretçi Sayısı</string>
     <string name="featured_image_removed_notice">Öne çıkan resim kaldırıldı</string>
     <string name="featured_image_confirmation_notice">Öne çıkan görsel olarak ayarla</string>
     <string name="featured_image_replace_dialog_cancel">Güncel tut</string>
@@ -422,6 +433,7 @@ Language: tr
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
+    <string name="gutenberg_native_add_blocks">Blok Ekle</string>
     <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
     <string name="gutenberg_native_what_is_alt_text">Alternatif metin nedir?</string>
     <string name="gutenberg_native_transform_s_to">%s öğesini şuna dönüştür:</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-01 15:29:30+0000
+Translation-Revision-Date: 2022-04-22 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_add_blocks_11d0841f">Blokken toevoegen</string>
+    <string name="blogging_prompts_onboarding_notification_action">Meer weten</string>
+    <string name="blogging_prompts_onboarding_notification_text">Word een betere schrijver door elke dag te schrijven. Tik voor meer informatie.</string>
+    <string name="blogging_prompts_onboarding_notification_title">Nieuw in de mobiele WordPress-app: Herinneringen</string>
+    <string name="new_site_creation_site_name_header_subtitle">Een goede naam is kort en eenvoudig te onthouden.\nJe kunt deze later wijzigen.</string>
+    <string name="new_site_creation_site_name_header_title">Geef je %s website een naam</string>
+    <string name="new_site_creation_site_name_title">Naam site</string>
+    <string name="my_site_todays_stats_get_more_views_message">Wil je je publiek vergroten? Check onze &lt;a href=\"%1$s\"&gt;beste tips&lt;/a&gt;.</string>
+    <string name="stats_insights_views_and_visitors_message">Je weergaven van de afgelopen week zijn %1$s %2$s dan de week daarvoor.</string>
+    <string name="stats_insights_views_and_visitors">Weergaven en bezoekers</string>
     <string name="login_select_email_client">Welke e-mail app gebruik je?</string>
     <string name="login_error_xml_rpc_auth_error_communicating">Er is een probleem opgetreden bij de communicatie met de site. Er is een HTTP foutcode 401 teruggestuurd.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC aanroepen lijken geblokkeerd op deze site (foutcode 401). Als de poging om in te loggen mislukt, tik je op het hulppictogram om de veelgestelde vragen te bekijken.</string>
@@ -325,6 +335,7 @@ Language: nl
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
+    <string name="gutenberg_native_add_blocks">Blokken toevoegen</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>

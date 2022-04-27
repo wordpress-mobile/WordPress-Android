@@ -72,6 +72,14 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
 
     private static final String SOURCE = "source";
     private static final String SOURCE_ACCOUNT_SETTINGS = "account_settings";
+    private static final String TRACK_PROPERTY_FIELD_NAME = "field_name";
+    private static final String TRACK_PROPERTY_EMAIL = "email";
+    private static final String TRACK_PROPERTY_PRIMARY_SITE = "primary_site";
+    private static final String TRACK_PROPERTY_WEB_ADDRESS = "web_address";
+    private static final String TRACK_PROPERTY_PASSWORD = "password";
+    private static final String TRACK_PROPERTY_USERNAME = "username";
+    private static final String TRACK_PROPERTY_PAGE = "page";
+    private static final String TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS = "account_settings";
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -163,24 +171,42 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         }
 
         if (preference == mEmailPreference) {
+            if (!mEmailPreference.getSummary().toString().equalsIgnoreCase(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_EMAIL);
+            }
             updateEmail(newValue.toString());
             showPendingEmailChangeSnackbar(newValue.toString());
             mEmailPreference.setEnabled(false);
             return false;
         } else if (preference == mPrimarySitePreference) {
+            if (!mPrimarySitePreference.getValue().equals(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_PRIMARY_SITE);
+            }
             changePrimaryBlogPreference(Long.parseLong(newValue.toString()));
             updatePrimaryBlog(newValue.toString());
             return false;
         } else if (preference == mWebAddressPreference) {
+            if (!mWebAddressPreference.getSummary().toString().equalsIgnoreCase(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_WEB_ADDRESS);
+            }
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
             return false;
         } else if (preference == mChangePasswordPreference) {
             showChangePasswordProgressDialog(true);
+            if (!mChangePasswordPreference.getSummary().toString().equalsIgnoreCase(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_PASSWORD);
+            }
             updatePassword(newValue.toString());
         }
-
         return true;
+    }
+
+    private void trackSettingsDidChange(String fieldName) {
+        Map<String, String> props = new HashMap<>();
+        props.put(TRACK_PROPERTY_FIELD_NAME, fieldName);
+        props.put(TRACK_PROPERTY_PAGE, TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(Stat.SETTINGS_DID_CHANGE, props);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -397,6 +423,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                         String.format(getString(R.string.settings_username_changer_toast_content), username),
                         Snackbar.LENGTH_LONG).show();
                 mUsernamePreference.setSummary(username);
+                trackSettingsDidChange(TRACK_PROPERTY_USERNAME);
             }
         }
     }
