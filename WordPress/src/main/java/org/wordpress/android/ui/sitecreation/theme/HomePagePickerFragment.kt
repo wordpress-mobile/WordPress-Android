@@ -96,7 +96,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setupViewModel() {
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             setToolbarVisibility(uiState.isToolbarVisible)
@@ -111,9 +111,9 @@ class HomePagePickerFragment : Fragment() {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
-        })
+        }
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner) { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -125,11 +125,11 @@ class HomePagePickerFragment : Fragment() {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
+        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner) {
             layoutsRecyclerView.smoothScrollToPosition(0)
-        })
+        }
 
         viewModel.start(displayUtils.isTablet())
     }

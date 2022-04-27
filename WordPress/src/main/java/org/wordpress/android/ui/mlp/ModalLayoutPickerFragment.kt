@@ -118,7 +118,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     private fun ModalLayoutPickerFragmentBinding.setupViewModel(savedInstanceState: Bundle?) {
         viewModel.loadSavedState(savedInstanceState)
 
-        viewModel.uiState.observe(this@ModalLayoutPickerFragment, { uiState ->
+        viewModel.uiState.observe(this@ModalLayoutPickerFragment) { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)
             setButtonsVisibility(uiState.buttonsUiState)
@@ -135,13 +135,13 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                     uiState.subtitle?.let { modalLayoutPickerError.actionableEmptyView.subtitle.setText(it) }
                 }
             }
-        })
+        }
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner) {
             previewModeSelectorPopup.show(viewModel)
-        })
+        }
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner) { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -153,11 +153,11 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.onCategorySelectionChanged.observeEvent(this@ModalLayoutPickerFragment, {
+        viewModel.onCategorySelectionChanged.observeEvent(this@ModalLayoutPickerFragment) {
             layoutsRecyclerView.smoothScrollToPosition(0)
-        })
+        }
     }
 
     private fun ModalLayoutPickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
