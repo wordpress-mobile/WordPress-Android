@@ -27,6 +27,8 @@ class PromptReminderNotifier @Inject constructor(
     // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
     var hasOptedInBloggingPromptsReminders = true
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
     fun notify(siteId: Int) {
         val notificationId = REMINDER_NOTIFICATION_ID + siteId
         val context = contextProvider.getContext()

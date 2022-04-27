@@ -29,6 +29,8 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     private lateinit var dialogType: DialogType
     private lateinit var bloggingPrompt: BloggingPrompt
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
     fun start(type: DialogType) {
         dialogType = type
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
