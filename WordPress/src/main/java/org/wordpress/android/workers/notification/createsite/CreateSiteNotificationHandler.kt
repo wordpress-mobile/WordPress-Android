@@ -1,7 +1,7 @@
 package org.wordpress.android.workers.notification.createsite
 
+import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationType.CREATE_SITE
@@ -20,11 +20,17 @@ class CreateSiteNotificationHandler @Inject constructor(
         return accountStore.hasAccessToken() && !siteStore.hasSite()
     }
 
-    override fun buildFirstActionIntent(context: Context, notificationId: Int): Intent {
-        return ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(
+    override fun buildFirstActionPendingIntent(context: Context, notificationId: Int): PendingIntent {
+        val intent = ActivityLauncher.createMainActivityAndSiteCreationActivityIntent(
                 context,
                 CREATE_SITE,
                 SiteCreationSource.NOTIFICATION
+        )
+        return PendingIntent.getActivity(
+                context,
+                notificationId + 1,
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 

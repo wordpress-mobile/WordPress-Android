@@ -51,7 +51,7 @@ class LocalNotificationWorker(
             setContentText(context.getString(text))
             addAction(firstActionIcon, context.getString(firstActionTitle), firstActionPendingIntent)
             val secondActionPendingIntent = getSecondActionPendingIntent(notificationId)
-            if (secondActionTitle != -1) {
+            if (secondActionPendingIntent != null) {
                 addAction(secondActionIcon, context.getString(secondActionTitle), secondActionPendingIntent)
             }
             priority = NotificationCompat.PRIORITY_DEFAULT
@@ -62,28 +62,16 @@ class LocalNotificationWorker(
         }
     }
 
-    private fun getFirstActionPendingIntent(notificationId: Int): PendingIntent {
+    private fun getFirstActionPendingIntent(notificationId: Int): PendingIntent? {
         val type = Type.fromTag(inputData.getString(TYPE))
         val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
-        val firstActionRequestCode = notificationId + 1
-        return PendingIntent.getActivity(
-                context,
-                firstActionRequestCode,
-                handler?.buildFirstActionIntent(context, notificationId),
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        return handler?.buildFirstActionPendingIntent(context, notificationId)
     }
 
-    private fun getSecondActionPendingIntent(notificationId: Int): PendingIntent {
+    private fun getSecondActionPendingIntent(notificationId: Int): PendingIntent? {
         val type = Type.fromTag(inputData.getString(TYPE))
         val handler = type?.let { localNotificationHandlerFactory.buildLocalNotificationHandler(it) }
-        val secondActionRequestCode = notificationId + 2
-        return PendingIntent.getActivity(
-                context,
-                secondActionRequestCode,
-                handler?.buildSecondActionIntent(context, notificationId),
-                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        return handler?.buildSecondActionPendingIntent(context, notificationId)
     }
 
     class Factory(
