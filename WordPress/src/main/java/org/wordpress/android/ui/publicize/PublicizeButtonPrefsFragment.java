@@ -177,7 +177,6 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
     private void saveSharingButtons(boolean isSharingButtons) {
         PrefListItems sharingButtons = mPrefSharingButtons.getSelectedItems();
         PrefListItems moreButtons = mPrefMoreButtons.getSelectedItems();
-
         // sharing and more buttons are mutually exclusive
         if (isSharingButtons) {
             moreButtons.removeItems(sharingButtons);
