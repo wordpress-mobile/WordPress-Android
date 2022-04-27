@@ -74,7 +74,10 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setupUi() {
         homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
         with(modalLayoutPickerHeaderSection) {
-            modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
+            modalLayoutPickerTitleRow?.header?.apply {
+                textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+                setText(R.string.hpp_title)
+            }
             modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
         }
     }
