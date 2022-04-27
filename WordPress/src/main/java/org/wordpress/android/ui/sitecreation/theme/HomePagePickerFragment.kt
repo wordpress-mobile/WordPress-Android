@@ -86,8 +86,10 @@ class HomePagePickerFragment : Fragment() {
 
     private fun HomePagePickerFragmentBinding.setupUi() {
         homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
-        modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
-        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.setText(R.string.hpp_subtitle)
+        with (modalLayoutPickerHeaderSection) {
+            modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
+            modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
+        }
         if (siteNameFeatureConfig.isEnabled()) {
             homePagePickerBottomToolbar.chooseButton.setText(R.string.hpp_choose_and_create_site)
         }
@@ -96,7 +98,6 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setupViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
-            setDescriptionVisibility(uiState.isDescriptionVisible)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             setToolbarVisibility(uiState.isToolbarVisible)
             when (uiState) {
@@ -139,15 +140,6 @@ class HomePagePickerFragment : Fragment() {
                 modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header,
                 visible
         )
-    }
-
-    /**
-     * Sets the header description visibility
-     * @param visible if true the description is visible else invisible
-     */
-    private fun HomePagePickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
-        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.visibility =
-                if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     private fun HomePagePickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
