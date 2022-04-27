@@ -1130,6 +1130,9 @@
     <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
     <string name="scan_multisite_not_supported_title">WordPress multisites are not supported</string>
     <string name="scan_multisite_not_supported_subtitle">We\'re sorry, Jetpack Scan is not compatible with multisite WordPress installations at this time.</string>
+    <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
+    <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
 
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>
@@ -1241,6 +1244,8 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
+    <string name="stats_timeframe_this_week">This Week</string>
+    <string name="stats_timeframe_previous_week">Previous Week</string>
 
     <string name="stats_views">Views</string>
     <string name="stats_visitors">Visitors</string>
@@ -1282,7 +1287,11 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
-    <string name="stats_insights_views_and_visitors_message">Your last weeks views are %1$s %2$s than previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Your this week\'s views are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Your this week\'s views are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Your this week\'s visitors are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Your this week\'s visitors are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
@@ -3030,7 +3039,7 @@
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
-    <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
+    <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
     <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
@@ -3038,23 +3047,23 @@
     <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
-    <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
-    <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
+    <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">Select %1$s Settings %2$s to add topics you like.</string>
+    <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Select %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
-    <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
-    <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
+    <string name="quick_start_dialog_view_site_message">Preview your site to see what your visitors will see.</string>
+    <string name="quick_start_dialog_view_your_site_message_short" tools:ignore="UnusedResources">Tap &lt;b&gt;%1$s&lt;/b&gt; to view your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to set a new title</string>
     <string name="quick_start_dialog_edit_homepage_title">Edit your homepage</string>
@@ -3066,7 +3075,7 @@
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
-    <string name="quick_start_list_check_stats_title">Check your stats</string>
+    <string name="quick_start_list_check_stats_title">Check your site stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_create_site_message">Site created! Complete another task.</string>
@@ -3083,7 +3092,7 @@
     <string name="quick_start_list_upload_icon_subtitle">Shown in your visitor\'s browser tab and other places online.</string>
     <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_view_site_title">Visit your site</string>
+    <string name="quick_start_list_view_site_title">View your site</string>
     <string name="quick_start_list_edit_homepage_subtitle" translatable="false">@string/quick_start_dialog_edit_homepage_message</string>
     <string name="quick_start_list_edit_homepage_title" translatable="false">@string/quick_start_dialog_edit_homepage_title</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
@@ -3340,6 +3349,7 @@
     <string name="hpp_title">Choose a design</string>
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
     <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_choose_and_create_site">Create site</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>

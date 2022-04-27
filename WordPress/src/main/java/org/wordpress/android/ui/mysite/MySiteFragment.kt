@@ -223,6 +223,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         }
         siteInfoContainer.title.text = siteInfoHeader.title
         quickStartTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showTitleFocusPoint)
+        quickStartSubTitleFocusPoint.setVisibleOrGone(siteInfoHeader.showSubtitleFocusPoint)
         siteInfoContainer.subtitle.text = siteInfoHeader.url
         siteInfoContainer.subtitle.setOnClickListener { siteInfoHeader.onUrlClick.click() }
         switchSite.setOnClickListener { siteInfoHeader.onSwitchSiteClick.click() }
@@ -280,7 +281,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         val customView = tab.customView ?: createTabCustomView(tab)
         with(customView) {
             val title = findViewById<TextView>(R.id.tab_label)
-            val quickStartFocusPoint = findViewById<QuickStartFocusPoint>(R.id.my_site_tab_quick_start_focus_point)
+            val quickStartFocusPoint = findViewById<QuickStartFocusPoint>(R.id.tab_quick_start_focus_point)
             title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
             quickStartFocusPoint?.setVisible(tabUiState.showQuickStartFocusPoint)
         }
@@ -288,7 +289,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
+        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
         else -> {
             // Pass all other navigationAction on to the child fragment, so they can be handled properly
             binding?.viewPager?.getCurrentFragment()?.handleNavigationAction(action)
@@ -319,7 +320,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
     private fun MySiteFragmentBinding.createTabCustomView(tab: TabLayout.Tab): View {
         val customView = LayoutInflater.from(context)
-                .inflate(R.layout.my_site_tab_custom_view, tabLayout, false)
+                .inflate(R.layout.tab_custom_view, tabLayout, false)
         tab.customView = customView
         return customView
     }

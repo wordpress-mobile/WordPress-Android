@@ -111,6 +111,7 @@ import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -180,6 +181,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
+    public static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
     public static final String ARG_WP_COM_SIGN_UP = "sign_up";
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_MY_SITE = "show_my_site";
@@ -399,7 +401,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            ActivityLauncher.newBlogForResult(this);
+            ActivityLauncher.newBlogForResult(this,
+                    SiteCreationSource.fromString(getIntent().getStringExtra(ARG_SITE_CREATION_SOURCE)));
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             ActivityLauncher.showSignInForResultWpComOnly(this);

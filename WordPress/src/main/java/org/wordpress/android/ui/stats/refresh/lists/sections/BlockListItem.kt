@@ -9,6 +9,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_BLUE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_PURPLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHIPS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIALOG_BUTTONS
@@ -18,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -31,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State.POSITIVE
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -49,6 +53,7 @@ sealed class BlockListItem(val type: Type) {
         TAG_ITEM,
         IMAGE_ITEM,
         VALUE_ITEM,
+        VALUES_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         INFO,
@@ -58,7 +63,10 @@ sealed class BlockListItem(val type: Type) {
         CHIPS,
         LINK,
         BAR_CHART,
+        LINE_CHART,
         CHART_LEGEND,
+        CHART_LEGENDS_BLUE,
+        CHART_LEGENDS_PURPLE,
         TABS,
         HEADER,
         MAP,
@@ -81,7 +89,7 @@ sealed class BlockListItem(val type: Type) {
     data class TitleWithMore(
         @StringRes val textResource: Int? = null,
         val text: String? = null,
-        val moreAction: ((View) -> Unit)? = null
+        val navigationAction: ListItemInteraction? = null
     ) : BlockListItem(TITLE_WITH_MORE)
 
     data class BigTitle(
@@ -112,6 +120,16 @@ sealed class BlockListItem(val type: Type) {
     ) : BlockListItem(VALUE_ITEM) {
         enum class State { POSITIVE, NEGATIVE, NEUTRAL }
     }
+
+    data class ValuesItem(
+        val selectedItem: Int,
+        val value1: String? = null,
+        @StringRes val unit1: Int,
+        val contentDescription1: String? = null,
+        val value2: String? = null,
+        @StringRes val unit2: Int,
+        val contentDescription2: String? = null
+    ) : BlockListItem(VALUES_ITEM)
 
     data class ListItem(
         val text: String,
@@ -162,6 +180,7 @@ sealed class BlockListItem(val type: Type) {
         val textResource: Int? = null,
         val links: List<Clickable>? = null,
         val bolds: List<String>? = null,
+        val color: List<String>? = null,
         val isLast: Boolean = false
     ) : BlockListItem(TEXT) {
         data class Clickable(
@@ -189,7 +208,7 @@ sealed class BlockListItem(val type: Type) {
         override val itemId: Int
             get() = chips.hashCode()
 
-        data class Chip(val header: Int, val value: String, val contentDescription: String)
+        data class Chip(val header: Int, val contentDescription: String)
     }
 
     data class Link(
@@ -219,7 +238,31 @@ sealed class BlockListItem(val type: Type) {
             get() = entries.hashCode()
     }
 
+    data class LineChartItem(
+        val selectedType: Int,
+        val entries: List<Line>,
+        val selectedItemPeriod: String? = null,
+        val onLineSelected: ((period: String?) -> Unit)? = null,
+        val onLineChartDrawn: ((visibleLineCount: Int) -> Unit)? = null,
+        val entryContentDescriptions: List<String>
+    ) : BlockListItem(LINE_CHART) {
+        data class Line(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
+
     data class ChartLegend(@StringRes val text: Int) : BlockListItem(CHART_LEGEND)
+
+    data class ChartLegendsBlue(
+        @StringRes val legend1: Int,
+        @StringRes val legend2: Int
+    ) : BlockListItem(CHART_LEGENDS_BLUE)
+
+    data class ChartLegendsPurple(
+        @StringRes val legend1: Int,
+        @StringRes val legend2: Int
+    ) : BlockListItem(CHART_LEGENDS_PURPLE)
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
             BlockListItem(TABS) {

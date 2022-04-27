@@ -24,6 +24,7 @@ import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 
 import java.util.ArrayList;
 
@@ -123,7 +124,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     }
 
     private void createNewSite() {
-        ActivityLauncher.newBlogForResult(this);
+        ActivityLauncher.newBlogForResult(this, SiteCreationSource.LOGIN_EPILOGUE);
     }
 
     private void closeWithResultOk() {
