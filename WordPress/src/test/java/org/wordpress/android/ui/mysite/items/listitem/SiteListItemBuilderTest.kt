@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.items.SITE_ITEM_ACTION
 import org.wordpress.android.ui.mysite.items.SITE_SETTINGS_ITEM
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.SiteDomainsFeatureConfig
 
@@ -33,6 +34,7 @@ class SiteListItemBuilderTest {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var pluginUtilsWrapper: PluginUtilsWrapper
     @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
     @Mock lateinit var siteDomainsFeatureConfig: SiteDomainsFeatureConfig
@@ -44,6 +46,7 @@ class SiteListItemBuilderTest {
                 accountStore,
                 pluginUtilsWrapper,
                 siteUtilsWrapper,
+                buildConfigWrapper,
                 themeBrowserUtils,
                 siteDomainsFeatureConfig
         )
