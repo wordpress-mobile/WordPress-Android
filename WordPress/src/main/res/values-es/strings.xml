@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-22 09:19:02+0000
+Translation-Revision-Date: 2022-04-23 04:46:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: es
@@ -10,12 +10,12 @@ Language: es
     <string name="gutenberg_native_add_blocks_11d0841f">Añadir bloques</string>
     <string name="initial_screen">Pantalla inicial</string>
     <string name="blogging_prompts_onboarding_notification_action">Más información</string>
-    <string name="blogging_prompts_onboarding_notification_text">Conviértete en un mejor escritor al crear el hábito de escribir. Pulsa para obtener más información.</string>
-    <string name="new_site_creation_site_name_header_title">Dale a tu web %s un nombre</string>
+    <string name="blogging_prompts_onboarding_notification_text">Conviértete en un mejor escritor creando un hábito de escritura. Toca para más información.</string>
     <string name="new_site_creation_site_name_title">Nombre del sitio</string>
-    <string name="my_site_todays_stats_get_more_views_message">¿Estás interesado en crear una audiencia? Revisa nuestros &lt;a href=\"%1$s\"&gt;mejores consejos&lt;/a&gt;.</string>
     <string name="blogging_prompts_onboarding_notification_title">Nuevo en la aplicación móvil de WordPress: Mensajes</string>
     <string name="new_site_creation_site_name_header_subtitle">Un buen nombre es corto y fácil de recordar.\nPuedes cambiarlo más adelante.</string>
+    <string name="my_site_todays_stats_get_more_views_message">¿Te interesa crear tu audiencia? Echa un vistazo a nuestros &lt;a href=\"%1$s\"&gt;mejores consejos&lt;/a&gt;.</string>
+    <string name="new_site_creation_site_name_header_title">Dale un nombre a tu web %s</string>
     <string name="stats_insights_views_and_visitors">Visitas y visitantes</string>
     <string name="stats_insights_views_and_visitors_message">Las visitas de las últimas semanas son %1$s %2$s que las de la semana anterior.</string>
     <string name="featured_image_removed_notice">Eliminada como imagen destacada</string>

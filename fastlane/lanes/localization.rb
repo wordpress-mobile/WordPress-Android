@@ -120,10 +120,11 @@ platform :android do
       [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
     end.to_h)
 
-    android_update_metadata_source(
-      po_file_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
-      source_files: files,
-      release_version: options[:version]
+    update_po_file_for_metadata_localization(
+      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
+      sources: files,
+      release_version: options[:version],
+      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
@@ -151,10 +152,11 @@ platform :android do
       'app-store-name': File.join(metadata_folder, 'title.txt'),
     }
 
-    android_update_metadata_source(
-      po_file_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
-      source_files: files,
-      release_version: options[:version]
+    update_po_file_for_metadata_localization(
+      po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
+      sources: files,
+      release_version: options[:version],
+      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
@@ -274,8 +276,10 @@ platform :android do
   MAIN_STRINGS_PATH = './WordPress/src/main/res/values/strings.xml'.freeze
   FROZEN_STRINGS_DIR_PATH = './fastlane/resources/values/'.freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: [] },
-    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", exclusions: [] }
+    # Note: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
+    # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
+    { library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", source_id: 'module:image-editor' },
+    { library: "WordPress Editor", strings_path: "./libs/editor/WordPressEditor/src/main/res/values/strings.xml", source_id: 'module:editor' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {
@@ -283,32 +287,29 @@ platform :android do
       import_key: 'gutenbergMobileVersion',
       repository: 'wordpress-mobile/gutenberg-mobile',
       strings_file_path: 'bundle/android/strings.xml',
-      github_release_prefix: '',
-      exclusions: []
+      source_id: 'gutenberg'
     },
     {
       name: 'Login Library',
       import_key: 'wordPressLoginVersion',
       repository: 'wordpress-mobile/WordPress-Login-Flow-Android',
       strings_file_path: 'WordPressLoginFlow/src/main/res/values/strings.xml',
-      github_release_prefix: '',
-      exclusions: ['default_web_client_id']
+      exclusions: ['default_web_client_id'],
+      source_id: 'login'
     },
     {
       name: "Stories Library",
       import_key: "storiesVersion",
       repository: "Automattic/stories-android",
       strings_file_path: "stories/src/main/res/values/strings.xml",
-      github_release_prefix: "",
-      exclusions: []
+      source_id: 'stories'
     },
     {
       name: "About Library",
       import_key: "aboutAutomatticVersion",
       repository: "Automattic/about-automattic-android",
       strings_file_path: "library/src/main/res/values/strings.xml",
-      github_release_prefix: "",
-      exclusions: []
+      source_id: 'about'
     },
   ].freeze
 
@@ -334,8 +335,7 @@ platform :android do
         library_name: lib[:name],
         import_key: lib[:import_key],
         repository: lib[:repository],
-        file_path: lib[:strings_file_path],
-        github_release_prefix: lib[:github_release_prefix]
+        file_path: lib[:strings_file_path]
       )
 
       if download_path.nil?
@@ -350,7 +350,9 @@ platform :android do
         lib_to_merge = [{
           library: lib[:name],
           strings_path: download_path,
-          exclusions: lib[:exclusions]
+          exclusions: lib[:exclusions],
+          source_id: lib[:source_id],
+          add_ignore_attr: true # The linter is not be able to detect if a merged string is actually used by a binary dependency
         }]
         an_localize_libs(app_strings_path: MAIN_STRINGS_PATH, libs_strings_path: lib_to_merge)
         File.delete(download_path) if File.exist?(download_path)
@@ -378,5 +380,21 @@ platform :android do
       locales: ALL_LOCALES,
       lint_task: 'lintWordpressVanillaRelease' # TODO: Should we adapt this?
     )
+  end
+
+  # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
+  # Internally, this calls the `an_update_metadata_source` release toolkit action and adds Git management to it.
+  #
+  def update_po_file_for_metadata_localization(po_path:, sources:, release_version:, commit_message:)
+    ensure_git_status_clean
+
+    an_update_metadata_source(
+      po_file_path: po_path,
+      source_files: sources,
+      release_version: release_version
+    )
+
+    git_add(path: po_path)
+    git_commit(path: po_path, message: commit_message, allow_nothing_to_commit: true)
   end
 end

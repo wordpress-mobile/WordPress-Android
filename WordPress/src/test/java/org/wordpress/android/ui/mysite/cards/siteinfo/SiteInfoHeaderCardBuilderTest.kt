@@ -58,8 +58,27 @@ class SiteInfoHeaderCardBuilderTest {
         assertThat(buildSiteInfoCard.showIconFocusPoint).isFalse()
     }
 
+    @Test
+    fun `given View Site active task, when card built, then showSubtitleFocusPoint is true`() {
+        val buildSiteInfoCard = buildSiteInfoCard(
+                showViewSiteFocusPoint = true
+        )
+
+        assertThat(buildSiteInfoCard.showSubtitleFocusPoint).isTrue
+    }
+
+    @Test
+    fun `given View Site not active task, when card built, then showSubtitleFocusPoint is false`() {
+        val buildSiteInfoCard = buildSiteInfoCard(
+                showViewSiteFocusPoint = false
+        )
+
+        assertThat(buildSiteInfoCard.showSubtitleFocusPoint).isFalse
+    }
+
     private fun buildSiteInfoCard(
         showUpdateSiteTitleFocusPoint: Boolean = false,
+        showViewSiteFocusPoint: Boolean = false,
         showUploadSiteIconFocusPoint: Boolean = false
     ) = siteInfoHeaderCardBuilder.buildSiteInfoCard(
             SiteInfoCardBuilderParams(
@@ -69,16 +88,22 @@ class SiteInfoHeaderCardBuilderTest {
                     iconClick = {},
                     urlClick = {},
                     switchSiteClick = {},
-                    setActiveTask(showUpdateSiteTitleFocusPoint, showUploadSiteIconFocusPoint)
+                    setActiveTask(
+                            showUpdateSiteTitleFocusPoint,
+                            showViewSiteFocusPoint,
+                            showUploadSiteIconFocusPoint
+                    )
             )
     )
 
     private fun setActiveTask(
         showUpdateSiteTitleFocusPoint: Boolean,
+        showViewSiteFocusPoint: Boolean,
         showUploadSiteIconFocusPoint: Boolean
     ): QuickStartTask? {
         return when {
             showUpdateSiteTitleFocusPoint -> QuickStartTask.UPDATE_SITE_TITLE
+            showViewSiteFocusPoint -> QuickStartTask.VIEW_SITE
             showUploadSiteIconFocusPoint -> QuickStartTask.UPLOAD_SITE_ICON
             else -> null
         }
