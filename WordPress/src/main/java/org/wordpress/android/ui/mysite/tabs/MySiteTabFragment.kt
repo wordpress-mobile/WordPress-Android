@@ -542,8 +542,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         swipeToRefreshHelper.setEnabled(isEnabled)
     }
 
-    private fun hideRefreshIndicatorIfNeeded() {
-        swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+    private fun MySiteTabFragmentBinding.hideRefreshIndicatorIfNeeded() {
+        swipeRefreshLayout.postDelayed({
+            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+        }, CHECK_REFRESH_DELAY)
     }
 
     private fun shareMessage(message: String) {
@@ -564,6 +566,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         private const val KEY_MY_SITE_TAB_TYPE = "key_my_site_tab_type"
+        private const val CHECK_REFRESH_DELAY = 300L
 
         @JvmStatic
         fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {
