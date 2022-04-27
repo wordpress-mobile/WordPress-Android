@@ -32,7 +32,7 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
             toggleAction.toggle()
             PhotoPickerUtils.announceSelectedImageForAccessibility(
                     imgThumbnail,
-                    isSelected
+                    !isSelected
             )
         }
         imgThumbnail.setOnLongClickListener {
