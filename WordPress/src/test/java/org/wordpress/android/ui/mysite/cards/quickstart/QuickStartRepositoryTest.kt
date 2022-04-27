@@ -65,7 +65,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private val siteLocalId = 1
 
     private val siteMenuTasks = listOf(
-            QuickStartTask.VIEW_SITE,
             QuickStartTask.ENABLE_POST_SHARING,
             QuickStartTask.EXPLORE_PLANS
     )
