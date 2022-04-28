@@ -46,6 +46,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
 
     // ONBOARDING dialog type actions
 
+    /* ktlint-disable max-line-length */
     @Test
     fun `Should trigger OpenEditor action when primary button is tapped`() = runBlocking {
         classToTest.start(ONBOARDING)
