@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-21 09:54:08+0000
+Translation-Revision-Date: 2022-04-23 13:59:48+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0
 Language: zh_CN
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">创建站点</string>
     <string name="gutenberg_native_add_blocks_11d0841f">添加区块</string>
     <string name="initial_screen">初始屏幕</string>
     <string name="blogging_prompts_onboarding_notification_action">了解更多</string>
@@ -109,6 +110,7 @@ Language: zh_CN
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此颜色搭配可能不便于用户阅读。 不妨尝试使用较浅的背景颜色和/或较深的文本颜色。</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此颜色搭配可能不便于用户阅读。 不妨尝试使用较深的背景颜色和/或较浅的文本颜色。</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">未能插入媒体。\n点按获取更多信息。</string>
+    <string name="new_site_creation_intents_header_subtitle">请从以下列表中选择一个主题，或输入自己的主题</string>
     <string name="new_site_creation_intents_header_title">您的网站是关于什么的？</string>
     <string name="notification_channel_weekly_roundup_title">每周综述</string>
     <string name="my_site_dashboard_tab_title">首页</string>
@@ -118,6 +120,7 @@ Language: zh_CN
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 调用似乎已被该站点屏蔽（错误代码 401）。 如果尝试登录失败，可点击帮助图标查看常见问题解答。</string>
     <string name="login_error_xml_rpc_cannot_read_site">无法通过该 URL 读取 WordPress 站点。 点击帮助图标查看常见问题解答。</string>
     <string name="login_error_xml_rpc_services_disabled">本站点禁用 XML-RPC 服务。</string>
+    <string name="my_site_menu_tab_title">菜单</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 允许使用以下字符：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">请检查您网络连接并刷新页面。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">转至统计数据</string>
@@ -432,6 +435,7 @@ Language: zh_CN
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
+    <string name="gutenberg_native_add_blocks">添加区块</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
     <string name="gutenberg_native_what_is_alt_text">什么是alt文字？</string>
     <string name="gutenberg_native_transform_s_to">将%s转换为</string>

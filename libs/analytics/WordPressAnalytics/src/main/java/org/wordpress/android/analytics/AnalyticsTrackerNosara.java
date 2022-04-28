@@ -1129,6 +1129,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
+            case STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED:
+                return "stats_views_and_visitors_view_more_tapped";
+            case STATS_VIEWS_AND_VISITORS_ERROR:
+                return "stats_views_and_visitors_error";
+            case STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED:
+                return "stats_views_and_visitors_line_chart_tapped";
+            case STATS_VIEWS_AND_VISITORS_TYPE_TAPPED:
+                return "stats_views_and_visitors_type_tapped";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
                 return "stats_publicize_view_more_tapped";
             case STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED:
@@ -2225,6 +2233,30 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_switcher_add_site_tapped";
             case SITE_SWITCHER_DISMISSED:
                 return "site_switcher_dismissed";
+            case SETTINGS_DID_CHANGE:
+                return "settings_did_change";
+            case APP_SETTINGS_APPEARANCE_CHANGED:
+                return "app_settings_appearance_changed";
+            case APP_SETTINGS_PRIVACY_SETTINGS_TAPPED:
+                return "app_settings_privacy_settings_tapped";
+            case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
+                return "app_settings_open_device_settings_tapped";
+            case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
+                return "app_settings_max_image_size_changed";
+            case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
+                return "app_settings_image_quality_changed";
+            case APP_SETTINGS_REMOVE_LOCATION_FROM_MEDIA_CHANGED:
+                return "app_settings_remove_location_from_media_changed";
+            case APP_SETTINGS_VIDEO_OPTIMIZATION_CHANGED:
+                return "app_settings_video_optimization_changed";
+            case APP_SETTINGS_MAX_VIDEO_SIZE_CHANGED:
+                return "app_settings_max_video_size_changed";
+            case APP_SETTINGS_VIDEO_QUALITY_CHANGED:
+                return "app_settings_video_quality_changed";
+            case PRIVACY_SETTINGS_OPENED:
+                return "privacy_settings_opened";
+            case PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED:
+                return "privacy_settings_report_crashes_toggled";
         }
         return null;
     }
