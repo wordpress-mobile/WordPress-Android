@@ -51,6 +51,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
@@ -1533,6 +1534,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onUrlClick(url: String): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_LINK_TAPPED)
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
@@ -1559,6 +1561,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPageJumpClick(pageJump: String?): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
         val wasJsEnabled = readerWebView.settings.javaScriptEnabled
 
         readerWebView.settings.javaScriptEnabled = true
@@ -1606,10 +1609,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onImageUrlClick(imageUrl: String, view: View, x: Int, y: Int): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_IMAGE_TAPPED)
         return showPhotoViewer(imageUrl, view, x, y)
     }
 
     override fun onFileDownloadClick(fileUrl: String?): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
                 fileUrl != null &&
                 PermissionUtils.checkAndRequestStoragePermission(
