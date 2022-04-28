@@ -128,7 +128,7 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `passes parameter to show focus point to pages item`() {
+    fun `given pages focus point enabled, when card built, showFocusPoint should be true`() {
         val showPagesFocusPoint = true
         setupHeaders(addPagesItem = true, showPagesFocusPoint = showPagesFocusPoint)
 
@@ -136,7 +136,8 @@ class SiteItemsBuilderTest {
                 SiteItemsBuilderParams(
                         site = siteModel,
                         onClick = SITE_ITEM_ACTION,
-                        activeTask = EDIT_HOMEPAGE
+                        activeTask = EDIT_HOMEPAGE,
+                        enablePagesFocusPoint = showPagesFocusPoint
                 )
         )
 
@@ -144,18 +145,37 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `passes parameter to show focus point to stats item`() {
+    fun `given stats focus point enabled, when card built, then showFocusPoint should be true`() {
         setupHeaders()
+        val enableStatsFocusPoint = true
 
         val buildSiteItems = siteItemsBuilder.build(
                 SiteItemsBuilderParams(
                         site = siteModel,
                         onClick = SITE_ITEM_ACTION,
-                        activeTask = CHECK_STATS
+                        activeTask = CHECK_STATS,
+                        enableStatsFocusPoint = enableStatsFocusPoint
                 )
         )
 
-        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = true))
+        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
+    }
+
+    @Test
+    fun `given stats focus point disabled, when card built, then showFocusPoint should be false`() {
+        setupHeaders()
+        val enableStatsFocusPoint = false
+
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = CHECK_STATS,
+                        enableStatsFocusPoint = enableStatsFocusPoint
+                )
+        )
+
+        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
     }
 
     /* INFO ITEM */

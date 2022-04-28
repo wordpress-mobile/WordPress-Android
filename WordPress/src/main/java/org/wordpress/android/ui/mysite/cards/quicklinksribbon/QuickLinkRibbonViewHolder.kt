@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite.cards.quicklinkribbons
+package org.wordpress.android.ui.mysite.cards.quicklinksribbon
 
 import android.annotation.SuppressLint
 import android.view.GestureDetector
@@ -31,6 +31,12 @@ class QuickLinkRibbonViewHolder(
     fun bind(quickLinkRibbon: QuickLinkRibbon) = with(binding) {
         setOnTouchItemListener()
         (quickLinkRibbonItemList.adapter as QuickLinkRibbonItemAdapter).update(quickLinkRibbon.quickLinkRibbonItems)
+        if (quickLinkRibbon.showStatsFocusPoint) {
+            quickLinkRibbonItemList.smoothScrollToPosition(quickLinkRibbon.quickLinkRibbonItems.size)
+        }
+        if (quickLinkRibbon.showPagesFocusPoint) {
+            quickLinkRibbonItemList.smoothScrollToPosition(0)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -25,8 +25,14 @@ class UsernameChangerFullScreenDialogFragment : BaseUsernameChangerFullScreenDia
             )
     )
 
+    override fun getTrackEventSource() = SOURCE
+
     override fun onUsernameConfirmed(controller: FullScreenDialogController, usernameSelected: String) {
         val result = Bundle().apply { putString(RESULT_USERNAME, usernameSelected) }
         controller.confirm(result)
+    }
+
+    companion object {
+        const val SOURCE = "signup_epilogue"
     }
 }

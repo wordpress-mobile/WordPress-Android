@@ -453,6 +453,7 @@ class PagesViewModel
     }
 
     private fun cancelPendingAutoUpload(pageId: LocalId) {
+        trackMenuSelectionEvent(CANCEL_AUTO_UPLOAD)
         val page = postStore.getPostByLocalPostId(pageId.value)
         val msgRes = UploadUtils.cancelPendingAutoUpload(page, dispatcher)
         _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(msgRes)))
@@ -468,6 +469,8 @@ class PagesViewModel
 
     private fun setHomepage(homepageId: Long) {
         performIfNetworkAvailable {
+            trackMenuSelectionEvent(SET_AS_HOMEPAGE)
+
             if (site.showOnFront == PAGE.value) {
                 launch {
                     val result = siteOptionsStore.updatePageOnFront(
@@ -497,6 +500,8 @@ class PagesViewModel
 
     private fun setPostsPage(remoteId: Long) {
         performIfNetworkAvailable {
+            trackMenuSelectionEvent(SET_AS_POSTS_PAGE)
+
             if (site.showOnFront == PAGE.value) {
                 launch {
                     val result = siteOptionsStore.updatePageForPosts(
@@ -593,17 +598,22 @@ class PagesViewModel
     private fun trackMenuSelectionEvent(action: Action) {
         val menu = when (action) {
             VIEW_PAGE -> "view"
+            CANCEL_AUTO_UPLOAD -> "cancel_auto_upload"
             SET_PARENT -> "set_parent"
-            MOVE_TO_DRAFT -> "move_to_draft"
-            MOVE_TO_TRASH -> "move_to_bin"
+            SET_AS_HOMEPAGE -> "set_homepage"
+            SET_AS_POSTS_PAGE -> "set_posts_page"
             COPY -> "copy"
-            else -> return
+            PUBLISH_NOW -> "publish_now"
+            MOVE_TO_DRAFT -> "move_to_draft"
+            DELETE_PERMANENTLY -> "delete_permanently"
+            MOVE_TO_TRASH -> "move_to_bin"
         }
         val properties = mutableMapOf("option_name" to menu as Any)
         AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)
     }
 
     private fun publishPageNow(remoteId: Long) {
+        trackMenuSelectionEvent(PUBLISH_NOW)
         _publishAction.value = pageMap[remoteId]
         launch(uiDispatcher) {
             delay(SCROLL_DELAY)
@@ -718,6 +728,7 @@ class PagesViewModel
     }
 
     private fun deletePage(page: PageModel) {
+        trackMenuSelectionEvent(DELETE_PERMANENTLY)
         val action = PageAction(page.remoteId, DELETE) {
             pageMap = pageMap.filter { it.key != page.remoteId }
 

@@ -1,6 +1,7 @@
-package org.wordpress.android.ui.mysite.cards.quicklinkribbons
+package org.wordpress.android.ui.mysite.cards.quicklinksribbon
 
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon.QuickLinkRibbonItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
@@ -9,7 +10,9 @@ import javax.inject.Inject
 
 class QuickLinkRibbonBuilder @Inject constructor() {
     fun build(params: QuickLinkRibbonBuilderParams) = QuickLinkRibbon(
-        quickLinkRibbonItems = getQuickLinkRibbonItems(params)
+        quickLinkRibbonItems = getQuickLinkRibbonItems(params),
+        showPagesFocusPoint = shouldShowPagesFocusPoint(params),
+        showStatsFocusPoint = shouldShowStatsFocusPoint(params)
     )
 
     private fun getQuickLinkRibbonItems(params: QuickLinkRibbonBuilderParams): MutableList<QuickLinkRibbonItem> {
@@ -18,7 +21,8 @@ class QuickLinkRibbonBuilder @Inject constructor() {
             val pages = QuickLinkRibbonItem(
                 label = R.string.pages,
                 icon = R.drawable.ic_pages_white_24dp,
-                onClick = ListItemInteraction.create(params.onPagesClick)
+                onClick = ListItemInteraction.create(params.onPagesClick),
+                showFocusPoint = shouldShowPagesFocusPoint(params)
             )
             items.add(pages)
         }
@@ -42,10 +46,20 @@ class QuickLinkRibbonBuilder @Inject constructor() {
                 QuickLinkRibbonItem(
                     label = R.string.stats,
                     icon = R.drawable.ic_stats_alt_white_24dp,
-                    onClick = ListItemInteraction.create(params.onStatsClick)
+                    onClick = ListItemInteraction.create(params.onStatsClick),
+                    showFocusPoint = shouldShowStatsFocusPoint(params)
                 )
             )
         }
         return items
+    }
+
+    private fun shouldShowPagesFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
+        return params.enableFocusPoints && (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartTask.REVIEW_PAGES)
+    }
+
+    private fun shouldShowStatsFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
+        return params.enableFocusPoints && params.activeTask == QuickStartTask.CHECK_STATS
     }
 }

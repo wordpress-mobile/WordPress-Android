@@ -2,7 +2,10 @@
 
 19.8
 -----
-* [*] App Settings: updated look and functionality of Locale Picker [#16331]
+* [*] App Settings: updated look and functionality of Locale Picker [https://github.com/wordpress-mobile/WordPress-Android/pull/16331]
+* [*] On self-hosted sites, allow previewing unsaved changes to draft posts [https://github.com/wordpress-mobile/WordPress-Android/pull/16296]
+* [*] Editor: Fix issue that caused previews on atomic sites to sometimes be out-of-date. [https://github.com/wordpress-mobile/WordPress-Android/pull/16332]
+* [*] Fixes self-hosted upload failure when the filename is non-latin [https://github.com/wordpress-mobile/WordPress-Android/pull/16421]
 
 19.7
 -----

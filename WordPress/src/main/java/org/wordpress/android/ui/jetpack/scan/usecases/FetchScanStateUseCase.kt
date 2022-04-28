@@ -63,6 +63,10 @@ class FetchScanStateUseCase @Inject constructor(
                 emit(Failure.MultisiteNotSupported)
                 return@flow
             }
+            if (scanStateModel.reason == ScanStateModel.Reason.VP_ACTIVE_ON_SITE) {
+                emit(Failure.VaultPressActiveOnSite)
+                return@flow
+            }
             emit(Success(scanStateModel))
 
             if (scanStateModel.state != ScanStateModel.State.SCANNING) {
@@ -93,6 +97,7 @@ class FetchScanStateUseCase @Inject constructor(
             object NetworkUnavailable : Failure()
             object RemoteRequestFailure : Failure()
             object MultisiteNotSupported : Failure()
+            object VaultPressActiveOnSite : Failure()
         }
     }
 }

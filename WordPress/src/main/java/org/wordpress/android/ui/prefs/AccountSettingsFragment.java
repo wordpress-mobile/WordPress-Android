@@ -29,6 +29,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -39,6 +41,8 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnShownListener;
 import org.wordpress.android.ui.accounts.signup.BaseUsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.util.AppLog;
@@ -51,12 +55,13 @@ import org.wordpress.android.widgets.WPSnackbar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 @SuppressWarnings("deprecation")
 public class AccountSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
-        OnConfirmListener {
+        OnConfirmListener, OnShownListener, OnDismissListener {
     private Preference mUsernamePreference;
     private EditTextPreferenceWithValidation mEmailPreference;
     private DetailListPreference mPrimarySitePreference;
@@ -64,6 +69,17 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     private EditTextPreferenceWithValidation mChangePasswordPreference;
     private ProgressDialog mChangePasswordProgressDialog;
     private Snackbar mEmailSnackbar;
+
+    private static final String SOURCE = "source";
+    private static final String SOURCE_ACCOUNT_SETTINGS = "account_settings";
+    private static final String TRACK_PROPERTY_FIELD_NAME = "field_name";
+    private static final String TRACK_PROPERTY_EMAIL = "email";
+    private static final String TRACK_PROPERTY_PRIMARY_SITE = "primary_site";
+    private static final String TRACK_PROPERTY_WEB_ADDRESS = "web_address";
+    private static final String TRACK_PROPERTY_PASSWORD = "password";
+    private static final String TRACK_PROPERTY_USERNAME = "username";
+    private static final String TRACK_PROPERTY_PAGE = "page";
+    private static final String TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS = "account_settings";
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -155,24 +171,42 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         }
 
         if (preference == mEmailPreference) {
+            if (!mEmailPreference.getSummary().toString().equalsIgnoreCase(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_EMAIL);
+            }
             updateEmail(newValue.toString());
             showPendingEmailChangeSnackbar(newValue.toString());
             mEmailPreference.setEnabled(false);
             return false;
         } else if (preference == mPrimarySitePreference) {
+            if (!mPrimarySitePreference.getValue().equals(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_PRIMARY_SITE);
+            }
             changePrimaryBlogPreference(Long.parseLong(newValue.toString()));
             updatePrimaryBlog(newValue.toString());
             return false;
         } else if (preference == mWebAddressPreference) {
+            if (!mWebAddressPreference.getSummary().toString().equalsIgnoreCase(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_WEB_ADDRESS);
+            }
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
             return false;
         } else if (preference == mChangePasswordPreference) {
             showChangePasswordProgressDialog(true);
+            if (!mChangePasswordPreference.getSummary().toString().equalsIgnoreCase(newValue.toString())) {
+                trackSettingsDidChange(TRACK_PROPERTY_PASSWORD);
+            }
             updatePassword(newValue.toString());
         }
-
         return true;
+    }
+
+    private void trackSettingsDidChange(String fieldName) {
+        Map<String, String> props = new HashMap<>();
+        props.put(TRACK_PROPERTY_FIELD_NAME, fieldName);
+        props.put(TRACK_PROPERTY_PAGE, TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(Stat.SETTINGS_DID_CHANGE, props);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -373,7 +407,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                 .setOnConfirmListener(this)
                 .setHideActivityBar(true)
                 .setIsLifOnScroll(false)
-                .setOnDismissListener(null)
+                .setOnDismissListener(this)
+                .setOnShownListener(this)
                 .setContent(SettingsUsernameChangerFragment.class, bundle)
                 .build()
                 .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), FullScreenDialogFragment.TAG);
@@ -388,6 +423,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                         String.format(getString(R.string.settings_username_changer_toast_content), username),
                         Snackbar.LENGTH_LONG).show();
                 mUsernamePreference.setSummary(username);
+                trackSettingsDidChange(TRACK_PROPERTY_USERNAME);
             }
         }
     }
@@ -414,6 +450,18 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
             ids.add(String.valueOf(site.getSiteId()));
         }
         return ids.toArray(new String[ids.size()]);
+    }
+
+    @Override public void onShown() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CHANGE_USERNAME_DISPLAYED, props);
+    }
+
+    @Override public void onDismiss() {
+        Map<String, String> props = new HashMap<>();
+        props.put(SOURCE, SOURCE_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(Stat.CHANGE_USERNAME_DISMISSED, props);
     }
 
     /*

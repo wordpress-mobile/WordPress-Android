@@ -17,7 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsViewHolder
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsViewHolder
-import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonViewHolder
+import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonViewHolder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewHolder
 import org.wordpress.android.ui.mysite.dynamiccards.quickstart.QuickStartDynamicCardViewHolder
 import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemViewHolder
