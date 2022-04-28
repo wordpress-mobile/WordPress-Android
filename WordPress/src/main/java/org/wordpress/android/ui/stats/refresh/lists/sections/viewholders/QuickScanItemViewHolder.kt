@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -30,12 +31,15 @@ class QuickScanItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         column: Column,
         label: TextView,
         value: TextView,
-        text: TextView,
+        highest: TextView,
         container: LinearLayout
     ) {
         label.setText(column.label)
         value.text = column.value
-        text.text = column.tooltip
+        column.highest?.let {
+            highest.text = column.highest
+            highest.visibility = View.VISIBLE
+        }
         column.tooltip?.let {
             TooltipCompat.setTooltipText(container, column.tooltip)
             container.setOnClickListener {
