@@ -588,6 +588,8 @@ abstract class ViewModelModule {
     @ViewModelKey(LocalePickerViewModel.class)
     abstract ViewModel localePickerViewModel(LocalePickerViewModel viewModel);
 
+    @Binds
+    @IntoMap
     @ViewModelKey(CategoryDetailViewModel.class)
     abstract ViewModel categoryDetailViewModel(CategoryDetailViewModel viewModel);
 
