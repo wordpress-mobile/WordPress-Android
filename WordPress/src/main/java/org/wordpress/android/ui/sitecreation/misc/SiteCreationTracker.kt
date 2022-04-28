@@ -167,13 +167,6 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
-    override fun trackThumbnailModeTapped(mode: String) {
-        tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED,
-                mapOf(PREVIEW_MODE.key to mode)
-        )
-    }
-
     fun trackSiteDesignSkipped() {
         designSelectionSkipped = true
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED)
