@@ -169,7 +169,11 @@ sealed class BlockListItem(val type: Type) {
         }
     }
 
-    data class QuickScanItem(val startColumn: Column, val endColumn: Column) : BlockListItem(QUICK_SCAN_ITEM) {
+    data class QuickScanItem(
+        val startColumn: Column,
+        val endColumn: Column,
+        val thirdColumn: Column? = null
+    ) : BlockListItem(QUICK_SCAN_ITEM) {
         data class Column(@StringRes val label: Int, val value: String, val tooltip: String? = null)
     }
 
@@ -213,8 +217,8 @@ sealed class BlockListItem(val type: Type) {
 
     data class Link(
         @DrawableRes val icon: Int? = null,
-        @StringRes val text: Int? = null,
-        val navigateAction: ListItemInteraction? = null
+        @StringRes val text: Int,
+        val navigateAction: ListItemInteraction
     ) : BlockListItem(LINK)
 
     data class DialogButtons(

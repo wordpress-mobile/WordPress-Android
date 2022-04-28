@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED
@@ -20,6 +21,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
@@ -79,7 +82,12 @@ class LatestPostSummaryUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle(domainModel))
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
-        if (domainModel != null && domainModel.hasData()) {
+
+        if (statsRevampV2Feature.isEnabled() && domainModel != null && domainModel.hasData()) {
+            items.add(buildQuickScanItems(domainModel))
+        }
+
+        if (!statsRevampV2Feature.isEnabled() && domainModel != null && domainModel.hasData()) {
             items.add(
                     ValueItem(
                             statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
@@ -120,7 +128,7 @@ class LatestPostSummaryUseCase
                     )
             )
         }
-        items.add(buildLink(domainModel))
+        buildLink(domainModel)?.let { items.add(it) }
         return items
     }
 
@@ -141,10 +149,38 @@ class LatestPostSummaryUseCase
                 Title(R.string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
             }
 
+    private fun buildQuickScanItems(domainModel: InsightsLatestPostModel) =
+        QuickScanItem(
+                Column(
+                        string.stats_views,
+                        statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
+                        contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_views,
+                                domainModel.postViewsCount
+                        )
+                ),
+                Column(
+                        string.stats_likes,
+                        statsUtils.toFormattedString(domainModel.postLikeCount),
+                        contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_likes,
+                                domainModel.postLikeCount
+                        )
+                ),
+                Column(
+                        string.stats_comments,
+                        statsUtils.toFormattedString(domainModel.postCommentCount),
+                        contentDescriptionHelper.buildContentDescription(
+                                R.string.stats_comments,
+                                domainModel.postCommentCount
+                        )
+                )
+        )
+
     private fun InsightsLatestPostModel.hasData() =
             this.postViewsCount > 0 || this.postCommentCount > 0 || this.postLikeCount > 0
 
-    private fun buildLink(model: InsightsLatestPostModel?): Link {
+    private fun buildLink(model: InsightsLatestPostModel?): Link? {
         return when {
             model == null -> Link(
                     R.drawable.ic_create_white_24dp,
@@ -161,7 +197,7 @@ class LatestPostSummaryUseCase
                             )
                     )
                 } else {
-                    Link()
+                    null
                 }
             }
             else -> Link(
