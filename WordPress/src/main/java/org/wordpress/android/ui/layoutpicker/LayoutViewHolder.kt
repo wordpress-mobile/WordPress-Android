@@ -22,7 +22,7 @@ class LayoutViewHolder(
         uiState: LayoutListItemUiState,
         imageManager: ImageManager
     ) {
-        imageManager.loadWithResultListener(binding.preview, MShot(uiState.preview),
+        imageManager.loadWithResultListener(binding.preview, MShot(uiState.mShotPreview),
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
                     }

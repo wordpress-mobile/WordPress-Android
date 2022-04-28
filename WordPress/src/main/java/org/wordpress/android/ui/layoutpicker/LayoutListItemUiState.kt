@@ -9,6 +9,7 @@ data class LayoutListItemUiState(
     val slug: String,
     val title: String,
     val preview: String,
+    val mShotPreview: String,
     val selected: Boolean,
     val onItemTapped: (() -> Unit),
     val onThumbnailReady: (() -> Unit)

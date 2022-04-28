@@ -41,6 +41,7 @@ class HomePagePickerViewModel @Inject constructor(
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
     override val useCachedData: Boolean = false
+    override val shouldUseMobileThumbnail = true
 
     sealed class DesignSelectionAction(val template: String) {
         object Skip : DesignSelectionAction(defaultTemplateSlug)
