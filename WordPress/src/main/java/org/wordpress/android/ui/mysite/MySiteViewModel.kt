@@ -671,7 +671,9 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
-        if (defaultABExperimentTab == MySiteTabType.SITE_MENU) {
+        if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+            cardsTracker.trackQuickStartCardItemClicked(type)
+        } else {
             analyticsTrackerWrapper.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
         }
         _onNavigation.value = Event(
