@@ -37,6 +37,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
     enum class DashboardCardType {
         ERROR_CARD,
+        QUICK_START_CARD,
         TODAYS_STATS_CARD_ERROR,
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,

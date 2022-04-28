@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-21 11:54:08+0000
+Translation-Revision-Date: 2022-04-27 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0
 Language: zh_TW
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">建立網站</string>
     <string name="gutenberg_native_add_blocks_11d0841f">新增區塊</string>
     <string name="initial_screen">初始畫面</string>
     <string name="blogging_prompts_onboarding_notification_action">深入瞭解</string>

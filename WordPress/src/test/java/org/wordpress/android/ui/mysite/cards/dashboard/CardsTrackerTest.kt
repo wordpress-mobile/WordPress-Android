@@ -7,7 +7,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.StatsSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -26,6 +28,24 @@ class CardsTrackerTest {
     fun setUp() {
         cardsTracker = CardsTracker(cardsShownTracker, analyticsTracker)
     }
+
+    /* QUICK START CARD */
+
+    @Test
+    fun `when quick start card grow item is clicked, then quick start card item tapped event is tracked`() {
+        cardsTracker.trackQuickStartCardItemClicked(QuickStartTaskType.GROW)
+
+        verifyCardItemClickedTracked(Type.QUICK_START, QuickStartSubtype.GROW.label)
+    }
+
+    @Test
+    fun `when quick start card customize item is clicked, then quick start card item tapped event is tracked`() {
+        cardsTracker.trackQuickStartCardItemClicked(QuickStartTaskType.CUSTOMIZE)
+
+        verifyCardItemClickedTracked(Type.QUICK_START, QuickStartSubtype.CUSTOMIZE.label)
+    }
+
+    /* TODAY'S STATS CARD */
 
     @Test
     fun `when today's stats card get more views link is clicked, then today's stats nudge event is tracked`() {
@@ -47,6 +67,8 @@ class CardsTrackerTest {
 
         verifyCardItemClickedTracked(Type.STATS, StatsSubtype.TODAYS_STATS.label)
     }
+
+    /* POST CARDS */
 
     @Test
     fun `when post create first footer link is clicked, then post create first event is tracked`() {
