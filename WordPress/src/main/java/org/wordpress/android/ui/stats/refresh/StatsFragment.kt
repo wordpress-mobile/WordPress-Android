@@ -14,7 +14,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.android.support.DaggerFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -42,7 +41,7 @@ import javax.inject.Inject
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 @AndroidEntryPoint
-class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
+class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var uiHelpers: UiHelpers
     private val viewModel: StatsViewModel by viewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
