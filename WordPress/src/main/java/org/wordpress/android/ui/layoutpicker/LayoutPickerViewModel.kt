@@ -64,6 +64,7 @@ abstract class LayoutPickerViewModel(
         }
 
     abstract val useCachedData: Boolean
+    abstract val shouldUseMobileThumbnail: Boolean
 
     var nestedScrollStates: Bundle = Bundle()
 
@@ -155,14 +156,17 @@ abstract class LayoutPickerViewModel(
             selectedCategories.forEach { category ->
 
                 val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
+                    val preview = when (_previewMode.value) {
+                        MOBILE -> layout.previewMobile
+                        TABLET -> layout.previewTablet
+                        else -> layout.preview
+                    }
+                    val thumbnailPreview = if (shouldUseMobileThumbnail) layout.previewMobile else preview
                     LayoutListItemUiState(
                             slug = layout.slug,
                             title = layout.title,
-                            preview = when (_previewMode.value) {
-                                MOBILE -> layout.previewMobile
-                                TABLET -> layout.previewTablet
-                                else -> layout.preview
-                            },
+                            preview = preview,
+                            mShotPreview = thumbnailPreview,
                             selected = layout.slug == state.selectedLayoutSlug,
                             onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
                             onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
@@ -187,7 +191,7 @@ abstract class LayoutPickerViewModel(
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
-    fun onLayoutTapped(layoutSlug: String) {
+    open fun onLayoutTapped(layoutSlug: String) {
         (uiState.value as? Content)?.let { state ->
             if (!state.loadedThumbnailSlugs.contains(layoutSlug)) return // No action
             if (layoutSlug == state.selectedLayoutSlug) { // deselect

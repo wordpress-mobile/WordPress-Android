@@ -53,7 +53,7 @@ class HomePagePickerViewModelTest {
 
     private lateinit var viewModel: HomePagePickerViewModel
 
-    val mockCategory = StarterDesignCategory(
+    private val mockCategory = StarterDesignCategory(
             slug = "about",
             title = "About",
             description = "About pages",
@@ -213,7 +213,7 @@ class HomePagePickerViewModelTest {
     }
 
     @Test
-    fun `when the picker starts on a phone the mobile thumbnails or preview load by default`() = mockResponse {
+    fun `when the picker starts on a phone the mobile previews load by default`() = mockResponse {
         viewModel.start(isTablet = false)
         val captor = ArgumentCaptor.forClass(PreviewMode::class.java)
         verify(previewModeObserver).onChanged(captor.capture())
@@ -221,7 +221,7 @@ class HomePagePickerViewModelTest {
     }
 
     @Test
-    fun `when the picker starts on a tablet the tablet thumbnails or preview load by default`() = mockResponse {
+    fun `when the picker starts on a tablet the tablet preview loads by default`() = mockResponse {
         viewModel.start(isTablet = true)
         val captor = ArgumentCaptor.forClass(PreviewMode::class.java)
         verify(previewModeObserver).onChanged(captor.capture())
@@ -229,7 +229,7 @@ class HomePagePickerViewModelTest {
     }
 
     @Test
-    fun `when the changes the preview mode the thumbnails or preview change`() = mockResponse {
+    fun `when the user changes the preview mode the previews change`() = mockResponse {
         viewModel.start()
         viewModel.onPreviewModeChanged(PreviewMode.DESKTOP)
         val captor = ArgumentCaptor.forClass(PreviewMode::class.java)

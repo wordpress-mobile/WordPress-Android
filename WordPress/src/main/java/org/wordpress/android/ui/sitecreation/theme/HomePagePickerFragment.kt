@@ -15,7 +15,6 @@ import com.google.android.material.appbar.AppBarLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.HomePagePickerFragmentBinding
-import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreview
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
@@ -43,7 +41,6 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
-    private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -83,28 +80,21 @@ class HomePagePickerFragment : Fragment() {
             setupUi()
             setupViewModel()
             setupActionListeners()
-            previewModeSelectorPopup = PreviewModeSelectorPopup(
-                    requireActivity(),
-                    homePagePickerTitlebar.previewTypeSelectorButton
-            )
         }
     }
 
     private fun HomePagePickerFragmentBinding.setupUi() {
         homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
-        modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
-        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.setText(R.string.hpp_subtitle)
-        if (siteNameFeatureConfig.isEnabled()) {
-            homePagePickerBottomToolbar.chooseButton.setText(R.string.hpp_choose_and_create_site)
+        with(modalLayoutPickerHeaderSection) {
+            modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
+            modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
         }
     }
 
     private fun HomePagePickerFragmentBinding.setupViewModel() {
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
-            setDescriptionVisibility(uiState.isDescriptionVisible)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
-            setToolbarVisibility(uiState.isToolbarVisible)
             when (uiState) {
                 is LayoutPickerUiState.Loading -> { // Nothing more to do here
                 }
@@ -116,9 +106,9 @@ class HomePagePickerFragment : Fragment() {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
-        })
+        }
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner) { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -130,15 +120,11 @@ class HomePagePickerFragment : Fragment() {
                     }
                 }
             }
-        })
+        }
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
-            previewModeSelectorPopup.show(viewModel)
-        })
-
-        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
+        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner) {
             layoutsRecyclerView.smoothScrollToPosition(0)
-        })
+        }
 
         viewModel.start(displayUtils.isTablet())
     }
@@ -151,15 +137,6 @@ class HomePagePickerFragment : Fragment() {
         )
     }
 
-    /**
-     * Sets the header description visibility
-     * @param visible if true the description is visible else invisible
-     */
-    private fun HomePagePickerFragmentBinding.setDescriptionVisibility(visible: Boolean) {
-        modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.visibility =
-                if (visible) View.VISIBLE else View.INVISIBLE
-    }
-
     private fun HomePagePickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
         modalLayoutPickerCategoriesSkeleton.categoriesSkeleton.setVisible(skeleton)
         categoriesRecyclerView.setVisible(!skeleton && !error)
@@ -168,17 +145,10 @@ class HomePagePickerFragment : Fragment() {
         errorView.setVisible(error)
     }
 
-    private fun HomePagePickerFragmentBinding.setToolbarVisibility(visible: Boolean) {
-        AniUtils.animateBottomBar(homePagePickerBottomToolbar.bottomToolbar, visible)
-    }
-
     private fun HomePagePickerFragmentBinding.setupActionListeners() {
-        homePagePickerBottomToolbar.previewButton.setOnClickListener { viewModel.onPreviewTapped() }
-        homePagePickerBottomToolbar.chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         homePagePickerTitlebar.skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         homePagePickerTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
-        homePagePickerTitlebar.previewTypeSelectorButton.setOnClickListener { viewModel.onThumbnailModePressed() }
         setScrollListener()
     }
 

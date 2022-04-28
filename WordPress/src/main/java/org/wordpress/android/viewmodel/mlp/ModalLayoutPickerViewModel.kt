@@ -66,6 +66,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     override val useCachedData: Boolean = true
+    override val shouldUseMobileThumbnail = false
 
     override val selectedLayout: LayoutModel?
         get() = (uiState.value as? Content)?.let { state ->

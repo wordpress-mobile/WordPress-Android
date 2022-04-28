@@ -3,7 +3,8 @@ package org.wordpress.android.ui.layoutpicker
 interface LayoutPickerTracker {
     fun trackPreviewModeChanged(mode: String)
 
-    fun trackThumbnailModeTapped(mode: String)
+    fun trackThumbnailModeTapped(mode: String) {
+    }
 
     fun trackPreviewModeTapped(mode: String)
 
