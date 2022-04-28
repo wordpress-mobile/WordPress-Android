@@ -115,34 +115,34 @@ class LocalePickerBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun LocalePickerBottomSheetBinding.setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let {
                 localeAdapter.submitList(uiState.listData)
                 btnLocaleSuggestion.text = uiState.currentLocale?.label
                 emptyView.visibility = if (uiState.isEmptyViewVisible) View.VISIBLE else View.GONE
             }
-        })
+        }
 
-        viewModel.hideKeyboard.observe(viewLifecycleOwner, {
+        viewModel.hideKeyboard.observe(viewLifecycleOwner) {
             ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
-        })
+        }
 
-        viewModel.expandBottomSheet.observe(viewLifecycleOwner, {
+        viewModel.expandBottomSheet.observe(viewLifecycleOwner) {
             expandBottomSheet()
-        })
+        }
 
-        viewModel.clearSearchField.observe(viewLifecycleOwner, {
+        viewModel.clearSearchField.observe(viewLifecycleOwner) {
             searchInputLayout.editText?.text?.clear()
             searchInputLayout.editText?.clearFocus()
-        })
+        }
 
-        viewModel.selectedLocale.observe(viewLifecycleOwner, {
+        viewModel.selectedLocale.observe(viewLifecycleOwner) {
             callback?.onLocaleSelected(it)
-        })
+        }
 
-        viewModel.dismissBottomSheet.observe(viewLifecycleOwner, {
+        viewModel.dismissBottomSheet.observe(viewLifecycleOwner) {
             dismiss()
-        })
+        }
 
         viewModel.start()
     }
