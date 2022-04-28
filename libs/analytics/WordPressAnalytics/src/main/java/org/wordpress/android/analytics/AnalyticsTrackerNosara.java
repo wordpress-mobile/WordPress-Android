@@ -2289,6 +2289,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_file_download_tapped";
             case READER_ARTICLE_PAGE_JUMP_TAPPED:
                 return "reader_article_page_jump_tapped";
+            case READER_ARTICLE_FEATURED_IMAGE_TAPPED:
+                return "reader_article_featured_image_tapped";
         }
         return null;
     }

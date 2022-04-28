@@ -891,7 +891,8 @@ public final class AnalyticsTracker {
         READER_ARTICLE_IMAGE_TAPPED,
         READER_ARTICLE_LINK_TAPPED,
         READER_ARTICLE_FILE_DOWNLOAD_TAPPED,
-        READER_ARTICLE_PAGE_JUMP_TAPPED
+        READER_ARTICLE_PAGE_JUMP_TAPPED,
+        READER_ARTICLE_FEATURED_IMAGE_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
