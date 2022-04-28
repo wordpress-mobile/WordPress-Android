@@ -40,7 +40,9 @@ class PhotoThumbnailViewHolder(
                 FIT_CENTER
         )
         mediaThumbnailViewUtils.setupListeners(
-                imgThumbnail, item.isSelected,
+                imgThumbnail,
+                false,
+                item.isSelected,
                 item.toggleAction,
                 item.clickAction,
                 animateSelection
