@@ -301,7 +301,7 @@ class FileDownloadsUseCaseTest : BaseUnitTest() {
         var navigationTarget: NavigationTarget? = null
         useCase.navigationTarget.observeForever { navigationTarget = it?.getContentIfNotHandled() }
 
-        (items[3] as Link).navigateAction.click()
+        (items[3] as Link).navigateAction?.click()
 
         assertThat(navigationTarget).isNotNull
         val viewPost = navigationTarget as ViewFileDownloads

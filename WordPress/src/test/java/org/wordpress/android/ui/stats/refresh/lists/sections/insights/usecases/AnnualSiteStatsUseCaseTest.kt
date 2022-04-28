@@ -122,7 +122,7 @@ class AnnualSiteStatsUseCaseTest : BaseUnitTest() {
             assertThat(this[2] is Link).isTrue()
             var navigationEvent: Event<NavigationTarget>? = null
             useCase.navigationTarget.observeForever { navigationEvent = it }
-            (this[2] as Link).navigateAction.click()
+            (this[2] as Link).navigateAction?.click()
             assertThat(navigationEvent).isNotNull
             val navigationTarget = navigationEvent?.getContentIfNotHandled()
             assertThat(navigationTarget is NavigationTarget.ViewAnnualStats).isTrue()
