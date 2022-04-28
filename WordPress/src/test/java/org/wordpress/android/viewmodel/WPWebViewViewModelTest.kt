@@ -19,6 +19,7 @@ import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus
@@ -37,12 +38,13 @@ class WPWebViewViewModelTest {
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
     @Mock private lateinit var uiStateObserver: Observer<WebPreviewUiState>
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var viewModel: WPWebViewViewModel
 
     @Before
     fun setUp() {
-        viewModel = WPWebViewViewModel(displayUtilsWrapper, networkUtils, connectionStatus)
+        viewModel = WPWebViewViewModel(displayUtilsWrapper, networkUtils, analyticsTrackerWrapper, connectionStatus)
         viewModel.uiState.observeForever(uiStateObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
