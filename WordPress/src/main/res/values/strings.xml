@@ -1294,6 +1294,7 @@
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_popular_title">&#x1F525; Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="stats_insights_year">Year</string>
