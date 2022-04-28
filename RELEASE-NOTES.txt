@@ -5,6 +5,7 @@
 * [*] On self-hosted sites, allow previewing unsaved changes to draft posts [https://github.com/wordpress-mobile/WordPress-Android/pull/16296]
 * [*] Editor: Fix issue that caused previews on atomic sites to sometimes be out-of-date. [https://github.com/wordpress-mobile/WordPress-Android/pull/16332]
 * [*] Fixes Media Picker video selection Accessibility issue [https://github.com/wordpress-mobile/WordPress-Android/pull/16426]
+* [*] Fixes self-hosted upload failure when the filename is non-latin [https://github.com/wordpress-mobile/WordPress-Android/pull/16421]
 
 19.7
 -----
