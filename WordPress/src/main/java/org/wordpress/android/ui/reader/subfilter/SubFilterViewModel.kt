@@ -5,11 +5,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
@@ -222,6 +222,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onBottomSheetCancelled() {
+        readerTracker.track(Stat.READER_FILTER_SHEET_DISMISSED)
         _bottomSheetUiState.value = Event(BottomSheetHidden)
     }
 
@@ -278,6 +279,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
+        readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
     }
 
@@ -343,6 +345,10 @@ class SubFilterViewModel @Inject constructor(
         }
     }
 
+    fun trackOnPageSelected(tab: String) {
+        readerTracker.track(Stat.READER_FILTER_SHEET_TAB_SELECTED, mutableMapOf(TRACK_TAB to tab))
+    }
+
     fun onSaveInstanceState(outState: Bundle) {
         outState.putString(
                 ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
@@ -372,5 +378,7 @@ class SubFilterViewModel @Inject constructor(
 
         const val ARG_CURRENT_SUBFILTER_JSON = "current_subfilter_json"
         const val ARG_IS_FIRST_LOAD = "is_first_load"
+
+        const val TRACK_TAB = "tab"
     }
 }

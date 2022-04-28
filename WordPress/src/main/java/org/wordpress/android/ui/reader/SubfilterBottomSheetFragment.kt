@@ -30,6 +30,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: SubFilterViewModel
 
+
     companion object {
         const val SUBFILTER_VIEW_MODEL_KEY = "subfilter_view_model_key"
         const val SUBFILTER_TITLE_KEY = "subfilter_title_key"
@@ -82,6 +83,21 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
                 categories.toList()
         )
         tabLayout.setupWithViewPager(pager)
+        pager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                // NO OP
+            }
+
+            override fun onPageSelected(position: Int) {
+                val page = (pager.adapter as SubfilterPagerAdapter).getPageTitle(position)
+                viewModel.trackOnPageSelected(page.toString())
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                // NO OP
+            }
+        })
+
         pager.currentItem = when (viewModel.getCurrentSubfilterValue()) {
             is Tag -> TAGS.ordinal
             else -> SITES.ordinal
