@@ -884,7 +884,8 @@ public final class AnalyticsTracker {
         READER_FILTER_SHEET_DISMISSED,
         READER_FILTER_SHEET_DISPLAYED,
         READER_FILTER_SHEET_ITEM_SELECTED,
-        READER_FILTER_SHEET_TAB_SELECTED
+        READER_FILTER_SHEET_TAB_SELECTED,
+        READER_SEARCH_HISTORY_CLEARED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
