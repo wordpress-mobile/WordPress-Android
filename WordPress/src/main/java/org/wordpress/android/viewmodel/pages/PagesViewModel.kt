@@ -1,7 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
 import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
@@ -549,10 +548,6 @@ class PagesViewModel
              * Ignore any exceptions here as certain devices have bugs and will fail.
              * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
              */
-            AppLog.e(PAGES, e)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
-        } catch (e: NullPointerException) {
-            // This exception is thrown above if ClipboardManager is not supported
             AppLog.e(PAGES, e)
             _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
         }
