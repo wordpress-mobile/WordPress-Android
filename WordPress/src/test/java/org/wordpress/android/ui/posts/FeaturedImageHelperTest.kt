@@ -34,6 +34,7 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.lang.AssertionError
 
 @RunWith(MockitoJUnitRunner::class)
 class FeaturedImageHelperTest {
@@ -348,6 +349,27 @@ class FeaturedImageHelperTest {
                 anyInt(),
                 eq(siteAccessibilityInfo)
         )
+    }
+
+    @Test
+    fun `createCurrent-State uses media url for self-hosted sites`() {
+        // Arrange
+        val post: PostImmutableModel = mock()
+        whenever(post.hasFeaturedImage()).thenReturn(true)
+
+        val media: MediaModel = mock()
+        whenever(media.thumbnailUrl).thenReturn("https://testing.com/thumbnail.jpg")
+        whenever(media.url).thenReturn("https://testing.com/url.jpg")
+        whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
+
+        val site = createSiteModel().apply {
+            setIsSelfHostedAdmin(true)
+        }
+
+        // Act
+        val featuredImage = featuredImageHelper.createCurrentFeaturedImageState(site, post)
+        // Assert
+        assertThat(featuredImage.mediaUri).isEqualTo("https://testing.com/url.jpg")
     }
 
     companion object Fixtures {
