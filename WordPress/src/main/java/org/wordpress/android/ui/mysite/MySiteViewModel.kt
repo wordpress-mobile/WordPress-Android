@@ -1133,6 +1133,8 @@ class MySiteViewModel @Inject constructor(
         onShare.postValue(Event(message))
     }
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
     private fun onBloggingPromptAnswerClick() {
         val bloggingPrompt = BloggingPrompt(
                 text = "Cast the movie of your life.",

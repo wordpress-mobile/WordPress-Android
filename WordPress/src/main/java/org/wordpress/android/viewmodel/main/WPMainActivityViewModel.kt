@@ -206,6 +206,8 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
     private fun onAnswerPromptActionClicked() {
         // TODO @klymyam add analytics
         _isBottomSheetShowing.postValue(Event(false))
