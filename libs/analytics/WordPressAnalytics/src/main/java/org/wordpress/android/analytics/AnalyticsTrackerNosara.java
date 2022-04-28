@@ -2277,6 +2277,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_filter_sheet_tab_selected";
             case READER_SEARCH_HISTORY_CLEARED:
                 return "reader_search_history_cleared";
+            case READER_MANAGE_VIEW_DISMISSED:
+                return "reader_manage_view_dismissed";
+            case READER_MANAGE_VIEW_DISPLAYED:
+                return "reader_manage_view_displayed";
         }
         return null;
     }
