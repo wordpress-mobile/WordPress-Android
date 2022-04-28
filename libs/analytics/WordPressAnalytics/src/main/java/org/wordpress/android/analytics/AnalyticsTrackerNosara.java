@@ -2294,7 +2294,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_ARTICLE_CUSTOM_VIEW_SHOWN:
                 return "reader_article_custom_view_shown";
             case READER_ARTICLE_CUSTOM_VIEW_HIDDEN:
-                return "READER_ARTICLE_CUSTOM_VIEW_HIDDEN";
+                return "reader_article_custom_view_hidden";
         }
         return null;
     }
