@@ -12,7 +12,8 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 
-object MySiteAdapterDiffCallback: DiffUtil.ItemCallback<MySiteCardAndItem>() {
+@Suppress("ComplexMethod")
+object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
     override fun areItemsTheSame(oldItem: MySiteCardAndItem, updatedItem: MySiteCardAndItem): Boolean {
         return oldItem.type == updatedItem.type && when {
             oldItem is QuickActionsCard && updatedItem is QuickActionsCard -> true

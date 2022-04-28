@@ -28,7 +28,7 @@ import org.wordpress.android.util.image.ImageManager
 class MySiteAdapter(
     val imageManager: ImageManager,
     val uiHelpers: UiHelpers
-) : ListAdapter<MySiteCardAndItem,MySiteCardAndItemViewHolder<*>>(MySiteAdapterDiffCallback) {
+) : ListAdapter<MySiteCardAndItem, MySiteCardAndItemViewHolder<*>>(MySiteAdapterDiffCallback) {
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
 
@@ -57,7 +57,7 @@ class MySiteAdapter(
             is QuickActionsViewHolder -> holder.bind(getItem(position) as QuickActionsCard)
             is QuickLinkRibbonViewHolder -> holder.bind(getItem(position) as QuickLinkRibbon)
             is DomainRegistrationViewHolder -> holder.bind(getItem(position) as DomainRegistrationCard)
-            is QuickStartCardViewHolder  -> holder.bind(getItem(position) as QuickStartCard)
+            is QuickStartCardViewHolder -> holder.bind(getItem(position) as QuickStartCard)
             is QuickStartDynamicCardViewHolder -> holder.bind(getItem(position) as QuickStartDynamicCard)
             is MySiteInfoItemViewHolder -> holder.bind(getItem(position) as InfoItem)
             is MySiteCategoryItemViewHolder -> holder.bind(getItem(position) as CategoryHeaderItem)
