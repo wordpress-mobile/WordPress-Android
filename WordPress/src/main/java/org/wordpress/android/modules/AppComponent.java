@@ -148,6 +148,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
@@ -660,6 +661,8 @@ public interface AppComponent {
     void inject(EditCancelDialogFragment object);
 
     void inject(BloggingReminderBottomSheetFragment object);
+    
+    void inject(LocalePickerBottomSheet object);
 
     void inject(CategoriesListFragment object);
 

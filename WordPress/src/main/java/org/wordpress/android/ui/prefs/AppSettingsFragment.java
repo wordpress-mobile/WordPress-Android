@@ -13,7 +13,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -42,6 +42,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
@@ -72,10 +74,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class AppSettingsFragment extends PreferenceFragment
-        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener, LocalePickerCallback {
     public static final int LANGUAGE_CHANGED = 1000;
 
-    private DetailListPreference mLanguagePreference;
+    private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
     private ListPreference mInitialScreenPreference;
 
@@ -136,8 +138,9 @@ public class AppSettingsFragment extends PreferenceFragment
         );
         updateAnalyticsSyncUI();
 
-        mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
+        mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
+        mLanguagePreference.setOnPreferenceClickListener(this);
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
@@ -302,8 +305,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        updateLanguagePreference(getResources().getConfiguration().locale.toString());
+        reattachLocalePickerCallback();
         // flush gathered events (if any)
         AnalyticsTracker.flush();
     }
@@ -385,6 +387,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return handlePrivacyClick();
         } else if (preference == mWhatsNew) {
             return handleFeatureAnnouncementClick();
+        } else if (preference == mLanguagePreference) {
+            return handleAppLocalePickerClick();
         }
 
         return false;
@@ -480,7 +484,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         WordPress.updateContextLocale();
-        updateLanguagePreference(languageCode);
         mContextProvider.refreshContext();
 
         // Track language change on Analytics because we have both the device language and app selected language
@@ -501,33 +504,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         // update Reader tags as they need be localized
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
-    }
-
-    private void updateLanguagePreference(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
-            return;
-        }
-
-        Locale languageLocale = LocaleManager.languageLocale(languageCode);
-        String[] availableLocales = getResources().getStringArray(R.array.available_languages);
-
-        Pair<String[], String[]> pair =
-                LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
-        // check for a possible NPE
-        if (pair == null) {
-            return;
-        }
-
-        String[] sortedEntries = pair.first;
-        String[] sortedValues = pair.second;
-
-        mLanguagePreference.setEntries(sortedEntries);
-        mLanguagePreference.setEntryValues(sortedValues);
-        mLanguagePreference.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
-
-        mLanguagePreference.setValue(languageCode);
-        mLanguagePreference.setSummary(LocaleManager.getLanguageString(languageCode, languageLocale));
-        mLanguagePreference.refreshAdapter();
     }
 
     private boolean handleAboutPreferenceClick() {
@@ -650,5 +626,34 @@ public class AppSettingsFragment extends PreferenceFragment
                     "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
                     + "using support fragment manager from AppCompatActivity.");
         }
+    }
+
+    private boolean handleAppLocalePickerClick() {
+        if (getActivity() instanceof AppCompatActivity) {
+            LocalePickerBottomSheet bottomSheet = LocalePickerBottomSheet.newInstance();
+            bottomSheet.setLocalePickerCallback(this);
+            bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                    LocalePickerBottomSheet.TAG);
+            return true;
+        } else {
+            throw new IllegalArgumentException(
+                    "Parent activity is not AppCompatActivity. LocalePickerBottomSheet must be called "
+                    + "using support fragment manager from AppCompatActivity.");
+        }
+    }
+
+    private void reattachLocalePickerCallback() {
+        if (getActivity() instanceof AppCompatActivity) {
+            LocalePickerBottomSheet bottomSheet = (LocalePickerBottomSheet) (((AppCompatActivity) getActivity()))
+                    .getSupportFragmentManager().findFragmentByTag(LocalePickerBottomSheet.TAG);
+            if (bottomSheet != null) {
+                bottomSheet.setLocalePickerCallback(this);
+            }
+        }
+    }
+
+    @Override
+    public void onLocaleSelected(@NotNull String languageCode) {
+        onPreferenceChange(mLanguagePreference, languageCode);
     }
 }

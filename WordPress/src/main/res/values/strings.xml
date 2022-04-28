@@ -925,6 +925,7 @@
         <item>@string/app_theme_entry_value_light</item>
         <item>@string/app_theme_entry_value_dark</item>
     </string-array>
+    <string name="locale_picker_current_language">Current language:</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug settings</string>

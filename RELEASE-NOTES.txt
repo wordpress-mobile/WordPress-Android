@@ -2,6 +2,8 @@
 
 19.8
 -----
+* [*] App Settings: updated look and functionality of Locale Picker [https://github.com/wordpress-mobile/WordPress-Android/pull/16331]
+* [*] Fix issue that prevented Jetpack customers with standalone VideoPress subs uploading >5min videos [https://github.com/wordpress-mobile/WordPress-Android/pull/16322]
 * [*] On self-hosted sites, allow previewing unsaved changes to draft posts [https://github.com/wordpress-mobile/WordPress-Android/pull/16296]
 * [*] Editor: Fix issue that caused previews on atomic sites to sometimes be out-of-date. [https://github.com/wordpress-mobile/WordPress-Android/pull/16332]
 * [*] Fixes Media Picker video selection Accessibility issue [https://github.com/wordpress-mobile/WordPress-Android/pull/16426]
