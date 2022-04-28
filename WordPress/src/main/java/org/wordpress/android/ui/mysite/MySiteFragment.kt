@@ -290,8 +290,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
         is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken)
         else -> {
-            // Pass all other navigationAction on to the child fragment, so they can be handled properly
-            binding?.viewPager?.getCurrentFragment()?.handleNavigationAction(action)
+            /* Pass all other navigationAction on to the child fragment, so they can be handled properly.
+               Added brief delay before passing action to nested (view pager) tab fragments to give them time to get
+               created. */
+            view?.postDelayed({
+                binding?.viewPager?.getCurrentFragment()?.handleNavigationAction(action)
+            }, PASS_TO_TAB_FRAGMENT_DELAY)
+            Unit
         }
     }
 
@@ -311,7 +316,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
            real issue as we could only test it on an emulator, we added it to be safe in such cases. */
         view?.postDelayed({
             binding?.viewPager?.getCurrentFragment()?.onActivityResult(requestCode, resultCode, data)
-        }, PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY)
+        }, PASS_TO_TAB_FRAGMENT_DELAY)
     }
 
     private fun ViewPager2.getCurrentFragment() =
@@ -347,7 +352,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     }
 
     companion object {
-        private const val PASS_ACTIVITY_RESULT_TO_TAB_FRAGMENT_DELAY = 300L
+        private const val PASS_TO_TAB_FRAGMENT_DELAY = 300L
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
