@@ -2257,6 +2257,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "privacy_settings_opened";
             case PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED:
                 return "privacy_settings_report_crashes_toggled";
+            case SHARING_BUTTONS_EDIT_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_sharing_buttons_changed";
+            case SHARING_BUTTONS_EDIT_MORE_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_more_sharing_buttons_changed";
         }
         return null;
     }
