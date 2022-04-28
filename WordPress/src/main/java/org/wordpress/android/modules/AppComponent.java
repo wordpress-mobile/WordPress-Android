@@ -202,7 +202,6 @@ import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
@@ -527,8 +526,6 @@ public interface AppComponent {
     void inject(TodayWidgetListProvider object);
 
     void inject(TodayWidgetBlockListProviderFactory object);
-
-    void inject(StatsActivity object);
 
     void inject(StatsListFragment object);
 
