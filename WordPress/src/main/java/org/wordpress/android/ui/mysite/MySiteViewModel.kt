@@ -687,6 +687,11 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
+        if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+            cardsTracker.trackQuickStartCardItemClicked(type)
+        } else {
+            analyticsTrackerWrapper.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
+        }
         _onNavigation.value = Event(
                 SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
         )
@@ -1323,6 +1328,7 @@ class MySiteViewModel @Inject constructor(
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         private const val LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM = -1
+        private const val TYPE = "type"
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
