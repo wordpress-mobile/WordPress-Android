@@ -1037,6 +1037,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* QUICK START CARD */
+
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
@@ -1054,6 +1055,37 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
         verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
+    fun `given site menu tab, when quick start card item is clicked, then quick start tapped is tracked`() {
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true,
+                initialScreen = MySiteTabType.SITE_MENU.label
+        )
+
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        verify(analyticsTrackerWrapper)
+                .track(Stat.QUICK_START_TAPPED, mapOf("type" to QuickStartTaskType.CUSTOMIZE.toString()))
+    }
+
+    @Test
+    fun `given dashboard tab, when quick start card item clicked, then quick start card item tapped is tracked`() {
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true,
+                initialScreen = MySiteTabType.DASHBOARD.label
+        )
+
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        verify(cardsTracker).trackQuickStartCardItemClicked(QuickStartTaskType.CUSTOMIZE)
     }
 
     @Test
