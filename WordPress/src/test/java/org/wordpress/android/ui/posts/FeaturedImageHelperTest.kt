@@ -34,7 +34,6 @@ import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.lang.AssertionError
 
 @RunWith(MockitoJUnitRunner::class)
 class FeaturedImageHelperTest {
