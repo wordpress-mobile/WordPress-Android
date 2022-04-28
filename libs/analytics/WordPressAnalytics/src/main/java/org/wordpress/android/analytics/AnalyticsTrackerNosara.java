@@ -2291,6 +2291,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_page_jump_tapped";
             case READER_ARTICLE_FEATURED_IMAGE_TAPPED:
                 return "reader_article_featured_image_tapped";
+            case READER_ARTICLE_CUSTOM_VIEW_SHOWN:
+                return "reader_article_custom_view_shown";
+            case READER_ARTICLE_CUSTOM_VIEW_HIDDEN:
+                return "READER_ARTICLE_CUSTOM_VIEW_HIDDEN";
         }
         return null;
     }

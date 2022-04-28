@@ -1519,11 +1519,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onCustomViewShown() {
         // full screen video has just been shown so hide the AppBar
+        readerTracker.track(Stat.READER_ARTICLE_CUSTOM_VIEW_SHOWN)
         onShowHideToolbar(false)
     }
 
     override fun onCustomViewHidden() {
         // user returned from full screen video so re-display the AppBar
+        readerTracker.track(Stat.READER_ARTICLE_CUSTOM_VIEW_HIDDEN)
         onShowHideToolbar(true)
     }
 
