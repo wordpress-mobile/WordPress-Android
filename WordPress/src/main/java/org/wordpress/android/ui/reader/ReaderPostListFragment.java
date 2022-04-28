@@ -1562,6 +1562,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void clearSearchSuggestions() {
+        mReaderTracker.track(Stat.READER_SEARCH_HISTORY_CLEARED);
         ReaderSearchTable.deleteAllQueries();
 
         mSearchSuggestionAdapter.swapCursor(null);
