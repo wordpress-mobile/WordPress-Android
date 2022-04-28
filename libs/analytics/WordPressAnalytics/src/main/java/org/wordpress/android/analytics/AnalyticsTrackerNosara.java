@@ -2261,6 +2261,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "sharing_buttons_edit_sharing_buttons_changed";
             case SHARING_BUTTONS_EDIT_MORE_SHARING_BUTTONS_CHANGED:
                 return "sharing_buttons_edit_more_sharing_buttons_changed";
+            case PEOPLE_MANAGEMENT_USER_INVITED:
+                return "people_management_user_invited";
+            case PEOPLE_MANAGEMENT_FILTER_CHANGED:
+                return "people_management_filter_changed";
         }
         return null;
     }
