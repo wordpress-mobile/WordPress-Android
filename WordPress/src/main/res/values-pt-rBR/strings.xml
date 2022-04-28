@@ -88,7 +88,6 @@ Language: pt_BR
     <string name="my_site_blogging_prompt_card_menu_remove">Remover do painel</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Ignorar esta sugestão</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visualizar mais sugestões</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d respostas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Compartilhar sugestão de publicação</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondida</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Responder sugestão</string>
@@ -107,7 +106,6 @@ Language: pt_BR
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">As chamadas XML-RPC parecem bloqueadas neste site (código de erro 401). Se a tentativa de login falhar, toque no ícone de ajuda para ver as perguntas frequentes.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Não foi possível ler o site WordPress nesse URL. Clique no ícone de ajuda para ver as perguntas frequentes.</string>
     <string name="login_error_xml_rpc_services_disabled">Os serviços XML-RPC estão desativados neste site.</string>
-    <string name="my_site_menu_tab_title">Menu do site</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Sua pesquisa inclui caracteres não compatíveis com os domínios do WordPress.com. Os caracteres permitidos são: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Verifique sua conexão com a internet e atualize a página.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir para estatísticas</string>
@@ -422,7 +420,6 @@ Language: pt_BR
     <string name="gutenberg_native_create_embed">Criar mídia incorporada</string>
     <string name="gutenberg_native_column_d">Coluna %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descreva brevemente o link para ajudar pessoas que usam leitores de tela</string>
-    <string name="gutenberg_native_add_blocks">Adicionar blocos</string>
     <string name="login_no_jetpack_sites">Nenhum site Jetpack foi encontrado</string>
     <string name="gutenberg_native_what_is_alt_text">O que é texto alternativo?</string>
     <string name="gutenberg_native_transform_s_to">Modificar %s em</string>

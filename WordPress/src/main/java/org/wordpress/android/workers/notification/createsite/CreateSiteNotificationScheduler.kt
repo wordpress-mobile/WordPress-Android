@@ -26,8 +26,8 @@ class CreateSiteNotificationScheduler
                     title = R.string.create_site_notification_title,
                     text = R.string.create_site_notification_text,
                     icon = R.drawable.ic_wordpress_white_24dp,
-                    actionIcon = -1,
-                    actionTitle = R.string.create_site_notification_create_site_action
+                    firstActionIcon = -1,
+                    firstActionTitle = R.string.create_site_notification_create_site_action
             )
             val secondNotification = firstNotification.copy(
                     delay = 8 // 1 week after first notification

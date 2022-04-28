@@ -1,19 +1,19 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_OVERVIEW_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
@@ -22,11 +22,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
-import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -37,7 +37,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.ceil
 
-const val OVERVIEW_ITEMS_TO_LOAD = 15
+const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
 
 class ViewsAndVisitorsUseCase
 @Inject constructor(
@@ -47,7 +47,6 @@ class ViewsAndVisitorsUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
-    private val popupMenuHandler: ItemPopupMenuHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -89,7 +88,7 @@ class ViewsAndVisitorsUseCase
         val response = visitsAndViewsStore.fetchVisits(
                 statsSiteProvider.siteModel,
                 statsGranularity,
-                LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
+                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
                 forced
         )
         val model = response.model
@@ -131,7 +130,7 @@ class ViewsAndVisitorsUseCase
                 val currentCalendar = localeManagerWrapper.getCurrentCalendar()
                 val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
-                        STATS_OVERVIEW_ERROR,
+                        STATS_VIEWS_AND_VISITORS_ERROR,
                         mapOf(
                                 "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
                                 "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
@@ -153,8 +152,13 @@ class ViewsAndVisitorsUseCase
         if (domainModel.dates.isNotEmpty()) {
             items.add(buildTitle())
 
+            if (uiState.selectedPosition == 1) {
+                items.add(viewsAndVisitorsMapper.buildChartLegendsPurple())
+            } else {
+                items.add(viewsAndVisitorsMapper.buildChartLegendsBlue())
+            }
+
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
-            val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
             val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
@@ -164,20 +168,14 @@ class ViewsAndVisitorsUseCase
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
-            selectedDateProvider.selectDate(
-                    selectedDate,
-                    availableDates.takeLast(visibleBarCount),
-                    statsGranularity
-            )
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
+
             items.add(
                     viewsAndVisitorsMapper.buildTitle(
+                            domainModel.dates,
+                            statsGranularity = statsGranularity,
                             selectedItem,
-                            previousItem,
-                            uiState.selectedPosition,
-                            isLast = selectedItem == domainModel.dates.last(),
-                            statsGranularity = statsGranularity
+                            uiState.selectedPosition
                     )
             )
             items.addAll(
@@ -191,32 +189,37 @@ class ViewsAndVisitorsUseCase
                     )
             )
             items.add(
-                    viewsAndVisitorsMapper.buildInformation()
+                    viewsAndVisitorsMapper.buildInformation(
+                            domainModel.dates,
+                            uiState.selectedPosition
+                    )
             )
             items.add(
                     viewsAndVisitorsMapper.buildChips(
-                            selectedItem,
-                            this::onColumnSelected,
+                            this::onChipSelected,
                             uiState.selectedPosition
                     )
             )
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
-            AppLog.e(T.STATS, "There is no data to be shown in the overview block")
+            AppLog.e(T.STATS, "There is no data to be shown in the views and visitors block")
         }
         return items
     }
 
-    private fun buildTitle() = TitleWithMore(string.stats_insights_views_and_visitors, moreAction = this::onMenuClick)
+    private fun buildTitle() = TitleWithMore(
+            string.stats_insights_views_and_visitors,
+            navigationAction = ListItemInteraction.create(this::onViewMoreClick)
+    )
 
-    private fun onMenuClick(view: View) {
-        // TODO: Connect this to second level navigation later
-        popupMenuHandler.onMenuClick(view, type)
+    private fun onViewMoreClick() {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED)
+        navigateTo(ViewTagsAndCategoriesStats) // TODO: Connect this to proper second level navigation later
     }
 
     private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
+                AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED,
                 statsGranularity
         )
         if (period != null && period != "empty") {
@@ -228,9 +231,9 @@ class ViewsAndVisitorsUseCase
         }
     }
 
-    private fun onColumnSelected(position: Int) {
+    private fun onChipSelected(position: Int) {
         analyticsTracker.trackGranular(
-                AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
+                AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_TYPE_TAPPED,
                 statsGranularity
         )
         updateUiState { it.copy(selectedPosition = position) }
@@ -250,7 +253,6 @@ class ViewsAndVisitorsUseCase
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
-        private val popupMenuHandler: ItemPopupMenuHandler,
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val statsWidgetUpdaters: StatsWidgetUpdaters,
@@ -259,13 +261,12 @@ class ViewsAndVisitorsUseCase
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 ViewsAndVisitorsUseCase(
-                        WEEKS,
+                        DAYS,
                         visitsAndViewsStore,
                         selectedDateProvider,
                         statsSiteProvider,
                         statsDateFormatter,
                         viewsAndVisitorsMapper,
-                        popupMenuHandler,
                         mainDispatcher,
                         backgroundDispatcher,
                         analyticsTracker,

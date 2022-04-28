@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/photo_picker_item_background"
-        android:contentDescription="@string/photo_picker_image_thumbnail_content_description"
+        android:contentDescription="@string/photo_picker_media_thumbnail_content_description"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="@string/media_grid_item_ratio"
         app:layout_constraintLeft_toLeftOf="parent"

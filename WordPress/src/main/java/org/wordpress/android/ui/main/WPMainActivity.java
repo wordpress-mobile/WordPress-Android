@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -194,6 +195,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_PAGES = "show_pages";
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
     public static final String ARG_EDITOR_CONTENT = "editor_content";
+    public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -366,6 +368,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     finish();
                 }
             }
+            checkDismissNotification();
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
@@ -425,6 +428,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+    }
+
+    private void checkDismissNotification() {
+        final Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(ARG_DISMISS_NOTIFICATION)) {
+            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            final int notificationId = intent.getIntExtra(ARG_DISMISS_NOTIFICATION, -1);
+            notificationManager.cancel(notificationId);
+        }
     }
 
     private void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
