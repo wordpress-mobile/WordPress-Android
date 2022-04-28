@@ -22,7 +22,6 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreview
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
@@ -90,16 +89,12 @@ class HomePagePickerFragment : Fragment() {
             modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
             modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
         }
-        if (siteNameFeatureConfig.isEnabled()) {
-            homePagePickerBottomToolbar.chooseButton.setText(R.string.hpp_choose_and_create_site)
-        }
     }
 
     private fun HomePagePickerFragmentBinding.setupViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             setHeaderVisibility(uiState.isHeaderVisible)
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
-            setToolbarVisibility(uiState.isToolbarVisible)
             when (uiState) {
                 is LayoutPickerUiState.Loading -> { // Nothing more to do here
                 }
@@ -150,13 +145,7 @@ class HomePagePickerFragment : Fragment() {
         errorView.setVisible(error)
     }
 
-    private fun HomePagePickerFragmentBinding.setToolbarVisibility(visible: Boolean) {
-        AniUtils.animateBottomBar(homePagePickerBottomToolbar.bottomToolbar, visible)
-    }
-
     private fun HomePagePickerFragmentBinding.setupActionListeners() {
-        homePagePickerBottomToolbar.previewButton.setOnClickListener { viewModel.onPreviewTapped() }
-        homePagePickerBottomToolbar.chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         homePagePickerTitlebar.skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         homePagePickerTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }

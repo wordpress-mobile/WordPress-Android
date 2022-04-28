@@ -86,12 +86,20 @@ class HomePagePickerViewModel @Inject constructor(
         }
     }
 
+    override fun onLayoutTapped(layoutSlug: String) {
+        // TODO: open preview instead of updating uistate to make buttons and border visible
+        // The parent class function super.onPreviewTapped() does not accept a slug, so we if we use this here, we first
+        // need to set the selectedLayoutSlug in the uistate
+        super.onLayoutTapped(layoutSlug)
+    }
+
     override fun onPreviewChooseTapped() {
         super.onPreviewChooseTapped()
         onChooseTapped()
     }
 
     fun onChooseTapped() {
+        // TODO: adapt this to the new flow
         selectedLayout?.let { layout ->
             val template = layout.slug
             analyticsTracker.trackSiteDesignSelected(template)
