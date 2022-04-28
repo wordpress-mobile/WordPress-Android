@@ -213,8 +213,8 @@ sealed class BlockListItem(val type: Type) {
 
     data class Link(
         @DrawableRes val icon: Int? = null,
-        @StringRes val text: Int,
-        val navigateAction: ListItemInteraction
+        @StringRes val text: Int? = null,
+        val navigateAction: ListItemInteraction? = null
     ) : BlockListItem(LINK)
 
     data class DialogButtons(

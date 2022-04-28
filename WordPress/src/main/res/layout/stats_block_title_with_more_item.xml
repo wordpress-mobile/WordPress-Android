@@ -10,7 +10,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
-        style="@style/TextAppearance.LoginFlow.Subtitle1"
+        style="@style/StatsBlockTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/unknown"

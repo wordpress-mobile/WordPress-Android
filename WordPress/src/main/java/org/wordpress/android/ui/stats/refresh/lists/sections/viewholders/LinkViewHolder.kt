@@ -26,7 +26,13 @@ class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         } else {
             text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
-        text.setText(item.text)
-        link.setOnClickListener { item.navigateAction.click() }
+
+        if (item.text != null) {
+            text.visibility = View.VISIBLE
+            text.setText(item.text)
+            link.setOnClickListener { item.navigateAction?.click() }
+        } else {
+            text.visibility = View.GONE
+        }
     }
 }

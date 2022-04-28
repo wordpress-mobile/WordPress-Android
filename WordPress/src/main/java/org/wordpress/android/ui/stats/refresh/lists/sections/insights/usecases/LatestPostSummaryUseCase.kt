@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -40,6 +42,7 @@ class LatestPostSummaryUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val latestPostSummaryMapper: LatestPostSummaryMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val statsRevampV2Feature: StatsRevampV2FeatureConfig,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
@@ -74,7 +77,7 @@ class LatestPostSummaryUseCase
 
     private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(buildTitle())
+        items.add(buildTitle(domainModel))
         items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
         if (domainModel != null && domainModel.hasData()) {
             items.add(
@@ -121,7 +124,22 @@ class LatestPostSummaryUseCase
         return items
     }
 
-    private fun buildTitle() = Title(R.string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
+    private fun buildTitle(model: InsightsLatestPostModel?) =
+            if (statsRevampV2Feature.isEnabled()) {
+                TitleWithMore(
+                        textResource = R.string.stats_insights_latest_post_summary,
+                        navigationAction = if (model?.hasData() == true) {
+                            ListItemInteraction.create(
+                                    ViewMoreParams(model.postId, model.postTitle, model.postURL),
+                                    this::onViewMore
+                            )
+                        } else {
+                            null
+                        }
+                )
+            } else {
+                Title(R.string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
+            }
 
     private fun InsightsLatestPostModel.hasData() =
             this.postViewsCount > 0 || this.postCommentCount > 0 || this.postLikeCount > 0
@@ -133,13 +151,19 @@ class LatestPostSummaryUseCase
                     R.string.stats_insights_create_post,
                     navigateAction = ListItemInteraction.create(this::onAddNewPostClick)
             )
-            model.hasData() -> Link(
-                    text = R.string.stats_insights_view_more,
-                    navigateAction = ListItemInteraction.create(
-                            ViewMoreParams(model.postId, model.postTitle, model.postURL),
-                            this::onViewMore
+            model.hasData() -> {
+                if (!statsRevampV2Feature.isEnabled()) {
+                    Link(
+                            text = R.string.stats_insights_view_more,
+                            navigateAction = ListItemInteraction.create(
+                                    ViewMoreParams(model.postId, model.postTitle, model.postURL),
+                                    this::onViewMore
+                            )
                     )
-            )
+                } else {
+                    Link()
+                }
+            }
             else -> Link(
                     R.drawable.ic_share_white_24dp,
                     R.string.stats_insights_share_post,
