@@ -1143,10 +1143,19 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
+    @Suppress("NestedBlockDepth")
     private fun selectDefaultTabIfNeeded() {
-        if (!isMySiteTabsEnabled || isDefaultABExperimentTabSet) return
+        if (!isMySiteTabsEnabled) return
         val index = orderedTabTypes.indexOf(defaultABExperimentTab)
         if (index != -1) {
+            if (isDefaultABExperimentTabSet) {
+                // This logic checks if the current default tab is the same as the tab
+                // set as initial screen, if yes then return
+                _selectTab.value?.let { tab ->
+                    val currentDefaultTab = tab.peekContent().position
+                    if (currentDefaultTab == index) return
+                }
+            }
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
             isDefaultABExperimentTabSet = true
         }
