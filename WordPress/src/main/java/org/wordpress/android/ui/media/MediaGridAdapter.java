@@ -638,7 +638,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
 
-        PhotoPickerUtils.announceSelectedImageForAccessibility(holder.mImageView, isVideo, selected);
+        PhotoPickerUtils.announceSelectedMediaForAccessibility(holder.mImageView, isVideo, selected);
     }
 
     private void toggleItemSelected(GridViewHolder holder, int position) {

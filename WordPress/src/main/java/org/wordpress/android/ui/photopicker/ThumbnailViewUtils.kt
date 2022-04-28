@@ -32,7 +32,7 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedImageForAccessibility(
+            PhotoPickerUtils.announceSelectedMediaForAccessibility(
                     imgThumbnail,
                     isVideo,
                     !isSelected
