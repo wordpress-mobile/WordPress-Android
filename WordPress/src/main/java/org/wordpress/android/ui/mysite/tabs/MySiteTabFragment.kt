@@ -517,7 +517,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             MySiteTabType.DASHBOARD -> state.dashboardCardsAndItems
             else -> state.cardAndItems
         }
-        (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
     }
 
     private fun MySiteTabFragmentBinding.loadEmptyView() {
