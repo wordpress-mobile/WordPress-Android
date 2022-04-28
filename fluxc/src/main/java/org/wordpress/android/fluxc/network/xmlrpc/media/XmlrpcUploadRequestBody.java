@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import okhttp3.MediaType;
@@ -76,7 +77,9 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     @Override
     public long contentLength() throws IOException {
         if (mContentSize == -1) {
-            mContentSize = getMediaBase64EncodedSize() + mPrependString.length() + APPEND_XML.length();
+            mContentSize = getMediaBase64EncodedSize()
+                           + mPrependString.getBytes(StandardCharsets.UTF_8).length
+                           + APPEND_XML.length();
         }
         return mContentSize;
     }
