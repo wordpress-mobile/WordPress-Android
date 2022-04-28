@@ -248,10 +248,8 @@ class SubFilterViewModel @Inject constructor(
             ))
             SubfilterListItem.ItemType.SITE -> {
                 val currentFeedId = (subfilterListItem as Site).blog.feedId
-                val currentBlogId = if (subfilterListItem.blog.hasFeedUrl())
-                    currentFeedId
-                else
-                    subfilterListItem.blog.blogId
+                val currentBlogId =
+                        if (subfilterListItem.blog.hasFeedUrl()) currentFeedId else subfilterListItem.blog.blogId
 
                 _readerModeInfo.value = (ReaderModeInfo(
                         null,
