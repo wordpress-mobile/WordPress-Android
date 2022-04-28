@@ -519,7 +519,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
-                case ANSWER_BLOGGING_PROMPT: // TODO @klymyam open editor with BP content
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, null);
                     break;
                 case CREATE_NEW_PAGE:
@@ -632,6 +631,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mViewModel.getCreatePostWithBloggingPrompt().observe(this, bloggingPrompt -> {
+            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.getContent());
+        });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
         // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
