@@ -4033,6 +4033,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
+    <string name="blogging_prompts_notification_dismiss">Dismiss</string>
 
     <!-- WordPressEditor module -->
     <string name="post_content" tools:ignore="UnusedResources">Content</string>
