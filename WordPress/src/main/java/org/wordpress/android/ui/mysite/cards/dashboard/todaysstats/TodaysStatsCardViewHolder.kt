@@ -106,8 +106,4 @@ class TodaysStatsCardViewHolder(
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
-
-    companion object {
-        private const val EXTERNAL_LINK_DRAWABLE_BOUND_LEFT = 5
-    }
 }
