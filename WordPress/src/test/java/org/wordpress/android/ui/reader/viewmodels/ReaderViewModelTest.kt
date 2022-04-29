@@ -541,24 +541,6 @@ class ReaderViewModelTest {
         }
     }
 
-    private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
-        test {
-            whenever(getFollowedTagsUseCase.get()).thenReturn(emptyReaderTagList)
-            block()
-        }
-    }
-
-    private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
-        test {
-            val nonEmptyUserTags = ReaderTagList().apply {
-                this.add(mock())
-                this.add(mock())
-            }
-            whenever(getFollowedTagsUseCase.get()).thenReturn(nonEmptyUserTags)
-            block()
-        }
-    }
-
     private fun createNonMockedNonEmptyReaderTagList(): ReaderTagList {
         return ReaderTagList().apply {
             add(ReaderTag("Following", "Following", "Following", FOLLOWING_PATH, ReaderTagType.DEFAULT))
