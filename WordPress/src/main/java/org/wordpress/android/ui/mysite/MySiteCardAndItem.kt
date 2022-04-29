@@ -37,6 +37,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
     enum class DashboardCardType {
         ERROR_CARD,
+        QUICK_START_CARD,
         TODAYS_STATS_CARD_ERROR,
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
@@ -50,12 +51,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         val url: String,
         val iconState: IconState,
         val showTitleFocusPoint: Boolean,
+        val showSubtitleFocusPoint: Boolean,
         val showIconFocusPoint: Boolean,
         val onTitleClick: ListItemInteraction? = null,
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteCardAndItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
+    ) : MySiteCardAndItem(
+            SITE_INFO_CARD,
+            activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
+    ) {
         sealed class IconState {
             object Progress : IconState()
             data class Visible(val url: String? = null) : IconState()

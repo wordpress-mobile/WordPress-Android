@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-21 09:54:08+0000
+Translation-Revision-Date: 2022-04-25 16:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0
 Language: ar
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">إنشاء موقع</string>
     <string name="gutenberg_native_add_blocks_11d0841f">إضافة مكوِّنات</string>
     <string name="initial_screen">الشاشة الأولى</string>
     <string name="blogging_prompts_onboarding_notification_action">معرفة المزيد</string>

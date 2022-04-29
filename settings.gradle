@@ -12,6 +12,13 @@ gradleEnterprise {
             taskInputFiles = true
         }
         uploadInBackground = System.getenv("CI") == null
+
+        // Obfuscate personal data
+        obfuscation {
+            username { username -> username.digest('SHA-1') }
+            hostname { _ -> "" }
+            ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
+        }
     }
 }
 

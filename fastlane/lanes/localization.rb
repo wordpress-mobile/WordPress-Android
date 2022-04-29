@@ -120,10 +120,11 @@ platform :android do
       [:"play_store_screenshot_#{n}", File.join(metadata_folder, "screenshot_#{n}.txt")]
     end.to_h)
 
-    android_update_metadata_source(
-      po_file_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
-      source_files: files,
-      release_version: options[:version]
+    update_po_file_for_metadata_localization(
+      po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
+      sources: files,
+      release_version: options[:version],
+      commit_message: "Update WordPress `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
@@ -151,10 +152,11 @@ platform :android do
       'app-store-name': File.join(metadata_folder, 'title.txt'),
     }
 
-    android_update_metadata_source(
-      po_file_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
-      source_files: files,
-      release_version: options[:version]
+    update_po_file_for_metadata_localization(
+      po_path: metadata_folder = File.join(metadata_folder, 'PlayStoreStrings.po'),
+      sources: files,
+      release_version: options[:version],
+      commit_message: "Update Jetpack `PlayStoreStrings.po` for version #{options[:version]}"
     )
   end
 
@@ -378,5 +380,21 @@ platform :android do
       locales: ALL_LOCALES,
       lint_task: 'lintWordpressVanillaRelease' # TODO: Should we adapt this?
     )
+  end
+
+  # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
+  # Internally, this calls the `an_update_metadata_source` release toolkit action and adds Git management to it.
+  #
+  def update_po_file_for_metadata_localization(po_path:, sources:, release_version:, commit_message:)
+    ensure_git_status_clean
+
+    an_update_metadata_source(
+      po_file_path: po_path,
+      source_files: sources,
+      release_version: release_version
+    )
+
+    git_add(path: po_path)
+    git_commit(path: po_path, message: commit_message, allow_nothing_to_commit: true)
   end
 end

@@ -1129,6 +1129,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
+            case STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED:
+                return "stats_views_and_visitors_view_more_tapped";
+            case STATS_VIEWS_AND_VISITORS_ERROR:
+                return "stats_views_and_visitors_error";
+            case STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED:
+                return "stats_views_and_visitors_line_chart_tapped";
+            case STATS_VIEWS_AND_VISITORS_TYPE_TAPPED:
+                return "stats_views_and_visitors_type_tapped";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
                 return "stats_publicize_view_more_tapped";
             case STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED:
@@ -1783,6 +1791,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:
                 return "quick_start_started";
+            case QUICK_START_TAPPED:
+                return "quick_start_tapped";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
@@ -2211,6 +2221,52 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "change_username_search_performed";
             case ADD_SITE_ALERT_DISPLAYED:
                 return "add_site_alert_displayed";
+            case MY_SITE_SITE_SWITCHER_TAPPED:
+                return "my_site_site_switcher_tapped";
+            case SITE_SWITCHER_DISPLAYED:
+                return "site_switcher_displayed";
+            case SITE_SWITCHER_SEARCH_PERFORMED:
+                return "site_switcher_search_performed";
+            case SITE_SWITCHER_TOGGLE_BLOG_VISIBLE:
+                return "site_switcher_toggle_blog_visible";
+            case SITE_SWITCHER_TOGGLED_EDIT_TAPPED:
+                return "site_switcher_toggled_edit_tapped";
+            case SITE_SWITCHER_ADD_SITE_TAPPED:
+                return "site_switcher_add_site_tapped";
+            case SITE_SWITCHER_DISMISSED:
+                return "site_switcher_dismissed";
+            case SETTINGS_DID_CHANGE:
+                return "settings_did_change";
+            case APP_SETTINGS_APPEARANCE_CHANGED:
+                return "app_settings_appearance_changed";
+            case APP_SETTINGS_PRIVACY_SETTINGS_TAPPED:
+                return "app_settings_privacy_settings_tapped";
+            case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
+                return "app_settings_open_device_settings_tapped";
+            case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
+                return "app_settings_max_image_size_changed";
+            case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
+                return "app_settings_image_quality_changed";
+            case APP_SETTINGS_REMOVE_LOCATION_FROM_MEDIA_CHANGED:
+                return "app_settings_remove_location_from_media_changed";
+            case APP_SETTINGS_VIDEO_OPTIMIZATION_CHANGED:
+                return "app_settings_video_optimization_changed";
+            case APP_SETTINGS_MAX_VIDEO_SIZE_CHANGED:
+                return "app_settings_max_video_size_changed";
+            case APP_SETTINGS_VIDEO_QUALITY_CHANGED:
+                return "app_settings_video_quality_changed";
+            case PRIVACY_SETTINGS_OPENED:
+                return "privacy_settings_opened";
+            case PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED:
+                return "privacy_settings_report_crashes_toggled";
+            case SHARING_BUTTONS_EDIT_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_sharing_buttons_changed";
+            case SHARING_BUTTONS_EDIT_MORE_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_more_sharing_buttons_changed";
+            case PEOPLE_MANAGEMENT_USER_INVITED:
+                return "people_management_user_invited";
+            case PEOPLE_MANAGEMENT_FILTER_CHANGED:
+                return "people_management_filter_changed";
         }
         return null;
     }
