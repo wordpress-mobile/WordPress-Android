@@ -2730,6 +2730,7 @@
     <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
+    <string name="photo_picker_video_thumbnail_content_description">Video Thumbnail</string>
     <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
     <string name="photo_picker_video_thumbnail_selected">Video selected</string>
