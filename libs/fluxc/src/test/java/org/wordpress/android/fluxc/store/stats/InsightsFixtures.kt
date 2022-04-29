@@ -58,12 +58,13 @@ const val TITLE = "title"
 const val URL = "URL"
 const val LIKE_COUNT = 5
 const val COMMENT_COUNT = 10
+const val FEATURED_IMAGE = ""
 val LATEST_POST = PostResponse(
         ID,
         TITLE,
         DATE,
         URL,
-        LIKE_COUNT, Discussion(COMMENT_COUNT)
+        LIKE_COUNT, Discussion(COMMENT_COUNT), FEATURED_IMAGE
 )
 
 val FIELDS = listOf("period", "views")

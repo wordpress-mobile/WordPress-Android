@@ -36,7 +36,7 @@ class LatestPostInsightsRestClient @Inject constructor(
                 "order_by" to "date",
                 "number" to "1",
                 "type" to "post",
-                "fields" to "ID,title,URL,discussion,like_count,date"
+                "fields" to "ID,title,URL,discussion,like_count,date,featured_image"
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
@@ -91,7 +91,8 @@ class LatestPostInsightsRestClient @Inject constructor(
             @SerializedName("date") val date: Date?,
             @SerializedName("URL") val url: String?,
             @SerializedName("like_count") val likeCount: Int?,
-            @SerializedName("discussion") val discussion: Discussion?
+            @SerializedName("discussion") val discussion: Discussion?,
+            @SerializedName("featured_image") val featuredImage: String?
         ) {
             data class Discussion(
                 @SerializedName("comment_count") val commentCount: Int?
