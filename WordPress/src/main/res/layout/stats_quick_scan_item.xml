@@ -36,6 +36,16 @@
             android:layout_height="wrap_content"
             android:text="@string/unknown"
             tools:text="34"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/start_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
     </LinearLayout>
 
     <View
@@ -47,7 +57,6 @@
         app:layout_constraintStart_toEndOf="@id/start_value_container"
         app:layout_constraintEnd_toStartOf="@id/end_value_container"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <LinearLayout
         android:id="@+id/end_value_container"
@@ -78,6 +87,15 @@
             android:layout_height="wrap_content"
             android:text="@string/unknown"
             tools:text="12"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/end_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
@@ -124,6 +142,15 @@
             android:layout_height="wrap_content"
             android:text="@string/unknown"
             tools:text="1"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/third_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 

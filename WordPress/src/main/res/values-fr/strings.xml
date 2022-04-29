@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-25 21:54:22+0000
+Translation-Revision-Date: 2022-04-27 13:21:50+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0
 Language: fr
@@ -95,6 +95,7 @@ Language: fr
     <string name="site_creation_intent_beauty">Beauté</string>
     <string name="site_creation_intent_automotive">Automobile</string>
     <string name="site_creation_intent_art">Art</string>
+    <string name="new_site_creation_intents_input_hint">Par ex. Mode, Poésie, Politique</string>
     <string name="new_site_creation_intents_title">Thème du site</string>
     <string name="quick_start_site_menu_tab_message_short">Appuyez sur &lt;b&gt;%1$s&lt;/b&gt; pour continuer.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Supprimer du tableau de bord</string>
@@ -434,6 +435,7 @@ Language: fr
     <string name="gutenberg_native_create_embed">Embarquer un contenu</string>
     <string name="gutenberg_native_column_d">Colonne %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Décrivez brièvement le lien pour aider l’utilisateur du lecteur d’écran</string>
+    <string name="gutenberg_native_add_blocks">Ajouter des blocs</string>
     <string name="login_no_jetpack_sites">Aucun site Jetpack trouvé</string>
     <string name="gutenberg_native_what_is_alt_text">Qu’est-ce que le texte alternatif ?</string>
     <string name="gutenberg_native_transform_s_to">Transformer %s en</string>

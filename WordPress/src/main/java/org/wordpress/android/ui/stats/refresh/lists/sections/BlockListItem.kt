@@ -182,7 +182,12 @@ sealed class BlockListItem(val type: Type) {
         val endColumn: Column,
         val thirdColumn: Column? = null
     ) : BlockListItem(QUICK_SCAN_ITEM) {
-        data class Column(@StringRes val label: Int, val value: String, val tooltip: String? = null)
+        data class Column(
+            @StringRes val label: Int,
+            val value: String,
+            val highest: String? = null,
+            val tooltip: String? = null
+        )
     }
 
     data class Information(val text: String) : BlockListItem(INFO)

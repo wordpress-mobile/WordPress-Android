@@ -148,6 +148,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
@@ -201,7 +202,6 @@ import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
@@ -527,8 +527,6 @@ public interface AppComponent {
 
     void inject(TodayWidgetBlockListProviderFactory object);
 
-    void inject(StatsActivity object);
-
     void inject(StatsListFragment object);
 
     void inject(DomainRegistrationActivity object);
@@ -660,6 +658,8 @@ public interface AppComponent {
     void inject(EditCancelDialogFragment object);
 
     void inject(BloggingReminderBottomSheetFragment object);
+    
+    void inject(LocalePickerBottomSheet object);
 
     void inject(CategoriesListFragment object);
 

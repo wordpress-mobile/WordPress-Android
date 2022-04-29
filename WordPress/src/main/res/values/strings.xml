@@ -925,6 +925,7 @@
         <item>@string/app_theme_entry_value_light</item>
         <item>@string/app_theme_entry_value_dark</item>
     </string-array>
+    <string name="locale_picker_current_language">Current language:</string>
 
     <!-- Debug settings -->
     <string name="preference_open_debug_settings" translatable="false">Debug settings</string>
@@ -1306,6 +1307,7 @@
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
+    <string name="stats_insights_popular_title">&#x1F525; Most Popular Time</string>
     <string name="stats_insights_this_year_site_stats">This Year</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="stats_insights_year">Year</string>
@@ -2740,9 +2742,12 @@
     <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
+    <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
+    <string name="photo_picker_video_thumbnail_selected">Video selected</string>
     <string name="photo_picker_image_selected">,Selected</string>
     <string name="photo_picker_image_thumbnail_unselected">Image unselected</string>
+    <string name="photo_picker_video_thumbnail_unselected">Video unselected</string>
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_list_content_description">Photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
@@ -4042,6 +4047,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
+    <string name="blogging_prompts_notification_dismiss">Dismiss</string>
 
     <!-- WordPressEditor module -->
     <string name="post_content" tools:ignore="UnusedResources">Content</string>
