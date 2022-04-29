@@ -14,6 +14,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -33,7 +34,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt.FollowSiteDiscoverTabStepPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.viewmodel.Event
@@ -240,13 +240,12 @@ class ReaderViewModelTest {
     @Test
     fun `Search is disabled for self-hosted login`() = testWithNonEmptyTags {
         // Arrange
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
             state = it
         }
         // Act
-        triggerReaderTabContentDisplay()
+        triggerReaderTabContentDisplay(hasAccessToken = false)
 
         // Assert
         assertThat(state!!.searchMenuItemUiState.isVisible).isFalse
@@ -285,13 +284,12 @@ class ReaderViewModelTest {
     @Test
     fun `Settings menu is disabled for self-hosted login`() = testWithNonEmptyTags {
         // Arrange
-        whenever(accountStore.hasAccessToken()).thenReturn(false)
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
             state = it
         }
         // Act
-        triggerReaderTabContentDisplay()
+        triggerReaderTabContentDisplay(hasAccessToken = false)
 
         // Assert
         assertThat(state!!.settingsMenuItemUiState.isVisible).isFalse
@@ -368,7 +366,7 @@ class ReaderViewModelTest {
     /* QUICK START - FOLLOW SITE TASK EVENT RECEIVED */
 
     @Test
-    fun `given discover tab not selected, when quick start event is follow site, then discover tab auto selected`() {
+    fun `given discover tab not selected, when qs event is follow site, then discover tab auto selected`() {
         val tagList = createNonMockedNonEmptyReaderTagList()
         testWithNonMockedNonEmptyTags {
             val observers = initObservers()
@@ -394,28 +392,28 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `given discover tab not selected, when quick start event is follow site, then qs discover tab step started`() {
+    fun `given discover selected with settings available, when qs event follow site, then discover tab step started`() {
         val tagList = createNonMockedNonEmptyReaderTagList()
-        testWithNonMockedNonEmptyTags {
+        testWithNonMockedNonEmptyTags(tagList) {
             val observers = initObservers()
-            triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[0])
+            triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1], hasAccessToken = true)
 
             viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
 
-            assertQsFollowSiteDiscoverTabStepStarted(observers)
+            assertQsFollowSiteDiscoverTabStepStarted(observers, isSettingsSupported = true)
         }
     }
 
     @Test
-    fun `given discover tab selected, when quick start event is follow site, then qs discover tab step started`() {
+    fun `given discover selected no settings available, when qs event follow site, then discover tab step started`() {
         val tagList = createNonMockedNonEmptyReaderTagList()
         testWithNonMockedNonEmptyTags(tagList) {
             val observers = initObservers()
-            triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1])
+            triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1], hasAccessToken = false)
 
             viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
 
-            assertQsFollowSiteDiscoverTabStepStarted(observers)
+            assertQsFollowSiteDiscoverTabStepStarted(observers, isSettingsSupported = false)
         }
     }
 
@@ -451,11 +449,18 @@ class ReaderViewModelTest {
     }
 
     private fun assertQsFollowSiteDiscoverTabStepStarted(
-        observers: Observers
+        observers: Observers,
+        isSettingsSupported: Boolean = true
     ) {
         with(observers) {
-            assertThat(quickStartReaderPrompts.last().peekContent()).isEqualTo(FollowSiteDiscoverTabStepPrompt)
-            assertThat(uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(true)
+            assertThat(quickStartReaderPrompts.last().peekContent().shortMessagePrompt).isEqualTo(
+                    if (isSettingsSupported) {
+                        R.string.quick_start_dialog_follow_sites_message_short_discover_and_settings
+                    } else {
+                        R.string.quick_start_dialog_follow_sites_message_short_discover
+                    }
+            )
+            assertThat(uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(isSettingsSupported)
         }
     }
 
@@ -489,7 +494,7 @@ class ReaderViewModelTest {
             quickStartReaderPrompts.add(it)
         }
 
-        val tabNavigationEvents =  mutableListOf<TabNavigation>()
+        val tabNavigationEvents = mutableListOf<TabNavigation>()
         viewModel.selectTab.observeForever {
             tabNavigationEvents.add(it.peekContent())
         }
@@ -504,9 +509,11 @@ class ReaderViewModelTest {
     )
 
     private fun triggerReaderTabContentDisplay(
-        selectedTabReaderTag: ReaderTag? = null
+        selectedTabReaderTag: ReaderTag? = null,
+        hasAccessToken: Boolean = true
     ) {
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(selectedTabReaderTag)
+        whenever(accountStore.hasAccessToken()).thenReturn(hasAccessToken)
         viewModel.start()
     }
 

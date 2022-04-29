@@ -91,6 +91,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         super.onDestroyView()
         searchMenuItem = null
         settingsMenuItem = null
+        settingsMenuItemFocusPoint = null
         binding = null
     }
 

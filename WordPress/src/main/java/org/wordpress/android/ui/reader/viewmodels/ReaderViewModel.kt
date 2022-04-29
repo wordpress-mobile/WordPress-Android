@@ -103,7 +103,11 @@ class ReaderViewModel @Inject constructor(
                         tagList,
                         shouldUpdateViewPager = currentContentUiState?.readerTagList?.equals(tagList) == false,
                         searchMenuItemUiState = MenuItemUiState(isVisible = isSearchSupported()),
-                        settingsMenuItemUiState = MenuItemUiState(isVisible = isSettingsSupported())
+                        settingsMenuItemUiState = MenuItemUiState(
+                                isVisible = isSettingsSupported(),
+                                showQuickStartFocusPoint =
+                                currentContentUiState?.settingsMenuItemUiState?.showQuickStartFocusPoint ?: false
+                        )
                 )
                 if (!initialized) {
                     initialized = true
@@ -236,7 +240,7 @@ class ReaderViewModel @Inject constructor(
         readerTracker.stop(MAIN_READER)
         wasPaused = true
         if (isChangingConfigurations == false) {
-            clearQuickStartFocusPoints()
+            updateContentUiState(showQuickStartFocusPoint = false)
             if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
                 quickStartRepository.clearPendingTask()
             }
@@ -282,40 +286,46 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun startQuickStartFollowSiteTaskDiscoverTabStep() {
-        _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverTabStepPrompt)
-        updateQuickStartFocusPointOnSettingsMenu(true)
+        val shortMessagePrompt = if (isSettingsSupported()) {
+            R.string.quick_start_dialog_follow_sites_message_short_discover_and_settings
+        } else {
+            R.string.quick_start_dialog_follow_sites_message_short_discover
+        }
+        _quickStartPromptEvent.value = Event(
+                QuickStartReaderPrompt(
+                        QuickStartTask.FOLLOW_SITE,
+                        shortMessagePrompt,
+                        R.drawable.ic_cog_white_24dp
+                )
+        )
+        updateContentUiState(showQuickStartFocusPoint = isSettingsSupported())
     }
 
     private fun completeQuickStartFollowSiteTask() {
-        updateQuickStartFocusPointOnSettingsMenu(false)
+        updateContentUiState(showQuickStartFocusPoint = false)
         quickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE)
     }
 
-    private fun clearQuickStartFocusPoints() {
-        updateQuickStartFocusPointOnSettingsMenu(false)
-    }
-
-    private fun updateQuickStartFocusPointOnSettingsMenu(show: Boolean) {
+    private fun updateContentUiState(
+        showQuickStartFocusPoint: Boolean
+    ) {
         val currentUiState = _uiState.value as? ContentUiState
         currentUiState?.let {
             _uiState.value = currentUiState.copy(
-                    settingsMenuItemUiState = it.settingsMenuItemUiState.copy(showQuickStartFocusPoint = show),
+                    settingsMenuItemUiState = it.settingsMenuItemUiState.copy(
+                            isVisible = isSettingsSupported(),
+                            showQuickStartFocusPoint = showQuickStartFocusPoint
+                    ),
                     shouldUpdateViewPager = false
             )
         }
     }
 
-    sealed class QuickStartReaderPrompt(
+    data class QuickStartReaderPrompt(
         val task: QuickStartTask,
         @StringRes val shortMessagePrompt: Int,
         @DrawableRes val iconId: Int
-    ) {
-        object FollowSiteDiscoverTabStepPrompt : QuickStartReaderPrompt(
-                QuickStartTask.FOLLOW_SITE,
-                R.string.quick_start_dialog_follow_sites_message_short_settings,
-                R.drawable.ic_cog_white_24dp
-        )
-    }
+    )
 
     companion object {
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
