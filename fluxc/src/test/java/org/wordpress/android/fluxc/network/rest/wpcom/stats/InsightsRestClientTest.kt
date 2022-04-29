@@ -191,7 +191,7 @@ class InsightsRestClientTest {
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/posts/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
-                        "fields" to "ID,title,URL,discussion,like_count,date",
+                        "fields" to "ID,title,URL,discussion,like_count,date,featured_image",
                         "number" to "1",
                         "order_by" to "date",
                         "type" to "post"
