@@ -34,7 +34,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -136,13 +135,6 @@ class ReaderViewModel @Inject constructor(
         }
         // Store most recently selected tab so we can restore the selection after restart
         appPrefsWrapper.setReaderTag(selectedTag)
-
-        if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
-            val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
-            if (isDiscover) {
-                startQuickStartFollowSiteTaskSettingsStep()
-            }
-        }
     }
 
     fun onCloseReaderInterests() {
@@ -273,21 +265,24 @@ class ReaderViewModel @Inject constructor(
     private fun checkAndStartQuickStartFollowSiteTaskNextStep() {
         val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
         if (isDiscover) {
-            startQuickStartFollowSiteTaskSettingsStep()
+            startQuickStartFollowSiteTaskDiscoverTabStep()
         } else {
-            startQuickStartFollowSiteTaskDiscoverStep()
+            autoSwitchToDiscoverTab()
         }
     }
 
-    private fun startQuickStartFollowSiteTaskDiscoverStep() {
+    private fun autoSwitchToDiscoverTab() {
         launch {
-            if (!initialized) delay(QUICK_START_DISCOVER_STEP_DELAY)
-            _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverStepPrompt)
+            if (!initialized) delay(QUICK_START_DISCOVER_TAB_STEP_DELAY)
+            (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isDiscover }?.let {
+                selectedTabChange(it)
+            }
+            startQuickStartFollowSiteTaskDiscoverTabStep()
         }
     }
 
-    private fun startQuickStartFollowSiteTaskSettingsStep() {
-        _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteSettingsStepPrompt)
+    private fun startQuickStartFollowSiteTaskDiscoverTabStep() {
+        _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverTabStepPrompt)
         updateQuickStartFocusPointOnSettingsMenu(true)
     }
 
@@ -315,13 +310,7 @@ class ReaderViewModel @Inject constructor(
         @StringRes val shortMessagePrompt: Int,
         @DrawableRes val iconId: Int
     ) {
-        object FollowSiteDiscoverStepPrompt : QuickStartReaderPrompt(
-                QuickStartTask.FOLLOW_SITE,
-                R.string.quick_start_dialog_follow_sites_message_short_discover,
-                QuickStartUtils.ICON_NOT_SET
-        )
-
-        object FollowSiteSettingsStepPrompt : QuickStartReaderPrompt(
+        object FollowSiteDiscoverTabStepPrompt : QuickStartReaderPrompt(
                 QuickStartTask.FOLLOW_SITE,
                 R.string.quick_start_dialog_follow_sites_message_short_settings,
                 R.drawable.ic_cog_white_24dp
@@ -329,7 +318,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     companion object {
-        private const val QUICK_START_DISCOVER_STEP_DELAY = 2000L
+        private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
     }
 }
 
