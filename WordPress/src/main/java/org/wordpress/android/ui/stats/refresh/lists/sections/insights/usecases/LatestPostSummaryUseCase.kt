@@ -151,25 +151,25 @@ class LatestPostSummaryUseCase
     private fun buildQuickScanItems(domainModel: InsightsLatestPostModel) =
         QuickScanItem(
                 Column(
-                        string.stats_views,
-                        statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
-                        contentDescriptionHelper.buildContentDescription(
+                        label = string.stats_views,
+                        value = statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
+                        tooltip = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_views,
                                 domainModel.postViewsCount
                         )
                 ),
                 Column(
-                        string.stats_likes,
-                        statsUtils.toFormattedString(domainModel.postLikeCount),
-                        contentDescriptionHelper.buildContentDescription(
+                        label = string.stats_likes,
+                        value = statsUtils.toFormattedString(domainModel.postLikeCount),
+                        tooltip = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_likes,
                                 domainModel.postLikeCount
                         )
                 ),
                 Column(
-                        string.stats_comments,
-                        statsUtils.toFormattedString(domainModel.postCommentCount),
-                        contentDescriptionHelper.buildContentDescription(
+                        label = string.stats_comments,
+                        value = statsUtils.toFormattedString(domainModel.postCommentCount),
+                        tooltip = contentDescriptionHelper.buildContentDescription(
                                 R.string.stats_comments,
                                 domainModel.postCommentCount
                         )
