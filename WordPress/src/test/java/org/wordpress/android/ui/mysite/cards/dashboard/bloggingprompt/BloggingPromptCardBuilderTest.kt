@@ -101,16 +101,19 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     private fun buildBloggingPromptCard(bloggingPrompt: BloggingPrompt?) = builder.build(
-            BloggingPromptCardBuilderParams(bloggingPrompt, onShareClick)
+            BloggingPromptCardBuilderParams(bloggingPrompt, onShareClick, onAnswerClick)
     )
 
     private val onShareClick: (message: String) -> Unit = { }
+
+    private val onAnswerClick: () -> Unit = { }
 
     private val bloggingPromptCard = BloggingPromptCardWithData(
             prompt = UiStringText(PROMPT_TITLE),
             respondents = RESPONDENTS_IN_CARD,
             numberOfAnswers = NUMBER_OF_RESPONDENTS,
             false,
-            onShareClick = onShareClick
+            onShareClick = onShareClick,
+            onAnswerClick = onAnswerClick
     )
 }
