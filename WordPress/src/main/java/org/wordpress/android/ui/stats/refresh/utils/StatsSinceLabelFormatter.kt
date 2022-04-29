@@ -54,6 +54,25 @@ class StatsSinceLabelFormatter @Inject constructor(
 
     fun getSinceLabel(date: Date) = getSinceLabel(date.toInstant().atZone(ZoneId.systemDefault()))
 
+    fun getPublishedSinceLabel(date: Date) = getPublishedSinceLabel(date.toInstant().atZone(ZoneId.systemDefault()))
+
+    fun getPublishedSinceLabel(
+        date: ZonedDateTime,
+        now: ZonedDateTime = ZonedDateTime.now()
+    ) = when (Interval.between(date, now)) {
+        SECONDS_AGO -> getLabelString(R.string.stats_published_seconds_ago)
+        ONE_MINUTE_AGO -> getLabelString(R.string.stats_published_a_minute_ago)
+        X_MINUTES_AGO -> getLabelString(R.string.stats_published_minutes_ago, MINUTES.between(date, now))
+        ONE_HOUR_AGO -> getLabelString(R.string.stats_published_an_hour_ago)
+        X_HOURS_AGO -> getLabelString(R.string.stats_published_hours_ago, HOURS.between(date, now))
+        ONE_DAY_AGO -> getLabelString(R.string.stats_published_a_day_ago)
+        X_DAYS_AGO -> getLabelString(R.string.stats_published_days_ago, DAYS.between(date, now))
+        ONE_MONTH_AGO -> getLabelString(R.string.stats_published_a_month_ago)
+        X_MONTHS_AGO -> getLabelString(R.string.stats_published_months_ago, MONTHS.between(date, now))
+        ONE_YEAR_AGO -> getLabelString(R.string.stats_published_a_year_ago)
+        X_YEARS_AGO -> getLabelString(R.string.stats_published_years_ago, YEARS.between(date, now))
+    }
+
     fun getSinceLabel(
         date: ZonedDateTime,
         now: ZonedDateTime = ZonedDateTime.now()

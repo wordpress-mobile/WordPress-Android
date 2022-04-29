@@ -80,74 +80,73 @@ class LatestPostSummaryUseCase
 
     private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(buildTitle(domainModel))
-        items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
 
-        if (statsRevampV2Feature.isEnabled() && domainModel != null && domainModel.hasData()) {
-            items.add(buildQuickScanItems(domainModel))
-        }
-
-        if (!statsRevampV2Feature.isEnabled() && domainModel != null && domainModel.hasData()) {
-            items.add(
-                    ValueItem(
-                            statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
-                            R.string.stats_views,
-                            contentDescription = contentDescriptionHelper.buildContentDescription(
-                                    R.string.stats_views,
-                                    domainModel.postViewsCount
-                            )
-                    )
-            )
-            if (domainModel.dayViews.isNotEmpty()) {
-                items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
+        if (statsRevampV2Feature.isEnabled()) {
+            items.add(buildTitleViewMore(domainModel))
+            items.add(latestPostSummaryMapper.buildLatestPostItem(domainModel))
+            if (domainModel != null && domainModel.hasData()) items.add(buildQuickScanItems(domainModel))
+        } else {
+            items.add(buildTitle())
+            items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
+            if (domainModel != null && domainModel.hasData()) {
+                items.add(
+                        ValueItem(
+                                statsUtils.toFormattedString(domainModel.postViewsCount, startValue = MILLION),
+                                R.string.stats_views,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_views,
+                                        domainModel.postViewsCount
+                                )
+                        )
+                )
+                if (domainModel.dayViews.isNotEmpty()) {
+                    items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
+                }
+                val postLikeCount = statsUtils.toFormattedString(domainModel.postLikeCount)
+                items.add(
+                        ListItemWithIcon(
+                                R.drawable.ic_star_white_24dp,
+                                textResource = R.string.stats_likes,
+                                value = postLikeCount,
+                                showDivider = true,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_likes,
+                                        domainModel.postLikeCount
+                                )
+                        )
+                )
+                val postCommentCount = statsUtils.toFormattedString(domainModel.postCommentCount)
+                items.add(
+                        ListItemWithIcon(
+                                R.drawable.ic_comment_white_24dp,
+                                textResource = R.string.stats_comments,
+                                value = postCommentCount,
+                                showDivider = false,
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        R.string.stats_comments,
+                                        domainModel.postCommentCount
+                                )
+                        )
+                )
             }
-            val postLikeCount = statsUtils.toFormattedString(domainModel.postLikeCount)
-            items.add(
-                    ListItemWithIcon(
-                            R.drawable.ic_star_white_24dp,
-                            textResource = R.string.stats_likes,
-                            value = postLikeCount,
-                            showDivider = true,
-                            contentDescription = contentDescriptionHelper.buildContentDescription(
-                                    R.string.stats_likes,
-                                    domainModel.postLikeCount
-                            )
-                    )
-            )
-            val postCommentCount = statsUtils.toFormattedString(domainModel.postCommentCount)
-            items.add(
-                    ListItemWithIcon(
-                            R.drawable.ic_comment_white_24dp,
-                            textResource = R.string.stats_comments,
-                            value = postCommentCount,
-                            showDivider = false,
-                            contentDescription = contentDescriptionHelper.buildContentDescription(
-                                    R.string.stats_comments,
-                                    domainModel.postCommentCount
-                            )
-                    )
-            )
         }
         buildLink(domainModel)?.let { items.add(it) }
         return items
     }
 
-    private fun buildTitle(model: InsightsLatestPostModel?) =
-            if (statsRevampV2Feature.isEnabled()) {
-                TitleWithMore(
-                        textResource = R.string.stats_insights_latest_post_summary,
-                        navigationAction = if (model?.hasData() == true) {
-                            ListItemInteraction.create(
-                                    ViewMoreParams(model.postId, model.postTitle, model.postURL),
-                                    this::onViewMore
-                            )
-                        } else {
-                            null
-                        }
+    private fun buildTitle() = Title(R.string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
+
+    private fun buildTitleViewMore(model: InsightsLatestPostModel?) = TitleWithMore(
+            textResource = R.string.stats_insights_latest_post_summary,
+            navigationAction = if (model?.hasData() == true) {
+                ListItemInteraction.create(
+                        ViewMoreParams(model.postId, model.postTitle, model.postURL),
+                        this::onViewMore
                 )
             } else {
-                Title(R.string.stats_insights_latest_post_summary, menuAction = this::onMenuClick)
+                null
             }
+    )
 
     private fun buildQuickScanItems(domainModel: InsightsLatestPostModel) =
         QuickScanItem(

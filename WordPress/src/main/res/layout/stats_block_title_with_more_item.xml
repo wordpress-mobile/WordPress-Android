@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:text="@string/stats_insights_view_more"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
         android:textAllCaps="true"
         app:layout_constraintBaseline_toBaselineOf="@id/text"
         app:layout_constraintEnd_toEndOf="parent" />
