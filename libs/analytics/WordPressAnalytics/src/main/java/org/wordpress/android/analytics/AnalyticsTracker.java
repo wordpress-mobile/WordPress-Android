@@ -887,7 +887,8 @@ public final class AnalyticsTracker {
         WEBVIEW_NAVIGATED_FORWARD,
         WEBVIEW_OPEN_IN_BROWSER_TAPPED,
         WEBVIEW_RELOAD_TAPPED,
-        WEBVIEW_SHARE_TAPPED
+        WEBVIEW_SHARE_TAPPED,
+        WEBVIEW_PREVIEW_DEVICE_CHANGED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

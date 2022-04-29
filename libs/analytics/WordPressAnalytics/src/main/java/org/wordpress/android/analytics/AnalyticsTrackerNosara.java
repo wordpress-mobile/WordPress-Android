@@ -2281,6 +2281,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "webview_reload_tapped";
             case WEBVIEW_SHARE_TAPPED:
                 return "webview_share_tapped";
+            case WEBVIEW_PREVIEW_DEVICE_CHANGED:
+                return "webview_preview_device_changed";
         }
         return null;
     }

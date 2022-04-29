@@ -10,19 +10,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.ui.WPWebViewUsageCategory
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.SingleLiveEvent
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.PreviewMode.DESKTOP
 import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
 import org.wordpress.android.ui.PreviewModeHandler
+import org.wordpress.android.ui.WPWebViewUsageCategory
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState.WebPreviewFullscreenErrorUiState
@@ -192,6 +192,10 @@ class WPWebViewViewModel
     }
 
     fun selectPreviewMode(selectedPreviewMode: PreviewMode) {
+        analyticsTrackerWrapper.track(
+                Stat.WEBVIEW_PREVIEW_DEVICE_CHANGED,
+                mapOf(TRACK_SELECTED_OPTION_NAME to selectedPreviewMode.name.lowercase())
+        )
         if (previewMode.value != selectedPreviewMode) {
             _previewMode.value = selectedPreviewMode
             _navbarUiState.value =
@@ -265,5 +269,9 @@ class WPWebViewViewModel
     override fun onPreviewModeChanged(mode: PreviewMode) {
         togglePreviewModeSelectorVisibility(false)
         selectPreviewMode(mode)
+    }
+
+    companion object {
+        const val  TRACK_SELECTED_OPTION_NAME = "selected_option_name"
     }
 }
