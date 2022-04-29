@@ -140,7 +140,6 @@ class ReaderViewModel @Inject constructor(
         if (quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)) {
             val isDiscover = appPrefsWrapper.getReaderTag()?.isDiscover == true
             if (isDiscover) {
-                updateQuickStartFocusPointOnDiscoverTab(false)
                 startQuickStartFollowSiteTaskSettingsStep()
             }
         }
@@ -173,8 +172,7 @@ class ReaderViewModel @Inject constructor(
                 tabLayoutVisible = true
         ) {
             data class TabUiState(
-                val label: UiString,
-                val showQuickStartFocusPoint: Boolean = false
+                val label: UiString
             )
 
             data class MenuItemUiState(
@@ -284,7 +282,6 @@ class ReaderViewModel @Inject constructor(
     private fun startQuickStartFollowSiteTaskDiscoverStep() {
         launch {
             if (!initialized) delay(QUICK_START_DISCOVER_STEP_DELAY)
-            updateQuickStartFocusPointOnDiscoverTab(true)
             _quickStartPromptEvent.value = Event(QuickStartReaderPrompt.FollowSiteDiscoverStepPrompt)
         }
     }
@@ -300,19 +297,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun clearQuickStartFocusPoints() {
-        updateQuickStartFocusPointOnDiscoverTab(false)
         updateQuickStartFocusPointOnSettingsMenu(false)
-    }
-
-    private fun updateQuickStartFocusPointOnDiscoverTab(show: Boolean) {
-        val currentUiState = _uiState.value as? ContentUiState
-        currentUiState?.let {
-            val discoverTabIndex = it.readerTagList.indexOf(it.readerTagList.find { readerTag -> readerTag.isDiscover })
-            val updateTabUiStates = it.tabUiStates.mapIndexed { index, tabUiState ->
-                if (index == discoverTabIndex) tabUiState.copy(showQuickStartFocusPoint = show) else tabUiState
-            }
-            _uiState.value = currentUiState.copy(tabUiStates = updateTabUiStates, shouldUpdateViewPager = false)
-        }
     }
 
     private fun updateQuickStartFocusPointOnSettingsMenu(show: Boolean) {

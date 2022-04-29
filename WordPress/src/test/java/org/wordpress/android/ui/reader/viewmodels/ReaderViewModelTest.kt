@@ -371,13 +371,13 @@ class ReaderViewModelTest {
     @Test
     fun `given discover tab not selected, when quick start event is follow site, then discover tab step started`() {
         val tagList = createNonMockedNonEmptyReaderTagList()
-        testWithNonMockedNonEmptyTags(tagList) {
+        testWithNonMockedNonEmptyTags {
             val observers = initObservers()
             triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[0])
 
             viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
 
-            assertQsFollowSiteDiscoverStepStarted(observers, tagList)
+            assertQsFollowSiteDiscoverStepStarted(observers)
         }
     }
 
@@ -390,7 +390,7 @@ class ReaderViewModelTest {
 
             viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
 
-            assertQsFollowSiteDiscoverStepNotStarted(observers, tagList)
+            assertQsFollowSiteDiscoverStepNotStarted(observers)
         }
     }
 
@@ -423,20 +423,6 @@ class ReaderViewModelTest {
     }
 
     /* QUICK START - DISCOVER TAB CLICK - SETTINGS MENU STEP */
-
-    @Test
-    fun `given pending follow site qs task, when discover tab clicked, then discover tab qs focus point hidden`() {
-        val tagList = createNonMockedNonEmptyReaderTagList()
-        testWithNonMockedNonEmptyTags(tagList) {
-            whenever(quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)).thenReturn(true)
-            val observers = initObservers()
-            triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1])
-
-            viewModel.onTagChanged(tagList[1])
-
-            assertThat(observers.uiStates.last().findDiscoverTabQsFocusPoint(tagList)).isFalse
-        }
-    }
 
     @Test
     fun `given pending follow site qs task, when discover tab clicked, then setting menu step started`() {
@@ -485,22 +471,18 @@ class ReaderViewModelTest {
     }
 
     private fun assertQsFollowSiteDiscoverStepStarted(
-        observers: Observers,
-        tagList: ReaderTagList
+        observers: Observers
     ) {
         with(observers) {
             assertThat(quickStartReaderPrompts.last().peekContent()).isEqualTo(FollowSiteDiscoverStepPrompt)
-            assertThat(uiStates.last().findDiscoverTabQsFocusPoint(tagList)).isEqualTo(true)
         }
     }
 
     private fun assertQsFollowSiteDiscoverStepNotStarted(
-        observers: Observers,
-        tagList: ReaderTagList
+        observers: Observers
     ) {
         with(observers) {
             assertThat(quickStartReaderPrompts).isEmpty()
-            assertThat(uiStates.last().findDiscoverTabQsFocusPoint(tagList)).isEqualTo(false)
         }
     }
 
@@ -527,11 +509,6 @@ class ReaderViewModelTest {
     ) {
         verify(quickStartRepository).completeTask(QuickStartTask.FOLLOW_SITE)
         assertThat(observers.uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(false)
-    }
-
-    private fun ReaderUiState.findDiscoverTabQsFocusPoint(readerTagList: ReaderTagList): Boolean {
-        val discoverTabIndex = readerTagList.indexOf(readerTagList.find { it.isDiscover })
-        return (this as? ContentUiState)?.tabUiStates?.get(discoverTabIndex)?.showQuickStartFocusPoint ?: false
     }
 
     private fun ReaderUiState.findSettingsMenuQsFocusPoint() =
