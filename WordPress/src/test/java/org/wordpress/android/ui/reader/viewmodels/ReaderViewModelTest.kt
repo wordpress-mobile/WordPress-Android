@@ -505,7 +505,7 @@ class ReaderViewModelTest {
     private data class Observers(
         val uiStates: List<ReaderUiState>,
         val quickStartReaderPrompts: List<Event<QuickStartReaderPrompt>>,
-        val tabNavigationEvents: List<TabNavigation>,
+        val tabNavigationEvents: List<TabNavigation>
     )
 
     private fun triggerReaderTabContentDisplay(
