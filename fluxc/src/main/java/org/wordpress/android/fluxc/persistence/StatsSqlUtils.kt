@@ -156,6 +156,7 @@ class StatsSqlUtils
         WP_COM_FOLLOWERS,
         EMAIL_FOLLOWERS,
         COMMENTS_INSIGHTS,
+        SUMMARY,
         TAGS_AND_CATEGORIES_INSIGHTS,
         POSTS_AND_PAGES_VIEWS,
         REFERRERS,
