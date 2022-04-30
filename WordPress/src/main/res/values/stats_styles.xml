@@ -35,11 +35,6 @@
 
     <!-- Stats Refresh -->
 
-    <style name="StatsCard" parent="WordPress.CardView.Unelevated">
-        <item name="cardCornerRadius">10dp</item>
-        <item name="strokeColor">@color/stats_card_stroke</item>
-    </style>
-
     <style name="StatsBlock" />
 
     <style name="StatsLoadingBlock" parent="StatsBlock">
