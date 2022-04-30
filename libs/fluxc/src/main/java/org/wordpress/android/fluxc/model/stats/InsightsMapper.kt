@@ -104,7 +104,8 @@ class InsightsMapper
                 viewsCount ?: 0,
                 commentCount,
                 postResponse.likeCount ?: 0,
-                daysViews
+                daysViews,
+            postResponse.featuredImage ?: ""
         )
     }
 
