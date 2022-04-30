@@ -1,15 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-01 15:29:18+0000
+Translation-Revision-Date: 2022-04-26 15:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0
 Language: ko_KR
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">사이트 만들기</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">블록 추가</string>
+    <string name="initial_screen">초기 화면</string>
+    <string name="blogging_prompts_onboarding_notification_action">더 알아보기</string>
+    <string name="blogging_prompts_onboarding_notification_text">글쓰기를 습관화하여 더 좋은 작가 되기 눌러서 자세히 알아보세요.</string>
+    <string name="blogging_prompts_onboarding_notification_title">워드프레스 모바일 앱 신규 기능: 프롬프트</string>
+    <string name="new_site_creation_site_name_header_subtitle">좋은 이름은 짧고 인상적입니다.\n나중에 변경할 수 있습니다.</string>
+    <string name="new_site_creation_site_name_header_title">%s 웹사이트 이름 지정</string>
+    <string name="new_site_creation_site_name_title">사이트 이름</string>
+    <string name="my_site_todays_stats_get_more_views_message">잠재 고객 유치에 관심이 있으신가요? &lt;a href=\"%1$s\"&gt;최고의 팁&lt;/a&gt; 확인</string>
+    <string name="stats_insights_views_and_visitors_message">지난주 조회수는 이전 주보다 %1$s %2$s습니다.</string>
+    <string name="stats_insights_views_and_visitors">조회수와 방문자 수</string>
+    <string name="featured_image_removed_notice">특성 이미지로서 제거됨</string>
+    <string name="featured_image_confirmation_notice">특성 이미지로 설정</string>
+    <string name="featured_image_replace_dialog_cancel">현재 상태 유지</string>
+    <string name="featured_image_replace_dialog_confirm">특성 이미지 교체</string>
+    <string name="featured_image_replace_dialog_description">이미 특성 이미지가 설정되어 있습니다. 새 이미지로 바꾸시겠어요?</string>
+    <string name="featured_image_replace_dialog_title">현재 특성 이미지를 교체할까요?</string>
+    <string name="dialog_dismiss_try_block_editor">해제</string>
+    <string name="dialog_body_try_block_editor">곧 새 글에 대한 구 버전 편집기가 제거되지만, 기존 글 또는 페이지 편집은 영향을 받지 않습니다. 지금 사이트 설정에서 블록 편집기를 활성화하여 유리하게 시작하세요.</string>
+    <string name="dialog_title_try_block_editor">새 블록 편집기 시도</string>
+    <string name="menu_toolbar_title">%s 블록 편집</string>
+    <string name="long_post_dlg_saving">저장하기</string>
+    <string name="retry_failed_upload_retry_all">모두 다시 시도</string>
+    <string name="retry_failed_upload_remove">업로드 제거</string>
+    <string name="retry_failed_upload_yes">다시 시도</string>
+    <string name="retry_failed_upload_title">파일을 업로드할 수 없음</string>
+    <string name="stop_upload_dialog_button_no">아니요</string>
+    <string name="stop_upload_dialog_button_yes">예</string>
+    <string name="dialog_button_cancel">취소</string>
+    <string name="dialog_button_ok">확인</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_title">링크 삽입</string>
+    <string name="editor_title_beta">베타</string>
+    <string name="toast_content_info_editor_not_ready">편집기를 아직 로드하는 중</string>
+    <string name="toast_content_info_failed">콘텐츠 구조 가져오기 실패</string>
+    <string name="dialog_content_info_body">블록: %1$d\n개단어: %2$d\n개문자: %3$d자</string>
+    <string name="dialog_content_info_title">콘텐츠 구조</string>
+    <string name="media_bar_description_library">워드프레스닷컴 미디어 라이브러리에서 미디어 선택</string>
+    <string name="media_bar_description_gallery">갤러리에서 미디어 선택</string>
+    <string name="media_bar_description_camera">카메라로 사진 또는 비디오 촬영</string>
+    <string name="pixel_suffix">%dpx</string>
+    <string name="stop_save_dialog_ok_button">확인</string>
+    <string name="stop_save_dialog_message">모든 파일이 저장될 때까지 기다려 주세요</string>
+    <string name="stop_save_dialog_title">파일 저장 중</string>
+    <string name="post_content">콘텐츠</string>
+    <string name="blogging_prompts_onboarding_card_prompt">자신의 인생을 영화로 만들어 보세요.</string>
+    <string name="blogging_prompts_onboarding_remind_me">나에게 알림</string>
+    <string name="blogging_prompts_onboarding_try_it_now">지금 시도하기</string>
+    <string name="blogging_prompts_onboarding_content_note_content">내 사이트 &gt; 설정 &gt; 블로깅 알림에서 언제든지 자세히 알아보고 알림을 설정할 수 있습니다.</string>
+    <string name="blogging_prompts_onboarding_content_note_title">참고:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">영감을 발휘할 수 있도록 알림판에 매일 새로운 프롬프트가 표시됩니다!</string>
+    <string name="blogging_prompts_onboarding_content_top">더 좋은 작가가 되는 가장 좋은 방법은 글쓰기를 습관화하고 다른 사람과 공유하는 것입니다. 그래서 프롬프트가 필요합니다!</string>
+    <string name="blogging_prompts_onboarding_header_title">프롬프트 소개</string>
+    <string name="blogging_prompt_set_reminders">알림 설정</string>
+    <string name="blogging_reminders_prompt_subtitle">알림에는 일일 프롬프트가 포함됩니다</string>
+    <string name="blogging_reminders_prompt_title">일일 프롬프트 포함</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">정기적으로 글을 작성하여 신규 독자를 유치하세요. 글을 쓰고 싶을 때 알려주시면 알림을 보내드리겠습니다!</string>
+    <string name="set_your_blogging_prompts_title">습관화하여 더 좋은 작가 되기</string>
+    <string name="site_creation_intent_writing_poetry">글쓰기 및 시</string>
+    <string name="site_creation_intent_travel">여행</string>
+    <string name="site_creation_intent_technology">기술</string>
+    <string name="site_creation_intent_sports">스포츠</string>
+    <string name="site_creation_intent_real_estate">부동산</string>
+    <string name="site_creation_intent_politics">정치</string>
+    <string name="site_creation_intent_photography">사진</string>
+    <string name="site_creation_intent_personal">개인</string>
+    <string name="site_creation_intent_people">사람</string>
+    <string name="site_creation_intent_parenting">육아</string>
+    <string name="site_creation_intent_news">뉴스</string>
+    <string name="site_creation_intent_music">음악</string>
+    <string name="site_creation_intent_local_services">지역 봉사</string>
+    <string name="site_creation_intent_lifestyle">라이프스타일</string>
+    <string name="site_creation_intent_interior_design">인테리어 디자인</string>
+    <string name="site_creation_intent_health">건강</string>
+    <string name="site_creation_intent_gaming">게임</string>
+    <string name="site_creation_intent_food">음식</string>
+    <string name="site_creation_intent_fitness_exercise">피트니스 및 운동</string>
+    <string name="site_creation_intent_film_television">영화 및 텔레비전</string>
+    <string name="site_creation_intent_finance">금융</string>
+    <string name="site_creation_intent_fashion">패션</string>
+    <string name="site_creation_intent_diy">DIY</string>
+    <string name="site_creation_intent_education">교육</string>
+    <string name="site_creation_intent_community_nonprofit">공동체 및 비영리</string>
+    <string name="site_creation_intent_business">비즈니스</string>
+    <string name="site_creation_intent_books">책</string>
+    <string name="site_creation_intent_beauty">미용</string>
+    <string name="site_creation_intent_automotive">자동차</string>
+    <string name="site_creation_intent_art">예술</string>
+    <string name="new_site_creation_intents_title">사이트 주제</string>
+    <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">이 프롬프트 건너뛰기</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">블로깅 프롬프트 공유</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ 답변됨</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">답변 프롬프트</string>
+    <string name="my_site_blogging_prompt_card_title">프롬프트</string>
+    <string name="my_site_all_tab_title">전체</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">알림 및 프롬프트</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 밝은 배경 색상 및/또는 더 어두운 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 어두운 배경 색상 및/또는 더 밝은 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">미디어를 삽입하지 못했습니다.\n자세히 알아보려면 누르세요.</string>
-    <string name="new_site_creation_intents_header_subtitle">아래 목록에 있는 주제 선택 또는 원하는 주제 입력</string>
+    <string name="new_site_creation_intents_header_subtitle">아래 목록에서 테마를 선택하거나 원하는 테마를 입력하세요.</string>
     <string name="new_site_creation_intents_header_title">웹사이트의 주제가 무엇인가요?</string>
     <string name="notification_channel_weekly_roundup_title">주간 총정리</string>
     <string name="my_site_dashboard_tab_title">홈</string>
@@ -19,7 +119,6 @@ Language: ko_KR
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_cannot_read_site">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_services_disabled">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
-    <string name="my_site_menu_tab_title">사이트 메뉴</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">통계로 이동</string>
@@ -328,14 +427,12 @@ Language: ko_KR
     <string name="gutenberg_native_one">1</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_text_color">텍스트 색상</string>
-    <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
     <string name="gutenberg_native_four">4</string>
     <string name="gutenberg_native_custom_url">사용자 정의 URL</string>
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
-    <string name="gutenberg_native_add_blocks">블록 추가</string>
     <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
     <string name="gutenberg_native_what_is_alt_text">대체 텍스트란 무엇인가요?</string>
     <string name="gutenberg_native_transform_s_to">다음으로 %s 변형</string>
@@ -605,8 +702,8 @@ Language: ko_KR
     <string name="threat_item_sub_header_file_signature">위협을 찾았습니다 %s</string>
     <string name="threat_item_sub_header_core_file">워드프레스에서 취약점을 찾았습니다</string>
     <string name="threat_item_sub_header_misc_vulnerability">기타 취약점</string>
-    <string name="threat_item_header_vulnerable_theme">취약한 테마: %s (버전 %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">취약한 플러그인: %s (버전 %s)</string>
+    <string name="threat_item_header_vulnerable_theme">취약한 테마: %1$s(버전 %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">취약한 플러그인: %1$s(버전 %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: 의심스러운 코드 유형</string>
     <string name="threat_item_header_database_threat">대이터배이스 %s 위협</string>
     <string name="threat_item_header_infected_core_file">%s: 감염 코어 파일</string>
@@ -616,7 +713,7 @@ Language: ko_KR
     <string name="scan_in_minutes_ago">%s분 전</string>
     <string name="scan_in_hours_ago">%s시간 전</string>
     <string name="scan_this_site">이 사이트</string>
-    <string name="scan_idle_last_scan_description">%s에 마지막 젯팩 스캔이 실행되었으며 위험이 발견되지 않았습니다. %s</string>
+    <string name="scan_idle_last_scan_description">%1$s에 마지막 젯팩 스캔이 실행되었으며 위험이 발견되지 않았습니다. %2$s</string>
     <string name="scan_idle_threats_found_title">사이트가 위험할 수 있습니다</string>
     <string name="scan_idle_no_threats_found_title">걱정하지 마세요</string>
     <string name="scan_again">다시 검사하기</string>
@@ -624,7 +721,7 @@ Language: ko_KR
     <string name="scan_state_icon">상태 검사하기 아이콘</string>
     <string name="backup">백업하기</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">활동 유형 필터 (%s유형을 선택했습니다)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (%s 항목을 보이는 중)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s(%2$s 아이템 표시)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">활동 유형 필터</string>
     <string name="activity_log_activity_type_empty_subtitle">선택한 날짜 범위에 활동 기록이 없습니다.</string>
     <string name="activity_log_activity_type_empty_title">사용할 수 있는 활동이 없습니다</string>
@@ -974,7 +1071,7 @@ Language: ko_KR
     <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
     <string name="pages_set_as_posts_page">글 페이지로 설정</string>
     <string name="pages_set_as_homepage">홈페이지로 설정</string>
-    <string name="suggestion_invalid">%s은(는) 유효한 %s이(가) 아님</string>
+    <string name="suggestion_invalid">%1$s은(는) 유효한 %2$s이(가) 아님</string>
     <string name="site_settings_select_page">페이지 선택</string>
     <string name="site_settings_posts_page">글 페이지</string>
     <string name="site_settings_static_homepage">정적 홈페이지</string>
@@ -1274,7 +1371,7 @@ Language: ko_KR
     <string name="local_post_autosave_revision_available">이 글에 저장되지 않은 변경 사항이 있습니다.</string>
     <string name="dialog_confirm_autosave_dont_restore_button">이 앱의 버전</string>
     <string name="dialog_confirm_autosave_restore_button">다른 기기의 버전</string>
-    <string name="dialog_confirm_autosave_body_second_part">이 앱에서\n%s에 저장됨\n\n다른 기기에서\n%s에 저장됨\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">이 앱에서\n%1$s\n에 저장됨\n다른 기기에서\n%2$s\n에 저장됨\n</string>
     <string name="dialog_confirm_autosave_body_first_part">최근에 이 글을 변경했지만 저장하지 않았습니다. 로드할 버전을 선택하세요.\n\n</string>
     <string name="dialog_confirm_autosave_title">어떤 버전을 편집하시겠어요?</string>
     <string name="button_delete_permanently">영구적으로 삭제하기</string>
@@ -1324,7 +1421,7 @@ Language: ko_KR
     <string name="share_desc">공유</string>
     <string name="navigate_back_desc">뒤로 가기</string>
     <string name="navigate_forward_desc">앞으로 가기</string>
-    <string name="calendar_scheduled_post_description">워드프레스 앱에서 \"%s\"에 \"%s\" 게시 예약됨 \n %s</string>
+    <string name="calendar_scheduled_post_description">워드프레스 앱 \n에서 \"%2$s\"에 \"%1$s\" 발행 예약됨 %3$s</string>
     <string name="calendar_scheduled_post_title">예약된 워드프레스 글: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\"이(가) 10분 후에 게시됩니다.</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\"이(가) 1시간 후에 게시됩니다.</string>
@@ -1427,6 +1524,7 @@ Language: ko_KR
     <string name="stats_management_news_card_message">확인하려는 통계를 선택하고 중요한 데이터에 집중하세요. 인사이트 하단의 %1$s을(를) 눌러 통계를 사용자 정의하세요.</string>
     <string name="stats_manage_your_stats">통계 관리</string>
     <string name="history_fetching_revisions">리비전을 가져오는 중…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">미디어를 삽입하지 못했습니다.\n옵션을 보려면 누르세요.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">미디어를 삽입하지 못했습니다.\n눌러서 다시 시도하세요.</string>
     <string name="editor_uploading_draft">임시글을 업로드하고 있습니다.</string>
     <string name="post_uploading_draft">임시글 업로드 중</string>
@@ -1573,7 +1671,7 @@ Language: ko_KR
     <string name="toast_conflict_updating_post">글 업데이트 중</string>
     <string name="dialog_confirm_load_remote_post_discard_web">웹 취소</string>
     <string name="dialog_confirm_load_remote_post_discard_local">로컬 취소</string>
-    <string name="dialog_confirm_load_remote_post_body_2">로컬\n%s에 저장됨\n\n웹\n%s에 저장됨\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">로컬\n%1$s\n에 저장됨\n웹\n%2$s\n에 저장됨\n</string>
     <string name="dialog_confirm_load_remote_post_body">이 글에 있는 두 가지 버전이 서로 충돌합니다. 취소할 버전을 선택하세요.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">동기화 충돌 문제 해결</string>
     <string name="stats_no_data_for_period">이 기간에 데이터 없음</string>
@@ -1858,7 +1956,7 @@ Language: ko_KR
     <string name="notification_settings_category_followed_sites">팔로우한 사이트</string>
     <string name="content_description_person_reading_device_notification">기기에서 알림을 읽고 있는 사람</string>
     <string name="content_description_people_looking_charts">그래프와 차트를 보는 사람들</string>
-    <string name="comment_title">%s의 %s</string>
+    <string name="comment_title">%2$s의 %1$s</string>
     <string name="dialog_confirm_delete_permanently_post">이 글을 영구적으로 삭제하시겠습니까?</string>
     <string name="notification_channel_important_title">중요</string>
     <string name="notification_channel_general_title">일반</string>
@@ -2476,12 +2574,19 @@ Language: ko_KR
     <string name="error_fetch_email_followers_list">사이트 이메일 팔로워를 가져올 수 없습니다.</string>
     <string name="error_fetch_followers_list">사이트 팔로워를 가져올 수 없습니다.</string>
     <string name="editor_failed_uploads_switch_html">일부 미디어 업로드에 실패했습니다. 이 상태에서는 HTML 모드로 전환할 수\n 없습니다. 실패한 업로드를 모두 제거하고 계속할까요?</string>
+    <string name="image_thumbnail">이미지 썸네일</string>
+    <string name="visual_editor">비주얼 편집기</string>
     <string name="image_width">가로</string>
     <string name="image_link_to">링크 연결 대상:</string>
+    <string name="image_alt_text">대체 텍스트</string>
     <string name="image_caption">캡션</string>
     <string name="image_settings_save_toast">변경사항 저장됨</string>
     <string name="image_settings_dismiss_dialog_title">저장되지 않은 변경 사항을 취소할까요?</string>
     <string name="stop_upload_dialog_title">업로드를 중지할까요?</string>
+    <string name="alert_error_adding_media">미디어를 삽입하는 동안 오류가 발생했습니다.</string>
+    <string name="alert_action_while_uploading">미디어를 업로드 중입니다. 완료될 때까지 기다려 주세요.</string>
+    <string name="alert_insert_image_html_mode">HTML 모드에서 직접 미디어를 삽입할 수 없습니다. 비주얼 모드로 전환하세요.</string>
+    <string name="uploading_gallery_placeholder">갤러리 업데이트 중…</string>
     <string name="tap_to_try_again">눌러서 다시 시도하세요!</string>
     <string name="invite_sent">초대를 전송했습니다.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2964,8 +3069,10 @@ Language: ko_KR
     <string name="delete_post">게시물 삭제</string>
     <string name="post_settings">작성 설정</string>
     <string name="file_not_found">올라간 미디어 파일을 찾을 수 없습니다. 삭제 또는 이동 된 것 같습니다.</string>
+    <string name="horizontal_alignment">가로</string>
     <string name="local_draft">로컬 초안</string>
     <string name="page_settings">페이지 설정</string>
+    <string name="create_a_link">링크 만들기</string>
     <string name="link_enter_url_text">링크 텍스트(옵션) :</string>
     <string name="cannot_delete_multi_media_items">일부 미디어를 다시로드 할 수 없습니다. 나중에 다시 시도하십시오.</string>
     <string name="media_error_no_permission">미디어 라이브러리를 볼 수 있는 권한이 없습니다</string>
@@ -3042,6 +3149,10 @@ Language: ko_KR
     <string name="username">사용자 이름</string>
     <string name="password">암호</string>
     <string name="reader">가입 블로그</string>
+    <string name="featured_in_post">게시물 본문에 이미지를 포함</string>
+    <string name="featured">같은 기능을 갖춘 이미지를 사용</string>
+    <string name="width">가로</string>
+    <string name="caption">캡션(옵션)</string>
     <string name="pages">페이지</string>
     <string name="posts">작성</string>
     <string name="anonymous">익명</string>
@@ -3049,6 +3160,7 @@ Language: ko_KR
     <string name="done">완료</string>
     <string name="ok">확인</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">업로드 중…</string>
     <string name="tos">이용 약관</string>
     <string name="version">버전</string>
     <string name="app_title">WordPress for Android</string>

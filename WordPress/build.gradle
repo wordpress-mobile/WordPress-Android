@@ -59,6 +59,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 detekt {
     baseline = file("${project.rootDir}/config/detekt/baseline.xml")
@@ -118,12 +119,15 @@ android {
         buildConfigField "boolean", "UNIFIED_ABOUT", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
-        buildConfigField "boolean", "SITE_INTENT_QUESTION", "false"
+        buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
+        buildConfigField "boolean", "SITE_NAME", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
+        buildConfigField "boolean", "BLOGGING_PROMPTS_NOTIFICATION", "false"
         buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT", "false"
         buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD", "false"
         buildConfigField "boolean", "STATS_REVAMP_V2", "false"
+        buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -178,14 +182,16 @@ android {
             buildConfigField "boolean", "ENABLE_QUICK_ACTION", "true"
             buildConfigField "boolean", "ENABLE_FOLLOWED_SITES_SETTINGS", "true"
             buildConfigField "boolean", "ENABLE_WHATS_NEW_FEATURE", "true"
-            buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "false"
+            buildConfigField "boolean", "ENABLE_MY_SITE_DASHBOARD_TABS", "true"
             buildConfigField "String", "TRACKS_EVENT_PREFIX", '"jpandroid_"'
             buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"com.jetpack.android"'
 
             manifestPlaceholders = [magicLinkScheme:"jetpack"]
         }
 
-        vanilla { // used for release and beta
+        // Used for release/beta testing builds. Usually shouldn't be build locally.
+        // AppName: WordPress/Jetpack
+        vanilla {
             dimension "buildType"
 
             versionName versionProperties.getProperty("versionName")
@@ -196,7 +202,9 @@ android {
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
-        zalpha { // alpha version - enable experimental features
+        // Used for Alpha builds - testing builds with experimental features enabled.
+        // AppName: WordPress/Jetpack
+        zalpha {
             dimension "buildType"
 
             versionName versionProperties.getProperty("alpha.versionName")
@@ -206,7 +214,9 @@ android {
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
-        wasabi { // "hot" version, can be installed along release, alpha or beta versions
+        // Used for local development - preferred variant for developers.
+        // AppName: WordPress Beta/Jetpack Beta
+        wasabi {
             applicationIdSuffix ".beta"
             dimension "buildType"
 
@@ -214,7 +224,10 @@ android {
             versionCode versionProperties.getProperty("alpha.versionCode").toInteger()
         }
 
-        jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
+        // Used for CI builds on PRs (downloadable apks). Can be used locally when a developer needs
+        // to install multiple versions of the app on the same device.
+        // AppName: WordPress Pre-Alpha/Jetpack Pre-Alpha
+        jalapeno {
             isDefault true
             applicationIdSuffix ".prealpha"
             dimension "buildType"
@@ -322,7 +335,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.2.4'
+    implementation "androidx.fragment:fragment:$fragmentVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
 
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -385,9 +399,6 @@ dependencies {
 
     testImplementation "junit:junit:$jUnitVersion"
 
-    testImplementation 'org.robolectric:robolectric:4.4'
-    testImplementation 'org.robolectric:shadows-multidex:4.4'
-
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
@@ -425,21 +436,21 @@ dependencies {
 
     androidTestImplementation "androidx.test:runner:$androidxTestVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestVersion"
-    androidTestImplementation "androidx.test.ext:junit:$androidxTestVersion"
+    androidTestImplementation "androidx.test.ext:junit:$jUnitExtVersion"
     androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
-    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    // Dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    // Dagger and Hilt
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "com.google.dagger:hilt-android:$daggerVersion"
+    kapt "com.google.dagger:hilt-compiler:$daggerVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$daggerVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$daggerVersion"
 
     implementation("$gradle.ext.fluxCBinaryPath") {
         version {
@@ -447,13 +458,17 @@ dependencies {
         }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
+        exclude group: 'com.android.support', module: 'support-annotations'
     }
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
-    implementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
-    testImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
-    debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
+
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
@@ -475,7 +490,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
-    implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
+    implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
 
     lintChecks 'org.wordpress:lint:1.1.0'
 
@@ -486,8 +501,8 @@ dependencies {
     kapt project(':libs:WordPressProcessors')
 
     // Debug
-    debugImplementation 'com.facebook.stetho:stetho:1.5.1'
-    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    debugImplementation 'com.facebook.stetho:stetho:1.6.0'
+    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.6.0'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
@@ -509,7 +524,9 @@ dependencies {
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
 
-    implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
+    implementation ("com.google.android.exoplayer:exoplayer:$exoPlayerVersion") {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
 
 configurations.all {
@@ -550,7 +567,7 @@ tasks.register("violationCommentsToGitHub", ViolationCommentsToGitHubTask) {
 **Reporter**: {{violation.reporter}}{{#violation.rule}}\n
 **Rule**: {{violation.rule}}{{/violation.rule}}
 **Severity**: {{violation.severity}}
-**File**: {{violation.file}} L{{violation.startLine}}{{#violation.source}}
+**File**: {{violation.file}}:{{violation.startLine}}{{#violation.source}}
 **Source**: {{violation.source}}{{/violation.source}}
 {{violation.message}}
 """

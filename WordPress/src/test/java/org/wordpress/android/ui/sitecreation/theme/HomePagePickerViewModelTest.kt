@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -36,6 +37,7 @@ private const val mockedDesignSegmentId = 1L
 private const val mockedDesignDemoUrl = "mockedDemoUrl"
 
 @RunWith(MockitoJUnitRunner::class)
+@InternalCoroutinesApi
 class HomePagePickerViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()

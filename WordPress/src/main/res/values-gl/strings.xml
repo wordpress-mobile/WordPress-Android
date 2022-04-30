@@ -1,15 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-26 21:48:11+0000
+Translation-Revision-Date: 2022-04-23 10:18:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0
 Language: gl_ES
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">Crear sitio</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Engadir bloques</string>
+    <string name="initial_screen">Pantalla inicial</string>
+    <string name="blogging_prompts_onboarding_notification_action">Aprender máis</string>
+    <string name="blogging_prompts_onboarding_notification_text">Convértete nun mellor escritor creando un hábito de escritura. Toca para máis información.</string>
+    <string name="blogging_prompts_onboarding_notification_title">Novo na aplicación móbil de WordPress: Estímulos</string>
+    <string name="new_site_creation_site_name_header_subtitle">Un bo nome é curto e fácil de recordar.\nPodes cambialo máis tarde.</string>
+    <string name="new_site_creation_site_name_header_title">Dálle á túa web %s un nome</string>
+    <string name="new_site_creation_site_name_title">Nome do sitio</string>
+    <string name="my_site_todays_stats_get_more_views_message">Estás interesado en crear unha audiencia? Revisa os nosos &lt;a href=\"%1$s\"&gt;mellores consellos&lt;/a&gt;.</string>
+    <string name="stats_insights_views_and_visitors_message">As túas visitas das últimas semanas son %1$s %2$s que as da semana anterior.</string>
+    <string name="stats_insights_views_and_visitors">Visitas e visitantes</string>
+    <string name="featured_image_removed_notice">Eliminada como imaxe destacada</string>
+    <string name="featured_image_confirmation_notice">Establecer como imaxe destacada</string>
+    <string name="featured_image_replace_dialog_cancel">Manter actual</string>
+    <string name="featured_image_replace_dialog_confirm">Reemplazar a imaxe destacada</string>
+    <string name="featured_image_replace_dialog_description">Xa tes establecida unha imaxe destacada. Queres remprazala coa nova imaxe?</string>
+    <string name="featured_image_replace_dialog_title">Remprazamos a imaxe destacada actual?</string>
+    <string name="dialog_dismiss_try_block_editor">Descartar</string>
+    <string name="dialog_body_try_block_editor">Pronto eliminaremos o editor clásico para as novas entradas, pero isto non afectará á edición de ningunha das túas entradas ou páxinas existentes. Adiántate agora activando o editor de bloques nos axustes do sitio.</string>
+    <string name="dialog_title_try_block_editor">Proba o novo editor de bloques</string>
+    <string name="menu_toolbar_title">Editar o bloque %s</string>
+    <string name="long_post_dlg_saving">Gardando</string>
+    <string name="retry_failed_upload_retry_all">Reintentar todo</string>
+    <string name="retry_failed_upload_remove">Eliminar a subida</string>
+    <string name="retry_failed_upload_yes">Reintentar</string>
+    <string name="retry_failed_upload_title">Non se puido subir o arquivo</string>
+    <string name="stop_upload_dialog_button_no">Non</string>
+    <string name="stop_upload_dialog_button_yes">Si</string>
+    <string name="dialog_button_cancel">Cancelar</string>
+    <string name="dialog_button_ok">Aceptar</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_title">Inserir unha ligazón</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="toast_content_info_editor_not_ready">O editor aínda está cargando</string>
+    <string name="toast_content_info_failed">Fallo ao obter a estrutura do contido</string>
+    <string name="dialog_content_info_body">Bloques: %1$d\nPalabras: %2$d\nCaracteres: %3$d</string>
+    <string name="dialog_content_info_title">Estrutura do contido</string>
+    <string name="media_bar_description_library">Elixe un medio da biblioteca de medios de WordPress</string>
+    <string name="media_bar_description_gallery">Elixe un medio da galería</string>
+    <string name="media_bar_description_camera">Fai unha foto ou un vídeo coa cámara</string>
+    <string name="pixel_suffix">%dpx</string>
+    <string name="stop_save_dialog_ok_button">Aceptar</string>
+    <string name="stop_save_dialog_message">Por favor, espera ata que se teñan gardado todos os arquivos</string>
+    <string name="stop_save_dialog_title">Arquivos gardándose</string>
+    <string name="post_content">Contido</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Fai a película da túa vida.</string>
+    <string name="blogging_prompts_onboarding_remind_me">Recordarmo</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Próbao agora</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Podes aprender máis e configurar recordatorios en calquera momento en «O meu sitio &gt; Axustes &gt; Recordatorios de bloguear».</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Nota:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">Mostrarémosche un novo estímulo cada día no teu escritorio para axudarche a que flúan eses fluídos creativos!</string>
+    <string name="blogging_prompts_onboarding_content_top">O mellor modo de converterte nun mellor escritor é crear un hábito de escritura e compartir con outros - aquí é onde entran os estímulos!</string>
+    <string name="blogging_prompts_onboarding_header_title">Presentando os estímulos</string>
+    <string name="blogging_prompt_set_reminders">Configurar recordatorios</string>
+    <string name="blogging_reminders_prompt_subtitle">O recordatorio incluirá un estímulo diario</string>
+    <string name="blogging_reminders_prompt_title">Incluír o estímulo diario</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Publicar con regularidade atrae novos lectores. Cóntanos cando queres escribir e enviarémosche un recordatorio!</string>
+    <string name="set_your_blogging_prompts_title">Convértete nun mellor escritor creando un hábito</string>
+    <string name="site_creation_intent_writing_poetry">Escritura e poesía</string>
+    <string name="site_creation_intent_travel">Viaxes</string>
+    <string name="site_creation_intent_technology">Tecnoloxía</string>
+    <string name="site_creation_intent_sports">Deportes</string>
+    <string name="site_creation_intent_real_estate">Inmobiliaria</string>
+    <string name="site_creation_intent_politics">Política</string>
+    <string name="site_creation_intent_photography">Fotografía</string>
+    <string name="site_creation_intent_personal">Persoal</string>
+    <string name="site_creation_intent_people">Xente</string>
+    <string name="site_creation_intent_parenting">Paternidade</string>
+    <string name="site_creation_intent_news">Noticias</string>
+    <string name="site_creation_intent_music">Música</string>
+    <string name="site_creation_intent_local_services">Servizos locais</string>
+    <string name="site_creation_intent_lifestyle">Estilo de vida</string>
+    <string name="site_creation_intent_interior_design">Deseño de interiores</string>
+    <string name="site_creation_intent_health">Saúde</string>
+    <string name="site_creation_intent_gaming">Xogos</string>
+    <string name="site_creation_intent_food">Comida</string>
+    <string name="site_creation_intent_fitness_exercise">Forma física e exercicio</string>
+    <string name="site_creation_intent_film_television">Películas e televisión</string>
+    <string name="site_creation_intent_finance">Finanzas</string>
+    <string name="site_creation_intent_fashion">Moda</string>
+    <string name="site_creation_intent_diy">Bricolaxe</string>
+    <string name="site_creation_intent_education">Educación</string>
+    <string name="site_creation_intent_community_nonprofit">Comunitario e ONG</string>
+    <string name="site_creation_intent_business">Negocios</string>
+    <string name="site_creation_intent_books">Libros</string>
+    <string name="site_creation_intent_beauty">Beleza</string>
+    <string name="site_creation_intent_automotive">Automoción</string>
+    <string name="site_creation_intent_art">Arte</string>
+    <string name="new_site_creation_intents_input_hint">P.ex.: Moda, poesía, política</string>
+    <string name="new_site_creation_intents_title">Temática do sitio</string>
+    <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Quitar do escritorio</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Omitir este estímulo</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Ver máis estímulos</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte o estímulo de bloguear</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Responder estímulo</string>
+    <string name="my_site_blogging_prompt_card_title">Estímulos</string>
+    <string name="my_site_all_tab_title">Todos</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Recordatorios e estímulos</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis clara e/ou unha cor de texto máis escura.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Esta combinación de cor pode ser difícil de ler para a xente. Intenta usar unha cor de fondo máis escura e/ou unha cor de texto máis clara.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Fallo ao inserir os medios.\nToca para máis información.</string>
-    <string name="new_site_creation_intents_header_subtitle">Elixe unha temática das listadas a continuación ou escribe a túa propia</string>
+    <string name="new_site_creation_intents_header_subtitle">Elixe unha temática das listadas a continuación ou escribe a túa propia.</string>
     <string name="new_site_creation_intents_header_title">De que trata a túa web?</string>
     <string name="notification_channel_weekly_roundup_title">Resumo semanal</string>
     <string name="my_site_dashboard_tab_title">Inicio</string>
@@ -19,7 +120,7 @@ Language: gl_ES
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">As chamadas XML-RPC parecen bloqueadas neste sitio (código de erro 401). Se o intento de acceso falla, toca na icona de axuda para ver as FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Non se puido ler o sitio WordPress nesa URL. Toca na icona de axuda para ver as FAQ.</string>
     <string name="login_error_xml_rpc_services_disabled">Os servizos XML-RPC están desactivados neste sitio.</string>
-    <string name="my_site_menu_tab_title">Menú do sitio</string>
+    <string name="my_site_menu_tab_title">Menú</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">A túa busca inclúe caracteres non compatibles nos dominios de WordPress.com. Permítense os seguintes caracteres: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Comproba a túa conexión a Internet e actualiza a páxina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Ir ás estatísticas</string>
@@ -328,7 +429,6 @@ Language: gl_ES
     <string name="gutenberg_native_one">Un</string>
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_text_color">Cor do texto</string>
-    <string name="gutenberg_native_s_link">ligazón %s</string>
     <string name="gutenberg_native_padding">Recheo</string>
     <string name="gutenberg_native_four">Catro</string>
     <string name="gutenberg_native_custom_url">URL personalizada</string>
@@ -605,8 +705,8 @@ Language: gl_ES
     <string name="threat_item_sub_header_file_signature">Ameaza encontrada %s</string>
     <string name="threat_item_sub_header_core_file">Encontrouse unha vulnerabilidade en WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Varias vulnerabilidades</string>
-    <string name="threat_item_header_vulnerable_theme">Tema vulnerable: %s (versión %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Plugin vulnerable: %s (versión %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Tema vulnerable: %1$s (versión %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Plugin vulnerable: %1$s (versión %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: patrón de código malicioso</string>
     <string name="threat_item_header_database_threat">Ameazas de base de datos %s</string>
     <string name="threat_item_header_infected_core_file">%s: arquivo principal infectado</string>
@@ -616,7 +716,7 @@ Language: gl_ES
     <string name="scan_in_minutes_ago">fai %s minuto(s)</string>
     <string name="scan_in_hours_ago">fai %s hora(s)</string>
     <string name="scan_this_site">este sitio</string>
-    <string name="scan_idle_last_scan_description">Executouse a última exploración de Jetpack %s e non se encontrou ningún risco. %s</string>
+    <string name="scan_idle_last_scan_description">Executouse a última exploración de Jetpack %1$s e non se encontrou ningún risco. %2$s</string>
     <string name="scan_idle_threats_found_title">Pode que o teu sitio web estea desprotexido</string>
     <string name="scan_idle_no_threats_found_title">Non te preocupes</string>
     <string name="scan_again">Analizar de novo</string>
@@ -624,7 +724,7 @@ Language: gl_ES
     <string name="scan_state_icon">Icona de estado da análise</string>
     <string name="backup">Copias de seguridade</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Filtro de tipo de actividade (%s tipos seleccionados)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (mostrando %s elementos)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (mostrando %2$s elementos)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Filtro de tipo de actividade</string>
     <string name="activity_log_activity_type_empty_subtitle">Non se rexistraron actividades no rango de datas seleccionado.</string>
     <string name="activity_log_activity_type_empty_title">Non hai actividades dispoñibles</string>
@@ -974,7 +1074,7 @@ Language: gl_ES
     <string name="pages_cannot_be_started">No podemos abrir as páxinas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="pages_set_as_posts_page">Establecer como páxina de entradas</string>
     <string name="pages_set_as_homepage">Establecer como páxina de inicio</string>
-    <string name="suggestion_invalid">%s non é unha %s válida</string>
+    <string name="suggestion_invalid">%1$s non é unha %2$s válida</string>
     <string name="site_settings_select_page">Seleccionar a páxina</string>
     <string name="site_settings_posts_page">Páxina de entradas</string>
     <string name="site_settings_static_homepage">Páxina de inicio estática</string>
@@ -1274,7 +1374,7 @@ Language: gl_ES
     <string name="local_post_autosave_revision_available">Fixeches cambios non gardados nesta entrada</string>
     <string name="dialog_confirm_autosave_dont_restore_button">A versión desde esta aplicación</string>
     <string name="dialog_confirm_autosave_restore_button">A versión desde outro dispositivo</string>
-    <string name="dialog_confirm_autosave_body_second_part">Desde esta aplicación\nGardado en %s\n\nDesde outro dispositivo\nGardado en %s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Desde esta aplicación\nGardado en %1$s\n\nDesde outro dispositivo\nGardado en %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Recentemente fixeches cambios nesta entrada, pero non os gardaches. Elixe unha versión para cargar:\n\n</string>
     <string name="dialog_confirm_autosave_title">Que versión che gustaría editar?</string>
     <string name="button_delete_permanently">Borrar permanentemente</string>
@@ -1324,7 +1424,7 @@ Language: gl_ES
     <string name="share_desc">Compartir</string>
     <string name="navigate_back_desc">Volver</string>
     <string name="navigate_forward_desc">Avanzar</string>
-    <string name="calendar_scheduled_post_description">«%s» programado para publicar o «%s» na túa aplicación de WordPress\n%s</string>
+    <string name="calendar_scheduled_post_description">«%1$s» programado para publicar o «%2$s» na túa aplicación de WordPress\n%3$s</string>
     <string name="calendar_scheduled_post_title">Entrada programada de WordPress: «%s»</string>
     <string name="notification_post_will_be_published_in_ten_minutes">«%s» publicarase en 10 minutos</string>
     <string name="notification_post_will_be_published_in_one_hour">«%s» publicarase en 1 hora</string>
@@ -1427,6 +1527,7 @@ Language: gl_ES
     <string name="stats_management_news_card_message">Elixe que estatísticas ver, e céntrate nos datos que máis te preocupen. Toca en %1$s ao fondo das estatísticas para personalizalas.</string>
     <string name="stats_manage_your_stats">Xestiona as túas estatísticas</string>
     <string name="history_fetching_revisions">Recuperando revisións…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Fallo ao insertar os medios.\nPor favor, toca para ver as opcións.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo ao insertar os medios.\nPor favor, toca para volver a intentalo.</string>
     <string name="editor_uploading_draft">O teu borrador estase subindo</string>
     <string name="post_uploading_draft">Subindo borrador</string>
@@ -1573,7 +1674,7 @@ Language: gl_ES
     <string name="toast_conflict_updating_post">Actualizando contido</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Descartar web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Descartar local</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Local\nGardado o %s\n\nWeb\nGardado o %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nGardado o %1$s\n\nWeb\nGardado o %2$s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Este contido ten dúas versións en conflito. Selecciona que versión queres descartar.\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolver conflicto de sincronización</string>
     <string name="stats_no_data_for_period">Non hai datos neste período</string>
@@ -1858,7 +1959,7 @@ Language: gl_ES
     <string name="notification_settings_category_followed_sites">Sitios seguidos</string>
     <string name="content_description_person_reading_device_notification">Dispositivo de lectura personal con avisos</string>
     <string name="content_description_people_looking_charts">Xente mirando gráficos e táboas</string>
-    <string name="comment_title">%s en %s</string>
+    <string name="comment_title">%1$s en %2$s</string>
     <string name="dialog_confirm_delete_permanently_post">Seguro que queres eliminar definitivamente esta publicación?</string>
     <string name="notification_channel_important_title">Importante</string>
     <string name="notification_channel_general_title">Xeral</string>
@@ -2249,6 +2350,7 @@ Language: gl_ES
     <string name="post_title">Título</string>
     <string name="menu_redo">Refacer</string>
     <string name="menu_undo">Desfacer</string>
+    <string name="media_insert_unimplemented">Desculpas! Esta característica aínda non está implementada :(</string>
     <string name="error_media_small">Medios demasiado pequenos para amosar</string>
     <string name="editor_dropped_unsupported_files">Advertencia: non todos os elementos arrastrados son compatibles!</string>
     <string name="editor_dropped_title_images_not_allowed">Non está permitido arrastrar imaxes no título</string>
@@ -2476,12 +2578,19 @@ Language: gl_ES
     <string name="error_fetch_email_followers_list">Non foi posible obter os seguidores do sitio por correo electrónico</string>
     <string name="error_fetch_followers_list">Non foi posible obter os seguidores do sitio</string>
     <string name="editor_failed_uploads_switch_html">Fallou a carga dalgúns ficheiros. Nesta situación non podes cambiar a modo HTML\nQueres borrar todas as cargas que fallaron e continuar?</string>
+    <string name="image_thumbnail">Miniatura</string>
+    <string name="visual_editor">Editor visual</string>
     <string name="image_width">Largo</string>
     <string name="image_link_to">Ligar a</string>
+    <string name="image_alt_text">Texto alternativo</string>
     <string name="image_caption">Lenda</string>
     <string name="image_settings_save_toast">Cambios gardados</string>
     <string name="image_settings_dismiss_dialog_title">Descartar os cambios sen gardar?</string>
     <string name="stop_upload_dialog_title">Suspender a carga?</string>
+    <string name="alert_error_adding_media">Houbo un erro na inserción do ficheiro</string>
+    <string name="alert_action_while_uploading">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
+    <string name="alert_insert_image_html_mode">Non se poden inserir ficheiros directamente no modo HTML. Hai que volver ao modo visual.</string>
+    <string name="uploading_gallery_placeholder">Cargando a galería…</string>
     <string name="tap_to_try_again">Pulsa para tentalo outra vez!</string>
     <string name="invite_sent">Invitación enviada con éxito</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2964,8 +3073,10 @@ Language: gl_ES
     <string name="delete_post">Eliminar o artigo</string>
     <string name="post_settings">Configuración do artigo</string>
     <string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>
+    <string name="horizontal_alignment">Aliñamento horizontal</string>
     <string name="local_draft">Borrador local</string>
     <string name="page_settings">Configuración da páxina</string>
+    <string name="create_a_link">Crear un enlace</string>
     <string name="link_enter_url_text">Texto do enlace (opcional)</string>
     <string name="cannot_delete_multi_media_items">Non se poden eliminar algún ficheiros neste momento. Téntao de novo máis tarde.</string>
     <string name="media_error_no_permission">Non tes permiso para ver a Biblioteca Multimedia</string>
@@ -3042,6 +3153,10 @@ Language: gl_ES
     <string name="username">Nome de usuario</string>
     <string name="password">Contrasinal</string>
     <string name="reader">Guía de Lectura</string>
+    <string name="featured_in_post">Incluír una imaxe no contido do artigo</string>
+    <string name="featured">Usar como imaxe destacada</string>
+    <string name="width">Largo</string>
+    <string name="caption">Lenda (opcional)</string>
     <string name="pages">Páxinas</string>
     <string name="posts">Artigos</string>
     <string name="anonymous">Anónimo</string>
@@ -3049,6 +3164,7 @@ Language: gl_ES
     <string name="done">feito</string>
     <string name="ok">Vale</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Cargando…</string>
     <string name="tos">Termos de servizo</string>
     <string name="version">Versión</string>
     <string name="app_title">WordPress para Android</string>

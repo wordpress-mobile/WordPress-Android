@@ -1,15 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-03-25 13:54:08+0000
+Translation-Revision-Date: 2022-04-26 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0
 Language: tr
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">Site oluştur</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Blok ekle</string>
+    <string name="initial_screen">İlk Ekran</string>
+    <string name="blogging_prompts_onboarding_notification_action">Daha fazlasını öğrenin</string>
+    <string name="blogging_prompts_onboarding_notification_text">Yazma alışkanlığı kazanarak daha iyi bir yazar olun. Daha fazlasını öğrenmek için dokunun.</string>
+    <string name="blogging_prompts_onboarding_notification_title">WordPress mobil uygulamasındaki yenilikler: İstemler</string>
+    <string name="new_site_creation_site_name_header_subtitle">İyi ad, kısa ve akılda kalıcı olan addır.\nBunu daha sonra değiştirebilirsiniz.</string>
+    <string name="new_site_creation_site_name_header_title">%s web sitenize bir ad verin </string>
+    <string name="new_site_creation_site_name_title">Site adı</string>
+    <string name="my_site_todays_stats_get_more_views_message">Kitlenizi oluşturmak mı istiyorsunuz? &lt;a href=\"%1$s\"&gt;En iyi ipuçlarımıza&lt;/a&gt; göz atın.</string>
+    <string name="stats_insights_views_and_visitors_message">Önceki haftaya göre son haftalardaki görüntülenme sayınız %1$s %2$s.</string>
+    <string name="stats_insights_views_and_visitors">Görüntüleme ve Ziyaretçi Sayısı</string>
+    <string name="featured_image_removed_notice">Öne çıkan resim kaldırıldı</string>
+    <string name="featured_image_confirmation_notice">Öne çıkan görsel olarak ayarla</string>
+    <string name="featured_image_replace_dialog_cancel">Güncel tut</string>
+    <string name="featured_image_replace_dialog_confirm">Öne çıkan görseli değiştir</string>
+    <string name="featured_image_replace_dialog_description">Zaten öne çıkan bir görsel grubunuz var. Yeni görselle değiştirmek istiyor musunuz?</string>
+    <string name="featured_image_replace_dialog_title">Mevcut öne çıkan görsel değiştirilsin mi?</string>
+    <string name="dialog_dismiss_try_block_editor">Kapat</string>
+    <string name="dialog_body_try_block_editor">Yakında yeni gönderiler için klasik düzenleyiciyi kaldıracağız, ancak bu mevcut gönderilerinizin veya sayfalarınızın hiçbirinde düzenleme özelliğini etkilemeyecektir. Hemen site ayarlarından Blok Düzenleyiciyi etkinleştirerek bir adım önde başlayın.</string>
+    <string name="dialog_title_try_block_editor">Yeni Blok Düzenleyici\'yi deneyin</string>
+    <string name="menu_toolbar_title">%s blokunu düzenle</string>
+    <string name="long_post_dlg_saving">Kaydediliyor</string>
+    <string name="retry_failed_upload_retry_all">Hepsini tekrar dene</string>
+    <string name="retry_failed_upload_remove">Yüklemeyi kaldır</string>
+    <string name="retry_failed_upload_yes">Tekrar dene</string>
+    <string name="retry_failed_upload_title">Dosya yüklenemedi</string>
+    <string name="stop_upload_dialog_button_no">Hayır</string>
+    <string name="stop_upload_dialog_button_yes">Evet</string>
+    <string name="dialog_button_cancel">İptal</string>
+    <string name="dialog_button_ok">Tamam</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_title">Bağlantı ekle</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="toast_content_info_editor_not_ready">Düzenleyici hala yükleniyor</string>
+    <string name="toast_content_info_failed">İçerik yapısı alınamadı</string>
+    <string name="dialog_content_info_body">Blok: %1$d\nKelime: %2$d\nKarakter: %3$d</string>
+    <string name="dialog_content_info_title">İçerik yapısı</string>
+    <string name="media_bar_description_library">WordPress ortam kütüphanesinden bir ortam seçin</string>
+    <string name="media_bar_description_gallery">Galeriden bir ortam seçin</string>
+    <string name="media_bar_description_camera">Kamera ile Fotoğraf veya Video çekin</string>
+    <string name="pixel_suffix">%dpiksel</string>
+    <string name="stop_save_dialog_ok_button">Tamam</string>
+    <string name="stop_save_dialog_message">Lütfen tüm dosyalar kaydedilene kadar bekleyin</string>
+    <string name="stop_save_dialog_title">Dosyalar kaydediliyor</string>
+    <string name="post_content">İçerik</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Hayatınızın filmini oynayın.</string>
+    <string name="blogging_prompts_onboarding_remind_me">Bana hatırlat</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Şimdi deneyin</string>
+    <string name="blogging_prompts_onboarding_content_note_content">İstediğiniz zaman Sitem &gt; Ayarlar &gt; Blog Hatırlatıcıları bölümünden daha fazla bilgi edinebilir ve hatırlatıcı oluşturabilirsiniz.</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Not:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">Yaratıcı fikirlerin fışkırmasına yardımcı olmak için her gün size panonuzda yeni bir bilgi göstereceğiz!</string>
+    <string name="blogging_prompts_onboarding_content_top">Daha iyi bir yazar olmanın en iyi yolu, yazma alışkanlığı kazanmak ve başkalarıyla paylaşmaktır - işte burada Bilgiler devreye girer!</string>
+    <string name="blogging_prompts_onboarding_header_title">Bilgilerle Tanışın</string>
+    <string name="blogging_prompt_set_reminders">Hatırlatıcı ayarla</string>
+    <string name="blogging_reminders_prompt_subtitle">Hatırlatıcı, günlük bir bilgi içerecektir</string>
+    <string name="blogging_reminders_prompt_title">Günlük bilgiyi dahil et</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Düzenli olarak yayın yapmak yeni okuyucuları cezbeder. Ne zaman yazmak istediğinizi bize söyleyin, size hatırlatalım!</string>
+    <string name="set_your_blogging_prompts_title">Bir alışkanlık kazanarak daha iyi bir yazar olun</string>
+    <string name="site_creation_intent_writing_poetry">Yazı ve Şiir</string>
+    <string name="site_creation_intent_travel">Seyahat</string>
+    <string name="site_creation_intent_technology">Teknoloji</string>
+    <string name="site_creation_intent_sports">Spor</string>
+    <string name="site_creation_intent_real_estate">Emlak</string>
+    <string name="site_creation_intent_politics">Politika</string>
+    <string name="site_creation_intent_photography">Fotoğrafçılık</string>
+    <string name="site_creation_intent_personal">Kişisel</string>
+    <string name="site_creation_intent_people">İnsanlar</string>
+    <string name="site_creation_intent_parenting">Ebeveynlik</string>
+    <string name="site_creation_intent_news">Haberler</string>
+    <string name="site_creation_intent_music">Müzik</string>
+    <string name="site_creation_intent_local_services">Yerel Hizmetler</string>
+    <string name="site_creation_intent_lifestyle">Yaşam Tarzı</string>
+    <string name="site_creation_intent_interior_design">İç Tasarım</string>
+    <string name="site_creation_intent_health">Sağlık</string>
+    <string name="site_creation_intent_gaming">Oyun</string>
+    <string name="site_creation_intent_food">Yiyecek</string>
+    <string name="site_creation_intent_fitness_exercise">Fitness ve Egzersiz</string>
+    <string name="site_creation_intent_film_television">Film ve Televizyon</string>
+    <string name="site_creation_intent_finance">Finans</string>
+    <string name="site_creation_intent_fashion">Moda</string>
+    <string name="site_creation_intent_diy">Kendin Yap</string>
+    <string name="site_creation_intent_education">Eğitim</string>
+    <string name="site_creation_intent_community_nonprofit">Topluluk ve Kâr Amacı Gütmeyen Kuruluş</string>
+    <string name="site_creation_intent_business">İşletme</string>
+    <string name="site_creation_intent_books">Kitaplar</string>
+    <string name="site_creation_intent_beauty">Güzellik</string>
+    <string name="site_creation_intent_automotive">Otomotiv</string>
+    <string name="site_creation_intent_art">Sanat</string>
+    <string name="new_site_creation_intents_input_hint">Örn. Moda, Şiir, Politika</string>
+    <string name="new_site_creation_intents_title">Site Konusu</string>
+    <string name="quick_start_site_menu_tab_message_short">Devam etmek için &lt;b&gt;%1$s&lt;/b&gt; öğesine dokunun.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Panodan kaldır</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Bu bilgiyi atla</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Daha fazla bilgi görüntüle</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Blog paylaşma istemi</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Yanıtlandı</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Yanıt istemi</string>
+    <string name="my_site_blogging_prompt_card_title">İstemler</string>
+    <string name="my_site_all_tab_title">Tümü</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Hatırlatıcılar ve istemler</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Bu renk birleşiminde insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Bu renk birleşimi insanların okuması zor olabilir. Daha parlak bir arka plan ve/veya daha koyu bir metin rengi kullanmayı deneyin.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Medya eklenemedi.\nDaha fazla bilgi için dokunun.</string>
-    <string name="new_site_creation_intents_header_subtitle">Aşağıdaki listeden bir konu seçin veya kendi konunuzu yazın</string>
+    <string name="new_site_creation_intents_header_subtitle">Aşağıdaki listeden bir konu seçin veya kendi konunuzu yazın.</string>
     <string name="new_site_creation_intents_header_title">Web siteniz ne hakkında?</string>
     <string name="notification_channel_weekly_roundup_title">Haftalık Özet</string>
     <string name="my_site_dashboard_tab_title">Başlangıç</string>
@@ -19,7 +120,6 @@ Language: tr
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Bu sitede XML-RPC çağrıları engellenmiş görünüyor (hata kodu 401). Oturum açma girişimi başarısız olursa, SSS\'yi görüntülemek için yardım simgesine dokunun.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Bu URL\'deki WordPress sitesi okunamıyor. SSS\'yi görüntülemek için yardım simgesine dokunun.</string>
     <string name="login_error_xml_rpc_services_disabled">XML-RPC servisleri bu site için kapalı.</string>
-    <string name="my_site_menu_tab_title">Site menüsü</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Aramanız, WordPress.com alan adlarında desteklenmeyen karakterler içeriyor. Aşağıdaki karakterlere izin verilir: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">İnternet bağlantınızı kontrol edin ve sayfayı yenileyin.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">İstatistiklere Git</string>
@@ -328,14 +428,13 @@ Language: tr
     <string name="gutenberg_native_one">Bir</string>
     <string name="gutenberg_native_no_preview_available">Önizleme yok</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
-    <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>
     <string name="gutenberg_native_four">Dört</string>
     <string name="gutenberg_native_custom_url">Özel adres</string>
     <string name="gutenberg_native_create_embed">Gömülü içerik oluştur</string>
     <string name="gutenberg_native_column_d">Sütun %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Ekran okuyucu kullanıcısına yardımcı olmak için bağlantıyı kısaca açıklayın</string>
-    <string name="gutenberg_native_add_blocks">Blok ekle</string>
+    <string name="gutenberg_native_add_blocks">Blok Ekle</string>
     <string name="login_no_jetpack_sites">Hiçbir Jetpack sitesi bulunamadı</string>
     <string name="gutenberg_native_what_is_alt_text">Alternatif metin nedir?</string>
     <string name="gutenberg_native_transform_s_to">%s öğesini şuna dönüştür:</string>
@@ -605,8 +704,8 @@ Language: tr
     <string name="threat_item_sub_header_file_signature">Tehdir bulundu %s</string>
     <string name="threat_item_sub_header_core_file">WordPress içinde güvenlik açığı bulundu</string>
     <string name="threat_item_sub_header_misc_vulnerability">Gizemli güvenlik açığı</string>
-    <string name="threat_item_header_vulnerable_theme">Savunmasız tema: %s (sürüm %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Savunmasız eklenti: %s (sürüm %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Savunmasız Tema: %1$s (sürüm %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Savunmasız Eklenti: %1$s (sürüm %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: kötü amaçlı kod deseni</string>
     <string name="threat_item_header_database_threat">Veritabanı %s tehditleri</string>
     <string name="threat_item_header_infected_core_file">%s: enfekte çekirdek dosyası</string>
@@ -616,7 +715,7 @@ Language: tr
     <string name="scan_in_minutes_ago">%s dakika önce</string>
     <string name="scan_in_hours_ago">%s saat önce</string>
     <string name="scan_this_site">bu site</string>
-    <string name="scan_idle_last_scan_description">Son Jetpack taraması çalıştı %s ve herhangi bir risk bulunmadı. %s</string>
+    <string name="scan_idle_last_scan_description">Son Jetpack taraması çalıştı %1$s ve herhangi bir risk bulunmadı. %2$s</string>
     <string name="scan_idle_threats_found_title">Siteniz risk altında olabilir</string>
     <string name="scan_idle_no_threats_found_title">Hiç endişe etmeyin</string>
     <string name="scan_again">Yeniden tara</string>
@@ -624,7 +723,7 @@ Language: tr
     <string name="scan_state_icon">Tarama durumu simgesi</string>
     <string name="backup">Yedek</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Etkinlik türü filtresi (%s tür seçili)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (%s öğe gösteriliyor)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (%2$s öğe gösteriliyor)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Etkinlik türü filtresi</string>
     <string name="activity_log_activity_type_empty_subtitle">Seçili tarih aralığında bir etkinlik kayıt edilmemiş.</string>
     <string name="activity_log_activity_type_empty_title">Kullanılabilir etkinlik yok</string>
@@ -974,7 +1073,7 @@ Language: tr
     <string name="pages_cannot_be_started">Şu anda sayfaları açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="pages_set_as_posts_page">Yazılar Sayfası Yap</string>
     <string name="pages_set_as_homepage">Ana Sayfa olarak ayarla</string>
-    <string name="suggestion_invalid">%s geçerli bir %s değil</string>
+    <string name="suggestion_invalid">%1$s geçerli bir %2$s değil.</string>
     <string name="site_settings_select_page">Sayfa seç</string>
     <string name="site_settings_posts_page">Yazılar sayfası</string>
     <string name="site_settings_static_homepage">Sabit ana sayfa</string>
@@ -1274,7 +1373,7 @@ Language: tr
     <string name="local_post_autosave_revision_available">Bu yazıda kaydedilmeyen değişiklikler yaptınız</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Bu uygulamadan sürüm</string>
     <string name="dialog_confirm_autosave_restore_button">Başka cihazdan sürüm</string>
-    <string name="dialog_confirm_autosave_body_second_part">Bu uygulamadan\n%s tarihinde kaydedildi\n\nBaşka cihazdan\n%s tarihinde kaydedildi\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Bu uygulamadan\nKaydetme tarihi %1$s\n\nBaşka cihazdan\nKaydetme tarihi %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Yakın zamanda bu yazınıda değişiklikler yaptınız ancak değişiklikleri kaydetmediniz. Yüklenecek sürümü seçin:\n\n</string>
     <string name="dialog_confirm_autosave_title">Hangi sürümü düzenlemekl istersiniz?</string>
     <string name="button_delete_permanently">Kalıcı Olarak Sil</string>
@@ -1324,7 +1423,7 @@ Language: tr
     <string name="share_desc">Paylaş</string>
     <string name="navigate_back_desc">Geri dön</string>
     <string name="navigate_forward_desc">İleri git</string>
-    <string name="calendar_scheduled_post_description">\"%s\", WordPress uygulamanızdaki \"%s\" hedefinde yayımlanmak üzere planlandı \n %s</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\", \n WordPress uygulamanızda \"%2$s\" tarihinde yayınlanmak üzere zamanlandı %3$s</string>
     <string name="calendar_scheduled_post_title">WordPress Zamanlanmış Gönderi: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" 10 dakika içinde yayımlanacak</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" 1 saat içinde yayımlanacak</string>
@@ -1427,6 +1526,7 @@ Language: tr
     <string name="stats_management_news_card_message">Hangi istatistikleri göreceğinizi seçin ve en çok önem verdiğiniz verilere odaklanın. İstatistiklerinizi özelleştirmek için \"Yönelimler\" altındaki %1$s öğesine dokunun.</string>
     <string name="stats_manage_your_stats">İstatistiklerinizi yönetin</string>
     <string name="history_fetching_revisions">Eski srümler getiriliyor…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Ortam ekleme başarısız.\nSeçenekler için dokunun.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Ortam eklenemedi.\nTekrar denemek için lütfen dokunun.</string>
     <string name="editor_uploading_draft">Taslağınız karşıya yükleniyor</string>
     <string name="post_uploading_draft">Taslak karşıya yükleniyor</string>
@@ -1573,7 +1673,7 @@ Language: tr
     <string name="toast_conflict_updating_post">Gönderi güncelleniyor</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Web’i At</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Yereli At</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Yerel\n%s tarihinde kaydedildi\n\nWeb\n%s tarihinde kaydedildi\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Yerel\nKaydetme tarihi %1$s\n\nWeb\nKaydetme tarihi %2$s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Bu gönderinin birbiriyle çakışan iki sürümü var. Atmak istediğiniz sürümü seçin.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Senkron sorununu çöz</string>
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
@@ -1858,7 +1958,7 @@ Language: tr
     <string name="notification_settings_category_followed_sites">Takip edilen siteler</string>
     <string name="content_description_person_reading_device_notification">Cihaz bildirimlerini okuyan kişi</string>
     <string name="content_description_people_looking_charts">Grafiklere ve çizelgelere bakan kişiler</string>
-    <string name="comment_title">%s, %s üzerinde</string>
+    <string name="comment_title">%1$s, %2$s</string>
     <string name="dialog_confirm_delete_permanently_post">Bu yazıyı kalıcı olarak silmek istediğinizden emin misiniz?</string>
     <string name="notification_channel_important_title">Önemli</string>
     <string name="notification_channel_general_title">Genel</string>
@@ -2249,6 +2349,7 @@ Language: tr
     <string name="post_title">Başlık</string>
     <string name="menu_redo">Geri al</string>
     <string name="menu_undo">Yinele</string>
+    <string name="media_insert_unimplemented">Özür dileriz! Özellik henüz devreye alınmadı :(</string>
     <string name="error_media_small">Ortam dosyası görüntülemek için çok küçük</string>
     <string name="editor_dropped_unsupported_files">Uyarı: Bırakılan tüm ögeler desteklenmiyor!</string>
     <string name="editor_dropped_title_images_not_allowed">Başlık alanına görsel bırakmaya izin verilmiyor</string>
@@ -2476,12 +2577,19 @@ Language: tr
     <string name="error_fetch_email_followers_list">Sitenin e-posta takipçileri getirilemedi</string>
     <string name="error_fetch_followers_list">Site takipçileri getirilemedi</string>
     <string name="editor_failed_uploads_switch_html">Bazı ortam yüklemeleri başarısız oldu. HTML moduna geçebilirsiniz\n        Tüm başarısız yüklemeleri kaldırılıp devam edilsin mi?</string>
+    <string name="image_thumbnail">Görsel küçük resm</string>
+    <string name="visual_editor">Görsel düzenleyici</string>
     <string name="image_width">Genişlik</string>
     <string name="image_link_to">Bağlantı</string>
+    <string name="image_alt_text">Alternatif metin</string>
     <string name="image_caption">Altyazı</string>
     <string name="image_settings_save_toast">Değişiklikler kaydedildi</string>
     <string name="image_settings_dismiss_dialog_title">Kaydedilmemiş değişiklikler atılsın mı?</string>
     <string name="stop_upload_dialog_title">Yükleme durdurulsun mu?</string>
+    <string name="alert_error_adding_media">Ortam eklenirken bir hata oluştu</string>
+    <string name="alert_action_while_uploading">Şu anda medya yüklüyorsunuz. Lütfen bu işlem tamamlanıncaya kadar bekleyin.</string>
+    <string name="alert_insert_image_html_mode">Ortam HTML modunda doğrudan ekleyemiyor. Lütfen tekrar görsel moduna geçin.</string>
+    <string name="uploading_gallery_placeholder">Galeri yükleniyor…</string>
     <string name="tap_to_try_again">Tekrar denemek için dokunun!</string>
     <string name="invite_sent">Davet başarıyla gönderildi</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2964,8 +3072,10 @@ Language: tr
     <string name="delete_post">Yazıyı silinsin mi?</string>
     <string name="post_settings">Yazı ayarları</string>
     <string name="file_not_found">Yükleme için dosya bulunamadı. Silindi veya taşındı mı?</string>
+    <string name="horizontal_alignment">Yatay hizalama</string>
     <string name="local_draft">Yerel taslak</string>
     <string name="page_settings">Sayfa ayarları</string>
+    <string name="create_a_link">Bağlantı oluştur</string>
     <string name="link_enter_url_text">Bağlantı yazısı (opsiyonel)</string>
     <string name="cannot_delete_multi_media_items">Bazı medyalar silinemedi. Daha sonra tekrar deneyin</string>
     <string name="media_error_no_permission">Medya kütüphanesini görüntüleme yetkiniz yok</string>
@@ -3042,6 +3152,10 @@ Language: tr
     <string name="username">Kullanıcı adı</string>
     <string name="password">Parola</string>
     <string name="reader">Okuyucu</string>
+    <string name="featured_in_post">Görseli yazı içeriğine ekle</string>
+    <string name="featured">Öne çıkan görsel olarak kullan</string>
+    <string name="width">Genişlik</string>
+    <string name="caption">Başlık (seçime bağlı)</string>
     <string name="pages">Sayfalar</string>
     <string name="posts">Yazılar</string>
     <string name="anonymous">Anonim</string>
@@ -3049,6 +3163,7 @@ Language: tr
     <string name="done">bitti</string>
     <string name="ok">Tamam</string>
     <string name="link_enter_url">Adres</string>
+    <string name="uploading">Yükleniyor…</string>
     <string name="tos">Hizmet şartları</string>
     <string name="version">Sürüm</string>
     <string name="app_title">Android için WordPress</string>

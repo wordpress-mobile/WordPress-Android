@@ -52,12 +52,7 @@ class ReaderViewModelTest {
     @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
 
     private val emptyReaderTagList = ReaderTagList()
-    private val nonEmptyReaderTagList = ReaderTagList().apply {
-        this.add(mock())
-        this.add(mock())
-        this.add(mock())
-        this.add(mock())
-    }
+    private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
 
     @Before
     fun setup() {

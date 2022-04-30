@@ -58,9 +58,9 @@ class SiteCreationIntentsViewModel @Inject constructor(
         _onBackButtonPressed.call()
     }
 
-    fun onContinuePressed() {
+    fun onCustomVerticalSelected() {
         uiState.value?.let { state ->
-            analyticsTracker.trackSiteIntentQuestionContinuePressed(state.searchQuery.orEmpty())
+            analyticsTracker.trackSiteIntentQuestionCustomVerticalSelected(state.searchQuery.orEmpty())
             _onIntentSelected.value = state.searchQuery
         }
     }
@@ -81,9 +81,7 @@ class SiteCreationIntentsViewModel @Inject constructor(
         val newItems = slugsArray.mapIndexed { index, slug ->
             val vertical = verticalArray[index]
             val emoji = emojiArray[index]
-            val item = IntentListItemUiState(slug, vertical, emoji)
-            item.onItemTapped = { intentSelected(slug, vertical) }
-            return@mapIndexed item
+            return@mapIndexed IntentListItemUiState(slug, vertical, emoji) { intentSelected(slug, vertical) }
         }
         fullItemsList = FullItemsList(newItems)
         defaultItems = DefaultItems(newItems.filter { it.verticalSlug in defaultsArray })
@@ -128,12 +126,17 @@ class SiteCreationIntentsViewModel @Inject constructor(
         }
     }
 
-    fun onSearchTextChanged(query: String) {
-        val searchResults = searchResultsProvider.search(fullItemsList.items, query)
+    fun onSearchTextChanged(userInput: String) {
+        val query = userInput.trim()
+        val searchResults = searchResultsProvider.search(fullItemsList.items, query).toMutableList().apply {
+            val isAnExactMatch = query.isNotEmpty() && !(size == 1 && this[0].verticalText.equals(query, true))
+            if (isAnExactMatch) {
+                add(0, IntentListItemUiState.getCustomVertical(query) { onCustomVerticalSelected() })
+            }
+        }
         uiState.value?.let { state ->
             updateUiState(
                     state.copy(
-                            isContinueButtonVisible = query.isNotEmpty() && searchResults.isEmpty(),
                             searchQuery = query,
                             content = IntentsUiState.Content.SearchResults(searchResults)
                     )
@@ -144,7 +147,6 @@ class SiteCreationIntentsViewModel @Inject constructor(
     data class IntentsUiState(
         val isAppBarTitleVisible: Boolean = false,
         val isHeaderVisible: Boolean = true,
-        val isContinueButtonVisible: Boolean = false,
         val searchQuery: String? = null,
         val content: Content
     ) {
@@ -170,8 +172,15 @@ class SiteCreationIntentsViewModel @Inject constructor(
     data class IntentListItemUiState(
         val verticalSlug: String,
         val verticalText: String,
-        val emoji: String
+        val emoji: String,
+        val onItemTapped: (() -> Unit)
     ) {
-        var onItemTapped: (() -> Unit)? = null
+        companion object {
+            private const val customVerticalSlug = ""
+            private const val customVerticalEmoji = "+"
+
+            fun getCustomVertical(query: String, onCustomVerticalSelected: (() -> Unit)) =
+                    IntentListItemUiState(customVerticalSlug, query, customVerticalEmoji, onCustomVerticalSelected)
+        }
     }
 }

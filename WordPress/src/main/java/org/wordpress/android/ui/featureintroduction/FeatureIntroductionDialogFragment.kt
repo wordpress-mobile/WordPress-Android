@@ -7,14 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.databinding.FeatureIntroductionDialogFragmentBinding
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setStatusBarAsSurfaceColor
+import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 abstract class FeatureIntroductionDialogFragment : DialogFragment() {
+    @Inject lateinit var uiHelpers: UiHelpers
     private var _binding: FeatureIntroductionDialogFragmentBinding? = null
     private val binding get() = _binding ?: throw NullPointerException("_binding cannot be null")
 
@@ -53,6 +55,10 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
         binding.primaryButton.text = getString(textRes)
     }
 
+    fun togglePrimaryButtonVisibility(isVisible: Boolean) {
+        uiHelpers.updateVisibility(binding.primaryButton, isVisible)
+    }
+
     fun setSecondaryButtonListener(listener: () -> Unit) {
         binding.secondaryButton.setOnClickListener { listener() }
     }
@@ -61,12 +67,16 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
         binding.secondaryButton.text = getString(textRes)
     }
 
+    fun toggleSecondaryButtonVisibility(isVisible: Boolean) {
+        uiHelpers.updateVisibility(binding.secondaryButton, isVisible)
+    }
+
     fun setHeaderTitle(@StringRes headerTitleRes: Int) {
         binding.headerTitle.text = getString(headerTitleRes)
     }
 
     fun setHeaderIcon(@DrawableRes headerIconRes: Int) {
-        binding.headerIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, headerIconRes, context?.theme))
+        binding.headerIcon.setImageResource(headerIconRes)
     }
 
     fun setContent(view: View) {

@@ -82,8 +82,9 @@ class QuickStartRepository
     private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
     private val _onQuickStartSiteMenuStep = MutableLiveData<QuickStartSiteMenuStep?>()
     private var _isQuickStartNoticeShown: Boolean = false
-    private val isMySiteTabsEnabled =
-            mySiteDashboardTabsFeatureConfig.isEnabled() && buildConfigWrapper.isMySiteTabsEnabled
+    private val isMySiteTabsEnabled = mySiteDashboardTabsFeatureConfig.isEnabled() &&
+            buildConfigWrapper.isMySiteTabsEnabled &&
+            selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val onQuickStartSiteMenuStep = _onQuickStartSiteMenuStep as LiveData<QuickStartSiteMenuStep?>
@@ -148,6 +149,13 @@ class QuickStartRepository
                 val shortQuickStartMessage = resourceProvider.getString(
                         R.string.quick_start_dialog_update_site_title_message_short,
                         SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
+                )
+                _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
+            }
+            task == QuickStartTask.VIEW_SITE -> {
+                val shortQuickStartMessage = resourceProvider.getString(
+                        R.string.quick_start_dialog_view_your_site_message_short,
+                        SiteUtils.getHomeURLOrHostName(selectedSiteRepository.getSelectedSite())
                 )
                 _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
             }
@@ -290,7 +298,6 @@ class QuickStartRepository
             quickStartTaskOrigin == MySiteTabType.DASHBOARD && task.showInSiteMenu()
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartTask.VIEW_SITE,
         QuickStartTask.ENABLE_POST_SHARING,
         QuickStartTask.EXPLORE_PLANS -> true
         else -> false

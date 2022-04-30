@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -30,6 +31,7 @@ class MostPopularInsightsUseCase
     private val statsSiteProvider: StatsSiteProvider,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider,
+    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
     private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsMostPopularModel? {
@@ -54,34 +56,43 @@ class MostPopularInsightsUseCase
         return listOf(buildTitle(), Empty())
     }
 
-    @ExperimentalStdlibApi
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
+        val highestDayPercent = resourceProvider.getString(
+                R.string.stats_most_popular_percent_views,
+                domainModel.highestDayPercent.roundToInt()
+        )
+        val highestHourPercent = resourceProvider.getString(
+                R.string.stats_most_popular_percent_views,
+                domainModel.highestHourPercent.roundToInt()
+        )
         items.add(buildTitle())
         items.add(
                 QuickScanItem(
                         Column(
                                 R.string.stats_insights_best_day,
                                 dateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                                resourceProvider.getString(
-                                        R.string.stats_most_popular_percent_views,
-                                        domainModel.highestDayPercent.roundToInt()
-                                )
+                                if (statsRevampV2FeatureConfig.isEnabled()) highestDayPercent else null,
+                                highestDayPercent
                         ),
                         Column(
                                 R.string.stats_insights_best_hour,
                                 dateUtils.getHour(domainModel.highestHour),
-                                resourceProvider.getString(
-                                        R.string.stats_most_popular_percent_views,
-                                        domainModel.highestHourPercent.roundToInt()
-                                )
+                                if (statsRevampV2FeatureConfig.isEnabled()) highestHourPercent else null,
+                                highestHourPercent
                         )
                 )
         )
         return items
     }
 
-    private fun buildTitle() = Title(R.string.stats_insights_popular, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(
+            textResource = if (statsRevampV2FeatureConfig.isEnabled()) {
+                R.string.stats_insights_popular_title
+            } else {
+                R.string.stats_insights_popular
+            },
+            menuAction = if (statsRevampV2FeatureConfig.isEnabled()) null else this::onMenuClick)
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)

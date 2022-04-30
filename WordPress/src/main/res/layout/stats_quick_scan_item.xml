@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingTop="@dimen/margin_extra_large"
     android:paddingBottom="@dimen/margin_extra_large">
 
@@ -32,6 +33,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/unknown" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/start_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
     </LinearLayout>
 
     <View
@@ -72,6 +83,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/unknown" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/end_text"
+            style="@style/StatsBlockText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 

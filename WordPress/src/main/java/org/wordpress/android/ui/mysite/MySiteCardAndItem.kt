@@ -2,15 +2,18 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DASHBOARD_CARDS
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_ACTIONS_CARD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
@@ -22,6 +25,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
     enum class Type {
         SITE_INFO_CARD,
         QUICK_ACTIONS_CARD,
+        QUICK_LINK_RIBBON,
         DOMAIN_REGISTRATION_CARD,
         QUICK_START_CARD,
         QUICK_START_DYNAMIC_CARD,
@@ -33,6 +37,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
     enum class DashboardCardType {
         ERROR_CARD,
+        QUICK_START_CARD,
         TODAYS_STATS_CARD_ERROR,
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
@@ -46,12 +51,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         val url: String,
         val iconState: IconState,
         val showTitleFocusPoint: Boolean,
+        val showSubtitleFocusPoint: Boolean,
         val showIconFocusPoint: Boolean,
         val onTitleClick: ListItemInteraction? = null,
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteCardAndItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
+    ) : MySiteCardAndItem(
+            SITE_INFO_CARD,
+            activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
+    ) {
         sealed class IconState {
             object Progress : IconState()
             data class Visible(val url: String? = null) : IconState()
@@ -68,10 +77,21 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
             val onPagesClick: ListItemInteraction,
             val onPostsClick: ListItemInteraction,
             val onMediaClick: ListItemInteraction,
-            val showPages: Boolean = true,
-            val showStatsFocusPoint: Boolean = false,
-            val showPagesFocusPoint: Boolean = false
-        ) : Card(QUICK_ACTIONS_CARD, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
+            val showPages: Boolean = true
+        ) : Card(QUICK_ACTIONS_CARD)
+
+        data class QuickLinkRibbon(
+            val quickLinkRibbonItems: List<QuickLinkRibbonItem>,
+            val showPagesFocusPoint: Boolean = false,
+            val showStatsFocusPoint: Boolean = false
+        ) : Card(QUICK_LINK_RIBBON, activeQuickStartItem = showPagesFocusPoint || showStatsFocusPoint) {
+            data class QuickLinkRibbonItem(
+                @StringRes val label: Int,
+                @DrawableRes val icon: Int,
+                val onClick: ListItemInteraction,
+                val showFocusPoint: Boolean = false
+            )
+        }
 
         data class DomainRegistrationCard(val onClick: ListItemInteraction) : Card(DOMAIN_REGISTRATION_CARD)
 
@@ -119,6 +139,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val visitors: UiString,
                         val likes: UiString,
                         val onCardClick: () -> Unit,
+                        val message: TextWithLinks? = null,
                         val footerLink: FooterLink
                     ) : TodaysStatsCard(dashboardCardType = DashboardCardType.TODAYS_STATS_CARD)
 
@@ -126,6 +147,13 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val label: UiString,
                         val onClick: () -> Unit
                     )
+
+                    data class TextWithLinks(
+                        val text: UiString,
+                        val links: List<Clickable>? = null
+                    ) {
+                        data class Clickable(val navigationAction: ListItemInteraction)
+                    }
                 }
 
                 sealed class PostCard(
@@ -176,15 +204,11 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 ) : DashboardCard(dashboardCardType) {
                     data class BloggingPromptCardWithData(
                         val prompt: UiString,
-                        val answeredUsers: List<AnsweredUser>,
+                        val respondents: List<TrainOfAvatarsItem>,
                         val numberOfAnswers: Int,
                         val isAnswered: Boolean,
                         val onShareClick: (String) -> Unit
-                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD) {
-                        data class AnsweredUser(
-                            val avatarUrl: String?
-                        )
-                    }
+                    ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }
         }

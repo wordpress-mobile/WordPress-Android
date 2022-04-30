@@ -68,9 +68,11 @@ class SiteCreationIntentsFragment : Fragment() {
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
-        siteCreationIntentsTitlebar.appBarTitle.isInvisible = !isPhoneLandscape()
+        siteCreationIntentsTitlebar.appBarTitle.isInvisible = !displayUtils.isPhoneLandscape()
         recyclerView.itemAnimator = null
         recyclerView.adapter = SiteCreationIntentsAdapter()
+        siteCreationIntentsHeader.title?.setText(R.string.new_site_creation_intents_header_title)
+        siteCreationIntentsHeader.subtitle?.setText(R.string.new_site_creation_intents_header_subtitle)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateUiState(uiState: IntentsUiState) {
@@ -78,7 +80,7 @@ class SiteCreationIntentsFragment : Fragment() {
         updateTitleVisibility(uiState.isAppBarTitleVisible)
         if (!uiState.isHeaderVisible) input.requestFocus()
         siteCreationIntentsHeader.root.isVisible = uiState.isHeaderVisible
-        updateContinueButtonVisibility(uiState.isContinueButtonVisible)
+        recyclerView.scrollToPosition(0)
     }
 
     private fun SiteCreationIntentsFragmentBinding.updateTitleVisibility(shouldAppBarTitleBeVisible: Boolean) {
@@ -88,10 +90,6 @@ class SiteCreationIntentsFragment : Fragment() {
                 siteCreationIntentsHeader.title,
                 shouldAppBarTitleBeVisible
         )
-    }
-
-    private fun SiteCreationIntentsFragmentBinding.updateContinueButtonVisibility(shouldBeVisible: Boolean) {
-        continueButtonContainer.isVisible = shouldBeVisible
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupViewModel() {
@@ -105,12 +103,10 @@ class SiteCreationIntentsFragment : Fragment() {
     private fun SiteCreationIntentsFragmentBinding.setupActionListeners() {
         siteCreationIntentsTitlebar.skipButton.setOnClickListener { viewModel.onSkipPressed() }
         siteCreationIntentsTitlebar.backButton.setOnClickListener { viewModel.onBackPressed() }
-        continueButton.setOnClickListener { viewModel.onContinuePressed() }
         setScrollListener()
         input.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 viewModel.onSearchInputFocused()
-                recyclerView.smoothScrollToPosition(0)
             }
         }
     }
@@ -133,8 +129,6 @@ class SiteCreationIntentsFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
-    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
 
     companion object {
         const val TAG = "site_creation_intents_fragment_tag"

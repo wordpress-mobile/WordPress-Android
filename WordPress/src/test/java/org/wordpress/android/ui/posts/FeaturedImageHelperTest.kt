@@ -350,6 +350,26 @@ class FeaturedImageHelperTest {
         )
     }
 
+    @Test
+    fun `createCurrent-State uses media url for self-hosted sites`() {
+        // Arrange
+        val post: PostImmutableModel = mock()
+        whenever(post.hasFeaturedImage()).thenReturn(true)
+
+        val media: MediaModel = mock()
+        whenever(media.url).thenReturn("https://testing.com/url.jpg")
+        whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
+
+        val site = createSiteModel().apply {
+            setIsSelfHostedAdmin(true)
+        }
+
+        // Act
+        val featuredImage = featuredImageHelper.createCurrentFeaturedImageState(site, post)
+        // Assert
+        assertThat(featuredImage.mediaUri).isEqualTo("https://testing.com/url.jpg")
+    }
+
     companion object Fixtures {
         fun createMediaModel(markedLocallyAsFeatured: Boolean): MediaModel {
             return MediaModel().apply {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-01 05:36:33+0000
+Translation-Revision-Date: 2022-04-22 06:45:15+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-rc.2
+Generator: GlotPress/3.0.0
 Language: pl
 -->
 <resources>
@@ -290,7 +290,6 @@ Language: pl
     <string name="gutenberg_native_retry">Spróbuj ponownie</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Podgląd nie jest dostępny</string>
-    <string name="gutenberg_native_s_link">%s łącze</string>
     <string name="gutenberg_native_text_color">Kolor tekstu</string>
     <string name="gutenberg_native_padding">Dopełnienie</string>
     <string name="gutenberg_native_four">Cztery</string>
@@ -298,7 +297,6 @@ Language: pl
     <string name="gutenberg_native_create_embed">Utwórz osadzoną treść</string>
     <string name="gutenberg_native_column_d">Kolumna %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Krótko opisz odnośnik, aby pomóc użytkownikom korzystającym z czytnika.</string>
-    <string name="gutenberg_native_add_blocks">Dodaj bloki</string>
     <string name="login_no_jetpack_sites">Nie odnaleziono witryn Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Co to jest tekst alternatywny?</string>
     <string name="gutenberg_native_transform_s_to">Przekształć %s w</string>
@@ -327,11 +325,11 @@ Language: pl
     <string name="gutenberg_native_button_position">Pozycja przycisku</string>
     <string name="get_likes_no_network_error">Brak dostępnej sieci</string>
     <string name="comments_empty_list_filtered_unreplied">Brak komentarzy bez odpowiedzi</string>
-    <string name="comment_status_unreplied">Nie odpisano</string>
     <string name="get_likes_unknown_error">Wystąpił nieznany błąd podczas pobierania polubień.</string>
     <string name="get_likes_empty_state_title">Wystąpił błąd podczas pobierania danych polubień</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s">%1$s. %2$s jest %3$s %4$s.</string>
     <string name="gutenberg_native_current_placeholder_text_is">Aktualny tekst zastępczy to</string>
+    <string name="comment_status_unreplied">Bez odpowiedzi</string>
     <string name="gutenberg_native_search_settings">Ustawienia przeszukiwania</string>
     <string name="gutenberg_native_add_link">DODAJ ODNOŚNIK</string>
     <string name="jetpack_brute_force_allowlist_title">Zawsze dozwolone adresy IP</string>
@@ -395,10 +393,10 @@ Language: pl
     <string name="backup_item_sqls_hint">(SQL)</string>
     <string name="backup_item_content_hint">(z wyłączeniem motywów, wtyczek, i przesłanych plików)</string>
     <string name="restore_warning_description_with_two_parameters">Czy jesteś pewien/pewna że chcesz przywrócić witrynę do stanu z %1$s o %2$s?\nWszystko co zostało zmienione od tego czasu zostanie utracone.</string>
-    <string name="gutenberg_native_uploading">Przesyłanie… </string>
     <string name="backup_item_contents">Katalog WP-content</string>
     <string name="backup_item_roots">Root WordPressa</string>
     <string name="backup_download_details_choose_items_header">Elementy zawarte w tej paczce do pobrania</string>
+    <string name="gutenberg_native_uploading">Przesyłanie…</string>
     <string name="gutenberg_native_replace_file">Zastąp plik</string>
     <string name="gutenberg_native_replace_audio">Zastąp plik dźwiękowy</string>
     <string name="gutenberg_native_problem_opening_the_audio">Problem podczas otwierania pliku dźwiękowego</string>
@@ -549,8 +547,6 @@ Language: pl
     <string name="threat_item_sub_header_file_signature">Odnaleziono zagrożenie w %s</string>
     <string name="threat_item_sub_header_core_file">Odnaleziono zagrożenie w WordPressie</string>
     <string name="threat_item_sub_header_misc_vulnerability">Różne słabe punkty</string>
-    <string name="threat_item_header_vulnerable_theme">Podatny szablon: %s (wersja %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Podatna wtycznka: %s (wersja %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: złośliwy wzorzec kodu</string>
     <string name="threat_item_header_database_threat">%s zagrożenia bazy danych</string>
     <string name="threats_fix_all">Napraw wszystko</string>
@@ -560,7 +556,6 @@ Language: pl
     <string name="scan_this_site">ta witryna</string>
     <string name="threat_item_header_threat_found">Odnaleziono zagrożenie</string>
     <string name="threat_item_header_infected_core_file">%s: zainfekowany plik główny</string>
-    <string name="scan_idle_last_scan_description">Ostatnie skanowanie Jetpack uruchomiono %s i nie wykryto żadnych ryzyk. %s</string>
     <string name="scan_idle_threats_found_title">Twoja witryna może być zagrożona</string>
     <string name="scan_idle_no_threats_found_title">Nie martw się niczym</string>
     <string name="scan_again">Skanuj ponownie</string>
@@ -572,7 +567,6 @@ Language: pl
     <string name="activity_log_activity_type_empty_subtitle">Nie zarejestrowano aktywności w wybranym zakresie dat.</string>
     <string name="activity_log_activity_type_empty_title">Brak dostępnych aktywności</string>
     <string name="activity_log_activity_type_error_subtitle">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (pokazano %s elementów)</string>
     <string name="activity_log_activity_type_error_title">Brak połączenia</string>
     <string name="activity_log_activity_type_filter_active_label">Typ aktywności (%s)</string>
     <string name="activity_log_date_range_filter_label_content_description">Filtr zakresu daty</string>
@@ -916,7 +910,6 @@ Language: pl
     <string name="site_settings_classic_blog">Klasyczny blog</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Wybrana strona główna i strony dla wpisów nie mogą być te same.</string>
     <string name="pages_set_as_posts_page">Ustaw jako Stronę z wpisami</string>
-    <string name="suggestion_invalid">%s nie jest prawidłową nazwą %s</string>
     <string name="site_settings_select_page">Wybierz stronę</string>
     <string name="site_settings_failed_update_homepage_settings">Nie udało się uaktualnić ustawień strony głównej, sprawdź swoje połączenie internetowe</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Nie można zapisać ustawień strony głównej zanim strony nie zostaną załadowane</string>
@@ -1030,7 +1023,7 @@ Language: pl
     <string name="gutenberg_native_customize">PERSONALIZUJ</string>
     <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
-    <string name="gutenberg_native_border_radius">Zaokrąglenia obramowania</string>
+    <string name="gutenberg_native_border_radius">Zaokrąglenie obramowania</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
@@ -1167,7 +1160,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Stuknij dwukrotnie i przytrzymaj aby edytować</string>
     <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
     <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Spróbuj ponownie.</string>
     <string name="gutenberg_native_alt_text">Tekst alternatywny</string>
     <string name="gutenberg_native_add_video">DODAJ FILM</string>
     <string name="gutenberg_native_add_url">Dodaj adres URL</string>
@@ -1175,12 +1167,13 @@ Language: pl
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>
     <string name="gutenberg_native_add_alt_text">Dodaj tekst alternatywny</string>
     <string name="gutenberg_native_add_image">Dodaj obrazek</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Proszę spróbować ponownie.</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
     <string name="main_switch_default_title_on">Włączone</string>
-    <string name="main_switch_default_title_off">Wyłączone</string>
     <string name="notifications_tab_dialog_main_off_message">Wyłączenie powiadomień dla tej witryny spowoduje zatrzymanie wyświetlania powiadomień w zakładce powiadomienia. Możesz określić jaki typ powiadomień chcesz otrzymywać po włączeniu powiadomień dla tej witryny.</string>
+    <string name="main_switch_default_title_off">Wyłączono</string>
     <string name="notifications_tab_dialog_main_status_off">Powiadomienia dla tej witryny</string>
     <string name="notifications_tab_dialog_main_status_on">Powiadomienia dla tej witryny</string>
     <string name="notifications_tab_dialog_main_off_title">Aby zobaczyć powiadomienia na zakładce powiadomień dla tej witryny, włącz powiadomienia dla tej witryny.</string>
@@ -1215,7 +1208,6 @@ Language: pl
     <string name="dialog_confirm_autosave_body_first_part">Dokonałeś ostatnio zmian w tym wpisie, ale nie zostały zapisane. Wybierz wersję, którą chcesz wczytać:\n\n</string>
     <string name="dialog_confirm_autosave_title">Którą wersję chciał(a)byś edytować?</string>
     <string name="post_waiting_for_connection_draft_cancel">Nie zapiszemy ostatnich zmian do twojego szkica.</string>
-    <string name="dialog_confirm_autosave_body_second_part">Z tej aplikacji\nZapisany %s\n\nZ innego urządzenia\nZapisany %s\n</string>
     <string name="button_delete_permanently">Usuń na zawsze</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Nie zaplanujemy daty opublikowania tych zmian.</string>
     <string name="post_waiting_for_connection_pending_cancel">Nie prześlemy tych zmian do przeglądu.</string>
@@ -1243,7 +1235,7 @@ Language: pl
     <string name="site_settings_site_accelerator_summary">Wczytuj strony szybciej zezwalając Jetpackowi na optymalizację twoich obrazków i plików statycznych (takich jak arkusze CSS i JavaScript).</string>
     <string name="site_settings_faster_static_files">Szybsze pliki statyczne</string>
     <string name="site_settings_faster_images">Szybsze obrazki</string>
-    <string name="site_settings_site_accelerator_off">Wyłączone</string>
+    <string name="site_settings_site_accelerator_off">Wyłączono</string>
     <string name="site_settings_site_accelerator_on">Włączone</string>
     <string name="site_settings_site_accelerator">Przyspieszacz witryny</string>
     <string name="site_settings_lazy_load_images_summary">Zwiększ szybkość swojej witryny wczytując jedynie obrazki widoczne na ekranie.</string>
@@ -1262,7 +1254,6 @@ Language: pl
     <string name="navigate_forward_desc">Idź dalej</string>
     <string name="calendar_scheduled_post_title">WordPress zapanował wpis: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
-    <string name="calendar_scheduled_post_description">Wpis \"%s\" został zaplanowany do publikacji w dniu \"%s\" w twojej aplikacji WordPressowej\n%s</string>
     <string name="navigate_back_desc">Wróć</string>
     <string name="web_preview_desktop">Komputer stacjonarny</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
@@ -1276,8 +1267,8 @@ Language: pl
     <string name="post_notification_one_hour_before">1 godzina temu</string>
     <string name="post_settings_add_to_calendar">Dodaj do kalendarza</string>
     <string name="post_settings_notification">Powiadomienie</string>
-    <string name="post_notification_off">Wyłączone</string>
     <string name="post_settings_time_and_date">Data i godzina</string>
+    <string name="post_notification_off">Wyłączono</string>
     <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
     <string name="site_settings_editor">Edytor</string>
     <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
@@ -1365,6 +1356,7 @@ Language: pl
     <string name="stats_management_news_card_message">Wybierz statystyki, które chcesz widzieć i skup się na danych na których najbardziej tobie zależy. Stuknij %1$s na dole strony Trendów aby spersonalizować statystyki.</string>
     <string name="stats_management_new">Nowe</string>
     <string name="history_fetching_revisions">Pobieranie wersji…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Nie udało się pobrać plików mediów.\nStuknij aby uzyskać dostęp do opcji. </string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Nie udało się wstawić plików mediów.\nStuknij aby spróbować ponownie. </string>
     <string name="editor_uploading_draft">Twój szkic jest przesyłany</string>
     <string name="post_uploading_draft">Przesyłanie wpisu</string>
@@ -1422,9 +1414,9 @@ Language: pl
     <string name="stats_detail_months_and_years">Miesiące i lata</string>
     <string name="stats_insights_load_more">Wczytaj więcej</string>
     <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła spersonalizować wygląd swojej witryny w późniejszym czasie</string>
-    <string name="published_on">Opublikowano w dniu: %s</string>
     <string name="publish_on">Zostanie opublikowany w dniu: %s</string>
     <string name="stats_months_and_years_views_label">Wyświetlenia</string>
+    <string name="published_on">Opublikowano dnia: %s</string>
     <string name="stats_insights_best_hour">Najlepsza godzina</string>
     <string name="stats_insights_best_day">Najlepszy Dzień</string>
     <string name="showing_stats_for">Prezentacja statystyk dla wpisu:</string>
@@ -1511,7 +1503,6 @@ Language: pl
     <string name="toast_conflict_updating_post">Aktualizacja wpisu</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Odrzuć wersję na internecie</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Odrzuć wersję lokalną</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Lokalna\nZapisano %s\n\nW internecie\nZapisano %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Ten wpis ma dwie konfliktujące ze sobą wersje. Wybierz wersję którą chciał(a)byś odrzucić.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Rozwiąż problem synchronizacji</string>
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
@@ -1667,8 +1658,8 @@ Language: pl
     <string name="install_jetpack_message">Dane logowania do witryny nie będą przechowywane i są użyte jedynie do celów instalacji Jetpacka.</string>
     <string name="installing_jetpack_message">Instalowanie Jetpacka na twojej witrynie.  To może zająć do kilku minut.</string>
     <string name="install_jetpack_retry">Spróbuj ponownie</string>
-    <string name="install_jetpack_continue">Ustaw</string>
     <string name="stats_jetpack_connection_faq">Najczęściej zadawane pytania Jetpacka</string>
+    <string name="install_jetpack_continue">Skonfiguruj</string>
     <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
@@ -1795,7 +1786,6 @@ Language: pl
     <string name="notification_settings_item_your_sites_all_followed_sites">Wszystkie witryny, które obserwuję</string>
     <string name="notification_settings_category_followed_sites">Obserwowane witryny</string>
     <string name="content_description_people_looking_charts">Ludzie analizujący grafiki i wykresy</string>
-    <string name="comment_title">%s na %s</string>
     <string name="dialog_confirm_delete_permanently_post">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć ten wpis?</string>
     <string name="content_description_person_reading_device_notification">Osoba czytająca na urządzeniu z powiadomieniami</string>
     <string name="notification_channel_important_title">Ważne</string>
@@ -2051,7 +2041,7 @@ Language: pl
     <string name="uploading_subtitle_media_only_one">Pozostał 1 plik</string>
     <string name="uploading_subtitle_media_only">Pozostało %1$d z %2$d plików</string>
     <string name="uploading_subtitle_posts_only_one">Pozostał 1 wpis</string>
-    <string name="uploading_title">Przesyłanie… </string>
+    <string name="uploading_title">Przesyłanie…</string>
     <string name="media_files_uploaded_write_post">Zredaguj wpis</string>
     <string name="media_all_files_uploaded_successfully">Przesłano z sukcesem %d plików</string>
     <string name="media_files_uploaded_successfully">, przesłano %d  z sukcesem</string>
@@ -2126,7 +2116,7 @@ Language: pl
     <string name="notification_settings_main_off_title">Aby otrzymywać powiadomienia na tym urządzeniu, ustaw powiadomienia na włączone</string>
     <string name="notification_settings_main_hint_off">Włącz powiadomienia</string>
     <string name="notification_settings_main_hint_on">Wyłącz powiadomienia</string>
-    <string name="notification_settings_main_status_off">Wyłączone</string>
+    <string name="notification_settings_main_status_off">Wyłączono</string>
     <string name="notification_settings_main_status_on">Włączone</string>
     <string name="max_video_resolution">Maksymalny rozmiar filmu</string>
     <string name="max_thumbnail_px_size">Maksymalny rozmiar obrazka</string>
@@ -2187,6 +2177,7 @@ Language: pl
     <string name="menu_redo">Ponów</string>
     <string name="menu_undo">Cofnij</string>
     <string name="post_title">Tytuł</string>
+    <string name="media_insert_unimplemented">Przepraszamy! Funkcjonalność nie jest jeszcze wdrożona :(</string>
     <string name="error_media_small">Plik mediów zbyt mały aby go wyświetlić</string>
     <string name="editor_dropped_unsupported_files">Ostrzeżenie: nie wszystkie upuszczone obiekty są wspierane!</string>
     <string name="editor_dropped_title_images_not_allowed">Upuszczanie obrazków w tytule nie jest dozwolone</string>
@@ -2414,12 +2405,19 @@ Language: pl
     <string name="error_fetch_email_followers_list">Nie można pobrać obserwujących witrynę przez e-mail</string>
     <string name="error_fetch_followers_list">Nie można usunąć obserwujących witrynę</string>
     <string name="editor_failed_uploads_switch_html">Nie udało się przesłać niektórych mediów. Nie możesz przejść do trybu HTML w tym momencie. Usunąć wszystkie błędnie przesłane media i kontynuować?</string>
+    <string name="image_thumbnail">Miniaturka obrazka</string>
+    <string name="visual_editor">Edytor wizualny</string>
     <string name="image_width">Szerokość</string>
     <string name="image_link_to">Odnośnik do</string>
+    <string name="image_alt_text">Alternatywny tekst</string>
     <string name="image_settings_save_toast">Zmiany zostały zapisane</string>
     <string name="image_caption">Podpis</string>
     <string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
     <string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
+    <string name="alert_error_adding_media">Błąd podczas wstawiania mediów</string>
+    <string name="alert_action_while_uploading">Przesyłasz właśnie media. Poczekaj aż to zadanie się zakończy.</string>
+    <string name="alert_insert_image_html_mode">Nie można wstawić mediów bezpośrednio w trybie HTML. Przełącz się na tryb wizualny.</string>
+    <string name="uploading_gallery_placeholder">Przesyłanie galerii…</string>
     <string name="invite_error_some_failed">Zaproszenie wysłano, ale wystąpiły błędy!</string>
     <string name="invite_sent">Zaproszenie zostało poprawnie wysłane</string>
     <string name="tap_to_try_again">Stuknij aby spróbować ponownie!</string>
@@ -2432,7 +2430,7 @@ Language: pl
     <string name="invite">Zaproś</string>
     <string name="invite_names_title">Nazwy użytkowników lub adresy e-mail</string>
     <string name="invite_people">Zaproś ludzi</string>
-    <string name="my_site_header_external">Na zewnątrz</string>
+    <string name="my_site_header_external">Zewnętrzne</string>
     <string name="label_clear_search_history">Usuń historię wyszukiwania</string>
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
     <string name="reader_empty_search_description">Nie odnaleziono żadnych wyników wyszukiwania zawierających %s w twoim języku</string>
@@ -2547,7 +2545,7 @@ Language: pl
     <string name="comment_status_all">Wszystkie</string>
     <string name="could_not_load_page">Nie można wczytać strony</string>
     <string name="interface_language">Język interfejsu</string>
-    <string name="off">Wyłączone</string>
+    <string name="off">Wyłączono</string>
     <string name="about_the_app">O aplikacji</string>
     <string name="error_post_account_settings">Nie udało się zapisać ustawień twojego konta</string>
     <string name="error_fetch_account_settings">Nie można pobrać ustawień twojego konta</string>
@@ -2693,7 +2691,7 @@ Language: pl
     <string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które obserwujesz. </string>
     <string name="notifications_empty_comments">Brak komentarzy</string>
     <string name="notifications_empty_unread">Jesteś na bieżąco!</string>
-    <string name="reader_short_comment_count_multi">%s Komentarzy</string>
+    <string name="reader_short_comment_count_multi">%s komentarzy</string>
     <string name="reader_short_comment_count_one">Jeden komentarz</string>
     <string name="reader_hint_comment_on_post">Dodaj komentarz do wpisu…</string>
     <string name="reader_discover_visit_blog">Odwiedź %s</string>
@@ -2898,12 +2896,14 @@ Language: pl
     <string name="select_categories">Wybierz kategorie</string>
     <string name="dlg_confirm_trash_comments">Wyrzucić do kosza?</string>
     <string name="post_not_found">Wykryto błąd podczas ładowania wpisu. Odśwież listę wpisów i spróbuj ponownie.</string>
+    <string name="horizontal_alignment">Wyrównanie w poziomie</string>
     <string name="file_not_found">Nie znaleziono pliku do wysłania. Został usunięty lub przeniesiony?</string>
     <string name="notifications_empty_all">Brak powiadomień… na razie. </string>
     <string name="invalid_site_url_message">Sprawdź, czy wpisany adres URL jest prawidłowy</string>
     <string name="link_enter_url_text">Tekst odnośnika (opcjonalny)</string>
     <string name="comment_status_trash">W koszu</string>
     <string name="remove_account">Usuń blog</string>
+    <string name="create_a_link">Stwórz odnośnik</string>
     <string name="error_refresh_media">Nie można było odświeżyć mediów w tym momencie</string>
     <string name="plugin_not_found">Wystąpił błąd podczas próby dostępu do tej wtyczki</string>
     <string name="delete_post">Usunąć wpis?</string>
@@ -2981,11 +2981,16 @@ Language: pl
     <string name="reader">Czytnik</string>
     <string name="no_network_title">Brak dostępnej sieci</string>
     <string name="pages">Strony</string>
+    <string name="width">Szerokość</string>
     <string name="posts">Wpisy</string>
+    <string name="featured_in_post">Załącz obraz w treści wpisu</string>
+    <string name="featured">Ustaw jako obrazek wyróżniający</string>
+    <string name="caption">Podpis pod obrazkiem (opcjonalnie)</string>
     <string name="anonymous">Anonim</string>
     <string name="ok">OK</string>
     <string name="done">gotowe</string>
     <string name="link_enter_url">Adres URL</string>
+    <string name="uploading">Przesyłanie…</string>
     <string name="version">Wersja</string>
     <string name="app_title">WordPress dla Androida</string>
     <string name="tos">Warunki usługi</string>

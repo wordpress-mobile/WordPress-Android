@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -59,6 +60,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationDetailsViewModel.Domai
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+@InternalCoroutinesApi
 class DomainRegistrationDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var transactionsStore: TransactionsStore
     @Mock private lateinit var siteStore: SiteStore

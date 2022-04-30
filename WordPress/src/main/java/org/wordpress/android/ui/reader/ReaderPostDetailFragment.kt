@@ -51,6 +51,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
@@ -66,6 +67,10 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
+import org.wordpress.android.ui.avatars.AvatarItemDecorator
+import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -79,10 +84,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.CommentSnippetAdapter
-import org.wordpress.android.ui.reader.adapters.FACE_ITEM_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
-import org.wordpress.android.ui.reader.adapters.ReaderPostLikersAdapter
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.DIRECT_OPERATION
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_POST_DETAILS_COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
@@ -94,7 +96,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
-import org.wordpress.android.ui.reader.viewholders.PostLikerItemDecorator
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetUiState
@@ -125,11 +126,11 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.isDarkTheme
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
-import org.wordpress.android.util.extensions.isDarkTheme
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -459,10 +460,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             layoutManager.onRestoreInstanceState(it)
         }
 
-        likeFacesRecycler.addItemDecoration(PostLikerItemDecorator(
+        likeFacesRecycler.addItemDecoration(
+                AvatarItemDecorator(
                 RtlUtils.isRtl(activity),
                 contextProvider.getContext(),
-                FACE_ITEM_LEFT_OFFSET_DIMEN)
+                AVATAR_LEFT_OFFSET_DIMEN)
         )
 
         likeFacesRecycler.layoutManager = layoutManager
@@ -669,7 +671,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         commentSnippetRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
-    private fun setupLikeFacesTrain(items: List<TrainOfFacesItem>, loading: Boolean, shouldSkipAnimation: Boolean) {
+    private fun setupLikeFacesTrain(items: List<TrainOfAvatarsItem>, loading: Boolean, shouldSkipAnimation: Boolean) {
         likeFacesRecycler.visibility = if (loading) View.GONE else View.VISIBLE
 
         if (shouldSkipAnimation) {
@@ -678,10 +680,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             likeFacesRecycler.itemAnimator = DefaultItemAnimator()
         }
 
-        var adapter = likeFacesRecycler.adapter as? ReaderPostLikersAdapter
+        var adapter = likeFacesRecycler.adapter as? TrainOfAvatarsAdapter
 
         if (adapter == null) {
-            adapter = ReaderPostLikersAdapter(
+            adapter = TrainOfAvatarsAdapter(
                     imageManager,
                     uiHelpers
             )
@@ -1517,11 +1519,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onCustomViewShown() {
         // full screen video has just been shown so hide the AppBar
+        readerTracker.track(Stat.READER_ARTICLE_CUSTOM_VIEW_SHOWN)
         onShowHideToolbar(false)
     }
 
     override fun onCustomViewHidden() {
         // user returned from full screen video so re-display the AppBar
+        readerTracker.track(Stat.READER_ARTICLE_CUSTOM_VIEW_HIDDEN)
         onShowHideToolbar(true)
     }
 
@@ -1532,6 +1536,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onUrlClick(url: String): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_LINK_TAPPED)
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
@@ -1558,6 +1563,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onPageJumpClick(pageJump: String?): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
         val wasJsEnabled = readerWebView.settings.javaScriptEnabled
 
         readerWebView.settings.javaScriptEnabled = true
@@ -1605,10 +1611,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onImageUrlClick(imageUrl: String, view: View, x: Int, y: Int): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_IMAGE_TAPPED)
         return showPhotoViewer(imageUrl, view, x, y)
     }
 
     override fun onFileDownloadClick(fileUrl: String?): Boolean {
+        readerTracker.track(Stat.READER_ARTICLE_FILE_DOWNLOAD_TAPPED)
         return if (activity != null &&
                 fileUrl != null &&
                 PermissionUtils.checkAndRequestStoragePermission(
