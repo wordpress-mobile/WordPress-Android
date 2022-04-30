@@ -255,7 +255,10 @@ class InsightsStoreTest {
         val url = "url"
         val likeCount = 5
         val commentCount = 10
-        val latestPost = PostResponse(id, title, date, url, likeCount, Discussion(commentCount))
+        val featuredImage = ""
+        val latestPost = PostResponse(
+            id, title, date, url, likeCount, Discussion(commentCount), featuredImage
+        )
         val fetchInsightsPayload = FetchStatsPayload(
                 PostsResponse(
                         postsFound, listOf(latestPost)
