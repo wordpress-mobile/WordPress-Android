@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostI
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.SummaryRestClient.SummaryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_PO
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.SUMMARY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TODAYS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
@@ -128,6 +130,17 @@ constructor(
             statsRequestSqlUtils,
             COMMENTS_INSIGHTS,
             CommentsResponse::class.java
+    )
+
+    class SummarySqlUtils
+    @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : InsightsSqlUtils<SummaryResponse>(
+        statsSqlUtils,
+        statsRequestSqlUtils,
+        SUMMARY,
+        SummaryResponse::class.java
     )
 
     class WpComFollowersSqlUtils
