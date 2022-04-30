@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadFlow;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadSource;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthEmailSent;
 import org.wordpress.android.util.AppLog;
@@ -42,6 +43,7 @@ public class SignupMagicLinkFragment extends Fragment {
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
     private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     private static final String ARG_IS_EMAIL_CLIENT_AVAILABLE = "ARG_IS_EMAIL_CLIENT_AVAILABLE";
+    private static final String ARG_MAGIC_LINK_SCHEME = "ARG_MAGIC_LINK_SCHEME";
     private static final String SIGNUP_FLOW_NAME = "mobile-android";
 
     public static final String TAG = "signup_magic_link_fragment_tag";
@@ -50,6 +52,7 @@ public class SignupMagicLinkFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private String mJetpackConnectSource;
     private boolean mIsJetpackConnect;
+    private AuthEmailPayloadScheme mScheme;
 
     @Inject protected Dispatcher mDispatcher;
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
@@ -59,16 +62,27 @@ public class SignupMagicLinkFragment extends Fragment {
 
     public static SignupMagicLinkFragment newInstance(String email, boolean isJetpackConnect,
                                                       String jetpackConnectSource) {
-        return newInstance(email, isJetpackConnect, jetpackConnectSource, null);
+        return newInstance(email, isJetpackConnect, jetpackConnectSource, null, null);
     }
 
     public static SignupMagicLinkFragment newInstance(String email, boolean isJetpackConnect,
                                                       String jetpackConnectSource,
                                                       Boolean isEmailClientAvailable) {
+        return newInstance(email, isJetpackConnect, jetpackConnectSource, isEmailClientAvailable,
+                null);
+    }
+
+    public static SignupMagicLinkFragment newInstance(String email, boolean isJetpackConnect,
+                                                      String jetpackConnectSource,
+                                                      Boolean isEmailClientAvailable,
+                                                      AuthEmailPayloadScheme scheme) {
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
         args.putBoolean(ARG_IS_JETPACK_CONNECT, isJetpackConnect);
         args.putString(ARG_JETPACK_CONNECT_SOURCE, jetpackConnectSource);
+        if (scheme != null) {
+            args.putSerializable(ARG_MAGIC_LINK_SCHEME, scheme);
+        }
         if (isEmailClientAvailable != null) {
             args.putBoolean(ARG_IS_EMAIL_CLIENT_AVAILABLE, isEmailClientAvailable);
         }
@@ -124,6 +138,8 @@ public class SignupMagicLinkFragment extends Fragment {
         if (getArguments() != null) {
             mIsJetpackConnect = getArguments().getBoolean(ARG_IS_JETPACK_CONNECT);
             mJetpackConnectSource = getArguments().getString(ARG_JETPACK_CONNECT_SOURCE);
+            mScheme = (AuthEmailPayloadScheme) getArguments()
+                    .getSerializable(ARG_MAGIC_LINK_SCHEME);
         }
 
         if (savedInstanceState == null) {
@@ -231,6 +247,7 @@ public class SignupMagicLinkFragment extends Fragment {
             AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, true,
                     mIsJetpackConnect ? AuthEmailPayloadFlow.JETPACK : null, source);
             authEmailPayload.signupFlowName = SIGNUP_FLOW_NAME;
+            authEmailPayload.scheme = mScheme;
             mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(authEmailPayload));
         }
     }
