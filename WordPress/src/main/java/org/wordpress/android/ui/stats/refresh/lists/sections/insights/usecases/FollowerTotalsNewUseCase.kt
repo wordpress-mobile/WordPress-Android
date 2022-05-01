@@ -54,7 +54,10 @@ class FollowerTotalsNewUseCase @Inject constructor(
     )
 
     private fun onViewMoreClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_FOLLOWER_TOTALS_VIEW_MORE_TAPPED)
+        analyticsTracker.track(
+                AnalyticsTracker.Stat.STATS_FOLLOWER_TOTALS_VIEW_MORE_TAPPED,
+                statsSiteProvider.siteModel
+        )
         navigateTo(ViewFollowerTotalsStats) // TODO: Connect this to proper second level navigation later
     }
 }
