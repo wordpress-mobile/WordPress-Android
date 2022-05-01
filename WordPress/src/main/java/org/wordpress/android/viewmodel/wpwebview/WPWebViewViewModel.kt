@@ -272,6 +272,6 @@ class WPWebViewViewModel
     }
 
     companion object {
-        const val  TRACK_SELECTED_OPTION_NAME = "selected_option_name"
+        const val TRACK_SELECTED_OPTION_NAME = "selected_option_name"
     }
 }
