@@ -923,6 +923,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             refreshBackForwardNavButtons();
         } else {
             super.onBackPressed();
+            mViewModel.track(Stat.WEBVIEW_DISMISSED);
             setResultIfNeeded();
         }
     }
