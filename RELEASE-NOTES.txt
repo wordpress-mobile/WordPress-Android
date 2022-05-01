@@ -8,6 +8,7 @@
 * [*] Editor: Fix issue that caused previews on atomic sites to sometimes be out-of-date. [https://github.com/wordpress-mobile/WordPress-Android/pull/16332]
 * [*] Fixes Media Picker video selection Accessibility issue [https://github.com/wordpress-mobile/WordPress-Android/pull/16426]
 * [*] Fixes self-hosted upload failure when the filename is non-latin [https://github.com/wordpress-mobile/WordPress-Android/pull/16421]
+* [*] Fixes self-hosted blurred featured image on post settings [https://github.com/wordpress-mobile/WordPress-Android/pull/16439]
 * [*] Block Editor: Latest Posts block: Add featured image settings [https://github.com/WordPress/gutenberg/pull/39257]
 * [*] Block Editor: Prevent incorrect notices displaying when switching between HTML-Visual mode quickly [https://github.com/WordPress/gutenberg/pull/40415]
 * [*] Block Editor: Embed block: Fix inline preview cut-off when editing URL [https://github.com/WordPress/gutenberg/pull/35326]

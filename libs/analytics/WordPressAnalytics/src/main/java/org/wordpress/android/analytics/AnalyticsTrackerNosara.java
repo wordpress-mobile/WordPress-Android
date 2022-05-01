@@ -2267,6 +2267,36 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_user_invited";
             case PEOPLE_MANAGEMENT_FILTER_CHANGED:
                 return "people_management_filter_changed";
+            case READER_FILTER_SHEET_CLEARED:
+                return "reader_filter_sheet_cleared";
+            case READER_FILTER_SHEET_DISMISSED:
+                return "reader_filter_sheet_dismissed";
+            case READER_FILTER_SHEET_DISPLAYED:
+                return "reader_filter_sheet_displayed";
+            case READER_FILTER_SHEET_ITEM_SELECTED:
+                return "reader_filter_sheet_item_selected";
+            case READER_FILTER_SHEET_TAB_SELECTED:
+                return "reader_filter_sheet_tab_selected";
+            case READER_SEARCH_HISTORY_CLEARED:
+                return "reader_search_history_cleared";
+            case READER_MANAGE_VIEW_DISMISSED:
+                return "reader_manage_view_dismissed";
+            case READER_MANAGE_VIEW_DISPLAYED:
+                return "reader_manage_view_displayed";
+            case READER_ARTICLE_IMAGE_TAPPED:
+                return "reader_article_image_tapped";
+            case READER_ARTICLE_LINK_TAPPED:
+                return "reader_article_link_tapped";
+            case READER_ARTICLE_FILE_DOWNLOAD_TAPPED:
+                return "reader_article_file_download_tapped";
+            case READER_ARTICLE_PAGE_JUMP_TAPPED:
+                return "reader_article_page_jump_tapped";
+            case READER_ARTICLE_FEATURED_IMAGE_TAPPED:
+                return "reader_article_featured_image_tapped";
+            case READER_ARTICLE_CUSTOM_VIEW_SHOWN:
+                return "reader_article_custom_view_shown";
+            case READER_ARTICLE_CUSTOM_VIEW_HIDDEN:
+                return "reader_article_custom_view_hidden";
             case WEBVIEW_DISMISSED:
                 return "webview_dismissed";
             case WEBVIEW_DISPLAYED:
