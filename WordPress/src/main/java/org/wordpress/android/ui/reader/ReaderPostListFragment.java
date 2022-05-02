@@ -42,6 +42,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -603,6 +604,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 visibleState.getCategories(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
+                        mReaderTracker.track(Stat.READER_FILTER_SHEET_DISPLAYED);
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                     } else if (!uiState.isVisible() && bottomSheet != null) {
                         bottomSheet.dismiss();
@@ -654,6 +656,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
         mRemoveFilterButton.setOnClickListener(v -> {
+            mReaderTracker.track(Stat.READER_FILTER_SHEET_CLEARED);
             mSubFilterViewModel.setDefaultSubfilter();
         });
         mSubFilterComponent.setVisibility(isFilterableScreen() ? View.VISIBLE : View.GONE);
@@ -1559,6 +1562,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void clearSearchSuggestions() {
+        mReaderTracker.track(Stat.READER_SEARCH_HISTORY_CLEARED);
         ReaderSearchTable.deleteAllQueries();
 
         mSearchSuggestionAdapter.swapCursor(null);

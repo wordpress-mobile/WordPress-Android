@@ -1,4 +1,0 @@
-19.6:
-Esta versión es breve y concisa: es posible que te hayas dado cuenta de que, al eliminar un sitio, sigue en tu lista de "Mis Sitios" hasta que reinicias la aplicación.
-
-Ya lo hemos corregido y ahora los sitios eliminados desaparecen de inmediato. Hasta pronto.

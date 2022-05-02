@@ -1,4 +1,0 @@
-19.6:
-Diese Release ist klein, aber fein: Du hast vielleicht bemerkt, dass eine Website nach dem Löschen in der „Meine Website“-Liste verbleibt, bis du die App neu startest.
-
-Wir haben das korrigiert: Gelöschte Websites werden jetzt sofort aus der Anzeige entfernt. Bis zum nächsten Mal!

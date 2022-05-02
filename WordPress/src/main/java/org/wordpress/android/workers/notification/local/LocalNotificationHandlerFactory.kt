@@ -1,7 +1,7 @@
 package org.wordpress.android.workers.notification.local
 
+import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import org.wordpress.android.workers.notification.bloggingprompts.BloggingPromptsOnboardingNotificationHandler
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationHandler
 import org.wordpress.android.workers.notification.local.LocalNotification.Type
@@ -23,6 +23,9 @@ class LocalNotificationHandlerFactory @Inject constructor(
 
 interface LocalNotificationHandler {
     fun shouldShowNotification(): Boolean
-    fun buildIntent(context: Context): Intent
+    fun buildFirstActionPendingIntent(context: Context, notificationId: Int): PendingIntent
+    fun buildSecondActionPendingIntent(context: Context, notificationId: Int): PendingIntent? {
+        return null
+    }
     fun onNotificationShown()
 }

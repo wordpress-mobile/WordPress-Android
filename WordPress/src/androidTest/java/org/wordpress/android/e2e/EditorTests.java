@@ -25,6 +25,9 @@ import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;
 import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBeDisplayed;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class EditorTests extends BaseTest {
     @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);

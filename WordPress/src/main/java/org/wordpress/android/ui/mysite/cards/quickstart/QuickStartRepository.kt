@@ -152,6 +152,13 @@ class QuickStartRepository
                 )
                 _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
             }
+            task == QuickStartTask.VIEW_SITE -> {
+                val shortQuickStartMessage = resourceProvider.getString(
+                        R.string.quick_start_dialog_view_your_site_message_short,
+                        SiteUtils.getHomeURLOrHostName(selectedSiteRepository.getSelectedSite())
+                )
+                _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
+            }
             else -> {
                 QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
                     _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
@@ -291,12 +298,8 @@ class QuickStartRepository
             quickStartTaskOrigin == MySiteTabType.DASHBOARD && task.showInSiteMenu()
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartTask.VIEW_SITE,
         QuickStartTask.ENABLE_POST_SHARING,
-        QuickStartTask.EXPLORE_PLANS,
-        QuickStartTask.CHECK_STATS,
-        QuickStartTask.REVIEW_PAGES,
-        QuickStartTask.EDIT_HOMEPAGE -> true
+        QuickStartTask.EXPLORE_PLANS -> true
         else -> false
     }
 

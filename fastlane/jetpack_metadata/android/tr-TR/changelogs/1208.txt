@@ -1,0 +1,6 @@
+19.7:
+- Sitem ekranına Site Menüsü ve Ana Sayfa sekmeleri eklendi
+- Blok düzenleyici açıldığında görünen Blok Ekle düğmesi daha kolay görünür hale getirildi
+- Ortam/ses bloku yükleme hatası metni kaldırıldı
+- Site oluşturma sürecine Site Amacı ekranı eklendi
+- - GB Dosya bloklarındaki yorumlarla ilgili bildirim ayrıntılarının neden olduğu kilitlenme durumu düzeltildi

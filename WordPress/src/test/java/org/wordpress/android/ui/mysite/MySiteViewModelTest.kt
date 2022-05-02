@@ -109,6 +109,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -629,14 +630,18 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* EMPTY VIEW - ADD SITE */
-
     @Test
-    fun `add new site press is handled correctly`() {
+    fun `given empty site view, when add new site is tapped, then navigated to AddNewSite`() {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
         viewModel.onAddSitePressed()
 
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.AddNewSite(true))
+        assertThat(navigationActions).containsOnly(
+                SiteNavigationAction.AddNewSite(
+                        true,
+                        SiteCreationSource.MY_SITE_NO_SITES
+                )
+        )
     }
 
     /* ON RESUME */
@@ -848,9 +853,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site info card url click opens site`() = test {
+    fun `site info card url click opens site and completes View Site task`() = test {
         invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
+        verify(quickStartRepository).completeTask(QuickStartTask.VIEW_SITE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
     }
 
@@ -1037,6 +1043,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* QUICK START CARD */
+
     @Test
     fun `when quick start task type item is clicked, then quick start full screen dialog is opened`() {
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
@@ -1054,6 +1061,37 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
         verify(quickStartRepository).clearActiveTask()
+    }
+
+    @Test
+    fun `given site menu tab, when quick start card item is clicked, then quick start tapped is tracked`() {
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true,
+                initialScreen = MySiteTabType.SITE_MENU.label
+        )
+
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        verify(analyticsTrackerWrapper)
+                .track(Stat.QUICK_START_TAPPED, mapOf("type" to QuickStartTaskType.CUSTOMIZE.toString()))
+    }
+
+    @Test
+    fun `given dashboard tab, when quick start card item clicked, then quick start card item tapped is tracked`() {
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isQuickStartDynamicCardEnabled = false,
+                isQuickStartInProgress = true,
+                initialScreen = MySiteTabType.DASHBOARD.label
+        )
+
+        requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
+
+        verify(cardsTracker).trackQuickStartCardItemClicked(QuickStartTaskType.CUSTOMIZE)
     }
 
     @Test
@@ -2492,7 +2530,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 domainRegistrationCardBuilderParams = any(),
                 quickStartCardBuilderParams = any(),
                 dashboardCardsBuilderParams = any(),
-                quickLinkRibbonsBuilderParams = any(),
+                quickLinkRibbonBuilderParams = any(),
                 isMySiteTabsEnabled = any()
         )
 
@@ -2530,6 +2568,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 url = siteUrl,
                 iconState = IconState.Visible(siteIcon),
                 showTitleFocusPoint = false,
+                showSubtitleFocusPoint = false,
                 showIconFocusPoint = false,
                 onTitleClick = ListItemInteraction.create { params.titleClick.invoke() },
                 onIconClick = ListItemInteraction.create { params.iconClick.invoke() },
@@ -2560,7 +2599,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickLinkRibbonPostsClickAction = params.onPostsClick
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
-        return QuickLinkRibbon(quickLinkRibbonItems = mock())
+        return QuickLinkRibbon(
+            quickLinkRibbonItems = mock(),
+            showStatsFocusPoint = false,
+            showPagesFocusPoint = false
+        )
     }
 
     private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
