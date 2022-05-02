@@ -117,7 +117,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_90dp"
         android:focusable="true"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
