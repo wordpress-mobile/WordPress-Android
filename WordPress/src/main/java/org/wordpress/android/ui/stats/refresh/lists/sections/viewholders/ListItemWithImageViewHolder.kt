@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
+import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.databinding.StatsBlockListItemWithImageBinding
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithImage
@@ -23,6 +24,7 @@ class ListItemWithImageViewHolder(
         statsTitle.text = item.title
         statsSubTitle.text = item.subTitle
         item.imageUrl?.let {
+            statsImage.visibility = View.VISIBLE
             imageManager.loadImageWithCorners(
                     statsImage,
                     IMAGE,

@@ -10,6 +10,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/stats_image"
+        android:visibility="gone"
         style="@style/ShapeAppearance.MaterialComponents.MediumComponent"
         android:layout_width="@dimen/margin_68dp"
         android:layout_height="@dimen/margin_68dp"
@@ -25,6 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
+        app:layout_goneMarginEnd="@dimen/margin_none"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/stats_image"

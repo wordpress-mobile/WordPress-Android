@@ -28,7 +28,10 @@ class LatestPostSummaryMapper
         model: InsightsLatestPostModel?
     ): ListItemWithImage {
         if (model == null) {
-            return ListItemWithImage(title = resourceProvider.getString(string.stats_insights_latest_post_empty))
+            return ListItemWithImage(
+                    title = resourceProvider.getString(string.stats_insights_latest_post_empty),
+                    imageUrl = null
+            )
         }
         val postTitle = if (model.postTitle.isNotBlank()) {
             StringEscapeUtils.unescapeHtml4(model.postTitle).let { Jsoup.parse(it).text() }
