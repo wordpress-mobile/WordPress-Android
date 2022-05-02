@@ -62,12 +62,15 @@ private val RESPONDENTS = listOf(
         )
 )
 
+/* ktlint-disable max-line-length */
 @RunWith(MockitoJUnitRunner::class)
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder
     private val bloggingPrompt = BloggingPrompt(
             text = PROMPT_TITLE,
-            template = "",
+            content = "<!-- wp:pullquote -->\n" +
+                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                    "<!-- /wp:pullquote -->",
             respondents = RESPONDENTS
     )
 
@@ -98,16 +101,19 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     private fun buildBloggingPromptCard(bloggingPrompt: BloggingPrompt?) = builder.build(
-            BloggingPromptCardBuilderParams(bloggingPrompt, onShareClick)
+            BloggingPromptCardBuilderParams(bloggingPrompt, onShareClick, onAnswerClick)
     )
 
     private val onShareClick: (message: String) -> Unit = { }
+
+    private val onAnswerClick: () -> Unit = { }
 
     private val bloggingPromptCard = BloggingPromptCardWithData(
             prompt = UiStringText(PROMPT_TITLE),
             respondents = RESPONDENTS_IN_CARD,
             numberOfAnswers = NUMBER_OF_RESPONDENTS,
             false,
-            onShareClick = onShareClick
+            onShareClick = onShareClick,
+            onAnswerClick = onAnswerClick
     )
 }

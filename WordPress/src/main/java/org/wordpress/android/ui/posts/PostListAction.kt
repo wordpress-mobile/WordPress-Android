@@ -62,7 +62,7 @@ fun handlePostListAction(
             ActivityLauncher.editPostOrPageForResult(activity, action.site, action.post, action.loadAutoSaveRevision)
         }
         is PostListAction.NewPost -> {
-            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
+            ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST, null)
         }
         is PostListAction.NewStoryPost -> {
             if (AppPrefs.shouldShowStoriesIntro()) {

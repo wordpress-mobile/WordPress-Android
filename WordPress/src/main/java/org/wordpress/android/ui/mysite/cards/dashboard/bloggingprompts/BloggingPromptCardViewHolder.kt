@@ -36,6 +36,7 @@ class BloggingPromptCardViewHolder(
         }
 
         answerButton.setOnClickListener {
+            card.onAnswerClick.invoke()
             uiHelpers.updateVisibility(answerButton, false)
             uiHelpers.updateVisibility(answeredPromptControls, true)
         }
