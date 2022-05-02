@@ -17,6 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnSurface"
         tools:text="@string/my_site_menu_tab_title" />
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
