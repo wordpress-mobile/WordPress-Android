@@ -9,7 +9,6 @@ import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
 import com.github.mikephil.charting.components.YAxis.AxisDependency.LEFT
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -47,10 +46,6 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     fun bind(item: LineChartItem) {
         chart.setNoDataText("")
-
-        val markerView = LineChartMarkerView(chart.context)
-        markerView.chartView = chart
-        chart.marker = markerView
 
         coroutineScope.launch {
             delay(50)
@@ -112,7 +107,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val hasThisWeekData = thisWeekData.isNotEmpty() && thisWeekData.any { it.value > 0 }
         val thisWeekDataSet = if (hasThisWeekData) {
             val mappedEntries = thisWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
-            buildDataSet(context, item.selectedType, mappedEntries)
+            buildThisWeekDataSet(context, item.selectedType, mappedEntries)
         } else {
             buildEmptyDataSet(context, item.entries.size)
         }
@@ -175,7 +170,13 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 }
 
                 override fun onValueSelected(e: Entry, h: Highlight) {
-                    val value = (e as? BarEntry)?.data as? String
+                    if (chart.marker == null) {
+                        val markerView = LineChartMarkerView(chart.context)
+                        markerView.chartView = chart
+                        chart.marker = markerView
+                        chart.highlightValue(h)
+                    }
+                    val value = (e as? Entry)?.data as? String
                     item.onLineSelected?.invoke(value)
                 }
             })
@@ -210,7 +211,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return dataSet
     }
 
-    private fun buildDataSet(context: Context, selectedType: Int, cut: List<Entry>): LineDataSet {
+    private fun buildThisWeekDataSet(context: Context, selectedType: Int, cut: List<Entry>): LineDataSet {
         val selectType = SelectedType.valueOf(selectedType).toString()
         val dataSet = LineDataSet(cut, "Current week $selectType")
 
