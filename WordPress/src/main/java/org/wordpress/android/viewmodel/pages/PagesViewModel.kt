@@ -550,6 +550,9 @@ class PagesViewModel
              */
             AppLog.e(PAGES, e)
             _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
+        } catch (e: NullPointerException) {
+            AppLog.e(PAGES, e)
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
         }
     }
 
