@@ -198,7 +198,13 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                     prompt.iconId
             )
 
-            showSnackbar(SnackbarMessageHolder(message = UiStringText(message), isImportant = false))
+            showSnackbar(
+                    SnackbarMessageHolder(
+                            message = UiStringText(message),
+                            duration = prompt.duration,
+                            isImportant = false
+                    )
+            )
         }
 
         viewModel.start()

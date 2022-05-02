@@ -324,11 +324,13 @@ class ReaderViewModel @Inject constructor(
     data class QuickStartReaderPrompt(
         val task: QuickStartTask,
         @StringRes val shortMessagePrompt: Int,
-        @DrawableRes val iconId: Int
+        @DrawableRes val iconId: Int,
+        val duration: Int = QUICK_START_PROMPT_DURATION
     )
 
     companion object {
         private const val QUICK_START_DISCOVER_TAB_STEP_DELAY = 2000L
+        private const val QUICK_START_PROMPT_DURATION = 5000
     }
 }
 
