@@ -28,19 +28,19 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-class FollowerTotalsNewUseCaseTest : BaseUnitTest() {
+class TotalFollowersNewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: SummaryStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    private lateinit var useCase: FollowerTotalsNewUseCase
+    private lateinit var useCase: TotalFollowersNewUseCase
     private val followers = 100
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        useCase = FollowerTotalsNewUseCase(
+        useCase = TotalFollowersNewUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
                 insightsStore,
@@ -84,7 +84,7 @@ class FollowerTotalsNewUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE_WITH_MORE)
-        assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_follower_totals)
+        assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_total_followers)
     }
 
     private fun assertValue(blockListItem: BlockListItem) {

@@ -18,7 +18,7 @@ sealed class NavigationTarget {
     ) : NavigationTarget()
 
     data class ViewFollowersStats(val selectedTab: Int) : NavigationTarget()
-    object ViewFollowerTotalsStats : NavigationTarget()
+    object ViewTotalFollowersStats : NavigationTarget()
     data class ViewCommentsStats(val selectedTab: Int) : NavigationTarget()
     object ViewTagsAndCategoriesStats : NavigationTarget()
     object ViewPublicizeStats : NavigationTarget()

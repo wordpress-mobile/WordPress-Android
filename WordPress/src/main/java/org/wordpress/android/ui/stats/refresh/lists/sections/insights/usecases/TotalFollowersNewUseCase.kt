@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowerTotalsStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -20,14 +20,14 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-class FollowerTotalsNewUseCase @Inject constructor(
+class TotalFollowersNewUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val summaryStore: SummaryStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<SummaryModel>(FOLLOWER_TOTALS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_follower_totals))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_total_followers))
 
     override fun buildEmptyItem() = buildUiModel(SummaryModel(0))
 
@@ -49,7 +49,7 @@ class FollowerTotalsNewUseCase @Inject constructor(
             listOf(buildTitle(), ValueWithChartItem(domainModel.followers))
 
     private fun buildTitle() = TitleWithMore(
-            R.string.stats_view_follower_totals,
+            R.string.stats_view_total_followers,
             navigationAction = ListItemInteraction.create(this::onViewMoreClick)
     )
 
@@ -58,6 +58,6 @@ class FollowerTotalsNewUseCase @Inject constructor(
                 AnalyticsTracker.Stat.STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED,
                 statsSiteProvider.siteModel
         )
-        navigateTo(ViewFollowerTotalsStats) // TODO: Connect this to proper second level navigation later
+        navigateTo(ViewTotalFollowersStats) // TODO: Connect this to proper second level navigation later
     }
 }

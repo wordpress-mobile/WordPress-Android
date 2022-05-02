@@ -33,7 +33,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 
-class FollowerTotalsUseCaseTest : BaseUnitTest() {
+class TotalFollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var followersStore: FollowersStore
     @Mock lateinit var publicizeStore: PublicizeStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
@@ -41,7 +41,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: FollowerTotalsUseCase
+    private lateinit var useCase: TotalFollowersUseCase
 
     private val emailModel = FollowersModel(7, emptyList(), false)
     private val wpModel = FollowersModel(3, emptyList(), false)
@@ -54,7 +54,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        useCase = FollowerTotalsUseCase(
+        useCase = TotalFollowersUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
                 followersStore,
@@ -77,7 +77,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maps follower totals to UI model`() = test {
+    fun `maps total followers to UI model`() = test {
         val forced = false
         val refresh = true
 
@@ -85,7 +85,7 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
         whenever(followersStore.fetchWpComFollowers(site, PagedMode(0))).thenReturn(OnStatsFetched(wpModel))
         whenever(publicizeStore.fetchPublicizeData(site, LimitMode.All)).thenReturn(OnStatsFetched(socialModel))
 
-        val result = loadFollowerTotalsData(refresh, forced)
+        val result = loadTotalFollowersData(refresh, forced)
 
         assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
@@ -116,11 +116,11 @@ class FollowerTotalsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_follower_totals)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_total_followers)
         assertThat(item.menuAction).isNotNull
     }
 
-    private suspend fun loadFollowerTotalsData(refresh: Boolean, forced: Boolean): UseCaseModel {
+    private suspend fun loadTotalFollowersData(refresh: Boolean, forced: Boolean): UseCaseModel {
         var result: UseCaseModel? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(refresh, forced)

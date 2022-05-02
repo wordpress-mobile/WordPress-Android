@@ -95,6 +95,6 @@ class InsightsManagementMapper
         POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
         PUBLICIZE -> R.string.stats_view_publicize
         ANNUAL_SITE_STATS -> R.string.stats_insights_this_year_site_stats
-        FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
+        FOLLOWER_TOTALS -> string.stats_view_total_followers
     }
 }
