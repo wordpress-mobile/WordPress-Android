@@ -18,6 +18,7 @@
         style="@style/ModalLayoutPickerHeader"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:textAlignment="textStart"
         android:paddingStart="@dimen/hpp_title_padding_start"
         android:paddingEnd="0dp"
         android:text="@string/hpp_title" />
