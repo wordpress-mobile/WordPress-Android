@@ -25,6 +25,7 @@
         style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxLines="2"
         android:layout_marginEnd="@dimen/margin_extra_large"
         app:layout_goneMarginEnd="@dimen/margin_none"
         app:layout_constraintTop_toTopOf="parent"
