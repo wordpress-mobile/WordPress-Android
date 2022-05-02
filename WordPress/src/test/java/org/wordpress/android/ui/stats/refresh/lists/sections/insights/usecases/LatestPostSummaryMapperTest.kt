@@ -54,7 +54,18 @@ class LatestPostSummaryMapperTest {
     @Test
     fun `builds message with no engagement and link`() {
         val viewCount = 0
-        val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
+        val model = InsightsLatestPostModel(
+                siteId,
+                postTitle,
+                postURL,
+                date,
+                postId,
+                viewCount,
+                0,
+                0,
+                listOf(),
+                ""
+        )
 
         val sinceTimeLabel = "10 mins"
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
@@ -86,7 +97,18 @@ class LatestPostSummaryMapperTest {
     @Test
     fun `builds message with engagement`() {
         val viewCount = 10
-        val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
+        val model = InsightsLatestPostModel(
+                siteId,
+                postTitle,
+                postURL,
+                date,
+                postId,
+                viewCount,
+                0,
+                0,
+                listOf(),
+                ""
+        )
 
         val sinceTimeLabel = "10 mins"
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
@@ -145,7 +167,18 @@ class LatestPostSummaryMapperTest {
         val postTitleWithHtml = "<b>Title</b> with <font color=\"red\">HTML</color>"
 
         val viewCount = 0
-        val model = InsightsLatestPostModel(siteId, postTitleWithHtml, postURL, date, postId, viewCount, 0, 0, listOf())
+        val model = InsightsLatestPostModel(
+                siteId,
+                postTitleWithHtml,
+                postURL,
+                date,
+                postId,
+                viewCount,
+                0,
+                0,
+                listOf(),
+                ""
+        )
 
         val sinceTimeLabel = "10 mins"
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(date)).thenReturn(sinceTimeLabel)
