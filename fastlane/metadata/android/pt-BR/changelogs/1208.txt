@@ -1,0 +1,6 @@
+19.7:
+- Adição das abas Menu do Site e Home na tela inicial
+- Deixamos o botão Adicionar Bloco mais visível ao abrir o editor de blocos
+- Remoção do texto de erro de envio do bloco mídia/áudio
+- Adição da tela Objetivo do Site no processo de criação do site
+- Correção de erros causados por detalhes de comentários na notificação de blocos do GB File

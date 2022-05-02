@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
@@ -28,7 +29,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
-import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonBuilder
+import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
@@ -176,7 +177,7 @@ class CardsBuilderTest {
     }
 
     @Test
-    fun `given tabs enabled, when cards are built, then quick link ribbons built`() {
+    fun `given tabs enabled, when cards are built, then quick link ribbon built`() {
         val cards = buildCards(isMySiteTabsEnabled = true)
 
         assertThat(cards.findQuickLinkRibbon()).isNotNull
@@ -197,6 +198,7 @@ class CardsBuilderTest {
 
     private fun buildCards(
         isQuickActionEnabled: Boolean = true,
+        activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
@@ -233,12 +235,13 @@ class CardsBuilderTest {
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock())
                 ),
-                quickLinkRibbonsBuilderParams = QuickLinkRibbonBuilderParams(
+                quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                         siteModel = mock(),
                         onPagesClick = mock(),
                         onPostsClick = mock(),
                         onMediaClick = mock(),
-                        onStatsClick = mock()
+                        onStatsClick = mock(),
+                        activeTask = activeTask
                 ),
                 isMySiteTabsEnabled
         )

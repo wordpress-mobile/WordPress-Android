@@ -1,4 +1,0 @@
-19.6:
-Rilis ini cepat dan bermanfaat: setelah menghapus sebuah situs, Anda mungkin menjumpai bahwa situs yang sama tetap ada di daftar Situs Saya sampai Anda memulai ulang aplikasi.
-
-Kami telah memperbaikinya — sekarang, situs yang dihapus langsung menghilang. Selamat tinggal.

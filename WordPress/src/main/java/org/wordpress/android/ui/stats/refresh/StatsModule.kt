@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -69,6 +72,7 @@ private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
 /**
  * Module that provides use cases for Stats.
  */
+@InstallIn(SingletonComponent::class)
 @Module
 class StatsModule {
     /**
@@ -374,7 +378,7 @@ class StatsModule {
 
     @Provides
     @Singleton
-    fun provideSharedPrefs(context: Context): SharedPreferences {
+    fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 }

@@ -12,6 +12,9 @@ import org.wordpress.android.support.BaseTest;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class ContactUsTests extends BaseTest {
     @Before
     public void setUp() {

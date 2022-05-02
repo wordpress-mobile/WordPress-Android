@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-15 11:17:05+0000
+Translation-Revision-Date: 2022-04-27 09:08:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: en_CA
 -->
 <resources>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
+    <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
+    <string name="dialog_title">Insert link</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="toast_content_info_editor_not_ready">Editor is still loading</string>
+    <string name="toast_content_info_failed">Failed to get content structure</string>
+    <string name="dialog_content_info_body">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
+    <string name="dialog_content_info_title">Content structure</string>
+    <string name="media_bar_description_library">Pick a media from WordPress media library</string>
+    <string name="stop_save_dialog_title">Files saving</string>
+    <string name="post_content">Content</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+    <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Try it now</string>
+    <string name="blogging_prompts_onboarding_content_note_content">You can learn more and set up reminders at any time in My Site &gt; Settings &gt; Blogging Reminders</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Note:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">We’ll show you a new prompt each day on your dashboard to help get those creative juices flowing!</string>
+    <string name="blogging_prompts_onboarding_content_top">The best way to become a better writer is to build a writing habit and share with others - that’s where Prompts come in!</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Posting regularly attracts new readers. Tell us when you want to write and we’ll send you a reminder!</string>
+    <string name="blogging_prompts_onboarding_header_title">Introducing Prompts</string>
+    <string name="blogging_prompt_set_reminders">Set reminders</string>
+    <string name="blogging_reminders_prompt_subtitle">Reminder will include a daily prompt</string>
+    <string name="blogging_reminders_prompt_title">Include daily prompt</string>
     <string name="set_your_blogging_prompts_title">Become a better writer by building a habit</string>
     <string name="site_creation_intent_writing_poetry">Writing &amp; Poetry</string>
     <string name="site_creation_intent_travel">Travel</string>
@@ -32,6 +56,7 @@ Language: en_CA
     <string name="site_creation_intent_parenting">Parenting</string>
     <string name="site_creation_intent_news">News</string>
     <string name="site_creation_intent_music">Music</string>
+    <string name="site_creation_intent_local_services">Local Services</string>
     <string name="site_creation_intent_automotive">Automotive</string>
     <string name="site_creation_intent_art">Art</string>
     <string name="new_site_creation_intents_title">Site topic</string>
@@ -42,7 +67,6 @@ Language: en_CA
     <string name="site_creation_intent_business">Business</string>
     <string name="site_creation_intent_books">Books</string>
     <string name="site_creation_intent_beauty">Beauty</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d answers</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
@@ -374,7 +398,6 @@ Language: en_CA
     <string name="gutenberg_native_custom_url">Custom URL</string>
     <string name="gutenberg_native_column_d">Column %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Briefly describe the link to help screen reader user</string>
-    <string name="gutenberg_native_add_blocks">Add blocks</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="gutenberg_native_what_is_alt_text">What is alt text?</string>
     <string name="gutenberg_native_transform_s_to">Transform %s to</string>

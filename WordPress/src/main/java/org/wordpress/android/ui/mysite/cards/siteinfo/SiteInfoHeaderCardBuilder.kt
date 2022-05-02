@@ -33,6 +33,7 @@ class SiteInfoHeaderCardBuilder
                 homeUrl,
                 siteIcon,
                 params.activeTask == QuickStartTask.UPDATE_SITE_TITLE,
+                params.activeTask == QuickStartTask.VIEW_SITE,
                 params.activeTask == QuickStartTask.UPLOAD_SITE_ICON,
                 buildTitleClick(params.site, params.titleClick),
                 ListItemInteraction.create(params.iconClick),
