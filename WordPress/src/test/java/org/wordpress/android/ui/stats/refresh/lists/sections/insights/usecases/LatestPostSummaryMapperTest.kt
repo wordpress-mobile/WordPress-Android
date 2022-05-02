@@ -12,8 +12,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -30,6 +30,7 @@ class LatestPostSummaryMapperTest {
     private val siteId = 1L
     private val postId = 10L
     private val postURL = "url"
+    private val featuredImageURL = ""
     @Before
     fun setUp() {
         mapper = LatestPostSummaryMapper(
@@ -64,7 +65,7 @@ class LatestPostSummaryMapperTest {
                 0,
                 0,
                 listOf(),
-                ""
+                featuredImageURL
         )
 
         val sinceTimeLabel = "10 mins"
@@ -107,7 +108,7 @@ class LatestPostSummaryMapperTest {
                 0,
                 0,
                 listOf(),
-                ""
+                featuredImageURL
         )
 
         val sinceTimeLabel = "10 mins"
@@ -177,7 +178,7 @@ class LatestPostSummaryMapperTest {
                 0,
                 0,
                 listOf(),
-                ""
+                featuredImageURL
         )
 
         val sinceTimeLabel = "10 mins"
