@@ -46,13 +46,16 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
 
     // ONBOARDING dialog type actions
 
+    /* ktlint-disable max-line-length */
     @Test
     fun `Should trigger OpenEditor action when primary button is tapped`() = runBlocking {
         classToTest.start(ONBOARDING)
 
         val startState = viewStates[0]
         (startState as Ready).onPrimaryButtonClick()
-        verify(actionObserver).onChanged(OpenEditor)
+        verify(actionObserver).onChanged(OpenEditor("<!-- wp:pullquote -->\n" +
+                "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                "<!-- /wp:pullquote -->"))
     }
 
     @Test

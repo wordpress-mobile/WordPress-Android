@@ -239,6 +239,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
         viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
+        viewModel.onAnswerBloggingPrompt.observeEvent(viewLifecycleOwner) {
+            val bloggingPrompt = it.first
+            val site = it.second
+            ActivityLauncher.addNewPostForResult(
+                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.content
+            )
+        }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -316,7 +323,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     requireActivity(),
                     action.site,
                     false,
-                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                    null
             )
         // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
