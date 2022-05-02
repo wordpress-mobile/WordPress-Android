@@ -639,6 +639,7 @@ class PagesViewModel
             MOVE_TO_DRAFT -> "move_to_draft"
             DELETE_PERMANENTLY -> "delete_permanently"
             MOVE_TO_TRASH -> "move_to_bin"
+            COPY_LINK -> "copy_link"
         }
         val properties = mutableMapOf("option_name" to menu as Any)
         AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)
