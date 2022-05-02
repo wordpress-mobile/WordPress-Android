@@ -40,6 +40,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 @Suppress("TooManyFunctions")
 object QuickStartUtils {
@@ -275,7 +276,7 @@ object QuickStartUtils {
                 context,
                 RequestCodes.QUICK_START_REMINDER_RECEIVER,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.set(
                 AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + QUICK_START_REMINDER_INTERVAL,
@@ -291,7 +292,7 @@ object QuickStartUtils {
                 context,
                 RequestCodes.QUICK_START_REMINDER_RECEIVER,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.cancel(pendingIntent)
     }

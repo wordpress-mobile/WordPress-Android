@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -87,12 +89,14 @@ import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.categories.CategoriesListActivity;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -151,6 +155,7 @@ public class ActivityLauncher {
     public static final String SOURCE_TRACK_EVENT_PROPERTY_KEY = "source";
     public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
     public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
+    private static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
@@ -356,6 +361,26 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static Intent openEditorWithContentIntent(
+            @NonNull final Context context,
+            @NonNull final String content
+    ) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_CONTENT, content);
+        return intent;
+    }
+
+    public static Intent openEditorWithPromptAndDismissNotificationIntent(
+            @NonNull final Context context, final int notificationId, final BloggingPrompt bloggingPrompt
+    ) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_CONTENT, bloggingPrompt.getContent());
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        return intent;
+    }
+
     public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainActivityIntent = getMainActivityInNewStack(context);
@@ -423,7 +448,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, reblogSource);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource, null);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
@@ -869,9 +894,10 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            @Nullable final String content
     ) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, content);
     }
 
     public static void addNewPostForResult(
@@ -879,7 +905,8 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            @Nullable final String content
     ) {
         if (site == null) {
             return;
@@ -889,6 +916,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(EditPostActivity.EXTRA_CONTENT, content);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1095,10 +1123,16 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {
+    public static void viewHistoryDetailForResult(@NonNull final Activity activity, @NonNull final Revision revision,
+                                                  @NonNull final long[] previousRevisionsIds, final long postId,
+                                                  final long siteId) {
         Intent intent = new Intent(activity, HistoryDetailActivity.class);
-        intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
-        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, new ArrayList<>(revisions));
+        intent.putExtra(HistoryDetailContainerFragment.EXTRA_CURRENT_REVISION, revision);
+        final Bundle extras = new Bundle();
+        extras.putLongArray(HistoryDetailContainerFragment.EXTRA_PREVIOUS_REVISIONS_IDS, previousRevisionsIds);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_POST_ID, postId);
+        extras.putLong(HistoryDetailContainerFragment.EXTRA_SITE_ID, siteId);
+        intent.putExtras(extras);
         activity.startActivityForResult(intent, RequestCodes.HISTORY_DETAIL);
     }
 
@@ -1146,8 +1180,7 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
-        } else if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE && site.isWPComAtomic()
-                   && !site.isPrivateWPComAtomic()) {
+        } else if (site.isWPComAtomic() && !site.isPrivateWPComAtomic()) {
             openAtomicBlogPostPreview(
                     context,
                     url,
@@ -1322,26 +1355,46 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newBlogForResult(Activity activity) {
+    public static void newBlogForResult(Activity activity, SiteCreationSource source) {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
+        intent.putExtra(SiteCreationActivity.ARG_CREATE_SITE_SOURCE, source.getLabel());
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
-    public static void showMainActivityAndSiteCreationActivity(Activity activity) {
+    public static void showMainActivityAndSiteCreationActivity(Activity activity, SiteCreationSource source) {
         // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
         // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
         // WPMainActivity, we must start it this way.
-        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null);
+        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null, source);
         activity.startActivity(intent);
     }
 
     @NonNull
     public static Intent createMainActivityAndSiteCreationActivityIntent(Context context,
-                                                                         @Nullable NotificationType notificationType) {
+                                                                         @Nullable NotificationType notificationType,
+                                                                         SiteCreationSource source) {
         final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        intent.putExtra(WPMainActivity.ARG_SITE_CREATION_SOURCE, source.getLabel());
+        if (notificationType != null) {
+            intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
+        }
+        return intent;
+    }
+
+    @NonNull
+    public static Intent createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
+            final Context context,
+            @Nullable final NotificationType notificationType,
+            final int notificationId
+    ) {
+        final Intent intent = new Intent(context, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_BLOGGING_PROMPTS_ONBOARDING, true);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         if (notificationType != null) {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }
@@ -1616,6 +1669,12 @@ public class ActivityLauncher {
     public static void showCategoriesList(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, CategoriesListActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+    public static void showCategoryDetail(@NonNull Context context, @Nullable Long categoryId) {
+        Intent intent = new Intent(context, CategoryDetailActivity.class);
+        intent.putExtra(CATEGORY_DETAIL_ID, categoryId);
         context.startActivity(intent);
     }
 

@@ -7,14 +7,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
@@ -40,13 +40,12 @@ import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var uiHelpers: UiHelpers
-    private lateinit var viewModel: StatsViewModel
+    private val viewModel: StatsViewModel by viewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private val selectedTabListener: SelectedTabListener
-        get() = SelectedTabListener(viewModel)
+    private lateinit var selectedTabListener: SelectedTabListener
 
     private var restorePreviousSearch = false
 
@@ -84,6 +83,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         statsPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
+        selectedTabListener = SelectedTabListener(viewModel)
         TabLayoutMediator(tabLayout, statsPager) { tab, position ->
             tab.text = adapter.getTabTitle(position)
         }.attach()
@@ -103,8 +103,6 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         isFirstStart: Boolean,
         savedInstanceState: Bundle?
     ) {
-        viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewModel::class.java)
-
         viewModel.onRestoreInstanceState(savedInstanceState)
 
         setupObservers(activity)

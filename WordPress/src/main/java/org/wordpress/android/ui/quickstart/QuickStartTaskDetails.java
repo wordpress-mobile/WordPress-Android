@@ -41,7 +41,7 @@ public enum QuickStartTaskDetails {
             QuickStartTask.FOLLOW_SITE,
             R.string.quick_start_list_follow_site_title,
             R.string.quick_start_list_follow_site_subtitle,
-            R.drawable.ic_reader_follow_white_24dp
+            R.drawable.ic_reader_white_24dp
     ),
     UPLOAD_SITE_ICON(
             QuickStartTask.UPLOAD_SITE_ICON,

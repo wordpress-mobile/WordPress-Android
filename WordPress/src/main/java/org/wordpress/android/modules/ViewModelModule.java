@@ -10,6 +10,7 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
@@ -33,8 +34,6 @@ import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
-import org.wordpress.android.ui.mysite.tabs.MySiteDashboardTabViewModel;
-import org.wordpress.android.ui.mysite.tabs.MySiteMenuTabViewModel;
 import org.wordpress.android.ui.people.PeopleInviteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
@@ -48,8 +47,10 @@ import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
-import org.wordpress.android.ui.prefs.categories.CategoriesListViewModel;
+import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
+import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
@@ -63,8 +64,9 @@ import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
+import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
-import org.wordpress.android.ui.stats.refresh.StatsViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
@@ -105,8 +107,11 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import dagger.multibindings.IntoMap;
 
+@InstallIn(SingletonComponent.class)
 @Module
 abstract class ViewModelModule {
     @Binds
@@ -211,11 +216,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(StatsViewModel.class)
-    abstract ViewModel statsViewModel(StatsViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(StatsWidgetConfigureViewModel.class)
     abstract ViewModel statsViewsWidgetViewModel(StatsWidgetConfigureViewModel viewModel);
 
@@ -248,6 +248,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteCreationIntentsViewModel.class)
+    abstract ViewModel siteCreationIntentsViewModel(SiteCreationIntentsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteCreationSiteNameViewModel.class)
+    abstract ViewModel siteCreationSiteNameViewModel(SiteCreationSiteNameViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -476,16 +486,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MySiteDashboardTabViewModel.class)
-    abstract ViewModel mySiteDashboardTabViewModel(MySiteDashboardTabViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MySiteMenuTabViewModel.class)
-    abstract ViewModel mySiteMenuTabViewModel(MySiteMenuTabViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(BasicDialogViewModel.class)
     abstract ViewModel basicDialogViewModel(BasicDialogViewModel viewModel);
 
@@ -579,6 +579,16 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(LocalePickerViewModel.class)
+    abstract ViewModel localePickerViewModel(LocalePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoryDetailViewModel.class)
+    abstract ViewModel categoryDetailViewModel(CategoryDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(UnifiedCommentActivityViewModel.class)
     abstract ViewModel unifiedCommentActivityViewModel(UnifiedCommentActivityViewModel viewModel);
 
@@ -596,4 +606,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ConversationNotificationsViewModel.class)
     abstract ViewModel conversationNotificationsViewModel(ConversationNotificationsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
+    abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
 }

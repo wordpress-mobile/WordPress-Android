@@ -1,0 +1,6 @@
+19.7:
+- Site menu en Home tabs toegevoegd aan Mijn site scherm
+- Knop Blok toevoegen beter zichtbaar gemaakt bij openen blok-editor
+- Fouttekst bij uploaden media/audio blok verwijderd
+- Site Doelscherm toegevoegd aan site creatie proces
+- Crash verholpen veroorzaakt door melding details voor reactie op GB bestand blokken

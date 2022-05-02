@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -15,12 +17,21 @@ class CardsTracker @Inject constructor(
 ) {
     enum class Type(val label: String) {
         ERROR("error"),
+        QUICK_START("quick_start"),
         STATS("stats"),
-        POST("post")
+        POST("post"),
+        BLOGGING_PROMPT("blogging_prompt")
+    }
+
+    enum class QuickStartSubtype(val label: String) {
+        CUSTOMIZE("customize"),
+        GROW("grow"),
+        UNKNOWN("unkown")
     }
 
     enum class StatsSubtype(val label: String) {
-        TODAYS_STATS("todays_stats")
+        TODAYS_STATS("todays_stats"),
+        TODAYS_STATS_NUDGE("todays_stats_nudge")
     }
 
     enum class PostSubtype(val label: String) {
@@ -28,6 +39,14 @@ class CardsTracker @Inject constructor(
         CREATE_NEXT("create_next"),
         DRAFT("draft"),
         SCHEDULED("scheduled")
+    }
+
+    fun trackQuickStartCardItemClicked(quickStartTaskType: QuickStartTaskType) {
+        trackCardItemClicked(Type.QUICK_START.label, quickStartTaskType.toSubtypeValue().label)
+    }
+
+    fun trackTodaysStatsCardGetMoreViewsNudgeClicked() {
+        trackCardItemClicked(Type.STATS.label, StatsSubtype.TODAYS_STATS_NUDGE.label)
     }
 
     fun trackTodaysStatsCardFooterLinkClicked() {
@@ -84,11 +103,13 @@ class CardsTracker @Inject constructor(
 fun DashboardCardType.toTypeValue(): Type {
     return when (this) {
         DashboardCardType.ERROR_CARD -> Type.ERROR
+        DashboardCardType.QUICK_START_CARD -> Type.QUICK_START
         DashboardCardType.TODAYS_STATS_CARD_ERROR -> Type.ERROR
         DashboardCardType.TODAYS_STATS_CARD -> Type.STATS
         DashboardCardType.POST_CARD_ERROR -> Type.ERROR
         DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS -> Type.POST
         DashboardCardType.POST_CARD_WITH_POST_ITEMS -> Type.POST
+        DashboardCardType.BLOGGING_PROMPT_CARD -> Type.BLOGGING_PROMPT
     }
 }
 
@@ -98,5 +119,13 @@ fun PostCardType.toSubtypeValue(): PostSubtype {
         PostCardType.CREATE_NEXT -> PostSubtype.CREATE_NEXT
         PostCardType.DRAFT -> PostSubtype.DRAFT
         PostCardType.SCHEDULED -> PostSubtype.SCHEDULED
+    }
+}
+
+fun QuickStartTaskType.toSubtypeValue(): QuickStartSubtype {
+    return when (this) {
+        QuickStartTaskType.CUSTOMIZE -> QuickStartSubtype.CUSTOMIZE
+        QuickStartTaskType.GROW -> QuickStartSubtype.GROW
+        QuickStartTaskType.UNKNOWN -> QuickStartSubtype.UNKNOWN
     }
 }

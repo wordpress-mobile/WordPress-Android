@@ -44,6 +44,10 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://www.jitpack.io" }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
@@ -83,6 +87,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
 
-    androidTestImplementation "androidx.test.ext:junit:$androidxTestVersion"
+    androidTestImplementation "androidx.test.ext:junit:$jUnitExtVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 }

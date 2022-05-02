@@ -1,8 +1,0 @@
-19.3:
-- Tidak ada tombol email saat pendaftaran jika aplikasi email tidak tersedia
-- Pemberitahuan di editor komentar baru
-- Zona waktu yang tepat untuk situs yang dibuat dalam aplikasi
-- Perbaikan bug untuk pratinjau “Situs Saya” and pratinjau Halaman/Situs yang kosong
- - Penyuntingan komentar pembaca untuk Admin/Editor
-- Memori rendah tidak memengaruhi blok cerita editor
-- Perbaikan teks error untuk URL situs baru dengan karakter bukan bahasa Inggris

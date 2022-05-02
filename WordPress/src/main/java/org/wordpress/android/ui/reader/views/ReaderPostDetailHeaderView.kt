@@ -11,9 +11,9 @@ import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.getDrawableResIdFromAttribute
+import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
 /**

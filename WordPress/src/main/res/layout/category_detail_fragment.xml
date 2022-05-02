@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/category_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/category_name_container"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:hint="@string/category_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/category_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            tools:text="Pony" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/parentDescLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:labelFor="@+id/parent_category"
+        android:text="@string/category_parent"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintEnd_toEndOf="@+id/category_name_container"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/category_name_container"
+        app:layout_constraintTop_toBottomOf="@+id/category_name_container" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/parent_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="@+id/parentDescLabel"
+        app:layout_constraintStart_toStartOf="@+id/parentDescLabel"
+        app:layout_constraintTop_toBottomOf="@+id/parentDescLabel"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+        tools:listitem="@layout/wp_simple_list_item_1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submit_button"
+        style="@style/WordPress.PrepubPrimaryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:enabled="false"
+        android:text="@string/prepublishing_nudges_add_category_button"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/parent_category"
+        app:layout_constraintStart_toStartOf="@+id/parent_category"
+        app:layout_constraintTop_toBottomOf="@+id/parent_category" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

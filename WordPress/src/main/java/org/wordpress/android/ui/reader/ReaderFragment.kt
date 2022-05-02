@@ -1,15 +1,19 @@
 package org.wordpress.android.ui.reader
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -25,6 +29,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
 import java.util.EnumSet
@@ -167,12 +172,39 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     private fun ReaderFragmentLayoutBinding.updateTabs(uiState: ContentUiState) {
-        val adapter = TabsAdapter(this@ReaderFragment, uiState.readerTagList)
-        viewPager.adapter = adapter
+        updateViewPagerAdapterAndMediator(uiState)
+        uiState.tabUiStates.forEachIndexed { index, tabUiState ->
+            val tab = tabLayout.getTabAt(index) as TabLayout.Tab
+            updateTab(tab, tabUiState)
+        }
+    }
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = uiState.tabTitles[position]
-        }.attach()
+    private fun ReaderFragmentLayoutBinding.updateTab(tab: TabLayout.Tab, tabUiState: TabUiState) {
+        val customView = tab.customView ?: createTabCustomView(tab)
+        with(customView) {
+            val title = findViewById<TextView>(R.id.tab_label)
+            title.text = uiHelpers.getTextOfUiString(requireContext(), tabUiState.label)
+        }
+    }
+
+    private fun ReaderFragmentLayoutBinding.updateViewPagerAdapterAndMediator(uiState: ContentUiState) {
+        viewPager.adapter = TabsAdapter(this@ReaderFragment, uiState.readerTagList)
+        TabLayoutMediator(tabLayout, viewPager, ReaderTabConfigurationStrategy(uiState)).attach()
+    }
+
+    private inner class ReaderTabConfigurationStrategy(
+        private val uiState: ContentUiState
+    ) : TabLayoutMediator.TabConfigurationStrategy {
+        override fun onConfigureTab(@NonNull tab: TabLayout.Tab, position: Int) {
+            binding?.updateTab(tab, uiState.tabUiStates[position])
+        }
+    }
+
+    private fun ReaderFragmentLayoutBinding.createTabCustomView(tab: TabLayout.Tab): View {
+        val customView = LayoutInflater.from(context)
+                .inflate(R.layout.tab_custom_view, tabLayout, false)
+        tab.customView = customView
+        return customView
     }
 
     fun requestBookmarkTab() {

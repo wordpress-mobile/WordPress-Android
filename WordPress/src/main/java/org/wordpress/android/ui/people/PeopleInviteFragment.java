@@ -34,6 +34,8 @@ import com.google.android.material.textview.MaterialTextView;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -687,8 +689,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                             ToastUtils.showToast(getActivity(), succeededUsernames.isEmpty()
                                     ? R.string.invite_error_sending
                                     : R.string.invite_error_some_failed);
+
+                            if (!succeededUsernames.isEmpty()) {
+                                AnalyticsTracker.track(Stat.PEOPLE_MANAGEMENT_USER_INVITED);
+                            }
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.invite_sent, ToastUtils.Duration.LONG);
+                            AnalyticsTracker.track(Stat.PEOPLE_MANAGEMENT_USER_INVITED);
                         }
 
                         // set the "SEND" option enabled again

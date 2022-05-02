@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 
 import java.util.List;
 

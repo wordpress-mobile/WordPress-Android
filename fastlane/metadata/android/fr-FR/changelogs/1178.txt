@@ -1,7 +1,0 @@
-19,3:
-- Les notifications s’affichent dans le nouvel éditeur de commentaires
-- Fuseau horaire corrigé pour les sites créés dans l’appli
-- Éditeur de commentaires dans le lecteur pour les administrateurs/rédacteurs
-- Une faible mémoire n’affecte pas l’éditeur du bloc Story
-- Texte d’erreur pour les URL de nouveaux sites comportant des caractères non anglais
-- Corrections de bogues et améliorations du design

@@ -154,8 +154,6 @@
                       },
                       "launch_status": "unlaunched",
                       "site_migration": null,
-                      "is_fse_active": false,
-                      "is_fse_eligible": false,
                       "is_core_site_editor_enabled": false
                     }, {
                       "ID": 181851495,
@@ -298,8 +296,6 @@
                       },
                       "launch_status": "unlaunched",
                       "site_migration": null,
-                      "is_fse_active": false,
-                      "is_fse_eligible": false,
                       "is_core_site_editor_enabled": false
                     }, {
                       "ID": 181977606,
@@ -440,8 +436,6 @@
                       },
                       "launch_status": false,
                       "site_migration": null,
-                      "is_fse_active": false,
-                      "is_fse_eligible": false,
                       "is_core_site_editor_enabled": false
                     }
             ]

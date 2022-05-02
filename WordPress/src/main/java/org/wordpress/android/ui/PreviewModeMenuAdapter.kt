@@ -12,7 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.PreviewMode.DESKTOP
 import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.setVisible
 
 /**
  * Implements the preview/thumbnail mode popup adapter

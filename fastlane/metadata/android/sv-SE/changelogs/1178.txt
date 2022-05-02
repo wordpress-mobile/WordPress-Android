@@ -1,8 +1,0 @@
-19.3:
-- Vid registrering visas inte e-postknappen om app för e-post saknas
-- Aviseringar i den nya kommentarsredigeraren
-- Webbplatser som skapas i appen får rätt tidszon
-- Rättat fel vid tom vy "Min webbplats" och förhandsvisning av sida/webbplats
-- Admin/redaktör kan redigera kommentarer i läsaren
-- Berättelseblock påverkas inte av låg minnestillgång
-- Bättre felbeskrivning vid försök att skapa webbplats-URL med tecken utanför engelska alfabetet

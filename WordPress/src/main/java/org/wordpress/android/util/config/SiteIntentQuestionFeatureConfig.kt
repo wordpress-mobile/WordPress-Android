@@ -9,7 +9,4 @@ import javax.inject.Inject
  */
 @FeatureInDevelopment
 class SiteIntentQuestionFeatureConfig
-@Inject constructor(appConfig: AppConfig) : FeatureConfig(
-        appConfig,
-        BuildConfig.SITE_INTENT_QUESTION
-)
+@Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.SITE_INTENT_QUESTION)

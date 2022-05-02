@@ -1,12 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-02-21 19:13:16+0000
+Translation-Revision-Date: 2022-04-22 11:58:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/3.0.0
 Language: sv_SE
 -->
 <resources>
-    <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökfråga innehåller tecken som inte fungerar med domäner hos WordPress.com. Endast alfanumeriska tecken är tillåtna.</string>
+    <string name="hpp_choose_and_create_site">Skapa webbplats</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Lägg till block</string>
+    <string name="initial_screen">Initial skärm</string>
+    <string name="blogging_prompts_onboarding_notification_action">Lär dig mer</string>
+    <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
+    <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
+    <string name="new_site_creation_site_name_header_subtitle">Ett bra namn är kort och lätt att komma ihåg.\nDu kan ändra det senare.</string>
+    <string name="new_site_creation_site_name_header_title">Give your %s website a name</string>
+    <string name="new_site_creation_site_name_title">Webbplatsnamn</string>
+    <string name="my_site_todays_stats_get_more_views_message">Interested in building your audience? Check out our &lt;a href=\"%1$s\"&gt;top tips&lt;/a&gt;.</string>
+    <string name="stats_insights_views_and_visitors_message">Your last weeks views are %1$s %2$s than previous week.</string>
+    <string name="stats_insights_views_and_visitors">Visningar och besökare</string>
+    <string name="featured_image_removed_notice">Borttagen som utvald bild </string>
+    <string name="featured_image_confirmation_notice">Ställ in som utvald bild</string>
+    <string name="featured_image_replace_dialog_cancel">Behåll den nuvarande</string>
+    <string name="featured_image_replace_dialog_confirm">Ersätt den utvalda bilden</string>
+    <string name="featured_image_replace_dialog_description">En utvald bild finns redan angiven. Vill du ersätta den med den nya?</string>
+    <string name="featured_image_replace_dialog_title">Vill du ersätta den utvalda bilden?</string>
+    <string name="dialog_dismiss_try_block_editor">Avfärda</string>
+    <string name="dialog_body_try_block_editor">Vi kommer snart att ta bort den klassiska redigeraren för nya inlägg. Men detta påverkar inte dina möjligheter att redigera befintliga inlägg och sidor. Du kan gå händelserna i förväg genom att aktivera blockredigeraren redan nu i inställningarna för webbplatsen.</string>
+    <string name="dialog_title_try_block_editor">Prova den nya blockredigeraren</string>
+    <string name="menu_toolbar_title">Redigera %s-block</string>
+    <string name="long_post_dlg_saving">Sparar</string>
+    <string name="retry_failed_upload_retry_all">Försök igen med alla</string>
+    <string name="retry_failed_upload_remove">Ta bort uppladdning</string>
+    <string name="retry_failed_upload_yes">Försök igen</string>
+    <string name="retry_failed_upload_title">Kunde inte ladda upp filen</string>
+    <string name="stop_upload_dialog_button_no">Nej</string>
+    <string name="stop_upload_dialog_button_yes">Ja</string>
+    <string name="dialog_button_cancel">Avbryt</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_title">Infoga länk</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="toast_content_info_editor_not_ready">Redigeraren laddas fortfarande</string>
+    <string name="toast_content_info_failed">Misslyckades att hämta innehållsstrukturen</string>
+    <string name="dialog_content_info_body">Block: %1$d\nOrd: %2$d\nTecken: %3$d</string>
+    <string name="dialog_content_info_title">Innehållsstruktur</string>
+    <string name="media_bar_description_library">Välj ett media från WordPress mediebibliotek</string>
+    <string name="media_bar_description_gallery">Välj ett media från galleriet</string>
+    <string name="media_bar_description_camera">Ta foto eller video med kameran</string>
+    <string name="pixel_suffix">%dpx</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
+    <string name="stop_save_dialog_message">Vänta tills alla filer är sparade</string>
+    <string name="stop_save_dialog_title">Sparar filer</string>
+    <string name="post_content">Innehåll</string>
+    <string name="blogging_prompts_onboarding_card_prompt">Välj skådespelarna för din drömfilm.</string>
+    <string name="blogging_prompts_onboarding_remind_me">Påminn mig</string>
+    <string name="blogging_prompts_onboarding_try_it_now">Prova nu</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Du kan när som helst ta reda på mer och konfigurera påminnelser under Min webbplats &gt; Inställningar &gt; Bloggningspåminnelser</string>
+    <string name="blogging_prompts_onboarding_content_note_title">Obs:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">Varje dag visar vi ett annorlunda förslag i din adminpanel för att hjälpa din kreativitet på traven!</string>
+    <string name="blogging_prompts_onboarding_content_top">Det bästa sättet att bli en bättre skribent är att börja skriva regelbundet och visa det för andra – det är här bloggningspåminnelserna kommer in i bilden!</string>
+    <string name="blogging_prompts_onboarding_header_title">Inkluderar förslag</string>
+    <string name="blogging_prompt_set_reminders">Ställ in påminnelser</string>
+    <string name="blogging_reminders_prompt_subtitle">Påminnelsen kommer att innehålla ett förslag för dagen</string>
+    <string name="blogging_reminders_prompt_title">Inkludera dagliga förslag</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Om du regelbundet publicerar får du fler läsare. Berätta för oss när du vill skriva så skickar vi påminnelser!</string>
+    <string name="set_your_blogging_prompts_title">Bli en bättre skribent genom att bygga upp en vana</string>
+    <string name="site_creation_intent_writing_poetry">Skrivande och poesi</string>
+    <string name="site_creation_intent_travel">Resa</string>
+    <string name="site_creation_intent_technology">Teknologi</string>
+    <string name="site_creation_intent_sports">Sport</string>
+    <string name="site_creation_intent_real_estate">Fastigheter</string>
+    <string name="site_creation_intent_politics">Politik</string>
+    <string name="site_creation_intent_photography">Fotografi</string>
+    <string name="site_creation_intent_personal">Personlig</string>
+    <string name="site_creation_intent_people">Människor</string>
+    <string name="site_creation_intent_parenting">Föräldraskap</string>
+    <string name="site_creation_intent_news">Nyheter</string>
+    <string name="site_creation_intent_music">Musik</string>
+    <string name="site_creation_intent_local_services">Lokala tjänster</string>
+    <string name="site_creation_intent_lifestyle">Livsstil</string>
+    <string name="site_creation_intent_interior_design">Inredningsdesign</string>
+    <string name="site_creation_intent_health">Hälsa</string>
+    <string name="site_creation_intent_gaming">Dataspel</string>
+    <string name="site_creation_intent_food">Mat</string>
+    <string name="site_creation_intent_fitness_exercise">Fitness och motion</string>
+    <string name="site_creation_intent_film_television">Film och tv</string>
+    <string name="site_creation_intent_finance">Ekonomi</string>
+    <string name="site_creation_intent_fashion">Mode</string>
+    <string name="site_creation_intent_diy">Gör det själv</string>
+    <string name="site_creation_intent_education">Utbildning</string>
+    <string name="site_creation_intent_community_nonprofit">Gemenskaper och ideella organisationer</string>
+    <string name="site_creation_intent_business">Företagande</string>
+    <string name="site_creation_intent_books">Böcker</string>
+    <string name="site_creation_intent_beauty">Skönhet</string>
+    <string name="site_creation_intent_automotive">Fordon</string>
+    <string name="site_creation_intent_art">Konst</string>
+    <string name="new_site_creation_intents_input_hint">T.ex. mode, poesi, politik</string>
+    <string name="new_site_creation_intents_title">Webbplatsämne</string>
+    <string name="quick_start_site_menu_tab_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att fortsätta.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Ta bort från adminpanelen</string>
+    <string name="my_site_blogging_prompt_card_menu_skip">Hoppa över detta förslag</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Visa fler förslag</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Dela bloggningsförslag</string>
+    <string name="my_site_blogging_prompt_card_answered_prompt">✓ Besvarat</string>
+    <string name="my_site_blogging_prompt_card_answer_prompt">Svara på förslaget</string>
+    <string name="my_site_blogging_prompt_card_title">Förslag</string>
+    <string name="my_site_all_tab_title">Alla</string>
+    <string name="site_settings_blogging_reminders_and_prompts_title">Påminnelser och förslag</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Denna färgkombination kan vara svår för människor att läsa. Försök använda en ljusare bakgrundsfärg och/eller en mörkare textfärg.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Denna färgkombination kan vara svår för människor att läsa. Försök använda en mörkare bakgrundsfärg och/eller en ljusare textfärg.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Misslyckades att infoga media.\nTryck för mer information.</string>
+    <string name="new_site_creation_intents_header_subtitle">Välj ett ämne från listan nedan eller skriv ditt eget.</string>
+    <string name="new_site_creation_intents_header_title">Vad handlar din webbplats om?</string>
+    <string name="notification_channel_weekly_roundup_title">Veckosammanfattning</string>
+    <string name="my_site_dashboard_tab_title">Hem</string>
+    <string name="adding_cat">Lägger till kategori</string>
+    <string name="login_select_email_client">Vilken e-postapp använder du?</string>
+    <string name="login_error_xml_rpc_auth_error_communicating">Det uppstod ett problem med att kommunicera med webbplatsen. En HTTP-felkod 401 returnerades.</string>
+    <string name="login_error_xml_rpc_cannot_read_site_auth_required">Anrop med XML-RPC verkar blockerade på denna webbplats (felkod 401). Om försöket att logga in misslyckas tryck på hjälpikonen för att se vanliga frågor.</string>
+    <string name="login_error_xml_rpc_cannot_read_site">Kunde inte läsa WordPress-webbplatsen på denna URL. Tryck på hjälpikonen för att se vanliga frågor.</string>
+    <string name="login_error_xml_rpc_services_disabled">Tjänsten XML-RPC är inaktiverad på denna webbplats.</string>
+    <string name="my_site_menu_tab_title">Meny</string>
+    <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökning innehåller tecken som inte stöds i WordPress.com-domäner. Följande tecken är tillåtna: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrollera din internetanslutning och ladda om sidan.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gå till statistiken</string>
     <string name="my_site_todays_stat_card_title">Dagens statistik</string>
@@ -310,10 +425,10 @@ Language: sv_SE
     <string name="gutenberg_native_preview_post">Förhandsgranska inlägg</string>
     <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
     <string name="gutenberg_native_retry">Försök igen</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Ett</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
-    <string name="gutenberg_native_s_link">Länk för %s</string>
     <string name="gutenberg_native_padding">Padding</string>
     <string name="gutenberg_native_four">Fyra</string>
     <string name="gutenberg_native_custom_url">Anpassad URL</string>
@@ -590,8 +705,8 @@ Language: sv_SE
     <string name="threat_item_sub_header_file_signature">Hot hittat %s</string>
     <string name="threat_item_sub_header_core_file">Sårbarhet hittades i WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Övrig typ av sårbarhet</string>
-    <string name="threat_item_header_vulnerable_theme">Sårbart tema: %s (version %s)</string>
-    <string name="threat_item_header_vulnerable_plugin">Sårbart tillägg: %s (version %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Sårbart tema: %1$s (version %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Sårbart tillägg: %1$s (version %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: signatur för skadlid kod</string>
     <string name="threat_item_header_database_threat">Databashot %s</string>
     <string name="threat_item_header_infected_core_file">%s: infekterad fil i WordPress-kärnan</string>
@@ -601,7 +716,7 @@ Language: sv_SE
     <string name="scan_in_minutes_ago">%s minut/minuter sedan</string>
     <string name="scan_in_hours_ago">%s timme/timmar sedan</string>
     <string name="scan_this_site">denna webbplats</string>
-    <string name="scan_idle_last_scan_description">Jetpack körde den senaste genomsökningen %s och då såg allt utmärkt ut. %s</string>
+    <string name="scan_idle_last_scan_description">Jetpack körde den senaste genomsökningen %1$s och då hittades inga risker. %2$s</string>
     <string name="scan_idle_threats_found_title">Din webbplats kan vara i riskzonen</string>
     <string name="scan_idle_no_threats_found_title">Oroa dig inte för någonting</string>
     <string name="scan_again">Skanna igen</string>
@@ -609,7 +724,7 @@ Language: sv_SE
     <string name="scan_state_icon">Ikon för genomsökningsstatus</string>
     <string name="backup">Säkerhetskopia</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Aktivitetstypsfiler (%s typer valda)</string>
-    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (visar %s objekt)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (visar %2$s objekt)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Aktivitetstypsfilter</string>
     <string name="activity_log_activity_type_empty_subtitle">Inga aktiviteter registrerade inom det valda datumintervallet.</string>
     <string name="activity_log_activity_type_empty_title">Inga aktiviteter tillgängliga</string>
@@ -694,7 +809,6 @@ Language: sv_SE
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Anna S&lt;/b&gt; gillade ditt inlägg</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Den rullningsbara blockmenyn har öppnats. Välj ett block.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Den rullningsbara blockmenyn har stängts.</string>
-    <string name="hpp_skip_button">Hoppa över</string>
     <string name="hpp_choose_button">Välj</string>
     <string name="hpp_subtitle">Välj favoritlayout på din startsida Du kan anpassa eller ändra det senare.</string>
     <string name="hpp_title">Välj en design</string>
@@ -960,7 +1074,7 @@ Language: sv_SE
     <string name="pages_cannot_be_started">Vi kan inte öppna sidor just nu. Försök igen senare</string>
     <string name="pages_set_as_posts_page">Ställ in som inläggssida</string>
     <string name="pages_set_as_homepage">Ställ in som startsida</string>
-    <string name="suggestion_invalid">%s är inte ett giltigt %s</string>
+    <string name="suggestion_invalid">%1$s är inte ett giltigt %2$s</string>
     <string name="site_settings_select_page">Välj sida</string>
     <string name="site_settings_posts_page">Inläggssida</string>
     <string name="site_settings_static_homepage">Statisk startsida</string>
@@ -1202,7 +1316,6 @@ Language: sv_SE
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
     <string name="gutenberg_native_hide_keyboard">Dölj tangentbordet</string>
     <string name="gutenberg_native_help_icon">Hjälpikon</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Kunde inte lägga in mediafil.\nTryck för att visa alternativ.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dubbeltryck för att ångra senaste ändring</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Dubbeltryck för att växla inställningens värde</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Dubbeltryck för att välja en bild</string>
@@ -1261,7 +1374,7 @@ Language: sv_SE
     <string name="local_post_autosave_revision_available">Du har gjort ändringar i detta inlägg som inte är sparade</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Versionen från denna app</string>
     <string name="dialog_confirm_autosave_restore_button">Versionen från en annan enhet</string>
-    <string name="dialog_confirm_autosave_body_second_part">Från denna app\nSparad den %s\n\nFrån en annan enhet\nSparad den %s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Från denna app\nSparad den %1$s\n\nFrån en annan enhet\nSparad den %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Du har nyligen gjort några ändringar i detta inlägg utan att spara. Välj vilken version du vill använda:\n\n</string>
     <string name="dialog_confirm_autosave_title">Vilken version vill du redigera?</string>
     <string name="button_delete_permanently">Ta bort permanent</string>
@@ -1311,7 +1424,7 @@ Language: sv_SE
     <string name="share_desc">Dela</string>
     <string name="navigate_back_desc">Gå tillbaka</string>
     <string name="navigate_forward_desc">Gå framåt</string>
-    <string name="calendar_scheduled_post_description">”%s” har schemalagts för publicering den ”%s” i din WordPress-app \n %s</string>
+    <string name="calendar_scheduled_post_description">”%1$s” har schemalagts för publicering den ”%2$s” i din WordPress-app \n%3$s</string>
     <string name="calendar_scheduled_post_title">Schemalagt WordPress-inlägg: ”%s”</string>
     <string name="notification_post_will_be_published_in_ten_minutes">”%s” kommer att publiceras om 10 minuter</string>
     <string name="notification_post_will_be_published_in_one_hour">”%s” kommer att publiceras om en timme</string>
@@ -1414,6 +1527,7 @@ Language: sv_SE
     <string name="stats_management_news_card_message">Välj vilken statistik du vill se och fokusera på de data du bryr dig mest om. Knacka på %1$s under insikterna för att anpassa visningen av din statistik.</string>
     <string name="stats_manage_your_stats">Hantera din statistik</string>
     <string name="history_fetching_revisions">Hämtar versioner…</string>
+    <string name="editor_failed_to_insert_media_tap_for_options">Det gick inte att lägga in media.\nTryck här för alternativ.</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Det gick inte att lägga in media.\nKnacka här för att försöka igen.</string>
     <string name="editor_uploading_draft">Ditt utkast laddas upp</string>
     <string name="post_uploading_draft">Laddar upp utkast</string>
@@ -1560,7 +1674,7 @@ Language: sv_SE
     <string name="toast_conflict_updating_post">Inlägget uppdateras</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Kasta webbversionen</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Kasta den lokala</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Lokal version\nSparades %s\n\nWebbversion\nSparades %s\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Lokal version\nSparad den %1$s\n\nWebbversion\nSparad den %2$s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Detta inlägg har två versioner som inte stämmer överens. Välj vilken version du vill kasta.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Lös synkroniseringskonflikt</string>
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
@@ -1845,7 +1959,7 @@ Language: sv_SE
     <string name="notification_settings_category_followed_sites">Följda webbplatser</string>
     <string name="content_description_person_reading_device_notification">Person som läser en mobil enhet med hjälp av aviseringar</string>
     <string name="content_description_people_looking_charts">Personers som studerar diagram och tabeller</string>
-    <string name="comment_title">%s om %s</string>
+    <string name="comment_title">%1$s på %2$s</string>
     <string name="dialog_confirm_delete_permanently_post">Är du säker på att du vill radera detta inlägg permanent?</string>
     <string name="notification_channel_important_title">Viktigt</string>
     <string name="notification_channel_general_title">Allmänt</string>
@@ -2236,6 +2350,7 @@ Language: sv_SE
     <string name="post_title">Rubrik</string>
     <string name="menu_redo">Upprepa</string>
     <string name="menu_undo">Ångra</string>
+    <string name="media_insert_unimplemented">Tyvärr har denna funktion inte utvecklats färdigt än :(</string>
     <string name="error_media_small">Mediafilen är för liten för att kunna visas</string>
     <string name="editor_dropped_unsupported_files">Varning: det finns inte stöd för alla objekt som lagts in!</string>
     <string name="editor_dropped_title_images_not_allowed">Det är inte tillåtet att dra in bilder i rubriken</string>
@@ -2463,12 +2578,19 @@ Language: sv_SE
     <string name="error_fetch_email_followers_list">Kunde inte hämta följare via e-post</string>
     <string name="error_fetch_followers_list">Kunde inte hämta följare</string>
     <string name="editor_failed_uploads_switch_html">Vissa mediauppladdningar har misslyckats. Du kan inte skifta till HTML-läget\n        i detta tillstånd. Vill du ta bort alla misslyckade uppladdningar och fortsätta?</string>
+    <string name="image_thumbnail">Miniatyrbild</string>
+    <string name="visual_editor">Visuell redigerare</string>
     <string name="image_width">Bredd</string>
     <string name="image_link_to">Länka till</string>
+    <string name="image_alt_text">Alt-text</string>
     <string name="image_caption">Bildtext</string>
     <string name="image_settings_save_toast">Ändringar sparade</string>
     <string name="image_settings_dismiss_dialog_title">Förkasta ändringar som inte sparats?</string>
     <string name="stop_upload_dialog_title">Stoppa uppladdning?</string>
+    <string name="alert_error_adding_media">Ett fel uppstod när media skulle infogas</string>
+    <string name="alert_action_while_uploading">Du laddar för närvarande upp media. Vänligen vänta till det är klart.</string>
+    <string name="alert_insert_image_html_mode">Media kan inte infogas direkt i HTML-läget. Vänligen växla tillbaka till det visuella läget.</string>
+    <string name="uploading_gallery_placeholder">Laddar upp galleri…</string>
     <string name="tap_to_try_again">Tryck för att försöka igen!</string>
     <string name="invite_sent">Inbjudan skickad</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -2538,6 +2660,7 @@ Language: sv_SE
     <string name="comments_empty_list_filtered_trashed">Inga kastade kommentarer</string>
     <string name="comments_empty_list_filtered_pending">Inga väntande kommentarer</string>
     <string name="comments_empty_list_filtered_approved">Inga godkända kommentarer</string>
+    <string name="button_skip">Hoppa över</string>
     <string name="xmlrpc_missing_method_error">Kunde inte ansluta. Obligatoriska XML-RPC-metoder saknas på servern.</string>
     <string name="alignment_center">Centrerat</string>
     <string name="post_format_video">Videoklipp</string>
@@ -2950,8 +3073,10 @@ Language: sv_SE
     <string name="delete_post">Ta bort inlägg?</string>
     <string name="post_settings">Inläggsinställningar</string>
     <string name="file_not_found">Kunde inte hitta mediafilen att ladda upp. Kanske har den tagits bort eller flyttats?</string>
+    <string name="horizontal_alignment">Vågrät justering</string>
     <string name="local_draft">Lokalt utkast</string>
     <string name="page_settings">Sidinställningar</string>
+    <string name="create_a_link">Skapa länk</string>
     <string name="link_enter_url_text">Länktext (valfritt)</string>
     <string name="cannot_delete_multi_media_items">En del medieobjekt kunde inte tas bort just nu. Försök igen senare.</string>
     <string name="media_error_no_permission">Du har inte behörighet att visa mediebiblioteket</string>
@@ -3028,6 +3153,10 @@ Language: sv_SE
     <string name="username">Användarnamn</string>
     <string name="password">Lösenord</string>
     <string name="reader">Läsare</string>
+    <string name="featured_in_post">Inkludera bild i inlägget</string>
+    <string name="featured">Använd som utvald bild</string>
+    <string name="width">Bredd</string>
+    <string name="caption">Bildtext (valfritt)</string>
     <string name="pages">Sidor</string>
     <string name="posts">Inlägg</string>
     <string name="anonymous">Anonym</string>
@@ -3035,6 +3164,7 @@ Language: sv_SE
     <string name="done">klart</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Laddar upp…</string>
     <string name="tos">Allmänna villkor</string>
     <string name="version">Version</string>
     <string name="app_title">WordPress for Android</string>

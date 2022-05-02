@@ -1,8 +1,43 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-19.5
+19.9
 -----
 
+
+19.8
+-----
+* [*] App Settings: updated look and functionality of Locale Picker [https://github.com/wordpress-mobile/WordPress-Android/pull/16331]
+* [*] Fix issue that prevented Jetpack customers with standalone VideoPress subs uploading >5min videos [https://github.com/wordpress-mobile/WordPress-Android/pull/16322]
+* [*] On self-hosted sites, allow previewing unsaved changes to draft posts [https://github.com/wordpress-mobile/WordPress-Android/pull/16296]
+* [*] Editor: Fix issue that caused previews on atomic sites to sometimes be out-of-date. [https://github.com/wordpress-mobile/WordPress-Android/pull/16332]
+* [*] Fixes Media Picker video selection Accessibility issue [https://github.com/wordpress-mobile/WordPress-Android/pull/16426]
+* [*] Fixes self-hosted upload failure when the filename is non-latin [https://github.com/wordpress-mobile/WordPress-Android/pull/16421]
+* [*] Fixes self-hosted blurred featured image on post settings [https://github.com/wordpress-mobile/WordPress-Android/pull/16439]
+* [*] Block Editor: Latest Posts block: Add featured image settings [https://github.com/WordPress/gutenberg/pull/39257]
+* [*] Block Editor: Prevent incorrect notices displaying when switching between HTML-Visual mode quickly [https://github.com/WordPress/gutenberg/pull/40415]
+* [*] Block Editor: Embed block: Fix inline preview cut-off when editing URL [https://github.com/WordPress/gutenberg/pull/35326]
+* [*] Jetpack App: Fixes signup magic link URL [https://github.com/wordpress-mobile/WordPress-Android/pull/16449]
+19.7
+-----
+* [*] [internal] Site creation: Adds a new screen asking the user the name of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16259]
+* [***] My Site: your My Site screen now has two tabs, "Site Menu" and "Home". Under "Home", you'll find contextual cards with some highlights of whats going on with your site. Check your drafts or scheduled posts, your today's stats or go directly to another section of the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/15989]
+* [*] Site creation: Adds a new screen asking the user the intent of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16306]
+* [*] Notifications: Fixed notification detail crash for comments with File block [https://github.com/wordpress-mobile/WordPress-Android/pull/16314]
+* [**] Block Editor: Quote block: Adds support for V2 behind a feature flag [https://github.com/WordPress/gutenberg/pull/40133]
+* [**] Block Editor: Update "add block" button's style in default editor view [https://github.com/WordPress/gutenberg/pull/39726]
+* [*] Block Editor: Remove banner error notification on upload failure [https://github.com/WordPress/gutenberg/pull/39694]
+
+19.6
+-----
+* [*] My Site: Fixes an issue where a deleted site is displayed until the app restarts [https://github.com/wordpress-mobile/WordPress-Android/pull/16063]
+* [*] [internal] Site creation: Adds a new screen asking the user the intent of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16243]
+
+19.5
+-----
+* [*] Notification: Adds Weekly Roundup switch to App info -> Notification menu to disable them for all sites. [https://github.com/wordpress-mobile/WordPress-Android/pull/16118]
+* [*] Block Editor: Add GIF badge for animated GIFs uploaded to Image blocks [https://github.com/WordPress/gutenberg/pull/38996]
+* [*] Block Editor: Small refinement to media upload errors, including centering and tweaking copy. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4597]
+* [*] Block Editor: Fix issue with list's starting index and the order [https://github.com/WordPress/gutenberg/pull/39354]
 
 19.4
 -----

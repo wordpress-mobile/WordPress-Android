@@ -1,6 +1,39 @@
 plugins {
-  id "com.gradle.enterprise" version "3.4.1"
+    id "com.gradle.enterprise" version "3.9"
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '1.6.5'
 }
+
+gradleEnterprise {
+    server = "https://gradle.a8c.com"
+    allowUntrustedServer = false
+    buildScan {
+        publishAlways()
+        capture {
+            taskInputFiles = true
+        }
+        uploadInBackground = System.getenv("CI") == null
+
+        // Obfuscate personal data
+        obfuscation {
+            username { username -> username.digest('SHA-1') }
+            hostname { _ -> "" }
+            ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
+        }
+    }
+}
+
+if (System.getenv().containsKey("CI")) {
+    buildCache {
+        remote(HttpBuildCache) {
+            url = "http://10.0.2.215:5071/cache/"
+            allowUntrustedServer = true
+            allowInsecureProtocol = true
+            push = true
+        }
+    }
+}
+
+rootProject.name = 'WPAndroid'
 
 include ':WordPress'
 
@@ -111,18 +144,6 @@ if (localBuilds.exists()) {
                 println "Substituting about-automattic with the local build"
                 substitute module("$gradle.ext.aboutAutomatticBinaryPath") using project(':library')
             }
-        }
-    }
-}
-
-// Build cache is only enabled for CI, at least for now
-if (System.getenv().containsKey("CI")) {
-    buildCache {
-        remote(HttpBuildCache) {
-            url = "http://10.0.2.215:5071/cache/"
-            allowUntrustedServer = true
-            allowInsecureProtocol = true
-            push = true
         }
     }
 }

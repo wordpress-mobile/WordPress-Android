@@ -1,8 +1,0 @@
-19.3:
-- No email button in signup when email app is unavailable
-- Notifications in new comment editor
-- Correct time zone for sites created in app
-- Bug fixes for empty “My Site” view and Page/Site preview
-- Reader comment editing for Admins/Editors
-- Low memory doesn’t affect editor story blocks
-- Better error text for new site URLs with non-English characters
