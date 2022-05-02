@@ -34,6 +34,7 @@ import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -370,19 +371,12 @@ public class ActivityLauncher {
         return intent;
     }
 
-    public static Intent openEditorAndDismissNotificationIntent(
-            @NonNull final Context context, final int notificationId
+    public static Intent openEditorWithPromptAndDismissNotificationIntent(
+            @NonNull final Context context, final int notificationId, final BloggingPrompt bloggingPrompt
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
-        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
-        return intent;
-    }
-
-    public static Intent createMainActivityDismissNotificationIntent(
-        @NonNull final Context context, final int notificationId
-    ) {
-        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_CONTENT, bloggingPrompt.getContent());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         return intent;
     }

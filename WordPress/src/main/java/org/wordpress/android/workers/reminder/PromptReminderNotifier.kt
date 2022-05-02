@@ -48,7 +48,7 @@ class PromptReminderNotifier @Inject constructor(
             context,
             openEditorRequestCode,
             // TODO @RenanLukas send BloggingPrompt with OpenEditor action when prompt store is ready
-            ActivityLauncher.openEditorAndDismissNotificationIntent(context, notificationId),
+            ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(context, notificationId, bloggingPrompt),
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val dismissNotificationRequestCode = notificationId + 2
