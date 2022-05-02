@@ -8,4 +8,3 @@
 * [*] Block Editor: Latest Posts block: Add featured image settings [https://github.com/WordPress/gutenberg/pull/39257]
 * [*] Block Editor: Prevent incorrect notices displaying when switching between HTML-Visual mode quickly [https://github.com/WordPress/gutenberg/pull/40415]
 * [*] Block Editor: Embed block: Fix inline preview cut-off when editing URL [https://github.com/WordPress/gutenberg/pull/35326]
-* [*] Jetpack App: Fixes signup magic link URL [https://github.com/wordpress-mobile/WordPress-Android/pull/16449]
