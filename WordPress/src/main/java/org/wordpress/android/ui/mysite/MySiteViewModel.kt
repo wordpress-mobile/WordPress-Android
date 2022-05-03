@@ -1,3 +1,4 @@
+@file:Suppress("MaximumLineLength")
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
@@ -104,6 +105,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
@@ -156,6 +158,7 @@ class MySiteViewModel @Inject constructor(
     private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
+    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<BloggingPrompt, SiteModel>>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -216,6 +219,7 @@ class MySiteViewModel @Inject constructor(
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
     val onShare = _onShare
+    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<BloggingPrompt, SiteModel>>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -442,7 +446,8 @@ class MySiteViewModel @Inject constructor(
                                             )
                                     )
                                 } else null,
-                                onShareClick = this::onBloggingPromptShareClick
+                                onShareClick = this::onBloggingPromptShareClick,
+                                onAnswerClick = this::onBloggingPromptAnswerClick
                         )
                 ),
                 QuickLinkRibbonBuilderParams(
@@ -687,6 +692,11 @@ class MySiteViewModel @Inject constructor(
 
     private fun onQuickStartTaskTypeItemClick(type: QuickStartTaskType) {
         clearActiveQuickStartTask()
+        if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
+            cardsTracker.trackQuickStartCardItemClicked(type)
+        } else {
+            analyticsTrackerWrapper.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
+        }
         _onNavigation.value = Event(
                 SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
         )
@@ -1129,6 +1139,20 @@ class MySiteViewModel @Inject constructor(
         onShare.postValue(Event(message))
     }
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
+    private fun onBloggingPromptAnswerClick() {
+        val bloggingPrompt = BloggingPrompt(
+                text = "Cast the movie of your life.",
+                content = "<!-- wp:pullquote -->\n" +
+                        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                        "<!-- /wp:pullquote -->",
+                respondents = emptyList()
+        )
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onAnswerBloggingPrompt.postValue(Event(Pair(bloggingPrompt, selectedSite)))
+    }
+
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
 
     fun setActionableEmptyViewGone(isVisible: Boolean, setGone: () -> Unit) {
@@ -1323,6 +1347,7 @@ class MySiteViewModel @Inject constructor(
     companion object {
         private const val MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE = 600
         private const val LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM = -1
+        private const val TYPE = "type"
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"

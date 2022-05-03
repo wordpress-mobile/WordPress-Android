@@ -36,7 +36,8 @@ public class ShortcutsNavigator {
                         activity,
                         currentSite,
                         false,
-                        PagePostCreationSourcesDetail.POST_FROM_SHORTCUT
+                        PagePostCreationSourcesDetail.POST_FROM_SHORTCUT,
+                        null
                 );
                 break;
             case OPEN_NOTIFICATIONS:

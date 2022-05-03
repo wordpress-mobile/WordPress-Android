@@ -37,6 +37,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
     enum class DashboardCardType {
         ERROR_CARD,
+        QUICK_START_CARD,
         TODAYS_STATS_CARD_ERROR,
         TODAYS_STATS_CARD,
         POST_CARD_ERROR,
@@ -206,7 +207,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val respondents: List<TrainOfAvatarsItem>,
                         val numberOfAnswers: Int,
                         val isAnswered: Boolean,
-                        val onShareClick: (String) -> Unit
+                        val onShareClick: (String) -> Unit,
+                        val onAnswerClick: () -> Unit
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }

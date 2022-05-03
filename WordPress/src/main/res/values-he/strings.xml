@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-20 17:54:08+0000
+Translation-Revision-Date: 2022-04-28 16:10:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: he_IL
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">יצירת אתר</string>
     <string name="gutenberg_native_add_blocks_11d0841f">להוסיף בלוקים</string>
     <string name="initial_screen">מסך ראשוני</string>
     <string name="blogging_prompts_onboarding_notification_action">למידע נוסף</string>
@@ -36,6 +37,7 @@ Language: he_IL
     <string name="dialog_button_cancel">לבטל</string>
     <string name="dialog_button_ok">אישור</string>
     <string name="dialog_edit_hint">http(s)://‎</string>
+    <string name="menu_toolbar_title">לערוך את הבלוק %s</string>
     <string name="dialog_title">להוסיף קישור</string>
     <string name="editor_title_beta">ביתא</string>
     <string name="toast_content_info_editor_not_ready">העורך עדיין טוען</string>
@@ -431,6 +433,7 @@ Language: he_IL
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_column_d">טור %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
+    <string name="gutenberg_native_add_blocks">להוסיף בלוקים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">מה זה טקסט חלופי?</string>
     <string name="gutenberg_native_transform_s_to">לשנות את %s אל</string>

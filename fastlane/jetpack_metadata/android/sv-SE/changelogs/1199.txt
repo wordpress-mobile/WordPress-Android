@@ -1,4 +1,0 @@
-19.6:
-Den här versionsuppdateringen är liten och enkel: du har kanske noterat att borttagna webbplatser har dröjt sig kvar i listan Mina webbplatser tills du har startat om appen.
-
-Vi har åtgärdat detta – borttagna webbplatser försvinner nu med en gång. Adjö och farväl.

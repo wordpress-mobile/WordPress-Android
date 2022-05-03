@@ -62,7 +62,7 @@ class StatsNavigator @Inject constructor(
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
             is AddNewPost -> {
-                ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS)
+                ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS, null)
             }
             is ViewPost -> {
                 StatsNavigatorHelper.openPostInReaderOrInAppWebView(

@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
@@ -177,12 +179,13 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
     private void saveSharingButtons(boolean isSharingButtons) {
         PrefListItems sharingButtons = mPrefSharingButtons.getSelectedItems();
         PrefListItems moreButtons = mPrefMoreButtons.getSelectedItems();
-
         // sharing and more buttons are mutually exclusive
         if (isSharingButtons) {
             moreButtons.removeItems(sharingButtons);
+            AnalyticsTracker.track(Stat.SHARING_BUTTONS_EDIT_SHARING_BUTTONS_CHANGED);
         } else {
             sharingButtons.removeItems(moreButtons);
+            AnalyticsTracker.track(Stat.SHARING_BUTTONS_EDIT_MORE_SHARING_BUTTONS_CHANGED);
         }
 
         // sharing buttons are visible and enabled, more buttons are invisible and enabled,

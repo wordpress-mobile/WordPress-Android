@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -193,6 +194,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
+    public static final String ARG_EDITOR_CONTENT = "editor_content";
+    public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -365,6 +368,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     finish();
                 }
             }
+            checkDismissNotification();
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
@@ -424,6 +428,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+    }
+
+    private void checkDismissNotification() {
+        final Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(ARG_DISMISS_NOTIFICATION)) {
+            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            final int notificationId = intent.getIntExtra(ARG_DISMISS_NOTIFICATION, -1);
+            notificationManager.cancel(notificationId);
+        }
     }
 
     private void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
@@ -506,8 +519,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
-                case ANSWER_BLOGGING_PROMPT: // TODO @klymyam open editor with BP content
-                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
+                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, null);
                     break;
                 case CREATE_NEW_PAGE:
                     if (mMLPViewModel.canShowModalLayoutPicker()) {
@@ -619,6 +631,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mViewModel.getCreatePostWithBloggingPrompt().observe(this, bloggingPrompt -> {
+            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.getContent());
+        });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
         // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
@@ -668,7 +683,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    onNewPostButtonClicked();
+                    final String content = intent.getStringExtra(ARG_EDITOR_CONTENT);
+                    onNewPostButtonClicked(content);
                     break;
                 case ARG_STATS:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -955,8 +971,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     // user tapped the new post button in the bottom navbar
     @Override
-    public void onNewPostButtonClicked() {
-        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
+    public void onNewPostButtonClicked(@Nullable final String content) {
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR, content);
     }
 
     private void handleNewPageAction(String title, String content, String template,
@@ -974,14 +990,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void handleNewPostAction(PagePostCreationSourcesDetail source) {
+    private void handleNewPostAction(PagePostCreationSourcesDetail source, @Nullable final String content) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
             return;
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, content);
     }
 
     private void handleNewStoryAction() {

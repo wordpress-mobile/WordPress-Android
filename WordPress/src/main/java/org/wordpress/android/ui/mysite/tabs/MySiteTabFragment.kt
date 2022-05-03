@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -158,6 +159,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
 
         val adapter = MySiteAdapter(imageManager, uiHelpers)
 
+        adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                recyclerView.smoothScrollToPosition(0)
+            }
+        })
+
         savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
             adapter.onRestoreInstanceState(it)
         }
@@ -231,6 +239,13 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
         viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
+        viewModel.onAnswerBloggingPrompt.observeEvent(viewLifecycleOwner) {
+            val bloggingPrompt = it.first
+            val site = it.second
+            ActivityLauncher.addNewPostForResult(
+                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.content
+            )
+        }
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -308,7 +323,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     requireActivity(),
                     action.site,
                     false,
-                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                    null
             )
         // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
@@ -509,7 +525,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             MySiteTabType.DASHBOARD -> state.dashboardCardsAndItems
             else -> state.cardAndItems
         }
-        (recyclerView.adapter as? MySiteAdapter)?.loadData(cardAndItems)
+        (recyclerView.adapter as? MySiteAdapter)?.submitList(cardAndItems)
     }
 
     private fun MySiteTabFragmentBinding.loadEmptyView() {
@@ -542,8 +558,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         swipeToRefreshHelper.setEnabled(isEnabled)
     }
 
-    private fun hideRefreshIndicatorIfNeeded() {
-        swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+    private fun MySiteTabFragmentBinding.hideRefreshIndicatorIfNeeded() {
+        swipeRefreshLayout.postDelayed({
+            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
+        }, CHECK_REFRESH_DELAY)
     }
 
     private fun shareMessage(message: String) {
@@ -564,6 +582,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         private const val KEY_MY_SITE_TAB_TYPE = "key_my_site_tab_type"
+        private const val CHECK_REFRESH_DELAY = 300L
 
         @JvmStatic
         fun newInstance(mySiteTabType: MySiteTabType) = MySiteTabFragment().apply {
