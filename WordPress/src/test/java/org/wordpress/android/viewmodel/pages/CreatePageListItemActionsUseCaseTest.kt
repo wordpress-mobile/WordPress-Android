@@ -42,7 +42,7 @@ class CreatePageListItemActionsUseCaseTest {
     @Test
     fun `Verify DRAFT actions`() {
         // Arrange
-        val expectedActions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY)
+        val expectedActions = setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH, COPY, COPY_LINK)
 
         // Act
         val draftActions = useCase.setupPageActions(DRAFTS, mock(), site, defaultRemoteId)
@@ -221,7 +221,8 @@ class CreatePageListItemActionsUseCaseTest {
                 VIEW_PAGE,
                 SET_PARENT,
                 MOVE_TO_DRAFT,
-                MOVE_TO_TRASH
+                MOVE_TO_TRASH,
+                COPY_LINK
         )
 
         // Act
