@@ -5,7 +5,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.AccountAction
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -14,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -23,13 +23,13 @@ class AccountSettingsRepository @Inject constructor(
     private val dispatcher: Dispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val accountStore: AccountStore,
-    private val siteStore: SiteStore
+    private val siteStore: SiteStore,
+    private val fetchNewAccountSettingsUseCase: FetchAccountSettingsUseCase
 ) {
     init {
         dispatcher.register(this)
     }
 
-    private var fetchNewSettingsContinuation: Continuation<OnAccountChanged>? = null
     private val pushSettingsContinuationList = mutableListOf<Continuation<OnAccountChanged>>()
 
     val account: AccountModel
@@ -43,12 +43,8 @@ class AccountSettingsRepository @Inject constructor(
         siteStore.getSiteBySiteId(siteRemoteId)
     }
 
-    suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
-        suspendCancellableCoroutine {
-            fetchNewSettingsContinuation = it
-            dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
-        }
-    }
+    suspend fun fetchNewSettings(): OnAccountChanged =
+            fetchNewAccountSettingsUseCase.fetchNewSettings()
 
     suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["primary_site_ID"] = blogId }
@@ -86,42 +82,10 @@ class AccountSettingsRepository @Inject constructor(
                 }
             }
 
-    /**
-     * Both fetch new settings and update settings, return the same response event `onAccountChanged.
-     * Only way to differentiate both the calls is `event.causeOfChange`.
-     * But causeOfChange is null when the server responds with the error. There is no other way to find
-     * AccountAction type and resume the respective continuations. So for error, we are resuming the first available
-     * continuation.
-     */
     @Subscribe
     fun onAccountChanged(event: OnAccountChanged) {
-        if (event.causeOfChange == null || event.causeOfChange.toString().isBlank()) {
-            getFirstAvailableContinuation()?.resume(event)
-            return
-        }
-        if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
-            fetchNewSettingsContinuation?.resume(event)
-            fetchNewSettingsContinuation = null
-        } else if (event.causeOfChange == AccountAction.PUSHED_SETTINGS) {
-            pushSettingsContinuationList.get(0)?.resume(event)
-            pushSettingsContinuationList.removeAt(0)
-        }
-    }
-
-    /**
-     * This method returns the first available continuation.
-     * First it checks for fetch new settings continuation and then it checks continuation list
-     * populated with push settings continuation.
-     */
-    private fun getFirstAvailableContinuation(): Continuation<OnAccountChanged>? {
-        fetchNewSettingsContinuation?.let {
-            fetchNewSettingsContinuation = null
-            return it
-        }
-        if (pushSettingsContinuationList.isNotEmpty()) {
-            return pushSettingsContinuationList.removeAt(0)
-        }
-        return null
+        pushSettingsContinuationList.get(0)?.resume(event)
+        pushSettingsContinuationList.removeAt(0)
     }
 
     fun onCleanUp() {
