@@ -38,12 +38,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
                 dummyRespondents.size
         )
 
-        val avatarsTrain = dummyRespondents.take(3).map { respondent ->
-            AvatarItem(
-                    respondent.userId,
-                    respondent.avatarUrl
-            )
-        }
+        val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent.avatarUrl) }
                 .toMutableList<TrainOfAvatarsItem>()
                 .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
 
