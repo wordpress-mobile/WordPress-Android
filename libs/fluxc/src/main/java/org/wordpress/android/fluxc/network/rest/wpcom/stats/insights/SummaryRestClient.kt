@@ -44,5 +44,9 @@ class SummaryRestClient @Inject constructor(
         }
     }
 
-    data class SummaryResponse(@SerializedName("followers") val followers: Int?)
+    data class SummaryResponse(
+        @SerializedName("likes") val likes: Int?,
+        @SerializedName("comments") val comments: Int?,
+        @SerializedName("followers") val followers: Int?
+    )
 }

@@ -174,6 +174,8 @@ class StatsStore
         LATEST_POST_SUMMARY,
         MOST_POPULAR_DAY_AND_HOUR,
         ALL_TIME_STATS,
+        TOTAL_LIKES,
+        TOTAL_COMMENTS,
         FOLLOWER_TOTALS,
         TAGS_AND_CATEGORIES,
         ANNUAL_SITE_STATS,
