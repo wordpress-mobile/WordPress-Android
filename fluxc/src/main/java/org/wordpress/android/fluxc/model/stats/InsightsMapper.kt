@@ -213,7 +213,11 @@ class InsightsMapper
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
-    fun map(response: SummaryResponse) = SummaryModel(response.followers ?: 0)
+    fun map(response: SummaryResponse) = SummaryModel(
+        response.likes ?: 0,
+        response.comments ?: 0,
+        response.followers ?: 0
+    )
 
     fun map(response: TagsResponse, cacheMode: LimitMode): TagsModel {
         return TagsModel(response.tags.let {
