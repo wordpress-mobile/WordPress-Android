@@ -81,7 +81,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -117,7 +116,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -464,27 +462,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
                 event.applyIfNotHandled(holder -> {
                     showSnackbar(holder);
-                    return Unit.INSTANCE;
-                })
-        );
-
-        mViewModel.getQuickStartPromptEvent().observe(getViewLifecycleOwner(), event ->
-                event.applyIfNotHandled(prompt -> {
-                    Spannable message = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
-                            requireContext(),
-                            prompt.getShortMessagePrompt(),
-                            prompt.getIconId()
-                    );
-                    showSnackbar(
-                            new SnackbarMessageHolder(
-                                    new UiStringText(message),
-                                    null,
-                                    () -> null,
-                                    (dismissEvent) -> null,
-                                    Snackbar.LENGTH_LONG,
-                                    true
-                            )
-                    );
                     return Unit.INSTANCE;
                 })
         );
@@ -910,17 +887,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(final QuickStartEvent event) {
-        if (!isAdded() || getView() == null) {
-            return;
-        }
-
-        mViewModel.onQuickStartEventReceived(event);
-        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @Override

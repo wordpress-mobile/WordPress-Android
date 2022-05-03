@@ -1280,6 +1280,18 @@
     <string name="stats_followers_a_year">A year</string>
     <string name="stats_followers_years">%1$d years</string>
 
+    <string name="stats_published_seconds_ago">Published seconds ago</string>
+    <string name="stats_published_a_minute_ago">Published a minute ago</string>
+    <string name="stats_published_minutes_ago">Published %1$d minutes ago</string>
+    <string name="stats_published_an_hour_ago">Published an hour ago</string>
+    <string name="stats_published_hours_ago">Published %1$d hours ago</string>
+    <string name="stats_published_a_day_ago">Published a day ago</string>
+    <string name="stats_published_days_ago">Published %1$d days ago</string>
+    <string name="stats_published_a_month_ago">Published a month ago</string>
+    <string name="stats_published_months_ago">Published %1$d months ago</string>
+    <string name="stats_published_a_year_ago">Published a year ago</string>
+    <string name="stats_published_years_ago">Published %1$d years ago</string>
+
     <!-- stats: search terms -->
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
@@ -3055,7 +3067,8 @@
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Select %1$s Settings %2$s to add topics you like.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags. Try selecting %1$s Settings %2$s to add topics you like.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags.</string>
     <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>

@@ -1,3 +1,4 @@
+@file:Suppress("MaximumLineLength")
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
