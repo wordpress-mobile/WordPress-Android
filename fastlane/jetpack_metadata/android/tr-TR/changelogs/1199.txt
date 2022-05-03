@@ -1,4 +1,0 @@
-19.6:
-Bu sürüm kısa ve güzel: Bir siteyi sildikten sonra, uygulamayı yeniden başlatana kadar aynı sitenin Sitem listenizde kaldığını fark etmiş olabilirsiniz.
-
-Bu durumu düzelttik; silinen siteler artık hemen kayboluyor. Hem de kalıcı olarak.

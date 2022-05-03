@@ -1,4 +1,0 @@
-19.6:
-Deze release is kort maar toch fijn, want: het is je misschien opgevallen dat als je een site verwijdert, dat diezelfde site nog altijd in de lijst Mijn site staat totdat je de app opnieuw hebt opgestart.
-
-Dat hebben we verholpen. Verwijderde sites verdwijnen meteen. Doei!

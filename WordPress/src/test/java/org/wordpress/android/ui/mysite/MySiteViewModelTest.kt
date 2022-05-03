@@ -21,6 +21,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -177,6 +178,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private var answerRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
@@ -225,6 +227,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
+    private var onBloggingPromptAnswerClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -384,6 +387,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onShare.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 shareRequests.add(it)
+            }
+        }
+        viewModel.onAnswerBloggingPrompt.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                answerRequests++
             }
         }
         viewModel.onTrackWithTabSource.observeForever { event ->
@@ -1471,6 +1479,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onBloggingPromptShareClicked).invoke(expectedShareMessage)
 
         assertThat(shareRequests.last()).isEqualTo(expectedShareMessage)
+    }
+
+    @Test
+    fun `given blogging prompt card, when answer button is clicked, answer action is called`() = test {
+        initSelectedSite()
+
+        requireNotNull(onBloggingPromptAnswerClicked).invoke()
+
+        assertTrue(answerRequests == 1)
     }
 
     /* DASHBOARD ERROR SNACKBAR */
@@ -2723,12 +2740,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun initBloggingPromptCard(mockInvocation: InvocationOnMock): BloggingPromptCardWithData {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
+        onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
-                onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit)
+                onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
+                onAnswerClick = onBloggingPromptAnswerClicked as (() -> Unit)
         )
     }
 
