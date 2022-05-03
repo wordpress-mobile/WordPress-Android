@@ -38,7 +38,6 @@ class SiteItemsBuilder @Inject constructor(
                 params.activeTask == QuickStartTask.REVIEW_PAGES
 
         return listOfNotNull(
-                siteListItemBuilder.buildPlanItemIfAvailable(params.site, showExplorePlansFocusPoint, params.onClick),
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(params.site),
                 ListItem(
                         R.drawable.ic_stats_alt_white_24dp,
