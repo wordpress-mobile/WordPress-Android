@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.stats.SummaryModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.modules.BG_THREAD
@@ -26,16 +25,16 @@ class TotalFollowersNewUseCase @Inject constructor(
     private val summaryStore: SummaryStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : StatelessUseCase<SummaryModel>(FOLLOWER_TOTALS, mainDispatcher, bgDispatcher) {
+) : StatelessUseCase<Int>(FOLLOWER_TOTALS, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_total_followers))
 
-    override fun buildEmptyItem() = buildUiModel(SummaryModel(0))
+    override fun buildEmptyItem() = buildUiModel(0)
 
-    override suspend fun loadCachedData() = summaryStore.getSummary(statsSiteProvider.siteModel)
+    override suspend fun loadCachedData() = summaryStore.getSummary(statsSiteProvider.siteModel)?.followers
 
-    override suspend fun fetchRemoteData(forced: Boolean): State<SummaryModel> {
+    override suspend fun fetchRemoteData(forced: Boolean): State<Int> {
         val response = summaryStore.fetchSummary(statsSiteProvider.siteModel, forced)
-        val model = response.model
+        val model = response.model?.followers
         val error = response.error
 
         return when {
@@ -45,8 +44,8 @@ class TotalFollowersNewUseCase @Inject constructor(
         }
     }
 
-    override fun buildUiModel(domainModel: SummaryModel) =
-            listOf(buildTitle(), ValueWithChartItem(domainModel.followers))
+    override fun buildUiModel(domainModel: Int) =
+            listOf(buildTitle(), ValueWithChartItem(domainModel))
 
     private fun buildTitle() = TitleWithMore(
             R.string.stats_view_total_followers,

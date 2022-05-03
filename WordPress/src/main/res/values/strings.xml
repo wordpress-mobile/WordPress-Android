@@ -1265,6 +1265,8 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Publicize</string>
     <string name="stats_view_followers">Followers</string>
+    <string name="stats_view_total_likes">Total Likes</string>
+    <string name="stats_view_total_comments">Total Comments</string>
     <string name="stats_view_total_followers">Total Followers</string>
 
     <!-- stats: followers -->

@@ -54,7 +54,7 @@ class TotalFollowersNewUseCaseTest : BaseUnitTest() {
     fun `maps summary to UI model`() = test {
         val forced = false
         val refresh = true
-        val model = SummaryModel(followers)
+        val model = SummaryModel(0, 0, followers)
         whenever(insightsStore.getSummary(site)).thenReturn(model)
         whenever(insightsStore.fetchSummary(site, forced)).thenReturn(OnStatsFetched(model))
 

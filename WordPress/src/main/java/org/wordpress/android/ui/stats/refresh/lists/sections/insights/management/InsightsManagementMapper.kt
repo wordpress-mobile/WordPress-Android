@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
@@ -34,6 +36,8 @@ private val POSTS_AND_PAGES_INSIGHTS = listOf(
 private val ACTIVITY_INSIGHTS = listOf(
         COMMENTS,
         FOLLOWERS,
+        TOTAL_LIKES,
+        TOTAL_COMMENTS,
         FOLLOWER_TOTALS,
         PUBLICIZE
 )
@@ -64,9 +68,14 @@ class InsightsManagementMapper
                     buildInsightModel(type, addedTypes, onClick)
                 }
                 insightListItems += Header(string.stats_insights_management_activity)
-                insightListItems += ACTIVITY_INSIGHTS.map { type ->
-                    buildInsightModel(type, addedTypes, onClick)
-                }
+                insightListItems += ACTIVITY_INSIGHTS
+                        .filterNot {
+                            // Remove stats revamp v2 insights from the list, if the flag is not enabled
+                            !statsRevampV2FeatureConfig.isEnabled() && (it == TOTAL_LIKES || it == TOTAL_COMMENTS)
+                        }
+                        .map { type ->
+                            buildInsightModel(type, addedTypes, onClick)
+                        }
                 insightListItems
             }
 
@@ -83,6 +92,7 @@ class InsightsManagementMapper
         )
     }
 
+    @Suppress("ComplexMethod")
     private fun toName(insightType: InsightType) = when (insightType) {
         VIEWS_AND_VISITORS -> R.string.stats_insights_views_and_visitors
         LATEST_POST_SUMMARY -> R.string.stats_insights_latest_post_summary
@@ -95,6 +105,8 @@ class InsightsManagementMapper
         POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
         PUBLICIZE -> R.string.stats_view_publicize
         ANNUAL_SITE_STATS -> R.string.stats_insights_this_year_site_stats
+        TOTAL_LIKES -> string.stats_view_total_likes
+        TOTAL_COMMENTS -> string.stats_view_total_comments
         FOLLOWER_TOTALS -> string.stats_view_total_followers
     }
 }
