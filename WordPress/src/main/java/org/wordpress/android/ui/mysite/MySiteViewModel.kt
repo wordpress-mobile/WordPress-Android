@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
-import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -46,6 +45,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCa
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
@@ -255,7 +255,8 @@ class MySiteViewModel @Inject constructor(
                         visibleDynamicCards,
                         backupAvailable,
                         scanAvailable,
-                        cardsUpdate
+                        cardsUpdate,
+                        bloggingPromptsUpdate
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -286,7 +287,8 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -297,7 +299,8 @@ class MySiteViewModel @Inject constructor(
                 visibleDynamicCards,
                 backupAvailable,
                 scanAvailable,
-                cardsUpdate
+                cardsUpdate,
+                bloggingPromptUpdate
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -385,7 +388,8 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
@@ -425,25 +429,8 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                // TODO @klymyam fetch the actual blogging prompt
                                 bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
-                                    @Suppress("MagicNumber")
-                                    val dummyRespondent = BloggingPromptRespondent(
-                                            54279365,
-                                            "https://0.gravatar.com/avatar/cec64efa352617" +
-                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
-                                    )
-                                    BloggingPrompt(
-                                            "Cast the movie of your life",
-                                            "",
-                                            listOf(
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent
-                                            )
-                                    )
+                                    bloggingPromptUpdate?.bloggingPrompt
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
                                 onAnswerClick = this::onBloggingPromptAnswerClick
