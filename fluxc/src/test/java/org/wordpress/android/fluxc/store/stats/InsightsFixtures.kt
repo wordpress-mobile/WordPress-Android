@@ -140,7 +140,7 @@ val TOP_COMMENTS_RESPONSE = CommentsResponse(
         listOf(AUTHOR),
         listOf(POST)
 )
-val SUMMARY_RESPONSE = SummaryResponse(100)
+val SUMMARY_RESPONSE = SummaryResponse(LIKE_COUNT, COMMENT_COUNT, 100)
 val SERVICE_RESPONSE = Service("facebook", 100)
 val PUBLICIZE_RESPONSE = PublicizeResponse(listOf(SERVICE_RESPONSE))
 
