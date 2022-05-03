@@ -2299,6 +2299,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_custom_view_shown";
             case READER_ARTICLE_CUSTOM_VIEW_HIDDEN:
                 return "reader_article_custom_view_hidden";
+            case WEBVIEW_DISMISSED:
+                return "webview_dismissed";
+            case WEBVIEW_DISPLAYED:
+                return "webview_displayed";
+            case WEBVIEW_NAVIGATED_BACK:
+                return "webview_navigated_back";
+            case WEBVIEW_NAVIGATED_FORWARD:
+                return "webview_navigated_forward";
+            case WEBVIEW_OPEN_IN_BROWSER_TAPPED:
+                return "webview_open_in_browser_tapped";
+            case WEBVIEW_RELOAD_TAPPED:
+                return "webview_reload_tapped";
+            case WEBVIEW_SHARE_TAPPED:
+                return "webview_share_tapped";
+            case WEBVIEW_PREVIEW_DEVICE_CHANGED:
+                return "webview_preview_device_changed";
         }
         return null;
     }

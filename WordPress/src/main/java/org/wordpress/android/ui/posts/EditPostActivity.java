@@ -285,6 +285,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_PAGE_TITLE = "pageTitle";
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
+    public static final String EXTRA_CONTENT = "extraContent";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -744,6 +745,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
         mStorageUtilsViewModel.start(savedInstanceState == null);
+
+        fillContentIfNeeded();
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -3600,6 +3603,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
     }
 
+    private void fillContentIfNeeded() {
+        final String content = getIntent().getStringExtra(EXTRA_CONTENT);
+        if (content != null && !content.isEmpty()) {
+            newPostSetup(null, content);
+        }
+    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)

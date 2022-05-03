@@ -1,4 +1,0 @@
-19.6:
-This release is short and sweet: after deleting a site, you might’ve noticed that same site sticking around in your My Site list until you restarted the app.
-
-We’ve fixed that—deleted sites now disappear right away. So long, farewell.

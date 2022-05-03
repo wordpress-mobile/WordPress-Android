@@ -28,6 +28,8 @@ class PromptReminderNotifier @Inject constructor(
     // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
     var hasOptedInBloggingPromptsReminders = true
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
     fun notify(siteId: Int) {
         val notificationId = REMINDER_NOTIFICATION_ID + siteId
         val context = contextProvider.getContext()
@@ -36,7 +38,9 @@ class PromptReminderNotifier @Inject constructor(
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
         val bloggingPrompt = BloggingPrompt(
             text = "Cast the movie of your life.",
-            template = "",
+            content = "<!-- wp:pullquote -->\n" +
+                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                    "<!-- /wp:pullquote -->",
             respondents = emptyList()
         )
         val openEditorRequestCode = notificationId + 1
@@ -44,7 +48,7 @@ class PromptReminderNotifier @Inject constructor(
             context,
             openEditorRequestCode,
             // TODO @RenanLukas send BloggingPrompt with OpenEditor action when prompt store is ready
-            ActivityLauncher.openEditorAndDismissNotificationIntent(context, notificationId),
+            ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(context, notificationId, bloggingPrompt),
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val dismissNotificationRequestCode = notificationId + 2

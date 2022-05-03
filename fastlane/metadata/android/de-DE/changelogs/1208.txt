@@ -1,0 +1,6 @@
+19.7:
+- Tabs für Website-Menü und Startseite zum Bildschirm „Meine Website“ hinzugefügt
+- Der Button „Block hinzufügen“ ist beim Öffnen des Block-Editors besser zu erkennen
+- Benachrichtigung bei Upload-Fehlern von Medien-/Audioblöcken entfernt
+- Ansicht für Website-Intent bei der Website-Erstellung hinzugefügt
+- Absturz aufgrund von Benachrichtigungsdetails für Kommentare in GB-Dateiblöcken behoben
