@@ -1280,6 +1280,18 @@
     <string name="stats_followers_a_year">A year</string>
     <string name="stats_followers_years">%1$d years</string>
 
+    <string name="stats_published_seconds_ago">Published seconds ago</string>
+    <string name="stats_published_a_minute_ago">Published a minute ago</string>
+    <string name="stats_published_minutes_ago">Published %1$d minutes ago</string>
+    <string name="stats_published_an_hour_ago">Published an hour ago</string>
+    <string name="stats_published_hours_ago">Published %1$d hours ago</string>
+    <string name="stats_published_a_day_ago">Published a day ago</string>
+    <string name="stats_published_days_ago">Published %1$d days ago</string>
+    <string name="stats_published_a_month_ago">Published a month ago</string>
+    <string name="stats_published_months_ago">Published %1$d months ago</string>
+    <string name="stats_published_a_year_ago">Published a year ago</string>
+    <string name="stats_published_years_ago">Published %1$d years ago</string>
+
     <!-- stats: search terms -->
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 

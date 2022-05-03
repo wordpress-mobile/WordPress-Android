@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
@@ -56,6 +57,7 @@ sealed class BlockListItem(val type: Type) {
         VALUES_ITEM,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
+        LIST_ITEM_WITH_IMAGE,
         INFO,
         EMPTY,
         TEXT,
@@ -169,7 +171,17 @@ sealed class BlockListItem(val type: Type) {
         }
     }
 
-    data class QuickScanItem(val startColumn: Column, val endColumn: Column) : BlockListItem(QUICK_SCAN_ITEM) {
+    data class ListItemWithImage(
+        val title: String? = null,
+        val subTitle: String? = null,
+        val imageUrl: String? = null
+    ) : BlockListItem(LIST_ITEM_WITH_IMAGE)
+
+    data class QuickScanItem(
+        val startColumn: Column,
+        val endColumn: Column,
+        val thirdColumn: Column? = null
+    ) : BlockListItem(QUICK_SCAN_ITEM) {
         data class Column(
             @StringRes val label: Int,
             val value: String,
