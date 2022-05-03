@@ -5,17 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.HomePagePickerFragmentBinding
-import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
@@ -25,9 +23,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.config.SiteNameFeatureConfig
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.setVisible
-import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 /**
@@ -61,17 +58,8 @@ class HomePagePickerFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
         with(HomePagePickerFragmentBinding.bind(view)) {
-            categoriesRecyclerView.apply {
-                layoutManager = LinearLayoutManager(
-                        context,
-                        RecyclerView.HORIZONTAL,
-                        false
-                )
-                setRecycledViewPool(RecyclerView.RecycledViewPool())
-                adapter = CategoriesAdapter()
-                ViewCompat.setNestedScrollingEnabled(this, false)
-            }
-
+            modalLayoutPickerCategoriesSkeleton.root.isGone = true
+            categoriesRecyclerView.isGone = true
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
                 adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates)
@@ -86,7 +74,10 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setupUi() {
         homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
         with(modalLayoutPickerHeaderSection) {
-            modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
+            modalLayoutPickerTitleRow?.header?.apply {
+                textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+                setText(R.string.hpp_title)
+            }
             modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
         }
     }
@@ -99,7 +90,6 @@ class HomePagePickerFragment : Fragment() {
                 is LayoutPickerUiState.Loading -> { // Nothing more to do here
                 }
                 is LayoutPickerUiState.Content -> {
-                    (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                 }
                 is LayoutPickerUiState.Error -> {
@@ -122,10 +112,6 @@ class HomePagePickerFragment : Fragment() {
             }
         }
 
-        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner) {
-            layoutsRecyclerView.smoothScrollToPosition(0)
-        }
-
         viewModel.start(displayUtils.isTablet())
     }
 
@@ -138,8 +124,6 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setContentVisibility(skeleton: Boolean, error: Boolean) {
-        modalLayoutPickerCategoriesSkeleton.categoriesSkeleton.setVisible(skeleton)
-        categoriesRecyclerView.setVisible(!skeleton && !error)
         modalLayoutPickerLayoutsSkeleton.layoutsSkeleton.setVisible(skeleton)
         layoutsRecyclerView.setVisible(!skeleton && !error)
         errorView.setVisible(error)
