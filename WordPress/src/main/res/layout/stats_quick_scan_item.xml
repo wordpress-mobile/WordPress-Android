@@ -10,7 +10,7 @@
 
     <LinearLayout
         android:id="@+id/start_value_container"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="@dimen/margin_extra_large"
@@ -61,10 +61,11 @@
 
     <LinearLayout
         android:id="@+id/end_value_container"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:focusable="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -115,10 +116,11 @@
     <LinearLayout
         android:id="@+id/third_value_container"
         android:visibility="gone"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_medium_large"
         android:focusable="true"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
@@ -129,7 +131,7 @@
         <TextView
             android:id="@+id/third_label"
             style="@style/StatsBlockQuickScanLabel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:labelFor="@id/third_value"
             android:text="@string/unknown"
