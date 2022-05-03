@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -61,7 +61,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
-    private lateinit var quickStartSiteMenuStep: MutableList<QuickStartSiteMenuStep?>
+    private lateinit var quickStartTabStep: MutableList<QuickStartTabStep?>
     private val siteLocalId = 1
 
     private val siteMenuTasks = listOf(
@@ -94,7 +94,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
-        quickStartSiteMenuStep = mutableListOf()
+        quickStartTabStep = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
                     ?.let { snackbars.add(it) }
@@ -102,8 +102,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
         }
-        quickStartRepository.onQuickStartSiteMenuStep.observeForever {
-            quickStartSiteMenuStep.add(it)
+        quickStartRepository.onQuickStartTabStep.observeForever {
+            quickStartTabStep.add(it)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -167,7 +167,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.setActiveTask(siteMenuTasks.random())
 
-        assertThat(quickStartSiteMenuStep).isEmpty()
+        assertThat(quickStartTabStep).isEmpty()
     }
 
     @Test
@@ -178,7 +178,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.setActiveTask(task)
 
-        assertThat(quickStartSiteMenuStep.last()).isEqualTo(QuickStartSiteMenuStep(true, task))
+        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task))
     }
 
     @Test
@@ -188,7 +188,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.setActiveTask(nonSiteMenuTasks.random())
 
-        assertThat(quickStartSiteMenuStep).isEmpty()
+        assertThat(quickStartTabStep).isEmpty()
     }
 
     @Test
