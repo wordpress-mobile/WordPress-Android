@@ -12,8 +12,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class QuickStartStore @Inject
-constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Dispatcher) : Store(dispatcher) {
+class QuickStartStore @Inject constructor(
+    private val quickStartSqlUtils: QuickStartSqlUtils,
+    dispatcher: Dispatcher
+) : Store(dispatcher) {
     enum class QuickStartTask constructor(
         private val string: String,
         val taskType: QuickStartTaskType,
@@ -109,23 +111,30 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
     }
 
     fun getCompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { quickStartSqlUtils.hasDoneTask(siteId, it) }
-                .sortedBy { it.order }
+        return QuickStartTask.getTasksByType(taskType)
+            .filter { quickStartSqlUtils.hasDoneTask(siteId, it) }
+            .sortedBy { it.order }
     }
 
-    fun getUncompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { !quickStartSqlUtils.hasDoneTask(siteId, it) }
-                .sortedBy { it.order }
+    fun getUncompletedTasksByType(
+        siteId: Long,
+        taskType: QuickStartTaskType
+    ): List<QuickStartTask> {
+        return QuickStartTask.getTasksByType(taskType)
+            .filter { !quickStartSqlUtils.hasDoneTask(siteId, it) }
+            .sortedBy { it.order }
     }
 
     fun getShownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { quickStartSqlUtils.hasShownTask(siteId, it) }
-                .sortedBy { it.order }
+        return QuickStartTask.getTasksByType(taskType)
+            .filter { quickStartSqlUtils.hasShownTask(siteId, it) }
+            .sortedBy { it.order }
     }
 
     fun getUnshownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { !quickStartSqlUtils.hasShownTask(siteId, it) }
-                .sortedBy { it.order }
+        return QuickStartTask.getTasksByType(taskType)
+            .filter { !quickStartSqlUtils.hasShownTask(siteId, it) }
+            .sortedBy { it.order }
     }
 
     fun setQuickStartCompleted(siteId: Long, isCompleted: Boolean) {
