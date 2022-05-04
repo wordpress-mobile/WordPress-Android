@@ -14,4 +14,7 @@ class ModalLayoutPickerDimensionProvider @Inject constructor(private val context
         get() = contextProvider.getContext().resources.getDimensionPixelSize(dimen.mlp_layout_card_height)
 
     override val scale: Double = 1.0 // Passing 1.0 and the rendered pixels per device in previewWidth
+
+    override val rowHeight: Int
+        get() = contextProvider.getContext().resources.getDimensionPixelSize(dimen.mlp_layouts_row_height)
 }

@@ -4,4 +4,5 @@ interface ThumbDimensionProvider {
     val previewWidth: Int
     val previewHeight: Int
     val scale: Double
+    val rowHeight: Int
 }

@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -27,6 +28,9 @@ class LayoutsItemViewHolder(
     private var currentItem: LayoutCategoryUiState? = null
 
     private val recycler: RecyclerView by lazy {
+        itemView.updateLayoutParams {
+            height = thumbDimensionProvider.rowHeight
+        }
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
             layoutManager = LinearLayoutManager(
                     context,

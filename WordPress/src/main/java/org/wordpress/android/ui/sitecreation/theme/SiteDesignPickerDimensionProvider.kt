@@ -14,4 +14,7 @@ class SiteDesignPickerDimensionProvider @Inject constructor(private val contextP
         get() = contextProvider.getContext().resources.getDimensionPixelSize(dimen.hpp_layout_card_height)
 
     override val scale: Double = 1.0 // Passing 1.0 and the rendered pixels per device in previewWidth
+
+    override val rowHeight: Int
+        get() = contextProvider.getContext().resources.getDimensionPixelSize(dimen.hpp_layouts_row_height)
 }
