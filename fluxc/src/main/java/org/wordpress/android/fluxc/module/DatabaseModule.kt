@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.persistence.BloggingRemindersDao
 import org.wordpress.android.fluxc.persistence.PlanOffersDao
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase
 import org.wordpress.android.fluxc.persistence.WPAndroidDatabase.Companion.buildDb
+import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import javax.inject.Singleton
@@ -41,5 +42,11 @@ class DatabaseModule {
     @Provides
     fun provideDashboardCardsDao(wpAndroidDatabase: WPAndroidDatabase): CardsDao {
         return wpAndroidDatabase.dashboardCardsDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideBloggingPromptsDao(wpAndroidDatabase: WPAndroidDatabase): BloggingPromptsDao {
+        return wpAndroidDatabase.bloggingPromptsDao()
     }
 }
