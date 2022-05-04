@@ -35,8 +35,8 @@ abstract class BloggingPromptsDao {
     abstract fun clear()
 
     @Entity(
-            tableName = "BloggingPrompts",
-            primaryKeys = ["id"]
+        tableName = "BloggingPrompts",
+        primaryKeys = ["id"]
     )
     @TypeConverters(BloggingPromptDateConverter::class)
     data class BloggingPromptEntity(
@@ -48,17 +48,19 @@ abstract class BloggingPromptsDao {
         val date: Date,
         val isAnswered: Boolean,
         val respondentsCount: Int,
+        val attribution: String,
         val respondentsAvatars: List<String>
     ) {
         fun toBloggingPrompt() = BloggingPromptModel(
-                id = id,
-                text = text,
-                title = title,
-                content = content,
-                date = date,
-                isAnswered = isAnswered,
-                respondentsCount = respondentsCount,
-                respondentsAvatars = respondentsAvatars
+            id = id,
+            text = text,
+            title = title,
+            content = content,
+            date = date,
+            isAnswered = isAnswered,
+            attribution = attribution,
+            respondentsCount = respondentsCount,
+            respondentsAvatars = respondentsAvatars
         )
 
         companion object {
@@ -66,15 +68,16 @@ abstract class BloggingPromptsDao {
                 siteLocalId: Int,
                 prompt: BloggingPromptModel
             ) = BloggingPromptEntity(
-                    id = prompt.id,
-                    siteLocalId = siteLocalId,
-                    text = prompt.text,
-                    title = prompt.title,
-                    content = prompt.content,
-                    date = prompt.date,
-                    isAnswered = prompt.isAnswered,
-                    respondentsCount = prompt.respondentsCount,
-                    respondentsAvatars = prompt.respondentsAvatars
+                id = prompt.id,
+                siteLocalId = siteLocalId,
+                text = prompt.text,
+                title = prompt.title,
+                content = prompt.content,
+                date = prompt.date,
+                isAnswered = prompt.isAnswered,
+                attribution = prompt.attribution,
+                respondentsCount = prompt.respondentsCount,
+                respondentsAvatars = prompt.respondentsAvatars
             )
         }
     }
