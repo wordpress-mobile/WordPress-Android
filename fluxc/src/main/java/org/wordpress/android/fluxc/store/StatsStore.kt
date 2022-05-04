@@ -176,6 +176,7 @@ class StatsStore
         ALL_TIME_STATS,
         TOTAL_LIKES,
         TOTAL_COMMENTS,
+        TOTAL_FOLLOWERS,
         FOLLOWER_TOTALS,
         TAGS_AND_CATEGORIES,
         ANNUAL_SITE_STATS,
