@@ -56,6 +56,7 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
     enum class QuickStartTaskType(private val string: String) {
         CUSTOMIZE("customize"),
         GROW("grow"),
+        GET_TO_KNOW_APP("get_to_know_app"),
         UNKNOWN("unknown");
 
         override fun toString(): String {
