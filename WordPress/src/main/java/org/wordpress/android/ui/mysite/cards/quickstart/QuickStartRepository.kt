@@ -92,7 +92,8 @@ class QuickStartRepository
     val onQuickStartTabStep = _onQuickStartTabStep as LiveData<QuickStartTabStep?>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
-    var quickStartTaskOrigin = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
+    var currentTab = if (isMySiteTabsEnabled) DASHBOARD else MySiteTabType.ALL
+    var quickStartTaskOrigin = if (isMySiteTabsEnabled) DASHBOARD else MySiteTabType.ALL
 
     private var pendingTask: QuickStartTask? = null
 
@@ -298,30 +299,28 @@ class QuickStartRepository
     }
 
     private fun isSiteMenuStepRequiredForTask(task: QuickStartTask) =
-            quickStartTaskOrigin == MySiteTabType.DASHBOARD && task.showInSiteMenu()
+            currentTab == DASHBOARD && task.isShownInSiteMenuTab()
 
     private fun isHomeStepRequiredForTask(task: QuickStartTask) =
-            !isSiteMenuStepRequiredForTask(task) && isShownInHomeTab(task)
+            quickStartTaskOrigin == DASHBOARD && currentTab == SITE_MENU && task.isShownInHomeTab()
 
-    private fun QuickStartTask.showInSiteMenu() = when (this) {
+    private fun QuickStartTask.isShownInSiteMenuTab() = when (this) {
         QuickStartTask.ENABLE_POST_SHARING,
         QuickStartTask.EXPLORE_PLANS -> true
         else -> false
     }
 
-    private fun isShownInHomeTab(quickStartTask: QuickStartTask): Boolean {
-        return when (quickStartTask) {
-            QuickStartTask.CHECK_STATS,
-            QuickStartTask.REVIEW_PAGES,
-            QuickStartTask.EDIT_HOMEPAGE -> true
-            else -> false
-        }
+    private fun QuickStartTask.isShownInHomeTab() = when (this) {
+        QuickStartTask.CHECK_STATS,
+        QuickStartTask.REVIEW_PAGES,
+        QuickStartTask.EDIT_HOMEPAGE -> true
+        else -> false
     }
 
     data class QuickStartTabStep(
         val isStarted: Boolean,
         val task: QuickStartTask? = null,
-        val mySiteTabType: MySiteTabType = MySiteTabType.SITE_MENU
+        val mySiteTabType: MySiteTabType
     )
 
     data class QuickStartCategory(

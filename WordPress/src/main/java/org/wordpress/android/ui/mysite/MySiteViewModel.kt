@@ -619,7 +619,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onTabChanged(position: Int) {
-        quickStartRepository.quickStartTaskOrigin = orderedTabTypes[position]
+        quickStartRepository.currentTab = orderedTabTypes[position]
         findUiStateForTab(orderedTabTypes[position])?.pendingTask?.let { requestTabStepPendingTask(it) }
         trackTabChanged(position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
     }
@@ -1177,6 +1177,7 @@ class MySiteViewModel @Inject constructor(
                     if (currentDefaultTab == index) return
                 }
             }
+            quickStartRepository.quickStartTaskOrigin = orderedTabTypes[index]
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
             isDefaultABExperimentTabSet = true
         }
