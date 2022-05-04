@@ -32,6 +32,8 @@
 
 /sites/$site/xposts
 
+/sites/$site/blogging-prompts
+
 /users/username/suggestions/
 
 /segments
