@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPr
 
 class BloggingPromptUtilsTest {
     @Test
-    fun test8601DateStringToDateObject() {
+    fun testBloggingPromptDateStringToDateObject() {
         val date = "2022-05-01"
 
         // A string date converted to Date and back should be unaltered
