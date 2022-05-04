@@ -111,7 +111,7 @@ class QuickStartRepository
         _activeTask.value = null
     }
 
-    private fun clearPendingTask() {
+    fun clearPendingTask() {
         pendingTask = null
     }
 
@@ -166,6 +166,8 @@ class QuickStartRepository
             }
         }
     }
+
+    fun isPendingTask(task: QuickStartTask) = task == pendingTask
 
     fun completeTask(task: QuickStartTask) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->

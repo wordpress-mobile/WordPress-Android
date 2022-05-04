@@ -2,23 +2,26 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tab_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:attr/actionBarItemBackground">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tab_label"
-        style="@style/TextAppearance.Design.Tab"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/settings_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium_large"
+        android:layout_marginStart="@dimen/margin_medium_large"
+        android:src="@drawable/ic_cog_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnSurface"
         tools:text="@string/my_site_menu_tab_title" />
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/tab_quick_start_focus_point"
+        android:id="@+id/menu_quick_start_focus_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/quick_start_focus_point_description"
@@ -27,7 +30,6 @@
         android:textAlignment="viewEnd"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:size="small" />
 
