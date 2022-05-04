@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.LatestPostI
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.MostPopularRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.SummaryRestClient.SummaryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
@@ -211,6 +212,12 @@ class InsightsMapper
         val hasMorePosts = (response.posts != null && cacheMode is Top && response.posts.size > cacheMode.limit)
         return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
+
+    fun map(response: SummaryResponse) = SummaryModel(
+        response.likes ?: 0,
+        response.comments ?: 0,
+        response.followers ?: 0
+    )
 
     fun map(response: TagsResponse, cacheMode: LimitMode): TagsModel {
         return TagsModel(response.tags.let {
