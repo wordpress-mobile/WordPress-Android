@@ -17,28 +17,28 @@ class PushAccountSettingsUseCase @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val continuationWrapperWithConcurrency: ContinuationWrapperWithConcurrency<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) {
-    suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
+) : PushAccountSettingsInteractor {
+    override suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["primary_site_ID"] = blogId }
         return updateAccountSettings(addPayload)
     }
 
-    suspend fun cancelPendingEmailChange(): OnAccountChanged {
+    override suspend fun cancelPendingEmailChange(): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email_change_pending"] = "false" }
         return updateAccountSettings(addPayload)
     }
 
-    suspend fun updateEmail(newEmail: String): OnAccountChanged {
+    override suspend fun updateEmail(newEmail: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email"] = newEmail }
         return updateAccountSettings(addPayload)
     }
 
-    suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged {
+    override suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_URL"] = newWebAddress }
         return updateAccountSettings(addPayload)
     }
 
-    suspend fun updatePassword(newPassword: String): OnAccountChanged {
+    override suspend fun updatePassword(newPassword: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["password"] = newPassword }
         return updateAccountSettings(addPayload)
     }
@@ -59,4 +59,12 @@ class PushAccountSettingsUseCase @Inject constructor(
         continuationWrapperWithConcurrency.continueWith( event)
         eventBusWrapper.unregister(this)
     }
+}
+
+interface PushAccountSettingsInteractor{
+    suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged
+    suspend fun cancelPendingEmailChange(): OnAccountChanged
+    suspend fun updateEmail(newEmail: String): OnAccountChanged
+    suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged
+    suspend fun updatePassword(newPassword: String): OnAccountChanged
 }

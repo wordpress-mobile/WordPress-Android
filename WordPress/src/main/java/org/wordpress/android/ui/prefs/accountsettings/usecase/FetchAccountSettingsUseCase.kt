@@ -16,8 +16,8 @@ class FetchAccountSettingsUseCase @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) {
-    suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
+) : FetchAccountSettingsInteractor{
+    override suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
         continuationWrapper.suspendCoroutine {
             eventBusWrapper.registerIfNotAlready(this)
             eventBusWrapper.post(AccountActionBuilder.newFetchSettingsAction())
@@ -29,4 +29,8 @@ class FetchAccountSettingsUseCase @Inject constructor(
         continuationWrapper.continueWith(event)
         eventBusWrapper.unregister(this)
     }
+}
+
+interface FetchAccountSettingsInteractor{
+    suspend fun fetchNewSettings(): OnAccountChanged
 }
