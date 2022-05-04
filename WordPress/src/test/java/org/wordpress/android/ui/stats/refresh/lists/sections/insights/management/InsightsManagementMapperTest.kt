@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
@@ -22,6 +21,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.test
@@ -68,7 +68,7 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[12], FOLLOWERS, true)
         assertInsight(result[13], TOTAL_LIKES, true)
         assertInsight(result[14], TOTAL_COMMENTS, true)
-        assertInsight(result[15], FOLLOWER_TOTALS, true)
+        assertInsight(result[15], TOTAL_FOLLOWERS, true)
         assertInsight(result[16], PUBLICIZE, true)
     }
 
@@ -98,7 +98,7 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[12], FOLLOWERS, false)
         assertInsight(result[13], TOTAL_LIKES, false)
         assertInsight(result[14], TOTAL_COMMENTS, false)
-        assertInsight(result[15], FOLLOWER_TOTALS, false)
+        assertInsight(result[15], TOTAL_FOLLOWERS, false)
         assertInsight(result[16], PUBLICIZE, true)
     }
 
@@ -127,7 +127,7 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[12], FOLLOWERS, false)
         assertInsight(result[13], TOTAL_LIKES, false)
         assertInsight(result[14], TOTAL_COMMENTS, false)
-        assertInsight(result[15], FOLLOWER_TOTALS, false)
+        assertInsight(result[15], TOTAL_FOLLOWERS, false)
         assertInsight(result[16], PUBLICIZE, false)
     }
 
