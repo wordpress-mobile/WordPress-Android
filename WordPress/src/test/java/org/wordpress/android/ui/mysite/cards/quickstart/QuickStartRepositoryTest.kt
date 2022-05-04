@@ -69,6 +69,12 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             QuickStartTask.EXPLORE_PLANS
     )
 
+    private val dashboardTasks = listOf(
+            QuickStartTask.CHECK_STATS,
+            QuickStartTask.REVIEW_PAGES,
+            QuickStartTask.EDIT_HOMEPAGE
+    )
+
     private val nonSiteMenuTasks = QuickStartTask.values().subtract(siteMenuTasks)
 
     @InternalCoroutinesApi
@@ -158,11 +164,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         verifyZeroInteractions(quickStartStore)
     }
 
-    /* QUICK START REQUEST SITE MENU STEP */
+    /* QUICK START REQUEST TAB STEP - SITE MENU */
 
     @Test
-    fun `given task origin site menu tab, when site menu task is activated, then site menu step is not started`() {
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.SITE_MENU
+    fun `given task origin site menu tab, when site menu task is activated, then site menu tab step is not started`() {
+        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
         initQuickStartInProgress()
 
         quickStartRepository.setActiveTask(siteMenuTasks.random())
@@ -171,19 +177,29 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given task origin dashboard tab, when site menu task is activated, then site menu step is started`() {
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+    fun `given task origin dashboard tab, when site menu task is activated, then site menu tab step is started`() {
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
         initQuickStartInProgress()
         val task = siteMenuTasks.random()
 
         quickStartRepository.setActiveTask(task)
 
-        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task))
+        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.SITE_MENU))
+    }
+
+    @Test
+    fun `given task origin dashboard tab, when site menu task is activated, then snackbar is shown`() {
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(siteMenuTasks.random())
+
+        assertThat(snackbars).isNotEmpty
     }
 
     @Test
     fun `given task origin dashboard tab, when non site menu task is activated, then site menu step is not started`() {
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
         initQuickStartInProgress()
 
         quickStartRepository.setActiveTask(nonSiteMenuTasks.random())
@@ -191,14 +207,30 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         assertThat(quickStartTabStep).isEmpty()
     }
 
+    /* QUICK START REQUEST TAB STEP - DASHBOARD */
+
     @Test
-    fun `given task origin dashboard tab, when site menu task is activated, then snackbar is shown`() {
+    fun `given task origin + current tab is dashboard, when task is activated, then tab step is not started`() {
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
         quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        val task = dashboardTasks.random()
         initQuickStartInProgress()
 
-        quickStartRepository.setActiveTask(siteMenuTasks.random())
+        quickStartRepository.setActiveTask(task)
 
-        assertThat(snackbars).isNotEmpty
+        assertThat(quickStartTabStep).isEmpty()
+    }
+
+    @Test
+    fun `given task origin dashboard tab + current tab is menu, when task is activated, then tab step is started`() {
+        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
+        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        val task = dashboardTasks.random()
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(task)
+
+        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.DASHBOARD))
     }
 
     /* QUICK START REQUEST NEXT STEP */
