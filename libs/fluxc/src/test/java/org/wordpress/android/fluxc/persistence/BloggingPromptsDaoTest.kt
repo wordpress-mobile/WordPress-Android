@@ -101,9 +101,8 @@ class BloggingPromptsDaoTest {
         assertThat(specificPrompt.toBloggingPrompt()).isEqualTo(prompt2)
     }
 
-
     @Test
-    fun `getAllPrompts returns all pro,pts`(): Unit = runBlocking {
+    fun `getAllPrompts returns all prompts`(): Unit = runBlocking {
         // when
         val prompt1 = generateBloggingPrompt().copy(id = 1, date = BloggingPromptsUtils.stringToDate("2022-05-01"))
             .toBloggingPrompt()
@@ -121,6 +120,30 @@ class BloggingPromptsDaoTest {
 
         assertThat(prompts).isNotNull
         assertThat(prompts.map { it.toBloggingPrompt() }).isEqualTo(listOf(prompt1, prompt2, prompt3))
+    }
+
+
+    @Test
+    fun `clear removes all prompts`(): Unit = runBlocking {
+        // when
+        val prompt1 = generateBloggingPrompt().copy(id = 1, date = BloggingPromptsUtils.stringToDate("2022-05-01"))
+            .toBloggingPrompt()
+        val prompt2 = generateBloggingPrompt().copy(id = 2, date = BloggingPromptsUtils.stringToDate("2015-04-20"))
+            .toBloggingPrompt()
+        val prompt3 = generateBloggingPrompt().copy(id = 3, date = BloggingPromptsUtils.stringToDate("2015-03-20"))
+            .toBloggingPrompt()
+
+        promptsDao.insertForSite(localSideId, listOf(prompt1, prompt2, prompt3))
+
+        // then
+        promptsDao.clear()
+
+        val prompts = promptsDao.getAllPrompts(
+            localSideId
+        ).first()
+
+        assertThat(prompts).isNotNull
+        assertThat(prompts).isEmpty()
     }
 
     @Test
