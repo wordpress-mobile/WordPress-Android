@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -80,6 +81,10 @@ class HomePagePickerFragment : Fragment() {
                 setText(R.string.hpp_title)
             }
             modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
+        }
+        modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
+            height = thumbDimensionProvider.previewHeight
+            width = thumbDimensionProvider.previewWidth
         }
     }
 

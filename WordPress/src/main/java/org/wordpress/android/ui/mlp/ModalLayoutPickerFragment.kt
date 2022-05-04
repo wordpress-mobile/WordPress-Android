@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -95,6 +96,11 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             }
             modalLayoutPickerTitlebar.previewTypeSelectorButton.setOnClickListener {
                 viewModel.onThumbnailModePressed()
+            }
+
+            modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
+                height = thumbDimensionProvider.previewHeight
+                width = thumbDimensionProvider.previewWidth
             }
 
             setScrollListener()
