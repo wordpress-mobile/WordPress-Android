@@ -18,7 +18,7 @@
         tools:text="@string/my_site_menu_tab_title"/>
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/my_site_tab_quick_start_focus_point"
+        android:id="@+id/tab_quick_start_focus_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/quick_start_focus_point_description"

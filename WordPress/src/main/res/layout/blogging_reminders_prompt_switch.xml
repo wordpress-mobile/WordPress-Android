@@ -10,8 +10,8 @@
         android:id="@+id/include_prompt_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,8 +20,8 @@
         android:id="@+id/prompt_switch_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:text="@string/blogging_reminders_prompt_subtitle"
         app:layout_constraintEnd_toStartOf="@+id/include_prompt_switch"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,13 +32,24 @@
         style="@style/TextAppearance.Compat.Notification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_large"
         android:text="@string/blogging_reminders_prompt_title"
-        app:layout_constraintEnd_toStartOf="@+id/include_prompt_switch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/blogging_reminders_prompt_help_button_desc"
+        android:id="@+id/prompt_help_button"
+        android:layout_width="@dimen/blogging_reminders_prompt_help_buttons_size"
+        android:layout_height="@dimen/blogging_reminders_prompt_help_buttons_size"
+        android:layout_marginStart="@dimen/margin_small_medium"
+        android:src="@drawable/ic_help_outline_white_24dp"
+        android:tint="?attr/wpColorOnSurfaceMedium"
+        app:layout_constraintBottom_toBottomOf="@+id/prompt_switch_title"
+        app:layout_constraintStart_toEndOf="@+id/prompt_switch_title"
+        app:layout_constraintTop_toTopOf="@+id/prompt_switch_title" />
 
     <View
         android:id="@+id/bottom_divider"

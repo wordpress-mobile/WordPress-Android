@@ -82,6 +82,21 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
                 categories.toList()
         )
         tabLayout.setupWithViewPager(pager)
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                // NO OP
+            }
+
+            override fun onPageSelected(position: Int) {
+                val page = (pager.adapter as SubfilterPagerAdapter).getPageTitle(position)
+                viewModel.trackOnPageSelected(page.toString())
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                // NO OP
+            }
+        })
+
         pager.currentItem = when (viewModel.getCurrentSubfilterValue()) {
             is Tag -> TAGS.ordinal
             else -> SITES.ordinal

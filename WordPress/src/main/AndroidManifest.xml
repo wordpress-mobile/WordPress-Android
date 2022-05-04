@@ -55,7 +55,6 @@
     <meta-data android:name="fontProviderRequests" android:value="Noto Color Emoji Compat"/>
 
     <application
-        android:name=".WordPress"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_scheme"
         android:hardwareAccelerated="true"
@@ -931,7 +930,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_minified_widget_info"/>
         </receiver>
-
+        <receiver android:name=".ui.notifications.DismissNotificationReceiver" />
         <service
             android:name=".ui.stats.refresh.lists.widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />

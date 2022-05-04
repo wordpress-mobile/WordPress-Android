@@ -6,7 +6,9 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.clearInvocations
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -24,6 +26,7 @@ import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
@@ -67,7 +70,7 @@ class SiteCreationMainVMTest {
             Unit
         }
         viewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
-        viewModel.start(null)
+        viewModel.start(null, SiteCreationSource.UNSPECIFIED)
         viewModel.navigationTargetObservable.observeForever(navigationTargetObserver)
         viewModel.wizardFinishedObservable.observeForever(wizardFinishedObserver)
         viewModel.dialogActionObservable.observeForever(dialogActionsObserver)
@@ -82,7 +85,7 @@ class SiteCreationMainVMTest {
     fun siteCreationSiteNameExperimentControlTracked() {
         whenever(siteNameABExperiment.getVariation()).thenReturn(Control)
         viewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
-        viewModel.start(null)
+        viewModel.start(null, SiteCreationSource.UNSPECIFIED)
         verify(tracker).trackSiteNameExperimentVariation(Control)
     }
 
@@ -90,7 +93,7 @@ class SiteCreationMainVMTest {
     fun siteCreationSiteNameExperimentTreatmentTracked() {
         whenever(siteNameABExperiment.getVariation()).thenReturn(Variation.fromName("wpandroid_site_name_v1"))
         viewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
-        viewModel.start(null)
+        viewModel.start(null, SiteCreationSource.UNSPECIFIED)
         verify(tracker).trackSiteNameExperimentVariation(Variation.fromName("wpandroid_site_name_v1"))
     }
 
@@ -218,7 +221,7 @@ class SiteCreationMainVMTest {
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
         val newViewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
-        newViewModel.start(savedInstanceState)
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
 
         /* we need to simulate navigation to the next step (Domain selection, see comment above) as
         wizardManager.showNextStep() isn't invoked when the VM is restored from a savedInstanceState. */
@@ -239,9 +242,33 @@ class SiteCreationMainVMTest {
 
         // we need to create a new instance of the VM as the `viewModel` has already been started in setUp()
         val newViewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
-        newViewModel.start(savedInstanceState)
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
 
         verify(wizardManager).setCurrentStepIndex(index)
+    }
+
+    @Test
+    fun `given null instance state, when start, then site creation accessed including source is tracked`() {
+        val newViewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
+        newViewModel.start(null, SiteCreationSource.UNSPECIFIED)
+
+        // Because setup is run before every test, we expect this to be tracked twice
+        // Once on the first instantiation
+        // Once on the new start
+        verify(tracker, atLeastOnce()).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
+    }
+
+    @Test
+    fun `given instance state is not null, when start, then site creation accessed is not tracked`() {
+        val expectedState = SiteCreationState(segmentId = SEGMENT_ID)
+        whenever(savedInstanceState.getParcelable<SiteCreationState>(KEY_SITE_CREATION_STATE))
+                .thenReturn(expectedState)
+
+        val newViewModel = SiteCreationMainVM(tracker, wizardManager, siteNameABExperiment)
+        newViewModel.start(savedInstanceState, SiteCreationSource.UNSPECIFIED)
+
+        // Because setup is run before every test, we expect this to be tracked on that first instance only
+        verify(tracker, times(1)).trackSiteCreationAccessed(SiteCreationSource.UNSPECIFIED)
     }
 
     private fun currentWizardState(vm: SiteCreationMainVM) =

@@ -51,12 +51,16 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         val url: String,
         val iconState: IconState,
         val showTitleFocusPoint: Boolean,
+        val showSubtitleFocusPoint: Boolean,
         val showIconFocusPoint: Boolean,
         val onTitleClick: ListItemInteraction? = null,
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteCardAndItem(SITE_INFO_CARD, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
+    ) : MySiteCardAndItem(
+            SITE_INFO_CARD,
+            activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint || showSubtitleFocusPoint
+    ) {
         sealed class IconState {
             object Progress : IconState()
             data class Visible(val url: String? = null) : IconState()
@@ -77,12 +81,15 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         ) : Card(QUICK_ACTIONS_CARD)
 
         data class QuickLinkRibbon(
-            val quickLinkRibbonItems: List<QuickLinkRibbonItem>
-        ) : Card(QUICK_LINK_RIBBON) {
+            val quickLinkRibbonItems: List<QuickLinkRibbonItem>,
+            val showPagesFocusPoint: Boolean = false,
+            val showStatsFocusPoint: Boolean = false
+        ) : Card(QUICK_LINK_RIBBON, activeQuickStartItem = showPagesFocusPoint || showStatsFocusPoint) {
             data class QuickLinkRibbonItem(
                 @StringRes val label: Int,
                 @DrawableRes val icon: Int,
-                val onClick: ListItemInteraction
+                val onClick: ListItemInteraction,
+                val showFocusPoint: Boolean = false
             )
         }
 

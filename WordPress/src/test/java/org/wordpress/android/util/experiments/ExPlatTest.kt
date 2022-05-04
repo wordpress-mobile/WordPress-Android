@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.OnAssignmentsFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -31,14 +32,15 @@ class ExPlatTest : BaseUnitTest() {
     @Mock lateinit var experiments: Lazy<Set<Experiment>>
     @Mock lateinit var experimentStore: ExperimentStore
     @Mock lateinit var appLog: AppLogWrapper
+    @Mock lateinit var accountStore: AccountStore
     private lateinit var exPlat: ExPlat
     private lateinit var dummyExperiment: Experiment
 
     @Before
     fun setUp() {
-        exPlat = ExPlat(experiments, experimentStore, appLog, testScope())
+        exPlat = ExPlat(experiments, experimentStore, appLog, accountStore, testScope())
         dummyExperiment = object : Experiment("dummy", exPlat) {}
-
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
         setupExperiments(setOf(dummyExperiment))
     }
 
@@ -188,6 +190,26 @@ class ExPlatTest : BaseUnitTest() {
         } finally {
             verifyZeroInteractions(experimentStore)
         }
+    }
+
+    @Test
+    fun `refreshIfNeeded does not interact with store if the user is not authorised`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        exPlat.forceRefresh()
+
+        verifyZeroInteractions(experimentStore)
+    }
+
+    @Test
+    fun `forceRefresh does not interact with store if the user is not authorised`() = test {
+        setupExperiments(setOf(dummyExperiment))
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        exPlat.forceRefresh()
+
+        verifyZeroInteractions(experimentStore)
     }
 
     private fun setupExperiments(experiments: Set<Experiment>) {

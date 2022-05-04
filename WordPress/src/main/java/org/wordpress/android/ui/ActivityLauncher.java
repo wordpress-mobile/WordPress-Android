@@ -95,6 +95,7 @@ import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -357,6 +358,23 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         context.startActivity(intent);
+    }
+
+    public static Intent openEditorAndDismissNotificationIntent(
+            @NonNull final Context context, final int notificationId
+    ) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        return intent;
+    }
+
+    public static Intent createMainActivityDismissNotificationIntent(
+        @NonNull final Context context, final int notificationId
+    ) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        return intent;
     }
 
     public static void openEditorForSiteInNewStack(Context context, @NonNull SiteModel site) {
@@ -1155,8 +1173,7 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
-        } else if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE && site.isWPComAtomic()
-                   && !site.isPrivateWPComAtomic()) {
+        } else if (site.isWPComAtomic() && !site.isPrivateWPComAtomic()) {
             openAtomicBlogPostPreview(
                     context,
                     url,
@@ -1331,26 +1348,29 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newBlogForResult(Activity activity) {
+    public static void newBlogForResult(Activity activity, SiteCreationSource source) {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
+        intent.putExtra(SiteCreationActivity.ARG_CREATE_SITE_SOURCE, source.getLabel());
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
-    public static void showMainActivityAndSiteCreationActivity(Activity activity) {
+    public static void showMainActivityAndSiteCreationActivity(Activity activity, SiteCreationSource source) {
         // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
         // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
         // WPMainActivity, we must start it this way.
-        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null);
+        final Intent intent = createMainActivityAndSiteCreationActivityIntent(activity, null, source);
         activity.startActivity(intent);
     }
 
     @NonNull
     public static Intent createMainActivityAndSiteCreationActivityIntent(Context context,
-                                                                         @Nullable NotificationType notificationType) {
+                                                                         @Nullable NotificationType notificationType,
+                                                                         SiteCreationSource source) {
         final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        intent.putExtra(WPMainActivity.ARG_SITE_CREATION_SOURCE, source.getLabel());
         if (notificationType != null) {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }
@@ -1360,12 +1380,14 @@ public class ActivityLauncher {
     @NonNull
     public static Intent createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
             final Context context,
-            @Nullable final NotificationType notificationType
+            @Nullable final NotificationType notificationType,
+            final int notificationId
     ) {
         final Intent intent = new Intent(context, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_BLOGGING_PROMPTS_ONBOARDING, true);
+        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         if (notificationType != null) {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }

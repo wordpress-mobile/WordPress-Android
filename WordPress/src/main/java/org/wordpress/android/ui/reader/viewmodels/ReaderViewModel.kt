@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -24,6 +23,9 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -83,7 +85,7 @@ class ReaderViewModel @Inject constructor(
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
                 _uiState.value = ContentUiState(
-                        tagList.map { it.label },
+                        tagList.map { TabUiState(label = UiStringText(it.label)) },
                         tagList,
                         searchIconVisible = isSearchSupported(),
                         settingsIconVisible = isSettingsSupported()
@@ -135,7 +137,7 @@ class ReaderViewModel @Inject constructor(
         val tabLayoutVisible: Boolean = false
     ) {
         data class ContentUiState(
-            val tabTitles: List<String>,
+            val tabUiStates: List<TabUiState>,
             val readerTagList: ReaderTagList,
             override val searchIconVisible: Boolean,
             override val settingsIconVisible: Boolean
@@ -144,7 +146,12 @@ class ReaderViewModel @Inject constructor(
                 settingsIconVisible = settingsIconVisible,
                 appBarExpanded = true,
                 tabLayoutVisible = true
-        )
+        ) {
+            data class TabUiState(
+                val label: UiString,
+                val showQuickStartFocusPoint: Boolean = false
+            )
+        }
     }
 
     override fun onCleared() {

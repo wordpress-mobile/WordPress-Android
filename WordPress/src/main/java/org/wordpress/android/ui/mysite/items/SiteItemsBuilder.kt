@@ -30,11 +30,10 @@ class SiteItemsBuilder @Inject constructor(
 
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
-        val showViewSiteFocusPoint = params.activeTask == QuickStartTask.VIEW_SITE
         val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
-        val showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS
-        val showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartTask.REVIEW_PAGES
+        val showStatsFocusPoint = (params.activeTask == QuickStartTask.CHECK_STATS && params.enableStatsFocusPoint)
+        val showPagesFocusPoint = (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartTask.REVIEW_PAGES) && params.enablePagesFocusPoint
 
         return listOfNotNull(
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(params.site),
@@ -82,8 +81,7 @@ class SiteItemsBuilder @Inject constructor(
                         R.drawable.ic_globe_white_24dp,
                         UiStringRes(R.string.my_site_btn_view_site),
                         secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick),
-                        showFocusPoint = showViewSiteFocusPoint
+                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick)
                 ),
                 siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         )
