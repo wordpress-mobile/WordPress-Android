@@ -1279,8 +1279,9 @@ class MySiteViewModel @Inject constructor(
 
         fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
             tabUiState.copy(
-                    showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType && quickStartTabStep.isStarted,
-                    pendingTask = quickStartTabStep?.task,
+                    showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
+                                quickStartTabStep.isStarted,
+                    pendingTask = quickStartTabStep?.task
             )
         }
     }
