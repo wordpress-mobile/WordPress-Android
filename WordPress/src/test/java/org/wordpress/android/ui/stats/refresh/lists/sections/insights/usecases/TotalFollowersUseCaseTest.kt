@@ -28,19 +28,19 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-class TotalFollowersNewUseCaseTest : BaseUnitTest() {
+class TotalFollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: SummaryStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    private lateinit var useCase: TotalFollowersNewUseCase
+    private lateinit var useCase: TotalFollowersUseCase
     private val followers = 100
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        useCase = TotalFollowersNewUseCase(
+        useCase = TotalFollowersUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
                 insightsStore,
