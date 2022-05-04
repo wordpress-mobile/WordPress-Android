@@ -107,6 +107,6 @@ class InsightsManagementMapper
         ANNUAL_SITE_STATS -> R.string.stats_insights_this_year_site_stats
         TOTAL_LIKES -> string.stats_view_total_likes
         TOTAL_COMMENTS -> string.stats_view_total_comments
-        FOLLOWER_TOTALS -> string.stats_view_total_followers
+        FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
     }
 }
