@@ -42,14 +42,8 @@
     </style>
 
     <style name="StatsBlockLine">
-        <item name="android:layout_height">@dimen/one_line_list_item_height_small</item>
-        <item name="android:paddingStart">@dimen/margin_extra_large</item>
-    </style>
-
-    <style name="StatsBlockLineBig">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
     </style>
 
     <style name="StatsBlockTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
