@@ -179,6 +179,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `given task origin dashboard tab, when site menu task is activated, then site menu tab step is started`() {
         quickStartRepository.currentTab = MySiteTabType.DASHBOARD
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.SITE_MENU
         initQuickStartInProgress()
         val task = siteMenuTasks.random()
 
@@ -190,6 +191,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `given task origin dashboard tab, when site menu task is activated, then snackbar is shown`() {
         quickStartRepository.currentTab = MySiteTabType.DASHBOARD
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.SITE_MENU
         initQuickStartInProgress()
 
         quickStartRepository.setActiveTask(siteMenuTasks.random())
@@ -212,7 +214,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `given task origin + current tab is dashboard, when task is activated, then tab step is not started`() {
         quickStartRepository.currentTab = MySiteTabType.DASHBOARD
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
         val task = dashboardTasks.random()
         initQuickStartInProgress()
 
@@ -224,7 +226,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `given task origin dashboard tab + current tab is menu, when task is activated, then tab step is started`() {
         quickStartRepository.currentTab = MySiteTabType.SITE_MENU
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
         val task = dashboardTasks.random()
         initQuickStartInProgress()
 

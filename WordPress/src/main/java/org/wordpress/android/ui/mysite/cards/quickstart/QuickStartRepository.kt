@@ -93,7 +93,7 @@ class QuickStartRepository
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
     var currentTab = if (isMySiteTabsEnabled) DASHBOARD else MySiteTabType.ALL
-    var quickStartTaskOrigin = if (isMySiteTabsEnabled) DASHBOARD else MySiteTabType.ALL
+    var quickStartTaskOriginTab = if (isMySiteTabsEnabled) DASHBOARD else MySiteTabType.ALL
 
     private var pendingTask: QuickStartTask? = null
 
@@ -302,13 +302,29 @@ class QuickStartRepository
             currentTab == DASHBOARD && task.isShownInSiteMenuTab()
 
     private fun isHomeStepRequiredForTask(task: QuickStartTask) =
-            quickStartTaskOrigin == DASHBOARD && currentTab == SITE_MENU && task.isShownInHomeTab()
+            quickStartTaskOriginTab == DASHBOARD && currentTab == SITE_MENU && task.isShownInHomeTab()
 
-    private fun QuickStartTask.isShownInSiteMenuTab() = when (this) {
-        QuickStartTask.ENABLE_POST_SHARING,
-        QuickStartTask.EXPLORE_PLANS -> true
-        else -> false
-    }
+    // the quick start focus point shown in case of when the default tab is site menu or dashboard varies
+    // this function checks whether the passed tasks is shown in site menu
+    private fun QuickStartTask.isShownInSiteMenuTab() =
+            when (quickStartTaskOriginTab) {
+                DASHBOARD ->
+                    when (this) {
+                        QuickStartTask.ENABLE_POST_SHARING,
+                        QuickStartTask.EXPLORE_PLANS -> true
+                        else -> false
+                    }
+                SITE_MENU ->
+                    when (this) {
+                        QuickStartTask.CHECK_STATS,
+                        QuickStartTask.REVIEW_PAGES,
+                        QuickStartTask.EDIT_HOMEPAGE,
+                        QuickStartTask.ENABLE_POST_SHARING,
+                        QuickStartTask.EXPLORE_PLANS -> true
+                        else -> false
+                    }
+                else -> false
+            }
 
     private fun QuickStartTask.isShownInHomeTab() = when (this) {
         QuickStartTask.CHECK_STATS,

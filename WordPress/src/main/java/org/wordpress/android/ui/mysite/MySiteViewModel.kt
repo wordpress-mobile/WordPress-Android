@@ -1177,7 +1177,7 @@ class MySiteViewModel @Inject constructor(
                     if (currentDefaultTab == index) return
                 }
             }
-            quickStartRepository.quickStartTaskOrigin = orderedTabTypes[index]
+            quickStartRepository.quickStartTaskOriginTab = orderedTabTypes[index]
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
             isDefaultABExperimentTabSet = true
         }
