@@ -9,6 +9,7 @@ data class BloggingPromptModel(
     val content: String,
     val date: Date,
     val isAnswered: Boolean,
+    val attribution: String,
     val respondentsCount: Int,
     val respondentsAvatars: List<String>
 )
