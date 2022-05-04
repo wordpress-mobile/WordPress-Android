@@ -646,8 +646,10 @@
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
 
-    <!-- Home Page Picker -->
+    <!-- Site Design Picker -->
     <dimen name="hpp_title_padding_start">@dimen/margin_none</dimen>
+    <dimen name="hpp_layout_card_height">260dp</dimen>
+    <dimen name="hpp_layout_card_width">200dp</dimen>
 
     <!-- Site Intent Question -->
     <dimen name="siq_title_padding_start">@dimen/margin_extra_extra_large</dimen>

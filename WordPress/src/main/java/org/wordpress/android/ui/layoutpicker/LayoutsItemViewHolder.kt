@@ -16,7 +16,8 @@ import org.wordpress.android.R
 class LayoutsItemViewHolder(
     parent: ViewGroup,
     private val prefetchItemCount: Int = 4,
-    private var nestedScrollStates: Bundle
+    private var nestedScrollStates: Bundle,
+    private val thumbDimensionProvider: ThumbDimensionProvider
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(
                 parent.context
@@ -33,7 +34,7 @@ class LayoutsItemViewHolder(
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
             setRecycledViewPool(RecyclerView.RecycledViewPool())
-            adapter = LayoutsAdapter(parent.context)
+            adapter = LayoutsAdapter(parent.context, thumbDimensionProvider)
 
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
