@@ -12,12 +12,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GET_TO_KNOW_APP_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
@@ -231,6 +233,8 @@ class QuickStartRepository
     private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
         CUSTOMIZE -> R.string.quick_start_completed_type_customize_message
         GROW -> R.string.quick_start_completed_type_grow_message
+        // TODO: ashiagr GET_TO_KNOW_APP add message
+        GET_TO_KNOW_APP -> R.string.quick_start_completed_type_grow_message
         UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
     }.let { resourceProvider.getString(it) }
 
@@ -240,6 +244,7 @@ class QuickStartRepository
         return when (this) {
             CUSTOMIZE_QUICK_START -> CUSTOMIZE
             GROW_QUICK_START -> GROW
+            GET_TO_KNOW_APP_QUICK_START -> GET_TO_KNOW_APP
         }
     }
 
@@ -247,6 +252,7 @@ class QuickStartRepository
         return when (this) {
             CUSTOMIZE -> CUSTOMIZE_QUICK_START
             GROW -> GROW_QUICK_START
+            GET_TO_KNOW_APP -> GET_TO_KNOW_APP_QUICK_START
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }

@@ -26,6 +26,7 @@ class CardsTracker @Inject constructor(
     enum class QuickStartSubtype(val label: String) {
         CUSTOMIZE("customize"),
         GROW("grow"),
+        GET_TO_KNOW_APP("get_to_know_app"),
         UNKNOWN("unkown")
     }
 
@@ -126,6 +127,7 @@ fun QuickStartTaskType.toSubtypeValue(): QuickStartSubtype {
     return when (this) {
         QuickStartTaskType.CUSTOMIZE -> QuickStartSubtype.CUSTOMIZE
         QuickStartTaskType.GROW -> QuickStartSubtype.GROW
+        QuickStartTaskType.GET_TO_KNOW_APP -> QuickStartSubtype.GET_TO_KNOW_APP
         QuickStartTaskType.UNKNOWN -> QuickStartSubtype.UNKNOWN
     }
 }
