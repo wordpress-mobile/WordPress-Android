@@ -34,7 +34,8 @@ import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 class InsightsManagementMapperTest : BaseUnitTest() {
     @Mock private lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var insightsManagementMapper: InsightsManagementMapper
-    private val insightTypeCount = InsightType.values().count()
+    private val insightTypeCount =
+            InsightType.values().count() - 1 // Excluding FOLLOWER_TOTALS for statsRevampV2FeatureConfig
     private val sectionsCount = 3
     @InternalCoroutinesApi
     @Before
