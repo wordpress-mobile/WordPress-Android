@@ -81,11 +81,20 @@ class BloggingPromptsDaoTest {
     @Test
     fun `getPromptForDate returns correct prompt based on the date`(): Unit = runBlocking {
         // when
-        val prompt1 = generateBloggingPrompt().copy(id = 1, date = BloggingPromptsUtils.stringToDate("2022-05-01"))
+        val prompt1 = generateBloggingPrompt().copy(
+            id = 1,
+            date = BloggingPromptsUtils.stringToDate("2022-05-01")
+        )
             .toBloggingPrompt()
-        val prompt2 = generateBloggingPrompt().copy(id = 2, date = BloggingPromptsUtils.stringToDate("2015-04-20"))
+        val prompt2 = generateBloggingPrompt().copy(
+            id = 2,
+            date = BloggingPromptsUtils.stringToDate("2015-04-20")
+        )
             .toBloggingPrompt()
-        val prompt3 = generateBloggingPrompt().copy(id = 3, date = BloggingPromptsUtils.stringToDate("2015-03-20"))
+        val prompt3 = generateBloggingPrompt().copy(
+            id = 3,
+            date = BloggingPromptsUtils.stringToDate("2015-03-20")
+        )
             .toBloggingPrompt()
 
         promptsDao.insertForSite(localSideId, listOf(prompt1, prompt2, prompt3))
@@ -104,11 +113,20 @@ class BloggingPromptsDaoTest {
     @Test
     fun `getAllPrompts returns all prompts`(): Unit = runBlocking {
         // when
-        val prompt1 = generateBloggingPrompt().copy(id = 1, date = BloggingPromptsUtils.stringToDate("2022-05-01"))
+        val prompt1 = generateBloggingPrompt().copy(
+            id = 1,
+            date = BloggingPromptsUtils.stringToDate("2022-05-01")
+        )
             .toBloggingPrompt()
-        val prompt2 = generateBloggingPrompt().copy(id = 2, date = BloggingPromptsUtils.stringToDate("2015-04-20"))
+        val prompt2 = generateBloggingPrompt().copy(
+            id = 2,
+            date = BloggingPromptsUtils.stringToDate("2015-04-20")
+        )
             .toBloggingPrompt()
-        val prompt3 = generateBloggingPrompt().copy(id = 3, date = BloggingPromptsUtils.stringToDate("2015-03-20"))
+        val prompt3 = generateBloggingPrompt().copy(
+            id = 3,
+            date = BloggingPromptsUtils.stringToDate("2015-03-20")
+        )
             .toBloggingPrompt()
 
         promptsDao.insertForSite(localSideId, listOf(prompt1, prompt2, prompt3))
@@ -119,18 +137,32 @@ class BloggingPromptsDaoTest {
         ).first()
 
         assertThat(prompts).isNotNull
-        assertThat(prompts.map { it.toBloggingPrompt() }).isEqualTo(listOf(prompt1, prompt2, prompt3))
+        assertThat(prompts.map { it.toBloggingPrompt() }).isEqualTo(
+            listOf(
+                prompt1,
+                prompt2,
+                prompt3
+            )
+        )
     }
-
 
     @Test
     fun `clear removes all prompts`(): Unit = runBlocking {
         // when
-        val prompt1 = generateBloggingPrompt().copy(id = 1, date = BloggingPromptsUtils.stringToDate("2022-05-01"))
+        val prompt1 = generateBloggingPrompt().copy(
+            id = 1,
+            date = BloggingPromptsUtils.stringToDate("2022-05-01")
+        )
             .toBloggingPrompt()
-        val prompt2 = generateBloggingPrompt().copy(id = 2, date = BloggingPromptsUtils.stringToDate("2015-04-20"))
+        val prompt2 = generateBloggingPrompt().copy(
+            id = 2,
+            date = BloggingPromptsUtils.stringToDate("2015-04-20")
+        )
             .toBloggingPrompt()
-        val prompt3 = generateBloggingPrompt().copy(id = 3, date = BloggingPromptsUtils.stringToDate("2015-03-20"))
+        val prompt3 = generateBloggingPrompt().copy(
+            id = 3,
+            date = BloggingPromptsUtils.stringToDate("2015-03-20")
+        )
             .toBloggingPrompt()
 
         promptsDao.insertForSite(localSideId, listOf(prompt1, prompt2, prompt3))
