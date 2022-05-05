@@ -87,10 +87,11 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     override fun onLayoutTapped(layoutSlug: String) {
-        // TODO: open preview instead of updating uistate to make buttons and border visible
-        // The parent class function super.onPreviewTapped() does not accept a slug, so we if we use this here, we first
-        // need to set the selectedLayoutSlug in the uistate
-        super.onLayoutTapped(layoutSlug)
+        (uiState.value as? Content)?.let {
+            updateUiState(it.copy(selectedLayoutSlug = layoutSlug))
+            onPreviewTapped()
+            loadLayouts()
+        }
     }
 
     override fun onPreviewChooseTapped() {
