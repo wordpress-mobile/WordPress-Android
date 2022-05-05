@@ -25,8 +25,6 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEX
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.DASHBOARD
-import org.wordpress.android.ui.mysite.tabs.MySiteTabType.SITE_MENU
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -92,8 +90,8 @@ class QuickStartRepository
     val onQuickStartTabStep = _onQuickStartTabStep as LiveData<QuickStartTabStep?>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
-    var currentTab = if (isMySiteTabsEnabled) DASHBOARD else MySiteTabType.ALL
-    var quickStartTaskOriginTab = if (isMySiteTabsEnabled) DASHBOARD else MySiteTabType.ALL
+    var currentTab = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
+    var quickStartTaskOriginTab = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
 
     private var pendingTask: QuickStartTask? = null
 
@@ -147,8 +145,8 @@ class QuickStartRepository
         clearPendingTask()
         clearTabStep()
         when {
-            isSiteMenuStepRequiredForTask(task) -> requestTabStepForTask(task, SITE_MENU)
-            isHomeStepRequiredForTask(task) -> requestTabStepForTask(task, DASHBOARD)
+            isSiteMenuStepRequiredForTask(task) -> requestTabStepForTask(task, MySiteTabType.SITE_MENU)
+            isHomeStepRequiredForTask(task) -> requestTabStepForTask(task, MySiteTabType.DASHBOARD)
             task == QuickStartTask.UPDATE_SITE_TITLE -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                         R.string.quick_start_dialog_update_site_title_message_short,
@@ -299,22 +297,22 @@ class QuickStartRepository
     }
 
     private fun isSiteMenuStepRequiredForTask(task: QuickStartTask) =
-            currentTab == DASHBOARD && task.isShownInSiteMenuTab()
+            currentTab == MySiteTabType.DASHBOARD && task.isShownInSiteMenuTab()
 
     private fun isHomeStepRequiredForTask(task: QuickStartTask) =
-            quickStartTaskOriginTab == DASHBOARD && currentTab == SITE_MENU && task.isShownInHomeTab()
+            quickStartTaskOriginTab == MySiteTabType.DASHBOARD && currentTab == MySiteTabType.SITE_MENU && task.isShownInHomeTab()
 
     // the quick start focus point shown in case of when the default tab is site menu or dashboard varies
     // this function checks whether the passed tasks is shown in site menu
     private fun QuickStartTask.isShownInSiteMenuTab() =
             when (quickStartTaskOriginTab) {
-                DASHBOARD ->
+                MySiteTabType.DASHBOARD ->
                     when (this) {
                         QuickStartTask.ENABLE_POST_SHARING,
                         QuickStartTask.EXPLORE_PLANS -> true
                         else -> false
                     }
-                SITE_MENU ->
+                MySiteTabType.SITE_MENU ->
                     when (this) {
                         QuickStartTask.CHECK_STATS,
                         QuickStartTask.REVIEW_PAGES,
