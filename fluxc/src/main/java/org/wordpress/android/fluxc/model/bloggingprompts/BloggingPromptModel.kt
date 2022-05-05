@@ -11,5 +11,5 @@ data class BloggingPromptModel(
     val isAnswered: Boolean,
     val attribution: String,
     val respondentsCount: Int,
-    val respondentsAvatars: List<String>
+    val respondentsAvatarUrls: List<String>
 )
