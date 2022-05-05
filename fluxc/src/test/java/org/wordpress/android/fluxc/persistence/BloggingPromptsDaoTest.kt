@@ -190,7 +190,7 @@ class BloggingPromptsDaoTest {
         assertThat(promptEntity.date).isEqualTo(prompt.date)
         assertThat(promptEntity.isAnswered).isEqualTo(prompt.isAnswered)
         assertThat(promptEntity.respondentsCount).isEqualTo(prompt.respondentsCount)
-        assertThat(promptEntity.respondentsAvatars).isEqualTo(prompt.respondentsAvatars)
+        assertThat(promptEntity.respondentsAvatars).isEqualTo(prompt.respondentsAvatarUrls)
     }
 
     @Test
