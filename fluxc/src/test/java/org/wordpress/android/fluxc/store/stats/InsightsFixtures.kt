@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActi
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PostingActivityRestClient.PostingActivityResponse.Streaks
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRestClient.PublicizeResponse.Service
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.SummaryRestClient.SummaryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse.TagsGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse.TagsGroup.TagResponse
@@ -58,12 +59,13 @@ const val TITLE = "title"
 const val URL = "URL"
 const val LIKE_COUNT = 5
 const val COMMENT_COUNT = 10
+const val FEATURED_IMAGE = ""
 val LATEST_POST = PostResponse(
         ID,
         TITLE,
         DATE,
         URL,
-        LIKE_COUNT, Discussion(COMMENT_COUNT)
+        LIKE_COUNT, Discussion(COMMENT_COUNT), FEATURED_IMAGE
 )
 
 val FIELDS = listOf("period", "views")
@@ -138,6 +140,7 @@ val TOP_COMMENTS_RESPONSE = CommentsResponse(
         listOf(AUTHOR),
         listOf(POST)
 )
+val SUMMARY_RESPONSE = SummaryResponse(LIKE_COUNT, COMMENT_COUNT, 100)
 val SERVICE_RESPONSE = Service("facebook", 100)
 val PUBLICIZE_RESPONSE = PublicizeResponse(listOf(SERVICE_RESPONSE))
 
