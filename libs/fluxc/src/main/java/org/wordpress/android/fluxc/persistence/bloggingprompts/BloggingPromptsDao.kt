@@ -60,7 +60,7 @@ abstract class BloggingPromptsDao {
             isAnswered = isAnswered,
             attribution = attribution,
             respondentsCount = respondentsCount,
-            respondentsAvatars = respondentsAvatars
+            respondentsAvatarUrls = respondentsAvatars
         )
 
         companion object {
@@ -77,7 +77,7 @@ abstract class BloggingPromptsDao {
                 isAnswered = prompt.isAnswered,
                 attribution = prompt.attribution,
                 respondentsCount = prompt.respondentsCount,
-                respondentsAvatars = prompt.respondentsAvatars
+                respondentsAvatars = prompt.respondentsAvatarUrls
             )
         }
     }
