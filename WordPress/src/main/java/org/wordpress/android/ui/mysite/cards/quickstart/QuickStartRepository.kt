@@ -300,7 +300,9 @@ class QuickStartRepository
             currentTab == MySiteTabType.DASHBOARD && task.isShownInSiteMenuTab()
 
     private fun isHomeStepRequiredForTask(task: QuickStartTask) =
-            quickStartTaskOriginTab == MySiteTabType.DASHBOARD && currentTab == MySiteTabType.SITE_MENU && task.isShownInHomeTab()
+            quickStartTaskOriginTab == MySiteTabType.DASHBOARD &&
+                    currentTab == MySiteTabType.SITE_MENU &&
+                    task.isShownInHomeTab()
 
     // the quick start focus point shown in case of when the default tab is site menu or dashboard varies
     // this function checks whether the passed tasks is shown in site menu
