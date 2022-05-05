@@ -12,7 +12,7 @@ class ContinuationWrapper<T> {
         block: (CancellableContinuation<T>) -> Unit
     ): T {
         if (continuation != null) {
-            throw IllegalStateException("The coroutine task is already in progress.")
+            cancel()
         }
         return suspendCancellableCoroutine<T> {
             continuation = it
