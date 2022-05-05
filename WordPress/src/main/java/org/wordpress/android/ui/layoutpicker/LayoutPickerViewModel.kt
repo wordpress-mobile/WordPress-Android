@@ -142,7 +142,7 @@ abstract class LayoutPickerViewModel(
         }
     }
 
-    private fun loadLayouts() {
+    fun loadLayouts() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
             val listItems = ArrayList<LayoutCategoryUiState>()
