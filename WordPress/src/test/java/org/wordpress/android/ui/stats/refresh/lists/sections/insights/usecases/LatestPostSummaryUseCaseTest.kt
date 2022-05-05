@@ -216,7 +216,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 viewsCount,
                 0,
                 0,
-                dayViews
+                dayViews,
+                ""
         )
     }
 }
