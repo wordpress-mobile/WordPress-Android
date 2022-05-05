@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs.accountsettings.module
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
@@ -17,21 +18,33 @@ import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSetting
 import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsUseCase
 import org.wordpress.android.ui.utils.ContinuationWrapper
 import org.wordpress.android.ui.utils.ContinuationWrapperWithConcurrency
-import org.wordpress.android.util.EventBusWrapper
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 class AccountSettingsModule {
+
     @Provides
     @Singleton
-    fun provideFetchAccountSettingsUseCase(
-        eventBusWrapper: EventBusWrapper,
+    fun provideContinuationWrapper(): ContinuationWrapper<OnAccountChanged> {
+        return ContinuationWrapper<OnAccountChanged>()
+    }
+
+    @Provides
+    @Singleton
+    fun provideContinuationWrapperWithConcurrency(): ContinuationWrapperWithConcurrency<OnAccountChanged> {
+        return ContinuationWrapperWithConcurrency<OnAccountChanged>()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFetchAccountSettingsInteractor(
+        dispatcher: Dispatcher,
         continuationWrapper: ContinuationWrapper<OnAccountChanged>,
         @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher
     ): FetchAccountSettingsInteractor {
         return FetchAccountSettingsUseCase(
-                eventBusWrapper,
+                dispatcher,
                 continuationWrapper,
                 ioDispatcher
         )
@@ -39,13 +52,13 @@ class AccountSettingsModule {
 
     @Provides
     @Singleton
-    fun providePushAccountSettingsUseCase(
-        eventBusWrapper: EventBusWrapper,
+    fun providePushAccountSettingsInteractor(
+        dispatcher: Dispatcher,
         continuationWrapper: ContinuationWrapperWithConcurrency<OnAccountChanged>,
         @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher
     ): PushAccountSettingsInteractor {
         return PushAccountSettingsUseCase(
-                eventBusWrapper,
+                dispatcher,
                 continuationWrapper,
                 ioDispatcher
         )
@@ -53,7 +66,7 @@ class AccountSettingsModule {
 
     @Provides
     @Singleton
-    fun provideGetSitesUseCase(
+    fun provideGetSitesInteractor(
         siteStore: SiteStore,
         @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher
     ): GetSitesInteractor {
@@ -65,7 +78,7 @@ class AccountSettingsModule {
 
     @Provides
     @Singleton
-    fun provideGetAccountsUseCase(
+    fun provideGetAccountInteractor(
         accountStore: AccountStore
     ): GetAccountInteractor {
         return GetAccountUseCase(
