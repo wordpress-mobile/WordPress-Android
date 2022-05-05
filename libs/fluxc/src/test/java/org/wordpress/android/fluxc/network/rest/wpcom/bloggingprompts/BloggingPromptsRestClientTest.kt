@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPr
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptsListResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsRestClient.BloggingPromptsRespondentAvatar
-import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsPayload
 import org.wordpress.android.fluxc.test
 import java.util.Date
 
