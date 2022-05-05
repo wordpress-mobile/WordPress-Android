@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.login.di.LoginFragmentModule;
 import org.wordpress.android.login.di.LoginServiceModule;
+import org.wordpress.android.ui.prefs.accountsettings.module.AccountSettingsModule;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
 import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 
@@ -39,7 +40,8 @@ import dagger.android.support.AndroidSupportInjectionModule;
         LoginServiceModule.class,
         SupportModule.class,
         ThreadModule.class,
-        CrashLoggingModule.class
+        CrashLoggingModule.class,
+        AccountSettingsModule.class
 })
 public interface AppComponentDebug extends AppComponent {
     @Component.Builder
@@ -49,3 +51,5 @@ public interface AppComponentDebug extends AppComponent {
         AppComponentDebug.Builder application(Application application);
     }
 }
+
+
