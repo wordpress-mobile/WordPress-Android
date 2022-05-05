@@ -5,6 +5,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
@@ -16,7 +17,8 @@ import org.wordpress.android.R
 class LayoutsItemViewHolder(
     parent: ViewGroup,
     private val prefetchItemCount: Int = 4,
-    private var nestedScrollStates: Bundle
+    private var nestedScrollStates: Bundle,
+    private val thumbDimensionProvider: ThumbDimensionProvider
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(
                 parent.context
@@ -26,6 +28,9 @@ class LayoutsItemViewHolder(
     private var currentItem: LayoutCategoryUiState? = null
 
     private val recycler: RecyclerView by lazy {
+        itemView.updateLayoutParams {
+            height = thumbDimensionProvider.rowHeight
+        }
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
             layoutManager = LinearLayoutManager(
                     context,
@@ -33,7 +38,7 @@ class LayoutsItemViewHolder(
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
             setRecycledViewPool(RecyclerView.RecycledViewPool())
-            adapter = LayoutsAdapter(parent.context)
+            adapter = LayoutsAdapter(parent.context, thumbDimensionProvider)
 
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

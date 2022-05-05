@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +38,7 @@ class HomePagePickerFragment : Fragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
     private lateinit var viewModel: HomePagePickerViewModel
 
     override fun onAttach(context: Context) {
@@ -62,7 +64,7 @@ class HomePagePickerFragment : Fragment() {
             categoriesRecyclerView.isGone = true
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
-                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates)
+                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates, thumbDimensionProvider)
             }
 
             setupUi()
@@ -79,6 +81,10 @@ class HomePagePickerFragment : Fragment() {
                 setText(R.string.hpp_title)
             }
             modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
+        }
+        modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
+            height = thumbDimensionProvider.previewHeight
+            width = thumbDimensionProvider.previewWidth
         }
     }
 
