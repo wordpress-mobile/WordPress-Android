@@ -65,6 +65,7 @@ abstract class LayoutPickerViewModel(
 
     abstract val useCachedData: Boolean
     abstract val shouldUseMobileThumbnail: Boolean
+    open val shouldHideSelectedOverlay = false
 
     var nestedScrollStates: Bundle = Bundle()
 
@@ -168,6 +169,7 @@ abstract class LayoutPickerViewModel(
                             preview = preview,
                             mShotPreview = thumbnailPreview,
                             selected = layout.slug == state.selectedLayoutSlug,
+                            shouldHideSelectedOverlay = shouldHideSelectedOverlay,
                             onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
                             onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
                     )

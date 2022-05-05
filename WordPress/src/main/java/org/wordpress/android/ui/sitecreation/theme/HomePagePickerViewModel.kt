@@ -42,6 +42,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     override val useCachedData: Boolean = false
     override val shouldUseMobileThumbnail = true
+    override val shouldHideSelectedOverlay = true
 
     sealed class DesignSelectionAction(val template: String) {
         object Skip : DesignSelectionAction(defaultTemplateSlug)
