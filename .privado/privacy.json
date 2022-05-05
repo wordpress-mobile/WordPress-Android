@@ -3500,14 +3500,7 @@
       }
     },
     {
-      "category": {
-        "sector": "Information Technology",
-        "industryGroup": "Software & Services",
-        "industry": "Internet Software & Services",
-        "subIndustry": "Internet Software & Services",
-        "sicCode": "48",
-        "naicsCode": "54"
-      },
+      "category": "Information Technology",
       "element": "URL Pattern Discovery",
       "ruleId": "TP000012",
       "confidence": "high",
@@ -3631,17 +3624,11 @@
       "vendorCategory": [
         "Others"
       ],
-      "companyLocation": "California , United States"
+      "companyLocation": "California , United States",
+      "markedAs": "false positive"
     },
     {
-      "category": {
-        "sector": "Consumer Discretionary",
-        "industryGroup": "Consumer Durables & Apparel",
-        "industry": "Household Durables",
-        "subIndustry": "Consumer Electronics",
-        "sicCode": "35",
-        "naicsCode": "33"
-      },
+      "category": "Consumer Discretionary",
       "element": "URL Pattern Discovery",
       "ruleId": "TP000012",
       "confidence": "high",
@@ -3772,17 +3759,11 @@
       "vendorCategory": [
         "Others"
       ],
-      "companyLocation": "California , United States"
+      "companyLocation": "California , United States",
+      "markedAs": "false positive"
     },
     {
-      "category": {
-        "sector": "Information Technology",
-        "industryGroup": "Software & Services",
-        "industry": "Internet Software & Services",
-        "subIndustry": "Internet",
-        "sicCode": "73",
-        "naicsCode": "51"
-      },
+      "category": "Information Technology",
       "element": "URL Pattern Discovery",
       "ruleId": "TP000012",
       "confidence": "high",
@@ -3844,7 +3825,8 @@
       "vendorCategory": [
         "Others"
       ],
-      "companyLocation": "California , United States"
+      "companyLocation": "California , United States",
+      "markedAs": "false positive"
     },
     {
       "category": {
@@ -3965,14 +3947,7 @@
       "companyLocation": "Florida , United States"
     },
     {
-      "category": {
-        "sector": "Information Technology",
-        "industryGroup": "Software & Services",
-        "industry": "Internet Software & Services",
-        "subIndustry": "Internet Software & Services",
-        "sicCode": "73",
-        "naicsCode": "54"
-      },
+      "category": "Information Technology",
       "element": "URL Pattern Discovery",
       "ruleId": "TP000012",
       "confidence": "high",
@@ -4025,7 +4000,8 @@
         "B2C",
         "SAAS",
         "B2B"
-      ]
+      ],
+      "markedAs": "false positive"
     },
     {
       "category": {
@@ -4484,14 +4460,7 @@
       "sdkName": "Firebase Remote Config"
     },
     {
-      "category": {
-        "sector": "Information Technology",
-        "industryGroup": "Software & Services",
-        "industry": "Internet Software & Services",
-        "subindustry": "Internet",
-        "sicCode": "73",
-        "naicsCode": "54"
-      },
+      "category": "Information Technology",
       "element": "Google Cloud",
       "ruleId": "TP000002",
       "confidence": "high",
@@ -4674,17 +4643,11 @@
         "lat": 37.422388,
         "lng": -122.0841883
       },
-      "companyLocation": "California , United States"
+      "companyLocation": "California , United States",
+      "markedAs": "false positive"
     },
     {
-      "category": {
-        "sector": "Information Technology",
-        "industryGroup": "Software & Services",
-        "industry": "Internet Software & Services",
-        "subindustry": "Internet",
-        "sicCode": "59",
-        "naicsCode": "45"
-      },
+      "category": "Information Technology",
       "element": "S3",
       "ruleId": "TP000004",
       "confidence": "high",
@@ -4745,7 +4708,8 @@
         "lat": 47.6163685,
         "lng": -122.3397259
       },
-      "companyLocation": "Washington , United States"
+      "companyLocation": "Washington , United States",
+      "markedAs": "false positive"
     },
     {
       "category": {
@@ -4889,14 +4853,7 @@
       "sdkName": "Facebook SDK: App Events & Analytics"
     },
     {
-      "category": {
-        "sector": "Information Technology",
-        "industryGroup": "Software & Services",
-        "industry": "Internet Software & Services",
-        "subindustry": "Internet",
-        "sicCode": "59",
-        "naicsCode": "45"
-      },
+      "category": "Information Technology",
       "element": "AWS",
       "ruleId": "TP000001",
       "confidence": "high",
@@ -5017,7 +4974,8 @@
         "lat": 47.6163685,
         "lng": -122.3397259
       },
-      "companyLocation": "Washington , United States"
+      "companyLocation": "Washington , United States",
+      "markedAs": "false positive"
     }
   ],
   "interestsubjectList": [
@@ -7854,5 +7812,5 @@
     }
   ],
   "created": "2022-05-05 18:41:41.220691",
-  "updated": "2022-05-05 19:04:46.339155"
+  "updated": "2022-05-05 19:07:27.302817"
 }
