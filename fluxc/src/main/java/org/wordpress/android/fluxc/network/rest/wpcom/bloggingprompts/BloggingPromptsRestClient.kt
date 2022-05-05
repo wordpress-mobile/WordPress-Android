@@ -4,6 +4,7 @@ import android.content.Context
 import com.android.volley.RequestQueue
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -15,8 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsError
-import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsPayload
+import org.wordpress.android.fluxc.store.Store.OnChangedError
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -79,7 +79,7 @@ class BloggingPromptsRestClient @Inject constructor(
             isAnswered = isAnswered,
             attribution = attribution,
             respondentsCount = respondentsCount,
-            respondentsAvatars = respondentsAvatars.map { it.avatarUrl }
+            respondentsAvatarUrls = respondentsAvatars.map { it.avatarUrl }
         )
     }
 
@@ -87,6 +87,19 @@ class BloggingPromptsRestClient @Inject constructor(
         @SerializedName("avatar") val avatarUrl: String
     )
 }
+
+data class BloggingPromptsPayload<T>(
+    val response: T? = null
+) : Payload<BloggingPromptsError>() {
+    constructor(error: BloggingPromptsError) : this() {
+        this.error = error
+    }
+}
+
+class BloggingPromptsError(
+    val type: BloggingPromptsErrorType,
+    val message: String? = null
+) : OnChangedError
 
 enum class BloggingPromptsErrorType {
     GENERIC_ERROR,
