@@ -65,6 +65,7 @@ abstract class LayoutPickerViewModel(
 
     abstract val useCachedData: Boolean
     abstract val shouldUseMobileThumbnail: Boolean
+    open val thumbnailTapOpensPreview = false
 
     var nestedScrollStates: Bundle = Bundle()
 
@@ -142,7 +143,7 @@ abstract class LayoutPickerViewModel(
         }
     }
 
-    private fun loadLayouts() {
+    fun loadLayouts() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
             val listItems = ArrayList<LayoutCategoryUiState>()
@@ -168,6 +169,7 @@ abstract class LayoutPickerViewModel(
                             preview = preview,
                             mShotPreview = thumbnailPreview,
                             selected = layout.slug == state.selectedLayoutSlug,
+                            tapOpensPreview = thumbnailTapOpensPreview,
                             onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
                             onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
                     )

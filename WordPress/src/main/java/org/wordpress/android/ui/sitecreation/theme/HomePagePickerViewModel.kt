@@ -42,6 +42,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     override val useCachedData: Boolean = false
     override val shouldUseMobileThumbnail = true
+    override val thumbnailTapOpensPreview = true
 
     sealed class DesignSelectionAction(val template: String) {
         object Skip : DesignSelectionAction(defaultTemplateSlug)
@@ -87,10 +88,13 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     override fun onLayoutTapped(layoutSlug: String) {
-        // TODO: open preview instead of updating uistate to make buttons and border visible
-        // The parent class function super.onPreviewTapped() does not accept a slug, so we if we use this here, we first
-        // need to set the selectedLayoutSlug in the uistate
-        super.onLayoutTapped(layoutSlug)
+        (uiState.value as? Content)?.let {
+            if (it.loadedThumbnailSlugs.contains(layoutSlug)) {
+                updateUiState(it.copy(selectedLayoutSlug = layoutSlug))
+                onPreviewTapped()
+                loadLayouts()
+            }
+        }
     }
 
     override fun onPreviewChooseTapped() {

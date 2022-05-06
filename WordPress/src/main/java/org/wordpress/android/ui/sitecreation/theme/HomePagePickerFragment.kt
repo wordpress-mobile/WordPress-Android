@@ -113,6 +113,10 @@ class HomePagePickerFragment : Fragment() {
                     }
                     is Dismiss -> {
                         (fm.findFragmentByTag(DESIGN_PREVIEW_TAG) as? DesignPreviewFragment)?.dismiss()
+                        (viewModel.uiState.value as? LayoutPickerUiState.Content)?.let {
+                            viewModel.updateUiState(it.copy(selectedLayoutSlug = null))
+                            viewModel.loadLayouts()
+                        }
                     }
                 }
             }
