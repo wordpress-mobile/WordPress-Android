@@ -16,7 +16,7 @@ class QuickStartStore @Inject constructor(
     private val quickStartSqlUtils: QuickStartSqlUtils,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
-    enum class QuickStartTask constructor(
+    enum class QuickStartNewSiteTask constructor(
         private val string: String,
         val taskType: QuickStartTaskType,
         val order: Int
@@ -39,8 +39,8 @@ class QuickStartStore @Inject constructor(
         }
 
         companion object {
-            fun fromString(string: String?): QuickStartTask {
-                for (value in QuickStartTask.values()) {
+            fun fromString(string: String?): QuickStartNewSiteTask {
+                for (value in QuickStartNewSiteTask.values()) {
                     if (string.equals(value.toString(), true)) {
                         return value
                     }
@@ -49,8 +49,8 @@ class QuickStartStore @Inject constructor(
                 return UNKNOWN
             }
 
-            fun getTasksByType(taskType: QuickStartTaskType): List<QuickStartTask> {
-                return QuickStartTask.values().filter { it.taskType == taskType }
+            fun getTasksByType(taskType: QuickStartTaskType): List<QuickStartNewSiteTask> {
+                return QuickStartNewSiteTask.values().filter { it.taskType == taskType }
             }
         }
     }
@@ -94,24 +94,24 @@ class QuickStartStore @Inject constructor(
         return quickStartSqlUtils.getShownCount(siteId)
     }
 
-    fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
+    fun hasDoneTask(siteId: Long, task: QuickStartNewSiteTask): Boolean {
         return quickStartSqlUtils.hasDoneTask(siteId, task)
     }
 
-    fun hasShownTask(siteId: Long, task: QuickStartTask): Boolean {
+    fun hasShownTask(siteId: Long, task: QuickStartNewSiteTask): Boolean {
         return quickStartSqlUtils.hasShownTask(siteId, task)
     }
 
-    fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
+    fun setDoneTask(siteId: Long, task: QuickStartNewSiteTask, isDone: Boolean) {
         quickStartSqlUtils.setDoneTask(siteId, task, isDone)
     }
 
-    fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
+    fun setShownTask(siteId: Long, task: QuickStartNewSiteTask, isShown: Boolean) {
         quickStartSqlUtils.setShownTask(siteId, task, isShown)
     }
 
-    fun getCompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType)
+    fun getCompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartNewSiteTask> {
+        return QuickStartNewSiteTask.getTasksByType(taskType)
             .filter { quickStartSqlUtils.hasDoneTask(siteId, it) }
             .sortedBy { it.order }
     }
@@ -119,20 +119,20 @@ class QuickStartStore @Inject constructor(
     fun getUncompletedTasksByType(
         siteId: Long,
         taskType: QuickStartTaskType
-    ): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType)
+    ): List<QuickStartNewSiteTask> {
+        return QuickStartNewSiteTask.getTasksByType(taskType)
             .filter { !quickStartSqlUtils.hasDoneTask(siteId, it) }
             .sortedBy { it.order }
     }
 
-    fun getShownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType)
+    fun getShownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartNewSiteTask> {
+        return QuickStartNewSiteTask.getTasksByType(taskType)
             .filter { quickStartSqlUtils.hasShownTask(siteId, it) }
             .sortedBy { it.order }
     }
 
-    fun getUnshownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType)
+    fun getUnshownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartNewSiteTask> {
+        return QuickStartNewSiteTask.getTasksByType(taskType)
             .filter { !quickStartSqlUtils.hasShownTask(siteId, it) }
             .sortedBy { it.order }
     }
