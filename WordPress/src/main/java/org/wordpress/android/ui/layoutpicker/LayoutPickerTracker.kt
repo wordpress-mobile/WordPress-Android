@@ -3,6 +3,7 @@ package org.wordpress.android.ui.layoutpicker
 interface LayoutPickerTracker {
     fun trackPreviewModeChanged(mode: String)
 
+    // NOOP implementation provided to make override optional in subclasses
     fun trackThumbnailModeTapped(mode: String) {
     }
 
