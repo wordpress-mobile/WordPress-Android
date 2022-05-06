@@ -3,8 +3,10 @@ package org.wordpress.android.ui.layoutpicker
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +20,7 @@ import org.wordpress.android.util.extensions.setVisible
 class LayoutsItemViewHolder(
     parent: ViewGroup,
     private val prefetchItemCount: Int = 4,
+    private val showRowDividers: Boolean,
     private var nestedScrollStates: Bundle,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val recommendedDimensionProvider: ThumbDimensionProvider?
@@ -35,6 +38,7 @@ class LayoutsItemViewHolder(
         itemView.updateLayoutParams {
             height = if (isRecommended) recommendedDimensionProvider!!.rowHeight else thumbDimensionProvider.rowHeight
         }
+        itemView.findViewById<View>(R.id.layouts_row_separator_line).isVisible = showRowDividers
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
             layoutManager = LinearLayoutManager(
                     context,
