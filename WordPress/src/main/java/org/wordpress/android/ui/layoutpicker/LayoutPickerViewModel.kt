@@ -179,7 +179,8 @@ abstract class LayoutPickerViewModel(
                                 category.slug,
                                 category.title,
                                 category.description,
-                                layouts
+                                layouts,
+                                category.isRecommended
                         )
                 )
             }

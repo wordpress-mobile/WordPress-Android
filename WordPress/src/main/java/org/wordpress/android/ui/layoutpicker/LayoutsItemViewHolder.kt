@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import org.wordpress.android.R
+import org.wordpress.android.util.extensions.setVisible
 
 /**
  * Modal Layout Picker layouts view holder
@@ -18,18 +19,21 @@ class LayoutsItemViewHolder(
     parent: ViewGroup,
     private val prefetchItemCount: Int = 4,
     private var nestedScrollStates: Bundle,
-    private val thumbDimensionProvider: ThumbDimensionProvider
+    private val thumbDimensionProvider: ThumbDimensionProvider,
+    private val recommendedDimensionProvider: ThumbDimensionProvider?
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(
                 parent.context
         ).inflate(R.layout.modal_layout_picker_layouts_row, parent, false)
 ) {
     private val title: TextView = itemView.findViewById(R.id.title)
+    private val subtitle: TextView = itemView.findViewById(R.id.subtitle)
     private var currentItem: LayoutCategoryUiState? = null
 
     private val recycler: RecyclerView by lazy {
+        val isRecommended = currentItem?.isRecommended == true && recommendedDimensionProvider != null
         itemView.updateLayoutParams {
-            height = thumbDimensionProvider.rowHeight
+            height = if (isRecommended) recommendedDimensionProvider!!.rowHeight else thumbDimensionProvider.rowHeight
         }
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
             layoutManager = LinearLayoutManager(
@@ -38,7 +42,10 @@ class LayoutsItemViewHolder(
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
             setRecycledViewPool(RecyclerView.RecycledViewPool())
-            adapter = LayoutsAdapter(parent.context, thumbDimensionProvider)
+            adapter = LayoutsAdapter(
+                    parent.context,
+                    if (isRecommended) recommendedDimensionProvider!! else thumbDimensionProvider
+            )
 
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -54,6 +61,7 @@ class LayoutsItemViewHolder(
         currentItem = category
 
         title.text = category.description
+        subtitle.setVisible(category.isRecommended)
         (recycler.adapter as LayoutsAdapter).setData(category.layouts)
         restoreScrollState(recycler, category.title)
     }

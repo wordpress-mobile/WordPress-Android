@@ -8,6 +8,11 @@
     <View style="@style/ModalLayoutPickerLayoutsSeparatorLine" />
 
     <TextView
+        android:id="@+id/subtitle"
+        style="@style/ModalLayoutPickerLayoutsSubtitle"
+        android:layout_marginStart="@dimen/mlp_layout_card_margin_start"
+        android:text="@string/hpp_recommended_subtitle" />
+    <TextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerLayoutsTitle"
         android:layout_marginStart="@dimen/mlp_layout_card_margin_start"

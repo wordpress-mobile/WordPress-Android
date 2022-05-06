@@ -81,7 +81,11 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(Error())
                 } else {
-                    handleResponse(event.designs.toLayoutModels(), event.categories.toLayoutCategories())
+                    // TODO: This is just to demonstrate the UI. The real are pending to be linked
+                    val recommended = event.categories.filter { it.slug == "blog" }.apply {  }.toLayoutCategories(true)
+
+                    val categories = event.categories.toLayoutCategories()
+                    handleResponse(event.designs.toLayoutModels(), recommended + categories)
                 }
             }
         }

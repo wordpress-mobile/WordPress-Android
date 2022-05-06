@@ -39,6 +39,7 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
+    @Inject lateinit var recommendedDimensionProvider: SiteDesignRecommendedDimensionProvider
     private lateinit var viewModel: HomePagePickerViewModel
 
     override fun onAttach(context: Context) {
@@ -64,7 +65,11 @@ class HomePagePickerFragment : Fragment() {
             categoriesRecyclerView.isGone = true
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
-                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates, thumbDimensionProvider)
+                adapter = LayoutCategoryAdapter(
+                        viewModel.nestedScrollStates,
+                        thumbDimensionProvider,
+                        recommendedDimensionProvider
+                )
             }
 
             setupUi()

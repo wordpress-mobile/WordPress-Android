@@ -1553,6 +1553,14 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
         <item name="fontFamily">serif</item>
     </style>
+    <style name="ModalLayoutPickerLayoutsSubtitle" parent="ModalLayoutPickerText">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="fontFamily">serif</item>
+    </style>
 
     <style name="ModalLayoutPickerLayoutsSeparatorLine">
         <item name="android:background">?attr/mlpDividerColor</item>
