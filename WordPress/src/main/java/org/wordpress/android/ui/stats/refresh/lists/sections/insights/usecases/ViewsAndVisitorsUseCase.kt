@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITO
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewViewsAndVisitorsDetail
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
@@ -214,7 +214,12 @@ class ViewsAndVisitorsUseCase
 
     private fun onViewMoreClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED)
-        navigateTo(ViewTagsAndCategoriesStats) // TODO: Connect this to proper second level navigation later
+        navigateTo(
+                ViewViewsAndVisitorsDetail(
+                        statsGranularity,
+                        selectedDateProvider.getSelectedDate(statsGranularity)
+                )
+        ) // TODO: Connect this to proper second level navigation later
     }
 
     private fun onBarSelected(period: String?) {

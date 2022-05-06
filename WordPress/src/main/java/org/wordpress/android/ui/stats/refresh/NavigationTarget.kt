@@ -42,4 +42,9 @@ sealed class NavigationTarget {
         val postUrl: String,
         val postType: String = StatsConstants.ITEM_TYPE_ATTACHMENT
     ) : NavigationTarget()
+
+    data class ViewViewsAndVisitorsDetail(
+        val statsGranularity: StatsGranularity,
+        val selectedDate: Date?
+    ) : NavigationTarget()
 }

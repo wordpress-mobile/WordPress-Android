@@ -103,6 +103,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
@@ -1490,6 +1491,13 @@ public class ActivityLauncher {
         StatsDetailActivity.Companion
                 .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
                         post.getLink());
+    }
+
+    public static void viewInsightsDetail(Context context, SiteModel site) {
+        if (site == null) {
+            return;
+        }
+        StatsDetailActivity.startForInsightsDetail(context, site);
     }
 
     public static void viewMediaPickerForResult(Activity activity,
