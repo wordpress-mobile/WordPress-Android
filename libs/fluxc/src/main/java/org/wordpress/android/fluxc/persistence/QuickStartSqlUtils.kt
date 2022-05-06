@@ -56,6 +56,7 @@ class QuickStartSqlUtils
                 .where().beginGroup()
                 .equals(QuickStartTaskModelTable.SITE_ID, siteId)
                 .equals(QuickStartTaskModelTable.TASK_NAME, task.toString())
+                .equals(QuickStartTaskModelTable.TASK_TYPE, task.taskType.toString())
                 .endGroup().endWhere()
                 .asModel.firstOrNull()
     }
