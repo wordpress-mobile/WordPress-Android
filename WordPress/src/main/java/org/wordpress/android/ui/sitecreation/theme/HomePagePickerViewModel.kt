@@ -18,6 +18,7 @@ import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,7 +33,8 @@ class HomePagePickerViewModel @Inject constructor(
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher,
+    private val resourceProvider: ResourceProvider
 ) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils, analyticsTracker) {
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
@@ -81,8 +83,15 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(Error())
                 } else {
-                    // TODO: This is just to demonstrate the UI. The real are pending to be linked
-                    val recommended = event.categories.filter { it.slug == "blog" }.toLayoutCategories(true)
+                    // TODO: This is just to demonstrate the UI. The real data are pending to be linked
+                    val dummySelectedVertical = "food"
+                    val recommendedVertical = resourceProvider.getString(
+                            R.string.hpp_recommended_title,
+                            dummySelectedVertical
+                    )
+                    val recommendedCategory = event.categories.first { it.slug == "blog" }
+                            .copy(title = recommendedVertical, description = recommendedVertical)
+                    val recommended = listOf(recommendedCategory).toLayoutCategories(true)
 
                     val categories = event.categories.toLayoutCategories()
                     handleResponse(event.designs.toLayoutModels(), recommended + categories)

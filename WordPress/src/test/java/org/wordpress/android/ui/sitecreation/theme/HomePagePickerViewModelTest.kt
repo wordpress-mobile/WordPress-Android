@@ -33,6 +33,7 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val mockedDesignSlug = "mockedDesignSlug"
 private const val mockedDesignSegmentId = 1L
@@ -52,6 +53,7 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
     @Mock lateinit var previewModeObserver: Observer<PreviewMode>
     @Mock lateinit var analyticsTracker: SiteCreationTracker
+    @Mock lateinit var resourceProvider: ResourceProvider
 
     private lateinit var viewModel: HomePagePickerViewModel
 
@@ -70,7 +72,8 @@ class HomePagePickerViewModelTest {
                 fetchHomePageLayoutsUseCase,
                 analyticsTracker,
                 NoDelayCoroutineDispatcher(),
-                NoDelayCoroutineDispatcher()
+                NoDelayCoroutineDispatcher(),
+                resourceProvider
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
