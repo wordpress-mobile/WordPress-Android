@@ -15,8 +15,8 @@ gradleEnterprise {
 
         // Obfuscate personal data
         obfuscation {
-            username { username -> username.digest('SHA-1') }
-            hostname { _ -> "" }
+            username { username -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_USERNAME") ?: username }
+            hostname { hostname -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_HOSTNAME") ?: hostname }
             ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
         }
     }
