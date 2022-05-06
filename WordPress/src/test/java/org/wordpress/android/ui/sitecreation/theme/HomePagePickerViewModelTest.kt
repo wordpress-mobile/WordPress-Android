@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -13,6 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
+import org.mockito.ArgumentMatchers.isA
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
@@ -142,42 +144,21 @@ class HomePagePickerViewModelTest {
     }
 
     @Test
-    fun `when the user taps on a layout the layout is selected if the thumbnail has loaded`() = mockResponse {
+    fun `when the user taps on a layout the preview flow is triggered`() = mockResponse {
         viewModel.start()
         viewModel.onThumbnailReady(mockedDesignSlug)
         viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug)
-                .isEqualTo(mockedDesignSlug)
+        val captor = ArgumentCaptor.forClass(DesignPreviewAction::class.java)
+        verify(onPreviewActionObserver).onChanged(captor.capture())
+        assertThat(requireNotNull(captor.value as Show).template).isEqualTo(mockedDesignSlug)
+        assertThat(requireNotNull(captor.value as Show).demoUrl).isEqualTo(mockedDesignDemoUrl)
     }
 
     @Test
-    fun `when the user taps on a layout the layout is not selected if the thumbnail has not loaded`() = mockResponse {
+    fun `when the user taps on a thumbnail that has not loaded, the preview flow is not triggered`() = mockResponse {
         viewModel.start()
         viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug).isNull()
-    }
-
-    @Test
-    fun `when the user taps on a selected layout the layout is deselected`() = mockResponse {
-        viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug).isNull()
-    }
-
-    @Test
-    fun `when the picker starts the toolbar is hidden`() = mockResponse {
-        viewModel.start()
-        assertThat(viewModel.uiState.value?.isToolbarVisible).isEqualTo(false)
-    }
-
-    @Test
-    fun `when the user selects a design the toolbar is shown`() = mockResponse {
-        viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(viewModel.uiState.value?.isToolbarVisible).isEqualTo(true)
+        verify(onPreviewActionObserver, never()).onChanged(isA(Show::class.java))
     }
 
     @Test
@@ -187,29 +168,6 @@ class HomePagePickerViewModelTest {
         val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(defaultTemplateSlug)
-    }
-
-    @Test
-    fun `when the user chooses a design the design info is passed to the next step`() = mockResponse {
-        viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
-        viewModel.onChooseTapped()
-        val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
-        verify(onDesignActionObserver).onChanged(captor.capture())
-        assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
-    }
-
-    @Test
-    fun `when the user selects a design and presses preview the preview flow is triggered`() = mockResponse {
-        viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
-        viewModel.onPreviewTapped()
-        val captor = ArgumentCaptor.forClass(DesignPreviewAction::class.java)
-        verify(onPreviewActionObserver).onChanged(captor.capture())
-        assertThat(requireNotNull(captor.value as Show).template).isEqualTo(mockedDesignSlug)
-        assertThat(requireNotNull(captor.value as Show).demoUrl).isEqualTo(mockedDesignDemoUrl)
     }
 
     @Test
@@ -236,4 +194,32 @@ class HomePagePickerViewModelTest {
         verify(previewModeObserver, times(2)).onChanged(captor.capture())
         assertThat(requireNotNull(captor.value as PreviewMode)).isEqualTo(PreviewMode.DESKTOP)
     }
+
+    @Test
+    fun `when the user chooses a design the design info is passed to the next step`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug)
+        viewModel.onPreviewChooseTapped()
+        val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
+        verify(onDesignActionObserver).onChanged(captor.capture())
+        assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
+    }
+
+    /*
+
+    It would be nice to also include a test like the following, but this behavior currently exists outside the SUT,
+    in the preview fragment.
+
+    @Test
+    fun `when the user dismisses the preview, the theme is deselected`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug)
+        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug)
+                .isEqualTo(mockedDesignSlug)
+        viewModel.onDismissPreview()
+        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug).isNull()
+    }
+    */
 }

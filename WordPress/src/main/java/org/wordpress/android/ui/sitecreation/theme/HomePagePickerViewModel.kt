@@ -89,9 +89,11 @@ class HomePagePickerViewModel @Inject constructor(
 
     override fun onLayoutTapped(layoutSlug: String) {
         (uiState.value as? Content)?.let {
-            updateUiState(it.copy(selectedLayoutSlug = layoutSlug))
-            onPreviewTapped()
-            loadLayouts()
+            if (it.loadedThumbnailSlugs.contains(layoutSlug)) {
+                updateUiState(it.copy(selectedLayoutSlug = layoutSlug))
+                onPreviewTapped()
+                loadLayouts()
+            }
         }
     }
 
