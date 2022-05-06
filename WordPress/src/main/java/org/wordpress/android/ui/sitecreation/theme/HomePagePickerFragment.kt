@@ -68,7 +68,8 @@ class HomePagePickerFragment : Fragment() {
                 adapter = LayoutCategoryAdapter(
                         viewModel.nestedScrollStates,
                         thumbDimensionProvider,
-                        recommendedDimensionProvider
+                        recommendedDimensionProvider,
+                        showRowDividers = false
                 )
             }
 
