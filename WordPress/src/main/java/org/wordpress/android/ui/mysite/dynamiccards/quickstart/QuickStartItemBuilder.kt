@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
@@ -65,6 +66,7 @@ class QuickStartItemBuilder
         return when (this) {
             CUSTOMIZE -> DynamicCardType.CUSTOMIZE_QUICK_START
             GROW -> DynamicCardType.GROW_QUICK_START
+            GET_TO_KNOW_APP -> DynamicCardType.GET_TO_KNOW_APP_QUICK_START
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }
@@ -78,6 +80,7 @@ class QuickStartItemBuilder
         return when (taskType) {
             CUSTOMIZE -> R.color.green_20
             GROW -> R.color.orange_40
+            GET_TO_KNOW_APP -> R.color.green_20
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }
@@ -86,6 +89,7 @@ class QuickStartItemBuilder
         return when (taskType) {
             CUSTOMIZE -> R.string.quick_start_sites_type_customize
             GROW -> R.string.quick_start_sites_type_grow
+            GET_TO_KNOW_APP -> R.string.quick_start_sites_type_get_to_know_app
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }

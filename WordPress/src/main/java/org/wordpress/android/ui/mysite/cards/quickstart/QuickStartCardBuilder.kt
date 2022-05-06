@@ -55,6 +55,7 @@ class QuickStartCardBuilder @Inject constructor() {
         return when (taskType) {
             QuickStartTaskType.CUSTOMIZE -> R.string.quick_start_sites_type_customize
             QuickStartTaskType.GROW -> R.string.quick_start_sites_type_grow
+            QuickStartTaskType.GET_TO_KNOW_APP -> R.string.quick_start_sites_type_get_to_know_app
             QuickStartTaskType.UNKNOWN -> throw IllegalArgumentException(UNEXPECTED_QUICK_START_TYPE)
         }
     }
