@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.V
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
@@ -96,6 +97,7 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
+        totalFollowersUseCase: TotalFollowersUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
         managementControlUseCase: ManagementControlUseCase,
         managementNewsCardUseCase: ManagementNewsCardUseCase
@@ -103,6 +105,9 @@ class StatsModule {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
+            useCases.add(totalFollowersUseCase)
+        } else {
+            useCases.add(followerTotalsUseCase)
         }
         useCases.addAll(
                 listOf(
@@ -115,7 +120,6 @@ class StatsModule {
                     tagsAndCategoriesUseCaseFactory.build(BLOCK),
                     publicizeUseCaseFactory.build(BLOCK),
                     postingActivityUseCase,
-                    followerTotalsUseCase,
                     annualSiteStatsUseCaseFactory.build(BLOCK),
                     managementControlUseCase,
                     managementNewsCardUseCase

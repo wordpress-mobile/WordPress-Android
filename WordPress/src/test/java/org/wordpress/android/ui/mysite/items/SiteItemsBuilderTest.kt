@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite.items
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -64,7 +65,7 @@ class SiteItemsBuilderTest {
                 addLookAndFeelHeader = true,
                 addConfigurationHeader = true,
                 addActivityLogItem = true,
-                addPlanItem = true,
+                addPlanItem = false,
                 addPagesItem = true,
                 addAdminItem = true,
                 addPeopleItem = true,
@@ -84,7 +85,6 @@ class SiteItemsBuilderTest {
         )
 
         assertThat(buildSiteItems).containsExactly(
-                PLAN_ITEM,
                 JETPACK_HEADER,
                 STATS_ITEM,
                 ACTIVITY_ITEM,
@@ -111,6 +111,7 @@ class SiteItemsBuilderTest {
 
     /* QUICK START - FOCUS POINT */
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `passes parameter to show focus point to plan item`() {
         val showPlansFocusPoint = true
