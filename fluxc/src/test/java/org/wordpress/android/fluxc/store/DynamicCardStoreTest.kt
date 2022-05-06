@@ -11,6 +11,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GET_TO_KNOW_APP_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.persistence.DynamicCardSqlUtils
 import org.wordpress.android.fluxc.test
@@ -21,6 +22,12 @@ class DynamicCardStoreTest {
     @Mock lateinit var dynamicCardSqlUtils: DynamicCardSqlUtils
     private lateinit var dynamicCardStore: DynamicCardStore
     private val siteId = 1
+    private val dynamicCardTypes = listOf(
+        CUSTOMIZE_QUICK_START,
+        GROW_QUICK_START,
+        GET_TO_KNOW_APP_QUICK_START
+    )
+
     @Before
     fun setUp() {
         dynamicCardStore = DynamicCardStore(
@@ -57,7 +64,7 @@ class DynamicCardStoreTest {
         val result = dynamicCardStore.getCards(siteId)
 
         assertThat(result.pinnedItem).isNull()
-        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
+        assertThat(result.dynamicCardTypes).isEqualTo(dynamicCardTypes)
     }
 
     @Test
@@ -68,7 +75,7 @@ class DynamicCardStoreTest {
         val result = dynamicCardStore.getCards(siteId)
 
         assertThat(result.pinnedItem).isNull()
-        assertThat(result.dynamicCardTypes).containsExactly(GROW_QUICK_START)
+        assertThat(result.dynamicCardTypes).doesNotContain(CUSTOMIZE_QUICK_START)
     }
 
     @Test
@@ -79,7 +86,7 @@ class DynamicCardStoreTest {
         val result = dynamicCardStore.getCards(siteId)
 
         assertThat(result.pinnedItem).isNull()
-        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START)
+        assertThat(result.dynamicCardTypes).doesNotContain(GROW_QUICK_START)
     }
 
     @Test
@@ -89,7 +96,7 @@ class DynamicCardStoreTest {
         val result = dynamicCardStore.getCards(siteId)
 
         assertThat(result.pinnedItem).isNull()
-        assertThat(result.dynamicCardTypes).containsExactly(GROW_QUICK_START)
+        assertThat(result.dynamicCardTypes).doesNotContain(CUSTOMIZE_QUICK_START)
     }
 
     @Test
@@ -99,12 +106,12 @@ class DynamicCardStoreTest {
         val result = dynamicCardStore.getCards(siteId)
 
         assertThat(result.pinnedItem).isNull()
-        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START)
+        assertThat(result.dynamicCardTypes).doesNotContain(GROW_QUICK_START)
     }
 
     @Test
     fun `does not return any cards when all are removed`() = test {
-        initDatabase(removedCards = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START))
+        initDatabase(removedCards = dynamicCardTypes)
 
         val result = dynamicCardStore.getCards(siteId)
 
@@ -119,7 +126,8 @@ class DynamicCardStoreTest {
         val result = dynamicCardStore.getCards(siteId)
 
         assertThat(result.pinnedItem).isEqualTo(GROW_QUICK_START)
-        assertThat(result.dynamicCardTypes).containsExactly(GROW_QUICK_START, CUSTOMIZE_QUICK_START)
+        assertThat(result.dynamicCardTypes)
+            .containsExactly(GROW_QUICK_START, CUSTOMIZE_QUICK_START, GET_TO_KNOW_APP_QUICK_START)
     }
 
     @Test
@@ -129,7 +137,7 @@ class DynamicCardStoreTest {
         val result = dynamicCardStore.getCards(siteId)
 
         assertThat(result.pinnedItem).isEqualTo(CUSTOMIZE_QUICK_START)
-        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
+        assertThat(result.dynamicCardTypes).isEqualTo(dynamicCardTypes)
     }
 
     private fun initEmptyDatabase() {
