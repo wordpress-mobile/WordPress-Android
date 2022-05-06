@@ -5,7 +5,7 @@ import com.wellsql.generated.QuickStartTaskModelTable
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -51,7 +51,7 @@ class QuickStartSqlUtils
                 .asModel.size
     }
 
-    private fun getTask(siteId: Long, task: QuickStartTask): QuickStartTaskModel? {
+    private fun getTask(siteId: Long, task: QuickStartNewSiteTask): QuickStartTaskModel? {
         return WellSql.select(QuickStartTaskModel::class.java)
                 .where().beginGroup()
                 .equals(QuickStartTaskModelTable.SITE_ID, siteId)
@@ -68,16 +68,16 @@ class QuickStartSqlUtils
                 .asModel.firstOrNull()
     }
 
-    fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
+    fun hasDoneTask(siteId: Long, task: QuickStartNewSiteTask): Boolean {
         return getTask(siteId, task)?.isDone ?: false
     }
 
-    fun hasShownTask(siteId: Long, task: QuickStartTask): Boolean {
+    fun hasShownTask(siteId: Long, task: QuickStartNewSiteTask): Boolean {
         return getTask(siteId, task)?.isShown ?: false
     }
 
     private fun insertOrUpdateQuickStartTaskModel(newTaskModel: QuickStartTaskModel) {
-        val oldModel = getTask(newTaskModel.siteId, QuickStartTask.fromString(newTaskModel.taskName))
+        val oldModel = getTask(newTaskModel.siteId, QuickStartNewSiteTask.fromString(newTaskModel.taskName))
         oldModel?.let {
             WellSql.update(QuickStartTaskModel::class.java)
                     .whereId(it.id)
@@ -100,7 +100,7 @@ class QuickStartSqlUtils
         WellSql.insert(newQuickStartStatus).execute()
     }
 
-    fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
+    fun setDoneTask(siteId: Long, task: QuickStartNewSiteTask, isDone: Boolean) {
         val model = getTask(siteId, task) ?: QuickStartTaskModel()
         model.siteId = siteId
         model.taskName = task.toString()
@@ -109,7 +109,7 @@ class QuickStartSqlUtils
         insertOrUpdateQuickStartTaskModel(model)
     }
 
-    fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
+    fun setShownTask(siteId: Long, task: QuickStartNewSiteTask, isShown: Boolean) {
         val model = getTask(siteId, task) ?: QuickStartTaskModel()
         model.siteId = siteId
         model.taskName = task.toString()
