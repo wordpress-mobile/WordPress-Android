@@ -30,6 +30,7 @@ class LayoutCategoryAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: LayoutsItemViewHolder, position: Int) {
+        holder.setIsRecyclable(false) // TODO: Find a better fix!
         holder.bind(items[position])
     }
 
