@@ -16,11 +16,13 @@ gradleEnterprise {
         }
         uploadInBackground = System.getenv("CI") == null
 
-        // Obfuscate personal data
-        obfuscation {
-            username { username -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_USERNAME") ?: username }
-            hostname { hostname -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_HOSTNAME") ?: hostname }
-            ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
+        if (!System.getenv().containsKey("CI")) {
+            // Obfuscate personal data unless it's a CI build
+            obfuscation {
+                username { username -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_USERNAME") ?: username }
+                hostname { hostname -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_HOSTNAME") ?: hostname }
+                ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
+            }
         }
     }
 }
