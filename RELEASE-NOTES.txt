@@ -2,6 +2,7 @@
 
 19.9
 -----
+* [*] Editor: Improved editor performance by reducing memory usage [https://github.com/wordpress-mobile/WordPress-Android/pull/16490]
 
 
 19.8
