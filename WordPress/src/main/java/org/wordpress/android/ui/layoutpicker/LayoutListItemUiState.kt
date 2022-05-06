@@ -13,10 +13,14 @@ data class LayoutListItemUiState(
     val selected: Boolean,
     val onItemTapped: (() -> Unit),
     val onThumbnailReady: (() -> Unit),
-    private val shouldHideSelectedOverlay: Boolean
+    private val tapOpensPreview: Boolean
 ) {
     val contentDescriptionResId: Int
-        get() = if (selected) R.string.mlp_selected_description else R.string.mlp_notselected_description
+        get() = when {
+            tapOpensPreview -> R.string.hpp_preview_tapped_theme
+            selected -> R.string.mlp_selected_description
+            else -> R.string.mlp_notselected_description
+        }
     val selectedOverlayVisible: Boolean
-        get() = !shouldHideSelectedOverlay && selected
+        get() = !tapOpensPreview && selected
 }
