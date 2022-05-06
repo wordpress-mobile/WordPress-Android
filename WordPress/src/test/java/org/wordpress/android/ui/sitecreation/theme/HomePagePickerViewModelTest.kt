@@ -205,21 +205,4 @@ class HomePagePickerViewModelTest {
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
     }
-
-    /*
-
-    It would be nice to also include a test like the following, but this behavior currently exists outside the SUT,
-    in the preview fragment.
-
-    @Test
-    fun `when the user dismisses the preview, the theme is deselected`() = mockResponse {
-        viewModel.start()
-        viewModel.onThumbnailReady(mockedDesignSlug)
-        viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug)
-                .isEqualTo(mockedDesignSlug)
-        viewModel.onDismissPreview()
-        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug).isNull()
-    }
-    */
 }
