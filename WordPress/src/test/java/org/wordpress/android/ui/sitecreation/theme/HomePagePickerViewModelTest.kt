@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -58,9 +59,9 @@ class HomePagePickerViewModelTest {
     private lateinit var viewModel: HomePagePickerViewModel
 
     private val mockCategory = StarterDesignCategory(
-            slug = "about",
-            title = "About",
-            description = "About pages",
+            slug = "blog",
+            title = "Blog",
+            description = "Blogging designs",
             emoji = "👋"
     )
 
@@ -106,6 +107,7 @@ class HomePagePickerViewModelTest {
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
+        whenever(resourceProvider.getString(any(), any())).thenReturn("")
         block()
     }
 
