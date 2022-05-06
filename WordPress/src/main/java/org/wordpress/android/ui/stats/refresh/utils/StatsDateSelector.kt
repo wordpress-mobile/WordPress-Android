@@ -74,6 +74,7 @@ constructor(
         return when (statsSection) {
             StatsSection.DETAIL,
             StatsSection.INSIGHTS,
+            StatsSection.INSIGHT_DETAIL,
             StatsSection.DAYS -> DAYS
             StatsSection.WEEKS -> WEEKS
             StatsSection.MONTHS -> MONTHS
