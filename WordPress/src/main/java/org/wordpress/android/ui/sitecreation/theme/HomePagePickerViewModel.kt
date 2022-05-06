@@ -82,7 +82,7 @@ class HomePagePickerViewModel @Inject constructor(
                     updateUiState(Error())
                 } else {
                     // TODO: This is just to demonstrate the UI. The real are pending to be linked
-                    val recommended = event.categories.filter { it.slug == "blog" }.apply {  }.toLayoutCategories(true)
+                    val recommended = event.categories.filter { it.slug == "blog" }.toLayoutCategories(true)
 
                     val categories = event.categories.toLayoutCategories()
                     handleResponse(event.designs.toLayoutModels(), recommended + categories)
