@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +39,7 @@ import javax.inject.Inject
 class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var thumbDimensionProvider: ModalLayoutPickerDimensionProvider
     private lateinit var viewModel: ModalLayoutPickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
@@ -73,7 +75,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
             layoutsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(requireActivity())
-                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates)
+                adapter = LayoutCategoryAdapter(viewModel.nestedScrollStates, thumbDimensionProvider)
             }
 
             modalLayoutPickerTitlebar.backButton.setOnClickListener {
@@ -94,6 +96,11 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             }
             modalLayoutPickerTitlebar.previewTypeSelectorButton.setOnClickListener {
                 viewModel.onThumbnailModePressed()
+            }
+
+            modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
+                height = thumbDimensionProvider.previewHeight
+                width = thumbDimensionProvider.previewWidth
             }
 
             setScrollListener()

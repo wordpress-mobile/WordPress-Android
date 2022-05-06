@@ -44,6 +44,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 
 class BlockDiffCallback(
     private val oldList: List<BlockListItem>,
@@ -76,6 +77,7 @@ class BlockDiffCallback(
                 TITLE_WITH_MORE,
                 BIG_TITLE,
                 VALUE_ITEM,
+                VALUE_WITH_CHART_ITEM,
                 VALUES_ITEM,
                 DIVIDER,
                 LOADING_ITEM,

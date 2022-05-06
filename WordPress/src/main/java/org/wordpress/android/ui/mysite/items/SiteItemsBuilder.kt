@@ -31,13 +31,11 @@ class SiteItemsBuilder @Inject constructor(
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
         val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
-        val showExplorePlansFocusPoint = params.activeTask == QuickStartTask.EXPLORE_PLANS
         val showStatsFocusPoint = (params.activeTask == QuickStartTask.CHECK_STATS && params.enableStatsFocusPoint)
         val showPagesFocusPoint = (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
                 params.activeTask == QuickStartTask.REVIEW_PAGES) && params.enablePagesFocusPoint
 
         return listOfNotNull(
-                siteListItemBuilder.buildPlanItemIfAvailable(params.site, showExplorePlansFocusPoint, params.onClick),
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(params.site),
                 ListItem(
                         R.drawable.ic_stats_alt_white_24dp,

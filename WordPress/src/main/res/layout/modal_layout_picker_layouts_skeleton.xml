@@ -29,6 +29,7 @@
                 android:background="?attr/categoriesButtonBackground" />
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/skeletonCardView"
                 style="@style/LayoutCardView"
                 android:layout_width="@dimen/mlp_layout_card_width"
                 android:layout_height="@dimen/mlp_layout_card_height"

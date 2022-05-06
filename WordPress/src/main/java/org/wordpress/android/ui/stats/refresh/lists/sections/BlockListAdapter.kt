@@ -67,9 +67,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActivityViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BigTitleViewHolder
@@ -102,6 +104,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TextVie
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TitleViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TitleWithMoreViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValueViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValueWithChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValuesViewHolder
 import org.wordpress.android.util.image.ImageManager
 
@@ -147,6 +150,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             MAP -> MapViewHolder(parent)
             MAP_LEGEND -> MapLegendViewHolder(parent)
             VALUE_ITEM -> ValueViewHolder(parent)
+            VALUE_WITH_CHART_ITEM -> ValueWithChartViewHolder(parent)
             VALUES_ITEM -> ValuesViewHolder(parent)
             ACTIVITY_ITEM -> ActivityViewHolder(parent)
             REFERRED_ITEM -> ReferredItemViewHolder(parent)
@@ -170,6 +174,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is TagViewHolder -> holder.bind(item as Tag)
             is ImageItemViewHolder -> holder.bind(item as ImageItem)
             is ValueViewHolder -> holder.bind(item as ValueItem)
+            is ValueWithChartViewHolder -> holder.bind(item as ValueWithChartItem)
             is ValuesViewHolder -> holder.bind(item as ValuesItem)
             is ListItemWithImageViewHolder -> holder.bind(item as ListItemWithImage)
             is ListItemWithIconViewHolder -> holder.bind(item as ListItemWithIcon)

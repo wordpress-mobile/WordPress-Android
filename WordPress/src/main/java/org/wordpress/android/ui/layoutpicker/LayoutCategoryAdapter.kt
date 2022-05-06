@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 /**
  * Renders the layout categories
  */
-class LayoutCategoryAdapter(private var nestedScrollStates: Bundle) : Adapter<LayoutsItemViewHolder>() {
+class LayoutCategoryAdapter(
+    private var nestedScrollStates: Bundle,
+    private val thumbDimensionProvider: ThumbDimensionProvider
+) : Adapter<LayoutsItemViewHolder>() {
     private var items: List<LayoutCategoryUiState> = listOf()
 
     fun update(newItems: List<LayoutCategoryUiState>) {
@@ -34,7 +37,11 @@ class LayoutCategoryAdapter(private var nestedScrollStates: Bundle) : Adapter<La
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            LayoutsItemViewHolder(parent = parent, nestedScrollStates = nestedScrollStates)
+            LayoutsItemViewHolder(
+                    parent = parent,
+                    nestedScrollStates = nestedScrollStates,
+                    thumbDimensionProvider = thumbDimensionProvider
+            )
 
     fun onRestoreInstanceState(savedInstanceState: Bundle) {
         nestedScrollStates = savedInstanceState

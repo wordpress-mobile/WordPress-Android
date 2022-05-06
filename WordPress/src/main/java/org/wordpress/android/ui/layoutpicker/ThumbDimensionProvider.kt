@@ -1,15 +1,8 @@
 package org.wordpress.android.ui.layoutpicker
 
-import org.wordpress.android.R
-import org.wordpress.android.viewmodel.ContextProvider
-import javax.inject.Inject
-
-class ThumbDimensionProvider @Inject constructor(private val contextProvider: ContextProvider) {
+interface ThumbDimensionProvider {
     val previewWidth: Int
-        get() = contextProvider.getContext().resources.getDimensionPixelSize(R.dimen.mlp_layout_card_width)
-
     val previewHeight: Int
-        get() = contextProvider.getContext().resources.getDimensionPixelSize(R.dimen.mlp_layout_card_height)
-
-    val scale: Double = 1.0 // Passing 1.0 and the rendered pixels per device in previewWidth
+    val scale: Double
+    val rowHeight: Int
 }
