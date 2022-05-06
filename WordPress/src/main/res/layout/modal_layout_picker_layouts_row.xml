@@ -5,7 +5,9 @@
     android:layout_height="@dimen/mlp_layouts_row_height"
     android:orientation="vertical">
 
-    <View style="@style/ModalLayoutPickerLayoutsSeparatorLine" />
+    <View
+        android:id="@+id/layouts_row_separator_line"
+        style="@style/ModalLayoutPickerLayoutsSeparatorLine" />
 
     <TextView
         android:id="@+id/subtitle"
