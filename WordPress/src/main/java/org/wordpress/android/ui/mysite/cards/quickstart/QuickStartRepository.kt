@@ -273,7 +273,7 @@ class QuickStartRepository
         if (taskToPrompt != null) {
             analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
             appPrefsWrapper.setQuickStartNoticeRequired(false)
-            val taskNoticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt)
+            val taskNoticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt) ?: return
             val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
                     "<b>${resourceProvider.getString(taskNoticeDetails.titleResId)}</b>:" +
                             " ${resourceProvider.getString(taskNoticeDetails.messageResId)}"

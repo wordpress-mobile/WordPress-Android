@@ -1,93 +1,76 @@
-package org.wordpress.android.ui.quickstart;
+package org.wordpress.android.ui.quickstart
 
-import org.wordpress.android.R;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-
+import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 
 /**
  * Static data that represents info that goes into Quick Start notices
- **/
-public enum QuickStartNoticeDetails {
+ */
+enum class QuickStartNoticeDetails(
+    val taskString: String,
+    val titleResId: Int,
+    val messageResId: Int
+) {
     UPDATE_SITE_TITLE(
-            QuickStartNewSiteTask.UPDATE_SITE_TITLE,
-            R.string.quick_start_list_update_site_title_title,
-            R.string.quick_start_list_update_site_title_subtitle
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL,
+            string.quick_start_list_update_site_title_title,
+            string.quick_start_list_update_site_title_subtitle
     ),
     VIEW_SITE_TUTORIAL(
-            QuickStartNewSiteTask.VIEW_SITE,
-            R.string.quick_start_dialog_view_site_title,
-            R.string.quick_start_dialog_view_site_message
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL,
+            string.quick_start_dialog_view_site_title,
+            string.quick_start_dialog_view_site_message
     ),
     SHARE_SITE_TUTORIAL(
-            QuickStartNewSiteTask.ENABLE_POST_SHARING,
-            R.string.quick_start_dialog_share_site_title,
-            R.string.quick_start_dialog_share_site_message
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL,
+            string.quick_start_dialog_share_site_title,
+            string.quick_start_dialog_share_site_message
     ),
     PUBLISH_POST_TUTORIAL(
-            QuickStartNewSiteTask.PUBLISH_POST,
-            R.string.quick_start_dialog_publish_post_title,
-            R.string.quick_start_dialog_publish_post_message
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL,
+            string.quick_start_dialog_publish_post_title,
+            string.quick_start_dialog_publish_post_message
     ),
     FOLLOW_SITES_TUTORIAL(
-            QuickStartNewSiteTask.FOLLOW_SITE,
-            R.string.quick_start_dialog_follow_sites_title,
-            R.string.quick_start_dialog_follow_sites_message
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL,
+            string.quick_start_dialog_follow_sites_title,
+            string.quick_start_dialog_follow_sites_message
     ),
     UPLOAD_SITE_ICON(
-            QuickStartNewSiteTask.UPLOAD_SITE_ICON,
-            R.string.quick_start_dialog_upload_icon_title,
-            R.string.quick_start_dialog_upload_icon_message
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL,
+            string.quick_start_dialog_upload_icon_title,
+            string.quick_start_dialog_upload_icon_message
     ),
     CHECK_STATS(
-            QuickStartNewSiteTask.CHECK_STATS,
-            R.string.quick_start_dialog_check_stats_title,
-            R.string.quick_start_dialog_check_stats_message
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL,
+            string.quick_start_dialog_check_stats_title,
+            string.quick_start_dialog_check_stats_message
     ),
     EXPLORE_PLANS(
-            QuickStartNewSiteTask.EXPLORE_PLANS,
-            R.string.quick_start_dialog_explore_plans_title,
-            R.string.quick_start_dialog_explore_plans_message
+            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL,
+            string.quick_start_dialog_explore_plans_title,
+            string.quick_start_dialog_explore_plans_message
     ),
     EDIT_HOMEPAGE(
-            QuickStartNewSiteTask.EDIT_HOMEPAGE,
-            R.string.quick_start_dialog_edit_homepage_title,
-            R.string.quick_start_dialog_edit_homepage_message
+            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL,
+            string.quick_start_dialog_edit_homepage_title,
+            string.quick_start_dialog_edit_homepage_message
     ),
     REVIEW_PAGES(
-            QuickStartNewSiteTask.REVIEW_PAGES,
-            R.string.quick_start_dialog_review_pages_title,
-            R.string.quick_start_dialog_review_pages_message
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL,
+            string.quick_start_dialog_review_pages_title,
+            string.quick_start_dialog_review_pages_message
     );
 
-    QuickStartNoticeDetails(QuickStartTask task, int titleResId, int messageResId) {
-        mTask = task;
-        mTitleResId = titleResId;
-        mMessageResId = messageResId;
-    }
-
-    private final QuickStartTask mTask;
-    private final int mTitleResId;
-    private final int mMessageResId;
-
-    public QuickStartTask getTask() {
-        return mTask;
-    }
-
-    public int getTitleResId() {
-        return mTitleResId;
-    }
-
-    public int getMessageResId() {
-        return mMessageResId;
-    }
-
-    public static QuickStartNoticeDetails getNoticeForTask(QuickStartTask task) {
-        for (QuickStartNoticeDetails quickStartTaskDetails : QuickStartNoticeDetails.values()) {
-            if (quickStartTaskDetails.mTask == task) {
-                return quickStartTaskDetails;
+    companion object {
+        fun getNoticeForTask(task: QuickStartTask): QuickStartNoticeDetails? {
+            for (quickStartTaskDetails in values()) {
+                if (quickStartTaskDetails.taskString == task.string) {
+                    return quickStartTaskDetails
+                }
             }
+            return null
         }
-        return null;
     }
 }
