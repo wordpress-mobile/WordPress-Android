@@ -50,6 +50,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
@@ -99,6 +100,7 @@ class StatsModule {
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
         totalLikesUseCase: TotalLikesUseCase,
+        totalCommentsUseCase: TotalCommentsUseCase,
         totalFollowersUseCase: TotalFollowersUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
         managementControlUseCase: ManagementControlUseCase,
@@ -108,6 +110,7 @@ class StatsModule {
         if (statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
             useCases.add(totalLikesUseCase)
+            useCases.add(totalCommentsUseCase)
             useCases.add(totalFollowersUseCase)
         } else {
             useCases.add(followerTotalsUseCase)
