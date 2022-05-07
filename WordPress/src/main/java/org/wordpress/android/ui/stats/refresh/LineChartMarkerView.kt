@@ -72,38 +72,9 @@ class LineChartMarkerView @Inject constructor(
                 }
             }
             val positive = thisWeekCount >= (prevWeekCount ?: 0)
-            val change = buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = false)
+            val change = statsUtils.buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = false)
             changeView.text = change.toString()
         }
         super.refreshContent(e, highlight)
-    }
-
-    private fun buildChange(
-        previousValue: Long?,
-        value: Long,
-        positive: Boolean,
-        isFormattedNumber: Boolean
-    ): String? {
-        return previousValue?.let {
-            val difference = value - previousValue
-            val percentage = when (previousValue) {
-                value -> "0"
-                0L -> "∞"
-                else -> mapLongToString((difference * 100 / previousValue), isFormattedNumber)
-            }
-            val formattedDifference = mapLongToString(difference, isFormattedNumber)
-            if (positive) {
-                context.getString(R.string.stats_traffic_increase, formattedDifference, percentage)
-            } else {
-                context.getString(R.string.stats_traffic_change, formattedDifference, percentage)
-            }
-        }
-    }
-
-    private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
-        return when (isFormattedNumber) {
-            true -> statsUtils.toFormattedString(value)
-            false -> value.toString()
-        }
     }
 }
