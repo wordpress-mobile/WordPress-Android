@@ -112,7 +112,7 @@ private val THIRD_PROMPT_MODEL = BloggingPromptModel(
     respondentsAvatarUrls = listOf(
         "http://site/avatar1.jpg",
         "http://site/avatar2.jpg",
-        "http://site/avatar3.jpg",
+        "http://site/avatar3.jpg"
     )
 )
 
@@ -159,7 +159,7 @@ private val THIRD_PROMPT_ENTITY = BloggingPromptEntity(
     respondentsAvatars = listOf(
         "http://site/avatar1.jpg",
         "http://site/avatar2.jpg",
-        "http://site/avatar3.jpg",
+        "http://site/avatar3.jpg"
     )
 )
 
