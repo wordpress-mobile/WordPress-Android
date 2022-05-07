@@ -116,6 +116,6 @@ class QuickStartUtilsWrapper
         analyticsTrackerWrapper.track(QUICK_START_STARTED)
     }
 
-    fun getNextUncompletedQuickStartTask(siteLocalId: Long) =
-            QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, siteLocalId)
+    fun getNextUncompletedQuickStartTask(quickStartType: QuickStartType, siteLocalId: Long) =
+            QuickStartUtils.getNextUncompletedQuickStartTask(quickStartStore, quickStartType, siteLocalId)
 }

@@ -270,7 +270,8 @@ class QuickStartRepository
     }
 
     private fun showQuickStartNotice(selectedSiteLocalId: Int) {
-        val taskToPrompt = quickStartUtilsWrapper.getNextUncompletedQuickStartTask(selectedSiteLocalId.toLong())
+        val taskToPrompt = quickStartUtilsWrapper
+                .getNextUncompletedQuickStartTask(quickStartType, selectedSiteLocalId.toLong())
         if (taskToPrompt != null) {
             analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
             appPrefsWrapper.setQuickStartNoticeRequired(false)

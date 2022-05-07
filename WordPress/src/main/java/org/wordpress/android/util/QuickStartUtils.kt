@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartType
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
@@ -321,11 +322,12 @@ object QuickStartUtils {
     @Suppress("ReturnCount")
     fun getNextUncompletedQuickStartTask(
         quickStartStore: QuickStartStore,
+        quickStartType: QuickStartType,
         siteLocalId: Long
     ): QuickStartTask? {
         // get all the uncompleted tasks for all task types
         val uncompletedTasks = ArrayList<QuickStartTask>()
-        QuickStartTaskType.values().forEach { type ->
+        quickStartType.taskTypes.forEach { type ->
             if (type != UNKNOWN) {
                 uncompletedTasks.addAll(quickStartStore.getUncompletedTasksByType(siteLocalId, type))
             }
