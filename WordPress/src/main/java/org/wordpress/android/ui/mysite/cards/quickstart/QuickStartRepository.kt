@@ -183,10 +183,11 @@ class QuickStartRepository
                     task,
                     selectedSite,
                     QuickStartEvent(task),
-                    contextProvider.getContext()
+                    contextProvider.getContext(),
+                    quickStartType
             )
             setTaskDoneAndTrack(task, selectedSite.id)
-            if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSite.id)) {
+            if (quickStartType.isEveryQuickStartTaskDone(quickStartStore, selectedSite.id.toLong())) {
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())

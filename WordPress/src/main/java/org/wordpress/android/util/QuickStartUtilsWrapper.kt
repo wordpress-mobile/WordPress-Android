@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartType
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -46,10 +47,6 @@ class QuickStartUtilsWrapper
         )
     }
 
-    fun isEveryQuickStartTaskDone(siteLocalId: Int): Boolean {
-        return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteLocalId)
-    }
-
     fun isEveryQuickStartTaskDoneForType(siteLocalId: Int, type: QuickStartTaskType): Boolean {
         return quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), type).isEmpty()
     }
@@ -63,11 +60,12 @@ class QuickStartUtilsWrapper
         task: QuickStartTask,
         site: SiteModel,
         quickStartEvent: QuickStartEvent? = null,
-        context: Context?
+        context: Context?,
+        quickStartType: QuickStartType
     ) {
         val siteLocalId = site.id.toLong()
 
-        if (shouldCancelCompleteAction(siteLocalId, site, task)) {
+        if (shouldCancelCompleteAction(siteLocalId, site, task, quickStartType)) {
             return
         }
 
@@ -77,7 +75,7 @@ class QuickStartUtilsWrapper
 
         quickStartStore.setDoneTask(siteLocalId, task, true)
 
-        if (isEveryQuickStartTaskDone(site.id)) {
+        if (quickStartType.isEveryQuickStartTaskDone(quickStartStore, siteLocalId)) {
             quickStartStore.setQuickStartCompleted(siteLocalId, true)
             val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
             dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
@@ -101,10 +99,11 @@ class QuickStartUtilsWrapper
     private fun shouldCancelCompleteAction(
         siteLocalId: Long,
         site: SiteModel,
-        task: QuickStartTask
+        task: QuickStartTask,
+        quickStartType: QuickStartType
     ): Boolean {
         return quickStartStore.getQuickStartCompleted(siteLocalId) ||
-                isEveryQuickStartTaskDone(site.id) ||
+                quickStartType.isEveryQuickStartTaskDone(quickStartStore, siteLocalId) ||
                 quickStartStore.hasDoneTask(siteLocalId, task) ||
                 !QuickStartUtils.isQuickStartAvailableForTheSite(site)
     }

@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
@@ -64,6 +65,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
     private lateinit var quickStartSiteMenuStep: MutableList<QuickStartSiteMenuStep?>
     private val siteLocalId = 1
+    private val quickStartType = NewSiteQuickStartType
 
     private val siteMenuTasks = listOf(
             QuickStartNewSiteTask.ENABLE_POST_SHARING,
@@ -224,7 +226,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.completeTask(QuickStartNewSiteTask.UPDATE_SITE_TITLE)
 
-        verify(quickStartUtilsWrapper, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
+        verify(quickStartUtilsWrapper, never()).completeTaskAndRemindNextOne(any(), any(), any(), any(), any())
     }
 
     @Test
@@ -239,7 +241,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 QuickStartNewSiteTask.PUBLISH_POST,
                 site,
                 QuickStartEvent(QuickStartNewSiteTask.PUBLISH_POST),
-                contextProvider.getContext()
+                contextProvider.getContext(),
+                quickStartType
         )
     }
 

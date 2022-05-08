@@ -192,12 +192,6 @@ object QuickStartUtils {
     }
 
     @JvmStatic
-    fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, siteLocalId: Int): Boolean {
-        return quickStartStore.getDoneCount(siteLocalId.toLong()) >= QuickStartTask.getAllTasks()
-                .filter { it.taskType != UNKNOWN }.size
-    }
-
-    @JvmStatic
     fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
         return when (task.string) {
             QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
