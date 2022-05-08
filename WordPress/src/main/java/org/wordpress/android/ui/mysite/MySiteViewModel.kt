@@ -1072,7 +1072,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
-            quickStartUtilsWrapper.startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
+            quickStartUtilsWrapper
+                    .startQuickStart(siteLocalId, isSiteTitleTaskCompleted, quickStartRepository.quickStartType)
             mySiteSourceManager.refreshQuickStart()
         }
     }

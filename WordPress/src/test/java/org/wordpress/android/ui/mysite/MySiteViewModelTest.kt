@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard
@@ -303,6 +304,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(quickStartRepository.onQuickStartSiteMenuStep).thenReturn(quickStartSiteMenuStep)
+        whenever(quickStartRepository.quickStartType).thenReturn(NewSiteQuickStartType)
         whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = MySiteViewModel(
@@ -1175,7 +1177,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.checkAndStartQuickStart(siteLocalId, false)
 
-        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId, false)
+        verify(quickStartUtilsWrapper).startQuickStart(
+                siteLocalId,
+                false,
+                quickStartRepository.quickStartType
+        )
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1231,7 +1237,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.startQuickStart()
 
-        verify(quickStartUtilsWrapper).startQuickStart(site.id, false)
+        verify(quickStartUtilsWrapper)
+                .startQuickStart(site.id, false, quickStartRepository.quickStartType)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -2618,9 +2625,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
         return QuickLinkRibbon(
-            quickLinkRibbonItems = mock(),
-            showStatsFocusPoint = false,
-            showPagesFocusPoint = false
+                quickLinkRibbonItems = mock(),
+                showStatsFocusPoint = false,
+                showPagesFocusPoint = false
         )
     }
 

@@ -104,11 +104,8 @@ class QuickStartUtilsWrapper
                 !QuickStartUtils.isQuickStartAvailableForTheSite(site)
     }
 
-    fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
-        quickStartStore.setDoneTask(siteLocalId.toLong(), QuickStartNewSiteTask.CREATE_SITE, true)
-        if (isSiteTitleTaskCompleted) {
-            quickStartStore.setDoneTask(siteLocalId.toLong(), QuickStartNewSiteTask.UPDATE_SITE_TITLE, true)
-        }
+    fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean, quickStartType: QuickStartType) {
+        quickStartType.startQuickStart(quickStartStore, siteLocalId.toLong(), isSiteTitleTaskCompleted)
         analyticsTrackerWrapper.track(QUICK_START_STARTED)
     }
 
