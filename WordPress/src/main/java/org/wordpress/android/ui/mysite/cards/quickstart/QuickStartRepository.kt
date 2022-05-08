@@ -127,10 +127,15 @@ class QuickStartRepository
     }
 
     suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
+        val taskTypes = quickStartType.taskTypes.filterNot { it == UNKNOWN }
         return if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
-            dynamicCardStore.getCards(siteLocalId).dynamicCardTypes.map { it.toQuickStartTaskType() }
+            dynamicCardStore.getCards(siteLocalId).dynamicCardTypes
+                    .filter { dynamicCardType ->
+                        dynamicCardType in taskTypes.map { it.toDynamicCardType() }
+                    }
+                    .map { it.toQuickStartTaskType() }
         } else {
-            listOf(CUSTOMIZE, GROW)
+            taskTypes
         }
     }
 
