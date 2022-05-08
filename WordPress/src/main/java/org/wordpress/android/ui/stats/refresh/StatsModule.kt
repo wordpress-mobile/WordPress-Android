@@ -398,7 +398,7 @@ class StatsModule {
         countryViewsUseCaseFactory: CountryViewsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                viewsAndVisitorsUseCaseFactory.build(BLOCK),
+                viewsAndVisitorsUseCaseFactory.build(VIEW_ALL),
                 referrersUseCaseFactory.build(DAYS, BLOCK),
                 countryViewsUseCaseFactory.build(DAYS, BLOCK)
         )

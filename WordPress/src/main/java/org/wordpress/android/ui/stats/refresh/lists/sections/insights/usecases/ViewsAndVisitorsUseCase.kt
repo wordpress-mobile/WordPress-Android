@@ -15,6 +15,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewViewsAndVisitorsDetail
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
@@ -52,7 +53,8 @@ class ViewsAndVisitorsUseCase
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
         VIEWS_AND_VISITORS,
         mainDispatcher,
@@ -209,7 +211,7 @@ class ViewsAndVisitorsUseCase
 
     private fun buildTitle() = TitleWithMore(
             string.stats_insights_views_and_visitors,
-            navigationAction = ListItemInteraction.create(this::onViewMoreClick)
+            navigationAction = if (useCaseMode == BLOCK) ListItemInteraction.create(this::onViewMoreClick) else null
     )
 
     private fun onViewMoreClick() {
@@ -277,7 +279,8 @@ class ViewsAndVisitorsUseCase
                         analyticsTracker,
                         statsWidgetUpdaters,
                         localeManagerWrapper,
-                        resourceProvider
+                        resourceProvider,
+                        useCaseMode
                 )
     }
 }
