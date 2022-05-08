@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartType
@@ -78,7 +77,7 @@ class QuickStartUtilsWrapper
         } else {
             if (quickStartEvent?.task == task) AppPrefs.setQuickStartNoticeRequired(true)
 
-            if (context != null && quickStartStore.hasDoneTask(siteLocalId, QuickStartNewSiteTask.CREATE_SITE)) {
+            if (context != null && quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId)) {
                 val nextTask =
                         QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
                                 quickStartStore,
