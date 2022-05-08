@@ -26,10 +26,6 @@ class QuickStartUtilsWrapper
     private val dispatcher: Dispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
-    fun isQuickStartInProgress(siteLocalId: Int): Boolean {
-        return QuickStartUtils.isQuickStartInProgress(quickStartStore, siteLocalId)
-    }
-
     fun isQuickStartAvailableForTheSite(siteModel: SiteModel): Boolean {
         return QuickStartUtils.isQuickStartAvailableForTheSite(siteModel)
     }

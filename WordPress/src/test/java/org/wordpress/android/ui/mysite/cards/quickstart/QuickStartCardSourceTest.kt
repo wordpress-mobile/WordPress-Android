@@ -391,7 +391,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
                         )
                 )
         )
-        whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)).thenReturn(true)
+        whenever(quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId.toLong())).thenReturn(true)
         whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(

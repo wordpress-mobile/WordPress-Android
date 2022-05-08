@@ -296,7 +296,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         nextUncompletedTask: QuickStartTask? = null
     ) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)).thenReturn(true)
+        whenever(quickStartType.isQuickStartInProgress(quickStartStore, siteLocalId.toLong())).thenReturn(true)
         whenever(appPrefsWrapper.isQuickStartNoticeRequired()).thenReturn(true)
         whenever(quickStartUtilsWrapper.getNextUncompletedQuickStartTask(quickStartType, siteLocalId.toLong()))
                 .thenReturn(nextUncompletedTask)

@@ -21,7 +21,6 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
@@ -184,12 +183,6 @@ object QuickStartUtils {
         return (siteModel.hasCapabilityManageOptions &&
                 themeBrowserUtils.isAccessible(siteModel) &&
                 SiteUtils.isAccessedViaWPComRest(siteModel))
-    }
-
-    @JvmStatic
-    fun isQuickStartInProgress(quickStartStore: QuickStartStore, siteLocalId: Int): Boolean {
-        return !quickStartStore.getQuickStartCompleted(siteLocalId.toLong()) &&
-                quickStartStore.hasDoneTask(siteLocalId.toLong(), QuickStartNewSiteTask.CREATE_SITE)
     }
 
     @JvmStatic

@@ -40,12 +40,14 @@ class QuickStartCardSource @Inject constructor(
             }
         }
         return merge(quickStartTaskTypes, quickStartRepository.activeTask) { types, activeTask ->
-            val categories = if (quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)) {
-                types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
-                        ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()
-            } else {
-                listOf()
-            }
+            val categories =
+                    if (quickStartRepository.quickStartType
+                                    .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())) {
+                        types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
+                                ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()
+                    } else {
+                        listOf()
+                    }
             getState(QuickStartUpdate(activeTask, categories))
         }
     }

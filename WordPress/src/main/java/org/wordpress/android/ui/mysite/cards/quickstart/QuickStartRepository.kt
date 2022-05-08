@@ -263,7 +263,7 @@ class QuickStartRepository
 
     fun checkAndShowQuickStartNotice() {
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSite()?.id ?: -1
-        if (quickStartUtilsWrapper.isQuickStartInProgress(selectedSiteLocalId) &&
+        if (quickStartType.isQuickStartInProgress(quickStartStore, selectedSiteLocalId.toLong()) &&
                 appPrefsWrapper.isQuickStartNoticeRequired()) {
             showQuickStartNotice(selectedSiteLocalId)
         }
