@@ -42,18 +42,18 @@ class QuickStartStore @Inject constructor(
         override val taskType: QuickStartTaskType,
         override val order: Int
     ) : QuickStartTask {
-        UNKNOWN("unknown", QuickStartTaskType.UNKNOWN, 0),
-        CREATE_SITE("create_site", CUSTOMIZE, 0),
-        UPDATE_SITE_TITLE("update_site_title", CUSTOMIZE, 1),
-        UPLOAD_SITE_ICON("upload_site_icon", CUSTOMIZE, 2),
-        EDIT_HOMEPAGE("edit_homepage", CUSTOMIZE, 3),
-        REVIEW_PAGES("review_pages", CUSTOMIZE, 4),
-        VIEW_SITE("view_site", CUSTOMIZE, 5),
-        ENABLE_POST_SHARING("enable_post_sharing", GROW, 7),
-        PUBLISH_POST("publish_post", GROW, 8),
-        FOLLOW_SITE("follow_site", GROW, 9),
-        CHECK_STATS("check_stats", GROW, 10),
-        EXPLORE_PLANS("explore_plans", GROW, 11);
+        UNKNOWN(QUICK_START_UNKNOWN_LABEL, QuickStartTaskType.UNKNOWN, 0),
+        CREATE_SITE(QUICK_START_CREATE_SITE_LABEL, CUSTOMIZE, 0),
+        UPDATE_SITE_TITLE(QUICK_START_UPDATE_SITE_TITLE_LABEL, CUSTOMIZE, 1),
+        UPLOAD_SITE_ICON(QUICK_START_UPLOAD_SITE_ICON_LABEL, CUSTOMIZE, 2),
+        EDIT_HOMEPAGE(QUICK_START_EDIT_HOMEPAGE_LABEL, CUSTOMIZE, 3),
+        REVIEW_PAGES(QUICK_START_REVIEW_PAGES_LABEL, CUSTOMIZE, 4),
+        VIEW_SITE(QUICK_START_VIEW_SITE_LABEL, CUSTOMIZE, 5),
+        ENABLE_POST_SHARING(QUICK_START_ENABLE_POST_SHARING_LABEL, GROW, 7),
+        PUBLISH_POST(QUICK_START_PUBLISH_POST_LABEL, GROW, 8),
+        FOLLOW_SITE(QUICK_START_FOLLOW_SITE_LABEL, GROW, 9),
+        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GROW, 10),
+        EXPLORE_PLANS(QUICK_START_EXPLORE_PLANS_LABEL, GROW, 11);
 
         override fun toString(): String {
             return string
@@ -168,5 +168,20 @@ class QuickStartStore @Inject constructor(
 
     fun getQuickStartNotificationReceived(siteId: Long): Boolean {
         return quickStartSqlUtils.getQuickStartNotificationReceived(siteId)
+    }
+
+    companion object {
+        const val QUICK_START_UNKNOWN_LABEL = "unknown"
+        const val QUICK_START_CREATE_SITE_LABEL = "create_site"
+        const val QUICK_START_UPDATE_SITE_TITLE_LABEL = "update_site_title"
+        const val QUICK_START_UPLOAD_SITE_ICON_LABEL = "upload_site_icon"
+        const val QUICK_START_EDIT_HOMEPAGE_LABEL = "edit_homepage"
+        const val QUICK_START_REVIEW_PAGES_LABEL = "review_pages"
+        const val QUICK_START_VIEW_SITE_LABEL = "view_site"
+        const val QUICK_START_ENABLE_POST_SHARING_LABEL = "enable_post_sharing"
+        const val QUICK_START_PUBLISH_POST_LABEL = "publish_post"
+        const val QUICK_START_FOLLOW_SITE_LABEL = "follow_site"
+        const val QUICK_START_CHECK_STATS_LABEL = "check_stats"
+        const val QUICK_START_EXPLORE_PLANS_LABEL = "explore_plans"
     }
 }
