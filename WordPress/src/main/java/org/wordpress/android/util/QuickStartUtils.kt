@@ -339,7 +339,7 @@ object QuickStartUtils {
         }
 
         // if we have not skipped a task yet, return the first available task from the list
-        val lastSkippedTask = AppPrefs.getLastSkippedQuickStartTask()
+        val lastSkippedTask = AppPrefs.getLastSkippedQuickStartTask(quickStartType)
                 ?: return uncompletedTasks.first()
 
         // look for a task that follows the one we skipped

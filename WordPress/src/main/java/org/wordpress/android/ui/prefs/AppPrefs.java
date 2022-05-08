@@ -15,8 +15,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartType;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -1235,12 +1235,12 @@ public class AppPrefs {
                && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
     }
 
-    public static QuickStartTask getLastSkippedQuickStartTask() {
+    public static QuickStartTask getLastSkippedQuickStartTask(QuickStartType quickStartType) {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
             return null;
         }
-        return QuickStartNewSiteTask.Companion.fromString(taskName);
+        return quickStartType.getTaskFromString(taskName);
     }
 
     public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {
