@@ -199,56 +199,57 @@ object QuickStartUtils {
 
     @JvmStatic
     fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
-        return when (task) {
-            QuickStartNewSiteTask.CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
-            QuickStartNewSiteTask.UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
-            QuickStartNewSiteTask.VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
-            QuickStartNewSiteTask.ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
-            QuickStartNewSiteTask.PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
-            QuickStartNewSiteTask.FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
-            QuickStartNewSiteTask.UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
-            QuickStartNewSiteTask.CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
-            QuickStartNewSiteTask.EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
-            QuickStartNewSiteTask.EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
-            QuickStartNewSiteTask.REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
+        return when (task.string) {
+            QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL ->
+                Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
+            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
+            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
 
     @JvmStatic
     fun getQuickStartListSkippedTracker(task: QuickStartTask): Stat {
-        return when (task) {
+        return when (task.string) {
             // Skipping create site task should never happen as of Quick Start v2.  The task is automatically set as
             // completed when Quick Start v2 begins since it is initiated when a new site is created.  The task case
             // is included here for completeness.
-            QuickStartNewSiteTask.CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
-            QuickStartNewSiteTask.UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
-            QuickStartNewSiteTask.VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
-            QuickStartNewSiteTask.ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_SKIPPED
-            QuickStartNewSiteTask.PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_SKIPPED
-            QuickStartNewSiteTask. FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
-            QuickStartNewSiteTask.UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
-            QuickStartNewSiteTask.CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
-            QuickStartNewSiteTask.EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
-            QuickStartNewSiteTask.EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
-            QuickStartNewSiteTask.REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
+            QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL -> Stat.QUICK_START_LIST_ADD_SOCIAL_SKIPPED
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL -> Stat.QUICK_START_LIST_PUBLISH_POST_SKIPPED
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
+            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
+            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
 
     fun getTaskCompletedTracker(task: QuickStartTask): Stat {
-        return when (task) {
-            QuickStartNewSiteTask.CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
-            QuickStartNewSiteTask.UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
-            QuickStartNewSiteTask.VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
-            QuickStartNewSiteTask.ENABLE_POST_SHARING -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
-            QuickStartNewSiteTask.PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
-            QuickStartNewSiteTask.FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
-            QuickStartNewSiteTask.UPLOAD_SITE_ICON -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
-            QuickStartNewSiteTask.CHECK_STATS -> Stat.QUICK_START_CHECK_STATS_COMPLETED
-            QuickStartNewSiteTask.EXPLORE_PLANS -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
-            QuickStartNewSiteTask.EDIT_HOMEPAGE -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
-            QuickStartNewSiteTask.REVIEW_PAGES -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
+        return when (task.string) {
+            QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL -> Stat.QUICK_START_CHECK_STATS_COMPLETED
+            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
+            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
