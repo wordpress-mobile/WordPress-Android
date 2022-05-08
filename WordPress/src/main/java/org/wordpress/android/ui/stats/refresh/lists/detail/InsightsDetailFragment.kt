@@ -32,6 +32,7 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
             with(nonNullActivity as AppCompatActivity) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.let {
+                    it.title = getString(R.string.stats_insights_views_and_visitors)
                     it.setHomeButtonEnabled(true)
                     it.setDisplayHomeAsUpEnabled(true)
                 }
