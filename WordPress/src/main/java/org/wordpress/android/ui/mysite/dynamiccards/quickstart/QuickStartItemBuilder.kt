@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -22,7 +23,9 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class QuickStartItemBuilder
-@Inject constructor() {
+@Inject constructor(
+    val quickStartRepository: QuickStartRepository
+) {
     fun build(
         quickStartCategory: QuickStartCategory,
         pinnedDynamicCardType: DynamicCardType?,
@@ -89,14 +92,15 @@ class QuickStartItemBuilder
         accentColor: Int,
         onQuickStartTaskClick: (QuickStartTask) -> Unit
     ): QuickStartTaskCard {
+        val task = quickStartRepository.quickStartType.getTaskFromString(this.taskString)
         return QuickStartTaskCard(
-                this.task,
+                task,
                 UiStringRes(this.titleResId),
                 UiStringRes(this.subtitleResId),
-                getIllustration(this.task),
+                getIllustration(task),
                 accentColor,
                 done,
-                ListItemInteraction.create(this.task, onQuickStartTaskClick)
+                ListItemInteraction.create(task, onQuickStartTaskClick)
         )
     }
 

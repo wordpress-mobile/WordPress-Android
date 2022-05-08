@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.mysite.dynamiccards.quickstart
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
@@ -13,7 +16,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.V
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
@@ -24,8 +29,15 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @RunWith(MockitoJUnitRunner::class)
 class QuickStartItemBuilderTest {
-    private val builder = QuickStartItemBuilder()
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    private lateinit var builder: QuickStartItemBuilder
     private val onQuickStartTaskCardClick: (QuickStartTask) -> Unit = {}
+
+    @Before
+    fun setUp() {
+        whenever(quickStartRepository.quickStartType).thenReturn(NewSiteQuickStartType)
+        builder = QuickStartItemBuilder(quickStartRepository)
+    }
 
     @Test
     fun `builds a customize category into quick start card`() {

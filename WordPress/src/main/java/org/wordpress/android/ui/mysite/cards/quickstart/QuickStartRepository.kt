@@ -79,8 +79,8 @@ class QuickStartRepository
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
 
-    private val detailsMap: Map<QuickStartTask, QuickStartTaskDetails> = QuickStartTaskDetails.values()
-            .associateBy { it.task }
+    private val detailsMap: Map<String, QuickStartTaskDetails> = QuickStartTaskDetails.values()
+            .associateBy { it.taskString }
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
@@ -102,9 +102,9 @@ class QuickStartRepository
     fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
             uncompletedTasks = quickStartStore.getUncompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
-                    .mapNotNull { detailsMap[it] },
+                    .mapNotNull { detailsMap[it.string] },
             completedTasks = quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), quickStartTaskType)
-                    .mapNotNull { detailsMap[it] })
+                    .mapNotNull { detailsMap[it.string] })
 
     fun resetTask() {
         clearActiveTask()
