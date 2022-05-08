@@ -82,7 +82,8 @@ class QuickStartUtilsWrapper
                         QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
                                 quickStartStore,
                                 siteLocalId,
-                                task.taskType
+                                task.taskType,
+                                quickStartType
                         )
                 if (nextTask != null) {
                     QuickStartUtils.startQuickStartReminderTimer(context, nextTask)

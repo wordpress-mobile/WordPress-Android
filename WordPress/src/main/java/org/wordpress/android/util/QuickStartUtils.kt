@@ -284,14 +284,15 @@ object QuickStartUtils {
     fun getNextUncompletedQuickStartTaskForReminderNotification(
         quickStartStore: QuickStartStore,
         siteLocalId: Long,
-        taskType: QuickStartTaskType
+        taskType: QuickStartTaskType,
+        quickStartType: QuickStartType
     ): QuickStartTask? {
         val uncompletedTasksOfPreferredType = quickStartStore.getUncompletedTasksByType(siteLocalId, taskType)
 
         var nextTask: QuickStartTask? = null
 
         if (uncompletedTasksOfPreferredType.isEmpty()) {
-            val otherQuickStartTaskTypes = QuickStartTaskType.values()
+            val otherQuickStartTaskTypes = quickStartType.taskTypes
                     .filter { it != taskType && it != UNKNOWN }
 
             otherQuickStartTaskTypes.forEach {
