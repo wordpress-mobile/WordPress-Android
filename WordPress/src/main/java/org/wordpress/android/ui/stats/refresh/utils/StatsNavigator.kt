@@ -45,6 +45,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalLikesStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
@@ -222,6 +223,9 @@ class StatsNavigator @Inject constructor(
                         target.postUrl,
                         readerTracker
                 )
+            }
+            is ViewTotalLikesStats -> {
+                ActivityLauncher.viewTotalLikesDetail(activity, siteProvider.siteModel)
             }
         }
     }

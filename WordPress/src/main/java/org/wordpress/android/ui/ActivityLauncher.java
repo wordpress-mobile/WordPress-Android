@@ -1492,6 +1492,11 @@ public class ActivityLauncher {
                         post.getLink());
     }
 
+    public static void viewTotalLikesDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalLikesDetail(context, site);
+    }
+
     public static void viewMediaPickerForResult(Activity activity,
                                                 @NonNull SiteModel site,
                                                 @NonNull MediaBrowserType browserType) {
