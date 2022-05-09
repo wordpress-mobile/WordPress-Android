@@ -5,8 +5,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategory
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.layoutpicker.LayoutCategoryModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -83,21 +85,22 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(Error())
                 } else {
-                    // TODO: This is just to demonstrate the UI. The real data are pending to be linked
-                    val dummySelectedVertical = "food"
-                    val recommendedVertical = resourceProvider.getString(
-                            R.string.hpp_recommended_title,
-                            dummySelectedVertical
-                    )
-                    val recommendedCategory = event.categories.first { it.slug == "blog" }
-                            .copy(title = recommendedVertical, description = recommendedVertical)
-                    val recommended = listOf(recommendedCategory).toLayoutCategories(true)
-
-                    val categories = event.categories.toLayoutCategories()
-                    handleResponse(event.designs.toLayoutModels(), recommended + categories)
+                    handleResponse(event.designs.toLayoutModels(), categoriesWithRecommendations(event.categories))
                 }
             }
         }
+    }
+
+    private fun categoriesWithRecommendations(categories: List<StarterDesignCategory>): List<LayoutCategoryModel> {
+        // TODO: This is just to demonstrate the UI. The real data are pending to be linked
+        val dummySelectedVertical = "food"
+        val recommendedVertical = resourceProvider.getString(
+                R.string.hpp_recommended_title,
+                dummySelectedVertical
+        )
+        val recommendedCategory = categories.first { it.slug == "blog" }
+                .copy(title = recommendedVertical, description = recommendedVertical)
+        return listOf(recommendedCategory).toLayoutCategories(true) + categories.toLayoutCategories()
     }
 
     override fun onLayoutTapped(layoutSlug: String) {
