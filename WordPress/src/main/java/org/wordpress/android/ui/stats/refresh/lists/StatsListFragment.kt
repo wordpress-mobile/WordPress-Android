@@ -166,6 +166,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     private fun StatsListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
         val viewModelClass = when (statsSection) {
             StatsSection.DETAIL -> DetailListViewModel::class.java
+            StatsSection.TOTAL_LIKES_DETAIL -> TotalLikesDetailListViewModel::class.java
             StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
