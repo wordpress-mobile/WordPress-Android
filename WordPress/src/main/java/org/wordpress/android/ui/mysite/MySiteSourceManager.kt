@@ -76,7 +76,9 @@ class MySiteSourceManager @Inject constructor(
     }
 
     fun refresh() {
-        refreshAllSources()
+        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            if (it is SiteIndependentSource || selectedSiteRepository.hasSelectedSite()) it.refresh()
+        }
     }
 
     fun onResume(isSiteSelected: Boolean) {
@@ -90,12 +92,6 @@ class MySiteSourceManager @Inject constructor(
         domainRegistrationSource.clear()
         scanAndBackupSource.clear()
         selectedSiteSource.clear()
-    }
-
-    private fun refreshAllSources() {
-        allSupportedMySiteSources.filterIsInstance(MySiteRefreshSource::class.java).forEach {
-            if (it is SiteIndependentSource || selectedSiteRepository.hasSelectedSite()) it.refresh()
-        }
     }
 
     private fun refreshSubsetOfAllSources() {
