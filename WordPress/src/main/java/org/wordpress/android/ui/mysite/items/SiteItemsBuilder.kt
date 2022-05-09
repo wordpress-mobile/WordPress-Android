@@ -13,20 +13,14 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
 class SiteItemsBuilder @Inject constructor(
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
-    private val siteListItemBuilder: SiteListItemBuilder,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val siteListItemBuilder: SiteListItemBuilder
 ) {
-    fun build(params: InfoItemBuilderParams) = if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-        params.isStaleMessagePresent.takeIf { it }
+    fun build(params: InfoItemBuilderParams) = params.isStaleMessagePresent.takeIf { it }
                 ?.let { InfoItem(title = UiStringRes(R.string.my_site_dashboard_stale_message)) }
-    } else {
-        null
-    }
 
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
