@@ -34,9 +34,13 @@ class LayoutsItemViewHolder(
     private var currentItem: LayoutCategoryUiState? = null
 
     private val recycler: RecyclerView by lazy {
-        val isRecommended = currentItem?.isRecommended == true && recommendedDimensionProvider != null
+        val dimensionProvider = if (currentItem?.isRecommended == true && recommendedDimensionProvider != null) {
+            recommendedDimensionProvider
+        } else {
+            thumbDimensionProvider
+        }
         itemView.updateLayoutParams {
-            height = if (isRecommended) recommendedDimensionProvider!!.rowHeight else thumbDimensionProvider.rowHeight
+            height = dimensionProvider.rowHeight
         }
         itemView.findViewById<View>(R.id.layouts_row_separator_line).isVisible = showRowDividers
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
@@ -46,10 +50,7 @@ class LayoutsItemViewHolder(
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
             setRecycledViewPool(RecyclerView.RecycledViewPool())
-            adapter = LayoutsAdapter(
-                    parent.context,
-                    if (isRecommended) recommendedDimensionProvider!! else thumbDimensionProvider
-            )
+            adapter = LayoutsAdapter(parent.context, dimensionProvider)
 
             addOnScrollListener(object : OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
