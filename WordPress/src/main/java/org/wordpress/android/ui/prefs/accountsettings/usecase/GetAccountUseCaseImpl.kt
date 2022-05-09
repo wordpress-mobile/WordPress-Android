@@ -4,12 +4,12 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import javax.inject.Inject
 
-class GetAccountUseCase @Inject constructor(
+class GetAccountUseCaseImpl @Inject constructor(
     private val accountStore: AccountStore
-) : GetAccountInteractor {
+) : GetAccountUseCase {
     override val account : AccountModel = accountStore.account
 }
 
-interface GetAccountInteractor{
+interface GetAccountUseCase{
     val account : AccountModel
 }

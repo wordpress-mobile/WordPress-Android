@@ -8,16 +8,16 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.prefs.accountsettings.module.DEFAULT_CONTINUATION
 import org.wordpress.android.ui.utils.ContinuationWrapper
-import org.wordpress.android.util.EventBusWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-class FetchAccountSettingsUseCase @Inject constructor(
+class FetchAccountSettingsUseCaseImpl @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
+    @Named(DEFAULT_CONTINUATION) private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) : FetchAccountSettingsInteractor{
+) : FetchAccountSettingsUseCase{
 
     init {
         dispatcher.register(this)
@@ -35,6 +35,6 @@ class FetchAccountSettingsUseCase @Inject constructor(
     }
 }
 
-interface FetchAccountSettingsInteractor{
+interface FetchAccountSettingsUseCase{
     suspend fun fetchNewSettings(): OnAccountChanged
 }

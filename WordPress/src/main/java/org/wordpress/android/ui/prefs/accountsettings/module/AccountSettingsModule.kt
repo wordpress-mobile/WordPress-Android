@@ -8,42 +8,47 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsInteractor
 import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
-import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountInteractor
+import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCaseImpl
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
-import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesInteractor
+import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCaseImpl
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
-import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsInteractor
+import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCaseImpl
 import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsUseCase
+import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsUseCaseImpl
 import org.wordpress.android.ui.utils.ContinuationWrapper
-import org.wordpress.android.ui.utils.ContinuationWrapperWithConcurrency
+import org.wordpress.android.ui.utils.ConcurrentContinuationWrapper
+import org.wordpress.android.ui.utils.DefaultContinuationWrapper
 import javax.inject.Named
 import javax.inject.Singleton
+const val DEFAULT_CONTINUATION = "DEFAULT_CONTINUATION"
+const val CONCURRENT_CONTINUATION = "CONCURRENT_CONTINUATION"
 
 @Module
 class AccountSettingsModule {
 
     @Provides
     @Singleton
-    fun provideContinuationWrapper(): ContinuationWrapper<OnAccountChanged> {
-        return ContinuationWrapper<OnAccountChanged>()
+    @Named(DEFAULT_CONTINUATION)
+    fun provideDefaultContinuationWrapper(): ContinuationWrapper<OnAccountChanged> {
+        return DefaultContinuationWrapper()
     }
 
     @Provides
     @Singleton
-    fun provideContinuationWrapperWithConcurrency(): ContinuationWrapperWithConcurrency<OnAccountChanged> {
-        return ContinuationWrapperWithConcurrency<OnAccountChanged>()
+    @Named(CONCURRENT_CONTINUATION)
+    fun provideConcurrentContinuationWrapper(): ContinuationWrapper<OnAccountChanged> {
+        return ConcurrentContinuationWrapper()
     }
 
     @Provides
     @Singleton
-    fun provideFetchAccountSettingsInteractor(
+    fun provideFetchAccountSettingsUseCase(
         dispatcher: Dispatcher,
-        continuationWrapper: ContinuationWrapper<OnAccountChanged>,
+        @Named(DEFAULT_CONTINUATION) continuationWrapper: ContinuationWrapper<OnAccountChanged>,
         @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher
-    ): FetchAccountSettingsInteractor {
-        return FetchAccountSettingsUseCase(
+    ): FetchAccountSettingsUseCase {
+        return FetchAccountSettingsUseCaseImpl(
                 dispatcher,
                 continuationWrapper,
                 ioDispatcher
@@ -52,12 +57,12 @@ class AccountSettingsModule {
 
     @Provides
     @Singleton
-    fun providePushAccountSettingsInteractor(
+    fun providePushAccountSettingsUseCase(
         dispatcher: Dispatcher,
-        continuationWrapper: ContinuationWrapperWithConcurrency<OnAccountChanged>,
+        @Named(CONCURRENT_CONTINUATION)  continuationWrapper: ContinuationWrapper<OnAccountChanged>,
         @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher
-    ): PushAccountSettingsInteractor {
-        return PushAccountSettingsUseCase(
+    ): PushAccountSettingsUseCase {
+        return PushAccountSettingsUseCaseImpl(
                 dispatcher,
                 continuationWrapper,
                 ioDispatcher
@@ -66,11 +71,11 @@ class AccountSettingsModule {
 
     @Provides
     @Singleton
-    fun provideGetSitesInteractor(
+    fun provideGetSitesUseCase(
         siteStore: SiteStore,
         @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher
-    ): GetSitesInteractor {
-        return GetSitesUseCase(
+    ): GetSitesUseCase {
+        return GetSitesUseCaseImpl(
                 ioDispatcher,
                 siteStore
         )
@@ -78,10 +83,10 @@ class AccountSettingsModule {
 
     @Provides
     @Singleton
-    fun provideGetAccountInteractor(
+    fun provideGetAccountUseCase(
         accountStore: AccountStore
-    ): GetAccountInteractor {
-        return GetAccountUseCase(
+    ): GetAccountUseCase {
+        return GetAccountUseCaseImpl(
                 accountStore
         )
     }

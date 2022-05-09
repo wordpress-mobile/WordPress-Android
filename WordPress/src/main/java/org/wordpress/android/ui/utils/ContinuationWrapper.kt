@@ -4,11 +4,11 @@ import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-class ContinuationWrapper<T> {
+class DefaultContinuationWrapper<T> : ContinuationWrapper<T> {
 
     private var continuation: CancellableContinuation<T>? = null
 
-    suspend fun suspendCoroutine(
+    override suspend fun suspendCoroutine(
         block: (CancellableContinuation<T>) -> Unit
     ): T {
         if (continuation != null) {
@@ -20,17 +20,25 @@ class ContinuationWrapper<T> {
         }
     }
 
-    fun continueWith(t: T) {
+    override fun continueWith(t: T) {
         if (continuation?.isActive == true) {
             continuation?.resume(t)
             continuation = null
         }
     }
 
-    fun cancel() {
+    override fun cancel() {
         if (continuation?.isActive == true) {
             continuation?.cancel()
             continuation = null
         }
     }
+}
+
+interface ContinuationWrapper<T>{
+    suspend fun suspendCoroutine(
+        block: (CancellableContinuation<T>) -> Unit
+    ): T
+    fun continueWith(t: T)
+    fun cancel()
 }

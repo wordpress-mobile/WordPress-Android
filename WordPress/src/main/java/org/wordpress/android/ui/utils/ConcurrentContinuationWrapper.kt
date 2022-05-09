@@ -3,14 +3,14 @@ package org.wordpress.android.ui.utils
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 
-class ContinuationWrapperWithConcurrency<T> {
+class ConcurrentContinuationWrapper<T> :ContinuationWrapper<T>{
 
     private val continuationList = arrayListOf<CancellableContinuation<T>>()
 
     val isWaiting: Boolean
         get() = continuationList.isNotEmpty()
 
-    suspend fun suspendCoroutine(
+    override suspend fun suspendCoroutine(
         block: (CancellableContinuation<T>) -> Unit
     ): T {
         return suspendCancellableCoroutine<T> {
@@ -19,12 +19,19 @@ class ContinuationWrapperWithConcurrency<T> {
         }
     }
 
-    fun continueWith(t: T) {
+    override fun continueWith(t: T) {
         continuationList.removeFirstOrNull()?.let {
             if (it.isActive) {
                 it.resume(t, null)
             }
         }
+    }
 
+    override fun cancel() {
+        continuationList.removeFirstOrNull()?.let {
+            if (it.isActive) {
+                it.cancel()
+            }
+        }
     }
 }

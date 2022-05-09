@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
-import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsInteractor
-import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountInteractor
-import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesInteractor
-import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsInteractor
+import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
+import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
+import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
+import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsUseCase
 import javax.inject.Inject
 
 class AccountSettingsRepository @Inject constructor(
-    fetchNewAccountSettingsUseCase: FetchAccountSettingsInteractor,
-    pushAccountSettingsUseCase: PushAccountSettingsInteractor,
-    getSitesUseCase: GetSitesInteractor,
-    getAccountUseCase: GetAccountInteractor
-) : FetchAccountSettingsInteractor by fetchNewAccountSettingsUseCase,
-        PushAccountSettingsInteractor by pushAccountSettingsUseCase,
-        GetSitesInteractor by getSitesUseCase,
-        GetAccountInteractor by getAccountUseCase
+    fetchNewAccountSettingsUseCaseImpl: FetchAccountSettingsUseCase,
+    pushAccountSettingsUseCaseImpl: PushAccountSettingsUseCase,
+    getSitesUseCaseImpl: GetSitesUseCase,
+    getAccountUseCaseImpl: GetAccountUseCase
+) : FetchAccountSettingsUseCase by fetchNewAccountSettingsUseCaseImpl,
+        PushAccountSettingsUseCase by pushAccountSettingsUseCaseImpl,
+        GetSitesUseCase by getSitesUseCaseImpl,
+        GetAccountUseCase by getAccountUseCaseImpl

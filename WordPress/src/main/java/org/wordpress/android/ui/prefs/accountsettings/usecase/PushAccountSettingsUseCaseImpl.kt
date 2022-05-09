@@ -10,18 +10,19 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.utils.ContinuationWrapperWithConcurrency
+import org.wordpress.android.ui.prefs.accountsettings.module.CONCURRENT_CONTINUATION
+import org.wordpress.android.ui.utils.ContinuationWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-class PushAccountSettingsUseCase @Inject constructor(
+class PushAccountSettingsUseCaseImpl @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val continuationWrapperWithConcurrency: ContinuationWrapperWithConcurrency<OnAccountChanged>,
+    @Named(CONCURRENT_CONTINUATION) private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) : PushAccountSettingsInteractor {
+) : PushAccountSettingsUseCase {
 
     init {
-        dispatcher.register(this@PushAccountSettingsUseCase)
+        dispatcher.register(this@PushAccountSettingsUseCaseImpl)
     }
 
     override suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
@@ -56,7 +57,7 @@ class PushAccountSettingsUseCase @Inject constructor(
 
     private suspend fun updateAccountSettings(addPayload: (PushAccountSettingsPayload) -> Unit): OnAccountChanged =
             withContext(ioDispatcher) {
-                continuationWrapperWithConcurrency.suspendCoroutine {
+                continuationWrapper.suspendCoroutine {
                     val payload = PushAccountSettingsPayload()
                     payload.params = HashMap()
                     addPayload(payload)
@@ -67,12 +68,12 @@ class PushAccountSettingsUseCase @Inject constructor(
     @Subscribe(threadMode = BACKGROUND)
     fun onAccountChanged(event: OnAccountChanged) {
         Log.d("ACCOUNT","onAccountChanged")
-        continuationWrapperWithConcurrency.continueWith( event)
+        continuationWrapper.continueWith( event)
         //if(!continuationWrapperWithConcurrency.isWaiting){ eventBusWrapper.unregister(this) }
     }
 }
 
-interface PushAccountSettingsInteractor{
+interface PushAccountSettingsUseCase{
     suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged
     suspend fun cancelPendingEmailChange(): OnAccountChanged
     suspend fun updateEmail(newEmail: String): OnAccountChanged
