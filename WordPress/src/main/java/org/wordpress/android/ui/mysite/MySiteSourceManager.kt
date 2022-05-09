@@ -127,4 +127,3 @@ class MySiteSourceManager @Inject constructor(
         }
     }
 }
-
