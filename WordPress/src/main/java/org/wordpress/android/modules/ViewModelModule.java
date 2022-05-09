@@ -70,6 +70,7 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewMo
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
@@ -611,4 +612,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
     abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalLikesDetailListViewModel.class)
+    abstract ViewModel totalLikesDetailListViewModel(TotalLikesDetailListViewModel viewModel);
 }
