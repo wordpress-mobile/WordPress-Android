@@ -92,12 +92,9 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     private fun categoriesWithRecommendations(categories: List<StarterDesignCategory>): List<LayoutCategoryModel> {
-        // TODO: This is just to demonstrate the UI. The real data are pending to be linked
-        val dummySelectedVertical = "food"
-        val recommendedVertical = resourceProvider.getString(
-                R.string.hpp_recommended_title,
-                dummySelectedVertical
-        )
+        val defaultVertical = resourceProvider.getString(R.string.hpp_recommended_default_vertical)
+        val recommendedVertical = resourceProvider.getString(R.string.hpp_recommended_title, defaultVertical)
+        // TODO: The link with the selected vertical and actual fallback recommendations will be implemented separately
         val recommendedCategory = categories.first { it.slug == "blog" }
                 .copy(title = recommendedVertical, description = recommendedVertical)
         return listOf(recommendedCategory).toLayoutCategories(true) + categories.toLayoutCategories()

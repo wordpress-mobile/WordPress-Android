@@ -3381,6 +3381,7 @@
     <string name="hpp_choose_error">There was an error while selecting the theme.</string>
     <string name="hpp_recommended_title">Best for %s</string>
     <string name="hpp_recommended_subtitle">Picked for you</string>
+    <string name="hpp_recommended_default_vertical">Blogging</string>
 
     <!-- Stories -->
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
