@@ -237,7 +237,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             viewModel.onQuickStartMenuInteraction(interaction)
         })
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
-        viewModel.onShowSwipeRefreshLayout.observeEvent(viewLifecycleOwner, { showSwipeToRefreshLayout(it) })
         viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
         viewModel.onAnswerBloggingPrompt.observeEvent(viewLifecycleOwner) {
             val bloggingPrompt = it.first
@@ -552,10 +551,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                     )
             )
         }
-    }
-
-    private fun showSwipeToRefreshLayout(isEnabled: Boolean) {
-        swipeToRefreshHelper.setEnabled(isEnabled)
     }
 
     private fun MySiteTabFragmentBinding.hideRefreshIndicatorIfNeeded() {
