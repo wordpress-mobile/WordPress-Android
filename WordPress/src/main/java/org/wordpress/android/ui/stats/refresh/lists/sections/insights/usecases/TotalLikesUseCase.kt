@@ -7,6 +7,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TOTAL_LIKES_E
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -133,5 +135,31 @@ class TotalLikesUseCase @Inject constructor(
                 statsSiteProvider.siteModel
         )
         navigateTo(ViewTotalLikesStats)
+    }
+
+    class TotalLikesUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
+        private val visitsAndViewsStore: VisitsAndViewsStore,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val statsDateFormatter: StatsDateFormatter,
+        private val totalStatsMapper: TotalStatsMapper,
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsWidgetUpdaters: StatsWidgetUpdaters,
+        private val localeManagerWrapper: LocaleManagerWrapper
+    ) : GranularUseCaseFactory {
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
+                TotalLikesUseCase(
+                        mainDispatcher,
+                        backgroundDispatcher,
+                        visitsAndViewsStore,
+                        statsSiteProvider,
+                        statsDateFormatter,
+                        totalStatsMapper,
+                        analyticsTracker,
+                        statsWidgetUpdaters,
+                        localeManagerWrapper
+                )
     }
 }
