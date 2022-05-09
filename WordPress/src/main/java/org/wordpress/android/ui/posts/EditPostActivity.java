@@ -2328,7 +2328,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
-                enableXPosts,
+                mSite.isUsingWpComRestApi() && enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom,
