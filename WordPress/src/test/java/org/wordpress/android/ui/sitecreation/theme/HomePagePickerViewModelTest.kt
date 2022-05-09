@@ -107,7 +107,8 @@ class HomePagePickerViewModelTest {
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
-        whenever(resourceProvider.getString(any(), any())).thenReturn("")
+        whenever(resourceProvider.getString(any())).thenReturn("Blogging")
+        whenever(resourceProvider.getString(any(), any())).thenReturn("Best for Blogging")
         block()
     }
 
