@@ -10,7 +10,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -26,7 +25,7 @@ class TotalFollowersUseCase @Inject constructor(
     private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<Int>(TOTAL_FOLLOWERS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_total_followers))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_followers))
 
     override fun buildEmptyItem() = buildUiModel(0)
 
@@ -45,7 +44,7 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     override fun buildUiModel(domainModel: Int) =
-            listOf(buildTitle(), ValueWithChartItem(domainModel))
+            listOf(buildTitle(), ValueWithChartItem(domainModel.toString()))
 
     private fun buildTitle() = TitleWithMore(
             R.string.stats_view_total_followers,

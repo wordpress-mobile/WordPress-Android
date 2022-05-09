@@ -12,7 +12,7 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 ) {
     private val value = itemView.findViewById<TextView>(id.value)
     fun bind(item: ValueWithChartItem) {
-        value.text = item.value.toString()
+        value.text = item.value
         // TODO: set the chart
     }
 }

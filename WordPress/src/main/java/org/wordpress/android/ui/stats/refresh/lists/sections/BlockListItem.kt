@@ -258,7 +258,7 @@ sealed class BlockListItem(val type: Type) {
     }
 
     // TODO: add the chart parameter
-    data class ValueWithChartItem(val value: Int) : BlockListItem(VALUE_WITH_CHART_ITEM)
+    data class ValueWithChartItem(val value: String) : BlockListItem(VALUE_WITH_CHART_ITEM)
 
     data class LineChartItem(
         val selectedType: Int,
