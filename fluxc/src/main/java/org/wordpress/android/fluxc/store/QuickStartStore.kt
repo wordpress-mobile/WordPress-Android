@@ -24,7 +24,9 @@ class QuickStartStore @Inject constructor(
         val order: Int
 
         companion object {
-            fun getAllTasks() = QuickStartNewSiteTask.values().toList()
+            fun getAllTasks(): List<QuickStartTask> =
+                    QuickStartNewSiteTask.values().toList() +
+                            QuickStartExistingSiteTask.values().toList()
 
             fun getTaskFromModel(model: QuickStartTaskModel) =
                     getAllTasks().find {
@@ -62,6 +64,30 @@ class QuickStartStore @Inject constructor(
         companion object {
             fun fromString(string: String?): QuickStartNewSiteTask {
                 for (value in QuickStartNewSiteTask.values()) {
+                    if (string.equals(value.toString(), true)) {
+                        return value
+                    }
+                }
+
+                return UNKNOWN
+            }
+        }
+    }
+
+    enum class QuickStartExistingSiteTask constructor(
+        override val string: String,
+        override val taskType: QuickStartTaskType,
+        override val order: Int
+    ) : QuickStartTask {
+        UNKNOWN(QUICK_START_UNKNOWN_LABEL, QuickStartTaskType.UNKNOWN, 0);
+
+        override fun toString(): String {
+            return string
+        }
+
+        companion object {
+            fun fromString(string: String?): QuickStartExistingSiteTask {
+                for (value in values()) {
                     if (string.equals(value.toString(), true)) {
                         return value
                     }
