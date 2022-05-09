@@ -4,6 +4,13 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.layoutpicker.LayoutCategoryViewType.DEFAULT
+import org.wordpress.android.ui.layoutpicker.LayoutCategoryViewType.RECOMMENDED
+
+enum class LayoutCategoryViewType {
+    DEFAULT,
+    RECOMMENDED,
+}
 
 /**
  * Renders the layout categories
@@ -30,8 +37,11 @@ class LayoutCategoryAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: LayoutsItemViewHolder, position: Int) {
-        holder.setIsRecyclable(false) // TODO: Find a better fix!
         holder.bind(items[position])
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (items[position].isRecommended) RECOMMENDED.ordinal else DEFAULT.ordinal
     }
 
     override fun onViewRecycled(holder: LayoutsItemViewHolder) {
