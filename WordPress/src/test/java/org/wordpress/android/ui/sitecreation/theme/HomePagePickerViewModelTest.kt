@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val mockedDesignSlug = "mockedDesignSlug"
 private const val mockedDesignSegmentId = 1L
@@ -52,13 +54,14 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
     @Mock lateinit var previewModeObserver: Observer<PreviewMode>
     @Mock lateinit var analyticsTracker: SiteCreationTracker
+    @Mock lateinit var resourceProvider: ResourceProvider
 
     private lateinit var viewModel: HomePagePickerViewModel
 
     private val mockCategory = StarterDesignCategory(
-            slug = "about",
-            title = "About",
-            description = "About pages",
+            slug = "blog",
+            title = "Blog",
+            description = "Blogging designs",
             emoji = "👋"
     )
 
@@ -70,7 +73,8 @@ class HomePagePickerViewModelTest {
                 fetchHomePageLayoutsUseCase,
                 analyticsTracker,
                 NoDelayCoroutineDispatcher(),
-                NoDelayCoroutineDispatcher()
+                NoDelayCoroutineDispatcher(),
+                resourceProvider
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
@@ -103,6 +107,8 @@ class HomePagePickerViewModelTest {
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
+        whenever(resourceProvider.getString(any())).thenReturn("Blogging")
+        whenever(resourceProvider.getString(any(), any())).thenReturn("Best for Blogging")
         block()
     }
 

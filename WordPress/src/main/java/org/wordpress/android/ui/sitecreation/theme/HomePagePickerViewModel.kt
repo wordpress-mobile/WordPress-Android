@@ -5,8 +5,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategory
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.layoutpicker.LayoutCategoryModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -18,6 +20,7 @@ import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,7 +35,8 @@ class HomePagePickerViewModel @Inject constructor(
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher,
+    private val resourceProvider: ResourceProvider
 ) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils, analyticsTracker) {
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
@@ -81,10 +85,19 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(Error())
                 } else {
-                    handleResponse(event.designs.toLayoutModels(), event.categories.toLayoutCategories())
+                    handleResponse(event.designs.toLayoutModels(), categoriesWithRecommendations(event.categories))
                 }
             }
         }
+    }
+
+    private fun categoriesWithRecommendations(categories: List<StarterDesignCategory>): List<LayoutCategoryModel> {
+        val defaultVertical = resourceProvider.getString(R.string.hpp_recommended_default_vertical)
+        val recommendedVertical = resourceProvider.getString(R.string.hpp_recommended_title, defaultVertical)
+        // TODO: The link with the selected vertical and actual fallback recommendations will be implemented separately
+        val recommendedCategory = categories.first { it.slug == "blog" }
+                .copy(title = recommendedVertical, description = recommendedVertical)
+        return listOf(recommendedCategory).toLayoutCategories(true) + categories.toLayoutCategories()
     }
 
     override fun onLayoutTapped(layoutSlug: String) {
