@@ -184,6 +184,7 @@ class QuickStartRepository
             )
             setTaskDoneAndTrack(task, selectedSite.id)
             if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSite.id)) {
+                showCompletedQuickStartNotice()
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
@@ -263,6 +264,20 @@ class QuickStartRepository
                 appPrefsWrapper.isQuickStartNoticeRequired()) {
             showQuickStartNotice(selectedSiteLocalId)
         }
+    }
+
+    private fun showCompletedQuickStartNotice() {
+        val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
+                "<b>${resourceProvider.getString(R.string.quick_start_complete_tour_message)}</b>:" +
+                        " ${resourceProvider.getString(R.string.quick_start_complete_tour_short_message)}"
+        )
+        _onSnackbar.value = Event(
+                SnackbarMessageHolder(
+                        message = UiStringText(message),
+                        duration = QUICK_START_NOTICE_DURATION,
+                        isImportant = false
+                )
+        )
     }
 
     private fun showQuickStartNotice(selectedSiteLocalId: Int) {
