@@ -174,7 +174,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var dynamicCardMenu: MutableList<DynamicCardMenuModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
-    private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
     private var answerRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
@@ -341,7 +340,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
         dynamicCardMenu = mutableListOf()
-        showSwipeRefreshLayout = mutableListOf()
         shareRequests = mutableListOf()
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
@@ -373,11 +371,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onDynamicCardMenuShown.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 dynamicCardMenu.add(it)
-            }
-        }
-        viewModel.onShowSwipeRefreshLayout.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                showSwipeRefreshLayout.add(it)
             }
         }
         viewModel.onShare.observeForever { event ->
@@ -1829,26 +1822,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* SWIPE REFRESH */
-    @InternalCoroutinesApi
-    @Test
-    fun `given not first resume, when on resume, then swipe refresh layout is enabled`() = test {
-        init()
-        viewModel.onResume() // first call
-
-        viewModel.onResume() // second call
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given first resume, when on resume, then swipe refresh layout is enabled`() = test {
-        init()
-
-        viewModel.onResume()
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
-    }
 
     @Test
     fun `given refresh, when not invoked as PTR, then pull-to-refresh request is not tracked`() {

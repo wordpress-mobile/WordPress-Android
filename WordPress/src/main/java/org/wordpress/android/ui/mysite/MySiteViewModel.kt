@@ -152,7 +152,6 @@ class MySiteViewModel @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
-    private val _onShowSwipeRefreshLayout = MutableLiveData<Event<Boolean>>()
     private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
@@ -215,7 +214,6 @@ class MySiteViewModel @Inject constructor(
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    val onShowSwipeRefreshLayout = _onShowSwipeRefreshLayout
     val onShare = _onShare
     val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<BloggingPrompt, SiteModel>>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
@@ -837,7 +835,6 @@ class MySiteViewModel @Inject constructor(
         mySiteSourceManager.onResume(isSiteSelected)
         isSiteSelected = false
         checkAndShowQuickStartNotice()
-        _onShowSwipeRefreshLayout.postValue(Event(true))
     }
 
     fun clearActiveQuickStartTask() {
