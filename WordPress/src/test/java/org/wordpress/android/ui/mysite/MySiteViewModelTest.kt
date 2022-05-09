@@ -378,11 +378,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dynamicCardMenu.add(it)
             }
         }
-        viewModel.onShowSwipeRefreshLayout.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                showSwipeRefreshLayout.add(it)
-            }
-        }
         viewModel.onShare.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 shareRequests.add(it)
