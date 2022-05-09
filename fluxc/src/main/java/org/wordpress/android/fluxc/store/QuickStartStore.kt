@@ -4,7 +4,9 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UNKNOWN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.util.AppLog
@@ -16,11 +18,30 @@ class QuickStartStore @Inject constructor(
     private val quickStartSqlUtils: QuickStartSqlUtils,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
-    enum class QuickStartNewSiteTask constructor(
-        private val string: String,
-        val taskType: QuickStartTaskType,
+    interface QuickStartTask {
+        val string: String
+        val taskType: QuickStartTaskType
         val order: Int
-    ) {
+
+        companion object {
+            fun getAllTasks() = QuickStartNewSiteTask.values().toList()
+
+            fun getTaskFromModel(model: QuickStartTaskModel) =
+                    getAllTasks().find {
+                        it.taskType.toString().equals(model.taskType, true) &&
+                            it.string.equals(model.taskName.toString(), true)
+                    } ?: UNKNOWN
+
+            fun getTasksByTaskType(taskType: QuickStartTaskType) =
+                    getAllTasks().filter { it.taskType == taskType }
+        }
+    }
+
+    enum class QuickStartNewSiteTask constructor(
+        override val string: String,
+        override val taskType: QuickStartTaskType,
+        override val order: Int
+    ) : QuickStartTask {
         UNKNOWN("unknown", QuickStartTaskType.UNKNOWN, 0),
         CREATE_SITE("create_site", CUSTOMIZE, 0),
         UPDATE_SITE_TITLE("update_site_title", CUSTOMIZE, 1),
