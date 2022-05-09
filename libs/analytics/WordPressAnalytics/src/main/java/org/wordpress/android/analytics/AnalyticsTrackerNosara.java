@@ -1127,6 +1127,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_next_date_tapped";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
+            case STATS_TOTAL_LIKES_VIEW_MORE_TAPPED:
+                return "stats_total_likes_view_more_tapped";
+            case STATS_TOTAL_LIKES_ERROR:
+                return "stats_total_likes_error";
+            case STATS_TOTAL_COMMENTS_VIEW_MORE_TAPPED:
+                return "stats_total_comments_view_more_tapped";
+            case STATS_TOTAL_COMMENTS_ERROR:
+                return "stats_total_comments_error";
             case STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_total_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:

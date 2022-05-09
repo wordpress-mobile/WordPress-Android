@@ -8,7 +8,7 @@ import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.util.config.BloggingPromptsNotificationConfig
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -18,7 +18,7 @@ class PromptReminderNotifierTest {
     private val siteStore: SiteStore = mock()
     private val accountStore: AccountStore = mock()
     private val reminderNotificationManager: ReminderNotificationManager = mock()
-    private val bloggingPromptsNotificationConfig: BloggingPromptsNotificationConfig = mock()
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig = mock()
 
     private val classToTest = PromptReminderNotifier(
             contextProvider = contextProvider,
@@ -26,7 +26,7 @@ class PromptReminderNotifierTest {
             siteStore = siteStore,
             accountStore = accountStore,
             reminderNotificationManager = reminderNotificationManager,
-            bloggingPromptsNotificationConfig = bloggingPromptsNotificationConfig
+            bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig
     )
 
     @Test
@@ -37,7 +37,7 @@ class PromptReminderNotifierTest {
 
     @Test
     fun `Should NOT notify if blogging prompts notification flag isEnabled returns FALSE`() {
-        whenever(bloggingPromptsNotificationConfig.isEnabled()).thenReturn(false)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         assertFalse(classToTest.shouldNotify(123))
     }
 
@@ -62,7 +62,7 @@ class PromptReminderNotifierTest {
         val siteId = 123
         val siteModel: SiteModel = mock()
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(bloggingPromptsNotificationConfig.isEnabled()).thenReturn(true)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         classToTest.hasOptedInBloggingPromptsReminders = true
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
         assertTrue(classToTest.shouldNotify(siteId))

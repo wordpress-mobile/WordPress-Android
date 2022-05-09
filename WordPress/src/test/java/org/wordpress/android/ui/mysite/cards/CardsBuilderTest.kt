@@ -36,7 +36,6 @@ import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as DashboardCardsBuilder
 
@@ -49,7 +48,6 @@ class CardsBuilderTest {
     @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
     @Mock lateinit var quickLinkRibbonBuilder: QuickLinkRibbonBuilder
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     private lateinit var cardsBuilder: CardsBuilder
@@ -155,15 +153,8 @@ class CardsBuilderTest {
     /* DASHBOARD CARDS */
 
     @Test
-    fun `given mySiteDashboardPhase2 disabled, when cards are built, then dashboard cards not built`() {
-        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
-
-        assertThat(cards.findDashboardCards()).isNull()
-    }
-
-    @Test
-    fun `given mySiteDashboardPhase2 enabled, when cards are built, then dashboard cards built`() {
-        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = true)
+    fun `when cards are built, then dashboard cards built`() {
+        val cards = buildCards()
 
         assertThat(cards.findDashboardCards()).isNotNull
     }
@@ -202,14 +193,12 @@ class CardsBuilderTest {
         isDomainCreditAvailable: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
-        isMySiteDashboardPhase2FeatureConfigEnabled: Boolean = false,
         isMySiteTabsEnabled: Boolean = false,
         isDefaultTabExperimentRunning: Boolean = false,
         isDefaultTabVariantAssigned: Boolean = false
     ): List<MySiteCardAndItem> {
         whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(isQuickActionEnabled)
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
         whenever(mySiteDefaultTabExperiment.isExperimentRunning()).thenReturn(isDefaultTabExperimentRunning)
         whenever(mySiteDefaultTabExperiment.isVariantAssigned()).thenReturn(isDefaultTabVariantAssigned)
         return cardsBuilder.build(
@@ -279,7 +268,6 @@ class CardsBuilderTest {
                 quickStartCardBuilder,
                 quickLinkRibbonBuilder,
                 dashboardCardsBuilder,
-                mySiteDashboardPhase2FeatureConfig,
                 mySiteDefaultTabExperiment
         )
     }
