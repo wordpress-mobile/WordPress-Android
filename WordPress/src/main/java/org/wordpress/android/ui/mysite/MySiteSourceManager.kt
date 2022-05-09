@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
@@ -16,7 +15,6 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
 class MySiteSourceManager @Inject constructor(
@@ -29,7 +27,6 @@ class MySiteSourceManager @Inject constructor(
     private val selectedSiteSource: SelectedSiteSource,
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -44,8 +41,7 @@ class MySiteSourceManager @Inject constructor(
     )
 
     private val showDashboardCards: Boolean
-        get() = mySiteDashboardPhase2FeatureConfig.isEnabled() &&
-                selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
+        get() = selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi == true
 
     private val allSupportedMySiteSources: List<MySiteSource<*>>
         get() = if (showDashboardCards) {
@@ -59,41 +55,28 @@ class MySiteSourceManager @Inject constructor(
 
     fun build(coroutineScope: CoroutineScope, siteLocalId: Int?): List<LiveData<out PartialState>> {
         return if (siteLocalId != null) {
-            allSupportedMySiteSources.map { source ->
-                source.build(coroutineScope, siteLocalId)
-                        .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
-            }
+            allSupportedMySiteSources.map { source -> source.build(coroutineScope, siteLocalId) }
         } else {
-            siteIndependentSources
-                    .map { source ->
-                        source.build(coroutineScope)
-                                .addDistinctUntilChangedIfNeeded(!mySiteDashboardPhase2FeatureConfig.isEnabled())
-                    }
+            siteIndependentSources.map { source -> source.build(coroutineScope) }
         }
     }
 
     fun isRefreshing(): Boolean {
-        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            val source = if (selectedSiteRepository.hasSelectedSite()) {
-                allSupportedMySiteSources
-            } else {
-                siteIndependentSources
-            }
-            source.filterIsInstance(MySiteRefreshSource::class.java).forEach {
-                if (it.isRefreshing() == true) {
-                    return true
-                }
+        val source = if (selectedSiteRepository.hasSelectedSite()) {
+            allSupportedMySiteSources
+        } else {
+            siteIndependentSources
+        }
+        source.filterIsInstance(MySiteRefreshSource::class.java).forEach {
+            if (it.isRefreshing() == true) {
+                return true
             }
         }
         return false
     }
 
     fun refresh() {
-        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            refreshAllSources()
-        } else {
-            refreshSubsetOfAllSources()
-        }
+        refreshAllSources()
     }
 
     fun onResume(isSiteSelected: Boolean) {
@@ -145,9 +128,3 @@ class MySiteSourceManager @Inject constructor(
     }
 }
 
-inline fun <X> LiveData<X>.addDistinctUntilChangedIfNeeded(isNeeded: Boolean): LiveData<X> =
-        if (isNeeded) {
-            distinctUntilChanged(this)
-        } else {
-            this
-        }

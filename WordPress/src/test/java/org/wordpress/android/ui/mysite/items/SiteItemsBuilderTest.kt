@@ -16,13 +16,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
-    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var siteModel: SiteModel
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
@@ -30,8 +28,7 @@ class SiteItemsBuilderTest {
     fun setUp() {
         siteItemsBuilder = SiteItemsBuilder(
                 siteCategoryItemBuilder,
-                siteListItemBuilder,
-                mySiteDashboardPhase2FeatureConfig
+                siteListItemBuilder
         )
     }
 
@@ -182,22 +179,7 @@ class SiteItemsBuilderTest {
     /* INFO ITEM */
 
     @Test
-    fun `given my site improvements flag not present, when build info item is invoked, then info item is not built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-
-        val infoItem = siteItemsBuilder.build(
-                InfoItemBuilderParams(
-                        isStaleMessagePresent = true
-                )
-        )
-
-        assertThat(infoItem).isNull()
-    }
-
-    @Test
-    fun `given my site improvements flag present, when build info item is invoked, then info item is built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
+    fun `when build info item is invoked, then info item is built`() {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = true
@@ -209,8 +191,6 @@ class SiteItemsBuilderTest {
 
     @Test
     fun `given stale message present, when build info item is invoked, then info item is built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = true
@@ -222,8 +202,6 @@ class SiteItemsBuilderTest {
 
     @Test
     fun `given stale message not present, when build info item is invoked, then info item is not built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = false
