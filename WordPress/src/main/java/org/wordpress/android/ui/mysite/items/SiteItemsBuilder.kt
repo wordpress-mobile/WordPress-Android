@@ -13,32 +13,23 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
 class SiteItemsBuilder @Inject constructor(
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
-    private val siteListItemBuilder: SiteListItemBuilder,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val siteListItemBuilder: SiteListItemBuilder
 ) {
-    fun build(params: InfoItemBuilderParams) = if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-        params.isStaleMessagePresent.takeIf { it }
+    fun build(params: InfoItemBuilderParams) = params.isStaleMessagePresent.takeIf { it }
                 ?.let { InfoItem(title = UiStringRes(R.string.my_site_dashboard_stale_message)) }
-    } else {
-        null
-    }
 
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
-        val showViewSiteFocusPoint = params.activeTask == QuickStartTask.VIEW_SITE
         val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
-        val showExplorePlansFocusPoint = params.activeTask == QuickStartTask.EXPLORE_PLANS
-        val showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS
-        val showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartTask.REVIEW_PAGES
+        val showStatsFocusPoint = (params.activeTask == QuickStartTask.CHECK_STATS && params.enableStatsFocusPoint)
+        val showPagesFocusPoint = (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartTask.REVIEW_PAGES) && params.enablePagesFocusPoint
 
         return listOfNotNull(
-                siteListItemBuilder.buildPlanItemIfAvailable(params.site, showExplorePlansFocusPoint, params.onClick),
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(params.site),
                 ListItem(
                         R.drawable.ic_stats_alt_white_24dp,
@@ -84,8 +75,7 @@ class SiteItemsBuilder @Inject constructor(
                         R.drawable.ic_globe_white_24dp,
                         UiStringRes(R.string.my_site_btn_view_site),
                         secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick),
-                        showFocusPoint = showViewSiteFocusPoint
+                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, params.onClick)
                 ),
                 siteListItemBuilder.buildAdminItemIfAvailable(params.site, params.onClick)
         )

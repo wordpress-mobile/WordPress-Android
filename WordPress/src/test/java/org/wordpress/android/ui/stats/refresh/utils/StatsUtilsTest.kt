@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
@@ -249,5 +251,75 @@ class StatsUtilsTest {
         val barWidth = getBarWidth(views, maxViews)
 
         assertThat(barWidth).isEqualTo(200)
+    }
+
+    @Test
+    fun `build change with positive difference`() {
+        val previousValue = 5L
+        val value = 20L
+        val positive = true
+        val expectedChange = "+15 (300%)"
+        whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("15"), eq("300")))
+                .thenReturn(expectedChange)
+
+        val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
+
+        assertThat(change).isEqualTo(expectedChange)
+    }
+
+    @Test
+    fun `build change with infinite positive difference`() {
+        val previousValue = 0L
+        val value = 20L
+        val positive = true
+        val expectedChange = "+20 (∞%)"
+        whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("20"), eq("∞")))
+                .thenReturn(expectedChange)
+
+        val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
+
+        assertThat(change).isEqualTo(expectedChange)
+    }
+
+    @Test
+    fun `build change with negative difference`() {
+        val previousValue = 30L
+        val value = 20L
+        val positive = false
+        val expectedChange = "-10 (-33%)"
+        whenever(resourceProvider.getString(eq(string.stats_traffic_change), eq("-10"), eq("-33")))
+                .thenReturn(expectedChange)
+
+        val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
+
+        assertThat(change).isEqualTo(expectedChange)
+    }
+
+    @Test
+    fun `build change with max negative difference`() {
+        val previousValue = 20L
+        val value = 0L
+        val positive = false
+        val expectedChange = "-20 (-100%)"
+        whenever(resourceProvider.getString(eq(string.stats_traffic_change), eq("-20"), eq("-100")))
+                .thenReturn(expectedChange)
+
+        val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
+
+        assertThat(change).isEqualTo(expectedChange)
+    }
+
+    @Test
+    fun `build change with zero difference`() {
+        val previousValue = 20L
+        val value = 20L
+        val positive = true
+        val expectedChange = "+0 (0%)"
+        whenever(resourceProvider.getString(eq(string.stats_traffic_increase), eq("0"), eq("0")))
+                .thenReturn(expectedChange)
+
+        val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
+
+        assertThat(change).isEqualTo(expectedChange)
     }
 }

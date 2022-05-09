@@ -1,0 +1,6 @@
+19.7:
+- Vi har lagt till flikarna Webbplatsmeny och Hem på skärmen Min webbplats
+- Vi har gjort knappen Lägg till block mer synlig när blockredigeraren öppnas
+- Vi har tagit bort meddelandetext som visades vid misslyckad uppladdning av mediafil/ljudblock
+- Vi har lagt till skärmen Syfte med webbplats i processen för webbplatsskapande
+- Vi har åtgärdat ett fel som gjorde att aviseringsinformation för kommentarer på GB-filblock orsakade krascher

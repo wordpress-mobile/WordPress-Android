@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
@@ -384,6 +385,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(hasBloggingPromptAction).isTrue()
     }
 
+    /* ktlint-disable max-line-length */
     @Test
     fun `bottom sheet action is answer BP when the BP answer button is clicked`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
@@ -393,7 +395,14 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         } as AnswerBloggingPromptAction?
         assertThat(action).isNotNull
         action!!.onClickAction?.invoke()
-        assertThat(viewModel.createAction.value).isEqualTo(ANSWER_BLOGGING_PROMPT)
+        val bloggingPrompt = BloggingPrompt(
+                text = "Cast the movie of your life.",
+                content = "<!-- wp:pullquote -->\n" +
+                        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                        "<!-- /wp:pullquote -->",
+                respondents = emptyList()
+        )
+        assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(bloggingPrompt)
     }
 
     @Test

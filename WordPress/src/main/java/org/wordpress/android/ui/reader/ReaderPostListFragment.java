@@ -42,6 +42,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -56,7 +57,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
@@ -81,7 +81,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -117,7 +116,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -125,6 +123,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarItem.Action;
+import org.wordpress.android.util.SnackbarItem.Info;
 import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -208,7 +208,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     private AlertDialog mBookmarksSavedLocallyDialog;
-    private QuickStartEvent mQuickStartEvent;
 
     private ReaderPostListViewModel mViewModel;
     // This VM is initialized only on the Following tab
@@ -409,7 +408,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
-            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
     }
 
@@ -505,18 +503,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void showSnackbar(SnackbarMessageHolder holder) {
-        Snackbar snackbar = WPSnackbar.make(
-                getSnackbarParent(),
-                mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
-                Snackbar.LENGTH_LONG
+        if (!isAdded() || getView() == null) return;
+        mSnackbarSequencer.enqueue(
+                new SnackbarItem(
+                        new Info(
+                                getSnackbarParent(),
+                                holder.getMessage(),
+                                holder.getDuration(),
+                                holder.isImportant()
+                        ),
+                        holder.getButtonTitle() != null
+                                ? new Action(holder.getButtonTitle(), view -> holder.getButtonAction().invoke()) : null
+                )
         );
-        if (holder.getButtonTitle() != null) {
-            snackbar.setAction(
-                    mUiHelpers.getTextOfUiString(requireContext(), holder.getButtonTitle()),
-                    v -> holder.getButtonAction().invoke()
-            );
-        }
-        snackbar.show();
     }
 
     private void addWebViewCachingFragment(Long blogId, Long postId) {
@@ -582,6 +581,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 visibleState.getCategories(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
+                        mReaderTracker.track(Stat.READER_FILTER_SHEET_DISPLAYED);
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                     } else if (!uiState.isVisible() && bottomSheet != null) {
                         bottomSheet.dismiss();
@@ -633,6 +633,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
         mRemoveFilterButton.setOnClickListener(v -> {
+            mReaderTracker.track(Stat.READER_FILTER_SHEET_CLEARED);
             mSubFilterViewModel.setDefaultSubfilter();
         });
         mSubFilterComponent.setVisibility(isFilterableScreen() ? View.VISIBLE : View.GONE);
@@ -888,36 +889,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(final QuickStartEvent event) {
-        if (!isAdded() || getView() == null) {
-            return;
-        }
-
-        mQuickStartEvent = event;
-        EventBus.getDefault().removeStickyEvent(event);
-
-        if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
-            && isAdded() && getActivity() instanceof WPMainActivity) {
-            showQuickStartSnackbar();
-            if (getSelectedSite() != null) mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
-        }
-    }
-
-    private void showQuickStartSnackbar() {
-        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
-                requireContext(),
-                R.string.quick_start_dialog_follow_sites_message_short_search,
-                R.drawable.ic_search_white_24dp
-        );
-        mSnackbarSequencer.enqueue(
-                new SnackbarItem(
-                        new SnackbarItem.Info(getSnackbarParent(), new UiStringText(title), Snackbar.LENGTH_LONG)
-                )
-        );
-    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         AppLog.d(T.READER, "reader post list > saving instance state");
@@ -950,7 +921,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, mIsTopLevel);
-        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
 
         if (isSearchTabsShowing()) {
             int tabPosition = getSearchTabsPosition();
@@ -1558,6 +1528,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void clearSearchSuggestions() {
+        mReaderTracker.track(Stat.READER_SEARCH_HISTORY_CLEARED);
         ReaderSearchTable.deleteAllQueries();
 
         mSearchSuggestionAdapter.swapCursor(null);

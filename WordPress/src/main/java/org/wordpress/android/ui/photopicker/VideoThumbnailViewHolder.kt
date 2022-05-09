@@ -52,7 +52,9 @@ class VideoThumbnailViewHolder(
                 FIT_CENTER
         )
         thumbnailViewUtils.setupListeners(
-                imgThumbnail, item.isSelected,
+                imgThumbnail,
+                true,
+                item.isSelected,
                 item.toggleAction,
                 item.clickAction,
                 animateSelection

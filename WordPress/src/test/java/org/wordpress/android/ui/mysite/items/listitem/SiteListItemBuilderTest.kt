@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.junit.Ignore
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -152,6 +153,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is WPcom`() {
         setupPlanItem(
@@ -168,6 +170,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showFocusPoint))
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is AT`() {
         setupPlanItem(
@@ -183,6 +186,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isEqualTo(PLAN_ITEM)
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when plan name is empty`() {
         setupPlanItem(planShortName = "")
@@ -192,6 +196,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when site cannot manage options`() {
         setupPlanItem(canManageOptions = false)
@@ -201,6 +206,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when site is WP for teams`() {
         setupPlanItem(isWpForTeams = true)
@@ -210,6 +216,7 @@ class SiteListItemBuilderTest {
         assertThat(item).isNull()
     }
 
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `plan item not built when site is neither WP com nor AT`() {
         setupPlanItem(isWPCom = false, isAutomatedTransfer = false)

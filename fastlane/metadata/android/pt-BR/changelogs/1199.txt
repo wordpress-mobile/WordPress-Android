@@ -1,4 +1,0 @@
-19.6:
-Esta versão é curta e agradável: depois de excluir um site, você deve ter notado que o mesmo site permanece na lista Meu Site até reiniciar o aplicativo.
-
-Isso foi corrigido, os sites excluídos agora desaparecem imediatamente.

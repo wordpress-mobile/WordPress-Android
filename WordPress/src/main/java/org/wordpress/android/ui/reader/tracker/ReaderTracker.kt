@@ -116,7 +116,7 @@ class ReaderTracker @Inject constructor(
         track(stat, properties)
     }
 
-    private fun track(
+    fun track(
         stat: AnalyticsTracker.Stat,
         properties: MutableMap<String, *>
     ) {

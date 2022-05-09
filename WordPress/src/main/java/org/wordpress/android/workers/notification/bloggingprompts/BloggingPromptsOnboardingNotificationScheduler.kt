@@ -1,6 +1,7 @@
 package org.wordpress.android.workers.notification.bloggingprompts
 
 import org.wordpress.android.R
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.workers.notification.local.LocalNotification
 import org.wordpress.android.workers.notification.local.LocalNotification.Type.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.workers.notification.local.LocalNotificationScheduler
@@ -9,7 +10,8 @@ import javax.inject.Inject
 
 class BloggingPromptsOnboardingNotificationScheduler @Inject constructor(
     private val localNotificationScheduler: LocalNotificationScheduler,
-    private val bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler
+    private val bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
 ) {
     // TODO @RenanLukas: if we have a local notification for the blogging prompts onboarding, we should track it
     fun scheduleBloggingPromptsOnboardingNotificationIfNeeded() {
@@ -22,10 +24,14 @@ class BloggingPromptsOnboardingNotificationScheduler @Inject constructor(
                     title = R.string.blogging_prompts_onboarding_notification_title,
                     text = R.string.blogging_prompts_onboarding_notification_text,
                     icon = R.drawable.ic_wordpress_white_24dp,
-                    actionIcon = -1,
-                    actionTitle = R.string.blogging_prompts_onboarding_notification_action
+                    firstActionIcon = -1,
+                    firstActionTitle = R.string.blogging_prompts_onboarding_notification_action,
+                    secondActionIcon = -1,
+                    secondActionTitle = R.string.blogging_prompts_notification_dismiss
             )
-            localNotificationScheduler.scheduleOneTimeNotification(firstNotification)
+            if (bloggingPromptsFeatureConfig.isEnabled()) {
+                localNotificationScheduler.scheduleOneTimeNotification(firstNotification)
+            }
         }
     }
 

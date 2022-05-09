@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -78,6 +79,7 @@ import org.wordpress.android.ui.WPTooltipView;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsReminderSchedulerListener;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
@@ -109,6 +111,7 @@ import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -133,7 +136,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.BloggingPromptsNotificationConfig;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -178,6 +180,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
+    public static final String ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE";
     public static final String ARG_WP_COM_SIGN_UP = "sign_up";
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_MY_SITE = "show_my_site";
@@ -190,6 +193,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
+    public static final String ARG_EDITOR_CONTENT = "editor_content";
+    public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -234,7 +239,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject BloggingPromptsOnboardingNotificationScheduler mBloggingPromptsOnboardingNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
-    @Inject BloggingPromptsNotificationConfig mBloggingPromptsNotificationConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -362,6 +366,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     finish();
                 }
             }
+            checkDismissNotification();
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
@@ -395,15 +400,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            ActivityLauncher.newBlogForResult(this);
+            ActivityLauncher.newBlogForResult(this,
+                    SiteCreationSource.fromString(getIntent().getStringExtra(ARG_SITE_CREATION_SOURCE)));
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             ActivityLauncher.showSignInForResultWpComOnly(this);
         } else if (getIntent().getBooleanExtra(ARG_BLOGGING_PROMPTS_ONBOARDING, false)
                    && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            new BloggingPromptsOnboardingDialogFragment()
-                    .show(getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG);
+            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
+                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
+            );
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -419,6 +426,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+    }
+
+    private void checkDismissNotification() {
+        final Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(ARG_DISMISS_NOTIFICATION)) {
+            final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            final int notificationId = intent.getIntExtra(ARG_DISMISS_NOTIFICATION, -1);
+            notificationManager.cancel(notificationId);
+        }
     }
 
     private void showSignInForResultBasedOnIsJetpackAppBuildConfig(Activity activity) {
@@ -456,9 +472,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
         mWeeklyRoundupScheduler.schedule();
-        if (mBloggingPromptsNotificationConfig.isEnabled()) {
-            mBloggingPromptsOnboardingNotificationScheduler.scheduleBloggingPromptsOnboardingNotificationIfNeeded();
-        }
+        mBloggingPromptsOnboardingNotificationScheduler.scheduleBloggingPromptsOnboardingNotificationIfNeeded();
     }
 
     private void initViewModel() {
@@ -501,8 +515,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
-                case ANSWER_BLOGGING_PROMPT: // TODO @klymyam open editor with BP content
-                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
+                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, null);
                     break;
                 case CREATE_NEW_PAGE:
                     if (mMLPViewModel.canShowModalLayoutPicker()) {
@@ -614,6 +627,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mViewModel.getCreatePostWithBloggingPrompt().observe(this, bloggingPrompt -> {
+            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.getContent());
+        });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
         // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
@@ -663,7 +679,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    onNewPostButtonClicked();
+                    final String content = intent.getStringExtra(ARG_EDITOR_CONTENT);
+                    onNewPostButtonClicked(content);
                     break;
                 case ARG_STATS:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -686,7 +703,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     ActivityLauncher.showSignInForResultWpComOnly(this);
                     break;
                 case ARG_BLOGGING_PROMPTS_ONBOARDING:
-                    BloggingPromptsOnboardingDialogFragment.newInstance().show(
+                    BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
                             getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
                     );
                     break;
@@ -950,8 +967,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     // user tapped the new post button in the bottom navbar
     @Override
-    public void onNewPostButtonClicked() {
-        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
+    public void onNewPostButtonClicked(@Nullable final String content) {
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR, content);
     }
 
     private void handleNewPageAction(String title, String content, String template,
@@ -969,14 +986,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void handleNewPostAction(PagePostCreationSourcesDetail source) {
+    private void handleNewPostAction(PagePostCreationSourcesDetail source, @Nullable final String content) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
             return;
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, content);
     }
 
     private void handleNewStoryAction() {

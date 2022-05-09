@@ -13,6 +13,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.LikeModel
@@ -442,6 +443,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onFeaturedImageClicked(blogId: Long, featuredImageUrl: String) {
+        readerTracker.track(Stat.READER_ARTICLE_FEATURED_IMAGE_TAPPED)
         val site = siteStore.getSiteBySiteId(blogId)
         _navigationEvents.value = Event(
                 ReaderNavigationEvents.ShowMediaPreview(site = site, featuredImage = featuredImageUrl)

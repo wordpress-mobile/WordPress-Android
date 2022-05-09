@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-14 12:01:53+0000
+Translation-Revision-Date: 2022-04-23 04:46:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0
 Language: es
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">Crear sitio</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Añadir bloques</string>
+    <string name="initial_screen">Pantalla inicial</string>
+    <string name="blogging_prompts_onboarding_notification_action">Más información</string>
+    <string name="blogging_prompts_onboarding_notification_text">Conviértete en un mejor escritor creando un hábito de escritura. Toca para más información.</string>
+    <string name="new_site_creation_site_name_title">Nombre del sitio</string>
+    <string name="blogging_prompts_onboarding_notification_title">Nuevo en la aplicación móvil de WordPress: Mensajes</string>
+    <string name="new_site_creation_site_name_header_subtitle">Un buen nombre es corto y fácil de recordar.\nPuedes cambiarlo más adelante.</string>
+    <string name="my_site_todays_stats_get_more_views_message">¿Te interesa crear tu audiencia? Echa un vistazo a nuestros &lt;a href=\"%1$s\"&gt;mejores consejos&lt;/a&gt;.</string>
+    <string name="new_site_creation_site_name_header_title">Dale un nombre a tu web %s</string>
+    <string name="stats_insights_views_and_visitors">Visitas y visitantes</string>
+    <string name="stats_insights_views_and_visitors_message">Las visitas de las últimas semanas son %1$s %2$s que las de la semana anterior.</string>
     <string name="featured_image_removed_notice">Eliminada como imagen destacada</string>
     <string name="featured_image_confirmation_notice">Establecer como imagen destacada</string>
     <string name="featured_image_replace_dialog_cancel">Mantener actual</string>
@@ -89,7 +101,6 @@ Language: es
     <string name="my_site_blogging_prompt_card_menu_skip">Omitir este estímulo</string>
     <string name="quick_start_site_menu_tab_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para continuar.</string>
     <string name="new_site_creation_intents_input_hint">Ej.: Moda, poesía, política</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d respuestas</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Comparte el estímulo de bloguear</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Respondido</string>
     <string name="my_site_blogging_prompt_card_title">Estímulos</string>
@@ -109,7 +120,7 @@ Language: es
     <string name="login_error_xml_rpc_cannot_read_site">No se ha podido leer el sitio WordPress en esa URL. Toca en el icono de ayuda para ver las FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Las llamadas XML-RPC parecen bloqueadas en este sitio (código de error 401). Si el intento de acceso falla, toca en el icono de ayuda para ver las FAQ.</string>
     <string name="login_error_xml_rpc_services_disabled">Los servicios XML-RPC están desactivados en este sitio.</string>
-    <string name="my_site_menu_tab_title">Menú del sitio</string>
+    <string name="my_site_menu_tab_title">Menú</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Tu búsqueda incluye caracteres no compatibles en los dominios de WordPress.com. Se permiten los siguientes caracteres: A–Z, a–z, 0–9.</string>
     <string name="error_edit_notification">Ha ocurrido un error al actualizar el contenido del aviso</string>
     <string name="my_site_todays_stat_card_title">Estadísticas de hoy</string>

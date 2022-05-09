@@ -1,3 +1,8 @@
-This release is short and sweet: after deleting a site, you might’ve noticed that same site sticking around in your My Site list until you restarted the app.
-
-We’ve fixed that—deleted sites now disappear right away. So long, farewell.
+- Feature image settings in Latest Post block
+- HTML/Visual mode switch notices
+- Full Embed block preview
+- Locale Picker visuals
+- Longer uploads with standalone VideoPress
+- Up-to-date Atomic site previews
+- Media Picker talkback media types
+- Signup magic link URL

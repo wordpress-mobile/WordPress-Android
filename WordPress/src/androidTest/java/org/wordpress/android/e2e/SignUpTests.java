@@ -10,6 +10,9 @@ import static org.wordpress.android.BuildConfig.E2E_SIGNUP_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_SIGNUP_USERNAME;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class SignUpTests extends BaseTest {
     @Before
     public void setUp() {

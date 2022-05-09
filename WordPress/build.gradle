@@ -59,6 +59,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 detekt {
     baseline = file("${project.rootDir}/config/detekt/baseline.xml")
@@ -111,7 +112,6 @@ android {
         buildConfigField "boolean", "SITE_DOMAINS", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_COMMENT_EDIT", "false"
-        buildConfigField "boolean", "MY_SITE_DASHBOARD_PHASE_2", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_TODAYS_STATS_CARD", "false"
         buildConfigField "boolean", "MY_SITE_DASHBOARD_TABS", "false"
         buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
@@ -122,7 +122,6 @@ android {
         buildConfigField "boolean", "SITE_NAME", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "BLOGGING_PROMPTS", "false"
-        buildConfigField "boolean", "BLOGGING_PROMPTS_NOTIFICATION", "false"
         buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT", "false"
         buildConfigField "boolean", "MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_DASHBOARD", "false"
         buildConfigField "boolean", "STATS_REVAMP_V2", "false"
@@ -334,7 +333,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.2.4'
+    implementation "androidx.fragment:fragment:$fragmentVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
 
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -441,14 +441,14 @@ dependencies {
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
-    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    // Dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    // Dagger and Hilt
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "com.google.dagger:hilt-android:$daggerVersion"
+    kapt "com.google.dagger:hilt-compiler:$daggerVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$daggerVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$daggerVersion"
 
     implementation("$gradle.ext.fluxCBinaryPath") {
         version {
