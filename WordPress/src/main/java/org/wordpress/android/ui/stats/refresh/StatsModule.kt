@@ -40,7 +40,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.V
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
@@ -51,6 +50,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
@@ -97,6 +99,8 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
+        totalLikesUseCase: TotalLikesUseCase,
+        totalCommentsUseCase: TotalCommentsUseCase,
         totalFollowersUseCase: TotalFollowersUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
         managementControlUseCase: ManagementControlUseCase,
@@ -105,6 +109,8 @@ class StatsModule {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
+            useCases.add(totalLikesUseCase)
+            useCases.add(totalCommentsUseCase)
             useCases.add(totalFollowersUseCase)
         } else {
             useCases.add(followerTotalsUseCase)
