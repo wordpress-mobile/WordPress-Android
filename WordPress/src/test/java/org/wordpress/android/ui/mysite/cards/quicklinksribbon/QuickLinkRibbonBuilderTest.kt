@@ -102,8 +102,8 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
 
     private fun setActiveTask(showPages: Boolean, showStats: Boolean): QuickStartStore.QuickStartTask? {
         return when {
-            showPages -> QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-            showStats -> QuickStartStore.QuickStartTask.CHECK_STATS
+            showPages -> QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
+            showStats -> QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
             else -> null
         }
     }

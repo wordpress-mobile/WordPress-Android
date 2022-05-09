@@ -7,9 +7,10 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard.QuickStartTaskCard
@@ -101,13 +102,13 @@ class QuickStartItemBuilderTest {
                         ListItemInteraction.create(VIEW_SITE, onQuickStartTaskCardClick)
                 ),
                 QuickStartTaskCard(
-                        QuickStartTask.UPDATE_SITE_TITLE,
+                        QuickStartNewSiteTask.UPDATE_SITE_TITLE,
                         UiStringRes(UPDATE_SITE_TITLE.titleResId),
                         UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
                         R.drawable.img_illustration_quick_start_task_set_site_title,
                         R.color.green_20,
                         true,
-                        ListItemInteraction.create(QuickStartTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
+                        ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
                 )
         )
     }
@@ -141,13 +142,13 @@ class QuickStartItemBuilderTest {
         assertThat(quickStartCard.progress).isEqualTo(100)
         assertThat(quickStartCard.taskCards).containsExactly(
                 QuickStartTaskCard(
-                        QuickStartTask.UPDATE_SITE_TITLE,
+                        QuickStartNewSiteTask.UPDATE_SITE_TITLE,
                         UiStringRes(UPDATE_SITE_TITLE.titleResId),
                         UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
                         R.drawable.img_illustration_quick_start_task_set_site_title,
                         R.color.green_20,
                         true,
-                        ListItemInteraction.create(QuickStartTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
+                        ListItemInteraction.create(QuickStartNewSiteTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
                 )
         )
     }

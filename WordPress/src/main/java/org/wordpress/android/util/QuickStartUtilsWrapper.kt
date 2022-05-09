@@ -8,9 +8,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
@@ -85,7 +84,7 @@ class QuickStartUtilsWrapper
         } else {
             if (quickStartEvent?.task == task) AppPrefs.setQuickStartNoticeRequired(true)
 
-            if (context != null && quickStartStore.hasDoneTask(siteLocalId, CREATE_SITE)) {
+            if (context != null && quickStartStore.hasDoneTask(siteLocalId, QuickStartNewSiteTask.CREATE_SITE)) {
                 val nextTask =
                         QuickStartUtils.getNextUncompletedQuickStartTaskForReminderNotification(
                                 quickStartStore,
@@ -111,9 +110,9 @@ class QuickStartUtilsWrapper
     }
 
     fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
-        quickStartStore.setDoneTask(siteLocalId.toLong(), CREATE_SITE, true)
+        quickStartStore.setDoneTask(siteLocalId.toLong(), QuickStartNewSiteTask.CREATE_SITE, true)
         if (isSiteTitleTaskCompleted) {
-            quickStartStore.setDoneTask(siteLocalId.toLong(), UPDATE_SITE_TITLE, true)
+            quickStartStore.setDoneTask(siteLocalId.toLong(), QuickStartNewSiteTask.UPDATE_SITE_TITLE, true)
         }
         analyticsTrackerWrapper.track(QUICK_START_STARTED)
     }

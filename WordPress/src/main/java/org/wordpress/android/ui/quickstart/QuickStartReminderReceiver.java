@@ -15,7 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
 import org.wordpress.android.push.NotificationPushIds;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -54,7 +54,7 @@ public class QuickStartReminderReceiver extends BroadcastReceiver {
         if (
                 quickStartTaskDetails == null
                 || selectedSiteLocalId == SelectedSiteRepository.UNAVAILABLE
-                || !mQuickStartStore.hasDoneTask(selectedSiteLocalId, QuickStartTask.CREATE_SITE)
+                || !mQuickStartStore.hasDoneTask(selectedSiteLocalId, QuickStartNewSiteTask.CREATE_SITE)
                 || mQuickStartStore.getQuickStartCompleted(selectedSiteLocalId)
                 || mQuickStartStore.hasDoneTask(selectedSiteLocalId, quickStartTaskDetails.getTask())
         ) {

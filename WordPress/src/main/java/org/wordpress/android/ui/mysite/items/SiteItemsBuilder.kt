@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.items
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -30,10 +30,11 @@ class SiteItemsBuilder @Inject constructor(
 
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
-        val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
-        val showStatsFocusPoint = (params.activeTask == QuickStartTask.CHECK_STATS && params.enableStatsFocusPoint)
-        val showPagesFocusPoint = (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartTask.REVIEW_PAGES) && params.enablePagesFocusPoint
+        val showEnablePostSharingFocusPoint = params.activeTask == QuickStartNewSiteTask.ENABLE_POST_SHARING
+        val showStatsFocusPoint =
+                params.activeTask == QuickStartNewSiteTask.CHECK_STATS && params.enableStatsFocusPoint
+        val showPagesFocusPoint = (params.activeTask == QuickStartNewSiteTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES) && params.enablePagesFocusPoint
 
         return listOfNotNull(
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(params.site),

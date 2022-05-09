@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
@@ -864,7 +865,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `site info card url click opens site and completes View Site task`() = test {
         invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.VIEW_SITE)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.VIEW_SITE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
     }
 
@@ -963,7 +964,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
     }
 
     @Test
@@ -972,7 +973,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
+        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -982,7 +983,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -1158,7 +1159,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task is clicked, then task is set as active task`() {
-        val task = QuickStartTask.VIEW_SITE
+        val task = QuickStartNewSiteTask.VIEW_SITE
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
         viewModel.onQuickStartTaskCardClick(task)
@@ -1247,7 +1248,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when quick start menu step is triggered, then site menu tab has quick start focus point`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
 
-        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, QuickStartTask.VIEW_SITE)
+        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, QuickStartNewSiteTask.VIEW_SITE)
 
         assertThat((uiModels.last().state as SiteSelected).findSiteMenuTabUiState().showQuickStartFocusPoint).isTrue
     }
@@ -1255,7 +1256,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given site menu tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
-        val pendingTask = QuickStartTask.VIEW_SITE
+        val pendingTask = QuickStartNewSiteTask.VIEW_SITE
         quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
 
         viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
@@ -1266,7 +1267,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given site menu tab has qs focus point, when tab is changed, then site menu pending task is active`() {
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
-        val pendingTask = QuickStartTask.VIEW_SITE
+        val pendingTask = QuickStartNewSiteTask.VIEW_SITE
         quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
 
         viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
@@ -1571,7 +1572,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
         invokeItemClickAction(ListItemAction.PLAN)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.EXPLORE_PLANS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
     }
 
@@ -1586,7 +1587,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `pages item click emits OpenPages navigation event`() {
         invokeItemClickAction(ListItemAction.PAGES)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -1671,7 +1672,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `stats item click completes CHECK_STATS task`() {
         invokeItemClickAction(ListItemAction.STATS)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
     }
 
     @Test
@@ -1747,7 +1748,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1755,7 +1756,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when change site icon dialog +ve btn clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1763,7 +1764,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1771,7 +1772,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete no refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1779,7 +1780,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when site icon dialog is dismissed, then upload site icon task is marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -2370,7 +2371,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
@@ -2408,7 +2409,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -2418,7 +2419,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
+        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 

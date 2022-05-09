@@ -15,6 +15,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
@@ -1239,7 +1240,7 @@ public class AppPrefs {
         if (TextUtils.isEmpty(taskName)) {
             return null;
         }
-        return QuickStartTask.Companion.fromString(taskName);
+        return QuickStartNewSiteTask.Companion.fromString(taskName);
     }
 
     public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {

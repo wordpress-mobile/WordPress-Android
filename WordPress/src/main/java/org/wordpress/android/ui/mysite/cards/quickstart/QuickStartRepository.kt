@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.DynamicCardType.GET_TO_KNOW_APP_QUICK_S
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
@@ -134,7 +135,7 @@ class QuickStartRepository
     fun skipQuickStart() {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             val selectedSiteLocalId = selectedSite.id.toLong()
-            QuickStartTask.values().forEach { quickStartStore.setDoneTask(selectedSiteLocalId, it, true) }
+            QuickStartTask.getAllTasks().forEach { quickStartStore.setDoneTask(selectedSiteLocalId, it, true) }
             quickStartStore.setQuickStartCompleted(selectedSiteLocalId, true)
             // skipping all tasks means no achievement notification, so we mark it as received
             quickStartStore.setQuickStartNotificationReceived(selectedSiteLocalId, true)
@@ -147,14 +148,14 @@ class QuickStartRepository
         clearSiteMenuStep()
         when {
             isSiteMenuStepRequiredForTask(task) -> requestSiteMenuStepForTask(task)
-            task == QuickStartTask.UPDATE_SITE_TITLE -> {
+            task == QuickStartNewSiteTask.UPDATE_SITE_TITLE -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                         R.string.quick_start_dialog_update_site_title_message_short,
                         SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
                 )
                 _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
             }
-            task == QuickStartTask.VIEW_SITE -> {
+            task == QuickStartNewSiteTask.VIEW_SITE -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                         R.string.quick_start_dialog_view_your_site_message_short,
                         SiteUtils.getHomeURLOrHostName(selectedSiteRepository.getSelectedSite())
@@ -306,8 +307,8 @@ class QuickStartRepository
             quickStartTaskOrigin == MySiteTabType.DASHBOARD && task.showInSiteMenu()
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartTask.ENABLE_POST_SHARING,
-        QuickStartTask.EXPLORE_PLANS -> true
+        QuickStartNewSiteTask.ENABLE_POST_SHARING,
+        QuickStartNewSiteTask.EXPLORE_PLANS -> true
         else -> false
     }
 

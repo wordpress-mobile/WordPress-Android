@@ -4,18 +4,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
@@ -113,18 +103,19 @@ class QuickStartItemBuilder
     @DrawableRes
     private fun getIllustration(task: QuickStartTask): Int {
         return when (task) {
-            UPDATE_SITE_TITLE -> R.drawable.img_illustration_quick_start_task_set_site_title
-            UPLOAD_SITE_ICON -> R.drawable.img_illustration_quick_start_task_edit_site_icon
-            VIEW_SITE -> R.drawable.img_illustration_quick_start_task_visit_your_site
-            ENABLE_POST_SHARING -> R.drawable.img_illustration_quick_start_task_enable_post_sharing
-            PUBLISH_POST -> R.drawable.img_illustration_quick_start_task_publish_post
-            FOLLOW_SITE -> R.drawable.img_illustration_quick_start_task_follow_other_sites
-            CHECK_STATS -> R.drawable.img_illustration_quick_start_task_check_site_stats
-            EDIT_HOMEPAGE -> R.drawable.img_illustration_quick_start_task_edit_your_homepage
-            REVIEW_PAGES -> R.drawable.img_illustration_quick_start_task_review_site_pages
-            EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_explore_plans
-            CREATE_SITE -> R.drawable.img_illustration_quick_start_task_create_site
-            QuickStartTask.UNKNOWN -> R.drawable.img_illustration_quick_start_task_placeholder
+            QuickStartNewSiteTask.UPDATE_SITE_TITLE -> R.drawable.img_illustration_quick_start_task_set_site_title
+            QuickStartNewSiteTask.UPLOAD_SITE_ICON -> R.drawable.img_illustration_quick_start_task_edit_site_icon
+            QuickStartNewSiteTask.VIEW_SITE -> R.drawable.img_illustration_quick_start_task_visit_your_site
+            QuickStartNewSiteTask.ENABLE_POST_SHARING ->
+                R.drawable.img_illustration_quick_start_task_enable_post_sharing
+            QuickStartNewSiteTask.PUBLISH_POST -> R.drawable.img_illustration_quick_start_task_publish_post
+            QuickStartNewSiteTask.FOLLOW_SITE -> R.drawable.img_illustration_quick_start_task_follow_other_sites
+            QuickStartNewSiteTask.CHECK_STATS -> R.drawable.img_illustration_quick_start_task_check_site_stats
+            QuickStartNewSiteTask.EDIT_HOMEPAGE -> R.drawable.img_illustration_quick_start_task_edit_your_homepage
+            QuickStartNewSiteTask.REVIEW_PAGES -> R.drawable.img_illustration_quick_start_task_review_site_pages
+            QuickStartNewSiteTask.EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_explore_plans
+            QuickStartNewSiteTask.CREATE_SITE -> R.drawable.img_illustration_quick_start_task_create_site
+            else -> R.drawable.img_illustration_quick_start_task_placeholder
         }
     }
 }
