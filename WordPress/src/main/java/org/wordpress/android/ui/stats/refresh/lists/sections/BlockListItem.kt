@@ -257,8 +257,7 @@ sealed class BlockListItem(val type: Type) {
             get() = entries.hashCode()
     }
 
-    // TODO: add the chart parameter
-    data class ValueWithChartItem(val value: String) : BlockListItem(VALUE_WITH_CHART_ITEM)
+    data class ValueWithChartItem(val value: String, val values: List<Long>?) : BlockListItem(VALUE_WITH_CHART_ITEM)
 
     data class LineChartItem(
         val selectedType: Int,
