@@ -221,7 +221,7 @@ class ViewsAndVisitorsUseCase
                         statsGranularity,
                         selectedDateProvider.getSelectedDate(statsGranularity)
                 )
-        ) // TODO: Connect this to proper second level navigation later
+        )
     }
 
     private fun onBarSelected(period: String?) {
