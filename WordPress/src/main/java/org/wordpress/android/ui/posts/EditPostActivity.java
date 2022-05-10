@@ -2305,7 +2305,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
         // If this.mIsXPostsCapable has not been set, default to allowing xPosts
-        boolean enableXPosts = mIsXPostsCapable == null || mIsXPostsCapable;
+        boolean enableXPosts = mSite.isUsingWpComRestApi() && (mIsXPostsCapable == null || mIsXPostsCapable);
 
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
@@ -2328,7 +2328,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsStoriesFeature(mSite),
                 mSite.isUsingWpComRestApi(),
-                mSite.isUsingWpComRestApi() && enableXPosts,
+                enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 !isFreeWPCom,
