@@ -68,6 +68,7 @@ import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewMo
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
@@ -209,6 +210,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StatsDetailViewModel.class)
     abstract ViewModel statsDetailViewModel(StatsDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(InsightsDetailListViewModel.class)
+    abstract ViewModel insightsDetailListViewModel(InsightsDetailListViewModel viewModel);
 
     @Binds
     @IntoMap

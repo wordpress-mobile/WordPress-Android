@@ -36,6 +36,7 @@ class StatsDetailActivity : LocaleAwareActivity() {
                 setReorderingAllowed(true)
                 when (listType) {
                     StatsSection.DETAIL -> add<StatsDetailFragment>(R.id.fragment_container)
+                    StatsSection.INSIGHT_DETAIL -> add<InsightsDetailFragment>(R.id.fragment_container)
                     StatsSection.TOTAL_LIKES_DETAIL -> add<TotalLikesDetailFragment>(R.id.fragment_container)
                 }
             }
@@ -73,6 +74,19 @@ class StatsDetailActivity : LocaleAwareActivity() {
                     site.siteId
             )
             context.startActivity(statsPostViewIntent)
+        }
+
+        @JvmStatic
+        fun startForInsightsDetail(
+            context: Context,
+            site: SiteModel
+        ) {
+            val intent = Intent(context, StatsDetailActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, site.id)
+                putExtra(StatsListFragment.LIST_TYPE, StatsSection.INSIGHT_DETAIL)
+            }
+            // TODO: Add tracking here
+            context.startActivity(intent)
         }
 
         @JvmStatic
