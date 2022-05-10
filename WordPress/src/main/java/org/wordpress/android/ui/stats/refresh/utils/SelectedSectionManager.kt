@@ -44,6 +44,7 @@ class SelectedSectionManager
 fun StatsSection.toStatsGranularity(): StatsGranularity? {
     return when (this) {
         ANNUAL_STATS, DETAIL, INSIGHTS -> null
+        StatsSection.INSIGHT_DETAIL,
         StatsSection.DAYS -> DAYS
         StatsSection.WEEKS -> WEEKS
         StatsSection.MONTHS -> MONTHS

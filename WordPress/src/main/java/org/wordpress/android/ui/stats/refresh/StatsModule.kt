@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -69,6 +71,8 @@ const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
 const val BLOCK_DETAIL_USE_CASE = "BlockDetailUseCase"
+const val VIEWS_AND_VISITORS_USE_CASE = "ViewsAndVisitorsUseCase"
+const val BLOCK_VIEWS_AND_VISITORS_USE_CASES = "BlockViewsAndVisitorsUseCases"
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
 
@@ -383,6 +387,52 @@ class StatsModule {
                 useCases,
                 { statsStore.getPostDetailTypes() },
                 uiModelMapper::mapDetailStats
+        )
+    }
+
+    /**
+     * Provides a singleton usecase that represents Views And Visitors Details screen.
+     * Update this method when you want to add more blocks to this detail screen.
+     * @param useCases build the use cases for the YEARS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES)
+    fun provideViewsAndVisitorsDetailUseCases(
+        viewsAndVisitorsUseCaseFactory: ViewsAndVisitorsUseCaseFactory,
+        referrersUseCaseFactory: ReferrersUseCaseFactory,
+        countryViewsUseCaseFactory: CountryViewsUseCaseFactory
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(
+                viewsAndVisitorsUseCaseFactory.build(VIEW_ALL),
+                referrersUseCaseFactory.build(DAYS, BLOCK),
+                countryViewsUseCaseFactory.build(DAYS, BLOCK)
+        )
+    }
+
+    /**
+     * Provides a singleton usecase that represents the Year stats screen.
+     * @param useCases build the use cases for the YEARS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(VIEWS_AND_VISITORS_USE_CASE)
+    fun provideViewsAndVisitorsDetailUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                statsSiteProvider,
+                useCases,
+                {
+                    listOf(VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
+                },
+                uiModelMapper::mapViewsVisitorsDetailStats
         )
     }
 

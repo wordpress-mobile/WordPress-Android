@@ -35,6 +35,7 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
         dialogType = type
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
         bloggingPrompt = BloggingPrompt(
+                id = 1234,
                 text = "Cast the movie of your life.",
                 content = "<!-- wp:pullquote -->\n" +
                         "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
@@ -46,7 +47,7 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
 
     private fun onPrimaryButtonClick() {
         val action = when (dialogType) {
-            ONBOARDING -> OpenEditor(bloggingPrompt.content)
+            ONBOARDING -> OpenEditor(bloggingPrompt.id)
             INFORMATION -> DismissDialog
         }
         _action.value = action
