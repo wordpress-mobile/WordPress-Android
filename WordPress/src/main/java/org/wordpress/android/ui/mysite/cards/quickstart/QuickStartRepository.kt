@@ -268,12 +268,12 @@ class QuickStartRepository
         }
     }
 
-    private fun showCompletedQuickStartNotice() {
+    fun showCompletedQuickStartNotice() {
         launch {
             delay(QUICK_START_COMPLETED_NOTICE_DELAY)
             val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
-                    "<b>${resourceProvider.getString(R.string.quick_start_complete_tour_message)}</b>:" +
-                            " ${resourceProvider.getString(R.string.quick_start_complete_tour_short_message)}"
+                    "<b>${resourceProvider.getString(R.string.quick_start_completed_tour_title)}</b>" +
+                            " ${resourceProvider.getString(R.string.quick_start_completed_tour_subtitle)}"
             )
             _onSnackbar.postValue(Event(
                     SnackbarMessageHolder(

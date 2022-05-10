@@ -3131,8 +3131,8 @@
     <string name="quick_start_focus_point_description">tap here</string>
     <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
 
-    <string name="quick_start_complete_tour_short_message">Congrats! You know your way around</string>
-    <string name="quick_start_complete_tour_message">Doesn\'t it feel good to cross things off a list?</string>
+    <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
+    <string name="quick_start_completed_tour_subtitle">Doesn\'t it feel good to cross things off a list?</string>
 
 
     <string name="quick_start_card_menu_pin">Pin this</string>
