@@ -47,6 +47,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewViewsAndVisitorsDetail
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.util.ToastUtils
@@ -222,6 +223,9 @@ class StatsNavigator @Inject constructor(
                         target.postUrl,
                         readerTracker
                 )
+            }
+            is ViewViewsAndVisitorsDetail -> {
+                ActivityLauncher.viewInsightsDetail(activity, siteProvider.siteModel)
             }
         }
     }
