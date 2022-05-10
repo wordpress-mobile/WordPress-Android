@@ -2,7 +2,7 @@
 
 19.9
 -----
-
+* [*] Block Editor: Prevent non-functional '+' icon displaying in toolbar on self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/16507]
 
 19.8
 -----
