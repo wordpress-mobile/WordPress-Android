@@ -5,10 +5,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategory
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.layoutpicker.LayoutCategoryModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -88,19 +88,72 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(Error())
                 } else {
-                    handleResponse(event.designs.toLayoutModels(), categoriesWithRecommendations(event.categories))
+                    handleResponseWithRecommendations(vertical, event.designs, event.categories)
                 }
             }
         }
     }
 
-    private fun categoriesWithRecommendations(categories: List<StarterDesignCategory>): List<LayoutCategoryModel> {
-        val defaultVertical = resourceProvider.getString(R.string.hpp_recommended_default_vertical)
-        val recommendedVertical = resourceProvider.getString(R.string.hpp_recommended_title, defaultVertical)
-        // TODO: The link with the selected vertical and actual fallback recommendations will be implemented separately
-        val recommendedCategory = categories.first { it.slug == "blog" }
-                .copy(title = recommendedVertical, description = recommendedVertical)
-        return listOf(recommendedCategory).toLayoutCategories(true) + categories.toLayoutCategories()
+    private fun handleResponseWithRecommendations(
+        vertical: String,
+        designs: List<StarterDesign>,
+        categories: List<StarterDesignCategory>
+    ) {
+        val verticalSlug: String? = if (vertical.isNullOrEmpty()) null else getVerticalSlug(vertical)
+        val hasRecommendations = !verticalSlug.isNullOrEmpty() &&
+                designs.any { it.group != null && it.group.contains(verticalSlug) }
+
+        if (hasRecommendations) {
+            val recommendedTitle = resourceProvider.getString(R.string.hpp_recommended_title, vertical)
+            // Create a new category for the recommendations
+            val recommendedCategory = StarterDesignCategory(
+                    slug = "recommended_$verticalSlug", // The slug is not used but should not already exist
+                    title = recommendedTitle,
+                    description = recommendedTitle,
+                    emoji = ""
+            )
+            val designsWithRecommendations = designs.map {
+                // Add the new category to the recommended designs so that they are filtered correctly
+                // in the `LayoutPickerViewModel.loadLayouts()` method
+                if (it.group.contains(verticalSlug)) {
+                    it.copy(categories = it.categories + recommendedCategory)
+                } else {
+                    it
+                }
+            }.toLayoutModels()
+            val categoriesWithRecommendations =
+                    listOf(recommendedCategory).toLayoutCategories(true) +
+                    categories.toLayoutCategories()
+            handleResponse(designsWithRecommendations, categoriesWithRecommendations)
+        } else {
+            // If no designs are recommended for the selected vertical recommend the blog category
+            val recommendedTitle = resourceProvider.getString(
+                    R.string.hpp_recommended_title,
+                    resourceProvider.getString(R.string.hpp_recommended_default_vertical)
+            )
+            val recommendedCategory = categories.firstOrNull { it.slug == "blog" }?.copy(
+                    title = recommendedTitle,
+                    description = recommendedTitle
+            )
+            if (recommendedCategory == null) {
+                // If there is no blog category do not show a recommendation
+                handleResponse(designs.toLayoutModels(), categories.toLayoutCategories())
+            } else {
+                val categoriesWithRecommendations =
+                        listOf(recommendedCategory).toLayoutCategories(true) +
+                        categories.toLayoutCategories()
+                handleResponse(designs.toLayoutModels(), categoriesWithRecommendations)
+            }
+        }
+    }
+
+    private fun getVerticalSlug(vertical: String): String? {
+        val slugsArray = resourceProvider.getStringArray(R.array.site_creation_intents_slugs)
+        val verticalArray = resourceProvider.getStringArray(R.array.site_creation_intents_strings)
+        if (slugsArray.size != verticalArray.size) {
+            throw IllegalStateException("Intents arrays size mismatch")
+        }
+        return slugsArray.getOrNull(verticalArray.indexOf(vertical))
     }
 
     override fun onLayoutTapped(layoutSlug: String) {
