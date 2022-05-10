@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.accountsettings.usecase
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -62,13 +61,14 @@ class PushAccountSettingsUseCaseImpl @Inject constructor(
 
     @Subscribe(threadMode = BACKGROUND)
     fun onAccountChanged(event: OnAccountChanged) {
-        continuationWrapper.continueWith( event)
-        if(!continuationWrapper.isWaiting){ dispatcher.unregister(this) }
+        continuationWrapper.continueWith(event)
+        if (!continuationWrapper.isWaiting) {
+            dispatcher.unregister(this)
+        }
     }
-
 }
 
-interface PushAccountSettingsUseCase{
+interface PushAccountSettingsUseCase {
     suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged
     suspend fun cancelPendingEmailChange(): OnAccountChanged
     suspend fun updateEmail(newEmail: String): OnAccountChanged

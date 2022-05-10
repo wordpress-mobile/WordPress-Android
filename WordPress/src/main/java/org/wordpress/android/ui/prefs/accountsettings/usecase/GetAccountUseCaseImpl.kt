@@ -7,9 +7,9 @@ import javax.inject.Inject
 class GetAccountUseCaseImpl @Inject constructor(
     private val accountStore: AccountStore
 ) : GetAccountUseCase {
-    override val account : AccountModel = accountStore.account
+    override val account: AccountModel = accountStore.account
 }
 
-interface GetAccountUseCase{
-    val account : AccountModel
+interface GetAccountUseCase {
+    val account: AccountModel
 }

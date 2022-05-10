@@ -17,6 +17,6 @@ class GetSitesUseCaseImpl @Inject constructor(
     }
 }
 
-interface GetSitesUseCase{
+interface GetSitesUseCase {
     suspend fun get(): List<SiteModel>
 }

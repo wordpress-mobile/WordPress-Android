@@ -16,11 +16,12 @@ import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCaseImpl
 import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsUseCase
 import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsUseCaseImpl
-import org.wordpress.android.ui.utils.ContinuationWrapper
 import org.wordpress.android.ui.utils.ConcurrentContinuationWrapper
+import org.wordpress.android.ui.utils.ContinuationWrapper
 import org.wordpress.android.ui.utils.DefaultContinuationWrapper
 import javax.inject.Named
 import javax.inject.Singleton
+
 const val DEFAULT_CONTINUATION = "DEFAULT_CONTINUATION"
 const val CONCURRENT_CONTINUATION = "CONCURRENT_CONTINUATION"
 
@@ -59,7 +60,7 @@ class AccountSettingsModule {
     @Singleton
     fun providePushAccountSettingsUseCase(
         dispatcher: Dispatcher,
-        @Named(CONCURRENT_CONTINUATION)  continuationWrapper: ContinuationWrapper<OnAccountChanged>,
+        @Named(CONCURRENT_CONTINUATION) continuationWrapper: ContinuationWrapper<OnAccountChanged>,
         @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher
     ): PushAccountSettingsUseCase {
         return PushAccountSettingsUseCaseImpl(

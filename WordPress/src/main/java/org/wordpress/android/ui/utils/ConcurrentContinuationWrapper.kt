@@ -3,7 +3,7 @@ package org.wordpress.android.ui.utils
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 
-class ConcurrentContinuationWrapper<T> :ContinuationWrapper<T>{
+class ConcurrentContinuationWrapper<T> : ContinuationWrapper<T> {
 
     private val continuationList = arrayListOf<CancellableContinuation<T>>()
 
