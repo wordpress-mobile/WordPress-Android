@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.store.bloggingprompts
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsError
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.rest.wpcom.bloggingprompts.BloggingPromptsErrorType.GENERIC_ERROR
@@ -28,15 +29,17 @@ class BloggingPromptsStore @Inject constructor(
         site: SiteModel,
         number: Int,
         from: Date
-    ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchPrompts") {
-        val payload = restClient.fetchPrompts(site, number, from)
-        return@withDefaultContext storePrompts(site, payload)
+    ): BloggingPromptsResult<List<BloggingPromptModel>> {
+        return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchPrompts") {
+            val payload = restClient.fetchPrompts(site, number, from)
+            storePrompts(site, payload)
+        }
     }
 
     private suspend fun storePrompts(
         site: SiteModel,
         payload: BloggingPromptsPayload<BloggingPromptsListResponse>
-    ): BloggingPromptsResult<List<CardModel>> = when {
+    ): BloggingPromptsResult<List<BloggingPromptModel>> = when {
         payload.isError -> handlePayloadError(payload.error)
         payload.response != null -> handlePayloadResponse(site, payload.response)
         else -> BloggingPromptsResult(BloggingPromptsError(INVALID_RESPONSE))
@@ -44,7 +47,7 @@ class BloggingPromptsStore @Inject constructor(
 
     private fun handlePayloadError(
         error: BloggingPromptsError
-    ): BloggingPromptsResult<List<CardModel>> = when (error.type) {
+    ): BloggingPromptsResult<List<BloggingPromptModel>> = when (error.type) {
         AUTHORIZATION_REQUIRED -> {
             promptsDao.clear()
             BloggingPromptsResult()
@@ -52,24 +55,34 @@ class BloggingPromptsStore @Inject constructor(
         else -> BloggingPromptsResult(error)
     }
 
-    fun getPromptForDate(site: SiteModel, date: Date) =
-        promptsDao.getPromptForDate(site.id, date).map { prompts ->
+    fun getPromptForDate(
+        site: SiteModel,
+        date: Date
+    ): Flow<BloggingPromptsResult<BloggingPromptModel>> {
+        return promptsDao.getPromptForDate(site.id, date).map { prompts ->
             BloggingPromptsResult(prompts.firstOrNull()?.toBloggingPrompt())
         }
+    }
 
-    fun getPromptById(site: SiteModel, promptId: Int) =
-        promptsDao.getPrompt(site.id, promptId).map { prompts ->
+    fun getPromptById(
+        site: SiteModel,
+        promptId: Int
+    ): Flow<BloggingPromptsResult<BloggingPromptModel>> {
+        return promptsDao.getPrompt(site.id, promptId).map { prompts ->
             BloggingPromptsResult(prompts.firstOrNull()?.toBloggingPrompt())
         }
+    }
 
-    fun getPrompts(site: SiteModel) = promptsDao.getAllPrompts(site.id).map { prompts ->
-        BloggingPromptsResult(prompts.map { it.toBloggingPrompt() })
+    fun getPrompts(site: SiteModel): Flow<BloggingPromptsResult<List<BloggingPromptModel>>> {
+        return promptsDao.getAllPrompts(site.id).map { prompts ->
+            BloggingPromptsResult(prompts.map { it.toBloggingPrompt() })
+        }
     }
 
     private suspend fun handlePayloadResponse(
         site: SiteModel,
         response: BloggingPromptsListResponse
-    ): BloggingPromptsResult<List<CardModel>> = try {
+    ): BloggingPromptsResult<List<BloggingPromptModel>> = try {
         promptsDao.insertForSite(site.id, response.toBloggingPrompts())
         BloggingPromptsResult()
     } catch (e: Exception) {
