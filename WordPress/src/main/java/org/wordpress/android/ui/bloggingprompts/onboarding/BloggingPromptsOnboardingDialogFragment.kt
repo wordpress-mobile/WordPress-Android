@@ -155,7 +155,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             when (action) {
                 is OpenEditor -> {
                     activity?.let {
-                        startActivity(ActivityLauncher.openEditorWithContentIntent(it, action.content))
+                        startActivity(ActivityLauncher.openEditorWithBloggingPrompt(it, action.promptId))
                     }
                 }
                 is OpenSitePicker -> {

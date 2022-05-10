@@ -19,6 +19,8 @@ sealed class NavigationTarget {
 
     data class ViewFollowersStats(val selectedTab: Int) : NavigationTarget()
     object ViewTotalFollowersStats : NavigationTarget()
+    object ViewTotalLikesStats : NavigationTarget()
+    object ViewTotalCommentsStats : NavigationTarget()
     data class ViewCommentsStats(val selectedTab: Int) : NavigationTarget()
     object ViewTagsAndCategoriesStats : NavigationTarget()
     object ViewPublicizeStats : NavigationTarget()
@@ -41,5 +43,10 @@ sealed class NavigationTarget {
         val postId: Long,
         val postUrl: String,
         val postType: String = StatsConstants.ITEM_TYPE_ATTACHMENT
+    ) : NavigationTarget()
+
+    data class ViewViewsAndVisitorsDetail(
+        val statsGranularity: StatsGranularity,
+        val selectedDate: Date?
     ) : NavigationTarget()
 }

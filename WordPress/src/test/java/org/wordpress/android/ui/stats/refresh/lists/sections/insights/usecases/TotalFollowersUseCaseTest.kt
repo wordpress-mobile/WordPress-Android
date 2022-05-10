@@ -26,13 +26,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 
 class TotalFollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: SummaryStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: TotalFollowersUseCase
     private val followers = 100
@@ -90,7 +88,7 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     private fun assertValue(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(VALUE_WITH_CHART_ITEM)
         val item = blockListItem as ValueWithChartItem
-        assertThat(item.value).isEqualTo(followers)
+        assertThat(item.value).isEqualTo(followers.toString())
     }
 
     private suspend fun loadSummary(refresh: Boolean, forced: Boolean): UseCaseModel {
