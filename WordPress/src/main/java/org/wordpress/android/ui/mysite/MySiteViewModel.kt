@@ -173,8 +173,11 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
+    private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
+    private val isBloggingPromptsFeatureConfigEnabled = bloggingPromptsFeatureConfig.isEnabled()
+
     val isMySiteTabsEnabled: Boolean
-        get() = mySiteDashboardTabsFeatureConfig.isEnabled() &&
+        get() = isMySiteDashboardTabsFeatureConfigEnabled &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
@@ -423,7 +426,7 @@ class MySiteViewModel @Inject constructor(
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                                 // TODO @klymyam fetch the actual blogging prompt
-                                bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
                                     @Suppress("MagicNumber")
                                     val dummyRespondent = BloggingPromptRespondent(
                                             54279365,
@@ -1173,7 +1176,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
-        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+        if (isMySiteDashboardTabsFeatureConfigEnabled) {
             _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
         } else {
             analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
