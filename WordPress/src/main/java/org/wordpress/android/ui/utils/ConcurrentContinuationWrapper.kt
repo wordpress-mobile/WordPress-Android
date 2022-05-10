@@ -7,7 +7,7 @@ class ConcurrentContinuationWrapper<T> :ContinuationWrapper<T>{
 
     private val continuationList = arrayListOf<CancellableContinuation<T>>()
 
-    val isWaiting: Boolean
+    override val isWaiting: Boolean
         get() = continuationList.isNotEmpty()
 
     override suspend fun suspendCoroutine(

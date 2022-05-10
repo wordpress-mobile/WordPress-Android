@@ -19,10 +19,8 @@ class FetchAccountSettingsUseCaseImpl @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : FetchAccountSettingsUseCase{
 
-    init {
-        dispatcher.register(this)
-    }
     override suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
+        dispatcher.register(this@FetchAccountSettingsUseCaseImpl)
         continuationWrapper.suspendCoroutine {
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
         }

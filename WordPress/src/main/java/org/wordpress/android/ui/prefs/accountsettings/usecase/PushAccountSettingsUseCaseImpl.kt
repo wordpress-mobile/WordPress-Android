@@ -26,31 +26,26 @@ class PushAccountSettingsUseCaseImpl @Inject constructor(
     }
 
     override suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
-        Log.d("ACCOUNT","updatePrimaryBlog")
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["primary_site_ID"] = blogId }
         return updateAccountSettings(addPayload)
     }
 
     override suspend fun cancelPendingEmailChange(): OnAccountChanged {
-        Log.d("ACCOUNT","cancelPendingEmailChange")
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email_change_pending"] = "false" }
         return updateAccountSettings(addPayload)
     }
 
     override suspend fun updateEmail(newEmail: String): OnAccountChanged {
-        Log.d("ACCOUNT","updateEmail")
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email"] = newEmail }
         return updateAccountSettings(addPayload)
     }
 
     override suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged {
-        Log.d("ACCOUNT","updateWebAddress")
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_URL"] = newWebAddress }
         return updateAccountSettings(addPayload)
     }
 
     override suspend fun updatePassword(newPassword: String): OnAccountChanged {
-        Log.d("ACCOUNT","updatePassword")
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["password"] = newPassword }
         return updateAccountSettings(addPayload)
     }
@@ -67,10 +62,10 @@ class PushAccountSettingsUseCaseImpl @Inject constructor(
 
     @Subscribe(threadMode = BACKGROUND)
     fun onAccountChanged(event: OnAccountChanged) {
-        Log.d("ACCOUNT","onAccountChanged")
         continuationWrapper.continueWith( event)
-        //if(!continuationWrapperWithConcurrency.isWaiting){ eventBusWrapper.unregister(this) }
+        if(!continuationWrapper.isWaiting){ dispatcher.unregister(this) }
     }
+
 }
 
 interface PushAccountSettingsUseCase{

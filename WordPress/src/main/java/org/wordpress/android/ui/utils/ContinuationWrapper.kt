@@ -8,6 +8,9 @@ class DefaultContinuationWrapper<T> : ContinuationWrapper<T> {
 
     private var continuation: CancellableContinuation<T>? = null
 
+    override val isWaiting: Boolean
+        get() = continuation != null
+
     override suspend fun suspendCoroutine(
         block: (CancellableContinuation<T>) -> Unit
     ): T {
@@ -36,6 +39,7 @@ class DefaultContinuationWrapper<T> : ContinuationWrapper<T> {
 }
 
 interface ContinuationWrapper<T>{
+    val isWaiting: Boolean
     suspend fun suspendCoroutine(
         block: (CancellableContinuation<T>) -> Unit
     ): T
