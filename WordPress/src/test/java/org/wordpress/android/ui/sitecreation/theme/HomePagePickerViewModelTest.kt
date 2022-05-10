@@ -56,6 +56,7 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var analyticsTracker: SiteCreationTracker
     @Mock lateinit var resourceProvider: ResourceProvider
 
+    private lateinit var recommendationProvider: SiteDesignRecommendationProvider
     private lateinit var viewModel: HomePagePickerViewModel
 
     private val mockCategory = StarterDesignCategory(
@@ -67,6 +68,7 @@ class HomePagePickerViewModelTest {
 
     @Before
     fun setUp() {
+        recommendationProvider = SiteDesignRecommendationProvider(resourceProvider)
         viewModel = HomePagePickerViewModel(
                 networkUtils,
                 dispatcher,
@@ -74,7 +76,7 @@ class HomePagePickerViewModelTest {
                 analyticsTracker,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher(),
-                resourceProvider
+                recommendationProvider
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
