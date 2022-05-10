@@ -42,6 +42,9 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var recommendedDimensionProvider: SiteDesignRecommendedDimensionProvider
     private lateinit var viewModel: HomePagePickerViewModel
 
+    private val siteIntent: String?
+        get() = arguments?.getString(ARG_SITE_INTENT)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
@@ -128,7 +131,7 @@ class HomePagePickerFragment : Fragment() {
             }
         }
 
-        viewModel.start(displayUtils.isTablet())
+        viewModel.start(siteIntent, displayUtils.isTablet())
     }
 
     private fun HomePagePickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
@@ -159,5 +162,19 @@ class HomePagePickerFragment : Fragment() {
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
         viewModel.onAppBarOffsetChanged(0, scrollThreshold)
+    }
+
+    companion object {
+        private const val ARG_SITE_INTENT = "arg_site_intent"
+
+        fun newInstance(siteIntent: String?): HomePagePickerFragment {
+            val bundle = Bundle().apply {
+                putString(ARG_SITE_INTENT, siteIntent)
+            }
+
+            return HomePagePickerFragment().apply {
+                arguments = bundle
+            }
+        }
     }
 }

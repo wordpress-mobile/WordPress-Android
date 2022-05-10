@@ -44,6 +44,8 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
+    private lateinit var vertical: String
+
     override val useCachedData: Boolean = false
     override val shouldUseMobileThumbnail = true
     override val thumbnailTapOpensPreview = true
@@ -62,7 +64,8 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 
-    fun start(isTablet: Boolean = false) {
+    fun start(intent: String? = null, isTablet: Boolean = false) {
+        vertical = intent ?: ""
         initializePreviewMode(isTablet)
         if (uiState.value !is Content) {
             analyticsTracker.trackSiteDesignViewed(selectedPreviewMode().key)
