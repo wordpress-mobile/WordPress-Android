@@ -341,6 +341,6 @@ class QuickStartRepository
 
     companion object {
         private const val QUICK_START_NOTICE_DURATION = 7000
-        private const val QUICK_START_COMPLETED_NOTICE_DELAY = 500L
+        private const val QUICK_START_COMPLETED_NOTICE_DELAY = 5000L
     }
 }
