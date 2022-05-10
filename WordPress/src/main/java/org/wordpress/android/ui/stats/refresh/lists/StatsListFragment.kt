@@ -17,7 +17,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Empty
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
@@ -188,7 +190,11 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         })
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
-            drawDateSelector(dateSelectorUiModel)
+            if (statsSection == TOTAL_LIKES_DETAIL) {
+                drawDateSelector(DateSelectorUiModel(false))
+            } else {
+                drawDateSelector(dateSelectorUiModel)
+            }
         })
 
         viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
