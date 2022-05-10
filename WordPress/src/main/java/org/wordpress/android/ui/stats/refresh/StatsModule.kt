@@ -54,7 +54,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -105,7 +104,7 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
-        totalLikesUseCase: TotalLikesUseCase,
+        totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
         totalCommentsUseCase: TotalCommentsUseCase,
         totalFollowersUseCase: TotalFollowersUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
@@ -115,7 +114,7 @@ class StatsModule {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
-            useCases.add(totalLikesUseCase)
+            useCases.add(totalLikesUseCaseFactory.build(BLOCK))
             useCases.add(totalCommentsUseCase)
             useCases.add(totalFollowersUseCase)
         } else {
@@ -404,7 +403,7 @@ class StatsModule {
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                totalLikesUseCaseFactory.build(DAYS, VIEW_ALL),
+                totalLikesUseCaseFactory.build(VIEW_ALL),
                 postsAndPagesUseCaseFactory.build(DAYS, VIEW_ALL)
         )
     }
