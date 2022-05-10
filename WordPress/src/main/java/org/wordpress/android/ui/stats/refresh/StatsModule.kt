@@ -454,7 +454,7 @@ class StatsModule {
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 totalLikesUseCaseFactory.build(VIEW_ALL),
-                postsAndPagesUseCaseFactory.build(DAYS, VIEW_ALL)
+                postsAndPagesUseCaseFactory.build(DAYS, BLOCK)
         )
     }
 
