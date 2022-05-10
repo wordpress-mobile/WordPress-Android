@@ -6,6 +6,8 @@ import com.google.android.material.snackbar.Snackbar.Callback.DISMISS_EVENT_SWIP
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -184,11 +186,11 @@ class QuickStartRepository
             )
             setTaskDoneAndTrack(task, selectedSite.id)
             if (quickStartUtilsWrapper.isEveryQuickStartTaskDone(selectedSite.id)) {
-                showCompletedQuickStartNotice()
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
+                showCompletedQuickStartNotice()
             }
         }
     }
@@ -267,17 +269,20 @@ class QuickStartRepository
     }
 
     private fun showCompletedQuickStartNotice() {
-        val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
-                "<b>${resourceProvider.getString(R.string.quick_start_complete_tour_message)}</b>:" +
-                        " ${resourceProvider.getString(R.string.quick_start_complete_tour_short_message)}"
-        )
-        _onSnackbar.value = Event(
-                SnackbarMessageHolder(
-                        message = UiStringText(message),
-                        duration = QUICK_START_NOTICE_DURATION,
-                        isImportant = false
-                )
-        )
+        launch {
+            delay(QUICK_START_COMPLETED_NOTICE_DELAY)
+            val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
+                    "<b>${resourceProvider.getString(R.string.quick_start_complete_tour_message)}</b>:" +
+                            " ${resourceProvider.getString(R.string.quick_start_complete_tour_short_message)}"
+            )
+            _onSnackbar.postValue(Event(
+                    SnackbarMessageHolder(
+                            message = UiStringText(message),
+                            duration = QUICK_START_NOTICE_DURATION,
+                            isImportant = false
+                    )
+            ))
+        }
     }
 
     private fun showQuickStartNotice(selectedSiteLocalId: Int) {
@@ -336,5 +341,6 @@ class QuickStartRepository
 
     companion object {
         private const val QUICK_START_NOTICE_DURATION = 7000
+        private const val QUICK_START_COMPLETED_NOTICE_DELAY = 500L
     }
 }
