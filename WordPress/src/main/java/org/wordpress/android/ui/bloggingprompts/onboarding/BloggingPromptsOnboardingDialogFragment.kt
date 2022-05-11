@@ -78,6 +78,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
         viewModel.start(dialogType)
     }
 
+    override fun onDestroyView() {
+        viewModel.stop()
+        super.onDestroyView()
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         arguments?.let {
