@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -102,9 +103,9 @@ class SiteInfoHeaderCardBuilderTest {
         showUploadSiteIconFocusPoint: Boolean
     ): QuickStartTask? {
         return when {
-            showUpdateSiteTitleFocusPoint -> QuickStartTask.UPDATE_SITE_TITLE
-            showViewSiteFocusPoint -> QuickStartTask.VIEW_SITE
-            showUploadSiteIconFocusPoint -> QuickStartTask.UPLOAD_SITE_ICON
+            showUpdateSiteTitleFocusPoint -> QuickStartNewSiteTask.UPDATE_SITE_TITLE
+            showViewSiteFocusPoint -> QuickStartNewSiteTask.VIEW_SITE
+            showUploadSiteIconFocusPoint -> QuickStartNewSiteTask.UPLOAD_SITE_ICON
             else -> null
         }
     }

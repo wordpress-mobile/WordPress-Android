@@ -39,7 +39,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
-import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
 import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
@@ -69,8 +68,10 @@ import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewMo
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
@@ -209,6 +210,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StatsDetailViewModel.class)
     abstract ViewModel statsDetailViewModel(StatsDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(InsightsDetailListViewModel.class)
+    abstract ViewModel insightsDetailListViewModel(InsightsDetailListViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -617,4 +623,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EditorBloggingPromptsViewModel.class)
     abstract ViewModel editorBloggingPromptsViewModel(EditorBloggingPromptsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalLikesDetailListViewModel.class)
+    abstract ViewModel totalLikesDetailListViewModel(TotalLikesDetailListViewModel viewModel);
 }

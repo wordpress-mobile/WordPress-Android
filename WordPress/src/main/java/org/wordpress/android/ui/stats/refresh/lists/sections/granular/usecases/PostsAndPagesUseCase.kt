@@ -46,7 +46,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class PostsAndPagesUseCase
-constructor(
+@Inject constructor(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
