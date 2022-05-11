@@ -54,7 +54,6 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER
         )
 
-
         viewModel.onBloggingPromptLoaded.observeForever {
             it.applyIfNotHandled {
                 loadedPromptContent = this
