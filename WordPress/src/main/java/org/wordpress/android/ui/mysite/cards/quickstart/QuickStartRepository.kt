@@ -6,6 +6,8 @@ import com.google.android.material.snackbar.Snackbar.Callback.DISMISS_EVENT_SWIP
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -209,6 +211,7 @@ class QuickStartRepository
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
+                showCompletedQuickStartNotice()
             }
         }
     }
@@ -286,6 +289,23 @@ class QuickStartRepository
         }
     }
 
+    fun showCompletedQuickStartNotice() {
+        launch {
+            delay(QUICK_START_COMPLETED_NOTICE_DELAY)
+            val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
+                    "<b>${resourceProvider.getString(R.string.quick_start_completed_tour_title)}</b>" +
+                            " ${resourceProvider.getString(R.string.quick_start_completed_tour_subtitle)}"
+            )
+            _onSnackbar.postValue(Event(
+                    SnackbarMessageHolder(
+                            message = UiStringText(message),
+                            duration = QUICK_START_NOTICE_DURATION,
+                            isImportant = false
+                    )
+            ))
+        }
+    }
+
     private fun showQuickStartNotice(selectedSiteLocalId: Int) {
         val taskToPrompt = quickStartUtilsWrapper
                 .getNextUncompletedQuickStartTask(quickStartType, selectedSiteLocalId.toLong())
@@ -343,5 +363,6 @@ class QuickStartRepository
 
     companion object {
         private const val QUICK_START_NOTICE_DURATION = 7000
+        private const val QUICK_START_COMPLETED_NOTICE_DELAY = 5000L
     }
 }

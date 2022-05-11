@@ -286,7 +286,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_PAGE_TITLE = "pageTitle";
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
-    public static final String EXTRA_CONTENT = "extraContent";
+    public static final String EXTRA_PROMPT_ID = "extraPromptId";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -2306,7 +2306,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
         // If this.mIsXPostsCapable has not been set, default to allowing xPosts
-        boolean enableXPosts = mIsXPostsCapable == null || mIsXPostsCapable;
+        boolean enableXPosts = mSite.isUsingWpComRestApi() && (mIsXPostsCapable == null || mIsXPostsCapable);
 
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
@@ -3604,10 +3604,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
     }
 
+    @SuppressWarnings("unused")
     private void fillContentIfNeeded() {
-        final String content = getIntent().getStringExtra(EXTRA_CONTENT);
-        if (content != null && !content.isEmpty()) {
-            newPostSetup(null, content);
+        final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
+        if (promptId >= 0) {
+            // TODO @RenanLukas - get BloggingPrompt by id and fill content
+            // newPostSetup(null, content);
         }
     }
 

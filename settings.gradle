@@ -7,28 +7,22 @@ gradleEnterprise {
     server = "https://gradle.a8c.com"
     allowUntrustedServer = false
     buildScan {
-        publishAlways()
+        def disableGE = System.getenv("GRADLE_ENTERPRISE_ANALYTICS_DISABLE")
+        if (!(disableGE == "1" || disableGE == "true")) {
+            publishAlways()
+        }
         capture {
             taskInputFiles = true
         }
         uploadInBackground = System.getenv("CI") == null
 
-        // Obfuscate personal data
-        obfuscation {
-            username { username -> username.digest('SHA-1') }
-            hostname { _ -> "" }
-            ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
-        }
-    }
-}
-
-if (System.getenv().containsKey("CI")) {
-    buildCache {
-        remote(HttpBuildCache) {
-            url = "http://10.0.2.215:5071/cache/"
-            allowUntrustedServer = true
-            allowInsecureProtocol = true
-            push = true
+        if (!System.getenv().containsKey("CI")) {
+            // Obfuscate personal data unless it's a CI build
+            obfuscation {
+                username { username -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_USERNAME") ?: username }
+                hostname { hostname -> System.getenv("GRADLE_ENTERPRISE_ANALYTICS_HOSTNAME") ?: hostname }
+                ipAddresses { addresses -> addresses.collect { address -> "0.0.0.0"} }
+            }
         }
     }
 }
