@@ -429,7 +429,7 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
