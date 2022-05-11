@@ -39,6 +39,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
+import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
 import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
@@ -611,4 +612,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
     abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditorBloggingPromptsViewModel.class)
+    abstract ViewModel editorBloggingPromptsViewModel(EditorBloggingPromptsViewModel viewModel);
 }
