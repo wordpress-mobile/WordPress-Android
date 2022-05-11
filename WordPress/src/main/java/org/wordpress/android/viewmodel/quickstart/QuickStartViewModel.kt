@@ -29,7 +29,7 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
 
     private fun refreshTaskStatus() {
         val list = ArrayList<QuickStartTaskState>()
-        QuickStartTask.values().forEach {
+        QuickStartTask.getAllTasks().forEach {
             list.add(QuickStartTaskState(it, quickStartStore.hasDoneTask(siteId, it)))
         }
         _quickStartTaskStateStates.postValue(list)
@@ -41,7 +41,7 @@ class QuickStartViewModel @Inject constructor(private val quickStartStore: Quick
     }
 
     fun skipAllTasks() {
-        QuickStartTask.values().forEach { quickStartStore.setDoneTask(siteId, it, true) }
+        QuickStartTask.getAllTasks().forEach { quickStartStore.setDoneTask(siteId, it, true) }
         quickStartStore.setQuickStartCompleted(siteId, true)
         // skipping all tasks means no achievement notification, so we mark it as received
         quickStartStore.setQuickStartNotificationReceived(siteId, true)

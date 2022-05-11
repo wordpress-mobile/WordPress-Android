@@ -13,13 +13,16 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.QuickStartCardBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.viewBinding
 
 class QuickStartCardViewHolder(
@@ -28,8 +31,9 @@ class QuickStartCardViewHolder(
 ) : MySiteCardAndItemViewHolder<QuickStartCardBinding>(parent.viewBinding(QuickStartCardBinding::inflate)) {
     fun bind(card: QuickStartCard) = with(binding) {
         mySiteCardToolbar.update(card)
-        quickStartCustomize.update(card.taskTypeItems.first { it.quickStartTaskType == CUSTOMIZE })
-        quickStartGrow.update(card.taskTypeItems.first { it.quickStartTaskType == GROW })
+        quickStartCustomize.update(CUSTOMIZE, card.taskTypeItems)
+        quickStartGrow.update(GROW, card.taskTypeItems)
+        quickStartGetToKnowApp.update(GET_TO_KNOW_APP, card.taskTypeItems)
     }
 
     private fun MySiteCardToolbarBinding.update(card: QuickStartCard) {
@@ -48,7 +52,14 @@ class QuickStartCardViewHolder(
         quickStartPopupMenu.show()
     }
 
-    private fun QuickStartTaskTypeItemBinding.update(item: QuickStartTaskTypeItem) {
+    private fun QuickStartTaskTypeItemBinding.update(
+        taskType: QuickStartTaskType,
+        taskTypeItems: List<QuickStartTaskTypeItem>
+    ) {
+        val hasItemOfTaskType = taskTypeItems.any { it.quickStartTaskType == taskType }
+        itemRoot.setVisible(hasItemOfTaskType)
+        if (!hasItemOfTaskType) return
+        val item = taskTypeItems.first { it.quickStartTaskType == taskType }
         with(itemTitle) {
             text = uiHelpers.getTextOfUiString(itemView.context, item.title)
             isEnabled = item.titleEnabled

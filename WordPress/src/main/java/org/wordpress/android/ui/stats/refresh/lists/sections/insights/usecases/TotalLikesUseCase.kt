@@ -14,9 +14,11 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalLikesStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -39,7 +41,8 @@ class TotalLikesUseCase @Inject constructor(
     private val totalStatsMapper: TotalStatsMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<VisitsAndViewsModel>(TOTAL_LIKES, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem() = listOf(TitleWithMore(string.stats_view_total_likes))
 
@@ -124,7 +127,7 @@ class TotalLikesUseCase @Inject constructor(
 
     private fun buildTitle() = TitleWithMore(
             string.stats_view_total_likes,
-            navigationAction = ListItemInteraction.create(this::onViewMoreClick)
+            navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
     )
 
     private fun onViewMoreClick() {
@@ -133,5 +136,32 @@ class TotalLikesUseCase @Inject constructor(
                 statsSiteProvider.siteModel
         )
         navigateTo(ViewTotalLikesStats)
+    }
+
+    class TotalLikesUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
+        private val visitsAndViewsStore: VisitsAndViewsStore,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val statsDateFormatter: StatsDateFormatter,
+        private val totalStatsMapper: TotalStatsMapper,
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsWidgetUpdaters: StatsWidgetUpdaters,
+        private val localeManagerWrapper: LocaleManagerWrapper
+    ) : InsightUseCaseFactory {
+        override fun build(useCaseMode: UseCaseMode) =
+                TotalLikesUseCase(
+                        mainDispatcher,
+                        backgroundDispatcher,
+                        visitsAndViewsStore,
+                        statsSiteProvider,
+                        statsDateFormatter,
+                        totalStatsMapper,
+                        analyticsTracker,
+                        statsWidgetUpdaters,
+                        localeManagerWrapper,
+                        useCaseMode
+                )
     }
 }

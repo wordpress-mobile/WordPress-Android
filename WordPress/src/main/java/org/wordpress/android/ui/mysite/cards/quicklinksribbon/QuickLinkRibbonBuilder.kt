@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.quicklinksribbon
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon.QuickLinkRibbonItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
@@ -55,11 +55,11 @@ class QuickLinkRibbonBuilder @Inject constructor() {
     }
 
     private fun shouldShowPagesFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
-        return params.enableFocusPoints && (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartTask.REVIEW_PAGES)
+        return params.enableFocusPoints && (params.activeTask == QuickStartNewSiteTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES)
     }
 
     private fun shouldShowStatsFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
-        return params.enableFocusPoints && params.activeTask == QuickStartTask.CHECK_STATS
+        return params.enableFocusPoints && params.activeTask == QuickStartNewSiteTask.CHECK_STATS
     }
 }

@@ -24,9 +24,10 @@ const val REFRESH_DELAY = 500L
 class CardsSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val cardsStore: CardsStore,
-    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
+    todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<CardsUpdate> {
+    private val isTodaysStatsCardFeatureConfigEnabled = todaysStatsCardFeatureConfig.isEnabled()
     override val refresh = MutableLiveData(false)
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<CardsUpdate> {
@@ -94,7 +95,7 @@ class CardsSource @Inject constructor(
     }
 
     private fun getCardTypes() = mutableListOf<Type>().apply {
-        if (todaysStatsCardFeatureConfig.isEnabled()) add(Type.TODAYS_STATS)
+        if (isTodaysStatsCardFeatureConfigEnabled) add(Type.TODAYS_STATS)
         add(Type.POSTS)
     }.toList()
 
