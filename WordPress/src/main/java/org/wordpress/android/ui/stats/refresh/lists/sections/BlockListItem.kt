@@ -292,7 +292,11 @@ sealed class BlockListItem(val type: Type) {
             get() = tabs.hashCode()
     }
 
-    data class Header(@StringRes val startLabel: Int, @StringRes val endLabel: Int) : BlockListItem(HEADER)
+    data class Header(
+        @StringRes val startLabel: Int,
+        @StringRes val endLabel: Int,
+        val bolds: List<String>? = null
+    ) : BlockListItem(HEADER)
 
     data class ExpandableItem(
         val header: ListItemWithIcon,
