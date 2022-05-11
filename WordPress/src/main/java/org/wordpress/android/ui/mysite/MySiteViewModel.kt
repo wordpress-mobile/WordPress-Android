@@ -1036,19 +1036,24 @@ class MySiteViewModel @Inject constructor(
         selectDefaultTabIfNeeded()
     }
 
-    fun performFirstStepAfterSiteCreation(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
+    fun performFirstStepAfterSiteCreation(
+        siteLocalId: Int,
+        isSiteTitleTaskCompleted: Boolean,
+        isNewSite: Boolean
+    ) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
-            checkAndStartLandOnTheEditor()
+            checkAndStartLandOnTheEditor(isNewSite)
         } else {
-            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted)
+            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted, isNewSite)
         }
     }
 
-    private fun checkAndStartLandOnTheEditor() {
+    private fun checkAndStartLandOnTheEditor(isNewSite: Boolean) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
-                    val landOnTheEditorAction = SiteNavigationAction.OpenHomepage(selectedSite, localHomepageId)
+                    val landOnTheEditorAction = SiteNavigationAction
+                            .OpenHomepage(selectedSite, localHomepageId, isNewSite)
                     _onNavigation.postValue(Event(landOnTheEditorAction))
                     analyticsTrackerWrapper.track(Stat.LANDING_EDITOR_SHOWN)
                 }
@@ -1056,7 +1061,12 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun checkAndStartQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
+    fun checkAndStartQuickStart(
+        siteLocalId: Int,
+        isSiteTitleTaskCompleted: Boolean,
+        isNewSite: Boolean
+    ) {
+        quickStartRepository.checkAndSetQuickStartType(isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         } else {
