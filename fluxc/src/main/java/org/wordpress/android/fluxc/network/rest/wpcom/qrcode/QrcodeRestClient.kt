@@ -30,34 +30,32 @@ class QrcodeRestClient @Inject constructor(
     suspend fun validate(data: String, token: String): QrcodePayload<QrcodeValidateResponse> {
         val url = WPCOMV2.auth.qr_code.validate.url
         val params = mapOf("data" to data, "token" to token)
-        return when (val response = wpComGsonRequestBuilder.syncPostRequest(
-                this,
-                url,
-                params,
-                null,
-                QrcodeValidateResponse::class.java
-        )) {
-            is Response.Error -> {
-                QrcodePayload(response.error.toQrcodeError())
-            }
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+            this,
+            url,
+            params,
+            null,
+            QrcodeValidateResponse::class.java
+        )
+        return when (response) {
             is Response.Success -> QrcodePayload(response.data)
+            is Response.Error -> QrcodePayload(response.error.toQrcodeError())
         }
     }
 
     suspend fun authenticate(data: String, token: String): QrcodePayload<QrcodeAuthenticateResponse> {
         val url = WPCOMV2.auth.qr_code.authenticate.url
         val params = mapOf("data" to data, "token" to token)
-        return when (val response = wpComGsonRequestBuilder.syncPostRequest(
+        val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
                 params,
                 null,
                 QrcodeAuthenticateResponse::class.java
-        )) {
-            is Response.Error -> {
-                QrcodePayload(response.error.toQrcodeError())
-            }
+        )
+        return when (response) {
             is Response.Success -> QrcodePayload(response.data)
+            is Response.Error -> QrcodePayload(response.error.toQrcodeError())
         }
     }
 
@@ -65,12 +63,10 @@ class QrcodeRestClient @Inject constructor(
         @SerializedName("browser") val browser: String? = null,
         @SerializedName("location") val location: String? = null,
         @SerializedName("success") val success: Boolean? = null,
-        @SerializedName("error") val error: String? = null
     )
 
     data class QrcodeAuthenticateResponse(
         @SerializedName("authenticated") val authenticated: Boolean? = null,
-        @SerializedName("error") val error: String? = null
     )
 }
 
