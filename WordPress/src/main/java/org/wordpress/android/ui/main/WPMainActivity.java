@@ -136,7 +136,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.BloggingPromptsNotificationConfig;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -194,6 +193,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_STATS_TIMEFRAME = "stats_timeframe";
     public static final String ARG_PAGES = "show_pages";
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
+    public static final String ARG_EDITOR_PROMPT_ID = "editor_prompt_id";
     public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
@@ -239,7 +239,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject BloggingPromptsOnboardingNotificationScheduler mBloggingPromptsOnboardingNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
-    @Inject BloggingPromptsNotificationConfig mBloggingPromptsNotificationConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -473,9 +472,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
         mWeeklyRoundupScheduler.schedule();
-        if (mBloggingPromptsNotificationConfig.isEnabled()) {
-            mBloggingPromptsOnboardingNotificationScheduler.scheduleBloggingPromptsOnboardingNotificationIfNeeded();
-        }
+        mBloggingPromptsOnboardingNotificationScheduler.scheduleBloggingPromptsOnboardingNotificationIfNeeded();
     }
 
     private void initViewModel() {
@@ -518,8 +515,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
-                case ANSWER_BLOGGING_PROMPT: // TODO @klymyam open editor with BP content
-                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
+                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1);
                     break;
                 case CREATE_NEW_PAGE:
                     if (mMLPViewModel.canShowModalLayoutPicker()) {
@@ -631,6 +627,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mViewModel.getCreatePostWithBloggingPrompt().observe(this, bloggingPrompt -> {
+            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.getId());
+        });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
         // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
@@ -680,7 +679,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    onNewPostButtonClicked();
+                    final int promptId = intent.getIntExtra(ARG_EDITOR_PROMPT_ID, -1);
+                    onNewPostButtonClicked(promptId);
                     break;
                 case ARG_STATS:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -967,8 +967,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     // user tapped the new post button in the bottom navbar
     @Override
-    public void onNewPostButtonClicked() {
-        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
+    public void onNewPostButtonClicked(final int promptId) {
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR, promptId);
     }
 
     private void handleNewPageAction(String title, String content, String template,
@@ -986,14 +986,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void handleNewPostAction(PagePostCreationSourcesDetail source) {
+    private void handleNewPostAction(PagePostCreationSourcesDetail source, final int promptId) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
             return;
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId);
     }
 
     private void handleNewStoryAction() {

@@ -21,6 +21,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -125,7 +126,6 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -158,7 +158,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
-    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
@@ -175,8 +174,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var dynamicCardMenu: MutableList<DynamicCardMenuModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
-    private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private var answerRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
@@ -225,6 +224,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
+    private var onBloggingPromptAnswerClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -290,7 +290,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Suppress("LongMethod")
-    fun init(enableMySiteDashboardConfig: Boolean = false) = test {
+    fun init() = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
@@ -299,7 +299,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(quickStartRepository.onQuickStartSiteMenuStep).thenReturn(quickStartSiteMenuStep)
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
@@ -326,7 +325,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsBuilder,
                 dynamicCardsBuilder,
                 landOnTheEditorFeatureConfig,
-                mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
                 cardsTracker,
                 siteItemsTracker,
@@ -342,7 +340,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
         dynamicCardMenu = mutableListOf()
-        showSwipeRefreshLayout = mutableListOf()
         shareRequests = mutableListOf()
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
@@ -376,14 +373,14 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dynamicCardMenu.add(it)
             }
         }
-        viewModel.onShowSwipeRefreshLayout.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                showSwipeRefreshLayout.add(it)
-            }
-        }
         viewModel.onShare.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 shareRequests.add(it)
+            }
+        }
+        viewModel.onAnswerBloggingPrompt.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                answerRequests++
             }
         }
         viewModel.onTrackWithTabSource.observeForever { event ->
@@ -1383,18 +1380,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when dashboard cards are shown, then card shown event is tracked`() = test {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
 
         verify(cardsTracker, atLeastOnce()).trackShown(any())
-    }
-
-    @Test
-    fun `when dashboard cards are not shown, then card shown events are not tracked`() = test {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-        initSelectedSite()
-
-        verify(cardsTracker, never()).trackShown(any())
     }
 
     /* DASHBOARD POST CARD - POST ITEM */
@@ -1471,6 +1459,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onBloggingPromptShareClicked).invoke(expectedShareMessage)
 
         assertThat(shareRequests.last()).isEqualTo(expectedShareMessage)
+    }
+
+    @Test
+    fun `given blogging prompt card, when answer button is clicked, answer action is called`() = test {
+        initSelectedSite()
+
+        requireNotNull(onBloggingPromptAnswerClicked).invoke()
+
+        assertTrue(answerRequests == 1)
     }
 
     /* DASHBOARD ERROR SNACKBAR */
@@ -1690,38 +1687,41 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
+        assertThat(findBackupListItem()).isNull()
     }
 
     @Test
     fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
-
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
+        assertThat(findScanListItem()).isNull()
     }
 
     @Test
     fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
+        assertThat(findScanListItem()).isNotNull
     }
 
     @Test
     fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
 
-        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
+        assertThat(findBackupListItem()).isNotNull
     }
 
     /* ADD SITE ICON DIALOG */
@@ -1822,47 +1822,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* SWIPE REFRESH */
-    @InternalCoroutinesApi
-    @Test
-    fun `given not first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
-        init(enableMySiteDashboardConfig = true)
-        viewModel.onResume() // first call
-
-        viewModel.onResume() // second call
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given not first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
-        init(enableMySiteDashboardConfig = false)
-        viewModel.onResume() // first call
-
-        viewModel.onResume() // second call
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
-        init(enableMySiteDashboardConfig = true)
-
-        viewModel.onResume()
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
-        init(enableMySiteDashboardConfig = false)
-
-        viewModel.onResume()
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
-    }
 
     @Test
     fun `given refresh, when not invoked as PTR, then pull-to-refresh request is not tracked`() {
@@ -1918,16 +1877,21 @@ class MySiteViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Test
     fun `given no post cards exist, when cardAndItems list is ordered, then dynamic card follow all cards`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+        site.setIsWPCom(false)
+        initSelectedSite(
+                isMySiteDashboardTabsFeatureFlagEnabled = true,
+                isMySiteTabsBuildConfigEnabled = true,
+                isSiteUsingWpComRestApi = false,
+                isQuickStartDynamicCardEnabled = true,
+                initialScreen = MySiteTabType.SITE_MENU.label
+        )
 
-        assertThat(getLastItems().last()).isInstanceOf(DynamicCard::class.java)
+        assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(DynamicCard::class.java)
     }
 
     @InternalCoroutinesApi
     @Test
     fun `given dashboard cards exist, when cardAndItems list is ordered, then dynamic cards precede dashboard cards`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isQuickStartDynamicCardEnabled = true)
 
         val dashboardCardsIndex = getLastItems().indexOfFirst { it is DashboardCards }
@@ -1939,7 +1903,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* STATE LISTS */
     @Test
     fun `given site select exists, then cardAndItem lists are not empty`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isQuickStartDynamicCardEnabled = false)
 
         assertThat(getLastItems().isNotEmpty())
@@ -1949,7 +1912,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with tabs disabled, when all cards and items, then qs card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
 
         val items = (uiModels.last().state as SiteSelected).cardAndItems
@@ -1959,7 +1921,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when dashboard cards and items, then dashboard cards exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -1969,7 +1930,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when dashboard cards and items, then list items not exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
         initSelectedSite()
 
@@ -1980,7 +1940,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard variant, when dashboard cards items, then qs card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -1996,7 +1955,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu default tab variant, when dashboard cards items, then qs card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -2012,7 +1970,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when site menu cards and items, then dashboard cards not exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
         initSelectedSite()
 
@@ -2023,7 +1980,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when site menu cards and items, then list items exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
         initSelectedSite()
 
@@ -2034,7 +1990,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard default tab variant, when site menu cards + items, then qs card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -2050,7 +2005,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu default tab variant, when site menu cards and items, then qs card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -2066,7 +2020,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with domain credit, when dashboard cards + items, then domain reg card does not exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
@@ -2077,7 +2030,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with domain credit, when site menu cards and items, then domain reg card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
@@ -2123,7 +2075,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu initial screen, when site menu cards + items, then dynamic card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -2140,7 +2091,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard initial screen, when dashboard cards + items, then dynamic card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -2157,7 +2107,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu initial screen, when dashboard cards + items, then dynamic card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -2174,7 +2123,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard initial screen, when site menu cards + items, then dynamic card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
@@ -2433,6 +2381,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun SiteSelected.findSiteMenuTabUiState() =
             tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.SITE_MENU }
 
+    private fun findBackupListItem() = getLastItems().filterIsInstance(ListItem::class.java)
+            .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
+
+    private fun findScanListItem() = getLastItems().filterIsInstance(ListItem::class.java)
+            .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
+
     private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
 
     private fun getDashboardTabLastItems() = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -2520,8 +2474,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     quickStartCard
             )
 
-            if (mySiteDashboardPhase2FeatureConfig.isEnabled())
-                listOfCards.add(dashboardCards)
+            listOfCards.add(dashboardCards)
             if (mySiteDashboardTabsFeatureConfig.isEnabled())
                 listOfCards.add(quickLinkRibbon)
             listOfCards
@@ -2556,8 +2509,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun setUpSiteItemBuilder() {
         doAnswer {
-            val items = initSiteItem(it)
-            listOf<MySiteCardAndItem>(items)
+            initSiteItems(it)
         }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
     }
 
@@ -2600,9 +2552,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickLinkRibbonMediaClickAction = params.onMediaClick
         quickLinkRibbonStatsClickAction = params.onStatsClick
         return QuickLinkRibbon(
-            quickLinkRibbonItems = mock(),
-            showStatsFocusPoint = false,
-            showPagesFocusPoint = false
+                quickLinkRibbonItems = mock(),
+                showStatsFocusPoint = false,
+                showPagesFocusPoint = false
         )
     }
 
@@ -2723,22 +2675,46 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun initBloggingPromptCard(mockInvocation: InvocationOnMock): BloggingPromptCardWithData {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
+        onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
-                onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit)
+                onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
+                onAnswerClick = onBloggingPromptAnswerClicked as (() -> Unit)
         )
     }
 
-    private fun initSiteItem(mockInvocation: InvocationOnMock): ListItem {
+    private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
         val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
-        return ListItem(
-                0,
-                UiStringRes(0),
-                onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick)
+        val items = mutableListOf<ListItem>()
+        items.add(
+                ListItem(
+                        0,
+                        UiStringRes(0),
+                        onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick)
+                )
         )
+        if (params.scanAvailable) {
+            items.add(
+                    ListItem(
+                            0,
+                            UiStringRes(R.string.scan),
+                            onClick = mock()
+                    )
+            )
+        }
+        if (params.backupAvailable) {
+            items.add(
+                    ListItem(
+                            0,
+                            UiStringRes(R.string.backup),
+                            onClick = mock()
+                    )
+            )
+        }
+        return items
     }
 
     fun ViewModel.invokeOnCleared() {

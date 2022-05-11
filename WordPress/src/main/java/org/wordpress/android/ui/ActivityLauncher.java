@@ -34,6 +34,7 @@ import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -360,19 +361,22 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static Intent openEditorAndDismissNotificationIntent(
-            @NonNull final Context context, final int notificationId
+    public static Intent openEditorWithBloggingPrompt(
+            @NonNull final Context context,
+            final int promptId
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
-        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
         return intent;
     }
 
-    public static Intent createMainActivityDismissNotificationIntent(
-        @NonNull final Context context, final int notificationId
+    public static Intent openEditorWithPromptAndDismissNotificationIntent(
+            @NonNull final Context context, final int notificationId, final BloggingPrompt bloggingPrompt
     ) {
         final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         return intent;
     }
@@ -444,7 +448,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, reblogSource);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
@@ -890,9 +894,10 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            final int promptId
     ) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source);
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId);
     }
 
     public static void addNewPostForResult(
@@ -900,7 +905,8 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             boolean isPromo,
-            PagePostCreationSourcesDetail source
+            PagePostCreationSourcesDetail source,
+            final int promptId
     ) {
         if (site == null) {
             return;
@@ -910,6 +916,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1483,6 +1490,18 @@ public class ActivityLauncher {
         StatsDetailActivity.Companion
                 .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
                         post.getLink());
+    }
+
+    public static void viewTotalLikesDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalLikesDetail(context, site);
+    }
+
+    public static void viewInsightsDetail(Context context, SiteModel site) {
+        if (site == null) {
+            return;
+        }
+        StatsDetailActivity.startForInsightsDetail(context, site);
     }
 
     public static void viewMediaPickerForResult(Activity activity,

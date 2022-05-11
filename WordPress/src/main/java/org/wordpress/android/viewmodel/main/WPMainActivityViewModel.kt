@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -109,6 +110,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
+    private val _createPostWithBloggingPrompt = SingleLiveEvent<BloggingPrompt>()
+    val createPostWithBloggingPrompt: LiveData<BloggingPrompt> = _createPostWithBloggingPrompt
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
@@ -202,10 +206,22 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
     private fun onAnswerPromptActionClicked() {
         // TODO @klymyam add analytics
         _isBottomSheetShowing.postValue(Event(false))
-        _createAction.postValue(ANSWER_BLOGGING_PROMPT)
+
+        // TODO @RenanLukas get BloggingPrompt from Store when it's ready
+        val bloggingPrompt = BloggingPrompt(
+            id = 1234,
+            text = "Cast the movie of your life.",
+            content = "<!-- wp:pullquote -->\n" +
+                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                    "<!-- /wp:pullquote -->",
+            respondents = emptyList()
+        )
+        _createPostWithBloggingPrompt.postValue(bloggingPrompt)
     }
 
     private fun disableTooltip(site: SiteModel?) {

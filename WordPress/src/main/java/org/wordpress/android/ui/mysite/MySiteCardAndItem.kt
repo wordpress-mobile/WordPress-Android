@@ -207,7 +207,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val respondents: List<TrainOfAvatarsItem>,
                         val numberOfAnswers: Int,
                         val isAnswered: Boolean,
-                        val onShareClick: (String) -> Unit
+                        val onShareClick: (String) -> Unit,
+                        val onAnswerClick: () -> Unit
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }
