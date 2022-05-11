@@ -36,7 +36,7 @@ private val RESPONDENTS_IN_CARD = listOf(
 private val RESPONDENTS = listOf(
         "http://avatar1.url",
         "http://avatar2.url",
-        "http://avatar3.url",
+        "http://avatar3.url"
 )
 
 /* ktlint-disable max-line-length */
