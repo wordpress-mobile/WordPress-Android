@@ -141,8 +141,8 @@ class MySiteViewModel @Inject constructor(
     private val siteItemsTracker: SiteItemsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
@@ -174,8 +174,11 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
+    private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
+    private val isBloggingPromptsFeatureConfigEnabled = bloggingPromptsFeatureConfig.isEnabled()
+
     val isMySiteTabsEnabled: Boolean
-        get() = mySiteDashboardTabsFeatureConfig.isEnabled() &&
+        get() = isMySiteDashboardTabsFeatureConfigEnabled &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
@@ -424,23 +427,25 @@ class MySiteViewModel @Inject constructor(
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                                 // TODO @klymyam fetch the actual blogging prompt
-                                bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
                                     @Suppress("MagicNumber")
                                     val dummyRespondent = BloggingPromptRespondent(
                                             54279365,
                                             "https://0.gravatar.com/avatar/cec64efa352617" +
                                                     "c35743d8ed233ab410?s=96&d=identicon&r=G"
                                     )
+                                    @Suppress("MagicNumber")
                                     BloggingPrompt(
-                                            "Cast the movie of your life",
-                                            "",
-                                            listOf(
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent
-                                            )
+                                        1234,
+                                        "Cast the movie of your life",
+                                        "",
+                                        listOf(
+                                            dummyRespondent,
+                                            dummyRespondent,
+                                            dummyRespondent,
+                                            dummyRespondent,
+                                            dummyRespondent
+                                        )
                                     )
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
@@ -1140,6 +1145,7 @@ class MySiteViewModel @Inject constructor(
     /* ktlint-disable max-line-length */
     private fun onBloggingPromptAnswerClick() {
         val bloggingPrompt = BloggingPrompt(
+                id = 1234,
                 text = "Cast the movie of your life.",
                 content = "<!-- wp:pullquote -->\n" +
                         "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
@@ -1175,7 +1181,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
-        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+        if (isMySiteDashboardTabsFeatureConfigEnabled) {
             _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
         } else {
             analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
