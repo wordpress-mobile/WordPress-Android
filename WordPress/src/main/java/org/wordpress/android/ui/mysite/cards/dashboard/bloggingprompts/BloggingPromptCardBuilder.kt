@@ -26,6 +26,7 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 respondents = avatarsTrain,
                 numberOfAnswers = params.bloggingPrompt.respondentsCount,
                 isAnswered = false,
+                promptId = params.bloggingPrompt.id,
                 onShareClick = params.onShareClick,
                 onAnswerClick = params.onAnswerClick
         )
