@@ -62,11 +62,11 @@ class QrcodeRestClient @Inject constructor(
     data class QrcodeValidateResponse(
         @SerializedName("browser") val browser: String? = null,
         @SerializedName("location") val location: String? = null,
-        @SerializedName("success") val success: Boolean? = null,
+        @SerializedName("success") val success: Boolean? = null
     )
 
     data class QrcodeAuthenticateResponse(
-        @SerializedName("authenticated") val authenticated: Boolean? = null,
+        @SerializedName("authenticated") val authenticated: Boolean? = null
     )
 }
 
