@@ -121,24 +121,12 @@ class QuickStartStore @Inject constructor(
         return quickStartSqlUtils.getDoneCount(siteId)
     }
 
-    fun getShownCount(siteId: Long): Int {
-        return quickStartSqlUtils.getShownCount(siteId)
-    }
-
     fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
         return quickStartSqlUtils.hasDoneTask(siteId, task)
     }
 
-    fun hasShownTask(siteId: Long, task: QuickStartTask): Boolean {
-        return quickStartSqlUtils.hasShownTask(siteId, task)
-    }
-
     fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
         quickStartSqlUtils.setDoneTask(siteId, task, isDone)
-    }
-
-    fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
-        quickStartSqlUtils.setShownTask(siteId, task, isShown)
     }
 
     fun getCompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
@@ -153,18 +141,6 @@ class QuickStartStore @Inject constructor(
     ): List<QuickStartTask> {
         return QuickStartTask.getTasksByTaskType(taskType)
                 .filter { !quickStartSqlUtils.hasDoneTask(siteId, it) }
-                .sortedBy { it.order }
-    }
-
-    fun getShownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByTaskType(taskType)
-                .filter { quickStartSqlUtils.hasShownTask(siteId, it) }
-                .sortedBy { it.order }
-    }
-
-    fun getUnshownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByTaskType(taskType)
-                .filter { !quickStartSqlUtils.hasShownTask(siteId, it) }
                 .sortedBy { it.order }
     }
 
