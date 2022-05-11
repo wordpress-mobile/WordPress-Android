@@ -62,20 +62,14 @@ class AuthorsCommentsUseCase @Inject constructor(
 
     override fun buildUiModel(domainModel: CommentsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-
+        items.add(buildTitle())
         if (domainModel.authors.isNotEmpty()) {
-            val header = Header(
-                    string.stats_comments_author_label,
-                    string.stats_comments_label,
-                    listOf(resourceProvider.getString(string.stats_comments_author_label))
-            )
-            items.add(header)
+            val header = Header(string.stats_comments_author_label, string.stats_comments_label)
             items.addAll(domainModel.authors.mapIndexed { index, author ->
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
                         iconStyle = AVATAR,
                         text = author.name,
-                        value = statsUtils.toFormattedString(author.comments),
                         showDivider = index < domainModel.authors.size - 1,
                         contentDescription = contentDescriptionHelper.buildContentDescription(
                                 header,
@@ -90,5 +84,5 @@ class AuthorsCommentsUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_view_comments, menuAction = null)
+    private fun buildTitle() = Title(string.stats_details_top_commentators, menuAction = null)
 }
