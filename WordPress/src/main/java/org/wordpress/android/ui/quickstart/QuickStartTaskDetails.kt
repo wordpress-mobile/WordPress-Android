@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.quickstart
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore
@@ -10,9 +12,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
  */
 enum class QuickStartTaskDetails(
     val taskString: String,
-    val titleResId: Int,
-    val subtitleResId: Int,
-    val iconResId: Int
+    @StringRes val titleResId: Int,
+    @StringRes val subtitleResId: Int,
+    @DrawableRes val iconResId: Int
 ) {
     CREATE_SITE_TUTORIAL(
             QuickStartStore.QUICK_START_CREATE_SITE_LABEL,

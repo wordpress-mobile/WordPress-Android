@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.quickstart
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -12,8 +14,8 @@ enum class QuickStartMySitePrompts constructor(
     val taskString: String,
     val parentContainerId: Int,
     val focusedContainerId: Int,
-    val shortMessagePrompt: Int,
-    val iconId: Int
+    @StringRes val shortMessagePrompt: Int,
+    @DrawableRes val iconId: Int
 ) {
     UPDATE_SITE_TITLE_TUTORIAL(
             QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL,

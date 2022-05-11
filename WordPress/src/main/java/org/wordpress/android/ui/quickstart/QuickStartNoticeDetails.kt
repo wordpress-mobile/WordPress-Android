@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.quickstart
 
+import androidx.annotation.StringRes
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -9,8 +10,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
  */
 enum class QuickStartNoticeDetails(
     val taskString: String,
-    val titleResId: Int,
-    val messageResId: Int
+    @StringRes val titleResId: Int,
+    @StringRes val messageResId: Int
 ) {
     UPDATE_SITE_TITLE(
             QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL,
