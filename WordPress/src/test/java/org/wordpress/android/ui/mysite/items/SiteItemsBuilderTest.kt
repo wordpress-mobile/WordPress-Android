@@ -3,23 +3,24 @@ package org.wordpress.android.ui.mysite.items
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
-    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var siteModel: SiteModel
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
@@ -27,8 +28,7 @@ class SiteItemsBuilderTest {
     fun setUp() {
         siteItemsBuilder = SiteItemsBuilder(
                 siteCategoryItemBuilder,
-                siteListItemBuilder,
-                mySiteDashboardPhase2FeatureConfig
+                siteListItemBuilder
         )
     }
 
@@ -62,7 +62,7 @@ class SiteItemsBuilderTest {
                 addLookAndFeelHeader = true,
                 addConfigurationHeader = true,
                 addActivityLogItem = true,
-                addPlanItem = true,
+                addPlanItem = false,
                 addPagesItem = true,
                 addAdminItem = true,
                 addPeopleItem = true,
@@ -82,7 +82,6 @@ class SiteItemsBuilderTest {
         )
 
         assertThat(buildSiteItems).containsExactly(
-                PLAN_ITEM,
                 JETPACK_HEADER,
                 STATS_ITEM,
                 ACTIVITY_ITEM,
@@ -107,6 +106,9 @@ class SiteItemsBuilderTest {
         )
     }
 
+    /* QUICK START - FOCUS POINT */
+
+    @Ignore("Ignored after a decision was made to hide the Plans screen.")
     @Test
     fun `passes parameter to show focus point to plan item`() {
         val showPlansFocusPoint = true
@@ -123,25 +125,61 @@ class SiteItemsBuilderTest {
         assertThat(buildSiteItems.first()).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint))
     }
 
-    /* INFO ITEM */
-
     @Test
-    fun `given my site improvements flag not present, when build info item is invoked, then info item is not built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
+    fun `given pages focus point enabled, when card built, showFocusPoint should be true`() {
+        val showPagesFocusPoint = true
+        setupHeaders(addPagesItem = true, showPagesFocusPoint = showPagesFocusPoint)
 
-        val infoItem = siteItemsBuilder.build(
-                InfoItemBuilderParams(
-                        isStaleMessagePresent = true
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = EDIT_HOMEPAGE,
+                        enablePagesFocusPoint = showPagesFocusPoint
                 )
         )
 
-        assertThat(infoItem).isNull()
+        assertThat(buildSiteItems).contains(PAGES_ITEM.copy(showFocusPoint = showPagesFocusPoint))
     }
 
     @Test
-    fun `given my site improvements flag present, when build info item is invoked, then info item is built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
+    fun `given stats focus point enabled, when card built, then showFocusPoint should be true`() {
+        setupHeaders()
+        val enableStatsFocusPoint = true
 
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = CHECK_STATS,
+                        enableStatsFocusPoint = enableStatsFocusPoint
+                )
+        )
+
+        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
+    }
+
+    @Test
+    fun `given stats focus point disabled, when card built, then showFocusPoint should be false`() {
+        setupHeaders()
+        val enableStatsFocusPoint = false
+
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = CHECK_STATS,
+                        enableStatsFocusPoint = enableStatsFocusPoint
+                )
+        )
+
+        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
+    }
+
+    /* INFO ITEM */
+
+    @Test
+    fun `when build info item is invoked, then info item is built`() {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = true
@@ -153,8 +191,6 @@ class SiteItemsBuilderTest {
 
     @Test
     fun `given stale message present, when build info item is invoked, then info item is built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = true
@@ -166,8 +202,6 @@ class SiteItemsBuilderTest {
 
     @Test
     fun `given stale message not present, when build info item is invoked, then info item is not built`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
                         isStaleMessagePresent = false
@@ -194,7 +228,8 @@ class SiteItemsBuilderTest {
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
         addScanItem: Boolean = false,
-        showPlansFocusPoint: Boolean = false
+        showPlansFocusPoint: Boolean = false,
+        showPagesFocusPoint: Boolean = false
     ) {
         if (addJetpackHeader) {
             whenever(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)).thenReturn(
@@ -243,8 +278,14 @@ class SiteItemsBuilderTest {
             )
         }
         if (addPagesItem) {
-            whenever(siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
-                    PAGES_ITEM
+            whenever(
+                    siteListItemBuilder.buildPagesItemIfAvailable(
+                            siteModel,
+                            SITE_ITEM_ACTION,
+                            showPagesFocusPoint
+                    )
+            ).thenReturn(
+                    PAGES_ITEM.copy(showFocusPoint = showPagesFocusPoint)
             )
         }
         if (addAdminItem) {

@@ -27,12 +27,10 @@ sealed class MySiteCardAndItemBuilderParams {
 
     data class QuickActionsCardBuilderParams(
         val siteModel: SiteModel,
-        val activeTask: QuickStartTask?,
         val onQuickActionStatsClick: () -> Unit,
         val onQuickActionPagesClick: () -> Unit,
         val onQuickActionPostsClick: () -> Unit,
-        val onQuickActionMediaClick: () -> Unit,
-        val enableFocusPoints: Boolean = false
+        val onQuickActionMediaClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class QuickLinkRibbonBuilderParams(
@@ -87,11 +85,14 @@ sealed class MySiteCardAndItemBuilderParams {
         val activeTask: QuickStartTask? = null,
         val backupAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
+        val enableStatsFocusPoint: Boolean = false,
+        val enablePagesFocusPoint: Boolean = false,
         val onClick: (ListItemAction) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 
     data class BloggingPromptCardBuilderParams(
         val bloggingPrompt: BloggingPrompt?,
-        val onShareClick: (message: String) -> Unit
+        val onShareClick: (message: String) -> Unit,
+        val onAnswerClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 }

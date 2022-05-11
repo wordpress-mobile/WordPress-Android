@@ -2,6 +2,8 @@ package org.wordpress.android.ui.prefs.accountsettings.module
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
@@ -26,6 +28,7 @@ const val DEFAULT_CONTINUATION = "DEFAULT_CONTINUATION"
 const val CONCURRENT_CONTINUATION = "CONCURRENT_CONTINUATION"
 
 @Module
+@InstallIn(SingletonComponent::class)
 class AccountSettingsModule {
 
     @Provides

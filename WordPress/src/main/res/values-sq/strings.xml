@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-08 12:37:53+0000
+Translation-Revision-Date: 2022-04-27 11:40:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: sq_AL
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">Krijoni sajt</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Shtoni blloqe</string>
+    <string name="initial_screen">Skena Fillestare</string>
+    <string name="blogging_prompts_onboarding_notification_action">Mësoni më tepër</string>
+    <string name="new_site_creation_site_name_header_subtitle">Një emër i mirë do të ishte i shkurtër dhe që mbahet mend.\nMund ta ndryshoni më vonë.</string>
+    <string name="new_site_creation_site_name_header_title">Jepini sajtit tuaj %s një emër</string>
+    <string name="new_site_creation_site_name_title">Emër sajti</string>
+    <string name="my_site_todays_stats_get_more_views_message">Ju intereson të ndërtoni publikun tuaj? Shihni &lt;a href=\"%1$s\"&gt;ndihmëzat tona kryesuese&lt;/a&gt;.</string>
+    <string name="stats_insights_views_and_visitors">Parje &amp; Vizitorë</string>
     <string name="featured_image_removed_notice">U hoq nga figurë e zgjedhur</string>
     <string name="featured_image_confirmation_notice">Vëre si figurë të zgjedhur</string>
     <string name="featured_image_replace_dialog_cancel">Mbaj të tanishmin</string>
@@ -79,13 +88,12 @@ Language: sq_AL
     <string name="new_site_creation_intents_title">Temë sajti</string>
     <string name="quick_start_site_menu_tab_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të vazhdohet.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Hiqe nga pulti</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d përgjigje</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Me Përgjigje</string>
     <string name="my_site_all_tab_title">Krejt</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të ndritshme dhe/ose një ngjyrë të errët teksti.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Kjo ndërthurje ngjyrash mund të vështirësojë leximin nga njerëzit. Provoni të përdorni një ngjyrë sfondi më të errët dhe/ose një ngjyrë të ndritshme teksti.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">S’u arrit të futej media.\nPrekeni për më tepër hollësi.</string>
-    <string name="new_site_creation_intents_header_subtitle">Zgjidhni një temë nga lista më poshtë, ose shtypni tuajën</string>
+    <string name="new_site_creation_intents_header_subtitle">Zgjidhni një temë nga lista më poshtë, ose shtypni tuajën.</string>
     <string name="new_site_creation_intents_header_title">Për çfarë është sajti juaj?</string>
     <string name="notification_channel_weekly_roundup_title">Përmbledhje Javore</string>
     <string name="my_site_dashboard_tab_title">Kreu</string>
@@ -95,7 +103,7 @@ Language: sq_AL
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Duket se në këtë sajt bllokohen thirrjet XML-RPC (kod gabimi 401). Nëse dështon përpjekja për hyrje, prekni ikonën e ndihmës që të shihni PBR.</string>
     <string name="login_error_xml_rpc_cannot_read_site">S’arrihet të lexohet sajti WordPress tek ajo URL. Prekni ikonën e ndihmës që të shihni PBR.</string>
     <string name="login_error_xml_rpc_services_disabled">Shërbimet XML-RPC janë të çaktivizuara për këtë sajt.</string>
-    <string name="my_site_menu_tab_title">Menu Sajti</string>
+    <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Kërkimi juaj përmban shenja të pambuluara në përkatësi WordPress.com. Lejohen shenjat vijuese: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrolloni lidhjen tuaj internet dhe rifreskoni faqen.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Shko te statistikat</string>
@@ -406,7 +414,7 @@ Language: sq_AL
     <string name="gutenberg_native_create_embed">Krijo trupëzim</string>
     <string name="gutenberg_native_column_d">Shtylla %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Përshkruajeni shkurt lidhjen që të ndihmoni përdoruesin e lexuesit të ekranit.</string>
-    <string name="gutenberg_native_add_blocks">Shtoni blloqe</string>
+    <string name="gutenberg_native_add_blocks">Shtoni Blloqe</string>
     <string name="login_no_jetpack_sites">S’u gjetën sajte Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Ç’është teksti alternativ?</string>
     <string name="gutenberg_native_transform_s_to">Shndërroje %s në</string>

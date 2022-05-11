@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -47,6 +50,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
@@ -69,6 +75,7 @@ private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
 /**
  * Module that provides use cases for Stats.
  */
+@InstallIn(SingletonComponent::class)
 @Module
 class StatsModule {
     /**
@@ -92,6 +99,9 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
+        totalLikesUseCase: TotalLikesUseCase,
+        totalCommentsUseCase: TotalCommentsUseCase,
+        totalFollowersUseCase: TotalFollowersUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
         managementControlUseCase: ManagementControlUseCase,
         managementNewsCardUseCase: ManagementNewsCardUseCase
@@ -99,6 +109,11 @@ class StatsModule {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
+            useCases.add(totalLikesUseCase)
+            useCases.add(totalCommentsUseCase)
+            useCases.add(totalFollowersUseCase)
+        } else {
+            useCases.add(followerTotalsUseCase)
         }
         useCases.addAll(
                 listOf(
@@ -111,7 +126,6 @@ class StatsModule {
                     tagsAndCategoriesUseCaseFactory.build(BLOCK),
                     publicizeUseCaseFactory.build(BLOCK),
                     postingActivityUseCase,
-                    followerTotalsUseCase,
                     annualSiteStatsUseCaseFactory.build(BLOCK),
                     managementControlUseCase,
                     managementNewsCardUseCase
@@ -374,7 +388,7 @@ class StatsModule {
 
     @Provides
     @Singleton
-    fun provideSharedPrefs(context: Context): SharedPreferences {
+    fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 }

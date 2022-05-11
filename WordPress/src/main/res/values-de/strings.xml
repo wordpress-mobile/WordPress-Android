@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-07 10:54:10+0000
+Translation-Revision-Date: 2022-04-21 20:04:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: de
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">Website erstellen</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Blöcke hinzufügen</string>
+    <string name="initial_screen">Erster Bildschirm</string>
+    <string name="blogging_prompts_onboarding_notification_action">Weitere Informationen</string>
+    <string name="blogging_prompts_onboarding_notification_text">Verbessere deine Schreibkünste, indem du deinen eigenen Schreibstil entwickelst. Tippe, um mehr zu erfahren.</string>
+    <string name="blogging_prompts_onboarding_notification_title">Neu in der mobilen WordPress-App: Themenvorschläge</string>
+    <string name="new_site_creation_site_name_header_subtitle">Ein guter Name ist kurz und einprägsam.\nDu kannst es später jederzeit ändern.</string>
+    <string name="new_site_creation_site_name_header_title">Gib deiner %s-Website einen Namen</string>
+    <string name="new_site_creation_site_name_title">Name der Website</string>
+    <string name="my_site_todays_stats_get_more_views_message">Möchtest du eine Zielgruppe aufbauen? Sieh dir unsere &lt;a href=\"%1$s\"&gt;Top-Tipps&lt;/a&gt; an.</string>
+    <string name="stats_insights_views_and_visitors_message">Deine Aufrufe der letzten Woche sind %1$s %2$s als in der Woche davor.</string>
+    <string name="stats_insights_views_and_visitors">Aufrufe und Besucher</string>
     <string name="featured_image_removed_notice">Als Beitragsbild entfernt</string>
     <string name="featured_image_confirmation_notice">Als Beitragsbild festlegen</string>
     <string name="featured_image_replace_dialog_cancel">Aktuelles behalten</string>
@@ -24,6 +36,8 @@ Language: de
     <string name="stop_upload_dialog_button_no">Nein</string>
     <string name="stop_upload_dialog_button_yes">Ja</string>
     <string name="dialog_button_cancel">Abbrechen</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_edit_hint">http(s)://</string>
     <string name="dialog_title">Link einfügen</string>
     <string name="toast_content_info_editor_not_ready">Editor wird geladen</string>
     <string name="toast_content_info_failed">Inhaltliche Struktur kann nicht abgerufen werden</string>
@@ -34,6 +48,8 @@ Language: de
     <string name="media_bar_description_camera">Foto oder Video mit der Kamera aufnehmen</string>
     <string name="pixel_suffix">%d px</string>
     <string name="stop_save_dialog_message">Warte bitte, bis alle Dateien gespeichert wurden</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
     <string name="stop_save_dialog_title">Dateien werden gespeichert</string>
     <string name="post_content">Inhalt</string>
     <string name="blogging_prompts_onboarding_card_prompt">Dreh einen Film über dein Leben.</string>
@@ -72,17 +88,19 @@ Language: de
     <string name="site_creation_intent_diy">Heimwerken</string>
     <string name="site_creation_intent_education">Bildung</string>
     <string name="site_creation_intent_community_nonprofit">Community und gemeinnützige Organisationen</string>
+    <string name="site_creation_intent_lifestyle">Lifestyle</string>
+    <string name="site_creation_intent_gaming">Gaming</string>
     <string name="site_creation_intent_business">Geschäft</string>
     <string name="site_creation_intent_books">Bücher</string>
     <string name="site_creation_intent_automotive">Automobil</string>
     <string name="site_creation_intent_art">Kunst</string>
-    <string name="new_site_creation_intents_input_hint">Z. B. Mode, Poesie, Politik</string>
     <string name="new_site_creation_intents_title">Website-Thema</string>
     <string name="quick_start_site_menu_tab_message_short">Tippe zum Fortfahren auf &lt;b&gt;%1$s&lt;/b&gt;.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Aus Dashboard entfernen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Diesen Themenvorschlag überspringen</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Mehr Themenvorschläge anzeigen</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d Antworten</string>
+    <string name="new_site_creation_intents_input_hint">z. B. Mode, Poesie, Politik</string>
+    <string name="site_creation_intent_beauty">Beauty</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-Vorschlag teilen</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Geantwortet</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Auf Themenvorschlag antworten</string>
@@ -93,7 +111,7 @@ Language: de
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine dunklere Hintergrundfarbe und/oder eine hellere Textfarbe.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Das Einfügen des Mediums ist fehlgeschlagen.\nTippe für weitere Informationen.</string>
     <string name="new_site_creation_intents_header_title">Worum wird es auf deiner Website gehen?</string>
-    <string name="new_site_creation_intents_header_subtitle">Wähle ein Thema in der Liste unten oder gib ein eigenes ein</string>
+    <string name="new_site_creation_intents_header_subtitle">Wähle ein Thema aus der unten stehenden Liste aus oder gib ein eigenes ein.</string>
     <string name="adding_cat">Kategorie wird hinzugefügt</string>
     <string name="my_site_dashboard_tab_title">Startseite</string>
     <string name="notification_channel_weekly_roundup_title">Wöchentliche Zusammenfassung</string>
@@ -102,7 +120,7 @@ Language: de
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC-Anrufe sind auf dieser Website anscheinend blockiert (Fehlercode 401). Wenn der Anmeldeversuch fehlschlägt, tippe auf das Hilfe-Icon, um die FAQ anzuzeigen.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Unter dieser URL kann keine WordPress-Website gefunden werden. Tippe auf das Hilfe-Icon, um die FAQ anzuzeigen.</string>
     <string name="login_error_xml_rpc_services_disabled">Der XML-RPC-Service wurde auf dieser Website deaktiviert.</string>
-    <string name="my_site_menu_tab_title">Website-Menü</string>
+    <string name="my_site_menu_tab_title">Menü</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Deine Suche beinhaltet Zeichen, die in Domains von WordPress.com nicht unterstützt werden. Die folgenden Zeichen sind erlaubt: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Überprüfe deine Internetverbindung und lade die Seite neu.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gehe zu den Statistiken</string>
@@ -2120,9 +2138,9 @@ Language: de
     <string name="plugin_one_stars">1 Stern</string>
     <string name="plugin_num_ratings">%s Bewertungen</string>
     <string name="plugin_read_reviews">Bewertungen lesen</string>
-    <string name="plugin_faq">H&amp;auml;ufig gestellte Fragen</string>
     <string name="plugin_empty_text">Nicht vorhanden</string>
     <string name="plugin_num_downloads">%s Downloads</string>
+    <string name="plugin_faq">Häufig gestellte Fragen</string>
     <string name="plugin_whatsnew">Neues</string>
     <string name="plugin_installation">Installation</string>
     <string name="plugin_description">Beschreibung</string>

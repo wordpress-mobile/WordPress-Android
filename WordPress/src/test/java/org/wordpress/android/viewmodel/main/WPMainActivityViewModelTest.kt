@@ -29,11 +29,14 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.test
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
+import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -46,6 +49,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 
 @RunWith(MockitoJUnitRunner::class)
@@ -66,6 +70,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
+    @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -96,6 +101,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask = MutableLiveData()
         externalFocusPointEvents = mutableListOf()
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
                 featureAnnouncementProvider,
                 buildConfigWrapper,
@@ -106,6 +112,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 accountStore,
                 siteStore,
                 mySiteDefaultTabExperiment,
+                bloggingPromptsFeatureConfig,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -360,6 +367,43 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_STORY)
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_STORY)
+    }
+
+    @Test
+    fun `bottom sheet does not show prompt card when FF is OFF`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+        startViewModelWithDefaultParameters()
+        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
+        assertThat(hasBloggingPromptAction).isFalse()
+    }
+
+    @Test
+    fun `bottom sheet does show prompt card when FF is ON`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        startViewModelWithDefaultParameters()
+        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
+        assertThat(hasBloggingPromptAction).isTrue()
+    }
+
+    /* ktlint-disable max-line-length */
+    @Test
+    fun `bottom sheet action is answer BP when the BP answer button is clicked`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        startViewModelWithDefaultParameters()
+        val action = viewModel.mainActions.value?.firstOrNull {
+            it.actionType == ANSWER_BLOGGING_PROMPT
+        } as AnswerBloggingPromptAction?
+        assertThat(action).isNotNull
+        action!!.onClickAction?.invoke()
+        val bloggingPrompt = BloggingPrompt(
+            id = 1234,
+            text = "Cast the movie of your life.",
+            content = "<!-- wp:pullquote -->\n" +
+                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                    "<!-- /wp:pullquote -->",
+            respondents = emptyList()
+        )
+        assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(bloggingPrompt)
     }
 
     @Test

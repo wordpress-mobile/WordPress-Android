@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-08 09:54:10+0000
+Translation-Revision-Date: 2022-04-28 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: ja_JP
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">サイトを作成</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">ブロックを追加</string>
+    <string name="initial_screen">初期画面</string>
+    <string name="blogging_prompts_onboarding_notification_action">さらに詳しく</string>
+    <string name="blogging_prompts_onboarding_notification_text">書く習慣をつけて執筆の腕を磨きましょう。 タップして詳細をご確認ください。</string>
+    <string name="blogging_prompts_onboarding_notification_title">WordPress モバイルアプリの新機能: プロンプト</string>
+    <string name="new_site_creation_site_name_header_subtitle">良い名前は短く、簡単に覚えられるものです。\nテーマは後で変更できます。</string>
+    <string name="new_site_creation_site_name_header_title">%s サイトに名前を付けてください</string>
+    <string name="new_site_creation_site_name_title">サイト名</string>
+    <string name="my_site_todays_stats_get_more_views_message">読者を増やしたいとお考えですか ? &lt;a href=\"%1$s\"&gt;トップのヒント&lt;/a&gt;をご覧ください。</string>
+    <string name="stats_insights_views_and_visitors_message">先週の表示数は先々週より%1$s %2$sです。</string>
+    <string name="stats_insights_views_and_visitors">表示数と訪問者数</string>
     <string name="featured_image_removed_notice">アイキャッチ画像を削除</string>
     <string name="featured_image_confirmation_notice">アイキャッチ画像として設定</string>
     <string name="featured_image_replace_dialog_cancel">現在の状態を維持</string>
@@ -83,13 +95,12 @@ Language: ja_JP
     <string name="site_creation_intent_beauty">美容</string>
     <string name="site_creation_intent_automotive">自動車</string>
     <string name="site_creation_intent_art">アート</string>
-    <string name="new_site_creation_intents_input_hint">例 ファッション、詩、政治</string>
     <string name="new_site_creation_intents_title">サイトのテーマ</string>
     <string name="quick_start_site_menu_tab_message_short">&lt;b&gt;%1$s&lt;/b&gt; をタップして続行します。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">ダッシュボードから削除</string>
     <string name="my_site_blogging_prompt_card_menu_skip">このプロンプトをスキップ</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">プロンプトをさらに表示</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d件の回答</string>
+    <string name="new_site_creation_intents_input_hint">例: ファッション、詩、政治</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">ブログ作成のプロンプトを共有</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓回答済み</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回答のプロンプト</string>
@@ -99,8 +110,8 @@ Language: ja_JP
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">この色の組み合わせは読みにくい可能性があります。 背景色を明るくするか、文字の色を暗くしてみましょう。</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">この色の組み合わせは読みにくい可能性があります。 背景色を暗くするか、文字の色を明るくしてみましょう。</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">メディアの挿入に失敗しました。\nタップして詳細をご覧ください。</string>
-    <string name="new_site_creation_intents_header_subtitle">以下のリストからテーマを選択するか、自分で入力します</string>
     <string name="new_site_creation_intents_header_title">どのような内容のサイトですか？</string>
+    <string name="new_site_creation_intents_header_subtitle">以下のリストからテーマを選択するか、自分で入力します。</string>
     <string name="notification_channel_weekly_roundup_title">1週間のまとめ</string>
     <string name="my_site_dashboard_tab_title">ホーム</string>
     <string name="adding_cat">カテゴリーを追加しています</string>
@@ -109,7 +120,6 @@ Language: ja_JP
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">このサイトでは XML-RPC コールがブロックされているようです (エラーコード401)。 ログインに失敗する場合は、ヘルプアイコンをタップして FAQ をご確認ください。</string>
     <string name="login_error_xml_rpc_cannot_read_site">ご指定の URL の WordPress サイトを読み込めません。 ヘルプアイコンをタップして FAQ を表示してください。</string>
     <string name="login_error_xml_rpc_services_disabled">このサイトでは XML-RPC サービスが無効になっています。</string>
-    <string name="my_site_menu_tab_title">サイトメニュー</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">検索内容に WordPress.com のドメインではサポートされていない文字が含まれています。 サポートされている文字は A–Z、a–z、0–9です。</string>
     <string name="my_site_error_within_card_subtitle">インターネット接続を確認してページを更新してください。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">統計情報を表示</string>
@@ -424,7 +434,6 @@ Language: ja_JP
     <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
-    <string name="gutenberg_native_add_blocks">ブロックを追加</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
     <string name="gutenberg_native_what_is_alt_text">代替テキストとは ?</string>
     <string name="gutenberg_native_transform_block">ブロックを変換…</string>
