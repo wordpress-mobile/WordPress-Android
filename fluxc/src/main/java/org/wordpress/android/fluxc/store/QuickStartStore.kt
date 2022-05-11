@@ -63,7 +63,7 @@ class QuickStartStore @Inject constructor(
 
         companion object {
             fun fromString(string: String?): QuickStartNewSiteTask {
-                for (value in QuickStartNewSiteTask.values()) {
+                for (value in values()) {
                     if (string.equals(value.toString(), true)) {
                         return value
                     }
@@ -106,18 +106,6 @@ class QuickStartStore @Inject constructor(
 
         override fun toString(): String {
             return string
-        }
-
-        companion object {
-            fun fromString(string: String?): QuickStartTaskType {
-                for (value in QuickStartTaskType.values()) {
-                    if (string.equals(value.toString(), true)) {
-                        return value
-                    }
-                }
-
-                return UNKNOWN
-            }
         }
     }
 
