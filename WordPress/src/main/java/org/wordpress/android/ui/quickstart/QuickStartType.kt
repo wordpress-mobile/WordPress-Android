@@ -6,9 +6,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 
-sealed class QuickStartType(val tasks: List<QuickStartTask>) {
-    object NewSiteQuickStartType : QuickStartType(QuickStartNewSiteTask.values().toList())
-    object ExistingSiteQuickStartType : QuickStartType(QuickStartExistingSiteTask.values().toList())
+sealed class QuickStartType(val label: String, val tasks: List<QuickStartTask>) {
+    object NewSiteQuickStartType : QuickStartType(NEW_SITE, QuickStartNewSiteTask.values().toList())
+    object ExistingSiteQuickStartType : QuickStartType(EXISTING_SITE, QuickStartExistingSiteTask.values().toList())
 
     val taskTypes = tasks.map { it.taskType }.distinct()
 
@@ -49,5 +49,18 @@ sealed class QuickStartType(val tasks: List<QuickStartTask>) {
     fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, siteLocalId: Long): Boolean {
         return quickStartStore.getDoneCount(siteLocalId) >= tasks
                 .filter { it.taskType != QuickStartTaskType.UNKNOWN }.size
+    }
+
+    companion object {
+        private const val NEW_SITE = "new-site"
+        private const val EXISTING_SITE = "existing-site"
+
+        fun fromString(label: String): QuickStartType {
+            return when(label) {
+                NewSiteQuickStartType.label -> NewSiteQuickStartType
+                ExistingSiteQuickStartType.label -> ExistingSiteQuickStartType
+                else -> NewSiteQuickStartType
+            }
+        }
     }
 }
