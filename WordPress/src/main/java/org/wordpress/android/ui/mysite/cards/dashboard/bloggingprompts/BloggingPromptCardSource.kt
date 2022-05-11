@@ -99,7 +99,7 @@ class BloggingPromptCardSource @Inject constructor(
         }
     }
 
-    // we don't have any special error handling at this point - just hide the card
+    // we don't have any special error handling at this point - just show the last available prompt
     private fun MediatorLiveData<BloggingPromptUpdate>.postErrorState() {
         val lastPrompt = this.value?.promptModel
         postState(BloggingPromptUpdate(lastPrompt))

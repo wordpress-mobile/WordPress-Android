@@ -191,6 +191,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val emailAddress = "test@email.com"
     private val postId = 100
     private val localHomepageId = 1
+    private val bloggingPromptId = 123
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -268,7 +269,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val bloggingPromptsUpdate = MutableLiveData(
             BloggingPromptUpdate(
                     promptModel = BloggingPromptModel(
-                            id = 1234,
+                            id = bloggingPromptId,
                             text = "text",
                             title = "",
                             content = "content",
@@ -2717,7 +2718,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
-                promptId = 123,
+                promptId = bloggingPromptId,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
                 onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
         )
