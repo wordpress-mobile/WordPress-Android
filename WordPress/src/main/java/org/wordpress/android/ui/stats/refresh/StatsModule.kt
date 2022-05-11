@@ -82,7 +82,7 @@ const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
 private const val BLOCK_VIEWS_AND_VISITORS_USE_CASES = "BlockViewsAndVisitorsUseCases"
-private const val TOTAL_LIKES_DETAIL_USE_CASES = "LikeDetailUseCases"
+private const val TOTAL_LIKES_DETAIL_USE_CASES = "LikesDetailUseCases"
 private const val TOTAL_COMMENTS_DETAIL_USE_CASES = "CommentsDetailUseCases"
 
 /**
@@ -489,7 +489,7 @@ class StatsModule {
 
     /**
      * Provides a list of use cases for the Total Comments detail screen in Stats. Modify this method when you want to
-     * add more blocks to the likes detail screen.
+     * add more blocks to the comments detail screen.
      */
     @Provides
     @Singleton
