@@ -140,8 +140,8 @@ class MySiteViewModel @Inject constructor(
     private val siteItemsTracker: SiteItemsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
