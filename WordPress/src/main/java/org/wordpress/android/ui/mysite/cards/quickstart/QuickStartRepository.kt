@@ -34,6 +34,8 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartType
+import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -46,6 +48,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -73,7 +76,8 @@ class QuickStartRepository
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     buildConfigWrapper: BuildConfigWrapper,
-    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    quickStartForExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
 ) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -94,8 +98,10 @@ class QuickStartRepository
     val onQuickStartSiteMenuStep = _onQuickStartSiteMenuStep as LiveData<QuickStartSiteMenuStep?>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
+    val isQuickStartForExistingUsersV2FeatureEnabled = quickStartForExistingUsersV2FeatureConfig.isEnabled()
     var quickStartTaskOrigin = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
-    val quickStartType = NewSiteQuickStartType
+    val quickStartType: QuickStartType
+        get() = appPrefsWrapper.getLastSelectedQuickStartType()
 
     private var pendingTask: QuickStartTask? = null
 
@@ -124,6 +130,12 @@ class QuickStartRepository
         if (_onQuickStartSiteMenuStep.value != null) {
             _onQuickStartSiteMenuStep.value = null
         }
+    }
+
+    fun checkAndSetQuickStartType(isNewSite: Boolean) {
+        if (!isQuickStartForExistingUsersV2FeatureEnabled) return
+        val quickStartType = if (isNewSite) NewSiteQuickStartType else ExistingSiteQuickStartType
+        appPrefsWrapper.setLastSelectedQuickStartType(quickStartType)
     }
 
     suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
