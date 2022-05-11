@@ -291,11 +291,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `when all task are completed, then completed notice is triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        initStore()
-        whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDone(siteLocalId)).thenReturn(true)
-        quickStartRepository.setActiveTask(QuickStartTask.EXPLORE_PLANS)
+        initStore(QuickStartNewSiteTask.EXPLORE_PLANS)
+        whenever(quickStartType.isEveryQuickStartTaskDone(quickStartStore, site.id.toLong())).thenReturn(true)
 
-        quickStartRepository.completeTask(QuickStartTask.EXPLORE_PLANS)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
 
         assertThat(snackbars).isNotEmpty
     }
