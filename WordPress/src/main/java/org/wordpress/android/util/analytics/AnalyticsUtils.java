@@ -830,5 +830,9 @@ public class AnalyticsUtils {
         if (event.equals("editor_block_inserted")) {
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_INSERTED, site, properties);
         }
+
+        if (event.equals("editor_block_moved")) {
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_MOVED, site, properties);
+        }
     }
 }
