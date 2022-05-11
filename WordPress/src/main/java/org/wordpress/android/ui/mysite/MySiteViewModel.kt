@@ -141,7 +141,7 @@ class MySiteViewModel @Inject constructor(
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
@@ -174,7 +174,6 @@ class MySiteViewModel @Inject constructor(
     private var isSiteSelected = false
 
     private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
-    private val isBloggingPromptsFeatureConfigEnabled = bloggingPromptsFeatureConfig.isEnabled()
 
     val isMySiteTabsEnabled: Boolean
         get() = isMySiteDashboardTabsFeatureConfigEnabled &&
@@ -429,7 +428,7 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
+                                bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,

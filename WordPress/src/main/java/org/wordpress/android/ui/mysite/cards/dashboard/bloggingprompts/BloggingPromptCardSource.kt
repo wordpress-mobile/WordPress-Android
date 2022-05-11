@@ -14,7 +14,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import java.util.Calendar
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,16 +24,19 @@ const val REFRESH_DELAY = 500L
 class BloggingPromptCardSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val promptsStore: BloggingPromptsStore,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<BloggingPromptUpdate> {
     override val refresh = MutableLiveData(false)
 
+    companion object {
+        private const val NUM_PROMPTS_TO_REQUEST = 20
+    }
+
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<BloggingPromptUpdate> {
         val result = MediatorLiveData<BloggingPromptUpdate>()
         result.getData(coroutineScope, siteLocalId)
-        result.addSource(refresh) {
-            result.refreshData(coroutineScope, siteLocalId, refresh.value)
-        }
+        result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
         refresh()
         return result
     }
@@ -43,7 +46,7 @@ class BloggingPromptCardSource @Inject constructor(
         siteLocalId: Int
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
-        if (selectedSite != null && selectedSite.id == siteLocalId) {
+        if (selectedSite != null && selectedSite.id == siteLocalId && bloggingPromptsFeatureConfig.isEnabled()) {
             coroutineScope.launch(bgDispatcher) {
                 promptsStore.getPromptForDate(selectedSite, Date()).collect { result ->
                     postValue(BloggingPromptUpdate(result.model))
@@ -71,7 +74,9 @@ class BloggingPromptCardSource @Inject constructor(
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
-            fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite)
+            if (bloggingPromptsFeatureConfig.isEnabled()) {
+                fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite)
+            }
         } else {
             postErrorState()
         }
@@ -83,26 +88,20 @@ class BloggingPromptCardSource @Inject constructor(
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-
-            val cal: Calendar = Calendar.getInstance()
-            cal.time = Date()
-            cal.add(Calendar.DATE, -10)
-            val dateBefore10Days: Date = cal.time
-
-            val result = promptsStore.fetchPrompts(selectedSite, 40, dateBefore10Days)
-            val model = result.model
+            val result = promptsStore.fetchPrompts(selectedSite, NUM_PROMPTS_TO_REQUEST, Date())
             val error = result.error
             when {
-                error != null -> postErrorState()
-                model != null -> onRefreshedBackgroundThread()
+                error != null -> {
+                    postErrorState()
+                }
                 else -> onRefreshedBackgroundThread()
             }
         }
     }
 
+    // we don't have any special error handling at this point - just hide the card
     private fun MediatorLiveData<BloggingPromptUpdate>.postErrorState() {
-        postState(
-                BloggingPromptUpdate(null)
-        )
+        val lastPrompt = this.value?.promptModel
+        postState(BloggingPromptUpdate(lastPrompt))
     }
 }
