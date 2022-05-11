@@ -35,7 +35,7 @@ class InsightsManagementMapperTest : BaseUnitTest() {
     @Mock private lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var insightsManagementMapper: InsightsManagementMapper
     private val insightTypeCount =
-            InsightType.values().count() - 1 // Excluding FOLLOWER_TOTALS for statsRevampV2FeatureConfig
+            InsightType.values().count() - 3 // Excluding FOLLOWER_TOTALS, AUTHORS_COMMENTS, POSTS_COMMENTS for statsRevampV2FeatureConfig
     private val sectionsCount = 3
     @InternalCoroutinesApi
     @Before
