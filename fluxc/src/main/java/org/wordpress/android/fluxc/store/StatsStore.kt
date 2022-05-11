@@ -181,6 +181,8 @@ class StatsStore
         TAGS_AND_CATEGORIES,
         ANNUAL_SITE_STATS,
         COMMENTS,
+        AUTHORS_COMMENTS,
+        POSTS_COMMENTS,
         FOLLOWERS,
         TODAY_STATS,
         POSTING_ACTIVITY,
