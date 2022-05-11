@@ -224,7 +224,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
-    private var onBloggingPromptAnswerClicked: (() -> Unit)? = null
+    private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -1465,7 +1465,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given blogging prompt card, when answer button is clicked, answer action is called`() = test {
         initSelectedSite()
 
-        requireNotNull(onBloggingPromptAnswerClicked).invoke()
+        requireNotNull(onBloggingPromptAnswerClicked).invoke(123)
 
         assertTrue(answerRequests == 1)
     }
@@ -2681,8 +2681,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
+                promptId = 123,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
-                onAnswerClick = onBloggingPromptAnswerClicked as (() -> Unit)
+                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
         )
     }
 
