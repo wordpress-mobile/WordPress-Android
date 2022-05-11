@@ -4,9 +4,9 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertNotNull
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
@@ -114,12 +114,6 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     fun `Should track screen shown when start is called with INFORMATION`() = runBlocking {
         classToTest.start(INFORMATION)
         verify(analyticsTracker).trackScreenShown()
-    }
-
-    @Test
-    fun `Should track screen dismissed when stop is called`() {
-        classToTest.stop()
-        verify(analyticsTracker).trackScreenDismissed()
     }
 
     @Test

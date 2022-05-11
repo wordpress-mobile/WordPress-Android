@@ -47,10 +47,6 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
         _uiState.value = uiStateMapper.mapReady(dialogType, ::onPrimaryButtonClick, ::onSecondaryButtonClick)
     }
 
-    fun stop() {
-        analyticsTracker.trackScreenDismissed()
-    }
-
     private fun onPrimaryButtonClick() {
         val action = when (dialogType) {
             ONBOARDING -> {

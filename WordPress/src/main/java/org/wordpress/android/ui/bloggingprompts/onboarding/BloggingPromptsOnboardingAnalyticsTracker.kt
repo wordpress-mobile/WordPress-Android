@@ -11,10 +11,6 @@ class BloggingPromptsOnboardingAnalyticsTracker @Inject constructor(
             Stat.BLOGGING_PROMPTS_INTRODUCTION_SCREEN_VIEWED, emptyMap()
     )
 
-    fun trackScreenDismissed() = analyticsTracker.track(
-            Stat.BLOGGING_PROMPTS_INTRODUCTION_SCREEN_DISMISSED, emptyMap()
-    )
-
     fun trackTryItNowClicked() = analyticsTracker.track(
             Stat.BLOGGING_PROMPTS_INTRODUCTION_TRY_IT_NOW_CLICKED, emptyMap()
     )

@@ -24,6 +24,7 @@ import org.wordpress.android.ui.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.engagement.UserProfileViewModel;
+import org.wordpress.android.ui.featureintroduction.FeatureIntroductionViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
@@ -623,4 +624,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TotalLikesDetailListViewModel.class)
     abstract ViewModel totalLikesDetailListViewModel(TotalLikesDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FeatureIntroductionViewModel.class)
+    abstract ViewModel featureIntroductionViewModel(FeatureIntroductionViewModel viewModel);
 }
