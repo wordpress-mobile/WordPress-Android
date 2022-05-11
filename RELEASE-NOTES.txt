@@ -1,8 +1,11 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-19.8
+19.9
 -----
 * [*] Pages List: Added "Copy Link" button to context menu [https://github.com/wordpress-mobile/WordPress-Android/pull/16321]
+
+19.8
+-----
 * [*] App Settings: updated look and functionality of Locale Picker [https://github.com/wordpress-mobile/WordPress-Android/pull/16331]
 * [*] Fix issue that prevented Jetpack customers with standalone VideoPress subs uploading >5min videos [https://github.com/wordpress-mobile/WordPress-Android/pull/16322]
 * [*] On self-hosted sites, allow previewing unsaved changes to draft posts [https://github.com/wordpress-mobile/WordPress-Android/pull/16296]
