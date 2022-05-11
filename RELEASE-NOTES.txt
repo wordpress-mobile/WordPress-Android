@@ -3,6 +3,8 @@
 19.9
 -----
 * [*] Pages List: Added "Copy Link" button to context menu [https://github.com/wordpress-mobile/WordPress-Android/pull/16321]
+* [*] Editor: Improved editor performance by reducing memory usage [https://github.com/wordpress-mobile/WordPress-Android/pull/16490]
+* [*] Block Editor: Prevent non-functional '+' icon displaying in toolbar on self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/16507]
 
 19.8
 -----
@@ -16,6 +18,7 @@
 * [*] Block Editor: Latest Posts block: Add featured image settings [https://github.com/WordPress/gutenberg/pull/39257]
 * [*] Block Editor: Prevent incorrect notices displaying when switching between HTML-Visual mode quickly [https://github.com/WordPress/gutenberg/pull/40415]
 * [*] Block Editor: Embed block: Fix inline preview cut-off when editing URL [https://github.com/WordPress/gutenberg/pull/35326]
+* [*] Jetpack App: Fixes signup magic link URL [https://github.com/wordpress-mobile/WordPress-Android/pull/16449]
 
 19.7
 -----

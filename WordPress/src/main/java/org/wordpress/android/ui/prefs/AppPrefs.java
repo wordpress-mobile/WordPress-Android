@@ -24,6 +24,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
+import org.wordpress.android.ui.quickstart.QuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
@@ -1234,12 +1235,12 @@ public class AppPrefs {
                && getBoolean(UndeletablePrefKey.SHOULD_UPDATE_BOOKMARKED_POSTS_PSEUDO_ID, true);
     }
 
-    public static QuickStartTask getLastSkippedQuickStartTask() {
+    public static QuickStartTask getLastSkippedQuickStartTask(QuickStartType quickStartType) {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
             return null;
         }
-        return QuickStartTask.Companion.fromString(taskName);
+        return quickStartType.getTaskFromString(taskName);
     }
 
     public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {

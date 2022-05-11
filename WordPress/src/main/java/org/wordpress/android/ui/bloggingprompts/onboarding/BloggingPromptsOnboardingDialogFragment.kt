@@ -153,7 +153,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     private fun setupActionObserver() {
         viewModel.action.observe(this) { action ->
             when (action) {
-                is OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
+                is OpenEditor -> {
+                    activity?.let {
+                        startActivity(ActivityLauncher.openEditorWithBloggingPrompt(it, action.promptId))
+                    }
+                }
                 is OpenSitePicker -> {
                     val intent = Intent(context, SitePickerActivity::class.java).apply {
                         putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)

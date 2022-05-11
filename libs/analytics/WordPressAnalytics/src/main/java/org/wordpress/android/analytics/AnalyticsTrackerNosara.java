@@ -1127,6 +1127,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_next_date_tapped";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
+            case STATS_TOTAL_LIKES_VIEW_MORE_TAPPED:
+                return "stats_total_likes_view_more_tapped";
+            case STATS_TOTAL_LIKES_ERROR:
+                return "stats_total_likes_error";
+            case STATS_TOTAL_COMMENTS_VIEW_MORE_TAPPED:
+                return "stats_total_comments_view_more_tapped";
+            case STATS_TOTAL_COMMENTS_ERROR:
+                return "stats_total_comments_error";
+            case STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED:
+                return "stats_total_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
             case STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED:
@@ -2187,6 +2197,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "recommend_app_content_fetch_failed";
             case EDITOR_BLOCK_INSERTED:
                 return "editor_block_inserted";
+            case EDITOR_BLOCK_MOVED:
+                return "editor_block_moved";
             case ABOUT_SCREEN_SHOWN:
                 return "about_screen_shown";
             case ABOUT_SCREEN_DISMISSED:
@@ -2297,6 +2309,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_custom_view_shown";
             case READER_ARTICLE_CUSTOM_VIEW_HIDDEN:
                 return "reader_article_custom_view_hidden";
+            case WEBVIEW_DISMISSED:
+                return "webview_dismissed";
+            case WEBVIEW_DISPLAYED:
+                return "webview_displayed";
+            case WEBVIEW_NAVIGATED_BACK:
+                return "webview_navigated_back";
+            case WEBVIEW_NAVIGATED_FORWARD:
+                return "webview_navigated_forward";
+            case WEBVIEW_OPEN_IN_BROWSER_TAPPED:
+                return "webview_open_in_browser_tapped";
+            case WEBVIEW_RELOAD_TAPPED:
+                return "webview_reload_tapped";
+            case WEBVIEW_SHARE_TAPPED:
+                return "webview_share_tapped";
+            case WEBVIEW_PREVIEW_DEVICE_CHANGED:
+                return "webview_preview_device_changed";
         }
         return null;
     }

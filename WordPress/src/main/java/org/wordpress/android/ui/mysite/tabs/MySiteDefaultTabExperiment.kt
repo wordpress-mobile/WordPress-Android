@@ -9,13 +9,15 @@ import org.wordpress.android.util.config.MySiteDefaultTabExperimentVariationDash
 import javax.inject.Inject
 
 class MySiteDefaultTabExperiment @Inject constructor(
-    private val mySiteDefaultTabExperimentFeatureConfig: MySiteDefaultTabExperimentFeatureConfig,
+    mySiteDefaultTabExperimentFeatureConfig: MySiteDefaultTabExperimentFeatureConfig,
     private val mySiteDefaultTabExperimentVariationDashboardFeatureConfig:
     MySiteDefaultTabExperimentVariationDashboardFeatureConfig,
-    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
+    private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
+    private val isMySiteDefaultTabExperimentFeatureConfigEnabled = mySiteDefaultTabExperimentFeatureConfig.isEnabled()
     fun checkAndSetVariantIfNeeded() {
         if (isExperimentRunning()) {
             if (!isVariantAssigned()) {
@@ -45,7 +47,7 @@ class MySiteDefaultTabExperiment @Inject constructor(
     }
 
     fun isExperimentRunning() =
-            mySiteDashboardTabsFeatureConfig.isEnabled() && mySiteDefaultTabExperimentFeatureConfig.isEnabled()
+            isMySiteDashboardTabsFeatureConfigEnabled && isMySiteDefaultTabExperimentFeatureConfigEnabled
 
     fun isVariantAssigned() = appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()
 
