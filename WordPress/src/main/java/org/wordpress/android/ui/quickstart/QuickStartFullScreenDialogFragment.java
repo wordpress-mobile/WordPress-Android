@@ -19,6 +19,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.ui.ActionableEmptyView;
@@ -31,6 +32,7 @@ import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,7 +169,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
         if (!showSnackbarIfNeeded(task)) {
             Bundle result = new Bundle();
-            result.putSerializable(RESULT_TASK, task);
+            result.putSerializable(RESULT_TASK, (Serializable) task);
             mDialogController.confirm(result);
         }
     }
@@ -240,7 +242,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     }
 
     private boolean showSnackbarIfNeeded(QuickStartTask task) {
-        if (task == QuickStartTask.CREATE_SITE) {
+        if (task == QuickStartNewSiteTask.CREATE_SITE) {
             WPSnackbar.make(requireView(), R.string.quick_start_list_create_site_message, Snackbar.LENGTH_LONG).show();
             return true;
         } else {
