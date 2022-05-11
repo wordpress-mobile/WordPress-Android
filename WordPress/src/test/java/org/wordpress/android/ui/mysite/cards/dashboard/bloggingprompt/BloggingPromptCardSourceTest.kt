@@ -38,7 +38,9 @@ private val PROMPT = BloggingPromptModel(
         text = "prompt text",
         title = "",
         content = "<!-- wp:pullquote -->\n" +
-                "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world" +
+                " live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of" +
+                " plinky.com)</cite></blockquote></figure>\n" +
                 "<!-- /wp:pullquote -->",
         date = Date(),
         isAnswered = false,
@@ -46,7 +48,6 @@ private val PROMPT = BloggingPromptModel(
         respondentsCount = 5,
         respondentsAvatarUrls = listOf()
 )
-
 @InternalCoroutinesApi
 class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -99,7 +100,6 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     fun `given prompts feature disabled, no get or fetch calls are made`() = test {
         init(isBloggingPromptFeatureEnabled = false)
         val result = mutableListOf<BloggingPromptUpdate>()
-        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
 
         bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
 

@@ -37,8 +37,6 @@ private val RESPONDENTS = listOf(
         "http://avatar1.url",
         "http://avatar2.url",
         "http://avatar3.url",
-        "http://avatar4.url",
-        "http://avatar5.url"
 )
 
 /* ktlint-disable max-line-length */
@@ -46,7 +44,7 @@ private val RESPONDENTS = listOf(
 class BloggingPromptCardBuilderTest : BaseUnitTest() {
     private lateinit var builder: BloggingPromptCardBuilder
     private val bloggingPrompt = BloggingPromptModel(
-            id = 1234,
+            id = 123,
             text = PROMPT_TITLE,
             title = "",
             content = "<!-- wp:pullquote -->\n" +
