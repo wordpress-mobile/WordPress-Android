@@ -1,4 +1,5 @@
 @file:Suppress("MaximumLineLength")
+
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
@@ -19,7 +20,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -155,7 +155,7 @@ class MySiteViewModel @Inject constructor(
     private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<BloggingPromptModel, SiteModel>>>()
+    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, Int>>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
@@ -215,7 +215,7 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShare = _onShare
-    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<BloggingPromptModel, SiteModel>>>
+    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -1121,18 +1121,9 @@ class MySiteViewModel @Inject constructor(
         onShare.postValue(Event(message))
     }
 
-    @Suppress("MaxLineLength")
-    /* ktlint-disable max-line-length */
-    private fun onBloggingPromptAnswerClick() {
-//        val bloggingPrompt = BloggingPrompt(
-//                text = "Cast the movie of your life.",
-//                content = "<!-- wp:pullquote -->\n" +
-//                        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-//                        "<!-- /wp:pullquote -->",
-//                respondents = emptyList()
-//        )
-//        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-//        _onAnswerBloggingPrompt.postValue(Event(Pair(bloggingPrompt, selectedSite)))
+    private fun onBloggingPromptAnswerClick(promptId: Int) {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

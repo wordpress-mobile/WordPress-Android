@@ -239,10 +239,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
         viewModel.onAnswerBloggingPrompt.observeEvent(viewLifecycleOwner) {
-            val bloggingPrompt = it.first
-            val site = it.second
+            val site = it.first
+            val bloggingPromptId = it.second
             ActivityLauncher.addNewPostForResult(
-                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.id
+                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPromptId
             )
         }
     }
