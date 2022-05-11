@@ -628,8 +628,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mViewModel.getCreatePostWithBloggingPrompt().observe(this, bloggingPrompt -> {
-            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.getId());
+        mViewModel.getCreatePostWithBloggingPrompt().observe(this, promptId -> {
+            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId);
         });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
