@@ -111,6 +111,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -1177,6 +1178,21 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given dynamic cards enabled + existing site, when check & start QS triggered, then existing site QS starts`() {
+        whenever(quickStartRepository.quickStartType).thenReturn(ExistingSiteQuickStartType)
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
+
+        verify(quickStartUtilsWrapper).startQuickStart(
+                siteLocalId,
+                false,
+                ExistingSiteQuickStartType
+        )
+        verify(mySiteSourceManager).refreshQuickStart()
+    }
+
+    @Test
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
@@ -1198,12 +1214,41 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given QS is not available for existing site, when check and start QS is triggered, then QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
     fun `given new site, when check and start QS is triggered, then QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
 
         viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
+
+        assertThat(navigationActions).containsExactly(
+                SiteNavigationAction.ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_manage_site_title,
+                        R.string.quick_start_dialog_need_help_manage_site_message,
+                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                        R.string.quick_start_dialog_need_help_button_negative
+                )
+        )
+    }
+
+    @Test
+    fun `given existing site, when check and start QS is triggered, then QSP is shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
 
         assertThat(navigationActions).containsExactly(
                 SiteNavigationAction.ShowQuickStartDialog(
