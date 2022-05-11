@@ -21,22 +21,17 @@ class EditorBloggingPromptsViewModel
     val onBloggingPromptLoaded: LiveData<Event<String>> = _onBloggingPromptLoaded
 
     private var isStarted = false
-    private lateinit var site: SiteModel
-
-    private var bloggingPromptId = 0
 
     fun start(site: SiteModel, bloggingPromptId: Int) {
         if (isStarted) {
             return
         }
         isStarted = true
-        this.bloggingPromptId = bloggingPromptId
-        this.site = site
-        loadPrompt()
+        loadPrompt(site, bloggingPromptId)
     }
 
-    private fun loadPrompt() = launch {
-        val prompt = bloggingPromptsStore.getPromptById(site, bloggingPromptId).first().model
+    private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
+        val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
         prompt?.let { _onBloggingPromptLoaded.value = Event(it.content) }
     }
 }

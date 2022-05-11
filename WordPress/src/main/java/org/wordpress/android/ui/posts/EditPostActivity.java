@@ -114,6 +114,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.support.ZendeskHelper;
@@ -409,9 +410,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject BloggingPromptsStore mBloggingPromptsStore;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
+    private EditorBloggingPromptsViewModel mEditorBloggingPromptsViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -518,6 +521,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
+        mEditorBloggingPromptsViewModel =
+                new ViewModelProvider(this, mViewModelFactory).get(EditorBloggingPromptsViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -745,8 +750,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
         mStorageUtilsViewModel.start(savedInstanceState == null);
-
-        fillContentIfNeeded();
     }
 
     private void presentNewPageNoticeIfNeeded() {
@@ -909,6 +912,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     return null;
                 })
         );
+        mEditorBloggingPromptsViewModel.getOnBloggingPromptLoaded().observe(this, event -> {
+            event.applyIfNotHandled(promptContent -> {
+                    mEditPostRepository.updateAsync(postModel -> {
+                        postModel.setContent(promptContent);
+                        return true;
+                    }, (postModel, result) -> {
+                        refreshEditorContent();
+                        return null;
+                    });
+                return null;
+            });
+        });
     }
 
     private void initializePostObject() {
@@ -3235,7 +3250,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
             }
         }
-
         onEditorFinalTouchesBeforeShowing();
     }
 
@@ -3278,6 +3292,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // unless the user cancelled editing in which case we should continue as normal and attach the listener
         if (!replaceBlockActionWaiting || mStoryEditingCancelled) {
             mStoriesEventListener.startListening();
+        }
+
+        // Start VM, load prompt and populate Editor with content after edit IS ready.
+        final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
+        if (promptId >= 0) {
+            mEditorBloggingPromptsViewModel.start(mSite, promptId);
         }
     }
 
@@ -3601,15 +3621,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         FetchMediaListPayload payload =
                 new FetchMediaListPayload(mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
         mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
-    }
-
-    @SuppressWarnings("unused")
-    private void fillContentIfNeeded() {
-        final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
-        if (promptId >= 0) {
-            // TODO @RenanLukas - get BloggingPrompt by id and fill content
-            // newPostSetup(null, content);
-        }
     }
 
     @SuppressWarnings("unused")
