@@ -95,6 +95,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == getPosition(READER)) {
                 customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
             }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
+            }
 
             itemView.addView(customView)
         }
