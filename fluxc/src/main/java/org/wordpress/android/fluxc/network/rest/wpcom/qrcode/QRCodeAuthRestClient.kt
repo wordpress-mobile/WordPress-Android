@@ -19,7 +19,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class QrcodeRestClient @Inject constructor(
+class QRCodeAuthRestClient @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     dispatcher: Dispatcher,
     appContext: Context?,
@@ -27,7 +27,7 @@ class QrcodeRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun validate(data: String, token: String): QrcodePayload<QrcodeValidateResponse> {
+    suspend fun validate(data: String, token: String): QRCodeAuthPayload<QRCodeAuthValidateResponse> {
         val url = WPCOMV2.auth.qr_code.validate.url
         val params = mapOf("data" to data, "token" to token)
         val response = wpComGsonRequestBuilder.syncPostRequest(
@@ -35,15 +35,15 @@ class QrcodeRestClient @Inject constructor(
             url,
             params,
             null,
-            QrcodeValidateResponse::class.java
+            QRCodeAuthValidateResponse::class.java
         )
         return when (response) {
-            is Response.Success -> QrcodePayload(response.data)
-            is Response.Error -> QrcodePayload(response.error.toQrcodeError())
+            is Response.Success -> QRCodeAuthPayload(response.data)
+            is Response.Error -> QRCodeAuthPayload(response.error.toQrcodeError())
         }
     }
 
-    suspend fun authenticate(data: String, token: String): QrcodePayload<QrcodeAuthenticateResponse> {
+    suspend fun authenticate(data: String, token: String): QRCodeAuthPayload<QRCodeAuthAuthenticateResponse> {
         val url = WPCOMV2.auth.qr_code.authenticate.url
         val params = mapOf("data" to data, "token" to token)
         val response = wpComGsonRequestBuilder.syncPostRequest(
@@ -51,39 +51,39 @@ class QrcodeRestClient @Inject constructor(
                 url,
                 params,
                 null,
-                QrcodeAuthenticateResponse::class.java
+                QRCodeAuthAuthenticateResponse::class.java
         )
         return when (response) {
-            is Response.Success -> QrcodePayload(response.data)
-            is Response.Error -> QrcodePayload(response.error.toQrcodeError())
+            is Response.Success -> QRCodeAuthPayload(response.data)
+            is Response.Error -> QRCodeAuthPayload(response.error.toQrcodeError())
         }
     }
 
-    data class QrcodeValidateResponse(
+    data class QRCodeAuthValidateResponse(
         @SerializedName("browser") val browser: String? = null,
         @SerializedName("location") val location: String? = null,
         @SerializedName("success") val success: Boolean? = null
     )
 
-    data class QrcodeAuthenticateResponse(
+    data class QRCodeAuthAuthenticateResponse(
         @SerializedName("authenticated") val authenticated: Boolean? = null
     )
 }
 
-data class QrcodePayload<T>(
+data class QRCodeAuthPayload<T>(
     val response: T? = null
-) : Payload<QrcodeError>() {
-    constructor(error: QrcodeError) : this() {
+) : Payload<QRCodeAuthError>() {
+    constructor(error: QRCodeAuthError) : this() {
         this.error = error
     }
 }
 
-class QrcodeError(
-    val type: QrcodeErrorType,
+class QRCodeAuthError(
+    val type: QRCodeAuthErrorType,
     val message: String? = null
 ) : OnChangedError
 
-enum class QrcodeErrorType {
+enum class QRCodeAuthErrorType {
     GENERIC_ERROR,
     AUTHORIZATION_REQUIRED,
     INVALID_RESPONSE,
@@ -94,37 +94,37 @@ enum class QrcodeErrorType {
     NOT_AUTHORIZED
 }
 
-fun WPComGsonNetworkError.toQrcodeError(): QrcodeError {
+fun WPComGsonNetworkError.toQrcodeError(): QRCodeAuthError {
     val type = when (type) {
-        GenericErrorType.TIMEOUT -> QrcodeErrorType.TIMEOUT
+        GenericErrorType.TIMEOUT -> QRCodeAuthErrorType.TIMEOUT
         GenericErrorType.NO_CONNECTION,
         GenericErrorType.SERVER_ERROR,
         GenericErrorType.INVALID_SSL_CERTIFICATE,
-        GenericErrorType.NETWORK_ERROR -> QrcodeErrorType.API_ERROR
+        GenericErrorType.NETWORK_ERROR -> QRCodeAuthErrorType.API_ERROR
         GenericErrorType.PARSE_ERROR,
         GenericErrorType.NOT_FOUND,
         GenericErrorType.CENSORED,
-        GenericErrorType.INVALID_RESPONSE -> QrcodeErrorType.INVALID_RESPONSE
+        GenericErrorType.INVALID_RESPONSE -> QRCodeAuthErrorType.INVALID_RESPONSE
         GenericErrorType.HTTP_AUTH_ERROR,
         GenericErrorType.AUTHORIZATION_REQUIRED,
-        GenericErrorType.NOT_AUTHENTICATED -> QrcodeErrorType.AUTHORIZATION_REQUIRED
+        GenericErrorType.NOT_AUTHENTICATED -> QRCodeAuthErrorType.AUTHORIZATION_REQUIRED
         GenericErrorType.UNKNOWN -> {
             when (apiError) {
-                QrcodeErrorType.REST_INVALID_PARAM.name.lowercase() -> {
-                    QrcodeErrorType.REST_INVALID_PARAM
+                QRCodeAuthErrorType.REST_INVALID_PARAM.name.lowercase() -> {
+                    QRCodeAuthErrorType.REST_INVALID_PARAM
                 }
-                QrcodeErrorType.DATA_INVALID.name.lowercase() -> {
-                    QrcodeErrorType.DATA_INVALID
+                QRCodeAuthErrorType.DATA_INVALID.name.lowercase() -> {
+                    QRCodeAuthErrorType.DATA_INVALID
                 }
-                QrcodeErrorType.NOT_AUTHORIZED.name.lowercase() -> {
-                    QrcodeErrorType.NOT_AUTHORIZED
+                QRCodeAuthErrorType.NOT_AUTHORIZED.name.lowercase() -> {
+                    QRCodeAuthErrorType.NOT_AUTHORIZED
                 }
                 else -> {
-                    QrcodeErrorType.GENERIC_ERROR
+                    QRCodeAuthErrorType.GENERIC_ERROR
                 }
             }
         }
-        null -> QrcodeErrorType.GENERIC_ERROR
+        null -> QRCodeAuthErrorType.GENERIC_ERROR
     }
-    return QrcodeError(type, message)
+    return QRCodeAuthError(type, message)
 }
