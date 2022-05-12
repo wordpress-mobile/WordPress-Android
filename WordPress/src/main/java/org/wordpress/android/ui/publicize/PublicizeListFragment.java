@@ -40,7 +40,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING;
+import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
     public interface PublicizeButtonPrefsListener {
