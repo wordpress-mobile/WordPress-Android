@@ -2,7 +2,7 @@ package org.wordpress.android.ui.mysite.cards.siteinfo
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
@@ -32,9 +32,9 @@ class SiteInfoHeaderCardBuilder
                 blogTitle,
                 homeUrl,
                 siteIcon,
-                params.activeTask == QuickStartTask.UPDATE_SITE_TITLE,
-                params.activeTask == QuickStartTask.VIEW_SITE,
-                params.activeTask == QuickStartTask.UPLOAD_SITE_ICON,
+                params.activeTask == QuickStartNewSiteTask.UPDATE_SITE_TITLE,
+                params.activeTask == QuickStartNewSiteTask.VIEW_SITE,
+                params.activeTask == QuickStartNewSiteTask.UPLOAD_SITE_ICON,
                 buildTitleClick(params.site, params.titleClick),
                 ListItemInteraction.create(params.iconClick),
                 ListItemInteraction.create(params.urlClick),

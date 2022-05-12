@@ -9,9 +9,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EXPLORE_PLANS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder

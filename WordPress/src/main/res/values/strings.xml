@@ -1366,6 +1366,7 @@
     <string name="stats_months_and_years_views_label">Views</string>
     <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
     <string name="stats_detail_recent_weeks">Recent Weeks</string>
+    <string name="stats_details_top_commentators">Top Commentators</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
@@ -3131,6 +3132,9 @@
     <string name="quick_start_focus_point_description">tap here</string>
     <string name="quick_start_site_menu_tab_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to continue.</string>
 
+    <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
+    <string name="quick_start_completed_tour_subtitle">Doesn\'t it feel good to cross things off a list?</string>
+
     <string name="quick_start_card_menu_pin">Pin this</string>
     <string name="quick_start_card_menu_unpin">Unpin this</string>
     <string name="quick_start_card_menu_hide">Hide for now</string>
@@ -3167,6 +3171,7 @@
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_copy_link">Copy link</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
