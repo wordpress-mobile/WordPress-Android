@@ -108,7 +108,7 @@ class QrcodeStoreTest {
         assertEquals(QrcodeResult(resultError), response)
     }
 
-    companion object{
+    companion object {
         private const val TOKEN_PARAM = "token_param"
         private const val DATA_PARAM = "data_param"
         private const val BROWSER = "Chrome"
