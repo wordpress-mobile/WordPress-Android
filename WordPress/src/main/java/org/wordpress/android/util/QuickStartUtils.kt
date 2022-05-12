@@ -200,6 +200,7 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
@@ -221,6 +222,7 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
@@ -238,6 +240,8 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL ->
+                Stat.QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
