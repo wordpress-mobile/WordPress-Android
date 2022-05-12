@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-11-21 10:07:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: ku_TR
 -->
 <resources>
@@ -803,10 +803,8 @@ Language: ku_TR
     <string name="exit">derketin</string>
     <string name="quick_start_sites">Gavên Pêşve</string>
     <string name="quick_start_complete_tasks_header"> (%d) Qediya</string>
-    <string name="quick_start_dialog_view_site_message">Kêfa xwe bi berhema qediyayî bîne!</string>
     <string name="quick_start_dialog_upload_icon_message">Mêvanên te ew ê îkona te di gerokên xwe de bibînin. Ji bo xuyangeke profesyonel û balkêş îkoneke taybet tevlî bike.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ji bo tu pakêta xwe ya heyî û pakêtên din ên berdest bibînî li %1$sPakêt%2$s\'ê bitepîne</string>
-    <string name="quick_start_dialog_check_stats_message_short">Ji bo tu performansa malpera xwe bibînî li %1$sAmar%2$s\'an bitepîne.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ji bo yeka din lê hilxînî, li %1$sÎkona Malpera Te%2$s\'yê bitepîne</string>
     <string name="quick_start_dialog_enable_sharing_title">Parvekirina şandiyê biçalakîne</string>
     <string name="quick_start_dialog_explore_plans_title">Pakêtan keşf bike</string>
@@ -816,7 +814,6 @@ Language: ku_TR
     <string name="quick_start_remove_next_steps_menu_title">Vêya rake</string>
     <string name="quick_start_dialog_check_stats_title">Amarên malpera xwe kontrol bike</string>
     <string name="quick_start_complete_view_subtitle">Te lîsteya xwe temam kir. Her bijî te karekî baş kir.</string>
-    <string name="quick_start_dialog_check_stats_message">Agahiyên li ser performansa malpera xwe hildemîne.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Rakirina Gavên Pêşve ew ê hemû gerên vê malperê veşêre. Ev çalakî nayê vegerandin.</string>
     <string name="quick_start_task_skip_menu_title">Peywirê derbas bike</string>
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">fireh bike</string>
@@ -983,15 +980,11 @@ Language: ku_TR
     <string name="quick_start_list_create_site_subtitle">Malpera xwe rake ser lingan û biweşîne.</string>
     <string name="quick_start_dialog_share_site_title">Malpera xwe parve bike</string>
     <string name="quick_start_dialog_view_site_title">Malpera xwe bibîne</string>
-    <string name="quick_start_dialog_view_site_message_short">Ji bo tu pêşdîtina malpera xwe bibînî li %1$sMalperê Bibîne%2$s\'yê bitepîne</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Ji bo domandinê li %1$sParvekirin%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Ji bo tu hesabên xwe yên medyaya civakî tevlî bikî li %1$sGirêdan%2$s\'ê bitepîne</string>
     <string name="quick_start_dialog_share_site_message">Hesabên xwe yên medyaya civakî girêbide – malpera te ew ê şandiyên nû bixweber parve bike.</string>
     <string name="quick_start_dialog_publish_post_title">Şandiyekê biweşîne</string>
     <string name="quick_start_dialog_publish_post_message_short">Ji bo şandiyeke nû biafirînî li %1$sŞandî Biafirîne%2$s\'yê bitepîne</string>
-    <string name="quick_start_dialog_follow_sites_title">Malperên din bişopîne</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Ji bo domandinê li %1$sXwîner%2$s\'ê bitepîne</string>
-    <string name="quick_start_dialog_follow_sites_message">Malperên ku îlhamê didine te bibîne û wan bişopîne ji bo ku hayê te ji hildemandinên weşanên wan çêbibe.</string>
     <string name="quick_start_button_positive">Here</string>
     <string name="quick_start_button_negative">Ne niha</string>
     <string name="quick_start_button_negative_short">Betal bike</string>
