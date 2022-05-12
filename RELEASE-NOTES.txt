@@ -7,8 +7,8 @@
 * [**] Block Editor: Cover Block: Improve color contrast between background and text [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4808]
 * [**] Block Editor: Buttons block: Fix issue related to displaying formatting buttons after closing the block settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4814]
 * [***] Block Editor: Add drag & drop blocks feature [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4832]
-* [*]  Block Editor: Gallery block: Fix broken "Link To" settings and add "Image Size" settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4841]
-* [*]  Block Editor: Unsupported Block Editor: Prevent WordPress.com tour banner from displaying. [https://github.com/wordpress-mobilegutenberg-mobile/pull/4820]
+* [*] Block Editor: Gallery block: Fix broken "Link To" settings and add "Image Size" settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4841]
+* [*] Block Editor: Unsupported Block Editor: Prevent WordPress.com tour banner from displaying. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4820]
 
 19.8
 -----
