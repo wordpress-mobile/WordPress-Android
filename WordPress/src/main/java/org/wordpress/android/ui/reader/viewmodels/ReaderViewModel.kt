@@ -61,6 +61,7 @@ class ReaderViewModel @Inject constructor(
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
     private var trackReaderTabJob: Job? = null
+    private var isQuickStartPromptShown: Boolean = false
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -85,8 +86,6 @@ class ReaderViewModel @Inject constructor(
 
     private val _quickStartPromptEvent = MutableLiveData<Event<QuickStartReaderPrompt>>()
     val quickStartPromptEvent = _quickStartPromptEvent as LiveData<Event<QuickStartReaderPrompt>>
-
-    var isQuickStartPromtShown: Boolean = false
 
     init {
         EventBus.getDefault().register(this)
@@ -246,8 +245,8 @@ class ReaderViewModel @Inject constructor(
         wasPaused = true
         if (isChangingConfigurations == false) {
             updateContentUiState(showQuickStartFocusPoint = false)
-            if (isQuickStartPromtShown) snackbarSequencer.dismissLastSnackbar()
-            isQuickStartPromtShown = false
+            if (isQuickStartPromptShown) snackbarSequencer.dismissLastSnackbar()
+            isQuickStartPromptShown = false
             if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
                 quickStartRepository.clearPendingTask()
             }
@@ -268,6 +267,10 @@ class ReaderViewModel @Inject constructor(
     }
 
     /* QUICK START */
+
+    fun onQuickStartPromptDismissed() {
+        isQuickStartPromptShown = false
+    }
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
         if (event.task == getFollowSiteTask()) checkAndStartQuickStartFollowSiteTaskNextStep()
@@ -298,7 +301,7 @@ class ReaderViewModel @Inject constructor(
         } else {
             R.string.quick_start_dialog_follow_sites_message_short_discover
         }
-        isQuickStartPromtShown = true
+        isQuickStartPromptShown = true
         _quickStartPromptEvent.value = Event(
                 QuickStartReaderPrompt(
                         getFollowSiteTask(),
