@@ -54,7 +54,7 @@ class PostsCommentsUseCase @Inject constructor(
         return commentsStore.getComments(statsSiteProvider.siteModel, cacheMode)
     }
 
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.posts))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(buildTitle())
 
     override fun buildEmptyItem(): List<BlockListItem> {
         return listOf(buildTitle(), Empty())
@@ -88,5 +88,5 @@ class PostsCommentsUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = Title(string.stats_view_comments, menuAction = null)
+    private fun buildTitle() = Title(string.posts, menuAction = null)
 }

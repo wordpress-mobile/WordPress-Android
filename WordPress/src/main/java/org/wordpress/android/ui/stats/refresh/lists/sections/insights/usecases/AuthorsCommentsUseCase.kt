@@ -17,8 +17,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,8 +27,6 @@ class AuthorsCommentsUseCase @Inject constructor(
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
     private val statsSiteProvider: StatsSiteProvider,
-    private val resourceProvider: ResourceProvider,
-    private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) : StatelessUseCase<CommentsModel>(InsightType.AUTHORS_COMMENTS, mainDispatcher, backgroundDispatcher) {
     override suspend fun fetchRemoteData(forced: Boolean): State<CommentsModel> {
@@ -54,7 +50,7 @@ class AuthorsCommentsUseCase @Inject constructor(
         return commentsStore.getComments(statsSiteProvider.siteModel, cacheMode)
     }
 
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_view_comments))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(buildTitle())
 
     override fun buildEmptyItem(): List<BlockListItem> {
         return listOf(buildTitle(), Empty())
