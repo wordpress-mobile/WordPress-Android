@@ -10,7 +10,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -32,8 +34,6 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
-        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
-                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         builder = QuickLinkRibbonBuilder(quickStartRepository)
     }
 
@@ -60,8 +60,16 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
 
     /* FOCUS POINT*/
     @Test
-    fun `given stats active task, when card is built, then stats focus point should be true`() {
-        val quickLinkRibbon = buildQuickLinkRibbon(showStatsFocusPoint = true)
+    fun `given new site QS + stats active task, when card is built, then stats focus point should be true`() {
+        val quickLinkRibbon = buildQuickLinkRibbon(showStatsFocusPoint = true, isNewSiteQuickStart = true)
+
+        assertThat(quickLinkRibbon.quickLinkRibbonItems[3].showFocusPoint).isEqualTo(true)
+        assertThat(quickLinkRibbon.showStatsFocusPoint).isEqualTo(true)
+    }
+
+    @Test
+    fun `given existing site QS + stats active task, when card is built, then stats focus point should be true`() {
+        val quickLinkRibbon = buildQuickLinkRibbon(showStatsFocusPoint = true, isNewSiteQuickStart = false)
 
         assertThat(quickLinkRibbon.quickLinkRibbonItems[3].showFocusPoint).isEqualTo(true)
         assertThat(quickLinkRibbon.showStatsFocusPoint).isEqualTo(true)
@@ -88,9 +96,18 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
         showPages: Boolean = true,
         showPagesFocusPoint: Boolean = false,
         showStatsFocusPoint: Boolean = false,
-        enableFocusPoints: Boolean = true
+        enableFocusPoints: Boolean = true,
+        isNewSiteQuickStart: Boolean = true
     ): QuickLinkRibbon {
         setShowPages(showPages)
+        val checkStatsTask = if (isNewSiteQuickStart) {
+            QuickStartNewSiteTask.CHECK_STATS
+        } else {
+            QuickStartExistingSiteTask.CHECK_STATS
+        }
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(checkStatsTask)
+
         return builder.build(
                 QuickLinkRibbonBuilderParams(
                         siteModel,
@@ -98,7 +115,7 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
                         onPostsClick,
                         onMediaClick,
                         onStatsClick,
-                        setActiveTask(showPagesFocusPoint, showStatsFocusPoint),
+                        setActiveTask(showPagesFocusPoint, showStatsFocusPoint, checkStatsTask),
                         enableFocusPoints = enableFocusPoints
                 )
         )
@@ -108,10 +125,14 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
         whenever(siteModel.isSelfHostedAdmin).thenReturn(showPages)
     }
 
-    private fun setActiveTask(showPages: Boolean, showStats: Boolean): QuickStartStore.QuickStartTask? {
+    private fun setActiveTask(
+        showPages: Boolean,
+        showStats: Boolean,
+        checkStatsTask: QuickStartTask
+    ): QuickStartTask? {
         return when {
-            showPages -> QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
-            showStats -> QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
+            showPages -> QuickStartNewSiteTask.EDIT_HOMEPAGE
+            showStats -> checkStatsTask
             else -> null
         }
     }
