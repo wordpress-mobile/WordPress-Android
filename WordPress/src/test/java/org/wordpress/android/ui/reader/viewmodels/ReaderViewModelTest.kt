@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTag.DISCOVER_PATH
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
@@ -58,6 +60,7 @@ class ReaderViewModelTest {
     @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var quickStartType: QuickStartType
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -78,6 +81,9 @@ class ReaderViewModelTest {
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL))
+                .thenReturn(QuickStartNewSiteTask.FOLLOW_SITE)
     }
 
     @Test
