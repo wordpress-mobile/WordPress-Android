@@ -2,9 +2,12 @@ package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.firstOrNull
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
@@ -13,13 +16,18 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.viewmodel.ScopedViewModel
+import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 
 class BloggingPromptsOnboardingViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val uiStateMapper: BloggingPromptsOnboardingUiStateMapper,
-    private val selectedSiteRepository: SelectedSiteRepository
-) : ViewModel() {
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val bloggingPromptsStore: BloggingPromptsStore,
+    @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<BloggingPromptsOnboardingUiState>()
     val uiState: LiveData<BloggingPromptsOnboardingUiState> = _uiState
 
@@ -27,30 +35,25 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     val action: LiveData<BloggingPromptsOnboardingAction> = _action
 
     private lateinit var dialogType: DialogType
-    private lateinit var bloggingPrompt: BloggingPrompt
+    private var site: SiteModel? = null
 
-    @Suppress("MaxLineLength")
-    /* ktlint-disable max-line-length */
     fun start(type: DialogType) {
         dialogType = type
-        // TODO @RenanLukas get BloggingPrompt from Store when it's ready
-        bloggingPrompt = BloggingPrompt(
-                id = 1234,
-                text = "Cast the movie of your life.",
-                content = "<!-- wp:pullquote -->\n" +
-                        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                        "<!-- /wp:pullquote -->",
-                respondents = emptyList()
-        )
+
+        site = selectedSiteRepository.getSelectedSite()
+
         _uiState.value = uiStateMapper.mapReady(dialogType, ::onPrimaryButtonClick, ::onSecondaryButtonClick)
     }
 
-    private fun onPrimaryButtonClick() {
+    private fun onPrimaryButtonClick() = launch {
         val action = when (dialogType) {
-            ONBOARDING -> OpenEditor(bloggingPrompt.id)
+            ONBOARDING -> {
+                val bloggingPrompt = bloggingPromptsStore.getPromptForDate(site!!, Date()).firstOrNull()?.model
+                OpenEditor(bloggingPrompt?.id ?: -1)
+            }
             INFORMATION -> DismissDialog
         }
-        _action.value = action
+        _action.postValue(action)
     }
 
     private fun onSecondaryButtonClick() {
