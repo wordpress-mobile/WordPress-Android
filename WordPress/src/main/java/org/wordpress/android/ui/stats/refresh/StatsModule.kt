@@ -42,6 +42,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.S
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AuthorsCommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
@@ -50,10 +51,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.M
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ManagementNewsCardUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostingActivityUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PostsCommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase.TotalCommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
@@ -69,16 +71,19 @@ const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
 const val BLOCK_DETAIL_USE_CASE = "BlockDetailUseCase"
 const val VIEWS_AND_VISITORS_USE_CASE = "ViewsAndVisitorsUseCase"
-const val TOTAL_LIKES_DETAIL_USE_CASE = "LikeDetailUseCase"
+const val TOTAL_LIKES_DETAIL_USE_CASE = "LikesDetailUseCase"
+const val TOTAL_COMMENTS_DETAIL_USE_CASE = "CommentsDetailUseCase"
 
 const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
-const val BLOCK_VIEWS_AND_VISITORS_USE_CASES = "BlockViewsAndVisitorsUseCases"
+
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
-private const val TOTAL_LIKES_DETAIL_USE_CASES = "LikeDetailUseCases"
+private const val BLOCK_VIEWS_AND_VISITORS_USE_CASES = "BlockViewsAndVisitorsUseCases"
+private const val TOTAL_LIKES_DETAIL_USE_CASES = "LikesDetailUseCases"
+private const val TOTAL_COMMENTS_DETAIL_USE_CASES = "CommentsDetailUseCases"
 
 /**
  * Module that provides use cases for Stats.
@@ -108,7 +113,7 @@ class StatsModule {
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
         totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
-        totalCommentsUseCase: TotalCommentsUseCase,
+        totalCommentsUseCaseFactory: TotalCommentsUseCaseFactory,
         totalFollowersUseCase: TotalFollowersUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
         managementControlUseCase: ManagementControlUseCase,
@@ -118,7 +123,7 @@ class StatsModule {
         if (statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
             useCases.add(totalLikesUseCaseFactory.build(BLOCK))
-            useCases.add(totalCommentsUseCase)
+            useCases.add(totalCommentsUseCaseFactory.build(BLOCK))
             useCases.add(totalFollowersUseCase)
         } else {
             useCases.add(followerTotalsUseCase)
@@ -479,6 +484,49 @@ class StatsModule {
                 useCases,
                 { listOf(InsightType.TOTAL_LIKES, TimeStatsType.POSTS_AND_PAGES) },
                 uiModelMapper::mapTimeStats
+        )
+    }
+
+    /**
+     * Provides a list of use cases for the Total Comments detail screen in Stats. Modify this method when you want to
+     * add more blocks to the comments detail screen.
+     */
+    @Provides
+    @Singleton
+    @Named(TOTAL_COMMENTS_DETAIL_USE_CASES)
+    fun provideCommentsDetailUseCases(
+        totalCommentsUseCaseFactory: TotalCommentsUseCaseFactory,
+        authorsCommentsUseCase: AuthorsCommentsUseCase,
+        postsCommentsUseCase: PostsCommentsUseCase
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(
+                totalCommentsUseCaseFactory.build(VIEW_ALL),
+                authorsCommentsUseCase,
+                postsCommentsUseCase
+        )
+    }
+
+    /**
+     * Provides a singleton usecase that represents the Comments detail screen.
+     * @param useCases build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(TOTAL_COMMENTS_DETAIL_USE_CASE)
+    fun provideCommentsDetailStatsUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(TOTAL_COMMENTS_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                statsSiteProvider,
+                useCases,
+                { listOf(InsightType.TOTAL_COMMENTS, InsightType.AUTHORS_COMMENTS, InsightType.POSTS_COMMENTS) },
+                uiModelMapper::mapInsights
         )
     }
 

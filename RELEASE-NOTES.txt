@@ -2,9 +2,15 @@
 
 19.9
 -----
+* [*] Pages List: Added "Copy Link" button to context menu [https://github.com/wordpress-mobile/WordPress-Android/pull/16321]
 * [*] Editor: Improved editor performance by reducing memory usage [https://github.com/wordpress-mobile/WordPress-Android/pull/16490]
 * [*] Block Editor: Prevent non-functional '+' icon displaying in toolbar on self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/16507]
-* [***] Jetpack App: Enable Site Domains feature for Jetpack app only [https://github.com/wordpress-mobile/WordPress-Android/pull/16417]
+* [***] Jetpack App: Enable Site Domains purchases for Jetpack app only [https://github.com/wordpress-mobile/WordPress-Android/pull/16417]
+* [**] Block Editor: Cover Block: Improve color contrast between background and text [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4808]
+* [**] Block Editor: Buttons block: Fix issue related to displaying formatting buttons after closing the block settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4814]
+* [***] Block Editor: Add drag & drop blocks feature [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4832]
+* [*] Block Editor: Gallery block: Fix broken "Link To" settings and add "Image Size" settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4841]
+* [*] Block Editor: Unsupported Block Editor: Prevent WordPress.com tour banner from displaying. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4820]
 
 19.8
 -----
@@ -19,6 +25,7 @@
 * [*] Block Editor: Prevent incorrect notices displaying when switching between HTML-Visual mode quickly [https://github.com/WordPress/gutenberg/pull/40415]
 * [*] Block Editor: Embed block: Fix inline preview cut-off when editing URL [https://github.com/WordPress/gutenberg/pull/35326]
 * [*] Jetpack App: Fixes signup magic link URL [https://github.com/wordpress-mobile/WordPress-Android/pull/16449]
+
 19.7
 -----
 * [*] [internal] Site creation: Adds a new screen asking the user the name of the site [https://github.com/wordpress-mobile/WordPress-Android/pull/16259]

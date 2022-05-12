@@ -38,6 +38,7 @@ class StatsDetailActivity : LocaleAwareActivity() {
                     StatsSection.DETAIL -> add<StatsDetailFragment>(R.id.fragment_container)
                     StatsSection.INSIGHT_DETAIL -> add<InsightsDetailFragment>(R.id.fragment_container)
                     StatsSection.TOTAL_LIKES_DETAIL -> add<TotalLikesDetailFragment>(R.id.fragment_container)
+                    StatsSection.TOTAL_COMMENTS_DETAIL -> add<TotalCommentsDetailFragment>(R.id.fragment_container)
                 }
             }
         }
@@ -99,6 +100,18 @@ class StatsDetailActivity : LocaleAwareActivity() {
                 putExtra(StatsListFragment.LIST_TYPE, StatsSection.TOTAL_LIKES_DETAIL)
             }
             // TODO: Add tracking here
+            context.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun startForTotalCommentsDetail(
+            context: Context,
+            site: SiteModel
+        ) {
+            val intent = Intent(context, StatsDetailActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, site.id)
+                putExtra(StatsListFragment.LIST_TYPE, StatsSection.TOTAL_COMMENTS_DETAIL)
+            }
             context.startActivity(intent)
         }
     }

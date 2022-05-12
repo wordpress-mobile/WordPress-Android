@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-04-25 16:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
@@ -17,7 +17,6 @@ Language: ar
     <string name="new_site_creation_site_name_title">اسم الموقع</string>
     <string name="my_site_todays_stats_get_more_views_message">هل أنت مهتم ببناء جمهورك؟ راجع &lt;a href=\"%1$s\"&gt;أفضل نصائحنا&lt;/a&gt;.</string>
     <string name="stats_insights_views_and_visitors">المشاهدات والزائرون</string>
-    <string name="stats_insights_views_and_visitors_message">تُعد مشاهدات الأسابيع الماضية الخاصة بك ⁦%1$s⁩ ⁦%2$s⁩ مقارنةً بالأسبوع الماضي.</string>
     <string name="featured_image_removed_notice">تمت الإزالة كصورة بارزة</string>
     <string name="featured_image_confirmation_notice">تعيين كصورة بارزة</string>
     <string name="featured_image_replace_dialog_cancel">الاحتفاظ بالحالي</string>
@@ -514,11 +513,9 @@ Language: ar
     <string name="quick_start_list_review_pages_subtitle">تحقّق من صفحاتك وقم بإجراء تغييرات، أو إضافة الصفحات أو إزالتها.</string>
     <string name="quick_start_card_menu_unpin">إلغاء تثبيت هذا</string>
     <string name="quick_start_list_enable_sharing_subtitle">شارك المقالات الجديدة تلقائيًّا على وسائل التواصل الاجتماعي الخاصة بك.</string>
-    <string name="quick_start_list_view_site_title">زيارة موقعك</string>
     <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه.</string>
     <string name="quick_start_list_enable_sharing_title">المشاركة عبر شبكات التواصل الاجتماعي</string>
-    <string name="quick_start_list_check_stats_title">تحقّق من احصائياتك</string>
     <string name="backup_download_status_failure_bullet2">سنستمر في محاولة إنشاء ملف النسخ الاحتياطي القابل للتنزيل.</string>
     <string name="backup_download_status_failure_bullet1">يتعذر علينا العثور على الحالة حتى نخبرك بالمدة التي ستستغرقها عملية النسخة الاحتياطية القابلة للتنزيل لديك.</string>
     <string name="restore_status_bullet_clock_icon_content_desc">أيقونة الساعة</string>
@@ -1615,13 +1612,11 @@ Language: ar
     <string name="quick_start_sites_type_customize">تخصيص موقعك</string>
     <string name="quick_start_sites">الخطوات التالية</string>
     <string name="quick_start_complete_tasks_header">مكتمل (%d)</string>
-    <string name="quick_start_dialog_view_site_message">استمتع بمنتجك النهائي!</string>
     <string name="quick_start_dialog_explore_plans_message_short">أنقر على %1$s الخطة %2$s لمشاهدة خطتك الحالية والخطط الأخرى المتاحة</string>
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
     <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
-    <string name="quick_start_dialog_check_stats_message_short">أنقر على %1$s الإحصائيات %2$s لمشاهدة مستوى أداء موقعك.</string>
     <string name="quick_start_dialog_publish_post_message">اكتب مسودّة مقالة ثم أنشرها.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
     <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
@@ -1629,7 +1624,6 @@ Language: ar
     <string name="quick_start_dialog_enable_sharing_message">شارك المقالات الجديدة تلقائيًّا على حساباتك على وسائل التواصل الاجتماعي.</string>
     <string name="quick_start_dialog_remove_next_steps_title">إزالة الخطوات التالية</string>
     <string name="quick_start_remove_next_steps_menu_title">إزالة هذا</string>
-    <string name="quick_start_dialog_check_stats_message">واكب التحديثات لأداء موقعك.</string>
     <string name="quick_start_dialog_check_stats_title">التحقّق من إحصاءات موقعك</string>
     <string name="quick_start_dialog_remove_next_steps_message">ستؤدي إزالة الخطوات التالية إلى إخفاء جميع الجولات على هذا الموقع. لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="quick_start_complete_view_subtitle">تهانينا لك على إكمال قائمتك. عمل متقن.</string>
@@ -1798,17 +1792,12 @@ Language: ar
     <string name="quick_start_list_create_site_title">إنشاء موقعك</string>
     <string name="quick_start_list_create_site_subtitle">اجعل موقعك جاهزًا للعمل.</string>
     <string name="quick_start_dialog_view_site_title">عرض موقعك</string>
-    <string name="quick_start_dialog_view_site_message_short">انقر على %1$sعرض الموقع %2$s لاستعراض موقعك</string>
     <string name="quick_start_dialog_share_site_title">مشاركة موقعك</string>
     <string name="quick_start_dialog_share_site_message">اتصل بحساباتك على وسائل التواصل الاجتماعي – سيشارك موقعك مقالات جديدة تلقائيًّا.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">أقر على %1$s مشاركة %2$s للمتابعة</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">أنقر على %1$s الروابط %2$s لإضافة حساباتك على وسائل التواصل الاجتماعي</string>
     <string name="quick_start_dialog_publish_post_title">نشر مقالة</string>
     <string name="quick_start_dialog_publish_post_message_short">انقر على %1$sإنشاء مقالة%2$s لإنشاء مقالة جديدة</string>
-    <string name="quick_start_dialog_follow_sites_title">متابعة مواقع أخرى</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">انقر على %1$sالقاريء%2$s للمتابعة</string>
-    <string name="quick_start_dialog_follow_sites_message">يمكنك العثور على المواقع التي تلهمك، ومتابعتها للحصول على التحديثات عندما تقوم بالنشر.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">أنقر على %1$s بحث %2$s للبحث عن مواقع ذات مواضيع مماثلة</string>
     <string name="quick_start_dialog_need_help_button_negative">لا شكرًا</string>
     <string name="quick_start_button_positive">انتقال</string>
     <string name="quick_start_button_negative_short">إلغاء</string>
