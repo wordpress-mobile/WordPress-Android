@@ -1189,8 +1189,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* START/IGNORE QUICK START + QUICK START DIALOG */
 
-
-
     @Test
     fun `given dynamic cards enabled + new site, when check & start QS triggered, then new site QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
@@ -1220,7 +1218,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
-    given no selected site, when check and start QS is triggered, then QSP is not shown`() {
+    fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 

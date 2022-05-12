@@ -177,7 +177,7 @@ class QuickStartRepository
                 )
                 _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
             }
-            task == quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL) -> { -> {
+            task == quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL) -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                         R.string.quick_start_dialog_view_your_site_message_short,
                         SiteUtils.getHomeURLOrHostName(selectedSiteRepository.getSelectedSite())
