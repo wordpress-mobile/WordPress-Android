@@ -163,7 +163,9 @@ abstract class LayoutPickerViewModel(
                     orderedLayouts[category.slug] = randomised
                     randomised
                 } else {
-                    layouts.getFilteredLayouts(category.slug)
+                    val ordered = layouts.getFilteredLayouts(category.slug)
+                    orderedLayouts[category.slug] = ordered
+                    ordered
                 }
                 val layouts = ordered.map { layout ->
                     val preview = when (_previewMode.value) {
