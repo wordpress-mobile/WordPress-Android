@@ -40,8 +40,8 @@ class SiteDesignRecommendationProvider @Inject constructor(private val resourceP
                 }
             }.toLayoutModels()
             val categoriesWithRecommendations =
-                    listOf(recommendedCategory).toLayoutCategories(true) +
-                            categories.toLayoutCategories()
+                    listOf(recommendedCategory).toLayoutCategories(recommended = true) +
+                            categories.toLayoutCategories(randomizeOrder = true)
             responseHandler(designsWithRecommendations, categoriesWithRecommendations)
         } else {
             // If no designs are recommended for the selected vertical recommend the blog category
@@ -55,11 +55,11 @@ class SiteDesignRecommendationProvider @Inject constructor(private val resourceP
             )
             if (recommendedCategory == null) {
                 // If there is no blog category do not show a recommendation
-                responseHandler(designs.toLayoutModels(), categories.toLayoutCategories())
+                responseHandler(designs.toLayoutModels(), categories.toLayoutCategories(randomizeOrder = true))
             } else {
                 val categoriesWithRecommendations =
-                        listOf(recommendedCategory).toLayoutCategories(true) +
-                                categories.toLayoutCategories()
+                        listOf(recommendedCategory).toLayoutCategories(recommended = true, randomizeOrder = true) +
+                                categories.toLayoutCategories(randomizeOrder = true)
                 responseHandler(designs.toLayoutModels(), categoriesWithRecommendations)
             }
         }
