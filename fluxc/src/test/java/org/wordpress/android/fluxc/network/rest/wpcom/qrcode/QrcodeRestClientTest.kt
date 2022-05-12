@@ -81,16 +81,16 @@ class QrcodeRestClientTest {
             "$API_BASE_PATH/$API_AUTH_QRCODE_VALIDATE_PATH")
     }
 
-     @Test
-     fun `given success, when validate is triggered, then validate response is returned`() = test {
-         val json = UnitTestUtils.getStringFromResourceFile(javaClass, VALIDATE_SUCCESS_JSON)
-         val response = getValidateResponseFromJsonString(json)
-         initPostValidate(data = response)
+    @Test
+    fun `given success, when validate is triggered, then validate response is returned`() = test {
+        val json = UnitTestUtils.getStringFromResourceFile(javaClass, VALIDATE_SUCCESS_JSON)
+        val response = getValidateResponseFromJsonString(json)
+        initPostValidate(data = response)
 
-         val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
+        val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
 
-         assertValidateSuccess(validateSuccess, result)
-     }
+        assertValidateSuccess(validateSuccess, result)
+    }
 
     @Test
     fun `given data invalid, when validate is triggered, then error response is returned`() = test {
@@ -269,7 +269,6 @@ class QrcodeRestClientTest {
 
         assertError(QrcodeErrorType.AUTHORIZATION_REQUIRED, result)
     }
-
 
     private suspend fun initPostValidate(
         data: QrcodeValidateResponse? = null,
