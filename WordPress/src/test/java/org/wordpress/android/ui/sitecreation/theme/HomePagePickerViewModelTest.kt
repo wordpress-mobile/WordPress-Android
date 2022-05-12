@@ -91,6 +91,7 @@ class HomePagePickerViewModelTest {
                                 listOf(mockCategory),
                                 mockedDesignDemoUrl,
                                 "theme",
+                                listOf("stable", "blog"),
                                 "desktopThumbnail",
                                 "tabletThumbnail",
                                 "mobileThumbnail"

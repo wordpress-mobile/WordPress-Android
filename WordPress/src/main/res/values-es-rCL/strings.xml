@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: es_CL
 -->
 <resources>
@@ -63,17 +63,14 @@ Language: es_CL
     <string name="exit">salir</string>
     <string name="quick_start_sites">Siguientes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
-    <string name="quick_start_dialog_view_site_message">¡Disfruta de tu producto terminado!</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu ícono en su navegador. Agrega un ícono personalizado para un look pulido y profesional.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Puntea %1$s Plan %2$s para ver su plan actual y otros planes disponibles</string>
-    <string name="quick_start_dialog_check_stats_message_short">Toca %1$s Estadísticas %2$s para ver cómo está funcionando tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Puntea %1$sEl Icono de tu Sitio%2$s para cargar uno nuevo</string>
     <string name="quick_start_dialog_explore_plans_title">Explora los planes</string>
     <string name="quick_start_dialog_explore_plans_message">Obtén información sobre las herramientas de marketing y SEO en nuestros planes pagados.</string>
     <string name="quick_start_dialog_enable_sharing_title">Habilita el compartir publicaciones</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente nuevas publicaciones en tus cuentas de redes sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Consulta las estadísticas de tu sitio</string>
-    <string name="quick_start_dialog_check_stats_message">Manténte al día sobre el rendimiento de tu sitio.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Si eliminas los Siguientes Pasos ocultarás todas las guías de este sitio. Esto no se puede deshacer.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Eliminar Siguientes Pasos</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
@@ -239,16 +236,12 @@ Language: es_CL
     <string name="quick_start_list_create_site_title">Crea tu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Obtén tu sitio y hazlo funcionar.</string>
     <string name="quick_start_dialog_view_site_title">Ve tu sitio</string>
-    <string name="quick_start_dialog_view_site_message_short">Toca %1$s Ver el Sitio %2$s para previsualizar tu sitio</string>
     <string name="quick_start_dialog_share_site_title">Comparte tu sitio</string>
     <string name="quick_start_dialog_share_site_message">Conéctate a tus cuentas de medios sociales – tu sitio compartirá automáticamente nuevos mensajes.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tap %1$s Compartir %2$s para continuar</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Pulsa en %1$s Conexiones %2$s para agregar tus cuentas de medios sociales</string>
     <string name="quick_start_dialog_publish_post_title">Publicar una entrada</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Crear Entrada %2$s para crear una nueva entrada</string>
-    <string name="quick_start_dialog_follow_sites_title">Seguir otros sitios</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Lector %2$s para continuar</string>
-    <string name="quick_start_dialog_follow_sites_message">Encuentra sitios que te inspiren y síguelos para recibir actualizaciones cuando publiquen.</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">No ahora</string>
