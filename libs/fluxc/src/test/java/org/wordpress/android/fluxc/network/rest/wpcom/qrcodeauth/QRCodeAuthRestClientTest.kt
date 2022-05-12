@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.qrcode
+package org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth
 
 import com.android.volley.RequestQueue
 import com.google.gson.GsonBuilder
@@ -25,8 +25,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthAuthenticateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthValidateResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient.QRCodeAuthAuthenticateResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient.QRCodeAuthValidateResponse
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
