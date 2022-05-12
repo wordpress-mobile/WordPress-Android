@@ -101,7 +101,6 @@ class QrcodeRestClientTest {
 
         val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
 
-        assertTrue(result.isError)
         assertError(QrcodeErrorType.DATA_INVALID, result)
     }
 
@@ -115,7 +114,6 @@ class QrcodeRestClientTest {
 
         val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
 
-        assertTrue(result.isError)
         assertError(QrcodeErrorType.REST_INVALID_PARAM, result)
     }
 
@@ -129,7 +127,6 @@ class QrcodeRestClientTest {
 
         val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
 
-        assertTrue(result.isError)
         assertError(QrcodeErrorType.NOT_AUTHORIZED, result)
     }
 
@@ -202,7 +199,6 @@ class QrcodeRestClientTest {
 
         val result = restClient.authenticate(TOKEN_PARAM, DATA_PARAM)
 
-        assertTrue(result.isError)
         assertError(QrcodeErrorType.DATA_INVALID, result)
     }
 
@@ -216,7 +212,6 @@ class QrcodeRestClientTest {
 
         val result = restClient.authenticate(TOKEN_PARAM, DATA_PARAM)
 
-        assertTrue(result.isError)
         assertError(QrcodeErrorType.REST_INVALID_PARAM, result)
     }
 
@@ -230,7 +225,6 @@ class QrcodeRestClientTest {
 
         val result = restClient.authenticate(TOKEN_PARAM, DATA_PARAM)
 
-        assertTrue(result.isError)
         assertError(QrcodeErrorType.NOT_AUTHORIZED, result)
     }
 
