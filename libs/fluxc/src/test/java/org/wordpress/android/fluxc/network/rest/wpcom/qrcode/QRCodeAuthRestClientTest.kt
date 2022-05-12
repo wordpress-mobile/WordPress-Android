@@ -25,14 +25,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QrcodeRestClient.QrcodeAuthenticateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QrcodeRestClient.QrcodeValidateResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthAuthenticateResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthValidateResponse
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
 @RunWith(MockitoJUnitRunner::class)
-class QrcodeRestClientTest {
+class QRCodeAuthRestClientTest {
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var requestQueue: RequestQueue
@@ -41,15 +41,15 @@ class QrcodeRestClientTest {
 
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var restClient: QrcodeRestClient
+    private lateinit var restClient: QRCodeAuthRestClient
 
-    private val validateSuccess = QrcodeValidateResponse(
+    private val validateSuccess = QRCodeAuthValidateResponse(
         browser = "Chrome",
         location = "Secaucus, New Jersey",
         success = true
     )
 
-    private val authenticateSuccess = QrcodeAuthenticateResponse(
+    private val authenticateSuccess = QRCodeAuthAuthenticateResponse(
         authenticated = true
     )
 
@@ -57,7 +57,7 @@ class QrcodeRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        restClient = QrcodeRestClient(
+        restClient = QRCodeAuthRestClient(
             wpComGsonRequestBuilder,
             dispatcher,
             null,
@@ -94,39 +94,39 @@ class QrcodeRestClientTest {
     @Test
     fun `given data invalid, when validate is triggered, then error response is returned`() = test {
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)).apply {
-            apiError = QrcodeErrorType.DATA_INVALID.name.lowercase()
+            apiError = QRCodeAuthErrorType.DATA_INVALID.name.lowercase()
         }
         initPostValidate(error = error)
 
         val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
 
-        assertError(QrcodeErrorType.DATA_INVALID, result)
+        assertError(QRCodeAuthErrorType.DATA_INVALID, result)
     }
 
     @Test
     fun `given rest invalid param, when validate is triggered, then error response is returned`() = test {
         // {"code":"rest_invalid_param","message":"Data is invalid (1) invalid base64 string","data":{"status":400}}
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)).apply {
-            apiError = QrcodeErrorType.REST_INVALID_PARAM.name.lowercase()
+            apiError = QRCodeAuthErrorType.REST_INVALID_PARAM.name.lowercase()
         }
         initPostValidate(error = error)
 
         val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
 
-        assertError(QrcodeErrorType.REST_INVALID_PARAM, result)
+        assertError(QRCodeAuthErrorType.REST_INVALID_PARAM, result)
     }
 
     @Test
     fun `given not authorized, when validate is triggered, then error response is returned`() = test {
         // {"code":"not_authorized","message":"Did not authorize the user","data":{"status":400}}
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)).apply {
-            apiError = QrcodeErrorType.NOT_AUTHORIZED.name.lowercase()
+            apiError = QRCodeAuthErrorType.NOT_AUTHORIZED.name.lowercase()
         }
         initPostValidate(error = error)
 
         val result = restClient.validate(TOKEN_PARAM, DATA_PARAM)
 
-        assertError(QrcodeErrorType.NOT_AUTHORIZED, result)
+        assertError(QRCodeAuthErrorType.NOT_AUTHORIZED, result)
     }
 
     @Test
@@ -135,7 +135,7 @@ class QrcodeRestClientTest {
 
         val result = restClient.validate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.API_ERROR, result)
+        assertError(QRCodeAuthErrorType.API_ERROR, result)
     }
 
     @Test
@@ -144,7 +144,7 @@ class QrcodeRestClientTest {
 
         val result = restClient.validate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.TIMEOUT, result)
+        assertError(QRCodeAuthErrorType.TIMEOUT, result)
     }
 
     @Test
@@ -153,7 +153,7 @@ class QrcodeRestClientTest {
 
         val result = restClient.validate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.INVALID_RESPONSE, result)
+        assertError(QRCodeAuthErrorType.INVALID_RESPONSE, result)
     }
 
     @Test
@@ -162,7 +162,7 @@ class QrcodeRestClientTest {
 
         val result = restClient.validate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.AUTHORIZATION_REQUIRED, result)
+        assertError(QRCodeAuthErrorType.AUTHORIZATION_REQUIRED, result)
     }
 
     // AUTHENTICATE TESTS
@@ -192,39 +192,39 @@ class QrcodeRestClientTest {
     @Test
     fun `given data invalid, when authenticate is triggered, then error response is returned`() = test {
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)).apply {
-            apiError = QrcodeErrorType.DATA_INVALID.name.lowercase()
+            apiError = QRCodeAuthErrorType.DATA_INVALID.name.lowercase()
         }
         initPostAuthenticate(error = error)
 
         val result = restClient.authenticate(TOKEN_PARAM, DATA_PARAM)
 
-        assertError(QrcodeErrorType.DATA_INVALID, result)
+        assertError(QRCodeAuthErrorType.DATA_INVALID, result)
     }
 
     @Test
     fun `given rest invalid param, when authenticate is triggered, then error response is returned`() = test {
         // {"code":"rest_invalid_param","message":"Data is invalid (1) invalid base64 string","data":{"status":400}}
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)).apply {
-            apiError = QrcodeErrorType.REST_INVALID_PARAM.name.lowercase()
+            apiError = QRCodeAuthErrorType.REST_INVALID_PARAM.name.lowercase()
         }
         initPostAuthenticate(error = error)
 
         val result = restClient.authenticate(TOKEN_PARAM, DATA_PARAM)
 
-        assertError(QrcodeErrorType.REST_INVALID_PARAM, result)
+        assertError(QRCodeAuthErrorType.REST_INVALID_PARAM, result)
     }
 
     @Test
     fun `given not authorized, when authenticate is triggered, then error response is returned`() = test {
         // {"code":"not_authorized","message":"Did not authorize the user","data":{"status":400}}
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)).apply {
-            apiError = QrcodeErrorType.NOT_AUTHORIZED.name.lowercase()
+            apiError = QRCodeAuthErrorType.NOT_AUTHORIZED.name.lowercase()
         }
         initPostAuthenticate(error = error)
 
         val result = restClient.authenticate(TOKEN_PARAM, DATA_PARAM)
 
-        assertError(QrcodeErrorType.NOT_AUTHORIZED, result)
+        assertError(QRCodeAuthErrorType.NOT_AUTHORIZED, result)
     }
 
     @Test
@@ -233,7 +233,7 @@ class QrcodeRestClientTest {
 
         val result = restClient.authenticate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.API_ERROR, result)
+        assertError(QRCodeAuthErrorType.API_ERROR, result)
     }
 
     @Test
@@ -242,7 +242,7 @@ class QrcodeRestClientTest {
 
         val result = restClient.authenticate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.TIMEOUT, result)
+        assertError(QRCodeAuthErrorType.TIMEOUT, result)
     }
 
     @Test
@@ -251,7 +251,7 @@ class QrcodeRestClientTest {
 
         val result = restClient.authenticate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.INVALID_RESPONSE, result)
+        assertError(QRCodeAuthErrorType.INVALID_RESPONSE, result)
     }
 
     @Test
@@ -260,13 +260,13 @@ class QrcodeRestClientTest {
 
         val result = restClient.authenticate(token = TOKEN_PARAM, data = DATA_PARAM)
 
-        assertError(QrcodeErrorType.AUTHORIZATION_REQUIRED, result)
+        assertError(QRCodeAuthErrorType.AUTHORIZATION_REQUIRED, result)
     }
 
     private suspend fun initPostValidate(
-        data: QrcodeValidateResponse? = null,
+        data: QRCodeAuthValidateResponse? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<QrcodeValidateResponse> {
+    ): Response<QRCodeAuthValidateResponse> {
         val nonNullData = data ?: mock()
         val response = if (error != null) Response.Error(error) else Response.Success(nonNullData)
 
@@ -276,7 +276,7 @@ class QrcodeRestClientTest {
                 url = urlCaptor.capture(),
                 params = paramsCaptor.capture(),
                 body = anyOrNull(),
-                clazz = eq(QrcodeValidateResponse::class.java),
+                clazz = eq(QRCodeAuthValidateResponse::class.java),
                 retryPolicy = isNull()
             )
         ).thenReturn(response)
@@ -285,9 +285,9 @@ class QrcodeRestClientTest {
     }
 
     private suspend fun initPostAuthenticate(
-        data: QrcodeAuthenticateResponse? = null,
+        data: QRCodeAuthAuthenticateResponse? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<QrcodeAuthenticateResponse> {
+    ): Response<QRCodeAuthAuthenticateResponse> {
         val nonNullData = data ?: mock()
         val response = if (error != null) Response.Error(error) else Response.Success(nonNullData)
 
@@ -297,7 +297,7 @@ class QrcodeRestClientTest {
                 url = urlCaptor.capture(),
                 params = paramsCaptor.capture(),
                 body = anyOrNull(),
-                clazz = eq(QrcodeAuthenticateResponse::class.java),
+                clazz = eq(QRCodeAuthAuthenticateResponse::class.java),
                 retryPolicy = isNull()
             )
         ).thenReturn(response)
@@ -306,28 +306,28 @@ class QrcodeRestClientTest {
     }
 
     private fun assertValidateSuccess(
-        expected: QrcodeValidateResponse,
-        actual: QrcodePayload<QrcodeValidateResponse>
+        expected: QRCodeAuthValidateResponse,
+        actual: QRCodeAuthPayload<QRCodeAuthValidateResponse>
     ) {
         with(actual) {
             assertFalse(isError)
-            assertEquals(QrcodePayload(expected), this)
+            assertEquals(QRCodeAuthPayload(expected), this)
         }
     }
 
     private fun assertAuthenticateSuccess(
-        expected: QrcodeAuthenticateResponse,
-        actual: QrcodePayload<QrcodeAuthenticateResponse>
+        expected: QRCodeAuthAuthenticateResponse,
+        actual: QRCodeAuthPayload<QRCodeAuthAuthenticateResponse>
     ) {
         with(actual) {
             assertFalse(isError)
-            assertEquals(QrcodePayload(expected), this)
+            assertEquals(QRCodeAuthPayload(expected), this)
         }
     }
 
     private fun <T> assertError(
-        expected: QrcodeErrorType,
-        actual: QrcodePayload<T>
+        expected: QRCodeAuthErrorType,
+        actual: QRCodeAuthPayload<T>
     ) {
         with(actual) {
             Assert.assertTrue(isError)
@@ -336,16 +336,16 @@ class QrcodeRestClientTest {
         }
     }
 
-    private fun getValidateResponseFromJsonString(json: String): QrcodeValidateResponse {
-        val responseType = object : TypeToken<QrcodeValidateResponse>() {}.type
+    private fun getValidateResponseFromJsonString(json: String): QRCodeAuthValidateResponse {
+        val responseType = object : TypeToken<QRCodeAuthValidateResponse>() {}.type
         return GsonBuilder()
-            .create().fromJson(json, responseType) as QrcodeValidateResponse
+            .create().fromJson(json, responseType) as QRCodeAuthValidateResponse
     }
 
-    private fun getAuthenticateResponseFromJsonString(json: String): QrcodeAuthenticateResponse {
-        val responseType = object : TypeToken<QrcodeAuthenticateResponse>() {}.type
+    private fun getAuthenticateResponseFromJsonString(json: String): QRCodeAuthAuthenticateResponse {
+        val responseType = object : TypeToken<QRCodeAuthAuthenticateResponse>() {}.type
         return GsonBuilder()
-            .create().fromJson(json, responseType) as QrcodeAuthenticateResponse
+            .create().fromJson(json, responseType) as QRCodeAuthAuthenticateResponse
     }
 
     companion object {
