@@ -13,10 +13,6 @@ class EventBusWrapper @Inject constructor() {
         EventBus.getDefault().register(subscriber)
     }
 
-    fun registerIfNotAlready(subscriber: Any) {
-        if (isRegistered(subscriber)) { EventBus.getDefault().register(subscriber) }
-    }
-
     fun unregister(subscriber: Any) {
         EventBus.getDefault().unregister(subscriber)
     }
