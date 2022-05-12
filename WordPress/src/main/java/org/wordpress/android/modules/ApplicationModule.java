@@ -26,7 +26,6 @@ import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.reader.subfilter.SubfilterPageFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
-import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailFragment;
@@ -64,9 +63,6 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract InsightsManagementFragment contributeInsightsManagementFragment();
-
-    @ContributesAndroidInjector
-    abstract StatsFragment contributeStatsFragment();
 
     @ContributesAndroidInjector
     abstract StatsDetailFragment contributeStatsDetailFragment();

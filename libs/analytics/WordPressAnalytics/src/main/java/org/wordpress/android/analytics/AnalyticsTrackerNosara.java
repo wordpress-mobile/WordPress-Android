@@ -1127,6 +1127,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_next_date_tapped";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
+            case STATS_TOTAL_LIKES_VIEW_MORE_TAPPED:
+                return "stats_total_likes_view_more_tapped";
+            case STATS_TOTAL_LIKES_ERROR:
+                return "stats_total_likes_error";
+            case STATS_TOTAL_COMMENTS_VIEW_MORE_TAPPED:
+                return "stats_total_comments_view_more_tapped";
+            case STATS_TOTAL_COMMENTS_ERROR:
+                return "stats_total_comments_error";
+            case STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED:
+                return "stats_total_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
             case STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED:
@@ -1791,6 +1801,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:
                 return "quick_start_started";
+            case QUICK_START_TAPPED:
+                return "quick_start_tapped";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
@@ -2185,6 +2197,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "recommend_app_content_fetch_failed";
             case EDITOR_BLOCK_INSERTED:
                 return "editor_block_inserted";
+            case EDITOR_BLOCK_MOVED:
+                return "editor_block_moved";
             case ABOUT_SCREEN_SHOWN:
                 return "about_screen_shown";
             case ABOUT_SCREEN_DISMISSED:
@@ -2257,6 +2271,60 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "privacy_settings_opened";
             case PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED:
                 return "privacy_settings_report_crashes_toggled";
+            case SHARING_BUTTONS_EDIT_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_sharing_buttons_changed";
+            case SHARING_BUTTONS_EDIT_MORE_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_more_sharing_buttons_changed";
+            case PEOPLE_MANAGEMENT_USER_INVITED:
+                return "people_management_user_invited";
+            case PEOPLE_MANAGEMENT_FILTER_CHANGED:
+                return "people_management_filter_changed";
+            case READER_FILTER_SHEET_CLEARED:
+                return "reader_filter_sheet_cleared";
+            case READER_FILTER_SHEET_DISMISSED:
+                return "reader_filter_sheet_dismissed";
+            case READER_FILTER_SHEET_DISPLAYED:
+                return "reader_filter_sheet_displayed";
+            case READER_FILTER_SHEET_ITEM_SELECTED:
+                return "reader_filter_sheet_item_selected";
+            case READER_FILTER_SHEET_TAB_SELECTED:
+                return "reader_filter_sheet_tab_selected";
+            case READER_SEARCH_HISTORY_CLEARED:
+                return "reader_search_history_cleared";
+            case READER_MANAGE_VIEW_DISMISSED:
+                return "reader_manage_view_dismissed";
+            case READER_MANAGE_VIEW_DISPLAYED:
+                return "reader_manage_view_displayed";
+            case READER_ARTICLE_IMAGE_TAPPED:
+                return "reader_article_image_tapped";
+            case READER_ARTICLE_LINK_TAPPED:
+                return "reader_article_link_tapped";
+            case READER_ARTICLE_FILE_DOWNLOAD_TAPPED:
+                return "reader_article_file_download_tapped";
+            case READER_ARTICLE_PAGE_JUMP_TAPPED:
+                return "reader_article_page_jump_tapped";
+            case READER_ARTICLE_FEATURED_IMAGE_TAPPED:
+                return "reader_article_featured_image_tapped";
+            case READER_ARTICLE_CUSTOM_VIEW_SHOWN:
+                return "reader_article_custom_view_shown";
+            case READER_ARTICLE_CUSTOM_VIEW_HIDDEN:
+                return "reader_article_custom_view_hidden";
+            case WEBVIEW_DISMISSED:
+                return "webview_dismissed";
+            case WEBVIEW_DISPLAYED:
+                return "webview_displayed";
+            case WEBVIEW_NAVIGATED_BACK:
+                return "webview_navigated_back";
+            case WEBVIEW_NAVIGATED_FORWARD:
+                return "webview_navigated_forward";
+            case WEBVIEW_OPEN_IN_BROWSER_TAPPED:
+                return "webview_open_in_browser_tapped";
+            case WEBVIEW_RELOAD_TAPPED:
+                return "webview_reload_tapped";
+            case WEBVIEW_SHARE_TAPPED:
+                return "webview_share_tapped";
+            case WEBVIEW_PREVIEW_DEVICE_CHANGED:
+                return "webview_preview_device_changed";
         }
         return null;
     }

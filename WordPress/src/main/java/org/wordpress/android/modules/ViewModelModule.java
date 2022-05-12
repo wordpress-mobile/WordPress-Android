@@ -50,6 +50,7 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
+import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
@@ -66,10 +67,11 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
 import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel;
-import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
@@ -211,13 +213,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(DetailListViewModel.class)
-    abstract ViewModel detailListViewModel(DetailListViewModel viewModel);
+    @ViewModelKey(InsightsDetailListViewModel.class)
+    abstract ViewModel insightsDetailListViewModel(InsightsDetailListViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(StatsViewModel.class)
-    abstract ViewModel statsViewModel(StatsViewModel viewModel);
+    @ViewModelKey(DetailListViewModel.class)
+    abstract ViewModel detailListViewModel(DetailListViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -584,6 +586,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(LocalePickerViewModel.class)
+    abstract ViewModel localePickerViewModel(LocalePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(CategoryDetailViewModel.class)
     abstract ViewModel categoryDetailViewModel(CategoryDetailViewModel viewModel);
 
@@ -611,4 +618,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
     abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalLikesDetailListViewModel.class)
+    abstract ViewModel totalLikesDetailListViewModel(TotalLikesDetailListViewModel viewModel);
 }

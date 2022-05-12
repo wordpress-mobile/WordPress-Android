@@ -42,6 +42,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -80,7 +81,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -116,7 +116,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -467,27 +466,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 })
         );
 
-        mViewModel.getQuickStartPromptEvent().observe(getViewLifecycleOwner(), event ->
-                event.applyIfNotHandled(prompt -> {
-                    Spannable message = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
-                            requireContext(),
-                            prompt.getShortMessagePrompt(),
-                            prompt.getIconId()
-                    );
-                    showSnackbar(
-                            new SnackbarMessageHolder(
-                                    new UiStringText(message),
-                                    null,
-                                    () -> null,
-                                    (dismissEvent) -> null,
-                                    Snackbar.LENGTH_LONG,
-                                    true
-                            )
-                    );
-                    return Unit.INSTANCE;
-                })
-        );
-
         mViewModel.getPreloadPostEvents().observe(getViewLifecycleOwner(), event ->
                 event.applyIfNotHandled(holder -> {
                     addWebViewCachingFragment(holder.getBlogId(), holder.getPostId());
@@ -603,6 +581,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 visibleState.getCategories(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
+                        mReaderTracker.track(Stat.READER_FILTER_SHEET_DISPLAYED);
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                     } else if (!uiState.isVisible() && bottomSheet != null) {
                         bottomSheet.dismiss();
@@ -654,6 +633,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
         mRemoveFilterButton.setOnClickListener(v -> {
+            mReaderTracker.track(Stat.READER_FILTER_SHEET_CLEARED);
             mSubFilterViewModel.setDefaultSubfilter();
         });
         mSubFilterComponent.setVisibility(isFilterableScreen() ? View.VISIBLE : View.GONE);
@@ -907,17 +887,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEvent(final QuickStartEvent event) {
-        if (!isAdded() || getView() == null) {
-            return;
-        }
-
-        mViewModel.onQuickStartEventReceived(event);
-        EventBus.getDefault().removeStickyEvent(event);
     }
 
     @Override
@@ -1559,6 +1528,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void clearSearchSuggestions() {
+        mReaderTracker.track(Stat.READER_SEARCH_HISTORY_CLEARED);
         ReaderSearchTable.deleteAllQueries();
 
         mSearchSuggestionAdapter.swapCursor(null);

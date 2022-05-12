@@ -1,0 +1,6 @@
+19.7:
+- Menambahkan tab Beranda dan Menu Situs pada layar Situs Saya
+- Membuat tombol Tambahkan Blok lebih terlihat saat membuka editor blok
+- Menghapus teks error saat mengunggah blok media/audio
+- Menambahkan layar Tujuan Situs pada proses pembuatan situs
+- Memperbaiki crash karena detail pemberitahuan komentar di blok File GB

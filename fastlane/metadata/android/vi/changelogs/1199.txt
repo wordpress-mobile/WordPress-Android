@@ -1,4 +1,0 @@
-19.6:
-Bản phát hành này ngắn gọn và thú vị: sau khi xóa một trang blog, bạn có thể nhận thấy rằng chính trang blog đó vẫn tồn tại trong danh sách Blog của tôi cho đến khi bạn khởi động lại ứng dụng.
-
-Chúng tôi đã sửa—cho nó biến mất luôn. Luôn và ngay.

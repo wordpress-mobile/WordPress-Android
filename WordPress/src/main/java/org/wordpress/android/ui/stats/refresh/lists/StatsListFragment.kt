@@ -17,7 +17,10 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Empty
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
@@ -166,6 +169,8 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     private fun StatsListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
         val viewModelClass = when (statsSection) {
             StatsSection.DETAIL -> DetailListViewModel::class.java
+            StatsSection.INSIGHT_DETAIL -> InsightsDetailListViewModel::class.java
+            StatsSection.TOTAL_LIKES_DETAIL -> TotalLikesDetailListViewModel::class.java
             StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
@@ -187,7 +192,11 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         })
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
-            drawDateSelector(dateSelectorUiModel)
+            if (statsSection == INSIGHT_DETAIL || statsSection == TOTAL_LIKES_DETAIL) {
+                drawDateSelector(DateSelectorUiModel(false))
+            } else {
+                drawDateSelector(dateSelectorUiModel)
+            }
         })
 
         viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->

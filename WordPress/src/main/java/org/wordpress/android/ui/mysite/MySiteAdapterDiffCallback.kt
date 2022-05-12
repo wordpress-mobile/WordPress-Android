@@ -12,18 +12,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 
-class MySiteAdapterDiffCallback(
-    private val oldCardAndItems: List<MySiteCardAndItem>,
-    private val updatedCardAndItems: List<MySiteCardAndItem>
-) : DiffUtil.Callback() {
-    override fun getOldListSize(): Int = oldCardAndItems.size
-
-    override fun getNewListSize(): Int = updatedCardAndItems.size
-
-    @Suppress("ComplexMethod")
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldCardAndItems[oldItemPosition]
-        val updatedItem = updatedCardAndItems[newItemPosition]
+@Suppress("ComplexMethod")
+object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
+    override fun areItemsTheSame(oldItem: MySiteCardAndItem, updatedItem: MySiteCardAndItem): Boolean {
         return oldItem.type == updatedItem.type && when {
             oldItem is QuickActionsCard && updatedItem is QuickActionsCard -> true
             oldItem is QuickLinkRibbon && updatedItem is QuickLinkRibbon -> true
@@ -38,6 +29,7 @@ class MySiteAdapterDiffCallback(
         }
     }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-            oldCardAndItems[oldItemPosition] == updatedCardAndItems[newItemPosition]
+    override fun areContentsTheSame(oldItem: MySiteCardAndItem, newItem: MySiteCardAndItem): Boolean {
+        return oldItem == newItem
+    }
 }

@@ -14,7 +14,6 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import javax.inject.Inject
 
@@ -26,7 +25,6 @@ class CardsBuilder @Inject constructor(
     private val quickStartCardBuilder: QuickStartCardBuilder,
     private val quickLinkRibbonBuilder: QuickLinkRibbonBuilder,
     private val dashboardCardsBuilder: CardsBuilder,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig,
     private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 ) {
     fun build(
@@ -52,9 +50,7 @@ class CardsBuilder @Inject constructor(
                 cards.add(quickStartCardBuilder.build(quickStartCardBuilderParams))
             }
         }
-        if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-            cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
-        }
+        cards.add(dashboardCardsBuilder.build(dashboardCardsBuilderParams))
         return cards
     }
 

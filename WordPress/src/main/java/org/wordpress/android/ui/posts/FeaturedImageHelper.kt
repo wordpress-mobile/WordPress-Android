@@ -155,22 +155,26 @@ class FeaturedImageHelper @Inject constructor(
         )
 
         // Get max width/height for photon thumbnail - we load a smaller image so it's loaded quickly
-        val maxDimen = resourceProvider.getDimension(R.dimen.post_settings_featured_image_height_min).toInt()
+        val maxDimen = resourceProvider.getDimensionPixelSize(R.dimen.post_settings_featured_image_height_max)
 
         val mediaUri = StringUtils.notNullStr(
-                if (TextUtils.isEmpty(media.thumbnailUrl)) {
+                if (site.isSelfHostedAdmin || TextUtils.isEmpty(media.thumbnailUrl)) {
                     media.url
                 } else {
                     media.thumbnailUrl
                 }
         )
 
-        val photonUrl = readerUtilsWrapper.getResizedImageUrl(
-                mediaUri,
-                maxDimen,
-                maxDimen,
-                siteUtilsWrapper.getAccessibilityInfoFromSite(site)
-        )
+        val photonUrl = if (site.isSelfHostedAdmin) {
+            mediaUri
+        } else {
+            readerUtilsWrapper.getResizedImageUrl(
+                    mediaUri,
+                    maxDimen,
+                    maxDimen,
+                    siteUtilsWrapper.getAccessibilityInfoFromSite(site)
+            )
+        }
         return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)
     }
 
