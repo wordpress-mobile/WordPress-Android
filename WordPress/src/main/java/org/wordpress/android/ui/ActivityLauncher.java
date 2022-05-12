@@ -1499,6 +1499,11 @@ public class ActivityLauncher {
         StatsDetailActivity.startForTotalLikesDetail(context, site);
     }
 
+    public static void viewTotalCommentsDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalCommentsDetail(context, site);
+    }
+
     public static void viewInsightsDetail(Context context, SiteModel site) {
         if (site == null) {
             return;

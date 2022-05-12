@@ -1366,6 +1366,7 @@
     <string name="stats_months_and_years_views_label">Views</string>
     <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
     <string name="stats_detail_recent_weeks">Recent Weeks</string>
+    <string name="stats_details_top_commentators">Top Commentators</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
