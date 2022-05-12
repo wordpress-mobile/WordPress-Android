@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineC
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithImage
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapLegend
@@ -53,6 +54,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
@@ -65,9 +67,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActivityViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BigTitleViewHolder
@@ -88,6 +92,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LineCha
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LinkViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithIconViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithImageViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LoadingItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.MapLegendViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.MapViewHolder
@@ -99,6 +104,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TextVie
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TitleViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TitleWithMoreViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValueViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValueWithChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValuesViewHolder
 import org.wordpress.android.util.image.ImageManager
 
@@ -122,6 +128,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             BIG_TITLE -> BigTitleViewHolder(parent)
             TAG_ITEM -> TagViewHolder(parent)
             IMAGE_ITEM -> ImageItemViewHolder(parent, imageManager)
+            LIST_ITEM_WITH_IMAGE -> ListItemWithImageViewHolder(parent, imageManager = imageManager)
             LIST_ITEM_WITH_ICON -> ListItemWithIconViewHolder(parent, imageManager)
             LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
@@ -143,6 +150,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             MAP -> MapViewHolder(parent)
             MAP_LEGEND -> MapLegendViewHolder(parent)
             VALUE_ITEM -> ValueViewHolder(parent)
+            VALUE_WITH_CHART_ITEM -> ValueWithChartViewHolder(parent)
             VALUES_ITEM -> ValuesViewHolder(parent)
             ACTIVITY_ITEM -> ActivityViewHolder(parent)
             REFERRED_ITEM -> ReferredItemViewHolder(parent)
@@ -166,7 +174,9 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is TagViewHolder -> holder.bind(item as Tag)
             is ImageItemViewHolder -> holder.bind(item as ImageItem)
             is ValueViewHolder -> holder.bind(item as ValueItem)
+            is ValueWithChartViewHolder -> holder.bind(item as ValueWithChartItem)
             is ValuesViewHolder -> holder.bind(item as ValuesItem)
+            is ListItemWithImageViewHolder -> holder.bind(item as ListItemWithImage)
             is ListItemWithIconViewHolder -> holder.bind(item as ListItemWithIcon)
             is ListItemViewHolder -> holder.bind(item as ListItem)
             is TextViewHolder -> holder.bind(item as Text)

@@ -19,6 +19,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.ui.ActionableEmptyView;
@@ -31,12 +32,14 @@ import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE;
+import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
 
 public class QuickStartFullScreenDialogFragment extends Fragment implements FullScreenDialogContent,
@@ -96,6 +99,12 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 setCompleteViewImage(R.drawable.img_illustration_site_about_182dp);
                 AnalyticsTracker.track(Stat.QUICK_START_TYPE_GROW_VIEWED);
                 break;
+            case GET_TO_KNOW_APP: // TODO: ashiagr GET_TO_KNOW_APP add analytics
+                tasksUncompleted
+                        .addAll(mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, GET_TO_KNOW_APP));
+                tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(selectedSiteLocalId, GET_TO_KNOW_APP));
+                setCompleteViewImage(R.drawable.img_illustration_site_about_182dp);
+                break;
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(selectedSiteLocalId, CUSTOMIZE));
@@ -144,6 +153,8 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             case GROW:
                 AnalyticsTracker.track(Stat.QUICK_START_TYPE_GROW_DISMISSED);
                 break;
+            case GET_TO_KNOW_APP: // TODO: ashiagr GET_TO_KNOW_APP add analytics
+                break;
             case UNKNOWN:
                 // Do not track unknown.
                 break;
@@ -158,7 +169,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
         if (!showSnackbarIfNeeded(task)) {
             Bundle result = new Bundle();
-            result.putSerializable(RESULT_TASK, task);
+            result.putSerializable(RESULT_TASK, (Serializable) task);
             mDialogController.confirm(result);
         }
     }
@@ -202,6 +213,8 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 AnalyticsTracker.track(isExpanded ? Stat.QUICK_START_LIST_GROW_EXPANDED
                         : Stat.QUICK_START_LIST_GROW_COLLAPSED);
                 break;
+            case GET_TO_KNOW_APP: // TODO: ashiagr GET_TO_KNOW_APP add analytics
+                break;
             case UNKNOWN:
                 // Do not track unknown.
                 break;
@@ -229,7 +242,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     }
 
     private boolean showSnackbarIfNeeded(QuickStartTask task) {
-        if (task == QuickStartTask.CREATE_SITE) {
+        if (task == QuickStartNewSiteTask.CREATE_SITE) {
             WPSnackbar.make(requireView(), R.string.quick_start_list_create_site_message, Snackbar.LENGTH_LONG).show();
             return true;
         } else {

@@ -23,12 +23,13 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
@@ -384,6 +385,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(hasBloggingPromptAction).isTrue()
     }
 
+    /* ktlint-disable max-line-length */
     @Test
     fun `bottom sheet action is answer BP when the BP answer button is clicked`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
@@ -393,7 +395,15 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         } as AnswerBloggingPromptAction?
         assertThat(action).isNotNull
         action!!.onClickAction?.invoke()
-        assertThat(viewModel.createAction.value).isEqualTo(ANSWER_BLOGGING_PROMPT)
+        val bloggingPrompt = BloggingPrompt(
+            id = 1234,
+            text = "Cast the movie of your life.",
+            content = "<!-- wp:pullquote -->\n" +
+                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                    "<!-- /wp:pullquote -->",
+            respondents = emptyList()
+        )
+        assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(bloggingPrompt)
     }
 
     @Test

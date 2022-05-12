@@ -22,23 +22,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
@@ -196,69 +186,58 @@ object QuickStartUtils {
     }
 
     @JvmStatic
-    fun isQuickStartInProgress(quickStartStore: QuickStartStore, siteLocalId: Int): Boolean {
-        return !quickStartStore.getQuickStartCompleted(siteLocalId.toLong()) &&
-                quickStartStore.hasDoneTask(siteLocalId.toLong(), CREATE_SITE)
-    }
-
-    @JvmStatic
-    fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, siteLocalId: Int): Boolean {
-        return quickStartStore.getDoneCount(siteLocalId.toLong()) >= QuickStartTask.values()
-                .filter { it.taskType != UNKNOWN }.size
-    }
-
-    @JvmStatic
     fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
-        return when (task) {
-            CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
-            UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
-            VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
-            ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
-            PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
-            FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
-            UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
-            CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
-            EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
-            EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
-            REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
+        return when (task.string) {
+            QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL ->
+                Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
+            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
+            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
 
     @JvmStatic
     fun getQuickStartListSkippedTracker(task: QuickStartTask): Stat {
-        return when (task) {
+        return when (task.string) {
             // Skipping create site task should never happen as of Quick Start v2.  The task is automatically set as
             // completed when Quick Start v2 begins since it is initiated when a new site is created.  The task case
             // is included here for completeness.
-            CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
-            UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
-            VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
-            ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_SKIPPED
-            PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_SKIPPED
-            FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
-            UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
-            CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
-            EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
-            EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
-            REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
+            QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL -> Stat.QUICK_START_LIST_ADD_SOCIAL_SKIPPED
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL -> Stat.QUICK_START_LIST_PUBLISH_POST_SKIPPED
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
+            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
+            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
 
     fun getTaskCompletedTracker(task: QuickStartTask): Stat {
-        return when (task) {
-            CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
-            UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
-            VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
-            ENABLE_POST_SHARING -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
-            PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
-            FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
-            UPLOAD_SITE_ICON -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
-            CHECK_STATS -> Stat.QUICK_START_CHECK_STATS_COMPLETED
-            EXPLORE_PLANS -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
-            EDIT_HOMEPAGE -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
-            REVIEW_PAGES -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
+        return when (task.string) {
+            QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_UPDATE_SITE_TITLE_LABEL -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
+            QuickStartStore.QUICK_START_VIEW_SITE_LABEL -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_ENABLE_POST_SHARING_LABEL -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_PUBLISH_POST_LABEL -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
+            QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_UPLOAD_SITE_ICON_LABEL -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
+            QuickStartStore.QUICK_START_CHECK_STATS_LABEL -> Stat.QUICK_START_CHECK_STATS_COMPLETED
+            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
+            QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
+            QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
@@ -305,14 +284,15 @@ object QuickStartUtils {
     fun getNextUncompletedQuickStartTaskForReminderNotification(
         quickStartStore: QuickStartStore,
         siteLocalId: Long,
-        taskType: QuickStartTaskType
+        taskType: QuickStartTaskType,
+        quickStartType: QuickStartType
     ): QuickStartTask? {
         val uncompletedTasksOfPreferredType = quickStartStore.getUncompletedTasksByType(siteLocalId, taskType)
 
         var nextTask: QuickStartTask? = null
 
         if (uncompletedTasksOfPreferredType.isEmpty()) {
-            val otherQuickStartTaskTypes = QuickStartTaskType.values()
+            val otherQuickStartTaskTypes = quickStartType.taskTypes
                     .filter { it != taskType && it != UNKNOWN }
 
             otherQuickStartTaskTypes.forEach {
@@ -336,11 +316,12 @@ object QuickStartUtils {
     @Suppress("ReturnCount")
     fun getNextUncompletedQuickStartTask(
         quickStartStore: QuickStartStore,
+        quickStartType: QuickStartType,
         siteLocalId: Long
     ): QuickStartTask? {
         // get all the uncompleted tasks for all task types
         val uncompletedTasks = ArrayList<QuickStartTask>()
-        QuickStartTaskType.values().forEach { type ->
+        quickStartType.taskTypes.forEach { type ->
             if (type != UNKNOWN) {
                 uncompletedTasks.addAll(quickStartStore.getUncompletedTasksByType(siteLocalId, type))
             }
@@ -358,7 +339,7 @@ object QuickStartUtils {
         }
 
         // if we have not skipped a task yet, return the first available task from the list
-        val lastSkippedTask = AppPrefs.getLastSkippedQuickStartTask()
+        val lastSkippedTask = AppPrefs.getLastSkippedQuickStartTask(quickStartType)
                 ?: return uncompletedTasks.first()
 
         // look for a task that follows the one we skipped

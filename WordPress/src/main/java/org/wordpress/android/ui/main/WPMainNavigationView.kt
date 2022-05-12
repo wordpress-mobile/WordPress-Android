@@ -67,7 +67,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked()
+        fun onNewPostButtonClicked(promptId: Int)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {

@@ -2,7 +2,9 @@
 
 19.9
 -----
+* [*] Editor: Improved editor performance by reducing memory usage [https://github.com/wordpress-mobile/WordPress-Android/pull/16490]
 
+* [*] Block Editor: Prevent non-functional '+' icon displaying in toolbar on self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/16507]
 
 19.8
 -----

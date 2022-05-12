@@ -182,6 +182,35 @@ class StatsUtils
         }
         return contentDescriptions
     }
+
+    fun buildChange(
+        previousValue: Long?,
+        value: Long,
+        positive: Boolean,
+        isFormattedNumber: Boolean
+    ): String? {
+        return previousValue?.let {
+            val difference = value - previousValue
+            val percentage = when (previousValue) {
+                value -> "0"
+                0L -> "∞"
+                else -> mapLongToString((difference * 100 / previousValue), isFormattedNumber)
+            }
+            val formattedDifference = mapLongToString(difference, isFormattedNumber)
+            if (positive) {
+                resourceProvider.getString(R.string.stats_traffic_increase, formattedDifference, percentage)
+            } else {
+                resourceProvider.getString(R.string.stats_traffic_change, formattedDifference, percentage)
+            }
+        }
+    }
+
+    private fun mapLongToString(value: Long, isFormattedNumber: Boolean): String {
+        return when (isFormattedNumber) {
+            true -> toFormattedString(value)
+            false -> value.toString()
+        }
+    }
 }
 
 fun getBarWidth(views: Int, maxViews: Int) = getBarWidth(views.toDouble(), maxViews.toDouble())

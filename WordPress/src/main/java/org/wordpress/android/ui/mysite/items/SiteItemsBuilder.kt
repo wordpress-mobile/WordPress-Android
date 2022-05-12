@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite.items
 
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
@@ -13,27 +13,22 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import javax.inject.Inject
 
 class SiteItemsBuilder @Inject constructor(
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
-    private val siteListItemBuilder: SiteListItemBuilder,
-    private val mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
+    private val siteListItemBuilder: SiteListItemBuilder
 ) {
-    fun build(params: InfoItemBuilderParams) = if (mySiteDashboardPhase2FeatureConfig.isEnabled()) {
-        params.isStaleMessagePresent.takeIf { it }
+    fun build(params: InfoItemBuilderParams) = params.isStaleMessagePresent.takeIf { it }
                 ?.let { InfoItem(title = UiStringRes(R.string.my_site_dashboard_stale_message)) }
-    } else {
-        null
-    }
 
     @Suppress("LongMethod")
     fun build(params: SiteItemsBuilderParams): List<MySiteCardAndItem> {
-        val showEnablePostSharingFocusPoint = params.activeTask == QuickStartTask.ENABLE_POST_SHARING
-        val showStatsFocusPoint = (params.activeTask == QuickStartTask.CHECK_STATS && params.enableStatsFocusPoint)
-        val showPagesFocusPoint = (params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                params.activeTask == QuickStartTask.REVIEW_PAGES) && params.enablePagesFocusPoint
+        val showEnablePostSharingFocusPoint = params.activeTask == QuickStartNewSiteTask.ENABLE_POST_SHARING
+        val showStatsFocusPoint =
+                params.activeTask == QuickStartNewSiteTask.CHECK_STATS && params.enableStatsFocusPoint
+        val showPagesFocusPoint = (params.activeTask == QuickStartNewSiteTask.EDIT_HOMEPAGE ||
+                params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES) && params.enablePagesFocusPoint
 
         return listOfNotNull(
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(params.site),
