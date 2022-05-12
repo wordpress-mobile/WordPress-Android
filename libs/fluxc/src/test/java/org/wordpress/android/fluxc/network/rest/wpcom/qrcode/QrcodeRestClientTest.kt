@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QrcodeRestClient.Qr
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class QrcodeRestClientTest {
