@@ -12,17 +12,17 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.REVIEW_PAGES
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.test
@@ -77,40 +77,5 @@ class QuickStartStoreTest {
         assertEquals(ENABLE_POST_SHARING, uncompletedGrowTasks[0])
         assertEquals(PUBLISH_POST, uncompletedGrowTasks[1])
         assertEquals(CHECK_STATS, uncompletedGrowTasks[2])
-    }
-
-    @Test
-    fun orderOfShownTasks() = test {
-        // marking tasks as shown in random order
-        quickStartStore.setShownTask(testLocalSiteId, REVIEW_PAGES, true)
-        quickStartStore.setShownTask(testLocalSiteId, UPLOAD_SITE_ICON, true)
-        quickStartStore.setShownTask(testLocalSiteId, CHECK_STATS, true)
-        quickStartStore.setShownTask(testLocalSiteId, ENABLE_POST_SHARING, true)
-        quickStartStore.setShownTask(testLocalSiteId, PUBLISH_POST, true)
-
-        // making sure shown tasks are retrieved in a correct order
-        val shownCustomizeTasks = quickStartStore.getShownTasksByType(testLocalSiteId, CUSTOMIZE)
-        assertEquals(2, shownCustomizeTasks.size)
-        assertEquals(UPLOAD_SITE_ICON, shownCustomizeTasks[0])
-        assertEquals(REVIEW_PAGES, shownCustomizeTasks[1])
-
-        val shownGrowTasks = quickStartStore.getShownTasksByType(testLocalSiteId, GROW)
-        assertEquals(3, shownGrowTasks.size)
-        assertEquals(ENABLE_POST_SHARING, shownGrowTasks[0])
-        assertEquals(PUBLISH_POST, shownGrowTasks[1])
-        assertEquals(CHECK_STATS, shownGrowTasks[2])
-
-        // making sure unshown tasks are retrieved in a correct order
-        val unshownCustomizeTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, CUSTOMIZE)
-        assertEquals(4, unshownCustomizeTasks.size)
-        assertEquals(CREATE_SITE, unshownCustomizeTasks[0])
-        assertEquals(UPDATE_SITE_TITLE, unshownCustomizeTasks[1])
-        assertEquals(EDIT_HOMEPAGE, unshownCustomizeTasks[2])
-        assertEquals(VIEW_SITE, unshownCustomizeTasks[3])
-
-        val unshownGrowTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, GROW)
-        assertEquals(2, unshownGrowTasks.size)
-        assertEquals(FOLLOW_SITE, unshownGrowTasks[0])
-        assertEquals(EXPLORE_PLANS, unshownGrowTasks[1])
     }
 }
