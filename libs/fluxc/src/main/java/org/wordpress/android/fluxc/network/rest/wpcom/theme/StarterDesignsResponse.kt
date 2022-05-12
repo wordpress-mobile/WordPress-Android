@@ -18,6 +18,7 @@ data class StarterDesign(
     val categories: List<StarterDesignCategory>,
     @SerializedName("demo_url") val demoUrl: String,
     val theme: String?,
+    val group: List<String>,
     val preview: String,
     @SerializedName("preview_tablet") val previewTablet: String,
     @SerializedName("preview_mobile") val previewMobile: String
