@@ -5,7 +5,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -32,21 +31,18 @@ class PromptReminderNotifier @Inject constructor(
     // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
     var hasOptedInBloggingPromptsReminders = true
 
-    fun notify(siteId: Int) {
+    suspend fun notify(siteId: Int) {
         val notificationId = REMINDER_NOTIFICATION_ID + siteId
         val context = contextProvider.getContext()
         val site = siteStore.getSiteByLocalId(siteId) ?: return
         val siteName = SiteUtils.getSiteNameOrHomeURL(site)
 
-        val prompt = runBlocking {
-            bloggingPromptsStore.getPromptForDate(site, Date()).firstOrNull()?.model
-        } ?: return
+        val prompt = bloggingPromptsStore.getPromptForDate(site, Date()).firstOrNull()?.model
 
         val openEditorRequestCode = notificationId + 1
         val openEditorPendingIntent = PendingIntent.getActivity(
                 context,
                 openEditorRequestCode,
-                // TODO @RenanLukas send BloggingPrompt with OpenEditor action when prompt store is ready
                 ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(
                         context,
                         notificationId,
@@ -68,7 +64,7 @@ class PromptReminderNotifier @Inject constructor(
                 contentTitle = resourceProvider.getString(
                         R.string.blogging_prompts_answer_prompt_notification_title, siteName
                 ),
-                contentText = prompt.text,
+                contentText = prompt?.text ?: "",
                 priority = PRIORITY_DEFAULT,
                 category = CATEGORY_REMINDER,
                 autoCancel = true,
