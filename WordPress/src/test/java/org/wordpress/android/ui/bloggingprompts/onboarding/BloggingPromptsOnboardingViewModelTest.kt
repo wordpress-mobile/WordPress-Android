@@ -2,7 +2,6 @@ package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -36,7 +35,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper()
     private val siteStore: SiteStore = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
-//    private val bloggingPromptsStore: BloggingPromptsStore = mock()
+    private val bloggingPromptsStore: BloggingPromptsStore = mock()
 
     private val bloggingPrompt = BloggingPromptsResult(
             model = BloggingPromptModel(
@@ -52,9 +51,9 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
             )
     )
 
-    private val bloggingPromptsStore: BloggingPromptsStore = mock {
-        onBlocking { getPromptForDate(any(), any()) } doReturn flowOf(bloggingPrompt)
-    }
+//    private val bloggingPromptsStore: BloggingPromptsStore = mock {
+//        onBlocking { getPromptForDate(any(), any()) } doReturn flowOf(bloggingPrompt)
+//    }
 
     private lateinit var classToTest: BloggingPromptsOnboardingViewModel
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
