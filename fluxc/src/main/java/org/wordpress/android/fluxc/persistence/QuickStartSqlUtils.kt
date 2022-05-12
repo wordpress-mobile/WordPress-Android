@@ -32,15 +32,6 @@ class QuickStartSqlUtils
                 .asModel.size
     }
 
-    fun getShownCount(siteId: Long): Int {
-        return WellSql.select(QuickStartTaskModel::class.java)
-                .where().beginGroup()
-                .equals(QuickStartTaskModelTable.SITE_ID, siteId)
-                .equals(QuickStartTaskModelTable.IS_SHOWN, true)
-                .endGroup().endWhere()
-                .asModel.size
-    }
-
     fun getShownCountByType(siteId: Long, taskType: QuickStartTaskType): Int {
         return WellSql.select(QuickStartTaskModel::class.java)
                 .where().beginGroup()
@@ -56,6 +47,7 @@ class QuickStartSqlUtils
                 .where().beginGroup()
                 .equals(QuickStartTaskModelTable.SITE_ID, siteId)
                 .equals(QuickStartTaskModelTable.TASK_NAME, task.toString())
+                .equals(QuickStartTaskModelTable.TASK_TYPE, task.taskType.toString())
                 .endGroup().endWhere()
                 .asModel.firstOrNull()
     }
@@ -72,12 +64,8 @@ class QuickStartSqlUtils
         return getTask(siteId, task)?.isDone ?: false
     }
 
-    fun hasShownTask(siteId: Long, task: QuickStartTask): Boolean {
-        return getTask(siteId, task)?.isShown ?: false
-    }
-
     private fun insertOrUpdateQuickStartTaskModel(newTaskModel: QuickStartTaskModel) {
-        val oldModel = getTask(newTaskModel.siteId, QuickStartTask.fromString(newTaskModel.taskName))
+        val oldModel = getTask(newTaskModel.siteId, QuickStartTask.getTaskFromModel(newTaskModel))
         oldModel?.let {
             WellSql.update(QuickStartTaskModel::class.java)
                     .whereId(it.id)
@@ -106,15 +94,6 @@ class QuickStartSqlUtils
         model.taskName = task.toString()
         model.taskType = task.taskType.toString()
         model.isDone = isDone
-        insertOrUpdateQuickStartTaskModel(model)
-    }
-
-    fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
-        val model = getTask(siteId, task) ?: QuickStartTaskModel()
-        model.siteId = siteId
-        model.taskName = task.toString()
-        model.taskType = task.taskType.toString()
-        model.isShown = isShown
         insertOrUpdateQuickStartTaskModel(model)
     }
 
