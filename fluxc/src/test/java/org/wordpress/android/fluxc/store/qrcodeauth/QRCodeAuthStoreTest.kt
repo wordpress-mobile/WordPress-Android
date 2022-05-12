@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.store.qrcode
+package org.wordpress.android.fluxc.store.qrcodeauth
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
@@ -7,15 +7,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthError
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthPayload
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthAuthenticateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthValidateResponse
-import org.wordpress.android.fluxc.store.qrcode.QRCodeAuthStore.QRCodeAuthAuthenticateResult
-import org.wordpress.android.fluxc.store.qrcode.QRCodeAuthStore.QRCodeAuthResult
-import org.wordpress.android.fluxc.store.qrcode.QRCodeAuthStore.QRCodeAuthValidateResult
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthPayload
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient.QRCodeAuthAuthenticateResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient.QRCodeAuthValidateResponse
+import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthAuthenticateResult
+import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthResult
+import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthValidateResult
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals

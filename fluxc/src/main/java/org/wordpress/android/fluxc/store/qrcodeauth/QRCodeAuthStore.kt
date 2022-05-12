@@ -1,10 +1,10 @@
-package org.wordpress.android.fluxc.store.qrcode
+package org.wordpress.android.fluxc.store.qrcodeauth
 
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthError
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthErrorType
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthAuthenticateResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcode.QRCodeAuthRestClient.QRCodeAuthValidateResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient.QRCodeAuthAuthenticateResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthRestClient.QRCodeAuthValidateResponse
 import org.wordpress.android.fluxc.store.Store
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
