@@ -69,39 +69,6 @@ class QuickStartSqlUtilsTest {
     }
 
     @Test
-    fun testShownCount() {
-        assertEquals(0, quickStartSqlUtils.getShownCount(testLocalSiteId))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.UNKNOWN, true)
-        assertEquals(1, quickStartSqlUtils.getShownCount(testLocalSiteId))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.UNKNOWN, false)
-        assertEquals(0, quickStartSqlUtils.getShownCount(testLocalSiteId))
-    }
-
-    @Test
-    fun testShownCountByType() {
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.UPLOAD_SITE_ICON, true)
-        assertEquals(1, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.UPLOAD_SITE_ICON, false)
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.CHECK_STATS, true)
-        assertEquals(1, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.CHECK_STATS, false)
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-    }
-
-    @Test
     fun testTaskDoneStatus() {
         assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartNewSiteTask.UNKNOWN))
 
@@ -110,36 +77,6 @@ class QuickStartSqlUtilsTest {
 
         quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartNewSiteTask.UNKNOWN, false)
         assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartNewSiteTask.UNKNOWN))
-    }
-
-    @Test
-    fun testTaskShownStatus() {
-        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE, true)
-        assertTrue(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE, false)
-        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-    }
-
-    @Test
-    fun testTaskMultipleStatuses() {
-        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE, true)
-        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE, true)
-        assertTrue(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE, false)
-        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-
-        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE, false)
-        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
-        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartNewSiteTask.CREATE_SITE))
     }
 
     @Test
