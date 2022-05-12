@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.qrcode
+package org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth
 
 import android.content.Context
 import com.android.volley.RequestQueue
