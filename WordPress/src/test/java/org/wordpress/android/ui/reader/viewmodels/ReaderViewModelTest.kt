@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -61,6 +62,7 @@ class ReaderViewModelTest {
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var quickStartType: QuickStartType
+    @Mock lateinit var snackbarSequencer: SnackbarSequencer
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -76,7 +78,8 @@ class ReaderViewModelTest {
                 readerTracker,
                 accountStore,
                 quickStartRepository,
-                selectedSiteRepository
+                selectedSiteRepository,
+                snackbarSequencer
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
