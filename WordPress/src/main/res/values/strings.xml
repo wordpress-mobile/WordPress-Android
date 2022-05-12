@@ -3121,6 +3121,8 @@
     <string name="quick_start_list_edit_homepage_title" translatable="false">@string/quick_start_dialog_edit_homepage_title</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
+    <string name="quick_start_list_upload_media_title">Upload photos or videos</string>
+    <string name="quick_start_list_upload_media_subtitle">Bring media straight from your device or camera to your site</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>

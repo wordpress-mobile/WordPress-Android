@@ -81,6 +81,12 @@ enum class QuickStartTaskDetails(
             string.quick_start_list_review_pages_title,
             string.quick_start_list_review_pages_subtitle,
             drawable.ic_pages_white_24dp
+    ),
+    UPLOAD_MEDIA(
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL,
+            string.quick_start_list_upload_media_title,
+            string.quick_start_list_upload_media_subtitle,
+            drawable.ic_baseline_add_photo_alternate_24
     );
 
     companion object {
