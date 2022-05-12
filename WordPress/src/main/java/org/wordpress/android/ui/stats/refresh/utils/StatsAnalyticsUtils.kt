@@ -27,6 +27,7 @@ private const val WEEKLY_VIEWS_WIDGET_PROPERTY = "weekly_views"
 private const val ALL_TIME_WIDGET_PROPERTY = "all_time"
 private const val MINIFIED_WIDGET_PROPERTY = "minified"
 private const val TOTAL_LIKES_PROPERTY = "total_likes_detail"
+private const val TOTAL_COMMENTS_PROPERTY = "total_comments_detail"
 
 fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranularity) {
     val property = when (granularity) {
@@ -48,6 +49,7 @@ fun AnalyticsTrackerWrapper.trackWithSection(stat: Stat, section: StatsSection) 
         StatsSection.DETAIL -> DETAIL_PROPERTY
         StatsSection.ANNUAL_STATS -> ANNUAL_STATS_PROPERTY
         StatsSection.TOTAL_LIKES_DETAIL -> TOTAL_LIKES_PROPERTY
+        StatsSection.TOTAL_COMMENTS_DETAIL -> TOTAL_COMMENTS_PROPERTY
     }
     this.track(stat, mapOf(GRANULARITY_PROPERTY to property))
 }
