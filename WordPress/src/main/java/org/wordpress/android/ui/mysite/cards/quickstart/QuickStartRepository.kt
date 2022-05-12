@@ -197,7 +197,7 @@ class QuickStartRepository
                     quickStartType
             )
             setTaskDoneAndTrack(task, selectedSite.id)
-            if (quickStartType.isEveryQuickStartTaskDone(quickStartStore, selectedSite.id)) {
+            if (quickStartType.isEveryQuickStartTaskDone(quickStartStore, selectedSite.id.toLong())) {
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
@@ -349,26 +349,26 @@ class QuickStartRepository
             when (quickStartTaskOriginTab) {
                 MySiteTabType.DASHBOARD ->
                     when (this) {
-                        QuickStartTask.ENABLE_POST_SHARING,
-                        QuickStartTask.EXPLORE_PLANS -> true
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
+                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
                         else -> false
                     }
                 MySiteTabType.SITE_MENU ->
                     when (this) {
-                        QuickStartTask.CHECK_STATS,
-                        QuickStartTask.REVIEW_PAGES,
-                        QuickStartTask.EDIT_HOMEPAGE,
-                        QuickStartTask.ENABLE_POST_SHARING,
-                        QuickStartTask.EXPLORE_PLANS -> true
+                        QuickStartNewSiteTask.CHECK_STATS,
+                        QuickStartNewSiteTask.REVIEW_PAGES,
+                        QuickStartNewSiteTask.EDIT_HOMEPAGE,
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
+                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
                         else -> false
                     }
                 else -> false
             }
 
     private fun QuickStartTask.isShownInHomeTab() = when (this) {
-        QuickStartTask.CHECK_STATS,
-        QuickStartTask.REVIEW_PAGES,
-        QuickStartTask.EDIT_HOMEPAGE -> true
+        QuickStartNewSiteTask.CHECK_STATS,
+        QuickStartNewSiteTask.REVIEW_PAGES,
+        QuickStartNewSiteTask.EDIT_HOMEPAGE -> true
         else -> false
     }
 

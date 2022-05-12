@@ -78,7 +78,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             QuickStartNewSiteTask.EDIT_HOMEPAGE
     )
 
-    private val nonSiteMenuTasks = QuickStartTask.values().subtract(siteMenuTasks)
+    private val nonSiteMenuTasks = QuickStartTask.getAllTasks().subtract(siteMenuTasks)
 
     @InternalCoroutinesApi
     @Before
@@ -261,16 +261,16 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.completeTask(QuickStartNewSiteTask.UPDATE_SITE_TITLE)
 
-        verify(quickStartUtilsWrapper, never()).completeTaskAndRemindNextOne(any(), any(), any(), any())
+        verify(quickStartUtilsWrapper, never()).completeTaskAndRemindNextOne(any(), any(), any(), any(), any())
     }
 
     @Test
     fun `given active task = completed task, when task is completed, then reminder notifs are triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        quickStartRepository.setActiveTask(QuickStartTask.PUBLISH_POST)
+        quickStartRepository.setActiveTask(QuickStartNewSiteTask.PUBLISH_POST)
 
-        quickStartRepository.completeTask(QuickStartTask.PUBLISH_POST)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.PUBLISH_POST)
 
         verify(quickStartUtilsWrapper).completeTaskAndRemindNextOne(
                 QuickStartNewSiteTask.PUBLISH_POST,
