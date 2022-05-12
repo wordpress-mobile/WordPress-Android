@@ -31,7 +31,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
-import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
@@ -59,13 +59,13 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var quickStartType: QuickStartType
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
     private lateinit var quickStartSiteMenuStep: MutableList<QuickStartSiteMenuStep?>
     private val siteLocalId = 1
-    private val quickStartType = NewSiteQuickStartType
 
     private val siteMenuTasks = listOf(
             QuickStartNewSiteTask.ENABLE_POST_SHARING,
@@ -95,6 +95,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig
         )
+        quickStartRepository.quickStartType = quickStartType
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
         quickStartSiteMenuStep = mutableListOf()
@@ -291,11 +292,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `when all task are completed, then completed notice is triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        initStore()
-        whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDone(siteLocalId)).thenReturn(true)
-        quickStartRepository.setActiveTask(QuickStartTask.EXPLORE_PLANS)
+        initStore(QuickStartNewSiteTask.EXPLORE_PLANS)
+        quickStartRepository.setActiveTask(QuickStartNewSiteTask.EXPLORE_PLANS)
+        whenever(quickStartType.isEveryQuickStartTaskDone(quickStartStore, site.id.toLong())).thenReturn(true)
 
-        quickStartRepository.completeTask(QuickStartTask.EXPLORE_PLANS)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
 
         assertThat(snackbars).isNotEmpty
     }

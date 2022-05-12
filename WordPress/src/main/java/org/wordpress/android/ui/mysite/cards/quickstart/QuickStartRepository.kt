@@ -36,6 +36,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -97,7 +98,7 @@ class QuickStartRepository
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
     var quickStartTaskOrigin = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
-    val quickStartType = NewSiteQuickStartType
+    var quickStartType: QuickStartType = NewSiteQuickStartType
 
     private var pendingTask: QuickStartTask? = null
 
