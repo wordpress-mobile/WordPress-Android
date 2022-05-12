@@ -35,6 +35,8 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 axisLeft.isEnabled = false
                 axisRight.isEnabled = false
                 legend.isEnabled = false
+                setTouchEnabled(false)
+                setViewPortOffsets(0f, 0f, 0f, 0f)
                 val entries = item.values.mapIndexed { index, value -> Entry(index.toFloat(), value.toFloat()) }
                 val lineChartColor = if (item.positive == true) {
                     R.color.green_40
@@ -52,6 +54,7 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     color = ContextCompat.getColor(context, lineChartColor)
                     lineWidth = 2f
                     mode = CUBIC_BEZIER
+                    cubicIntensity = CUBIC_INTENSITY
                     setDrawFilled(true)
                     val drawable = ContextCompat.getDrawable(context, drawableRes)
                     drawable?.alpha = FILL_ALPHA
@@ -65,5 +68,6 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     companion object {
         private const val FILL_ALPHA = 26
+        private const val CUBIC_INTENSITY = 0.14f // Higher values cause visual crop at min and max values
     }
 }
