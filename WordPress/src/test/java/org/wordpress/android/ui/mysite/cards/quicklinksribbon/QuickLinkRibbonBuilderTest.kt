@@ -10,13 +10,18 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkRibbonBuilderParams
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.utils.ListItemInteraction
 
 @InternalCoroutinesApi
 class QuickLinkRibbonBuilderTest : BaseUnitTest() {
     @Mock lateinit var siteModel: SiteModel
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var quickStartType: QuickStartType
     private lateinit var builder: QuickLinkRibbonBuilder
 
     private val onStatsClick: () -> Unit = {}
@@ -26,7 +31,10 @@ class QuickLinkRibbonBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = QuickLinkRibbonBuilder()
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
+        builder = QuickLinkRibbonBuilder(quickStartRepository)
     }
 
     @Test

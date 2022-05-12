@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.siteinfo
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -7,20 +8,28 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteInfoHeaderCardBuilderTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var quickStartType: QuickStartType
     private lateinit var siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
 
     @Before
     fun setUp() {
-        siteInfoHeaderCardBuilder = SiteInfoHeaderCardBuilder(resourceProvider)
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
+                .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
+        siteInfoHeaderCardBuilder = SiteInfoHeaderCardBuilder(resourceProvider, quickStartRepository)
     }
 
     @Test

@@ -9,26 +9,35 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EXPLORE_PLANS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
+import org.wordpress.android.ui.quickstart.QuickStartType
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
     @Mock lateinit var siteModel: SiteModel
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var quickStartType: QuickStartType
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
     fun setUp() {
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(CHECK_STATS)
         siteItemsBuilder = SiteItemsBuilder(
                 siteCategoryItemBuilder,
-                siteListItemBuilder
+                siteListItemBuilder,
+                quickStartRepository
         )
     }
 
