@@ -29,11 +29,15 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
 
     private lateinit var dialogType: DialogType
     private lateinit var bloggingPrompt: BloggingPrompt
+    private var hasTrackedScreenShown = false
 
     @Suppress("MaxLineLength")
     /* ktlint-disable max-line-length */
     fun start(type: DialogType) {
-        analyticsTracker.trackScreenShown()
+        if (!hasTrackedScreenShown) {
+            hasTrackedScreenShown = true
+            analyticsTracker.trackScreenShown()
+        }
         dialogType = type
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
         bloggingPrompt = BloggingPrompt(

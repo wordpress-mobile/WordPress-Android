@@ -105,13 +105,15 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `Should track screen shown when start is called with ONBOARDING`() = runBlocking {
+    fun `Should track screen shown only the first time start is called with ONBOARDING`() = runBlocking {
+        classToTest.start(ONBOARDING)
         classToTest.start(ONBOARDING)
         verify(analyticsTracker).trackScreenShown()
     }
 
     @Test
-    fun `Should track screen shown when start is called with INFORMATION`() = runBlocking {
+    fun `Should track screen shown only the first time start is called with INFORMATION`() = runBlocking {
+        classToTest.start(INFORMATION)
         classToTest.start(INFORMATION)
         verify(analyticsTracker).trackScreenShown()
     }
