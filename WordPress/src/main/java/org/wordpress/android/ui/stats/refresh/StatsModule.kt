@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.modules.BG_THREAD
@@ -54,7 +55,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
@@ -66,15 +67,18 @@ const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
 const val YEAR_STATS_USE_CASE = "YearStatsUseCase"
+const val BLOCK_DETAIL_USE_CASE = "BlockDetailUseCase"
+const val VIEWS_AND_VISITORS_USE_CASE = "ViewsAndVisitorsUseCase"
+const val TOTAL_LIKES_DETAIL_USE_CASE = "LikeDetailUseCase"
+
 const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
-const val BLOCK_DETAIL_USE_CASE = "BlockDetailUseCase"
-const val VIEWS_AND_VISITORS_USE_CASE = "ViewsAndVisitorsUseCase"
 const val BLOCK_VIEWS_AND_VISITORS_USE_CASES = "BlockViewsAndVisitorsUseCases"
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
+private const val TOTAL_LIKES_DETAIL_USE_CASES = "LikeDetailUseCases"
 
 /**
  * Module that provides use cases for Stats.
@@ -103,7 +107,7 @@ class StatsModule {
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
         followerTotalsUseCase: FollowerTotalsUseCase,
-        totalLikesUseCase: TotalLikesUseCase,
+        totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
         totalCommentsUseCase: TotalCommentsUseCase,
         totalFollowersUseCase: TotalFollowersUseCase,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
@@ -113,7 +117,7 @@ class StatsModule {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (statsRevampV2FeatureConfig.isEnabled()) {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
-            useCases.add(totalLikesUseCase)
+            useCases.add(totalLikesUseCaseFactory.build(BLOCK))
             useCases.add(totalCommentsUseCase)
             useCases.add(totalFollowersUseCase)
         } else {
@@ -429,10 +433,52 @@ class StatsModule {
                 mainDispatcher,
                 statsSiteProvider,
                 useCases,
+
                 {
                     listOf(VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
                 },
                 uiModelMapper::mapViewsVisitorsDetailStats
+        )
+    }
+
+    /**
+     * Provides a list of use cases for the Total Likes detail screen in Stats. Modify this method when you want to
+     * add more blocks to the likes detail screen.
+     */
+    @Provides
+    @Singleton
+    @Named(TOTAL_LIKES_DETAIL_USE_CASES)
+    fun provideLikesDetailUseCases(
+        totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
+        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(
+                totalLikesUseCaseFactory.build(VIEW_ALL),
+                postsAndPagesUseCaseFactory.build(DAYS, BLOCK)
+        )
+    }
+
+    /**
+     * Provides a singleton usecase that represents the Likes detail screen.
+     * @param useCases build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Singleton
+    @Named(TOTAL_LIKES_DETAIL_USE_CASE)
+    fun provideLikesDetailStatsUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(TOTAL_LIKES_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+                bgDispatcher,
+                mainDispatcher,
+                statsSiteProvider,
+                useCases,
+                { listOf(InsightType.TOTAL_LIKES, TimeStatsType.POSTS_AND_PAGES) },
+                uiModelMapper::mapTimeStats
         )
     }
 
