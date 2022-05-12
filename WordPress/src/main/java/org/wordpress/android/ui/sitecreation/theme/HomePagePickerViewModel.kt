@@ -105,13 +105,12 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     override fun onPreviewChooseTapped() {
-        super.onPreviewChooseTapped()
         onChooseTapped()
     }
 
     fun onChooseTapped() {
-        // TODO: adapt this to the new flow
         selectedLayout?.let { layout ->
+            super.onPreviewChooseTapped()
             val template = layout.slug
             analyticsTracker.trackSiteDesignSelected(template)
             _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
