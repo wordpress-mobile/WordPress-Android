@@ -17,14 +17,22 @@ class TotalStatsMapper @Inject constructor(
 ) {
     fun buildTotalLikesValue(dates: List<PeriodData>): ValueWithChartItem {
         val currentWeekLikes = getCurrentWeekDays(dates, LIKES)
-        val sum = sum(currentWeekLikes)
-        return ValueWithChartItem(sum, currentWeekLikes)
+        val currentWeekSumFormatted = sum(currentWeekLikes)
+
+        val previousWeekLikes = getPreviousWeekDays(dates, LIKES)
+        val positive = currentWeekLikes.sum() >= previousWeekLikes.sum()
+
+        return ValueWithChartItem(currentWeekSumFormatted, currentWeekLikes, positive)
     }
 
     fun buildTotalCommentsValue(dates: List<PeriodData>): ValueWithChartItem {
         val currentWeekComments = getCurrentWeekDays(dates, COMMENTS)
-        val sum = sum(currentWeekComments)
-        return ValueWithChartItem(sum, currentWeekComments)
+        val currentWeekSumFormatted = sum(currentWeekComments)
+
+        val previousWeekComments = getPreviousWeekDays(dates, LIKES)
+        val positive = currentWeekComments.sum() >= previousWeekComments.sum()
+
+        return ValueWithChartItem(currentWeekSumFormatted, currentWeekComments, positive)
     }
 
     fun buildTotalLikesInformation(dates: List<PeriodData>) = buildTotalInformation(dates, LIKES)

@@ -44,7 +44,7 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     override fun buildUiModel(domainModel: Int) =
-            listOf(buildTitle(), ValueWithChartItem(domainModel.toString(), null))
+            listOf(buildTitle(), ValueWithChartItem(domainModel.toString()))
 
     private fun buildTitle() = TitleWithMore(
             R.string.stats_view_total_followers,

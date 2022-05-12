@@ -36,17 +36,24 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 axisRight.isEnabled = false
                 legend.isEnabled = false
                 val entries = item.values.mapIndexed { index, value -> Entry(index.toFloat(), value.toFloat()) }
+                val lineChartColor = if (item.positive == true) {
+                    R.color.green_40
+                } else {
+                    R.color.blue_50
+                }
+                val drawableRes = if (item.positive == true) {
+                    R.drawable.bg_rectangle_total_stats_line_chart_green_gradient
+                } else {
+                    R.drawable.bg_rectangle_total_stats_line_chart_blue_gradient
+                }
                 val dataSet = LineDataSet(entries, null).apply {
                     setDrawCircles(false)
                     setDrawValues(false)
-                    color = ContextCompat.getColor(context, R.color.green_40)
+                    color = ContextCompat.getColor(context, lineChartColor)
                     lineWidth = 2f
                     mode = CUBIC_BEZIER
                     setDrawFilled(true)
-                    val drawable = ContextCompat.getDrawable(
-                            context,
-                            R.drawable.bg_rectangle_stats_line_chart_green_gradient
-                    )
+                    val drawable = ContextCompat.getDrawable(context, drawableRes)
                     drawable?.alpha = FILL_ALPHA
                     fillDrawable = drawable
                 }
