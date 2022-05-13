@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -54,6 +55,7 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var valueWithChart: ValueWithChartItem
     @Mock lateinit var information: Text
+    @Mock lateinit var useCaseMode: UseCaseMode
     private lateinit var useCase: TotalCommentsUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
@@ -72,7 +74,8 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
                 totalStatsMapper,
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
-                localeManagerWrapper
+                localeManagerWrapper,
+                useCaseMode
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(totalStatsMapper.buildTotalCommentsValue(any())).thenReturn(valueWithChart)
