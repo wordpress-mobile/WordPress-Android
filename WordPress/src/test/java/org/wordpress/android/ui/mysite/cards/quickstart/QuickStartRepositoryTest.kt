@@ -252,7 +252,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
         whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
                 .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
-        val task = dashboardTasks.random()
+        val task = QuickStartExistingSiteTask.CHECK_STATS
         initQuickStartInProgress()
 
         quickStartRepository.setActiveTask(task)
