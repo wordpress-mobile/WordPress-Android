@@ -13,7 +13,7 @@ class QuickStartTracker @Inject constructor(
     fun track(stat: Stat, properties: Map<String, Any?>? = null) {
         val props = HashMap<String, Any?>()
         properties?.let { props.putAll(it) }
-        props[SITE_TYPE] = appPrefsWrapper.getLastSelectedQuickStartType()
+        props[SITE_TYPE] = appPrefsWrapper.getLastSelectedQuickStartType().trackingLabel
         analyticsTrackerWrapper.track(stat, props)
     }
 
