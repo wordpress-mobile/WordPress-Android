@@ -36,6 +36,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
@@ -77,6 +78,7 @@ class QuickStartRepository
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
+    private val quickStartTracker: QuickStartTracker,
     buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     quickStartForExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
@@ -222,7 +224,7 @@ class QuickStartRepository
         siteLocalId: Int
     ) {
         quickStartStore.setDoneTask(siteLocalId.toLong(), task, true)
-        analyticsTrackerWrapper.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
+        quickStartTracker.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
     }
 
     private fun requestTabStepForTask(task: QuickStartTask, tabType: MySiteTabType) {
