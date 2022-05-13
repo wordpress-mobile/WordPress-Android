@@ -16,7 +16,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
@@ -169,7 +168,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onTaskTapped(QuickStartTask task) {
-        AnalyticsTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
+        mQuickStartTracker.track(QuickStartUtils.getQuickStartListTappedTracker(task));
         if (!showSnackbarIfNeeded(task)) {
             Bundle result = new Bundle();
             result.putSerializable(RESULT_TASK, (Serializable) task);
@@ -187,7 +186,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onSkipTaskTapped(QuickStartTask task) {
-        AnalyticsTracker.track(QuickStartUtils.getQuickStartListSkippedTracker(task));
+        mQuickStartTracker.track(QuickStartUtils.getQuickStartListSkippedTracker(task));
         int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
         mQuickStartStore.setDoneTask(selectedSiteLocalId, task, true);
 
