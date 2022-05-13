@@ -39,7 +39,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
@@ -52,7 +51,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var dynamicCardStore: DynamicCardStore
@@ -97,7 +95,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 appPrefsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
-                analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
                 dynamicCardStore,
