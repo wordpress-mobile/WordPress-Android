@@ -181,7 +181,7 @@ abstract class LayoutPickerViewModel(
                             mShotPreview = thumbnailPreview,
                             selected = layout.slug == state.selectedLayoutSlug,
                             tapOpensPreview = thumbnailTapOpensPreview,
-                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
+                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug, category.isRecommended) },
                             onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
                     )
                 }
@@ -205,7 +205,7 @@ abstract class LayoutPickerViewModel(
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
-    open fun onLayoutTapped(layoutSlug: String) {
+    open fun onLayoutTapped(layoutSlug: String, isRecommended: Boolean = false) {
         (uiState.value as? Content)?.let { state ->
             if (!state.loadedThumbnailSlugs.contains(layoutSlug)) return // No action
             if (layoutSlug == state.selectedLayoutSlug) { // deselect
