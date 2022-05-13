@@ -124,6 +124,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             finish()
         })
         mainViewModel.onBackPressedObservable.observe(this, Observer {
+            ActivityUtils.hideKeyboard(this)
             super.onBackPressed()
         })
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
