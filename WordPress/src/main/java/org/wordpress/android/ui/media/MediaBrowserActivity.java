@@ -57,6 +57,7 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.push.NotificationType;
@@ -66,6 +67,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
@@ -120,6 +123,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
+    @Inject QuickStartRepository mQuickStartRepository;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     private SiteModel mSite;
 
@@ -623,6 +628,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 return true;
             case R.id.menu_new_media:
                 showAddMediaPopup();
+                completeUploadMediaQuickStartTask();
                 return true;
             case R.id.menu_search:
                 mSearchMenuItem = item;
@@ -967,6 +973,13 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         }
 
         popup.show();
+    }
+
+    private void completeUploadMediaQuickStartTask() {
+        if (mSelectedSiteRepository.getSelectedSite() != null
+            && mQuickStartRepository.isPendingTask(QuickStartExistingSiteTask.UPLOAD_MEDIA)) {
+            mQuickStartRepository.completeTask(QuickStartExistingSiteTask.UPLOAD_MEDIA);
+        }
     }
 
     private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
