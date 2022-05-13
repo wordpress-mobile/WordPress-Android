@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.quickstart
 
 import androidx.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -62,6 +63,11 @@ enum class QuickStartNoticeDetails(
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL,
             string.quick_start_dialog_review_pages_title,
             string.quick_start_dialog_review_pages_message
+    ),
+    UPLOAD_MEDIA(
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL,
+            R.string.quick_start_dialog_upload_media_message,
+            R.drawable.ic_media_white_24dp
     );
 
     companion object {
