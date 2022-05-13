@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-27 09:54:08+0000
+Translation-Revision-Date: 2022-05-12 10:46:28+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">關閉</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">答案</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
+    <string name="blogging_prompts_onboarding_got_it">知道了</string>
+    <string name="quick_start_dialog_view_your_site_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">選取「%1$s 設定 %2$s」來新增你喜愛的主題。</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
+    <string name="blogging_reminders_prompt_help_button_desc">深入瞭解提示</string>
+    <string name="photo_picker_video_thumbnail_unselected">已取消選取影片</string>
+    <string name="photo_picker_video_thumbnail_selected">已選取影片</string>
+    <string name="photo_picker_media_thumbnail_content_description">媒體縮圖</string>
+    <string name="stats_insights_popular_title">🔥 最熱門的時間</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">你本週的訪客比上週減少了 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">你本週的訪客比上週增加了 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_views_negative">你本週的瀏覽次數比上週減少了 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_views_positive">你本週的瀏覽次數比上週增加了 %1$s。</string>
+    <string name="stats_timeframe_previous_week">上週</string>
+    <string name="stats_timeframe_this_week">本週</string>
+    <string name="scan_vault_press_active_on_site_button_text">造訪儀表板</string>
+    <string name="scan_vault_press_active_on_site_subtitle">你的網站已受 VaultPress 保護 按下方連結即可前往你的 VaultPress 儀表板。</string>
+    <string name="scan_vault_press_active_on_site_title">你的網站擁有 VaultPress 功能</string>
+    <string name="locale_picker_current_language">目前語言：</string>
     <string name="hpp_choose_and_create_site">建立網站</string>
     <string name="gutenberg_native_add_blocks_11d0841f">新增區塊</string>
     <string name="initial_screen">初始畫面</string>
@@ -516,6 +538,8 @@ Language: zh_TW
     <string name="quick_start_list_enable_sharing_subtitle">自動將新文章分享到社群媒體。</string>
     <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。</string>
     <string name="quick_start_list_enable_sharing_title">社群分享</string>
+    <string name="quick_start_list_view_site_title">查看你的網站</string>
+    <string name="quick_start_list_check_stats_title">檢視網站統計資料</string>
     <string name="backup_download_status_failure_bullet2">我們仍會嘗試為你建立可下載的備份檔案。</string>
     <string name="backup_download_status_failure_bullet1">我們擷取不到狀態，無法判斷需要花多久時間建立可下載的備份。</string>
     <string name="backup_download_status_failure_heading">看來，我們擷取不到可下載備份的狀態</string>
@@ -1618,6 +1642,7 @@ Language: zh_TW
     <string name="quick_start_dialog_upload_icon_title">選擇專屬網站圖示</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
     <string name="quick_start_dialog_publish_post_message">撰寫草稿並發表文章。</string>
+    <string name="quick_start_dialog_check_stats_message_short">選取「%1$s 統計資料 %2$s」以查看網站成效。</string>
     <string name="quick_start_dialog_explore_plans_title">探索各種方案</string>
     <string name="quick_start_dialog_explore_plans_message">深入瞭解付費專案中的行銷和 SEO 工具。</string>
     <string name="quick_start_dialog_enable_sharing_title">啟用文章分享功能</string>
@@ -1796,9 +1821,11 @@ Language: zh_TW
     <string name="quick_start_dialog_share_site_message">連結到你的社交媒體帳號 - 你的網站會自動分享新文章。</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">點選%1$s「分享」%2$s以繼續</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">點選%1$s「連結」%2$s以新增你的社交媒體帳號</string>
+    <string name="quick_start_dialog_view_site_message">預覽你的網站即可查看訪客將會看到的內容。</string>
     <string name="quick_start_dialog_publish_post_title">發表文章</string>
     <string name="quick_start_dialog_publish_post_message_short">點選%1$s建立文章%2$s以建立新文章</string>
     <string name="quick_start_dialog_need_help_button_negative">不用！謝謝</string>
+    <string name="quick_start_dialog_follow_sites_title">連結其他網站</string>
     <string name="quick_start_button_positive">執行</string>
     <string name="quick_start_button_negative_short">取消</string>
     <string name="quick_start_button_negative">現在不要</string>
