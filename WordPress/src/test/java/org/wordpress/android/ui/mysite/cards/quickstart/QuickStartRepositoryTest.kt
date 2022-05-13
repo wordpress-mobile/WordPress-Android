@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.test
@@ -232,9 +233,25 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given task origin dashboard tab + current tab is menu, when task is activated, then tab step is started`() {
+    fun `given new site + task origin dashboard + current tab menu, when task activated, then tab step started`() {
         quickStartRepository.currentTab = MySiteTabType.SITE_MENU
         quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
+        val task = dashboardTasks.random()
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(task)
+
+        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.DASHBOARD))
+    }
+
+    @Test
+    fun `given existing site + task origin dashboard + current tab menu, when task activated, then tab step started`() {
+        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
         val task = dashboardTasks.random()
         initQuickStartInProgress()
 
