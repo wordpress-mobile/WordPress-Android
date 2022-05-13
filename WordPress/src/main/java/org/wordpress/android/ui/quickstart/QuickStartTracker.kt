@@ -9,6 +9,7 @@ class QuickStartTracker @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val quickStartRepository: QuickStartRepository
 ) {
+    @JvmOverloads
     fun track(stat: Stat, properties: Map<String, Any?>? = null) {
         val props = HashMap<String, Any?>()
         properties?.let { props.putAll(it) }
