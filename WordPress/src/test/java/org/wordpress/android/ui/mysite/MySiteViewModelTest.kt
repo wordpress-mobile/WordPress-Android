@@ -1108,7 +1108,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
-        verify(analyticsTrackerWrapper)
+        verify(quickStartTracker)
                 .track(Stat.QUICK_START_TAPPED, mapOf("type" to QuickStartTaskType.CUSTOMIZE.toString()))
     }
 
@@ -1294,7 +1294,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
         viewModel.startQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
     @Test
@@ -1312,7 +1312,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
         viewModel.ignoreQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     /* QUICK START SITE MENU STEP */
