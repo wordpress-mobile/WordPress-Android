@@ -55,7 +55,7 @@ sealed class QuickStartType(val label: String, val tasks: List<QuickStartTask>) 
         private const val NEW_SITE = "new-site"
         private const val EXISTING_SITE = "existing-site"
 
-        fun fromString(label: String): QuickStartType {
+        fun fromLabel(label: String): QuickStartType {
             return when (label) {
                 NewSiteQuickStartType.label -> NewSiteQuickStartType
                 ExistingSiteQuickStartType.label -> ExistingSiteQuickStartType
