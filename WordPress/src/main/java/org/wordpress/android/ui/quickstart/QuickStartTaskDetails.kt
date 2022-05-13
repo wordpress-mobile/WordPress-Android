@@ -86,7 +86,7 @@ enum class QuickStartTaskDetails(
             QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL,
             string.quick_start_list_upload_media_title,
             string.quick_start_list_upload_media_subtitle,
-            drawable.ic_baseline_add_photo_alternate_24
+            drawable.ic_media_white_24dp
     );
 
     companion object {
