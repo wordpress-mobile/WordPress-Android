@@ -3075,6 +3075,7 @@
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags. Try selecting %1$s Settings %2$s to add topics you like.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">Select %1$s plus %2$s to upload media. You can add it to your posts/ pages from any device.</string>
     <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
