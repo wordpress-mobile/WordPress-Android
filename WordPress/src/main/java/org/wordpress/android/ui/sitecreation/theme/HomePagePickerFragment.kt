@@ -63,6 +63,10 @@ class HomePagePickerFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
+        savedInstanceState?.let {
+            viewModel.loadSavedState(it)
+        }
+
         with(HomePagePickerFragmentBinding.bind(view)) {
             modalLayoutPickerCategoriesSkeleton.root.isGone = true
             categoriesRecyclerView.isGone = true
