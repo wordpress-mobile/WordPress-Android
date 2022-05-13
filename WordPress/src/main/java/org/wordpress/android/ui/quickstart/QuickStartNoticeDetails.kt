@@ -66,8 +66,8 @@ enum class QuickStartNoticeDetails(
     ),
     UPLOAD_MEDIA(
             QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL,
-            R.string.quick_start_dialog_upload_media_message,
-            R.drawable.ic_media_white_24dp
+            R.string.quick_start_list_upload_media_title,
+            R.string.quick_start_list_upload_media_subtitle,
     );
 
     companion object {
