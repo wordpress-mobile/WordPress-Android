@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -57,5 +58,22 @@ class TotalFollowersUseCase @Inject constructor(
                 statsSiteProvider.siteModel
         )
         navigateTo(ViewTotalFollowersStats) // TODO: Connect this to proper second level navigation later
+    }
+
+    class TotalFollowersUseCaseFactory @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
+        private val summaryStore: SummaryStore,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val analyticsTracker: AnalyticsTrackerWrapper
+    ) : InsightUseCaseFactory {
+        override fun build(useCaseMode: UseCaseMode) = TotalFollowersUseCase(
+                mainDispatcher,
+                backgroundDispatcher,
+                summaryStore,
+                statsSiteProvider,
+                analyticsTracker,
+                useCaseMode
+        )
     }
 }
