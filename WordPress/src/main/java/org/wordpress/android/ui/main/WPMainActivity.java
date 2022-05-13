@@ -961,7 +961,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (pageType == PageType.READER) {
             // MySite fragment might not be attached to activity, so we need to remove focus point from here
             QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
-            mQuickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.FOLLOW_SITE);
+            QuickStartTask followSiteTask = mQuickStartRepository
+                    .getQuickStartType().getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL);
+            mQuickStartRepository.requestNextStepOfTask(followSiteTask);
         }
 
         mViewModel.onPageChanged(
@@ -1261,7 +1263,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             int size = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
             int horizontalOffset;
             int verticalOffset;
-            if (QuickStartNewSiteTask.FOLLOW_SITE.equals(activeTask)) {
+            QuickStartTask followSiteTask = mQuickStartRepository
+                    .getQuickStartType().getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL);
+            if (followSiteTask.equals(activeTask)) {
                 horizontalOffset = targetView != null ? ((targetView.getWidth() / 2 - size + getResources()
                         .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset))) : 0;
                 verticalOffset = 0;

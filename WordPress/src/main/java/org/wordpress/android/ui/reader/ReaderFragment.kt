@@ -202,6 +202,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                     SnackbarMessageHolder(
                             message = UiStringText(message),
                             duration = prompt.duration,
+                            onDismissAction = {
+                                viewModel.onQuickStartPromptDismissed()
+                            },
                             isImportant = false
                     )
             )
