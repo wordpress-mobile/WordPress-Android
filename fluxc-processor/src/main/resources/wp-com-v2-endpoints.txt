@@ -32,7 +32,7 @@
 
 /sites/$site/xposts
 
-/sites/$site/blogging-prompts/
+/sites/$site/blogging-prompts
 /sites/$site/blogging-prompts/settings
 
 /users/username/suggestions/
@@ -46,3 +46,6 @@
 /me/gutenberg/
 
 /experiments/$version#String/assignments/$platform#String
+
+/auth/qr-code/validate
+/auth/qr-code/authenticate
