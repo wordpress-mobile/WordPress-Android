@@ -92,11 +92,19 @@ class SiteDesignRecommendationProviderTest {
     }
 
     @Test
+    fun `All non recommended categories are randomised`() {
+        val handler = ResponseHandler()
+        recommendationProvider.handleResponse("", allDesigns, allCategories, handler::handle)
+        assertThat(requireNotNull(handler.categories?.filter { !it.isRecommended })).allMatch { it.randomizeOrder }
+    }
+
+    @Test
     fun `when no vertical is selected the blog category is recommended`() {
         val handler = ResponseHandler()
         recommendationProvider.handleResponse("", allDesigns, allCategories, handler::handle)
         assertThat(requireNotNull(handler.categories?.filter { it.isRecommended }?.size)).isEqualTo(1)
         assertThat(requireNotNull(handler.categories?.first()?.isRecommended)).isEqualTo(true)
+        assertThat(requireNotNull(handler.categories?.first()?.randomizeOrder)).isEqualTo(true)
         assertThat(requireNotNull(handler.categories?.first()?.slug)).isEqualTo(blogCategory.slug)
     }
 
@@ -106,6 +114,7 @@ class SiteDesignRecommendationProviderTest {
         recommendationProvider.handleResponse("art", allDesigns, allCategories, handler::handle)
         assertThat(requireNotNull(handler.categories?.filter { it.isRecommended }?.size)).isEqualTo(1)
         assertThat(requireNotNull(handler.categories?.first()?.isRecommended)).isEqualTo(true)
+        assertThat(requireNotNull(handler.categories?.first()?.randomizeOrder)).isEqualTo(true)
         assertThat(requireNotNull(handler.categories?.first()?.slug)).isEqualTo(blogCategory.slug)
     }
 
@@ -115,6 +124,7 @@ class SiteDesignRecommendationProviderTest {
         recommendationProvider.handleResponse(mockedVerticalTitle, allDesigns, allCategories, handler::handle)
         assertThat(requireNotNull(handler.categories?.filter { it.isRecommended }?.size)).isEqualTo(1)
         assertThat(requireNotNull(handler.categories?.first()?.isRecommended)).isEqualTo(true)
+        assertThat(requireNotNull(handler.categories?.first()?.randomizeOrder)).isEqualTo(false)
         assertThat(requireNotNull(handler.categories?.first()?.slug)).isEqualTo("recommended_$mockedVerticalSlug")
     }
 
