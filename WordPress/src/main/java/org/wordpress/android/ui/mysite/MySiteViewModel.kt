@@ -679,7 +679,12 @@ class MySiteViewModel @Inject constructor(
                     )
                     getStatsNavigationActionForSite(selectedSite)
                 }
-                ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
+                ListItemAction.MEDIA -> {
+                    quickStartRepository.requestNextStepOfTask(
+                            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+                    )
+                    SiteNavigationAction.OpenMedia(selectedSite)
+                }
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
                     SiteNavigationAction.OpenSite(selectedSite)
