@@ -1258,7 +1258,7 @@ public class AppPrefs {
     }
 
     public static QuickStartType getLastSelectedQuickStartType() {
-        return QuickStartType.Companion.fromString(
+        return QuickStartType.Companion.fromLabel(
                 getString(
                         DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE,
                         NewSiteQuickStartType.INSTANCE.getLabel()
