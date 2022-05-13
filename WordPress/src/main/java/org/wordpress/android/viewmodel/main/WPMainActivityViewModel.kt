@@ -1,3 +1,4 @@
+@file:Suppress("MaximumLineLength")
 package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
