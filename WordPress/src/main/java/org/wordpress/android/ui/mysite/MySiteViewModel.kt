@@ -701,7 +701,7 @@ class MySiteViewModel @Inject constructor(
         if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
             cardsTracker.trackQuickStartCardItemClicked(type)
         } else {
-            analyticsTrackerWrapper.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
+            quickStartTracker.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
         }
         _onNavigation.value = Event(
                 SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
