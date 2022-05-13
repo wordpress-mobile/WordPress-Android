@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UNKNOWN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -79,7 +80,12 @@ class QuickStartStore @Inject constructor(
         override val taskType: QuickStartTaskType,
         override val order: Int
     ) : QuickStartTask {
-        UNKNOWN(QUICK_START_UNKNOWN_LABEL, QuickStartTaskType.UNKNOWN, 0);
+        UNKNOWN(QUICK_START_UNKNOWN_LABEL, QuickStartTaskType.UNKNOWN, 0),
+        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GET_TO_KNOW_APP, 1),
+//        CHECK_NOTIFICATIONS(QUICK_START_CHECK_NOTIFIATIONS_LABEL, GET_TO_KNOW_APP, 2),
+        VIEW_SITE(QUICK_START_VIEW_SITE_LABEL, GET_TO_KNOW_APP, 3),
+//        UPLOAD_MEDIA(QUICK_START_UPLOAD_MEDIA_LABEL, GET_TO_KNOW_APP, 4),
+        FOLLOW_SITE(QUICK_START_FOLLOW_SITE_LABEL, GET_TO_KNOW_APP, 5);
 
         override fun toString(): String {
             return string
@@ -173,5 +179,7 @@ class QuickStartStore @Inject constructor(
         const val QUICK_START_FOLLOW_SITE_LABEL = "follow_site"
         const val QUICK_START_CHECK_STATS_LABEL = "check_stats"
         const val QUICK_START_EXPLORE_PLANS_LABEL = "explore_plans"
+        const val QUICK_START_CHECK_NOTIFIATIONS_LABEL = "check_notifications"
+        const val QUICK_START_UPLOAD_MEDIA_LABEL = "upload_media"
     }
 }
