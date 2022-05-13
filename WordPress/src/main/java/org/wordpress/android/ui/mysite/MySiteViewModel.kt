@@ -63,7 +63,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCa
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -158,7 +158,7 @@ class MySiteViewModel @Inject constructor(
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
     private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<BloggingPrompt, SiteModel>>>()
 
-    private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
+    private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
             .switchMap { quickStartSiteMenuStep ->
                 val result = MutableLiveData<TabsUiState>()
                 /* We want to filter out tabs state livedata update when state is not set in uiModel.
@@ -626,15 +626,13 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onTabChanged(position: Int) {
-        quickStartRepository.quickStartTaskOrigin = orderedTabTypes[position]
-        if (position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU)) {
-            findUiStateForTab(MySiteTabType.SITE_MENU)?.pendingTask?.let { requestSiteMenuStepPendingTask(it) }
-        }
+        quickStartRepository.currentTab = orderedTabTypes[position]
+        findUiStateForTab(orderedTabTypes[position])?.pendingTask?.let { requestTabStepPendingTask(it) }
         trackTabChanged(position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
     }
 
-    private fun requestSiteMenuStepPendingTask(pendingTask: QuickStartTask) {
-        quickStartRepository.clearSiteMenuStep()
+    private fun requestTabStepPendingTask(pendingTask: QuickStartTask) {
+        quickStartRepository.clearTabStep()
         launch {
             delay(LIST_SCROLL_DELAY_MS)
             quickStartRepository.setActiveTask(pendingTask)
@@ -1201,6 +1199,7 @@ class MySiteViewModel @Inject constructor(
                     if (currentDefaultTab == index) return
                 }
             }
+            quickStartRepository.quickStartTaskOriginTab = orderedTabTypes[index]
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
             isDefaultABExperimentTabSet = true
         }
@@ -1246,11 +1245,7 @@ class MySiteViewModel @Inject constructor(
         TabUiState(
                 label = UiStringRes(it.stringResId),
                 tabType = it,
-                showQuickStartFocusPoint = if (it == MySiteTabType.SITE_MENU) {
-                    findUiStateForTab(MySiteTabType.SITE_MENU)?.showQuickStartFocusPoint ?: false
-                } else {
-                    false
-                }
+                showQuickStartFocusPoint = findUiStateForTab(it)?.showQuickStartFocusPoint ?: false
         )
     }
 
@@ -1304,15 +1299,12 @@ class MySiteViewModel @Inject constructor(
             val pendingTask: QuickStartTask? = null
         )
 
-        fun update(quickStartSiteMenuStep: QuickStartSiteMenuStep?) = tabUiStates.map { tabUiState ->
-            if (tabUiState.tabType == MySiteTabType.SITE_MENU) {
-                tabUiState.copy(
-                        showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false,
-                        pendingTask = quickStartSiteMenuStep?.task
-                )
-            } else {
-                tabUiState
-            }
+        fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
+            tabUiState.copy(
+                    showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
+                                quickStartTabStep.isStarted,
+                    pendingTask = quickStartTabStep?.task
+            )
         }
     }
 

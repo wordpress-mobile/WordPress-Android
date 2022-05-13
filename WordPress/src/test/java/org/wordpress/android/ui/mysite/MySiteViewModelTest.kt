@@ -98,7 +98,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCa
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -208,7 +208,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
-    private val quickStartSiteMenuStep = MutableLiveData<QuickStartSiteMenuStep>()
+    private val quickStartTabStep = MutableLiveData<QuickStartTabStep>()
     private val dynamicCards = MutableLiveData(
             DynamicCardsUpdate(
                     cards = listOf(
@@ -306,7 +306,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
-        whenever(quickStartRepository.onQuickStartSiteMenuStep).thenReturn(quickStartSiteMenuStep)
+        whenever(quickStartRepository.onQuickStartTabStep).thenReturn(quickStartTabStep)
         whenever(quickStartRepository.quickStartType).thenReturn(NewSiteQuickStartType)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
@@ -1246,32 +1246,41 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* QUICK START SITE MENU STEP */
 
     @Test
-    fun `when quick start menu step is triggered, then site menu tab has quick start focus point`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
+    fun `when quick start menu step is triggered, then dashboard tab has quick start focus point`() {
+        initSelectedSite(
+                isMySiteTabsBuildConfigEnabled = true,
+                initialScreen = MySiteTabType.DASHBOARD.label
+        )
 
-        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, QuickStartNewSiteTask.VIEW_SITE)
+        quickStartTabStep.value = QuickStartTabStep(true, QuickStartNewSiteTask.REVIEW_PAGES, MySiteTabType.DASHBOARD)
 
-        assertThat((uiModels.last().state as SiteSelected).findSiteMenuTabUiState().showQuickStartFocusPoint).isTrue
+        assertThat((uiModels.last().state as SiteSelected).findDashboardTabUiState().showQuickStartFocusPoint).isTrue
     }
 
     @Test
-    fun `given site menu tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-        val pendingTask = QuickStartNewSiteTask.VIEW_SITE
-        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
+    fun `given dashboard tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
+        initSelectedSite(
+                isMySiteTabsBuildConfigEnabled = true,
+                initialScreen = MySiteTabType.DASHBOARD.label
+        )
+        val pendingTask = QuickStartNewSiteTask.REVIEW_PAGES
+        quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.DASHBOARD)
 
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
 
-        verify(quickStartRepository).clearSiteMenuStep()
+        verify(quickStartRepository).clearTabStep()
     }
 
     @Test
-    fun `given site menu tab has qs focus point, when tab is changed, then site menu pending task is active`() {
-        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
-        val pendingTask = QuickStartNewSiteTask.VIEW_SITE
-        quickStartSiteMenuStep.value = QuickStartSiteMenuStep(true, pendingTask)
+    fun `given dashboard tab has qs focus point, when tab is changed, then dashboard pending task is active`() {
+        initSelectedSite(
+                isMySiteTabsBuildConfigEnabled = true,
+                initialScreen = MySiteTabType.DASHBOARD.label
+        )
+        val pendingTask = QuickStartNewSiteTask.REVIEW_PAGES
+        quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.DASHBOARD)
 
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
+        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
 
         verify(quickStartRepository).setActiveTask(pendingTask)
     }
@@ -2399,6 +2408,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun SiteSelected.findSiteMenuTabUiState() =
             tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.SITE_MENU }
+
+    private fun SiteSelected.findDashboardTabUiState() =
+            tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.DASHBOARD }
 
     private fun findBackupListItem() = getLastItems().filterIsInstance(ListItem::class.java)
             .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }

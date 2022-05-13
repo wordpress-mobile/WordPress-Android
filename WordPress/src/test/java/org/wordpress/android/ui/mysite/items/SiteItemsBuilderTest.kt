@@ -16,11 +16,13 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
+import org.wordpress.android.util.BuildConfigWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var siteModel: SiteModel
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
@@ -68,6 +70,7 @@ class SiteItemsBuilderTest {
                 addPeopleItem = true,
                 addPluginItem = true,
                 addShareItem = true,
+                addSiteDomainsItem = true,
                 addSiteSettingsItem = true,
                 addThemesItem = true,
                 addBackupItem = true,
@@ -99,6 +102,7 @@ class SiteItemsBuilderTest {
                 PEOPLE_ITEM,
                 PLUGINS_ITEM,
                 SHARING_ITEM,
+                DOMAINS_ITEM,
                 SITE_SETTINGS_ITEM,
                 EXTERNAL_HEADER,
                 VIEW_SITE_ITEM,
@@ -211,6 +215,36 @@ class SiteItemsBuilderTest {
         assertThat(infoItem).isNull()
     }
 
+    @Test
+    fun `given site domains flag is not enabled, when build site domains is invoked, then site domains is built`() {
+        whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(null)
+
+        val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
+        )
+
+        assertThat(siteDomainsItems).doesNotContain(DOMAINS_ITEM)
+    }
+
+    @Test
+    fun `given site domains flag is enabled, when build site domains is invoked, then site domains is built`() {
+        whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(DOMAINS_ITEM)
+
+        val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
+        )
+
+        assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
+    }
+
     @Suppress("ComplexMethod", "LongMethod", "LongParameterList")
     private fun setupHeaders(
         addJetpackHeader: Boolean = false,
@@ -224,6 +258,7 @@ class SiteItemsBuilderTest {
         addPeopleItem: Boolean = false,
         addPluginItem: Boolean = false,
         addShareItem: Boolean = false,
+        addSiteDomainsItem: Boolean = false,
         addSiteSettingsItem: Boolean = false,
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
@@ -316,6 +351,11 @@ class SiteItemsBuilderTest {
         if (addThemesItem) {
             whenever(siteListItemBuilder.buildThemesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                     THEMES_ITEM
+            )
+        }
+        if (addSiteDomainsItem) {
+            whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    DOMAINS_ITEM
             )
         }
     }
