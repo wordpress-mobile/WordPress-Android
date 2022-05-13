@@ -920,14 +920,14 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onRemoveNextStepsDialogPositiveButtonClicked() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
         quickStartRepository.skipQuickStart()
         refresh()
         clearActiveQuickStartTask()
     }
 
     private fun onRemoveNextStepsDialogNegativeButtonClicked() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
@@ -1123,14 +1123,14 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun startQuickStart() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
         startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
         shouldMarkUpdateSiteTitleTaskComplete = false
     }
 
     fun ignoreQuickStart() {
         shouldMarkUpdateSiteTitleTaskComplete = false
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     private fun onPostItemClick(params: PostItemClickParams) {
