@@ -35,6 +35,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -53,12 +54,14 @@ class ReaderViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val snackbarSequencer: SnackbarSequencer
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
     private var trackReaderTabJob: Job? = null
+    private var isQuickStartPromptShown: Boolean = false
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -242,6 +245,8 @@ class ReaderViewModel @Inject constructor(
         wasPaused = true
         if (isChangingConfigurations == false) {
             updateContentUiState(showQuickStartFocusPoint = false)
+            if (isQuickStartPromptShown) snackbarSequencer.dismissLastSnackbar()
+            isQuickStartPromptShown = false
             if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
                 quickStartRepository.clearPendingTask()
             }
@@ -262,6 +267,10 @@ class ReaderViewModel @Inject constructor(
     }
 
     /* QUICK START */
+
+    fun onQuickStartPromptDismissed() {
+        isQuickStartPromptShown = false
+    }
 
     fun onQuickStartEventReceived(event: QuickStartEvent) {
         if (event.task == getFollowSiteTask()) checkAndStartQuickStartFollowSiteTaskNextStep()
@@ -292,6 +301,7 @@ class ReaderViewModel @Inject constructor(
         } else {
             R.string.quick_start_dialog_follow_sites_message_short_discover
         }
+        isQuickStartPromptShown = true
         _quickStartPromptEvent.value = Event(
                 QuickStartReaderPrompt(
                         getFollowSiteTask(),
