@@ -24,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMEN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
@@ -675,21 +676,27 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `when the active task needs to show an focus point, emit visible focus point info`() {
         activeTask.value = FOLLOW_SITE
 
-        assertThat(externalFocusPointEvents).containsExactly(listOf(visibleFollowSiteFocusPointInfo))
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+        )
     }
 
     @Test
     fun `when the active task doesn't need to show an external focus point, emit invisible focus point info`() {
         activeTask.value = VIEW_SITE
 
-        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+        )
     }
 
     @Test
     fun `when the active task is null, emit invisible focus point info`() {
         activeTask.value = null
 
-        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+        )
     }
 
     @Test
@@ -701,9 +708,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = FOLLOW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(
-                listOf(visibleFollowSiteFocusPointInfo),
-                listOf(invisibleFollowSiteFocusPointInfo),
-                listOf(visibleFollowSiteFocusPointInfo)
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -803,5 +810,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     companion object {
         val visibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, true)
         val invisibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, false)
+
+        val invisibleCheckNotificationsFocusPointInfo = FocusPointInfo(CHECK_NOTIFICATIONS, false)
     }
 }
