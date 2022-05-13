@@ -540,8 +540,12 @@ class StatsModule {
     @Singleton
     @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASES)
     fun provideFollowersDetailUseCases(
-        totalFollowersUseCaseFactory: TotalFollowersUseCaseFactory
-    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(totalFollowersUseCaseFactory.build(VIEW_ALL))
+        totalFollowersUseCaseFactory: TotalFollowersUseCaseFactory,
+        followersUseCaseFactory: FollowersUseCaseFactory
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
+            totalFollowersUseCaseFactory.build(VIEW_ALL),
+            followersUseCaseFactory.build(BLOCK)
+    )
 
     /**
      * Provides a singleton usecase that represents the Followers detail screen.
@@ -561,7 +565,7 @@ class StatsModule {
             mainDispatcher,
             statsSiteProvider,
             useCases,
-            { listOf(InsightType.TOTAL_FOLLOWERS) },
+            { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWERS) },
             uiModelMapper::mapInsights
     )
 
