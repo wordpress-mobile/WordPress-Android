@@ -32,6 +32,6 @@ class EditorBloggingPromptsViewModel
 
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
-        prompt?.let { _onBloggingPromptLoaded.value = Event(it.content) }
+        prompt?.let { _onBloggingPromptLoaded.postValue(Event(it.content)) }
     }
 }
