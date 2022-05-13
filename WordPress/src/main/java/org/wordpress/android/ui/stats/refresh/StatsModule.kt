@@ -116,7 +116,7 @@ class StatsModule {
         followerTotalsUseCase: FollowerTotalsUseCase,
         totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
         totalCommentsUseCaseFactory: TotalCommentsUseCaseFactory,
-        totalFollowersUseCase: TotalFollowersUseCase,
+        totalFollowersUseCaseFactory: TotalFollowersUseCaseFactory,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
         managementControlUseCase: ManagementControlUseCase,
         managementNewsCardUseCase: ManagementNewsCardUseCase
@@ -126,7 +126,7 @@ class StatsModule {
             useCases.add(viewsAndVisitorsUseCaseFactory.build(BLOCK))
             useCases.add(totalLikesUseCaseFactory.build(BLOCK))
             useCases.add(totalCommentsUseCaseFactory.build(BLOCK))
-            useCases.add(totalFollowersUseCase)
+            useCases.add(totalFollowersUseCaseFactory.build(BLOCK))
         } else {
             useCases.add(followerTotalsUseCase)
         }
