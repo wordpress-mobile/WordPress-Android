@@ -362,7 +362,6 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {
-        // For now, we only do this for the FOLLOW_SITE task.
         val followSiteTask = quickStartRepository.quickStartType
                 .getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
         val followSitesTaskFocusPointInfo = FocusPointInfo(followSiteTask, task == followSiteTask)
