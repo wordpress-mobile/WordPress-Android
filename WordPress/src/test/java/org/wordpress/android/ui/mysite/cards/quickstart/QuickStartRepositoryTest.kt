@@ -105,7 +105,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 quickStartTracker,
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
-                quickStartExistingUsersV2FeatureConfig,
+                quickStartExistingUsersV2FeatureConfig
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
