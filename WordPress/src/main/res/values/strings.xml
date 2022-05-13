@@ -3176,6 +3176,7 @@
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_copy_link">Copy link</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
