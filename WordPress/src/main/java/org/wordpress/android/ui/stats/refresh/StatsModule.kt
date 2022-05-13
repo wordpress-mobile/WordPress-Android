@@ -56,7 +56,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase.TotalCommentsUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -73,6 +73,7 @@ const val BLOCK_DETAIL_USE_CASE = "BlockDetailUseCase"
 const val VIEWS_AND_VISITORS_USE_CASE = "ViewsAndVisitorsUseCase"
 const val TOTAL_LIKES_DETAIL_USE_CASE = "LikesDetailUseCase"
 const val TOTAL_COMMENTS_DETAIL_USE_CASE = "CommentsDetailUseCase"
+const val TOTAL_FOLLOWERS_DETAIL_USE_CASE = "FollowersDetailUseCase"
 
 const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
@@ -84,6 +85,7 @@ private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
 private const val BLOCK_VIEWS_AND_VISITORS_USE_CASES = "BlockViewsAndVisitorsUseCases"
 private const val TOTAL_LIKES_DETAIL_USE_CASES = "LikesDetailUseCases"
 private const val TOTAL_COMMENTS_DETAIL_USE_CASES = "CommentsDetailUseCases"
+private const val TOTAL_FOLLOWERS_DETAIL_USE_CASES = "FollowersDetailUseCases"
 
 /**
  * Module that provides use cases for Stats.
@@ -529,6 +531,39 @@ class StatsModule {
                 uiModelMapper::mapInsights
         )
     }
+
+    /**
+     * Provides a list of use cases for the Total Followers detail screen in Stats. Modify this method when you want to
+     * add more blocks to the followers detail screen.
+     */
+    @Provides
+    @Singleton
+    @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASES)
+    fun provideFollowersDetailUseCases(
+        totalFollowersUseCaseFactory: TotalFollowersUseCaseFactory
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(totalFollowersUseCaseFactory.build(VIEW_ALL))
+
+    /**
+     * Provides a singleton usecase that represents the Followers detail screen.
+     * @param useCases build the use cases
+     */
+    @Provides
+    @Singleton
+    @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASE)
+    fun provideFollowersDetailStatsUseCase(
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase = BaseListUseCase(
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCases,
+            { listOf(InsightType.TOTAL_FOLLOWERS) },
+            uiModelMapper::mapInsights
+    )
 
     @Provides
     @Singleton
