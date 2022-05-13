@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -2307,7 +2308,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based
         // WP.com sites.
-        // If the site is using the WP.com API and this.mIsXPostsCapable has not been set, default to allowing xPosts.
+        // If this.mIsXPostsCapable has not been set, default to allowing xPosts.
         boolean enableXPosts = mSite.isUsingWpComRestApi() && (mIsXPostsCapable == null || mIsXPostsCapable);
 
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
