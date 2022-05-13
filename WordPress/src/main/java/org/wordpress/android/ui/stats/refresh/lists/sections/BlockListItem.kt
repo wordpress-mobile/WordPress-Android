@@ -257,8 +257,11 @@ sealed class BlockListItem(val type: Type) {
             get() = entries.hashCode()
     }
 
-    // TODO: add the chart parameter
-    data class ValueWithChartItem(val value: String) : BlockListItem(VALUE_WITH_CHART_ITEM)
+    data class ValueWithChartItem(
+        val value: String,
+        val values: List<Long>? = null,
+        val positive: Boolean? = null
+    ) : BlockListItem(VALUE_WITH_CHART_ITEM)
 
     data class LineChartItem(
         val selectedType: Int,
@@ -292,7 +295,11 @@ sealed class BlockListItem(val type: Type) {
             get() = tabs.hashCode()
     }
 
-    data class Header(@StringRes val startLabel: Int, @StringRes val endLabel: Int) : BlockListItem(HEADER)
+    data class Header(
+        @StringRes val startLabel: Int,
+        @StringRes val endLabel: Int,
+        val bolds: List<String>? = null
+    ) : BlockListItem(HEADER)
 
     data class ExpandableItem(
         val header: ListItemWithIcon,
