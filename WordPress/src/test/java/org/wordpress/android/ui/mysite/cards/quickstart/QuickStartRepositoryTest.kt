@@ -25,13 +25,13 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
-import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
@@ -59,17 +59,23 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var quickStartType: QuickStartType
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
-    private lateinit var quickStartSiteMenuStep: MutableList<QuickStartSiteMenuStep?>
+    private lateinit var quickStartTabStep: MutableList<QuickStartTabStep?>
     private val siteLocalId = 1
-    private val quickStartType = NewSiteQuickStartType
 
     private val siteMenuTasks = listOf(
             QuickStartNewSiteTask.ENABLE_POST_SHARING,
             QuickStartNewSiteTask.EXPLORE_PLANS
+    )
+
+    private val dashboardTasks = listOf(
+            QuickStartNewSiteTask.CHECK_STATS,
+            QuickStartNewSiteTask.REVIEW_PAGES,
+            QuickStartNewSiteTask.EDIT_HOMEPAGE
     )
 
     private val nonSiteMenuTasks = QuickStartTask.getAllTasks().subtract(siteMenuTasks)
@@ -95,9 +101,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig
         )
+        quickStartRepository.quickStartType = quickStartType
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
-        quickStartSiteMenuStep = mutableListOf()
+        quickStartTabStep = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
                     ?.let { snackbars.add(it) }
@@ -105,8 +112,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
             event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
         }
-        quickStartRepository.onQuickStartSiteMenuStep.observeForever {
-            quickStartSiteMenuStep.add(it)
+        quickStartRepository.onQuickStartTabStep.observeForever {
+            quickStartTabStep.add(it)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -161,47 +168,75 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         verifyZeroInteractions(quickStartStore)
     }
 
-    /* QUICK START REQUEST SITE MENU STEP */
+    /* QUICK START REQUEST TAB STEP - SITE MENU */
 
     @Test
-    fun `given task origin site menu tab, when site menu task is activated, then site menu step is not started`() {
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.SITE_MENU
+    fun `given task origin site menu tab, when site menu task is activated, then site menu tab step is not started`() {
+        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
         initQuickStartInProgress()
 
         quickStartRepository.setActiveTask(siteMenuTasks.random())
 
-        assertThat(quickStartSiteMenuStep).isEmpty()
+        assertThat(quickStartTabStep).isEmpty()
     }
 
     @Test
-    fun `given task origin dashboard tab, when site menu task is activated, then site menu step is started`() {
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+    fun `given task origin dashboard tab, when site menu task is activated, then site menu tab step is started`() {
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.SITE_MENU
         initQuickStartInProgress()
         val task = siteMenuTasks.random()
 
         quickStartRepository.setActiveTask(task)
 
-        assertThat(quickStartSiteMenuStep.last()).isEqualTo(QuickStartSiteMenuStep(true, task))
-    }
-
-    @Test
-    fun `given task origin dashboard tab, when non site menu task is activated, then site menu step is not started`() {
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
-        initQuickStartInProgress()
-
-        quickStartRepository.setActiveTask(nonSiteMenuTasks.random())
-
-        assertThat(quickStartSiteMenuStep).isEmpty()
+        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.SITE_MENU))
     }
 
     @Test
     fun `given task origin dashboard tab, when site menu task is activated, then snackbar is shown`() {
-        quickStartRepository.quickStartTaskOrigin = MySiteTabType.DASHBOARD
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.SITE_MENU
         initQuickStartInProgress()
 
         quickStartRepository.setActiveTask(siteMenuTasks.random())
 
         assertThat(snackbars).isNotEmpty
+    }
+
+    @Test
+    fun `given task origin dashboard tab, when non site menu task is activated, then site menu step is not started`() {
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(nonSiteMenuTasks.random())
+
+        assertThat(quickStartTabStep).isEmpty()
+    }
+
+    /* QUICK START REQUEST TAB STEP - DASHBOARD */
+
+    @Test
+    fun `given task origin + current tab is dashboard, when task is activated, then tab step is not started`() {
+        quickStartRepository.currentTab = MySiteTabType.DASHBOARD
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
+        val task = dashboardTasks.random()
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(task)
+
+        assertThat(quickStartTabStep).isEmpty()
+    }
+
+    @Test
+    fun `given task origin dashboard tab + current tab is menu, when task is activated, then tab step is started`() {
+        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
+        val task = dashboardTasks.random()
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(task)
+
+        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.DASHBOARD))
     }
 
     /* QUICK START REQUEST NEXT STEP */
@@ -291,11 +326,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `when all task are completed, then completed notice is triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        initStore()
-        whenever(quickStartUtilsWrapper.isEveryQuickStartTaskDone(siteLocalId)).thenReturn(true)
-        quickStartRepository.setActiveTask(QuickStartTask.EXPLORE_PLANS)
+        initStore(QuickStartNewSiteTask.EXPLORE_PLANS)
+        quickStartRepository.setActiveTask(QuickStartNewSiteTask.EXPLORE_PLANS)
+        whenever(quickStartType.isEveryQuickStartTaskDone(quickStartStore, site.id.toLong())).thenReturn(true)
 
-        quickStartRepository.completeTask(QuickStartTask.EXPLORE_PLANS)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
 
         assertThat(snackbars).isNotEmpty
     }

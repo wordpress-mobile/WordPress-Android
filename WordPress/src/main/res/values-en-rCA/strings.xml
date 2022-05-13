@@ -1,13 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-27 09:08:49+0000
+Translation-Revision-Date: 2022-05-09 07:17:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_CA
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">Dismiss</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Answer</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
+    <string name="blogging_prompts_onboarding_got_it">Got it</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to view your site</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">Select %1$s Settings %2$s to add topics you like.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Select %1$s Reader %2$s to find other sites.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
+    <string name="photo_picker_video_thumbnail_unselected">Video unselected</string>
+    <string name="photo_picker_video_thumbnail_selected">Video selected</string>
+    <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
+    <string name="stats_insights_popular_title">🔥 Most Popular Time</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Your this week\'s views are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Your this week\'s visitors are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Your this week\'s visitors are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Your this week\'s views are %1$s higher than the previous week.</string>
+    <string name="stats_timeframe_previous_week">Previous Week</string>
+    <string name="stats_timeframe_this_week">This Week</string>
+    <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
+    <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
+    <string name="locale_picker_current_language">Current language:</string>
+    <string name="hpp_choose_and_create_site">Create site</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Add blocks</string>
+    <string name="initial_screen">Initial Screen</string>
+    <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
+    <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
+    <string name="new_site_creation_site_name_header_title">Give your %s website a name</string>
+    <string name="new_site_creation_site_name_title">Site name</string>
+    <string name="my_site_todays_stats_get_more_views_message">Interested in building your audience? Check out our &lt;a href=\"%1$s\"&gt;top tips&lt;/a&gt;.</string>
+    <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
+    <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
+    <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
+    <string name="featured_image_removed_notice">Removed as featured image</string>
+    <string name="featured_image_confirmation_notice">Set as featured image</string>
+    <string name="featured_image_replace_dialog_cancel">Keep current</string>
+    <string name="featured_image_replace_dialog_confirm">Replace featured image</string>
+    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it with the new image?</string>
+    <string name="featured_image_replace_dialog_title">Replace current featured image?</string>
+    <string name="dialog_dismiss_try_block_editor">Dismiss</string>
+    <string name="dialog_body_try_block_editor">We’ll be removing the Classic Editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_edit_hint">http(s)://</string>
+    <string name="retry_failed_upload_retry_all">Retry all</string>
+    <string name="retry_failed_upload_remove">Remove upload</string>
+    <string name="retry_failed_upload_yes">Retry</string>
+    <string name="retry_failed_upload_title">Couldn\'t upload file</string>
+    <string name="stop_upload_dialog_button_no">No</string>
+    <string name="stop_upload_dialog_button_yes">Yes</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_title_try_block_editor">Try the new Block Editor</string>
+    <string name="menu_toolbar_title">Edit %s block</string>
+    <string name="long_post_dlg_saving">Saving</string>
     <string name="stop_save_dialog_ok_button">OK</string>
     <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
     <string name="dialog_title">Insert link</string>
@@ -17,6 +69,9 @@ Language: en_CA
     <string name="dialog_content_info_body">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
     <string name="dialog_content_info_title">Content structure</string>
     <string name="media_bar_description_library">Pick a media from WordPress media library</string>
+    <string name="media_bar_description_gallery">Pick a media from gallery</string>
+    <string name="media_bar_description_camera">Take Photo or Video with camera</string>
+    <string name="pixel_suffix">%dpx</string>
     <string name="stop_save_dialog_title">Files saving</string>
     <string name="post_content">Content</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
@@ -67,6 +122,7 @@ Language: en_CA
     <string name="site_creation_intent_business">Business</string>
     <string name="site_creation_intent_books">Books</string>
     <string name="site_creation_intent_beauty">Beauty</string>
+    <string name="new_site_creation_intents_input_hint">E.g. Fashion, Poetry, Politics</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Share blogging prompt</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Answered</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Answer prompt</string>
@@ -77,6 +133,7 @@ Language: en_CA
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">This colour combination may be hard for people to read. Try using a darker background colour and/or a brighter text colour.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Failed to insert media.\nTap for more info.</string>
     <string name="new_site_creation_intents_header_title">What’s your website about?</string>
+    <string name="new_site_creation_intents_header_subtitle">Choose a topic from the list below or type your own.</string>
     <string name="notification_channel_weekly_roundup_title">Weekly Roundup</string>
     <string name="my_site_dashboard_tab_title">Home</string>
     <string name="adding_cat">Adding category</string>
@@ -85,6 +142,7 @@ Language: en_CA
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC calls seem blocked on this site (error code 401). If attempt to login fails tap on help icon to view the FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Unable to read the WordPress site at that URL. Tap on help icon to view the FAQ.</string>
     <string name="login_error_xml_rpc_services_disabled">XML-RPC services are disabled on this site.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Your search includes characters not supported in WordPress.com domains. The following characters are allowed: A–Z, a–z, 0–9.</string>
     <string name="error_edit_notification">An error occurred while updating the notification content</string>
     <string name="my_site_error_within_card_subtitle">Check your internet connection and refresh the page.</string>
@@ -389,6 +447,7 @@ Language: en_CA
     <string name="gutenberg_native_preview_post">Preview post</string>
     <string name="gutenberg_native_preview_page">Preview page</string>
     <string name="gutenberg_native_retry">Retry</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">One</string>
     <string name="gutenberg_native_no_preview_available">No preview available</string>
     <string name="gutenberg_native_text_color">Text colour</string>
@@ -398,6 +457,7 @@ Language: en_CA
     <string name="gutenberg_native_custom_url">Custom URL</string>
     <string name="gutenberg_native_column_d">Column %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Briefly describe the link to help screen reader user</string>
+    <string name="gutenberg_native_add_blocks">Add blocks</string>
     <string name="login_no_jetpack_sites">No Jetpack sites found</string>
     <string name="gutenberg_native_what_is_alt_text">What is alt text?</string>
     <string name="gutenberg_native_transform_s_to">Transform %s to</string>
@@ -482,6 +542,8 @@ Language: en_CA
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_enable_sharing_title">Social sharing</string>
+    <string name="quick_start_list_view_site_title">View your site</string>
+    <string name="quick_start_list_check_stats_title">Check your site stats</string>
     <string name="backup_download_status_failure_bullet2">We\'ll still attempt to create your downloadable backup file.</string>
     <string name="backup_download_status_failure_bullet1">We couldn\'t find the status to say how long your downloadable backup will take.</string>
     <string name="backup_download_status_failure_heading">Hmm, we couldn\'t find your downloadable backup status</string>
@@ -667,6 +729,8 @@ Language: en_CA
     <string name="threat_item_sub_header_misc_vulnerability">Miscellaneous vulnerability</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: malicious code pattern</string>
     <string name="threat_item_header_database_threat">Database %s threats</string>
+    <string name="threat_item_header_vulnerable_theme">Vulnerable Theme: %1$s (version %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Vulnerable Plugin: %1$s (version %2$s)</string>
     <string name="threat_item_header_infected_core_file">%s: infected core file</string>
     <string name="threat_item_header_threat_found">Threat found</string>
     <string name="threats_fix_all">Fix All</string>
@@ -674,6 +738,7 @@ Language: en_CA
     <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_in_minutes_ago">%s minute(s) ago</string>
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
+    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %1$s and did not find any risks. %2$s</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_again">Scan again</string>
@@ -685,6 +750,7 @@ Language: en_CA
     <string name="activity_log_activity_type_empty_subtitle">No activities recorded in the selected date range.</string>
     <string name="activity_log_activity_type_empty_title">No activities available</string>
     <string name="activity_log_activity_type_error_subtitle">Please check your internet connection and retry.</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (showing %2$s items)</string>
     <string name="activity_log_activity_type_error_title">No connection</string>
     <string name="activity_log_activity_type_filter_active_label">Activity Type (%s)</string>
     <string name="activity_log_date_range_filter_label_content_description">Date Range filter</string>
@@ -1035,6 +1101,7 @@ Language: en_CA
     <string name="site_settings_static_homepage">Static Homepage</string>
     <string name="site_settings_classic_blog">Classic Blog</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Selected homepage and page for posts cannot be the same.</string>
+    <string name="suggestion_invalid">%1$s is not a valid %2$s</string>
     <string name="site_settings_homepage_settings">Homepage Settings</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Cannot save homepage settings before pages are loaded</string>
     <string name="site_settings_accept_homepage">Accept</string>
@@ -1333,6 +1400,7 @@ Language: en_CA
     <string name="dialog_confirm_autosave_title">Which version would you like to edit?</string>
     <string name="button_delete_permanently">Delete Permanently</string>
     <string name="post_waiting_for_connection_draft_cancel">We won\'t save the latest changes to your draft.</string>
+    <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %1$s\n\nFrom another device\nSaved on %2$s\n</string>
     <string name="post_waiting_for_connection_scheduled_cancel">We won\'t schedule these changes.</string>
     <string name="post_waiting_for_connection_pending_cancel">We won\'t submit these changes for review. </string>
     <string name="post_waiting_for_connection_publish_cancel"> We won\'t publish these changes.</string>
@@ -1380,6 +1448,7 @@ Language: en_CA
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="close_dialog_button_desc">Close Dialogue</string>
+    <string name="calendar_scheduled_post_description">\"%1$s\" scheduled for publishing on \"%2$s\" in your WordPress app \n %3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" will be published in 1 hour</string>
     <string name="notification_post_has_been_published">\"%s\" has been published</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Scheduled post: 10 minute reminder</string>
@@ -1577,6 +1646,7 @@ Language: en_CA
     <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Select %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
@@ -1586,6 +1656,7 @@ Language: en_CA
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
+    <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
     <string name="quick_start_complete_view_title">All tasks complete!</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
@@ -1626,6 +1697,7 @@ Language: en_CA
     <string name="dialog_confirm_load_remote_post_discard_local">Discard Local</string>
     <string name="dialog_confirm_load_remote_post_body">This post has two versions that are in conflict. Select the version you would like to discard.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Resolve sync conflict</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Local\nSaved on %1$s\n\nWeb\nSaved on %2$s\n</string>
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
@@ -1754,9 +1826,11 @@ Language: en_CA
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tap %1$s Sharing %2$s to continue</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
+    <string name="quick_start_dialog_view_site_message">Preview your site to see what your visitors will see.</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_need_help_button_negative">No thanks</string>
+    <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_button_positive">Go</string>
     <string name="quick_start_button_negative_short">Cancel</string>
     <string name="quick_start_button_negative">Not now</string>
@@ -1904,6 +1978,7 @@ Language: en_CA
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+    <string name="comment_title">%1$s on %2$s</string>
     <string name="notification_channel_important_title">Important</string>
     <string name="notification_channel_general_title">General</string>
     <string name="photo_picker_use_photo">Use this photo</string>
