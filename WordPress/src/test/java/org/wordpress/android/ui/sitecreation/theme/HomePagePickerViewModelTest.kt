@@ -56,6 +56,7 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var analyticsTracker: SiteCreationTracker
     @Mock lateinit var resourceProvider: ResourceProvider
 
+    private lateinit var recommendationProvider: SiteDesignRecommendationProvider
     private lateinit var viewModel: HomePagePickerViewModel
 
     private val mockCategory = StarterDesignCategory(
@@ -67,6 +68,7 @@ class HomePagePickerViewModelTest {
 
     @Before
     fun setUp() {
+        recommendationProvider = SiteDesignRecommendationProvider(resourceProvider)
         viewModel = HomePagePickerViewModel(
                 networkUtils,
                 dispatcher,
@@ -74,7 +76,7 @@ class HomePagePickerViewModelTest {
                 analyticsTracker,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher(),
-                resourceProvider
+                recommendationProvider
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
@@ -211,5 +213,23 @@ class HomePagePickerViewModelTest {
         val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
+    }
+
+    @Test
+    fun `when the user chooses a recommended design the recommended information is emitted`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug, true)
+        viewModel.onPreviewChooseTapped()
+        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, true)
+    }
+
+    @Test
+    fun `when the user chooses a design that is not recommended the correct information is emitted`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug, false)
+        viewModel.onPreviewChooseTapped()
+        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, false)
     }
 }
