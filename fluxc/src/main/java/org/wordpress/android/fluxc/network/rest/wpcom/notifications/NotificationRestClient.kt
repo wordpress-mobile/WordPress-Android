@@ -3,6 +3,10 @@ package org.wordpress.android.fluxc.network.rest.wpcom.notifications
 import android.content.Context
 import android.os.Build
 import com.android.volley.RequestQueue
+import java.util.Date
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.NotificationActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
@@ -34,10 +38,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
-import java.util.Date
-import javax.inject.Inject
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Singleton
 class NotificationRestClient @Inject constructor(
@@ -55,7 +55,49 @@ class NotificationRestClient @Inject constructor(
         const val NOTIFICATION_DEFAULT_NUM_NOTE_ITEMS = 20
     }
 
+    suspend fun registerDevice(
+        fcmToken: String,
+        appKey: NotificationAppKey,
+        uuid: String
+    ): RegisterDeviceResponsePayload {
+        val deviceName = DeviceUtils.getInstance().getDeviceName(appContext)
+
+        val request = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                WPCOMREST.devices.new_.urlV1,
+                mapOf(
+                        "device_token" to fcmToken,
+                        "device_family" to "android",
+                        "app_secret_key" to appKey.value,
+                        "device_name" to deviceName,
+                        "device_model" to "${Build.MANUFACTURER} ${Build.MODEL}",
+                        "app_version" to PackageUtils.getVersionName(appContext),
+                        "version_code" to PackageUtils.getVersionCode(appContext).toString(),
+                        "os_version" to Build.VERSION.RELEASE,
+                        "device_uuid" to uuid
+                ).toMap(),
+                body = null,
+                RegisterDeviceRestResponse::class.java
+        )
+        return when (request) {
+            is Success -> {
+                val id = request.data.id
+                if (id.isNullOrEmpty()) {
+                    RegisterDeviceResponsePayload(
+                            DeviceRegistrationError(DeviceRegistrationErrorType.MISSING_DEVICE_ID)
+                    )
+                } else {
+                    RegisterDeviceResponsePayload(id)
+                }
+            }
+            is Error -> {
+                RegisterDeviceResponsePayload(networkErrorToRegistrationError(request.error))
+            }
+        }
+    }
+
     // region Device Registration
+    @Deprecated(message = "EventBus is deprecated.", ReplaceWith("registerDevice(fcmToken, appKey, uuid)"))
     fun registerDeviceForPushNotifications(
         gcmToken: String,
         appKey: NotificationAppKey,

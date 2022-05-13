@@ -273,6 +273,31 @@ class NotificationStore @Inject constructor(
     fun getNotificationByLocalId(noteId: Int) =
             notificationSqlUtils.getNotificationByIdSet(NoteIdSet(noteId, 0, 0))
 
+    suspend fun registerDevice(token: String, appKey: NotificationAppKey): RegisterDeviceResponsePayload {
+        val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()
+
+        return notificationRestClient.registerDevice(
+                fcmToken = token,
+                appKey = appKey,
+                uuid = uuid
+        ).apply {
+            if (isError || deviceId.isNullOrEmpty()) {
+                when (error.type) {
+                    DeviceRegistrationErrorType.MISSING_DEVICE_ID ->
+                        AppLog.e(T.NOTIFS, "Server response missing device_id - registration skipped!")
+                    DeviceRegistrationErrorType.GENERIC_ERROR ->
+                        AppLog.e(T.NOTIFS, "Error trying to register device: ${error.type} - ${error.message}")
+                    DeviceRegistrationErrorType.INVALID_RESPONSE ->
+                        AppLog.e(T.NOTIFS, "Server response missing response object: ${error.type} - ${error.message}")
+                }
+            } else {
+                preferences.edit().putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceId).apply()
+                AppLog.i(T.NOTIFS, "Server response OK. Device ID: $deviceId")
+            }
+        }
+    }
+
+    @Deprecated("EventBus is deprecated.", ReplaceWith("registerDevice(token, appKey)"))
     private fun registerDevice(payload: RegisterDevicePayload) {
         val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()
 
