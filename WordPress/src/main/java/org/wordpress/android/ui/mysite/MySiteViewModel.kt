@@ -811,6 +811,9 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
+        quickStartRepository.requestNextStepOfTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+        )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
