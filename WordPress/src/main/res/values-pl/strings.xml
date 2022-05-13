@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-22 06:45:15+0000
+Translation-Revision-Date: 2022-05-11 09:07:20+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: pl
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">Zamknij</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpowiedz</string>
+    <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
+    <string name="photo_picker_video_thumbnail_unselected">Cofnięto zaznaczenie filmu</string>
+    <string name="photo_picker_video_thumbnail_selected">Wybrano film</string>
+    <string name="stats_timeframe_previous_week">Poprzedni tydzień</string>
+    <string name="stats_timeframe_this_week">Bieżący tydzień</string>
+    <string name="scan_vault_press_active_on_site_button_text">Przejdź do kokpitu</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="stop_upload_dialog_button_no">Nie</string>
+    <string name="stop_upload_dialog_button_yes">Tak</string>
+    <string name="dialog_button_cancel">Anuluj</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="retry_failed_upload_yes">Ponów</string>
+    <string name="dialog_title">Wstaw odnośnik</string>
+    <string name="editor_title_beta">Beta</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
+    <string name="site_creation_intent_books">Książki</string>
+    <string name="site_creation_intent_art">Sztuka</string>
+    <string name="my_site_menu_tab_title">Menu</string>
+    <string name="login_error_xml_rpc_services_disabled">Usługa XML-RPC jest wyłączona.</string>
+    <string name="my_site_todays_stat_card_title">Dzisiejsze statystyki</string>
+    <string name="reader_comment_menu_edit">Edytuj</string>
+    <string name="reader_comment_menu_trash">Przenieś do kosza</string>
+    <string name="reader_comment_menu_spam">Oznacz jako spam</string>
     <string name="gutenberg_native_gallery_style">Styl galerii</string>
     <string name="sharing_facebook_warning_positive_button">Idź do sieci</string>
     <string name="about_automattic_app_icon_description">Ikona aplikacji</string>
@@ -176,6 +202,7 @@ Language: pl
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al">Bloki pomagają ci skoncentrować się na pisaniu treści, wiedząc, że wszystkie narzędzia do formatowania są w zasięgu ręki - gotowe, abyś mógł/mogła trafić że swoimi treściami do szerokiej publiki.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and">Zorganizuj swoje treści w kolumny, dodaj przyciski Wezwania do Działania i nakładaj tekst ponad obrazki.</string>
     <string name="quick_start_sites_type_tasks_completed">Wykonano %1$s z %2$s</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar">W dowolnym momencie można dodać nowy blok stukając w ikonkę + w pasku narzędzi na dole po lewej stronie.</string>
     <string name="quick_start_dialog_need_help_manage_site_message">Naucz się podstaw przy pomocy krótkiego samouczka.</string>
     <string name="comment_batch_moderation_error">Nie udało się zmienić jednego lub więcej komentarzy</string>
     <string name="create_site_notification_create_site_action">Utwórz witrynę</string>
@@ -243,6 +270,8 @@ Language: pl
     <string name="storage_utils_dialog_ok_button">Sprawdź pamięć</string>
     <string name="storage_utils_dialog_message">Musimy zapisać twoje treści na urządzeniu zanim zostaną opublikowane. Przejrzyj ustawienia dostępnej przestrzeni i usuń pliki aby zwolnić miejsce.</string>
     <string name="storage_utils_dialog_title">Niewystarczająca ilość pamięci w urządzeniu</string>
+    <string name="gutenberg_native_y_axis_position">Pozycja osi Y</string>
+    <string name="gutenberg_native_x_axis_position">Pozycja osi X</string>
     <string name="gutenberg_native_type_a_url">Wpisz adres URL</string>
     <string name="gutenberg_native_s_has_url_set">%s ma ustawiony adres URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s nie ma ustawionego adresu URL</string>
@@ -288,6 +317,7 @@ Language: pl
     <string name="gutenberg_native_preview_post">Podgląd wpisu</string>
     <string name="gutenberg_native_preview_page">Podgląd strony</string>
     <string name="gutenberg_native_retry">Spróbuj ponownie</string>
+    <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Podgląd nie jest dostępny</string>
     <string name="gutenberg_native_text_color">Kolor tekstu</string>
@@ -297,6 +327,7 @@ Language: pl
     <string name="gutenberg_native_create_embed">Utwórz osadzoną treść</string>
     <string name="gutenberg_native_column_d">Kolumna %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Krótko opisz odnośnik, aby pomóc użytkownikom korzystającym z czytnika.</string>
+    <string name="gutenberg_native_add_blocks">Dodaj bloki</string>
     <string name="login_no_jetpack_sites">Nie odnaleziono witryn Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">Co to jest tekst alternatywny?</string>
     <string name="gutenberg_native_transform_s_to">Przekształć %s w</string>
@@ -306,6 +337,7 @@ Language: pl
     <string name="like_title_plural">%d polubień</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s przekształcony w %2$s</string>
     <string name="like_faces_error_loading_message">Błąd wczytywania danych o polubieniach. %s.</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_the_image_is_pur">Opisz zawartość obrazka. Pozostaw pole puste jeśli jest on wyłącznie dekoracją.</string>
     <string name="like_title_singular">1 polubienie</string>
     <string name="suggestion">Sugestia:</string>
     <string name="gutenberg_native_use_icon_button">Użyj ikony przycisku</string>
@@ -320,6 +352,7 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_edit_button_text">Stuknij dwukrotnie aby edytować tekst przycisku</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Nie ustawiono własnego tekstu zastępczego</string>
     <string name="gutenberg_native_hide_search_heading">Ukryj nagłówek wyszukiwania</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">stuknij dwukrotnie aby zmienić jednostkę</string>
     <string name="gutenberg_native_clear_search">Usuń wyszukiwanie</string>
     <string name="gutenberg_native_cancel_search">Anuluj wyszukiwanie</string>
     <string name="gutenberg_native_button_position">Pozycja przycisku</string>
@@ -549,6 +582,8 @@ Language: pl
     <string name="threat_item_sub_header_misc_vulnerability">Różne słabe punkty</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: złośliwy wzorzec kodu</string>
     <string name="threat_item_header_database_threat">%s zagrożenia bazy danych</string>
+    <string name="threat_item_header_vulnerable_theme">Podatny szablon: %1$s (wersja %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Podatna wtyczka: %1$s (wersja %2$s)</string>
     <string name="threats_fix_all">Napraw wszystko</string>
     <string name="scan_in_few_seconds">kilka sekund temu</string>
     <string name="scan_in_minutes_ago">%s minut/ę temu</string>
@@ -556,6 +591,7 @@ Language: pl
     <string name="scan_this_site">ta witryna</string>
     <string name="threat_item_header_threat_found">Odnaleziono zagrożenie</string>
     <string name="threat_item_header_infected_core_file">%s: zainfekowany plik główny</string>
+    <string name="scan_idle_last_scan_description">Ostatnie skanowanie Jetpack uruchomiono %1$s i nie wykryto żadnego ryzyka. %2$s</string>
     <string name="scan_idle_threats_found_title">Twoja witryna może być zagrożona</string>
     <string name="scan_idle_no_threats_found_title">Nie martw się niczym</string>
     <string name="scan_again">Skanuj ponownie</string>
@@ -567,6 +603,7 @@ Language: pl
     <string name="activity_log_activity_type_empty_subtitle">Nie zarejestrowano aktywności w wybranym zakresie dat.</string>
     <string name="activity_log_activity_type_empty_title">Brak dostępnych aktywności</string>
     <string name="activity_log_activity_type_error_subtitle">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%1$s (pokazano %2$s elementów)</string>
     <string name="activity_log_activity_type_error_title">Brak połączenia</string>
     <string name="activity_log_activity_type_filter_active_label">Typ aktywności (%s)</string>
     <string name="activity_log_date_range_filter_label_content_description">Filtr zakresu daty</string>
@@ -676,6 +713,7 @@ Language: pl
     <string name="media_loading_failed">Nie udało się wczytać plików mediów</string>
     <string name="reader_discover_recommended_blogs_header">Witryny do obserwacji</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Z każdym wydaniem pracujemy nad dodawaniem większej ilości bloków.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nie jest w pełni wspierane</string>
     <string name="stories_intro_create_story_post_label">Utwórz wpis z relacją</string>
     <string name="gutenberg_native_help_button">Przycisk wsparcia</string>
     <string name="gutenberg_native_edit_using_web_editor">Edytuj używając edytora web</string>
@@ -911,6 +949,7 @@ Language: pl
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Wybrana strona główna i strony dla wpisów nie mogą być te same.</string>
     <string name="pages_set_as_posts_page">Ustaw jako Stronę z wpisami</string>
     <string name="site_settings_select_page">Wybierz stronę</string>
+    <string name="suggestion_invalid">%1$s nie jest prawidłową nazwą %2$s</string>
     <string name="site_settings_failed_update_homepage_settings">Nie udało się uaktualnić ustawień strony głównej, sprawdź swoje połączenie internetowe</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Nie można zapisać ustawień strony głównej zanim strony nie zostaną załadowane</string>
     <string name="site_settings_failed_to_save_homepage_settings">NIe można było zapisać ustawień strony głównej</string>
@@ -1209,6 +1248,7 @@ Language: pl
     <string name="dialog_confirm_autosave_title">Którą wersję chciał(a)byś edytować?</string>
     <string name="post_waiting_for_connection_draft_cancel">Nie zapiszemy ostatnich zmian do twojego szkica.</string>
     <string name="button_delete_permanently">Usuń na zawsze</string>
+    <string name="dialog_confirm_autosave_body_second_part">Z tej aplikacji\nZapisano %1$s\n\nZ innego urządzenia\nZapisano %2$s\n</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Nie zaplanujemy daty opublikowania tych zmian.</string>
     <string name="post_waiting_for_connection_pending_cancel">Nie prześlemy tych zmian do przeglądu.</string>
     <string name="post_waiting_for_connection_publish_cancel">Nie opublikujemy tych zmian.</string>
@@ -1256,6 +1296,7 @@ Language: pl
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
     <string name="navigate_back_desc">Wróć</string>
     <string name="web_preview_desktop">Komputer stacjonarny</string>
+    <string name="calendar_scheduled_post_description">Wpis „%1$s” został zaplanowany do publikacji w dniu „%2$s” w twojej aplikacji WordPressowej\n%3$s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>
@@ -1447,24 +1488,23 @@ Language: pl
     <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
     <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Ciesz się gotowym produktem!</string>
     <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Stuknij %1$s Plan %2$s aby sprawdzić swój aktualny plan sibskrypcji i inne dostępne plany. </string>
     <string name="quick_start_sites">Następne kroki</string>
     <string name="quick_start_dialog_upload_icon_title">Wybierz unikatową ikonę witryny</string>
     <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Stuknij%1$s Statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
+    <string name="quick_start_dialog_check_stats_message_short">Wybierz %1$s statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
     <string name="quick_start_dialog_explore_plans_title">Eksploruj plany subskrypcji</string>
     <string name="quick_start_dialog_explore_plans_message">Dowiedz się więcej o narzędziach SEO w naszych płatnych planach subskrypcji.</string>
     <string name="quick_start_dialog_enable_sharing_title">Uaktywnij udostępnianie wpisów</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatycznie udostępniaj nowe wpisy na swoich kontach mediów społecznościowych.</string>
     <string name="quick_start_dialog_check_stats_title">Sprawdź statystyki swojej witryny</string>
-    <string name="quick_start_dialog_check_stats_message">Bądź na bieżąco w temacie statystyk swojej witryny.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Usunięcie Kolejnych Kroków ukryje wszystkie przewodniki na tej witrynie. Nie można cofnąć tej czynności.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Usuń Kolejne Kroki</string>
     <string name="quick_start_remove_next_steps_menu_title">Usuń to</string>
     <string name="quick_start_complete_view_subtitle">Gratulacje.Ukończyłeś swoją listę. Dobra robota.</string>
+    <string name="quick_start_dialog_check_stats_message">Bądź na bieżąco z wydajnością swojej witryny.</string>
     <string name="quick_start_complete_view_title">Wszystkie zadania zakończono!</string>
     <string name="quick_start_task_skip_menu_title">Pomiń zadanie</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">zwiń</string>
@@ -1505,6 +1545,7 @@ Language: pl
     <string name="dialog_confirm_load_remote_post_discard_local">Odrzuć wersję lokalną</string>
     <string name="dialog_confirm_load_remote_post_body">Ten wpis ma dwie konfliktujące ze sobą wersje. Wybierz wersję którą chciał(a)byś odrzucić.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Rozwiąż problem synchronizacji</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Lokalna\nZapisano %1$s\n\nW internecie\nZapisano %2$s\n</string>
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację GPS z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
@@ -1630,17 +1671,14 @@ Language: pl
     <string name="quick_start_list_create_site_subtitle">Uruchom swoją witrynę.</string>
     <string name="quick_start_dialog_view_site_title">Zobacz swoją witrynę</string>
     <string name="quick_start_dialog_share_site_title">Udostępnij swoją witrynę</string>
-    <string name="quick_start_dialog_view_site_message_short">Stuknij na %1$s Zobacz Witrynę %2$s aby ją podejrzeć</string>
     <string name="quick_start_dialog_share_site_message">Połącz się ze swoimi kontami mediów społecznościowych - twoja witryna automatycznie udostępni nowe wpisy. </string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Stuknij %1$s Udostępnianie %2$s aby kontynuować</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Stuknij %1$s Połączenia %2$s aby dodać konta mediów społecznościowych</string>
+    <string name="quick_start_dialog_view_site_message">Podejrzyj witrynę aby sprawdzić jej wygląd, który zobaczą odwiedzający. </string>
     <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
     <string name="quick_start_dialog_publish_post_message_short">Stuknij %1$s Utwórz wpis %2$s  aby utworzyć nowy wpis.</string>
-    <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
-    <string name="quick_start_dialog_follow_sites_message">Znajdź witryny które ciebie inspirują i obserwuj je aby otrzymywać aktualizacje kiedy te coś opublikują.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Stuknij %1$s Szukanie %2$s aby znaleźć witryny o podobnych zainteresowaniach</string>
+    <string name="quick_start_dialog_follow_sites_title">Podłącz inne witryny</string>
     <string name="quick_start_button_positive">Dalej</string>
     <string name="quick_start_button_negative_short">Anuluj</string>
     <string name="quick_start_button_negative">Nie teraz</string>
@@ -1788,6 +1826,7 @@ Language: pl
     <string name="content_description_people_looking_charts">Ludzie analizujący grafiki i wykresy</string>
     <string name="dialog_confirm_delete_permanently_post">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć ten wpis?</string>
     <string name="content_description_person_reading_device_notification">Osoba czytająca na urządzeniu z powiadomieniami</string>
+    <string name="comment_title">%1$s do %2$s</string>
     <string name="notification_channel_important_title">Ważne</string>
     <string name="notification_channel_general_title">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
@@ -2676,10 +2715,10 @@ Language: pl
     <string name="customize">Dostosuj</string>
     <string name="current_theme">Aktualnie używany motyw</string>
     <string name="active">Włączono</string>
-    <string name="post_published">Wpis opublikowany</string>
     <string name="page_published">Strona opublikowana</string>
     <string name="post_updated">Wpis uaktualniony</string>
     <string name="page_updated">Strona uaktualniona</string>
+    <string name="post_published">Wpis został opublikowany</string>
     <string name="theme_no_search_result_found">Przepraszamy, nie znaleziono motywów.</string>
     <string name="reader_label_gap_marker">Wczytaj więcej wpisów</string>
     <string name="notifications_no_search_results">\'%s\' nie pasuje do żadnej witryny</string>
@@ -2920,6 +2959,7 @@ Language: pl
     <string name="reader_likes_you_and_multi">Ty i %,d innych lubią to</string>
     <string name="reader_likes_multi">%,d osób lubi to</string>
     <string name="cant_share_no_visible_blog">Nie możesz udostępnić do WordPressa bez widocznego blogu</string>
+    <string name="comment_unapproved">Cofnięto zatwierdzenie komentarza</string>
     <string name="reader_likes_you_and_one">Ty i jedna inna osoba lubicie to</string>
     <string name="reader_toast_err_get_post">Nie można pobrać tego wpisu</string>
     <string name="pick_photo">Wybierz zdjęcie</string>

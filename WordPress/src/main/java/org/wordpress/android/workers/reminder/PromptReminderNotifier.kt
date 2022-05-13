@@ -12,7 +12,7 @@ import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.BloggingPromptsNotificationConfig
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class PromptReminderNotifier @Inject constructor(
     val siteStore: SiteStore,
     val accountStore: AccountStore,
     val reminderNotificationManager: ReminderNotificationManager,
-    val bloggingPromptsNotificationConfig: BloggingPromptsNotificationConfig
+    val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
 ) {
     // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
     var hasOptedInBloggingPromptsReminders = true
@@ -37,6 +37,7 @@ class PromptReminderNotifier @Inject constructor(
         val siteName = SiteUtils.getSiteNameOrHomeURL(site)
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
         val bloggingPrompt = BloggingPrompt(
+            id = 1234,
             text = "Cast the movie of your life.",
             content = "<!-- wp:pullquote -->\n" +
                     "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
@@ -91,10 +92,10 @@ class PromptReminderNotifier @Inject constructor(
 
     fun shouldNotify(siteId: Int): Boolean {
         val hasAccessToken = accountStore.hasAccessToken()
-        val isBloggingPromptsNotificationEnabled = bloggingPromptsNotificationConfig.isEnabled()
+        val isBloggingPromptsEnabled = bloggingPromptsFeatureConfig.isEnabled()
         val siteModel = siteStore.getSiteByLocalId(siteId)
         val hasOptedInBloggingPromptsReminders = siteModel != null && hasOptedInBloggingPromptsReminders
-        return hasAccessToken && isBloggingPromptsNotificationEnabled && hasOptedInBloggingPromptsReminders
+        return hasAccessToken && isBloggingPromptsEnabled && hasOptedInBloggingPromptsReminders
     }
 
     companion object {

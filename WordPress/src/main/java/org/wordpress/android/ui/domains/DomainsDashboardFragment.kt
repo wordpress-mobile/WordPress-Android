@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
@@ -49,6 +50,9 @@ class DomainsDashboardFragment : Fragment(R.layout.domains_dashboard_fragment) {
     }
 
     private fun DomainsDashboardFragmentBinding.setupObservers() {
+        viewModel.progressBar.observe(viewLifecycleOwner) {
+            progress.isVisible = it
+        }
         viewModel.uiModel.observe(viewLifecycleOwner) { uiState ->
             (contentRecyclerView.adapter as? DomainsDashboardAdapter)?.submitList(uiState ?: listOf())
         }

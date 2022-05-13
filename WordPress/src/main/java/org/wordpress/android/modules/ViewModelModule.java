@@ -68,8 +68,11 @@ import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewMo
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalCommentsDetailListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
@@ -208,6 +211,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StatsDetailViewModel.class)
     abstract ViewModel statsDetailViewModel(StatsDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(InsightsDetailListViewModel.class)
+    abstract ViewModel insightsDetailListViewModel(InsightsDetailListViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -611,4 +619,14 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
     abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalLikesDetailListViewModel.class)
+    abstract ViewModel totalLikesDetailListViewModel(TotalLikesDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalCommentsDetailListViewModel.class)
+    abstract ViewModel totalCommentssDetailListViewModel(TotalCommentsDetailListViewModel viewModel);
 }

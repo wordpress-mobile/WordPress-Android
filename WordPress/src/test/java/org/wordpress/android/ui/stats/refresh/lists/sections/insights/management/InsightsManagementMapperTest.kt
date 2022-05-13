@@ -14,13 +14,15 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_COMMENTS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem
@@ -32,7 +34,8 @@ import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 class InsightsManagementMapperTest : BaseUnitTest() {
     @Mock private lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var insightsManagementMapper: InsightsManagementMapper
-    private val insightTypeCount = InsightType.values().count()
+    // Excluding FOLLOWER_TOTALS, AUTHORS_COMMENTS, POSTS_COMMENTS for statsRevampV2FeatureConfig
+    private val insightTypeCount = InsightType.values().count() - 3
     private val sectionsCount = 3
     @InternalCoroutinesApi
     @Before
@@ -64,8 +67,10 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertHeader(result[10], R.string.stats_insights_management_activity)
         assertInsight(result[11], COMMENTS, true)
         assertInsight(result[12], FOLLOWERS, true)
-        assertInsight(result[13], FOLLOWER_TOTALS, true)
-        assertInsight(result[14], PUBLICIZE, true)
+        assertInsight(result[13], TOTAL_LIKES, true)
+        assertInsight(result[14], TOTAL_COMMENTS, true)
+        assertInsight(result[15], TOTAL_FOLLOWERS, true)
+        assertInsight(result[16], PUBLICIZE, true)
     }
 
     @Test
@@ -92,12 +97,17 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertHeader(result[10], R.string.stats_insights_management_activity)
         assertInsight(result[11], COMMENTS, false)
         assertInsight(result[12], FOLLOWERS, false)
-        assertInsight(result[13], FOLLOWER_TOTALS, false)
-        assertInsight(result[14], PUBLICIZE, true)
+        assertInsight(result[13], TOTAL_LIKES, false)
+        assertInsight(result[14], TOTAL_COMMENTS, false)
+        assertInsight(result[15], TOTAL_FOLLOWERS, false)
+        assertInsight(result[16], PUBLICIZE, true)
     }
 
     @Test
     fun `maps all removed insights with correct type`() = test {
+        // Given
+        whenever(statsRevampV2FeatureConfig.isEnabled()).thenReturn(true)
+
         // When
         val result = insightsManagementMapper.buildUIModel(setOf()) {}
 
@@ -116,8 +126,10 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertHeader(result[10], R.string.stats_insights_management_activity)
         assertInsight(result[11], COMMENTS, false)
         assertInsight(result[12], FOLLOWERS, false)
-        assertInsight(result[13], FOLLOWER_TOTALS, false)
-        assertInsight(result[14], PUBLICIZE, false)
+        assertInsight(result[13], TOTAL_LIKES, false)
+        assertInsight(result[14], TOTAL_COMMENTS, false)
+        assertInsight(result[15], TOTAL_FOLLOWERS, false)
+        assertInsight(result[16], PUBLICIZE, false)
     }
 
     private fun assertHeader(item: InsightListItem, text: Int) {

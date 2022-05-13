@@ -361,13 +361,13 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static Intent openEditorWithContentIntent(
+    public static Intent openEditorWithBloggingPrompt(
             @NonNull final Context context,
-            @NonNull final String content
+            final int promptId
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
-        intent.putExtra(WPMainActivity.ARG_EDITOR_CONTENT, content);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
         return intent;
     }
 
@@ -376,7 +376,7 @@ public class ActivityLauncher {
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
-        intent.putExtra(WPMainActivity.ARG_EDITOR_CONTENT, bloggingPrompt.getContent());
+        intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         return intent;
     }
@@ -448,7 +448,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, reblogSource, null);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
@@ -895,9 +895,9 @@ public class ActivityLauncher {
             SiteModel site,
             boolean isPromo,
             PagePostCreationSourcesDetail source,
-            @Nullable final String content
+            final int promptId
     ) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, content);
+        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId);
     }
 
     public static void addNewPostForResult(
@@ -906,7 +906,7 @@ public class ActivityLauncher {
             SiteModel site,
             boolean isPromo,
             PagePostCreationSourcesDetail source,
-            @Nullable final String content
+            final int promptId
     ) {
         if (site == null) {
             return;
@@ -916,7 +916,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(EditPostActivity.EXTRA_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1072,9 +1072,11 @@ public class ActivityLauncher {
         editPageForResult(intent, fragment, site, pageLocalId, loadAutoSaveRevision, RequestCodes.EDIT_POST);
     }
 
-    public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId) {
+    public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
+                                                boolean isNewSite) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
         editPageForResult(intent, fragment, site, homeLocalId, false, RequestCodes.EDIT_LANDING_PAGE);
     }
 
@@ -1490,6 +1492,23 @@ public class ActivityLauncher {
         StatsDetailActivity.Companion
                 .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
                         post.getLink());
+    }
+
+    public static void viewTotalLikesDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalLikesDetail(context, site);
+    }
+
+    public static void viewTotalCommentsDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalCommentsDetail(context, site);
+    }
+
+    public static void viewInsightsDetail(Context context, SiteModel site) {
+        if (site == null) {
+            return;
+        }
+        StatsDetailActivity.startForInsightsDetail(context, site);
     }
 
     public static void viewMediaPickerForResult(Activity activity,

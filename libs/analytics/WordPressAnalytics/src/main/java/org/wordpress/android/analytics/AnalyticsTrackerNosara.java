@@ -411,6 +411,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "review_pages");
                 break;
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED:
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED:
+            case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "check_notifications");
+                break;
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -1127,6 +1132,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_next_date_tapped";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
+            case STATS_TOTAL_LIKES_VIEW_MORE_TAPPED:
+                return "stats_total_likes_view_more_tapped";
+            case STATS_TOTAL_LIKES_ERROR:
+                return "stats_total_likes_error";
+            case STATS_TOTAL_COMMENTS_VIEW_MORE_TAPPED:
+                return "stats_total_comments_view_more_tapped";
+            case STATS_TOTAL_COMMENTS_ERROR:
+                return "stats_total_comments_error";
+            case STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED:
+                return "stats_total_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
             case STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED:
@@ -1822,6 +1837,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
             case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
             case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED:
                 return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
@@ -1834,6 +1850,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
             case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
             case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
             case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
@@ -1846,6 +1863,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_EXPLORE_PLANS_COMPLETED:
             case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
+            case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
                 return "quick_start_task_completed";
             case QUICK_START_ALL_TASKS_COMPLETED:
                 return "quick_start_all_tasks_completed";
@@ -2187,6 +2205,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "recommend_app_content_fetch_failed";
             case EDITOR_BLOCK_INSERTED:
                 return "editor_block_inserted";
+            case EDITOR_BLOCK_MOVED:
+                return "editor_block_moved";
             case ABOUT_SCREEN_SHOWN:
                 return "about_screen_shown";
             case ABOUT_SCREEN_DISMISSED:
