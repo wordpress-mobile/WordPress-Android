@@ -76,7 +76,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 .get(SiteCreationSiteNameViewModel::class.java)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
         mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
-        hppViewModel.loadSavedState(savedInstanceState)
 
         observeVMState()
     }
