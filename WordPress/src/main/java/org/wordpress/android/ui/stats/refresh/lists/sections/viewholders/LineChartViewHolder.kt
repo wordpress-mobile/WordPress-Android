@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.content.Context
+import android.graphics.DashPathEffect
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper.LineChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.LineChartLabelFormatter
+import java.lang.Integer.max
 
 private const val MIN_VALUE = 6f
 
@@ -122,10 +124,10 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             valueFormatter = LargeValueFormatter()
             setDrawGridLines(true)
             setDrawTopYLabelEntry(true)
-            setDrawZeroLine(false)
+            setDrawZeroLine(true)
             setDrawAxisLine(false)
-            granularity = 1f
-            axisMinimum = 0f
+            granularity = 1F
+            axisMinimum = 0F
             axisMaximum = if (maxYValue < MIN_VALUE) {
                 MIN_VALUE
             } else {
@@ -137,7 +139,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             textSize = 10f
             gridLineWidth = 1f
         }
-        extraLeftOffset = 8f
+        extraLeftOffset = 16f
         axisRight.apply {
             setDrawGridLines(false)
             setDrawZeroLine(false)
@@ -146,11 +148,26 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
         xAxis.apply {
             granularity = 1f
-            setDrawAxisLine(false)
+            setDrawAxisLine(true)
             setDrawGridLines(false)
+
+            if (contentRect.width() > 0) {
+                axisLineWidth = 4.0F
+
+                val count = max(thisWeekData.count(), 7)
+                val tickWidth = 4.0F
+                val contentWidthMinusTicks = contentRect.width() - (tickWidth * count.toFloat())
+                setAxisLineDashedLine(
+                        DashPathEffect(
+                                floatArrayOf(tickWidth, (contentWidthMinusTicks / (count - 1).toFloat())),
+                                0f
+                        )
+                )
+            }
 
             setDrawLabels(true)
             setLabelCount(3, true)
+            setAvoidFirstLastClipping(true)
             position = BOTTOM
             valueFormatter = LineChartLabelFormatter(thisWeekData)
 
