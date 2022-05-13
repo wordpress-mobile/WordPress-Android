@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
+import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -481,6 +482,7 @@ class MySiteViewModel @Inject constructor(
                         scanAvailable = scanAvailable,
                         enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                        enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         onClick = this::onItemClick
                 )
         )
