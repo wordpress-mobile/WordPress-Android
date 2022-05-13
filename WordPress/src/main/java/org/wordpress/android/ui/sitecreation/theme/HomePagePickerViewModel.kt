@@ -94,10 +94,10 @@ class HomePagePickerViewModel @Inject constructor(
         }
     }
 
-    override fun onLayoutTapped(layoutSlug: String) {
+    override fun onLayoutTapped(layoutSlug: String, isRecommended: Boolean) {
         (uiState.value as? Content)?.let {
             if (it.loadedThumbnailSlugs.contains(layoutSlug)) {
-                updateUiState(it.copy(selectedLayoutSlug = layoutSlug))
+                updateUiState(it.copy(selectedLayoutSlug = layoutSlug, isSelectedLayoutRecommended = isRecommended))
                 onPreviewTapped()
                 loadLayouts()
             }
@@ -112,7 +112,8 @@ class HomePagePickerViewModel @Inject constructor(
         selectedLayout?.let { layout ->
             super.onPreviewChooseTapped()
             val template = layout.slug
-            analyticsTracker.trackSiteDesignSelected(template)
+            val isRecommended = (uiState.value as? Content)?.isSelectedLayoutRecommended == true
+            analyticsTracker.trackSiteDesignSelected(template, isRecommended)
             _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
             return
         }

@@ -214,4 +214,22 @@ class HomePagePickerViewModelTest {
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
     }
+
+    @Test
+    fun `when the user chooses a recommended design the recommended information is emitted`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug, true)
+        viewModel.onPreviewChooseTapped()
+        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, true)
+    }
+
+    @Test
+    fun `when the user chooses a design that is not recommended the correct information is emitted`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug, false)
+        viewModel.onPreviewChooseTapped()
+        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, false)
+    }
 }
