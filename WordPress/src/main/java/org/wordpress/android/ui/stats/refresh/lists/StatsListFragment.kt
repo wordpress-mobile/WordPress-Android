@@ -30,8 +30,8 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -173,6 +173,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.INSIGHT_DETAIL -> InsightsDetailListViewModel::class.java
             StatsSection.TOTAL_LIKES_DETAIL -> TotalLikesDetailListViewModel::class.java
             StatsSection.TOTAL_COMMENTS_DETAIL -> TotalCommentsDetailListViewModel::class.java
+            StatsSection.TOTAL_FOLLOWERS_DETAIL -> TotalFollowersDetailListViewModel::class.java
             StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
