@@ -673,11 +673,20 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when the active task needs to show an focus point, emit visible focus point info`() {
+    fun `when follow site is active task, then only follow site visible focus point shown`() {
         activeTask.value = FOLLOW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(
                 listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+        )
+    }
+
+    @Test
+    fun `when check notifications is active task, then only check notifications visible focus point shown`() {
+        activeTask.value = CHECK_NOTIFICATIONS
+
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(invisibleFollowSiteFocusPointInfo, visibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -811,6 +820,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         val visibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, true)
         val invisibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, false)
 
+        val visibleCheckNotificationsFocusPointInfo = FocusPointInfo(CHECK_NOTIFICATIONS, true)
         val invisibleCheckNotificationsFocusPointInfo = FocusPointInfo(CHECK_NOTIFICATIONS, false)
     }
 }
