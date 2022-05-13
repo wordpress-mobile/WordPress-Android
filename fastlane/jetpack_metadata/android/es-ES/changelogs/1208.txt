@@ -1,6 +1,0 @@
-19.7:
-- Pestañas Inicio y Menú del sitio añadidas a la pantalla Mi sitio
-- Botón Añadir bloque más visible cuando se abre el editor de bloques
-- Texto de error al cargar un bloque Medios o Audio eliminado
-- Pantalla de objetivo del sitio añadida al proceso de creación de sitios
-- Bloqueo provocado por los detalles de notificación sobre comentarios de bloques Archivo GB corregido
