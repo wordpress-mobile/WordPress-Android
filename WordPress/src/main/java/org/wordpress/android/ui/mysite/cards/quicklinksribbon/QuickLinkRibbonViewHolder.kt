@@ -37,6 +37,10 @@ class QuickLinkRibbonViewHolder(
         if (quickLinkRibbon.showPagesFocusPoint) {
             quickLinkRibbonItemList.smoothScrollToPosition(0)
         }
+        if (quickLinkRibbon.showMediaFocusPoint) {
+            // Todo: @ajeshr change the scroll logic to remove hard value
+            quickLinkRibbonItemList.smoothScrollToPosition(2)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
