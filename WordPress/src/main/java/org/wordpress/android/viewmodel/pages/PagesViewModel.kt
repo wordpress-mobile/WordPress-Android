@@ -1,5 +1,7 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.ClipData
+import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -23,6 +25,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
@@ -35,6 +38,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.COPY
+import org.wordpress.android.ui.pages.PageItem.Action.COPY_LINK
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
@@ -64,6 +68,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -99,7 +104,7 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val postStore: PostStore,
     private val dispatcher: Dispatcher,
-    private val actionPerfomer: ActionPerformer,
+    private val actionPerformer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     private val siteStore: SiteStore,
@@ -217,6 +222,7 @@ class PagesViewModel
         val post: PostModel,
         val previewType: RemotePreviewType
     )
+
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (_site == null) {
@@ -254,7 +260,7 @@ class PagesViewModel
     }
 
     override fun onCleared() {
-        actionPerfomer.onCleanup()
+        actionPerformer.onCleanup()
         pageListEventListener.onDestroy()
     }
 
@@ -279,7 +285,7 @@ class PagesViewModel
                     if (result.isError) {
                         _listState.setOnUi(ERROR)
                         showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.error_refresh_pages)))
-                        AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+                        AppLog.e(PAGES, "An error occurred while fetching the Pages")
                     } else {
                         _listState.setOnUi(DONE)
                     }
@@ -392,19 +398,18 @@ class PagesViewModel
         val list = pageStore.search(site, searchQuery)
                 .groupBy { PageListType.fromPageStatus(it.status) }
 
-        return@withContext list.toSortedMap(
-                Comparator { previous, next ->
-                    when {
-                        previous == next -> 0
-                        previous == PUBLISHED -> -1
-                        next == PUBLISHED -> 1
-                        previous == DRAFTS -> -1
-                        next == DRAFTS -> 1
-                        previous == SCHEDULED -> -1
-                        next == SCHEDULED -> 1
-                        else -> throw IllegalArgumentException("Unexpected page type")
-                    }
-                })
+        return@withContext list.toSortedMap { previous, next ->
+            when {
+                previous == next -> 0
+                previous == PUBLISHED -> -1
+                next == PUBLISHED -> 1
+                previous == DRAFTS -> -1
+                next == DRAFTS -> 1
+                previous == SCHEDULED -> -1
+                next == SCHEDULED -> 1
+                else -> throw IllegalArgumentException("Unexpected page type")
+            }
+        }
     }
 
     fun onSearchExpanded(restorePreviousSearch: Boolean) {
@@ -430,11 +435,11 @@ class PagesViewModel
         }
     }
 
-    fun onMenuAction(action: Action, page: Page): Boolean {
+    fun onMenuAction(action: Action, page: Page, context: Context? = null): Boolean {
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, PageStatus.DRAFT)
+            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.remoteId, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
@@ -442,6 +447,7 @@ class PagesViewModel
             SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
             SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
             COPY -> onCopyPage(page)
+            COPY_LINK -> context?.let { copyPageLink(page, it) }
         }
         return true
     }
@@ -529,6 +535,32 @@ class PagesViewModel
         }
     }
 
+    private fun copyPageLink(page: Page, context: Context) {
+        // Get the link to the page
+        val pageLink = postStore.getPostByLocalPostId(page.localId).link
+        try {
+            // Copy the link to the clipboard
+            val clipboard = context.clipboardManager
+            val clip = ClipData.newPlainText("${page.localId}", pageLink)
+            if (clipboard != null) {
+                clipboard.setPrimaryClip(clip)
+                _showSnackbarMessage.postValue(SnackbarMessageHolder((UiStringRes(R.string.media_edit_copy_url_toast))))
+            } else {
+                throw NullPointerException("ClipboardManager is not supported on this device")
+            }
+        } catch (e: SecurityException) {
+            /**
+             * Ignore any exceptions here as certain devices have bugs and will fail.
+             * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
+             */
+            AppLog.e(PAGES, e)
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
+        } catch (e: NullPointerException) {
+            AppLog.e(PAGES, e)
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
+        }
+    }
+
     private fun previewPage(page: Page) {
         launch(defaultDispatcher) {
             trackMenuSelectionEvent(VIEW_PAGE)
@@ -607,6 +639,7 @@ class PagesViewModel
             MOVE_TO_DRAFT -> "move_to_draft"
             DELETE_PERMANENTLY -> "delete_permanently"
             MOVE_TO_TRASH -> "move_to_bin"
+            COPY_LINK -> "copy_link"
         }
         val properties = mutableMapOf("option_name" to menu as Any)
         AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)
@@ -709,7 +742,7 @@ class PagesViewModel
 
         launch {
             _arePageActionsEnabled = false
-            actionPerfomer.performAction(action)
+            actionPerformer.performAction(action)
             _arePageActionsEnabled = true
         }
     }
@@ -757,7 +790,7 @@ class PagesViewModel
         }
 
         launch {
-            actionPerfomer.performAction(action)
+            actionPerformer.performAction(action)
         }
     }
 
@@ -818,7 +851,7 @@ class PagesViewModel
 
                 launch {
                     _arePageActionsEnabled = false
-                    actionPerfomer.performAction(action)
+                    actionPerformer.performAction(action)
                     _arePageActionsEnabled = true
                 }
             }
