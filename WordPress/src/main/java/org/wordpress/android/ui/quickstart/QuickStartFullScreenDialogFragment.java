@@ -99,11 +99,12 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 setCompleteViewImage(R.drawable.img_illustration_site_about_182dp);
                 AnalyticsTracker.track(Stat.QUICK_START_TYPE_GROW_VIEWED);
                 break;
-            case GET_TO_KNOW_APP: // TODO: ashiagr GET_TO_KNOW_APP add analytics
+            case GET_TO_KNOW_APP:
                 tasksUncompleted
                         .addAll(mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, GET_TO_KNOW_APP));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(selectedSiteLocalId, GET_TO_KNOW_APP));
                 setCompleteViewImage(R.drawable.img_illustration_site_about_182dp);
+                AnalyticsTracker.track(Stat.QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED);
                 break;
             case UNKNOWN:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(selectedSiteLocalId, CUSTOMIZE));
@@ -153,7 +154,8 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             case GROW:
                 AnalyticsTracker.track(Stat.QUICK_START_TYPE_GROW_DISMISSED);
                 break;
-            case GET_TO_KNOW_APP: // TODO: ashiagr GET_TO_KNOW_APP add analytics
+            case GET_TO_KNOW_APP:
+                AnalyticsTracker.track(Stat.QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED);
                 break;
             case UNKNOWN:
                 // Do not track unknown.
@@ -213,7 +215,9 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 AnalyticsTracker.track(isExpanded ? Stat.QUICK_START_LIST_GROW_EXPANDED
                         : Stat.QUICK_START_LIST_GROW_COLLAPSED);
                 break;
-            case GET_TO_KNOW_APP: // TODO: ashiagr GET_TO_KNOW_APP add analytics
+            case GET_TO_KNOW_APP:
+                AnalyticsTracker.track(isExpanded ? Stat.QUICK_START_GET_TO_KNOW_APP_EXPANDED
+                        : Stat.QUICK_START_GET_TO_KNOW_APP_COLLAPSED);
                 break;
             case UNKNOWN:
                 // Do not track unknown.

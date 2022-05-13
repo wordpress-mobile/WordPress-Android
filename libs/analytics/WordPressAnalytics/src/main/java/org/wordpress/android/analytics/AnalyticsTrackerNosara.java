@@ -308,11 +308,17 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TYPE_GROW_VIEWED:
                 predefinedEventProperties.put("type", "grow");
                 break;
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED:
+                predefinedEventProperties.put("type", "get_to_know_app");
+                break;
             case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
                 predefinedEventProperties.put("type", "customize");
                 break;
             case QUICK_START_TYPE_GROW_DISMISSED:
                 predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED:
+                predefinedEventProperties.put("type", "get_to_know_app");
                 break;
             case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
                 predefinedEventProperties.put("type", "customize");
@@ -320,11 +326,17 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_GROW_COLLAPSED:
                 predefinedEventProperties.put("type", "grow");
                 break;
+            case QUICK_START_GET_TO_KNOW_APP_COLLAPSED:
+                predefinedEventProperties.put("type", "get_to_know_app");
+                break;
             case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
                 predefinedEventProperties.put("type", "customize");
                 break;
             case QUICK_START_LIST_GROW_EXPANDED:
                 predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_GET_TO_KNOW_APP_EXPANDED:
+                predefinedEventProperties.put("type", "get_to_know_app");
                 break;
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
                 predefinedEventProperties.put("task_name", "create_site");
@@ -1816,15 +1828,19 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_remove_dialog_button_tapped";
             case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
             case QUICK_START_TYPE_GROW_DISMISSED:
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED:
                 return "quick_start_type_dismissed";
             case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
             case QUICK_START_LIST_GROW_COLLAPSED:
+            case QUICK_START_GET_TO_KNOW_APP_COLLAPSED:
                 return "quick_start_list_collapsed";
             case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
             case QUICK_START_LIST_GROW_EXPANDED:
+            case QUICK_START_GET_TO_KNOW_APP_EXPANDED:
                 return "quick_start_list_expanded";
             case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
             case QUICK_START_TYPE_GROW_VIEWED:
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED:
                 return "quick_start_list_viewed";
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_SKIPPED:
