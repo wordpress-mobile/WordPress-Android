@@ -86,6 +86,13 @@ enum class QuickStartMySitePrompts constructor(
             R.id.quick_action_pages_button,
             R.string.quick_start_dialog_edit_homepage_message_short,
             R.drawable.ic_pages_white_24dp
+    ),
+    UPLOAD_MEDIA(
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL,
+            -1,
+            R.id.quick_action_media_button,
+            R.string.quick_start_dialog_upload_media_message,
+            R.drawable.ic_media_white_24dp
     );
 
     companion object {

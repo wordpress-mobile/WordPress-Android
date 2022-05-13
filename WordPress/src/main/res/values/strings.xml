@@ -3097,6 +3097,7 @@
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
+    <string name="quick_start_dialog_upload_media_message">Select %1$s Media %2$s to see your current library.</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
     <string name="quick_start_list_check_stats_title">Check your site stats</string>
