@@ -26,18 +26,15 @@ import org.wordpress.android.ui.stats.refresh.LineChartMarkerView
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Visitors
 import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper.LineChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.LineChartLabelFormatter
 import java.lang.Integer.max
 
-private const val MIN_VALUE = 6f
-
 private typealias LineCount = Int
 
-@Suppress("MagicNumber")
+@Suppress("MagicNumber", "TooManyFunctions")
 class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_line_chart_item
@@ -77,14 +74,23 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    @Suppress("LongMethod", "ComplexMethod")
     private fun LineChart.draw(
         item: LineChartItem
     ): LineCount {
         resetChart()
 
-        val maxYValue = item.entries.maxByOrNull { it.value }!!.value
+        data = LineData(getData(item))
 
+        configureChartView(item)
+        configureYAxis(item)
+        configureXAxis(item)
+        configureDataSets(data.dataSets, item.selectedType)
+
+        invalidate()
+        return item.entries.size
+    }
+
+    private fun getData(item: LineChartItem): List<ILineDataSet> {
         val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
 
         val prevWeekData = if (hasData && item.entries.size > 7) {
@@ -95,9 +101,9 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val hasPrevWeekData = prevWeekData.isNotEmpty() && prevWeekData.any { it.value > 0 }
         val prevWeekDataSet = if (hasPrevWeekData) {
             val mappedEntries = prevWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
-            buildPreviousWeekDataSet(context, mappedEntries)
+            LineDataSet(mappedEntries, "Previous week data")
         } else {
-            buildEmptyDataSet(context, item.entries.size)
+            buildEmptyDataSet(chart.context, item.entries.size)
         }
 
         val thisWeekData = if (hasData && item.entries.size > 7) {
@@ -109,18 +115,59 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val hasThisWeekData = thisWeekData.isNotEmpty() && thisWeekData.any { it.value > 0 }
         val thisWeekDataSet = if (hasThisWeekData) {
             val mappedEntries = thisWeekData.mapIndexed { index, pair -> toLineEntry(pair, index) }
-            buildThisWeekDataSet(context, item.selectedType, mappedEntries)
+            LineDataSet(mappedEntries, "Current week data")
         } else {
-            buildEmptyDataSet(context, item.entries.size)
+            buildEmptyDataSet(chart.context, item.entries.size)
         }
         item.onLineChartDrawn?.invoke(thisWeekDataSet.entryCount)
 
         val dataSets = mutableListOf<ILineDataSet>()
         dataSets.add(thisWeekDataSet)
         dataSets.add(prevWeekDataSet)
-        data = LineData(dataSets)
 
-        axisLeft.apply {
+        return dataSets
+    }
+
+    private fun configureChartView(item: LineChartItem) {
+        chart.apply {
+            setPinchZoom(false)
+            setScaleEnabled(false)
+            legend.isEnabled = false
+            setDrawBorders(false)
+            extraLeftOffset = 16f
+            axisRight.isEnabled = false
+
+            isHighlightPerDragEnabled = false
+            val description = Description()
+            description.text = ""
+            this.description = description
+
+            animateX(1000, Easing.EaseInSine)
+
+            val isClickable = item.onLineSelected != null
+            if (isClickable) {
+                setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                    override fun onNothingSelected() {
+                        item.onLineSelected?.invoke(item.selectedItemPeriod)
+                    }
+
+                    override fun onValueSelected(e: Entry, h: Highlight) {
+                        drawChartMarker(e, h, item.selectedType)
+                        item.onLineSelected?.invoke(e.data as? String)
+                    }
+                })
+            } else {
+                setOnChartValueSelectedListener(null)
+            }
+            isHighlightPerTapEnabled = isClickable
+        }
+    }
+
+    private fun configureYAxis(item: LineChartItem) {
+        val minYValue = 6f
+        val maxYValue = item.entries.maxByOrNull { it.value }!!.value
+
+        chart.axisLeft.apply {
             valueFormatter = LargeValueFormatter()
             setDrawGridLines(true)
             setDrawTopYLabelEntry(true)
@@ -128,35 +175,38 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawAxisLine(false)
             granularity = 1F
             axisMinimum = 0F
-            axisMaximum = if (maxYValue < MIN_VALUE) {
-                MIN_VALUE
+            axisMaximum = if (maxYValue < minYValue) {
+                minYValue
             } else {
                 roundUp(maxYValue.toFloat())
             }
             setLabelCount(5, true)
-            textColor = ContextCompat.getColor(context, R.color.neutral_30)
-            gridColor = ContextCompat.getColor(context, R.color.stats_bar_chart_gridline)
+            textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
+            gridColor = ContextCompat.getColor(chart.context, R.color.stats_bar_chart_gridline)
             textSize = 10f
             gridLineWidth = 1f
         }
-        extraLeftOffset = 16f
-        axisRight.apply {
-            setDrawGridLines(false)
-            setDrawZeroLine(false)
-            setDrawLabels(false)
-            setDrawAxisLine(false)
+    }
+
+    private fun configureXAxis(item: LineChartItem) {
+        val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
+        val thisWeekData = if (hasData && item.entries.size > 7) {
+            item.entries.subList(7, item.entries.size)
+        } else {
+            emptyList()
         }
-        xAxis.apply {
+
+        chart.xAxis.apply {
             granularity = 1f
             setDrawAxisLine(true)
             setDrawGridLines(false)
 
-            if (contentRect.width() > 0) {
+            if (chart.contentRect.width() > 0) {
                 axisLineWidth = 4.0F
 
                 val count = max(thisWeekData.count(), 7)
                 val tickWidth = 4.0F
-                val contentWidthMinusTicks = contentRect.width() - (tickWidth * count.toFloat())
+                val contentWidthMinusTicks = chart.contentRect.width() - (tickWidth * count.toFloat())
                 setAxisLineDashedLine(
                         DashPathEffect(
                                 floatArrayOf(tickWidth, (contentWidthMinusTicks / (count - 1).toFloat())),
@@ -173,44 +223,58 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
             removeAllLimitLines()
         }
-        setPinchZoom(false)
-        setScaleEnabled(false)
-        legend.isEnabled = false
-        setDrawBorders(false)
+    }
 
-        val isClickable = item.onLineSelected != null
-        if (isClickable) {
-            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-                override fun onNothingSelected() {
-                    item.selectedItemPeriod
-                    item.onLineSelected?.invoke(item.selectedItemPeriod)
-                }
+    private fun drawChartMarker(e: Entry, h: Highlight, selectedType: Int) {
+        if (chart.marker == null) {
+            val markerView = LineChartMarkerView(chart.context, selectedType)
+            markerView.chartView = chart
+            chart.marker = markerView
+            chart.highlightValue(h)
+        }
+    }
 
-                override fun onValueSelected(e: Entry, h: Highlight) {
-                    if (chart.marker == null) {
-                        val markerView = LineChartMarkerView(chart.context)
-                        markerView.chartView = chart
-                        chart.marker = markerView
-                        chart.highlightValue(h)
-                    }
-                    val value = (e as? Entry)?.data as? String
-                    item.onLineSelected?.invoke(value)
-                }
-            })
-        } else {
-            setOnChartValueSelectedListener(null)
+    private fun configureDataSets(dataSets: MutableList<ILineDataSet>, selectedType: Int) {
+        val thisWeekDataSet = dataSets.first() as? LineDataSet
+        thisWeekDataSet?.apply {
+            axisDependency = LEFT
+
+            lineWidth = 2f
+            formLineWidth = 0f
+
+            setDrawValues(false)
+            setDrawCircles(false)
+
+            highLightColor = ContextCompat.getColor(chart.context, R.color.gray_10)
+            highlightLineWidth = 1F
+            setDrawVerticalHighlightIndicator(true)
+            setDrawHorizontalHighlightIndicator(false)
+            enableDashedHighlightLine(4.4F, 1F, 0F)
+            isHighlightEnabled = true
+
+            mode = CUBIC_BEZIER
+            cubicIntensity = 0.2f
+            color = ContextCompat.getColor(chart.context, SelectedType.getColor(selectedType))
+
+            setDrawFilled(true)
+            fillDrawable = ContextCompat.getDrawable(chart.context, SelectedType.getFillDrawable(selectedType))
         }
 
-        isHighlightPerDragEnabled = false
-        isHighlightPerTapEnabled = isClickable
-        val description = Description()
-        description.text = ""
-        this.description = description
+        val lastWeekDataSet = dataSets.last() as? LineDataSet
+        lastWeekDataSet?.apply {
+            axisDependency = LEFT
 
-        animateX(1000, Easing.EaseInSine)
+            lineWidth = 2f
 
-        invalidate()
-        return item.entries.size
+            mode = CUBIC_BEZIER
+            cubicIntensity = 0.2f
+
+            color = ContextCompat.getColor(chart.context, R.color.gray_10)
+
+            setDrawValues(false)
+            setDrawCircles(false)
+            isHighlightEnabled = false
+        }
     }
 
     private fun buildEmptyDataSet(context: Context, count: Int): LineDataSet {
@@ -224,53 +288,7 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = false
         dataSet.fillAlpha = 80
-        dataSet.setDrawHighlightIndicators(false) //
-        return dataSet
-    }
-
-    private fun buildThisWeekDataSet(context: Context, selectedType: Int, cut: List<Entry>): LineDataSet {
-        val selectType = SelectedType.valueOf(selectedType).toString()
-        val dataSet = LineDataSet(cut, "Current week $selectType")
-
-        dataSet.axisDependency = LEFT
-
-        dataSet.lineWidth = 2f
-        dataSet.formLineWidth = 0f
-
-        dataSet.setDrawValues(false)
-        dataSet.setDrawCircles(false)
         dataSet.setDrawHighlightIndicators(false)
-
-        dataSet.mode = CUBIC_BEZIER
-        dataSet.cubicIntensity = 0.2f
-        dataSet.color = when (SelectedType.valueOf(selectedType)) {
-            Visitors -> ContextCompat.getColor(context, R.color.purple_50)
-            else -> ContextCompat.getColor(context, R.color.blue_50)
-        }
-
-        dataSet.setDrawFilled(true)
-        dataSet.fillDrawable = when (SelectedType.valueOf(selectedType)) {
-            Visitors -> ContextCompat.getDrawable(context, R.drawable.bg_rectangle_stats_line_chart_purple_gradient)
-            else -> ContextCompat.getDrawable(context, R.drawable.bg_rectangle_stats_line_chart_blue_gradient)
-        }
-
-        return dataSet
-    }
-
-    private fun buildPreviousWeekDataSet(context: Context, entries: List<Entry>): LineDataSet {
-        val dataSet = LineDataSet(entries, "Previous week data")
-        dataSet.axisDependency = LEFT
-
-        dataSet.lineWidth = 2f
-
-        dataSet.mode = CUBIC_BEZIER
-        dataSet.cubicIntensity = 0.2f
-
-        dataSet.color = ContextCompat.getColor(context, R.color.gray_10)
-
-        dataSet.setDrawValues(false)
-        dataSet.setDrawCircles(false)
-
         return dataSet
     }
 
