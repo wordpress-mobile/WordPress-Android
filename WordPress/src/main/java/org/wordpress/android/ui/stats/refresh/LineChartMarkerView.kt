@@ -8,15 +8,17 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import javax.inject.Inject
 
 @Suppress("MagicNumber")
+@AndroidEntryPoint
 class LineChartMarkerView @Inject constructor(
     context: Context
 ) : MarkerView(context, R.layout.stats_line_chart_marker) {
-    private lateinit var statsUtils: StatsUtils
+    @Inject lateinit var statsUtils: StatsUtils
     private val changeView = findViewById<TextView>(R.id.marker_text1)
     private val countView = findViewById<TextView>(R.id.marker_text2)
 
