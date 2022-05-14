@@ -978,6 +978,7 @@
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
