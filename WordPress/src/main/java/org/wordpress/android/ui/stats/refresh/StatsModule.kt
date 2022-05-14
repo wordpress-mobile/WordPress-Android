@@ -565,7 +565,7 @@ class StatsModule {
             mainDispatcher,
             statsSiteProvider,
             useCases,
-            { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWERS) },
+            { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWER_TYPES, InsightType.FOLLOWERS) },
             uiModelMapper::mapInsights
     )
 
