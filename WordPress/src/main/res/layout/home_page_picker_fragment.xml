@@ -22,8 +22,8 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include
-                android:id="@+id/modal_layout_picker_header_section"
-                layout="@layout/modal_layout_picker_header_section"
+                android:id="@+id/site_creation_theme_header"
+                layout="@layout/site_creation_header_v2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"

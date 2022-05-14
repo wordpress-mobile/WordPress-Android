@@ -88,13 +88,8 @@ class HomePagePickerFragment : Fragment() {
 
     private fun HomePagePickerFragmentBinding.setupUi() {
         homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
-        with(modalLayoutPickerHeaderSection) {
-            modalLayoutPickerTitleRow?.header?.apply {
-                textAlignment = View.TEXT_ALIGNMENT_TEXT_START
-                setText(R.string.hpp_title)
-            }
-            modalLayoutPickerSubtitleRow?.root?.visibility = View.GONE
-        }
+        siteCreationThemeHeader.title?.setText(R.string.hpp_title)
+        siteCreationThemeHeader.subtitle?.isGone = true
         modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
             height = thumbDimensionProvider.previewHeight
             width = thumbDimensionProvider.previewWidth
@@ -141,7 +136,7 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(
                 homePagePickerTitlebar.title,
-                modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header,
+                siteCreationThemeHeader.title,
                 visible
         )
     }
