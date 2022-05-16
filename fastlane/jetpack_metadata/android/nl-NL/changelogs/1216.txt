@@ -1,0 +1,8 @@
+19.8:
+- Instellingen van aanbevolen afbeelding in blok met nieuwste berichten
+- Meldingen bij schakelen tussen HTML/-visuele modus
+- Volledige voorbeeldweergave insluiten-blok
+- Visuele elementen taalkiezer
+- Langere uploads met standalone VideoPress
+- Mediakiezer Talkback-mediatypen
+- URL magische link voor aanmelden

@@ -1,0 +1,10 @@
+19.8:
+- Vista previa de los cambios no guardados para las entradas en borrador
+- Ajustes de la imagen destacada en el bloque Últimas entradas
+- Avisos de cambio de modo HTML/Visual
+- Vista previa completa del bloque de incrustar
+- Elementos visuales del Selector local
+- Cargas más extensas con VideoPress independiente
+- Tipos de medios de discusión del Selector de medios
+- Cargas de nombres de archivos no latinos
+- Borrar imagen destacada en los ajustes de las entradas
