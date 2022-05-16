@@ -14,7 +14,7 @@ import org.wordpress.android.R.attr
 import org.wordpress.android.R.integer
 import org.wordpress.android.R.string
 import org.wordpress.android.ui.comments.CommentUtils
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import javax.inject.Inject
 
 class CommentListUiUtils @Inject constructor() {

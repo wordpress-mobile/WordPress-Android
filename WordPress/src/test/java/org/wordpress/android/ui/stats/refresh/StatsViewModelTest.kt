@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -87,7 +88,9 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
-        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED)
+        /* First one is default insights section selection which is set when no value is passed to vm for
+           initial section */
+        verify(analyticsTracker, times(2)).track(STATS_INSIGHTS_ACCESSED)
     }
 
     @Test

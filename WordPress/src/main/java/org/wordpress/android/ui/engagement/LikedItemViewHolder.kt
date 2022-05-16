@@ -11,7 +11,7 @@ import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameCharSequence
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.util.GravatarUtils
-import org.wordpress.android.util.getDrawableResIdFromAttribute
+import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 

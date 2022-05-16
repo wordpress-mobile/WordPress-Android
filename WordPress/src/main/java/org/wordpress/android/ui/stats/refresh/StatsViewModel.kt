@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -56,6 +57,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("TooManyFunctions", "LongParameterList")
+@HiltViewModel
 class StatsViewModel
 @Inject constructor(
     @Named(LIST_STATS_USE_CASES) private val listUseCases: Map<StatsSection, BaseListUseCase>,
@@ -143,19 +145,20 @@ class StatsViewModel
         if (!isInitialized || restart) {
             isInitialized = true
 
-            initialSection?.let { statsSectionManager.setSelectedSection(it) }
-
-            val initialGranularity = initialSection?.toStatsGranularity()
-            if (initialGranularity != null && initialSelectedPeriod != null) {
-                selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
-            }
-
             // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
             analyticsTracker.track(
                     stat = AnalyticsTracker.Stat.STATS_ACCESSED,
                     site = statsSiteProvider.siteModel,
                     feature = todaysStatsCardFeatureConfig
             )
+
+            initialSection?.let { statsSectionManager.setSelectedSection(it) }
+            trackSectionSelected(initialSection ?: INSIGHTS)
+
+            val initialGranularity = initialSection?.toStatsGranularity()
+            if (initialGranularity != null && initialSelectedPeriod != null) {
+                selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
+            }
 
             if (launchedFromWidget) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
@@ -227,6 +230,10 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
+        trackSectionSelected(statsSection)
+    }
+
+    private fun trackSectionSelected(statsSection: StatsSection) {
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)

@@ -5,18 +5,14 @@ repositories {
         url "https://a8c-libs.s3.amazonaws.com/android"
         content {
             includeGroup "org.wordpress"
-        }
-    }
-    maven {
-        url 'https://jitpack.io'
-        content {
-            includeGroup "com.github.Automattic"
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.tracks"
         }
     }
 }
 
 dependencies {
-    implementation "com.github.Automattic:Automattic-Tracks-Android:$tracksVersion"
+    implementation "com.automattic:Automattic-Tracks-Android:$tracksVersion"
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
     lintChecks 'org.wordpress:lint:1.1.0'

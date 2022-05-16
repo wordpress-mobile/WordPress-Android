@@ -1,0 +1,10 @@
+19.8:
+- Pratinjau perubahan tak tersimpan untuk konsep pos
+- Pengaturan gambar andalan di blok Artikel Terbaru
+- Pemberitahuan pengalihan mode HTML/Visual
+- Pratinjau lengkap blok Sematan
+- Tampilan Pemilih Lokasi
+- Unggahan lebih panjang dengan VideoPress tersendiri
+- Talkback dapat membacakan tipe media di Pemilih Media
+- Unggahan berkas bernama non-Latin
+- Gambar andalan lebih jernih pada pengaturan pos

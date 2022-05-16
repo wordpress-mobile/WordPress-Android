@@ -32,7 +32,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
-import org.wordpress.android.util.getColorStateListFromAttribute
+import org.wordpress.android.util.extensions.getColorStateListFromAttribute
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -67,7 +67,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked()
+        fun onNewPostButtonClicked(promptId: Int)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {
@@ -94,6 +94,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             imgIcon.setImageResource(getDrawableResForPosition(i))
             if (i == getPosition(READER)) {
                 customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+            }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
             itemView.addView(customView)

@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import org.wordpress.android.databinding.DomainRegistrationCardBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
 
 class DomainRegistrationViewHolder(
     parent: ViewGroup

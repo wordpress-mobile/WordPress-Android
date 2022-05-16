@@ -72,14 +72,6 @@ public class ReaderViewPage {
         return new ReaderPage();
     }
 
-    public ReaderPage goBackToReaderIfNecessary() {
-        if (mFooter.exists()) {
-            goBackToReader();
-        }
-
-        return new ReaderPage();
-    }
-
     public ReaderViewPage slideToPreviousPost() {
         swipeToRight();
 

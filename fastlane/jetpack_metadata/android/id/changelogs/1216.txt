@@ -1,0 +1,8 @@
+19.8:
+- Pengaturan gambar andalan di blok Artikel Terbaru
+- Pemberitahuan pengalihan mode HTML/Visual
+- Pratinjau lengkap blok Sematan
+- Tampilan Pemilih Lokal
+- Unggahan lebih panjang dengan VideoPress
+- Tipe media talkback Pemilih Media
+- URL tautan ajaib untuk Mendaftar
