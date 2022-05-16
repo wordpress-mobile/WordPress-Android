@@ -87,7 +87,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setupUi() {
-        homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
+        homePagePickerTitlebar.appBarTitle.isInvisible = !displayUtils.isPhoneLandscape()
         siteCreationThemeHeader.title?.setText(R.string.hpp_title)
         siteCreationThemeHeader.subtitle?.isGone = true
         modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
@@ -135,7 +135,7 @@ class HomePagePickerFragment : Fragment() {
 
     private fun HomePagePickerFragmentBinding.setHeaderVisibility(visible: Boolean) {
         uiHelper.fadeInfadeOutViews(
-                homePagePickerTitlebar.title,
+                homePagePickerTitlebar.appBarTitle,
                 siteCreationThemeHeader.title,
                 visible
         )
