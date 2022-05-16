@@ -86,6 +86,13 @@ enum class QuickStartMySitePrompts constructor(
             R.id.quick_action_pages_button,
             R.string.quick_start_dialog_edit_homepage_message_short,
             R.drawable.ic_pages_white_24dp
+    ),
+    CHECK_NOTIFICATIONS(
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL,
+            R.id.root_view_main,
+            R.id.bottom_nav_notifications_button,
+            R.string.quick_start_dialog_check_notifications_message_short,
+            R.drawable.ic_bell_white_24dp
     );
 
     companion object {

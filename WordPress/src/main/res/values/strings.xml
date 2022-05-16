@@ -3094,8 +3094,11 @@
     <string name="quick_start_dialog_edit_homepage_title">Edit your homepage</string>
     <string name="quick_start_dialog_edit_homepage_message">Change, add, or remove content from your site\'s homepage.</string>
     <string name="quick_start_dialog_edit_homepage_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Select the %1$s Notifications tab %2$s to get updates on the go.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">Select %1$s Homepage %2$s to edit your Homepage.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
+    <string name="quick_start_dialog_check_notifications_title">Check your notifications</string>
+    <string name="quick_start_dialog_check_notifications_message">Get real time updates from your pocket.</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
@@ -3122,6 +3125,8 @@
     <string name="quick_start_list_edit_homepage_title" translatable="false">@string/quick_start_dialog_edit_homepage_title</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
+    <string name="quick_start_list_check_notification_subtitle">Get real time updates from your pocket</string>
+    <string name="quick_start_list_check_notification_title" translatable="false">@string/quick_start_dialog_check_notifications_title</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>

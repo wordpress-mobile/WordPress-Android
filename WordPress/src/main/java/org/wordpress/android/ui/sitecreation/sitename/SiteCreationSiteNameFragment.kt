@@ -80,7 +80,6 @@ class SiteCreationSiteNameFragment : Fragment() {
         siteCreationSiteNameHeader.title?.text = headerTitleWithIntentColoredBlueIfSpecified
         siteCreationSiteNameHeader.subtitle?.setText(R.string.new_site_creation_site_name_header_subtitle)
         siteCreationSiteNameTitlebar.appBarTitle.setText(R.string.new_site_creation_site_name_title)
-        siteCreationSiteNameTitlebar.appBarTitle.isInvisible = !displayUtils.isPhoneLandscape()
         viewModel.uiState.value?.siteName.let { input.setText(it) }
         input.requestFocus()
         ActivityUtils.showKeyboard(input)

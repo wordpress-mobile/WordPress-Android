@@ -40,6 +40,8 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -111,7 +113,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
-import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
+import org.wordpress.android.ui.quickstart.QuickStartType
+import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -169,6 +172,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var quickStartType: QuickStartType
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -307,7 +311,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(quickStartRepository.onQuickStartTabStep).thenReturn(quickStartTabStep)
-        whenever(quickStartRepository.quickStartType).thenReturn(NewSiteQuickStartType)
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
+                .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -860,12 +868,26 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site info card url click opens site and completes View Site task`() = test {
-        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
+    fun `given new site QS View Site task, when site info url clicked, site opened + View Site task completed`() =
+            test {
+                whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
+                        .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
+                invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.VIEW_SITE)
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
-    }
+                verify(quickStartRepository).completeTask(QuickStartNewSiteTask.VIEW_SITE)
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
+            }
+
+    @Test
+    fun `given existing site QS View Site task, when site info url clicked, site opened + View Site task completed`() =
+            test {
+                whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
+                        .thenReturn(QuickStartExistingSiteTask.VIEW_SITE)
+                invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
+
+                verify(quickStartRepository).completeTask(QuickStartExistingSiteTask.VIEW_SITE)
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
+            }
 
     @Test
     fun `site info card switch click opens site picker`() = test {
@@ -957,8 +979,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action stats click completes CHECK_STATS task`() {
+    fun `given new site QS, when quick action stats clicked, then CHECK_STATS task completes`() {
         initSelectedSite()
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -1166,47 +1190,90 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* START/IGNORE QUICK START + QUICK START DIALOG */
 
     @Test
-    fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
+    fun `given dynamic cards enabled + new site, when check & start QS triggered, then new site QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
 
         verify(quickStartUtilsWrapper).startQuickStart(
                 siteLocalId,
                 false,
-                quickStartRepository.quickStartType
+                quickStartType
         )
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
     @Test
+    fun `given dynamic cards enabled + existing site, when check & start QS triggered, then existing site QS starts`() {
+        whenever(quickStartRepository.quickStartType).thenReturn(ExistingSiteQuickStartType)
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
+
+        verify(quickStartUtilsWrapper).startQuickStart(
+                siteLocalId,
+                false,
+                ExistingSiteQuickStartType
+        )
+        verify(mySiteSourceManager).refreshQuickStart()
+    }
+
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given QS is not available for the site, when check and start QS is triggered, then QSP is not shown`() {
+    fun `given QS is not available for new site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `when check and start QS is triggered, then QSP is shown`() {
+    fun `given QS is not available for existing site, when check and start QS is triggered, then QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given new site, when check and start QS is triggered, then QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
+
+        assertThat(navigationActions).containsExactly(
+                SiteNavigationAction.ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_manage_site_title,
+                        R.string.quick_start_dialog_need_help_manage_site_message,
+                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                        R.string.quick_start_dialog_need_help_button_negative
+                )
+        )
+    }
+
+    @Test
+    fun `given existing site, when check and start QS is triggered, then QSP is shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
 
         assertThat(navigationActions).containsExactly(
                 SiteNavigationAction.ShowQuickStartDialog(
@@ -1671,10 +1738,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click completes CHECK_STATS task`() {
+    fun `given new site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
+
         invokeItemClickAction(ListItemAction.STATS)
 
         verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
+    }
+
+    @Test
+    fun `given existing site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
+
+        invokeItemClickAction(ListItemAction.STATS)
+
+        verify(quickStartRepository).completeTask(QuickStartExistingSiteTask.CHECK_STATS)
     }
 
     @Test
@@ -1868,17 +1948,19 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
         verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenHomepage(site, localHomepageId))
+        assertThat(navigationActions).containsExactly(
+                SiteNavigationAction.OpenHomepage(site, homepageLocalId = localHomepageId, isNewSite = true)
+        )
     }
 
     @Test
     fun `given the land on the editor feature is not enabled, then the home page editor is not shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(false)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -2405,9 +2487,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun findDomainRegistrationCard() =
             getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
-
-    private fun SiteSelected.findSiteMenuTabUiState() =
-            tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.SITE_MENU }
 
     private fun SiteSelected.findDashboardTabUiState() =
             tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.DASHBOARD }
