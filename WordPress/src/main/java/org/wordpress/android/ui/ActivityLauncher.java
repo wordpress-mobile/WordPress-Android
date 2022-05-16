@@ -1504,6 +1504,11 @@ public class ActivityLauncher {
         StatsDetailActivity.startForTotalCommentsDetail(context, site);
     }
 
+    public static void viewTotalFollowersDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalFollowersDetail(context, site);
+    }
+
     public static void viewInsightsDetail(Context context, SiteModel site) {
         if (site == null) {
             return;

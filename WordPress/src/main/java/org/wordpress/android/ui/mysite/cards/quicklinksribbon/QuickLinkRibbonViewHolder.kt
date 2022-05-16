@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
+import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickLinkRibbonListBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
@@ -36,6 +37,13 @@ class QuickLinkRibbonViewHolder(
         }
         if (quickLinkRibbon.showPagesFocusPoint) {
             quickLinkRibbonItemList.smoothScrollToPosition(0)
+        }
+        if (quickLinkRibbon.showMediaFocusPoint) {
+            val mediaItem = quickLinkRibbon.quickLinkRibbonItems.firstOrNull { it.label == R.string.media }
+            mediaItem?.let {
+                val mediaItemIndex = quickLinkRibbon.quickLinkRibbonItems.indexOf(it)
+                quickLinkRibbonItemList.smoothScrollToPosition(mediaItemIndex)
+            }
         }
     }
 

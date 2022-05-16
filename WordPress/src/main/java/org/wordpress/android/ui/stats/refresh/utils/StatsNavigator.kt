@@ -27,13 +27,13 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAnnualStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
@@ -46,6 +46,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewSearchTerms
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalCommentsStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalFollowersStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalLikesStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewVideoPlays
@@ -236,6 +237,9 @@ class StatsNavigator @Inject constructor(
 
             is ViewTotalCommentsStats -> {
                 ActivityLauncher.viewTotalCommentsDetail(activity, siteProvider.siteModel)
+            }
+            is ViewTotalFollowersStats -> {
+                ActivityLauncher.viewTotalFollowersDetail(activity, siteProvider.siteModel)
             }
         }
     }

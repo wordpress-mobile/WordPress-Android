@@ -2305,7 +2305,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
-        // If this.mIsXPostsCapable has not been set, default to allowing xPosts
+        // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based
+        // WP.com sites so, gate with `isUsingWpComRestApi()`
+        // If this.mIsXPostsCapable has not been set, default to allowing xPosts.
         boolean enableXPosts = mSite.isUsingWpComRestApi() && (mIsXPostsCapable == null || mIsXPostsCapable);
 
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
