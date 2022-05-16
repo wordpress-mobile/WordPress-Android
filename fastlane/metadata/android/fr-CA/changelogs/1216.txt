@@ -1,0 +1,8 @@
+19.8 :
+- Aperçu des modifications non sauvegardées pour les articles à l’état de brouillon
+- Réglages de l’image mise en avant dans le bloc des derniers articles
+- Notifications lors de la commutation entre les modes HTML/visuel
+- Aperçu complet du bloc de contenu embarqué
+- Visuels dans le sélecteur local
+- Chargements plus longs avec le module autonome VideoPress
+- Chargements avec un nom de fichier non latin

@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
+import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -483,6 +484,7 @@ class MySiteViewModel @Inject constructor(
                         scanAvailable = scanAvailable,
                         enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                        enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         onClick = this::onItemClick
                 )
         )
@@ -677,7 +679,12 @@ class MySiteViewModel @Inject constructor(
                     )
                     getStatsNavigationActionForSite(selectedSite)
                 }
-                ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
+                ListItemAction.MEDIA -> {
+                    quickStartRepository.requestNextStepOfTask(
+                            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+                    )
+                    SiteNavigationAction.OpenMedia(selectedSite)
+                }
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
                     SiteNavigationAction.OpenSite(selectedSite)
@@ -804,6 +811,9 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
+        quickStartRepository.requestNextStepOfTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+        )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
@@ -833,6 +843,9 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickLinkRibbonMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
+        quickStartRepository.requestNextStepOfTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+        )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 

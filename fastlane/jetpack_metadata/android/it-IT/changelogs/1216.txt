@@ -1,0 +1,8 @@
+19.8:
+- Impostazioni dell'immagine in evidenza nel blocco Ultimi articoli
+- Avvisi al passaggio della modalità HTML/Visuale
+ - Anteprima blocco Incorporamenti completa
+- Elementi visuali del selettore locale
+- Caricamenti più lunghi con VideoPress autonomo
+- Tipi di elementi multimediali di talkback del selettore di elementi
+- Iscrizione tramite un URL del link
