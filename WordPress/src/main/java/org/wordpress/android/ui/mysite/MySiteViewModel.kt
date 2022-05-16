@@ -22,6 +22,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
+import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -620,7 +622,7 @@ class MySiteViewModel @Inject constructor(
         return when (quickStartTask) {
             QuickStartNewSiteTask.UPDATE_SITE_TITLE,
             QuickStartNewSiteTask.UPLOAD_SITE_ICON,
-            QuickStartNewSiteTask.VIEW_SITE -> true
+            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL) -> true
             else -> false
         }
     }
@@ -668,7 +670,9 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.THEMES -> SiteNavigationAction.OpenThemes(selectedSite)
                 ListItemAction.PLUGINS -> SiteNavigationAction.OpenPlugins(selectedSite)
                 ListItemAction.STATS -> {
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.CHECK_STATS)
+                    quickStartRepository.completeTask(
+                            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+                    )
                     getStatsNavigationActionForSite(selectedSite)
                 }
                 ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
@@ -760,7 +764,9 @@ class MySiteViewModel @Inject constructor(
 
     private fun urlClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        quickStartRepository.completeTask(QuickStartNewSiteTask.VIEW_SITE)
+        quickStartRepository.completeTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL)
+        )
         _onNavigation.value = Event(SiteNavigationAction.OpenSite(selectedSite))
     }
 
@@ -773,7 +779,9 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_STATS_TAPPED)
-        quickStartRepository.completeTask(QuickStartNewSiteTask.CHECK_STATS)
+        quickStartRepository.completeTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+        )
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
@@ -800,7 +808,9 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickLinkRibbonStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
-        quickStartRepository.completeTask(QuickStartNewSiteTask.CHECK_STATS)
+        quickStartRepository.completeTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+        )
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
@@ -1039,19 +1049,24 @@ class MySiteViewModel @Inject constructor(
         selectDefaultTabIfNeeded()
     }
 
-    fun performFirstStepAfterSiteCreation(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
+    fun performFirstStepAfterSiteCreation(
+        siteLocalId: Int,
+        isSiteTitleTaskCompleted: Boolean,
+        isNewSite: Boolean
+    ) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
-            checkAndStartLandOnTheEditor()
+            checkAndStartLandOnTheEditor(isNewSite)
         } else {
-            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted)
+            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted, isNewSite)
         }
     }
 
-    private fun checkAndStartLandOnTheEditor() {
+    private fun checkAndStartLandOnTheEditor(isNewSite: Boolean) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
-                    val landOnTheEditorAction = SiteNavigationAction.OpenHomepage(selectedSite, localHomepageId)
+                    val landOnTheEditorAction = SiteNavigationAction
+                            .OpenHomepage(selectedSite, localHomepageId, isNewSite)
                     _onNavigation.postValue(Event(landOnTheEditorAction))
                     analyticsTrackerWrapper.track(Stat.LANDING_EDITOR_SHOWN)
                 }
@@ -1059,7 +1074,12 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun checkAndStartQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
+    fun checkAndStartQuickStart(
+        siteLocalId: Int,
+        isSiteTitleTaskCompleted: Boolean,
+        isNewSite: Boolean
+    ) {
+        quickStartRepository.checkAndSetQuickStartType(isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         } else {
