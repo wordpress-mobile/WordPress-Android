@@ -24,6 +24,7 @@ import org.wordpress.android.ui.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.engagement.UserProfileViewModel;
+import org.wordpress.android.ui.featureintroduction.FeatureIntroductionViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
@@ -72,6 +73,7 @@ import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalCommentsDetailListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalFollowersDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
@@ -627,6 +629,16 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(FeatureIntroductionViewModel.class)
+    abstract ViewModel featureIntroductionViewModel(FeatureIntroductionViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(TotalCommentsDetailListViewModel.class)
-    abstract ViewModel totalCommentssDetailListViewModel(TotalCommentsDetailListViewModel viewModel);
+    abstract ViewModel totalCommentsDetailListViewModel(TotalCommentsDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalFollowersDetailListViewModel.class)
+    abstract ViewModel totalFollowersDetailListViewModel(TotalFollowersDetailListViewModel viewModel);
 }

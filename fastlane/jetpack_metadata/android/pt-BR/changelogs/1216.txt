@@ -1,0 +1,8 @@
+19.8:
+– Configurações da imagem destacada no bloco Posts mais recentes
+– Avisos na troca dos modos HTML/Visual
+– Pré-visualização completa do bloco de mídia incorporada
+– Visualização do seletor local
+– Uploads mais longos com VideoPress independente
+– Seletor de tipos de mídia do talkback
+– URL com acesso direto à inscrição

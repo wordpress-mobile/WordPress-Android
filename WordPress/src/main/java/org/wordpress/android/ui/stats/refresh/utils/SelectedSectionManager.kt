@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import javax.inject.Inject
 
@@ -45,7 +46,7 @@ class SelectedSectionManager
 
 fun StatsSection.toStatsGranularity(): StatsGranularity? {
     return when (this) {
-        ANNUAL_STATS, DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, INSIGHTS -> null
+        ANNUAL_STATS, DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, TOTAL_FOLLOWERS_DETAIL, INSIGHTS -> null
         StatsSection.INSIGHT_DETAIL,
         StatsSection.DAYS -> DAYS
         StatsSection.WEEKS -> WEEKS

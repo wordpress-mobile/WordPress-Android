@@ -9,26 +9,36 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EXPLORE_PLANS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.items.categoryheader.SiteCategoryItemBuilder
 import org.wordpress.android.ui.mysite.items.listitem.SiteListItemBuilder
+import org.wordpress.android.ui.quickstart.QuickStartType
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
     @Mock lateinit var siteModel: SiteModel
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var quickStartType: QuickStartType
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
     fun setUp() {
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         siteItemsBuilder = SiteItemsBuilder(
                 siteCategoryItemBuilder,
-                siteListItemBuilder
+                siteListItemBuilder,
+                quickStartRepository
         )
     }
 
@@ -68,6 +78,7 @@ class SiteItemsBuilderTest {
                 addPeopleItem = true,
                 addPluginItem = true,
                 addShareItem = true,
+                addSiteDomainsItem = true,
                 addSiteSettingsItem = true,
                 addThemesItem = true,
                 addBackupItem = true,
@@ -99,6 +110,7 @@ class SiteItemsBuilderTest {
                 PEOPLE_ITEM,
                 PLUGINS_ITEM,
                 SHARING_ITEM,
+                DOMAINS_ITEM,
                 SITE_SETTINGS_ITEM,
                 EXTERNAL_HEADER,
                 VIEW_SITE_ITEM,
@@ -143,15 +155,17 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `given stats focus point enabled, when card built, then showFocusPoint should be true`() {
+    fun `given new site QS stats task focus point enabled, when card built, then stats item focus point shown`() {
         setupHeaders()
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         val enableStatsFocusPoint = true
 
         val buildSiteItems = siteItemsBuilder.build(
                 SiteItemsBuilderParams(
                         site = siteModel,
                         onClick = SITE_ITEM_ACTION,
-                        activeTask = CHECK_STATS,
+                        activeTask = QuickStartNewSiteTask.CHECK_STATS,
                         enableStatsFocusPoint = enableStatsFocusPoint
                 )
         )
@@ -160,15 +174,55 @@ class SiteItemsBuilderTest {
     }
 
     @Test
-    fun `given stats focus point disabled, when card built, then showFocusPoint should be false`() {
+    fun `given new site QS stats task focus point disabled, when card built, then stats item focus point hidden`() {
         setupHeaders()
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         val enableStatsFocusPoint = false
 
         val buildSiteItems = siteItemsBuilder.build(
                 SiteItemsBuilderParams(
                         site = siteModel,
                         onClick = SITE_ITEM_ACTION,
-                        activeTask = CHECK_STATS,
+                        activeTask = QuickStartNewSiteTask.CHECK_STATS,
+                        enableStatsFocusPoint = enableStatsFocusPoint
+                )
+        )
+
+        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
+    }
+
+    @Test
+    fun `given existing site QS stats task focus point enabled, when card built, then stats item focus point shown`() {
+        setupHeaders()
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
+        val enableStatsFocusPoint = true
+
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = QuickStartExistingSiteTask.CHECK_STATS,
+                        enableStatsFocusPoint = enableStatsFocusPoint
+                )
+        )
+
+        assertThat(buildSiteItems).contains(STATS_ITEM.copy(showFocusPoint = enableStatsFocusPoint))
+    }
+
+    @Test
+    fun `given existing site QS stats task focus point disabled, when card built, then stats item focus pt hidden`() {
+        setupHeaders()
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
+        val enableStatsFocusPoint = false
+
+        val buildSiteItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION,
+                        activeTask = QuickStartExistingSiteTask.CHECK_STATS,
                         enableStatsFocusPoint = enableStatsFocusPoint
                 )
         )
@@ -211,6 +265,36 @@ class SiteItemsBuilderTest {
         assertThat(infoItem).isNull()
     }
 
+    @Test
+    fun `given site domains flag is not enabled, when build site domains is invoked, then site domains is built`() {
+        whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(null)
+
+        val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
+        )
+
+        assertThat(siteDomainsItems).doesNotContain(DOMAINS_ITEM)
+    }
+
+    @Test
+    fun `given site domains flag is enabled, when build site domains is invoked, then site domains is built`() {
+        whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION))
+                .thenReturn(DOMAINS_ITEM)
+
+        val siteDomainsItems = siteItemsBuilder.build(
+                SiteItemsBuilderParams(
+                        site = siteModel,
+                        onClick = SITE_ITEM_ACTION
+                )
+        )
+
+        assertThat(siteDomainsItems).contains(DOMAINS_ITEM)
+    }
+
     @Suppress("ComplexMethod", "LongMethod", "LongParameterList")
     private fun setupHeaders(
         addJetpackHeader: Boolean = false,
@@ -224,6 +308,7 @@ class SiteItemsBuilderTest {
         addPeopleItem: Boolean = false,
         addPluginItem: Boolean = false,
         addShareItem: Boolean = false,
+        addSiteDomainsItem: Boolean = false,
         addSiteSettingsItem: Boolean = false,
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
@@ -316,6 +401,11 @@ class SiteItemsBuilderTest {
         if (addThemesItem) {
             whenever(siteListItemBuilder.buildThemesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                     THEMES_ITEM
+            )
+        }
+        if (addSiteDomainsItem) {
+            whenever(siteListItemBuilder.buildDomainsItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    DOMAINS_ITEM
             )
         }
     }

@@ -43,6 +43,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
@@ -94,6 +95,7 @@ public class NotificationsProcessingService extends Service {
     @Inject SiteStore mSiteStore;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
+    @Inject QuickStartTracker mQuickStartTracker;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -229,7 +231,7 @@ public class NotificationsProcessingService extends Service {
                     if (notificationId == GROUP_NOTIFICATION_ID) {
                         mGCMMessageHandler.clearNotifications();
                     } else if (notificationId == QUICK_START_REMINDER_NOTIFICATION_ID) {
-                        AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
+                        mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_DISMISSED);
                     } else {
                         mGCMMessageHandler.removeNotification(notificationId);
                         // Dismiss the grouped notification if a user dismisses all notifications from a wear device

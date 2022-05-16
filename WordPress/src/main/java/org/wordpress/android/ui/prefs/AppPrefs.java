@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.quickstart.QuickStartType;
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
@@ -138,6 +139,7 @@ public class AppPrefs {
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
+        LAST_SELECTED_QUICK_START_TYPE,
 
         POST_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
@@ -172,7 +174,7 @@ public class AppPrefs {
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
 
         // Used to indicate if the variant has been assigned for the My Site Tab experiment
-        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED
+        MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
     }
 
     /**
@@ -1249,6 +1251,19 @@ public class AppPrefs {
             return;
         }
         setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
+    }
+
+    public static void setLastSelectedQuickStartType(QuickStartType quickStartType) {
+        setString(DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE, quickStartType.getLabel());
+    }
+
+    public static QuickStartType getLastSelectedQuickStartType() {
+        return QuickStartType.Companion.fromLabel(
+                getString(
+                        DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE,
+                        NewSiteQuickStartType.INSTANCE.getLabel()
+                )
+        );
     }
 
     public static void setManualFeatureConfig(boolean isEnabled, String featureKey) {

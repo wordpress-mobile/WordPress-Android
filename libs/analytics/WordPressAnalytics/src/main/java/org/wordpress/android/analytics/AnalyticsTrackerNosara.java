@@ -308,11 +308,17 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TYPE_GROW_VIEWED:
                 predefinedEventProperties.put("type", "grow");
                 break;
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED:
+                predefinedEventProperties.put("type", "get_to_know_app");
+                break;
             case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
                 predefinedEventProperties.put("type", "customize");
                 break;
             case QUICK_START_TYPE_GROW_DISMISSED:
                 predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED:
+                predefinedEventProperties.put("type", "get_to_know_app");
                 break;
             case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
                 predefinedEventProperties.put("type", "customize");
@@ -320,11 +326,17 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_GROW_COLLAPSED:
                 predefinedEventProperties.put("type", "grow");
                 break;
+            case QUICK_START_GET_TO_KNOW_APP_COLLAPSED:
+                predefinedEventProperties.put("type", "get_to_know_app");
+                break;
             case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
                 predefinedEventProperties.put("type", "customize");
                 break;
             case QUICK_START_LIST_GROW_EXPANDED:
                 predefinedEventProperties.put("type", "grow");
+                break;
+            case QUICK_START_GET_TO_KNOW_APP_EXPANDED:
+                predefinedEventProperties.put("type", "get_to_know_app");
                 break;
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
                 predefinedEventProperties.put("task_name", "create_site");
@@ -410,6 +422,16 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "review_pages");
+                break;
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED:
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED:
+            case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "check_notifications");
+                break;
+            case QUICK_START_LIST_UPLOAD_MEDIA_SKIPPED:
+            case QUICK_START_LIST_UPLOAD_MEDIA_TAPPED:
+            case QUICK_START_UPLOAD_MEDIA_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "media_upload");
                 break;
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
@@ -1811,15 +1833,19 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_remove_dialog_button_tapped";
             case QUICK_START_TYPE_CUSTOMIZE_DISMISSED:
             case QUICK_START_TYPE_GROW_DISMISSED:
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED:
                 return "quick_start_type_dismissed";
             case QUICK_START_LIST_CUSTOMIZE_COLLAPSED:
             case QUICK_START_LIST_GROW_COLLAPSED:
+            case QUICK_START_GET_TO_KNOW_APP_COLLAPSED:
                 return "quick_start_list_collapsed";
             case QUICK_START_LIST_CUSTOMIZE_EXPANDED:
             case QUICK_START_LIST_GROW_EXPANDED:
+            case QUICK_START_GET_TO_KNOW_APP_EXPANDED:
                 return "quick_start_list_expanded";
             case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
             case QUICK_START_TYPE_GROW_VIEWED:
+            case QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED:
                 return "quick_start_list_viewed";
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_SKIPPED:
@@ -1832,6 +1858,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
             case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
             case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED:
+            case QUICK_START_LIST_UPLOAD_MEDIA_SKIPPED:
                 return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
@@ -1844,6 +1872,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
             case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
             case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
+            case QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED:
+            case QUICK_START_LIST_UPLOAD_MEDIA_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
             case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
@@ -1856,6 +1886,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_EXPLORE_PLANS_COMPLETED:
             case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
+            case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
+            case QUICK_START_UPLOAD_MEDIA_TASK_COMPLETED:
                 return "quick_start_task_completed";
             case QUICK_START_ALL_TASKS_COMPLETED:
                 return "quick_start_all_tasks_completed";
@@ -2341,6 +2373,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_prompts_my_site_card_menu_skip_this_prompt_undo_tapped";
             case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_UNDO_CLICKED:
                 return "blogging_prompts_my_site_card_menu_remove_from_dashboard_undo_tapped";
+            case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_VIEWED:
+                return "blogging_prompts_introduction_modal_viewed";
+            case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_DISMISSED:
+                return "blogging_prompts_introduction_modal_dismissed";
+            case BLOGGING_PROMPTS_INTRODUCTION_TRY_IT_NOW_CLICKED:
+                return "blogging_prompts_introduction_modal_try_it_now_tapped";
+            case BLOGGING_PROMPTS_INTRODUCTION_REMIND_ME_CLICKED:
+                return "blogging_prompts_introduction_modal_remind_me_tapped";
+            case BLOGGING_PROMPTS_INTRODUCTION_GOT_IT_CLICKED:
+                return "blogging_prompts_introduction_modal_got_it_tapped";
         }
         return null;
     }

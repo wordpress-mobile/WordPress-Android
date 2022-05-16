@@ -83,8 +83,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
         data class QuickLinkRibbon(
             val quickLinkRibbonItems: List<QuickLinkRibbonItem>,
             val showPagesFocusPoint: Boolean = false,
-            val showStatsFocusPoint: Boolean = false
-        ) : Card(QUICK_LINK_RIBBON, activeQuickStartItem = showPagesFocusPoint || showStatsFocusPoint) {
+            val showStatsFocusPoint: Boolean = false,
+            val showMediaFocusPoint: Boolean = false
+        ) : Card(
+                QUICK_LINK_RIBBON,
+                activeQuickStartItem = showPagesFocusPoint || showStatsFocusPoint || showMediaFocusPoint
+        ) {
             data class QuickLinkRibbonItem(
                 @StringRes val label: Int,
                 @DrawableRes val icon: Int,
