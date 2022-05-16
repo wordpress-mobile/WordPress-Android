@@ -2357,6 +2357,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "webview_share_tapped";
             case WEBVIEW_PREVIEW_DEVICE_CHANGED:
                 return "webview_preview_device_changed";
+            case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_VIEWED:
+                return "blogging_prompts_introduction_modal_viewed";
+            case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_DISMISSED:
+                return "blogging_prompts_introduction_modal_dismissed";
+            case BLOGGING_PROMPTS_INTRODUCTION_TRY_IT_NOW_CLICKED:
+                return "blogging_prompts_introduction_modal_try_it_now_tapped";
+            case BLOGGING_PROMPTS_INTRODUCTION_REMIND_ME_CLICKED:
+                return "blogging_prompts_introduction_modal_remind_me_tapped";
+            case BLOGGING_PROMPTS_INTRODUCTION_GOT_IT_CLICKED:
+                return "blogging_prompts_introduction_modal_got_it_tapped";
         }
         return null;
     }
