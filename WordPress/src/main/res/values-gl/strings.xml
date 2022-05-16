@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-05 14:18:43+0000
+Translation-Revision-Date: 2022-05-13 11:51:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
@@ -1716,7 +1716,7 @@ Language: gl_ES
     <string name="stats_country_label">País</string>
     <string name="stats_countries">Países</string>
     <string name="stats_clicks_label">Clics</string>
-    <string name="stats_clicks_link_label">Enlace</string>
+    <string name="stats_clicks_link_label">Ligazón</string>
     <string name="stats_clicks">Clics</string>
     <string name="stats_referrer_views_label">Visitas</string>
     <string name="stats_referrer_label">Referente</string>
@@ -2685,7 +2685,7 @@ Language: gl_ES
     <string name="post_format_status">Estado</string>
     <string name="post_format_standard">Estándar</string>
     <string name="post_format_quote">Cita</string>
-    <string name="post_format_link">Enlace</string>
+    <string name="post_format_link">Ligazón</string>
     <string name="post_format_image">Imaxe</string>
     <string name="post_format_gallery">Galería</string>
     <string name="post_format_chat">Chat</string>
