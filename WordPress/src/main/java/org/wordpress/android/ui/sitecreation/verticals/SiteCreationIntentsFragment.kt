@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -68,7 +67,6 @@ class SiteCreationIntentsFragment : Fragment() {
     }
 
     private fun SiteCreationIntentsFragmentBinding.setupUi() {
-        siteCreationIntentsTitlebar.appBarTitle.isInvisible = !displayUtils.isPhoneLandscape()
         recyclerView.itemAnimator = null
         recyclerView.adapter = SiteCreationIntentsAdapter()
         siteCreationIntentsHeader.title?.setText(R.string.new_site_creation_intents_header_title)

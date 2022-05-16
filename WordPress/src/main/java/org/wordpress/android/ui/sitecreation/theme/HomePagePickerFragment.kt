@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.core.view.isInvisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -87,7 +86,6 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setupUi() {
-        homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
         with(modalLayoutPickerHeaderSection) {
             modalLayoutPickerTitleRow?.header?.apply {
                 textAlignment = View.TEXT_ALIGNMENT_TEXT_START
