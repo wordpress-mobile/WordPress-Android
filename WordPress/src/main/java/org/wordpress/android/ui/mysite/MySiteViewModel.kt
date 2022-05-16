@@ -22,6 +22,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
+import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
@@ -62,7 +65,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCa
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartSiteMenuStep
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartTabStep
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -140,8 +143,8 @@ class MySiteViewModel @Inject constructor(
     private val siteItemsTracker: SiteItemsTracker,
     private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
-    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
@@ -157,7 +160,7 @@ class MySiteViewModel @Inject constructor(
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
     private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<BloggingPrompt, SiteModel>>>()
 
-    private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
+    private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
             .switchMap { quickStartSiteMenuStep ->
                 val result = MutableLiveData<TabsUiState>()
                 /* We want to filter out tabs state livedata update when state is not set in uiModel.
@@ -173,8 +176,11 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
+    private val isMySiteDashboardTabsFeatureConfigEnabled = mySiteDashboardTabsFeatureConfig.isEnabled()
+    private val isBloggingPromptsFeatureConfigEnabled = bloggingPromptsFeatureConfig.isEnabled()
+
     val isMySiteTabsEnabled: Boolean
-        get() = mySiteDashboardTabsFeatureConfig.isEnabled() &&
+        get() = isMySiteDashboardTabsFeatureConfigEnabled &&
                 buildConfigWrapper.isMySiteTabsEnabled &&
                 selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
 
@@ -367,8 +373,8 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartTask.ENABLE_POST_SHARING,
-        QuickStartTask.EXPLORE_PLANS -> true
+        QuickStartNewSiteTask.ENABLE_POST_SHARING,
+        QuickStartNewSiteTask.EXPLORE_PLANS -> true
         else -> false
     }
 
@@ -423,23 +429,25 @@ class MySiteViewModel @Inject constructor(
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
                                 // TODO @klymyam fetch the actual blogging prompt
-                                bloggingPrompt = if (bloggingPromptsFeatureConfig.isEnabled()) {
+                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
                                     @Suppress("MagicNumber")
                                     val dummyRespondent = BloggingPromptRespondent(
                                             54279365,
                                             "https://0.gravatar.com/avatar/cec64efa352617" +
                                                     "c35743d8ed233ab410?s=96&d=identicon&r=G"
                                     )
+                                    @Suppress("MagicNumber")
                                     BloggingPrompt(
-                                            "Cast the movie of your life",
-                                            "",
-                                            listOf(
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent,
-                                                    dummyRespondent
-                                            )
+                                        1234,
+                                        "Cast the movie of your life",
+                                        "",
+                                        listOf(
+                                            dummyRespondent,
+                                            dummyRespondent,
+                                            dummyRespondent,
+                                            dummyRespondent,
+                                            dummyRespondent
+                                        )
                                     )
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
@@ -612,23 +620,21 @@ class MySiteViewModel @Inject constructor(
 
     private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask): Boolean {
         return when (quickStartTask) {
-            QuickStartTask.UPDATE_SITE_TITLE,
-            QuickStartTask.UPLOAD_SITE_ICON,
-            QuickStartTask.VIEW_SITE -> true
+            QuickStartNewSiteTask.UPDATE_SITE_TITLE,
+            QuickStartNewSiteTask.UPLOAD_SITE_ICON,
+            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL) -> true
             else -> false
         }
     }
 
     fun onTabChanged(position: Int) {
-        quickStartRepository.quickStartTaskOrigin = orderedTabTypes[position]
-        if (position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU)) {
-            findUiStateForTab(MySiteTabType.SITE_MENU)?.pendingTask?.let { requestSiteMenuStepPendingTask(it) }
-        }
+        quickStartRepository.currentTab = orderedTabTypes[position]
+        findUiStateForTab(orderedTabTypes[position])?.pendingTask?.let { requestTabStepPendingTask(it) }
         trackTabChanged(position == orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
     }
 
-    private fun requestSiteMenuStepPendingTask(pendingTask: QuickStartTask) {
-        quickStartRepository.clearSiteMenuStep()
+    private fun requestTabStepPendingTask(pendingTask: QuickStartTask) {
+        quickStartRepository.clearTabStep()
         launch {
             delay(LIST_SCROLL_DELAY_MS)
             quickStartRepository.setActiveTask(pendingTask)
@@ -644,19 +650,19 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
                 ListItemAction.SCAN -> SiteNavigationAction.OpenScan(selectedSite)
                 ListItemAction.PLAN -> {
-                    quickStartRepository.completeTask(QuickStartTask.EXPLORE_PLANS)
+                    quickStartRepository.completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
                     SiteNavigationAction.OpenPlan(selectedSite)
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
                 ListItemAction.PAGES -> {
-                    quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
-                    quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
+                    quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
+                    quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
                     SiteNavigationAction.OpenPages(selectedSite)
                 }
                 ListItemAction.ADMIN -> SiteNavigationAction.OpenAdmin(selectedSite)
                 ListItemAction.PEOPLE -> SiteNavigationAction.OpenPeople(selectedSite)
                 ListItemAction.SHARING -> {
-                    quickStartRepository.requestNextStepOfTask(QuickStartTask.ENABLE_POST_SHARING)
+                    quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.ENABLE_POST_SHARING)
                     SiteNavigationAction.OpenSharing(selectedSite)
                 }
                 ListItemAction.DOMAINS -> SiteNavigationAction.OpenDomains(selectedSite)
@@ -664,7 +670,9 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.THEMES -> SiteNavigationAction.OpenThemes(selectedSite)
                 ListItemAction.PLUGINS -> SiteNavigationAction.OpenPlugins(selectedSite)
                 ListItemAction.STATS -> {
-                    quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
+                    quickStartRepository.completeTask(
+                            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+                    )
                     getStatsNavigationActionForSite(selectedSite)
                 }
                 ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
@@ -756,7 +764,9 @@ class MySiteViewModel @Inject constructor(
 
     private fun urlClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
+        quickStartRepository.completeTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL)
+        )
         _onNavigation.value = Event(SiteNavigationAction.OpenSite(selectedSite))
     }
 
@@ -769,15 +779,17 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_STATS_TAPPED)
-        quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
+        quickStartRepository.completeTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+        )
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun quickActionPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
-        quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
+        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
 
@@ -796,15 +808,17 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickLinkRibbonStatsClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_STATS_TAPPED)
-        quickStartRepository.completeTask(QuickStartTask.CHECK_STATS)
+        quickStartRepository.completeTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_CHECK_STATS_LABEL)
+        )
         _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite))
     }
 
     private fun onQuickLinkRibbonPagesClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_PAGES_TAPPED)
-        quickStartRepository.requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
-        quickStartRepository.completeTask(QuickStartTask.REVIEW_PAGES)
+        quickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         _onNavigation.value = Event(SiteNavigationAction.OpenPages(selectedSite))
     }
 
@@ -862,7 +876,7 @@ class MySiteViewModel @Inject constructor(
     fun onSiteNameChooserDismissed() {
         // This callback is called even when the dialog interaction is positive,
         // otherwise we would need to call 'completeTask' on 'onSiteNameChosen' as well.
-        quickStartRepository.completeTask(QuickStartTask.UPDATE_SITE_TITLE)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.UPDATE_SITE_TITLE)
         quickStartRepository.checkAndShowQuickStartNotice()
     }
 
@@ -870,7 +884,7 @@ class MySiteViewModel @Inject constructor(
         when (interaction) {
             is Positive -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
+                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     _onNavigation.postValue(
                             Event(
                                     SiteNavigationAction.OpenMediaPicker(
@@ -883,12 +897,12 @@ class MySiteViewModel @Inject constructor(
             }
             is Negative -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
+                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                 }
                 TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(Stat.MY_SITE_ICON_REMOVED)
-                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
+                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
@@ -896,7 +910,7 @@ class MySiteViewModel @Inject constructor(
             }
             is Dismissed -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    quickStartRepository.completeTask(QuickStartTask.UPLOAD_SITE_ICON)
+                    quickStartRepository.completeTask(QuickStartNewSiteTask.UPLOAD_SITE_ICON)
                     quickStartRepository.checkAndShowQuickStartNotice()
                 }
             }
@@ -1035,19 +1049,24 @@ class MySiteViewModel @Inject constructor(
         selectDefaultTabIfNeeded()
     }
 
-    fun performFirstStepAfterSiteCreation(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
+    fun performFirstStepAfterSiteCreation(
+        siteLocalId: Int,
+        isSiteTitleTaskCompleted: Boolean,
+        isNewSite: Boolean
+    ) {
         if (landOnTheEditorFeatureConfig.isEnabled()) {
-            checkAndStartLandOnTheEditor()
+            checkAndStartLandOnTheEditor(isNewSite)
         } else {
-            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted)
+            checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted, isNewSite)
         }
     }
 
-    private fun checkAndStartLandOnTheEditor() {
+    private fun checkAndStartLandOnTheEditor(isNewSite: Boolean) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             launch(bgDispatcher) {
                 homePageDataLoader.loadHomepage(selectedSite)?.pageId?.let { localHomepageId ->
-                    val landOnTheEditorAction = SiteNavigationAction.OpenHomepage(selectedSite, localHomepageId)
+                    val landOnTheEditorAction = SiteNavigationAction
+                            .OpenHomepage(selectedSite, localHomepageId, isNewSite)
                     _onNavigation.postValue(Event(landOnTheEditorAction))
                     analyticsTrackerWrapper.track(Stat.LANDING_EDITOR_SHOWN)
                 }
@@ -1055,7 +1074,12 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun checkAndStartQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
+    fun checkAndStartQuickStart(
+        siteLocalId: Int,
+        isSiteTitleTaskCompleted: Boolean,
+        isNewSite: Boolean
+    ) {
+        quickStartRepository.checkAndSetQuickStartType(isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         } else {
@@ -1066,7 +1090,8 @@ class MySiteViewModel @Inject constructor(
 
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
-            quickStartUtilsWrapper.startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
+            quickStartUtilsWrapper
+                    .startQuickStart(siteLocalId, isSiteTitleTaskCompleted, quickStartRepository.quickStartType)
             mySiteSourceManager.refreshQuickStart()
         }
     }
@@ -1138,6 +1163,7 @@ class MySiteViewModel @Inject constructor(
     /* ktlint-disable max-line-length */
     private fun onBloggingPromptAnswerClick() {
         val bloggingPrompt = BloggingPrompt(
+                id = 1234,
                 text = "Cast the movie of your life.",
                 content = "<!-- wp:pullquote -->\n" +
                         "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
@@ -1173,7 +1199,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun trackWithTabSourceIfNeeded(stat: Stat, properties: HashMap<String, *>? = null) {
-        if (mySiteDashboardTabsFeatureConfig.isEnabled()) {
+        if (isMySiteDashboardTabsFeatureConfigEnabled) {
             _onTrackWithTabSource.postValue(Event(MySiteTrackWithTabSource(stat, properties)))
         } else {
             analyticsTrackerWrapper.track(stat, properties ?: emptyMap())
@@ -1193,6 +1219,7 @@ class MySiteViewModel @Inject constructor(
                     if (currentDefaultTab == index) return
                 }
             }
+            quickStartRepository.quickStartTaskOriginTab = orderedTabTypes[index]
             _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
             isDefaultABExperimentTabSet = true
         }
@@ -1238,11 +1265,7 @@ class MySiteViewModel @Inject constructor(
         TabUiState(
                 label = UiStringRes(it.stringResId),
                 tabType = it,
-                showQuickStartFocusPoint = if (it == MySiteTabType.SITE_MENU) {
-                    findUiStateForTab(MySiteTabType.SITE_MENU)?.showQuickStartFocusPoint ?: false
-                } else {
-                    false
-                }
+                showQuickStartFocusPoint = findUiStateForTab(it)?.showQuickStartFocusPoint ?: false
         )
     }
 
@@ -1296,15 +1319,12 @@ class MySiteViewModel @Inject constructor(
             val pendingTask: QuickStartTask? = null
         )
 
-        fun update(quickStartSiteMenuStep: QuickStartSiteMenuStep?) = tabUiStates.map { tabUiState ->
-            if (tabUiState.tabType == MySiteTabType.SITE_MENU) {
-                tabUiState.copy(
-                        showQuickStartFocusPoint = quickStartSiteMenuStep?.isStarted ?: false,
-                        pendingTask = quickStartSiteMenuStep?.task
-                )
-            } else {
-                tabUiState
-            }
+        fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
+            tabUiState.copy(
+                    showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
+                                quickStartTabStep.isStarted,
+                    pendingTask = quickStartTabStep?.task
+            )
         }
     }
 

@@ -73,7 +73,10 @@ constructor(
     private fun toStatsGranularity(): StatsGranularity {
         return when (statsSection) {
             StatsSection.DETAIL,
+            StatsSection.TOTAL_LIKES_DETAIL,
+            StatsSection.TOTAL_COMMENTS_DETAIL,
             StatsSection.INSIGHTS,
+            StatsSection.INSIGHT_DETAIL,
             StatsSection.DAYS -> DAYS
             StatsSection.WEEKS -> WEEKS
             StatsSection.MONTHS -> MONTHS

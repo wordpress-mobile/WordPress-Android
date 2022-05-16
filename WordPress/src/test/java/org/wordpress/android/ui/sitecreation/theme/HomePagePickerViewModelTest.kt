@@ -18,6 +18,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.isA
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategory
@@ -56,7 +57,11 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var analyticsTracker: SiteCreationTracker
     @Mock lateinit var resourceProvider: ResourceProvider
 
+    private lateinit var recommendationProvider: SiteDesignRecommendationProvider
     private lateinit var viewModel: HomePagePickerViewModel
+
+    private val slugsArray = arrayOf("art", "food", "beauty")
+    private val verticalArray = arrayOf("Art", "Food", "Beauty")
 
     private val mockCategory = StarterDesignCategory(
             slug = "blog",
@@ -67,6 +72,7 @@ class HomePagePickerViewModelTest {
 
     @Before
     fun setUp() {
+        recommendationProvider = SiteDesignRecommendationProvider(resourceProvider)
         viewModel = HomePagePickerViewModel(
                 networkUtils,
                 dispatcher,
@@ -74,7 +80,7 @@ class HomePagePickerViewModelTest {
                 analyticsTracker,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher(),
-                resourceProvider
+                recommendationProvider
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
@@ -97,6 +103,7 @@ class HomePagePickerViewModelTest {
                                 listOf(mockCategory),
                                 mockedDesignDemoUrl,
                                 "theme",
+                                listOf("stable", "blog"),
                                 "desktopThumbnail",
                                 "tabletThumbnail",
                                 "mobileThumbnail"
@@ -109,6 +116,8 @@ class HomePagePickerViewModelTest {
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn("Blogging")
         whenever(resourceProvider.getString(any(), any())).thenReturn("Best for Blogging")
+        whenever(resourceProvider.getStringArray(R.array.site_creation_intents_slugs)).thenReturn(slugsArray)
+        whenever(resourceProvider.getStringArray(R.array.site_creation_intents_strings)).thenReturn(verticalArray)
         block()
     }
 
@@ -210,5 +219,43 @@ class HomePagePickerViewModelTest {
         val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
+    }
+
+    @Test
+    fun `when the user chooses a recommended design the recommended information is emitted`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug, true)
+        viewModel.onPreviewChooseTapped()
+        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, true)
+    }
+
+    @Test
+    fun `when the user chooses a design that is not recommended the correct information is emitted`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug, false)
+        viewModel.onPreviewChooseTapped()
+        verify(analyticsTracker).trackSiteDesignSelected(mockedDesignSlug, false)
+    }
+
+    @Test
+    fun `when the vertical changes the designs reload`() = mockResponse {
+        val expectedUiStateChangesOnEachLoad = 3
+        viewModel.start(intent = "Art")
+        viewModel.start(intent = "Food")
+        val captor = ArgumentCaptor.forClass(LayoutPickerUiState::class.java)
+        verify(uiStateObserver, times(expectedUiStateChangesOnEachLoad * 2)).onChanged(captor.capture())
+        assertThat(captor.value is LayoutPickerUiState.Content)
+    }
+
+    @Test
+    fun `when the vertical is the same the designs do not change`() = mockResponse {
+        val expectedUiStateChangesOnEachLoad = 3
+        viewModel.start(intent = "Art")
+        viewModel.start(intent = "Art")
+        val captor = ArgumentCaptor.forClass(LayoutPickerUiState::class.java)
+        verify(uiStateObserver, times(expectedUiStateChangesOnEachLoad)).onChanged(captor.capture())
+        assertThat(captor.value is LayoutPickerUiState.Content)
     }
 }

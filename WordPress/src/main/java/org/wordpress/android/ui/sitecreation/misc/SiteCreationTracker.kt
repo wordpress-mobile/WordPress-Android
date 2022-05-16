@@ -9,6 +9,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.C
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.FILTER
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.LOCATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.RECOMMENDED
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
@@ -47,7 +48,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         SELECTED_FILTERS("selected_filters"),
         VERTICAL_SLUG("vertical_slug"),
         VARIATION("variation"),
-        SITE_NAME("site_name")
+        SITE_NAME("site_name"),
+        RECOMMENDED("recommended")
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -172,11 +174,11 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED)
     }
 
-    fun trackSiteDesignSelected(template: String) {
+    fun trackSiteDesignSelected(template: String, recommended: Boolean) {
         designSelectionSkipped = false
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED,
-                mapOf(TEMPLATE.key to template)
+                mapOf(TEMPLATE.key to template, RECOMMENDED.key to recommended)
         )
     }
 

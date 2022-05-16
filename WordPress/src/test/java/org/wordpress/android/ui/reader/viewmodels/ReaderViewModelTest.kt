@@ -17,7 +17,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTag.DISCOVER_PATH
 import org.wordpress.android.models.ReaderTag.FOLLOWING_PATH
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
@@ -36,6 +38,7 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -58,6 +61,8 @@ class ReaderViewModelTest {
     @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var quickStartType: QuickStartType
+    @Mock lateinit var snackbarSequencer: SnackbarSequencer
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -73,11 +78,15 @@ class ReaderViewModelTest {
                 readerTracker,
                 accountStore,
                 quickStartRepository,
-                selectedSiteRepository
+                selectedSiteRepository,
+                snackbarSequencer
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL))
+                .thenReturn(QuickStartNewSiteTask.FOLLOW_SITE)
     }
 
     @Test
@@ -372,7 +381,7 @@ class ReaderViewModelTest {
             val observers = initObservers()
             triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[0])
 
-            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
+            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.FOLLOW_SITE))
 
             assertThat(observers.tabNavigationEvents.last().position).isEqualTo(1) // Discover tab index: 1
         }
@@ -385,7 +394,7 @@ class ReaderViewModelTest {
             val observers = initObservers()
             triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[0])
 
-            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
+            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.CHECK_STATS))
 
             assertThat(observers.tabNavigationEvents.last().position).isNotEqualTo(1) // Discover tab index: 1
         }
@@ -398,7 +407,7 @@ class ReaderViewModelTest {
             val observers = initObservers()
             triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1], hasAccessToken = true)
 
-            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
+            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.FOLLOW_SITE))
 
             assertQsFollowSiteDiscoverTabStepStarted(observers, isSettingsSupported = true)
         }
@@ -411,7 +420,7 @@ class ReaderViewModelTest {
             val observers = initObservers()
             triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1], hasAccessToken = false)
 
-            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.FOLLOW_SITE))
+            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.FOLLOW_SITE))
 
             assertQsFollowSiteDiscoverTabStepStarted(observers, isSettingsSupported = false)
         }
@@ -424,7 +433,7 @@ class ReaderViewModelTest {
             val observers = initObservers()
             triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1])
 
-            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartTask.CHECK_STATS))
+            viewModel.onQuickStartEventReceived(QuickStartEvent(QuickStartNewSiteTask.CHECK_STATS))
 
             assertQsFollowSiteDiscoverTabStepNotStarted(observers)
         }
@@ -438,7 +447,7 @@ class ReaderViewModelTest {
         testWithNonMockedNonEmptyTags(tagList) {
             whenever(accountStore.hasAccessToken()).thenReturn(true)
             whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mock())
-            whenever(quickStartRepository.isPendingTask(QuickStartTask.FOLLOW_SITE)).thenReturn(true)
+            whenever(quickStartRepository.isPendingTask(QuickStartNewSiteTask.FOLLOW_SITE)).thenReturn(true)
             val observers = initObservers()
             triggerReaderTabContentDisplay(selectedTabReaderTag = tagList[1])
 
@@ -476,7 +485,7 @@ class ReaderViewModelTest {
     private fun assertQsFollowSiteTaskCompleted(
         observers: Observers
     ) {
-        verify(quickStartRepository).completeTask(QuickStartTask.FOLLOW_SITE)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.FOLLOW_SITE)
         assertThat(observers.uiStates.last().findSettingsMenuQsFocusPoint()).isEqualTo(false)
     }
 

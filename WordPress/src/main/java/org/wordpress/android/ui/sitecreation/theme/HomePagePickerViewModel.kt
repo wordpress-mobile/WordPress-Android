@@ -5,10 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategory
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.layoutpicker.LayoutCategoryModel
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
@@ -16,11 +14,8 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
-import org.wordpress.android.ui.layoutpicker.toLayoutCategories
-import org.wordpress.android.ui.layoutpicker.toLayoutModels
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,13 +31,15 @@ class HomePagePickerViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher,
-    private val resourceProvider: ResourceProvider
+    private val recommendationProvider: SiteDesignRecommendationProvider
 ) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils, analyticsTracker) {
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+
+    private var vertical: String = ""
 
     override val useCachedData: Boolean = false
     override val shouldUseMobileThumbnail = true
@@ -62,9 +59,13 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 
-    fun start(isTablet: Boolean = false) {
+    fun start(intent: String? = null, isTablet: Boolean = false) {
+        val verticalChanged = vertical != intent
+        if (verticalChanged) {
+            vertical = intent ?: ""
+        }
         initializePreviewMode(isTablet)
-        if (uiState.value !is Content) {
+        if (uiState.value !is Content || verticalChanged) {
             analyticsTracker.trackSiteDesignViewed(selectedPreviewMode().key)
             fetchLayouts()
         }
@@ -85,25 +86,21 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(Error())
                 } else {
-                    handleResponse(event.designs.toLayoutModels(), categoriesWithRecommendations(event.categories))
+                    recommendationProvider.handleResponse(
+                            vertical,
+                            event.designs,
+                            event.categories,
+                            this@HomePagePickerViewModel::handleResponse
+                    )
                 }
             }
         }
     }
 
-    private fun categoriesWithRecommendations(categories: List<StarterDesignCategory>): List<LayoutCategoryModel> {
-        val defaultVertical = resourceProvider.getString(R.string.hpp_recommended_default_vertical)
-        val recommendedVertical = resourceProvider.getString(R.string.hpp_recommended_title, defaultVertical)
-        // TODO: The link with the selected vertical and actual fallback recommendations will be implemented separately
-        val recommendedCategory = categories.first { it.slug == "blog" }
-                .copy(title = recommendedVertical, description = recommendedVertical)
-        return listOf(recommendedCategory).toLayoutCategories(true) + categories.toLayoutCategories()
-    }
-
-    override fun onLayoutTapped(layoutSlug: String) {
+    override fun onLayoutTapped(layoutSlug: String, isRecommended: Boolean) {
         (uiState.value as? Content)?.let {
             if (it.loadedThumbnailSlugs.contains(layoutSlug)) {
-                updateUiState(it.copy(selectedLayoutSlug = layoutSlug))
+                updateUiState(it.copy(selectedLayoutSlug = layoutSlug, isSelectedLayoutRecommended = isRecommended))
                 onPreviewTapped()
                 loadLayouts()
             }
@@ -111,15 +108,15 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     override fun onPreviewChooseTapped() {
-        super.onPreviewChooseTapped()
         onChooseTapped()
     }
 
     fun onChooseTapped() {
-        // TODO: adapt this to the new flow
         selectedLayout?.let { layout ->
+            super.onPreviewChooseTapped()
             val template = layout.slug
-            analyticsTracker.trackSiteDesignSelected(template)
+            val isRecommended = (uiState.value as? Content)?.isSelectedLayoutRecommended == true
+            analyticsTracker.trackSiteDesignSelected(template, isRecommended)
             _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
             return
         }

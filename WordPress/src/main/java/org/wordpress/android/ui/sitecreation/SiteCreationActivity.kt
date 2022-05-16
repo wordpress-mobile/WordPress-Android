@@ -76,7 +76,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 .get(SiteCreationSiteNameViewModel::class.java)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
         mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
-        hppViewModel.loadSavedState(savedInstanceState)
 
         observeVMState()
     }
@@ -124,6 +123,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             finish()
         })
         mainViewModel.onBackPressedObservable.observe(this, Observer {
+            ActivityUtils.hideKeyboard(this)
             super.onBackPressed()
         })
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
@@ -181,7 +181,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
             SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
-            SITE_DESIGNS -> HomePagePickerFragment()
+            SITE_DESIGNS -> HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle
             )
