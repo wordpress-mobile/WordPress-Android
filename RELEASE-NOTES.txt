@@ -11,6 +11,7 @@
 * [***] Block Editor: Add drag & drop blocks feature [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4832]
 * [*] Block Editor: Gallery block: Fix broken "Link To" settings and add "Image Size" settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4841]
 * [*] Block Editor: Unsupported Block Editor: Prevent WordPress.com tour banner from displaying. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4820]
+* [*] Quick Start: We are now showing a different set of Quick Start tasks for existing sites and new sites. The existing sites checklist includes new tours such as: "Check your notifications" and "Upload photos or videos". [https://github.com/wordpress-mobile/WordPress-Android/issues/16349, https://github.com/wordpress-mobile/WordPress-Android/issues/16350, https://github.com/wordpress-mobile/WordPress-Android/pull/16505]
 
 19.8
 -----
