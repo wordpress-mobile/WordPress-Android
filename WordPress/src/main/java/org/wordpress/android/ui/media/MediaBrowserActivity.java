@@ -90,6 +90,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.QuickStartFocusPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +144,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
     private AddMenuItem mLastAddMediaItemClicked;
+    private MenuItem menuNewMediaItem;
+    private QuickStartFocusPoint mMenuNewMediaQuickStartFocusPoint;
 
     private boolean mShowAudioTab;
 
@@ -602,6 +605,16 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setMaxWidth(Integer.MAX_VALUE);
 
+        menuNewMediaItem = menu.findItem(R.id.menu_new_media);
+        mMenuNewMediaQuickStartFocusPoint = menuNewMediaItem.getActionView()
+                                                            .findViewById(R.id.menu_add_media_quick_start_focus_point);
+
+        menuNewMediaItem.getActionView().setOnClickListener(v -> {
+            showAddMediaPopup();
+            completeUploadMediaQuickStartTask();
+            updateMenuNewMediaQuickStartFocusPoint(false);
+        });
+
         // open search bar if we were searching for something before
         if (!TextUtils.isEmpty(mQuery) && mMediaGridFragment != null && mMediaGridFragment.isVisible()) {
             String tempQuery = mQuery; // temporary hold onto query
@@ -612,8 +625,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
         // hide "add media" if the user doesn't have upload permission or this is a multiselect picker
         if (mBrowserType.canMultiselect()
-                || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
-            menu.findItem(R.id.menu_new_media).setVisible(false);
+            || !WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+            menuNewMediaItem.setVisible(false);
             mMediaGridFragment.showActionableEmptyViewButton(false);
         }
 
@@ -627,8 +640,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
-                showAddMediaPopup();
-                completeUploadMediaQuickStartTask();
+                // Do Nothing (handled in action view click listener)
                 return true;
             case R.id.menu_search:
                 mSearchMenuItem = item;
@@ -1187,6 +1199,12 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     findViewById(R.id.tab_layout), false,
                     event.mediaModelList, mSite, event.successMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);
+        }
+    }
+
+    public void updateMenuNewMediaQuickStartFocusPoint(boolean shouldShow) {
+        if (mMenuNewMediaQuickStartFocusPoint != null && menuNewMediaItem.isVisible()) {
+            mMenuNewMediaQuickStartFocusPoint.setVisibleOrGone(shouldShow);
         }
     }
 }

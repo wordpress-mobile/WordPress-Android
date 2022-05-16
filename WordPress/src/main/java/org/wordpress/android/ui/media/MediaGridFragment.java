@@ -239,6 +239,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         EventBus.getDefault().removeStickyEvent(event);
         if (mQuickStartEvent.getTask() == QuickStartExistingSiteTask.UPLOAD_MEDIA && isAdded()) {
             showQuickStartSnackbar();
+            if (getActivity() instanceof MediaBrowserActivity) {
+                MediaBrowserActivity activity = (MediaBrowserActivity) getActivity();
+                getView().post(() -> activity.updateMenuNewMediaQuickStartFocusPoint(true));
+            }
         }
     }
 
