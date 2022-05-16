@@ -1,11 +1,10 @@
 * [*] Pages List: Added "Copy Link" button to context menu [https://github.com/wordpress-mobile/WordPress-Android/pull/16321]
 * [*] Editor: Improved editor performance by reducing memory usage [https://github.com/wordpress-mobile/WordPress-Android/pull/16490]
 * [*] Block Editor: Prevent non-functional '+' icon displaying in toolbar on self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/16507]
-* [***] Jetpack App: Enable Site Domains purchases for Jetpack app only [https://github.com/wordpress-mobile/WordPress-Android/pull/16417]
+* [***] Enable Site Domains purchases for Jetpack app only [https://github.com/wordpress-mobile/WordPress-Android/pull/16417]
 * [**] Block Editor: Cover Block: Improve color contrast between background and text [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4808]
 * [**] Block Editor: Buttons block: Fix issue related to displaying formatting buttons after closing the block settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4814]
 * [***] Block Editor: Add drag & drop blocks feature [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4832]
 * [*] Block Editor: Gallery block: Fix broken "Link To" settings and add "Image Size" settings [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4841]
 * [*] Block Editor: Unsupported Block Editor: Prevent WordPress.com tour banner from displaying. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/4820]
 * [*] Quick Start: We are now showing a different set of Quick Start tasks for existing sites and new sites. The existing sites checklist includes new tours such as: "Check your notifications" and "Upload photos or videos". [https://github.com/wordpress-mobile/WordPress-Android/issues/16349, https://github.com/wordpress-mobile/WordPress-Android/issues/16350, https://github.com/wordpress-mobile/WordPress-Android/pull/16505]
-
