@@ -19,8 +19,6 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
         style="@style/SiteCreationHeaderV2Subtitle"
-        android:layout_marginEnd="@dimen/margin_none"
-        android:layout_marginStart="@dimen/margin_none"
         android:paddingBottom="@dimen/margin_extra_medium_large"
         android:lineSpacingExtra="5sp"
         android:letterSpacing="0.01"
