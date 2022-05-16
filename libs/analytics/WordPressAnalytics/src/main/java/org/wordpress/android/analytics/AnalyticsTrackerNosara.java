@@ -428,6 +428,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "check_notifications");
                 break;
+            case QUICK_START_UPLOAD_MEDIA_SKIPPED:
+            case QUICK_START_UPLOAD_MEDIA_TAPPED:
+            case QUICK_START_UPLOAD_MEDIA_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "media_upload");
+                break;
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -1854,6 +1859,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
             case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
             case QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED:
+            case QUICK_START_UPLOAD_MEDIA_SKIPPED:
                 return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
@@ -1867,6 +1873,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
             case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
             case QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED:
+            case QUICK_START_UPLOAD_MEDIA_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
             case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
@@ -1880,6 +1887,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
             case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
+            case QUICK_START_UPLOAD_MEDIA_TASK_COMPLETED:
                 return "quick_start_task_completed";
             case QUICK_START_ALL_TASKS_COMPLETED:
                 return "quick_start_all_tasks_completed";
