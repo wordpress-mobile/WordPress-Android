@@ -36,6 +36,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
@@ -47,7 +48,6 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
@@ -69,7 +69,6 @@ class QuickStartRepository
     private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val resourceProvider: ResourceProvider,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val eventBus: EventBusWrapper,
     private val dynamicCardStore: DynamicCardStore,
@@ -77,6 +76,7 @@ class QuickStartRepository
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
+    private val quickStartTracker: QuickStartTracker,
     buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     quickStartForExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
@@ -209,7 +209,7 @@ class QuickStartRepository
             setTaskDoneAndTrack(task, selectedSite.id)
             if (quickStartType.isEveryQuickStartTaskDone(quickStartStore, selectedSite.id.toLong())) {
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
-                analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
+                quickStartTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
                 showCompletedQuickStartNotice()
@@ -222,7 +222,7 @@ class QuickStartRepository
         siteLocalId: Int
     ) {
         quickStartStore.setDoneTask(siteLocalId.toLong(), task, true)
-        analyticsTrackerWrapper.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
+        quickStartTracker.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
     }
 
     private fun requestTabStepForTask(task: QuickStartTask, tabType: MySiteTabType) {
@@ -311,7 +311,7 @@ class QuickStartRepository
         val taskToPrompt = quickStartUtilsWrapper
                 .getNextUncompletedQuickStartTask(quickStartType, selectedSiteLocalId.toLong())
         if (taskToPrompt != null) {
-            analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
+            quickStartTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
             appPrefsWrapper.setQuickStartNoticeRequired(false)
             val taskNoticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt) ?: return
             val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
@@ -336,12 +336,12 @@ class QuickStartRepository
     }
 
     private fun onQuickStartNoticeButtonAction(task: QuickStartTask) {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
         setActiveTask(task)
     }
 
     private fun onQuickStartNoticeNegativeAction(task: QuickStartTask) {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
         appPrefsWrapper.setLastSkippedQuickStartTask(task)
     }
 

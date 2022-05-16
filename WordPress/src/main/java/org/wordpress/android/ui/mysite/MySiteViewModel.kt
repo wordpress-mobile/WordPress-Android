@@ -83,6 +83,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -146,7 +147,8 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val quickStartTracker: QuickStartTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -706,7 +708,7 @@ class MySiteViewModel @Inject constructor(
         if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
             cardsTracker.trackQuickStartCardItemClicked(type)
         } else {
-            analyticsTrackerWrapper.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
+            quickStartTracker.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
         }
         _onNavigation.value = Event(
                 SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
@@ -931,14 +933,14 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onRemoveNextStepsDialogPositiveButtonClicked() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
         quickStartRepository.skipQuickStart()
         refresh()
         clearActiveQuickStartTask()
     }
 
     private fun onRemoveNextStepsDialogNegativeButtonClicked() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
@@ -1104,7 +1106,12 @@ class MySiteViewModel @Inject constructor(
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             quickStartUtilsWrapper
-                    .startQuickStart(siteLocalId, isSiteTitleTaskCompleted, quickStartRepository.quickStartType)
+                    .startQuickStart(
+                            siteLocalId,
+                            isSiteTitleTaskCompleted,
+                            quickStartRepository.quickStartType,
+                            quickStartTracker
+                    )
             mySiteSourceManager.refreshQuickStart()
         }
     }
@@ -1129,14 +1136,14 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun startQuickStart() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
         startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
         shouldMarkUpdateSiteTitleTaskComplete = false
     }
 
     fun ignoreQuickStart() {
         shouldMarkUpdateSiteTitleTaskComplete = false
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     private fun onPostItemClick(params: PostItemClickParams) {

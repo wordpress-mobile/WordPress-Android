@@ -26,7 +26,7 @@ import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrati
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 
 /* SITE */
 
@@ -35,7 +35,7 @@ const val SITE_LOCAL_ID = 1
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteSourceManagerTest : BaseUnitTest() {
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     @Mock lateinit var domainRegistrationSource: DomainRegistrationSource
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
@@ -63,7 +63,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         whenever(selectedSiteRepository.hasSelectedSite()).thenReturn(true)
 
         mySiteSourceManager = MySiteSourceManager(
-                analyticsTrackerWrapper,
+                quickStartTracker,
                 currentAvatarSource,
                 domainRegistrationSource,
                 dynamicCardsSource,
@@ -259,7 +259,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         val id = DynamicCardType.CUSTOMIZE_QUICK_START
         mySiteSourceManager.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
         verify(dynamicCardsSource).hideItem(id)
     }
 
@@ -268,7 +268,7 @@ class MySiteSourceManagerTest : BaseUnitTest() {
         val id = DynamicCardType.CUSTOMIZE_QUICK_START
         mySiteSourceManager.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
         verify(dynamicCardsSource).removeItem(id)
     }
 
