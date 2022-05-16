@@ -26,6 +26,4 @@
 
     <!-- About button in Me -->
     <string name="me_btn_about">About Jetpack</string>
-
-    <string name="quick_start_sites_type_get_to_know_app">Get to know the Jetpack app</string>
 </resources>
