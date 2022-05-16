@@ -57,7 +57,7 @@ class LayoutCategoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            when(viewType) {
+            when (viewType) {
                 FOOTER.ordinal -> LayoutsFooterViewHolder(parent, footerLayoutResId!!)
                 else ->
                     LayoutsItemViewHolder(
