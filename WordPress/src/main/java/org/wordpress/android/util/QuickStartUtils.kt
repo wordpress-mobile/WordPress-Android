@@ -202,7 +202,7 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED
-            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_UPLOAD_MEDIA_TAPPED
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_LIST_UPLOAD_MEDIA_TAPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
@@ -226,7 +226,7 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED
-            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_UPLOAD_MEDIA_SKIPPED
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_LIST_UPLOAD_MEDIA_SKIPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
