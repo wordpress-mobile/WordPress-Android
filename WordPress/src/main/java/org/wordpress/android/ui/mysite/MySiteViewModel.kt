@@ -376,8 +376,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartNewSiteTask.ENABLE_POST_SHARING,
-        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
         else -> false
     }
 
@@ -654,7 +653,6 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
                 ListItemAction.SCAN -> SiteNavigationAction.OpenScan(selectedSite)
                 ListItemAction.PLAN -> {
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
                     SiteNavigationAction.OpenPlan(selectedSite)
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
