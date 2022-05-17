@@ -11,5 +11,6 @@ data class InsightsLatestPostModel(
     val postViewsCount: Int = 0,
     val postCommentCount: Int = 0,
     val postLikeCount: Int,
-    val dayViews: List<Pair<String, Int>>
+    val dayViews: List<Pair<String, Int>>,
+    val featuredImageUrl: String
 )
