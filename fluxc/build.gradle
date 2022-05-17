@@ -63,8 +63,7 @@ dependencies {
 
     implementation sharedLibs.androidx.exifinterface
 
-    // WordPress libs
-    implementation("org.wordpress:utils:$wordPressUtilsVersion") {
+    implementation(sharedLibs.wordpress.utils) {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
