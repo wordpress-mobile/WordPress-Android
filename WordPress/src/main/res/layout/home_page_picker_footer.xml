@@ -6,12 +6,14 @@
 
     <TextView
         android:id="@+id/bottom_helper_text"
-        style="@style/ModalLayoutPickerSubtitle"
+        style="@style/SiteCreationHeaderV2Subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_info_outline_grey_dark_18dp"
-        android:padding="16dp"
+        android:padding="@dimen/margin_large"
         android:text="@string/hpp_bottom_helper_text"
+        android:drawablePadding="@dimen/margin_large"
+        app:drawableStartCompat="@drawable/ic_info_outline_grey_dark_24dp"
+        app:drawableTint="?attr/colorOnSurface"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
