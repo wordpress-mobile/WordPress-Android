@@ -25,6 +25,7 @@ class LayoutCategoryAdapter(
     private val footerLayoutResId: Int? = null
 ) : Adapter<LayoutsRowViewHolder>() {
     private var items: List<LayoutCategoryUiState> = listOf()
+    private val shouldShowFooter get() = footerLayoutResId != null && items.isNotEmpty()
 
     fun update(newItems: List<LayoutCategoryUiState>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -37,7 +38,7 @@ class LayoutCategoryAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun getItemCount(): Int = items.size + if (footerLayoutResId != null) 1 else 0
+    override fun getItemCount(): Int = items.size + if (shouldShowFooter) 1 else 0
 
     override fun onBindViewHolder(holder: LayoutsRowViewHolder, position: Int) {
         (holder as? LayoutsItemViewHolder)?.bind(items[position])
