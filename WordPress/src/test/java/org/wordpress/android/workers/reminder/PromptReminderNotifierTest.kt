@@ -8,6 +8,7 @@ import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -20,6 +21,7 @@ class PromptReminderNotifierTest {
     private val accountStore: AccountStore = mock()
     private val reminderNotificationManager: ReminderNotificationManager = mock()
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig = mock()
+    private val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker = mock()
 
     private val classToTest = PromptReminderNotifier(
             contextProvider = contextProvider,
@@ -27,7 +29,8 @@ class PromptReminderNotifierTest {
             siteStore = siteStore,
             accountStore = accountStore,
             reminderNotificationManager = reminderNotificationManager,
-            bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig
+            bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig,
+            bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker
     )
 
     @Test

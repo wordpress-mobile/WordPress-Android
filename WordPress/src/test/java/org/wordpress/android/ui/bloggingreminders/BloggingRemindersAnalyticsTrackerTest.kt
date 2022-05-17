@@ -155,7 +155,7 @@ class BloggingRemindersAnalyticsTrackerTest {
 
     @Test
     fun `trackNotificationReceived tracks correct event and properties`() {
-        bloggingRemindersAnalyticsTracker.trackNotificationReceived()
+        bloggingRemindersAnalyticsTracker.trackNotificationReceived(promptIncluded = false)
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED), checkMap {
             assertThat(it).containsKey("blog_type")
         })
