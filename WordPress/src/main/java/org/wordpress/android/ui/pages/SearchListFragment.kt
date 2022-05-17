@@ -83,7 +83,7 @@ class SearchListFragment : Fragment(R.layout.pages_list_fragment) {
         val adapter: PageSearchAdapter
         if (recyclerView.adapter == null) {
             adapter = PageSearchAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page) },
+                    { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
                     { page -> viewModel.onItemTapped(page) }, uiHelper)
             recyclerView.adapter = adapter
         } else {

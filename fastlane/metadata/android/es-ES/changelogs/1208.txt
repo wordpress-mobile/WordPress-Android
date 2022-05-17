@@ -1,6 +1,0 @@
-19.7:
-- Añadidas pestañas del menú del sitio e inicio a la pantalla de mi sitio
-- Hacer que el botón de añadir botón sea más visible cuando se abre el editor de bloques
-- Eliminado el texto de error en la subida del bloque de medios/audio
-- Añadida pantalla de intención del sitio al proceso de creación del sitio
-- Corregido error provocado por detalles de avisos para los comentarios en los bloques de Archivo de GB

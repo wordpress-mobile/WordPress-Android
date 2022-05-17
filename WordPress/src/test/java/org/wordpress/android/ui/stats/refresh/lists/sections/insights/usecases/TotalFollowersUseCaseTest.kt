@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -32,6 +33,7 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var useCaseMode: UseCaseMode
     private lateinit var useCase: TotalFollowersUseCase
     private val followers = 100
 
@@ -43,7 +45,8 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
-                analyticsTrackerWrapper
+                analyticsTrackerWrapper,
+                useCaseMode
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }

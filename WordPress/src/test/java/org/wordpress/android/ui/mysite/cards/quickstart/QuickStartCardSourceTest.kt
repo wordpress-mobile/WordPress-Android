@@ -40,6 +40,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -47,9 +48,9 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -59,7 +60,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var dynamicCardStore: DynamicCardStore
@@ -69,6 +69,8 @@ class QuickStartCardSourceTest : BaseUnitTest() {
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var quickStartCardSource: QuickStartCardSource
@@ -86,6 +88,8 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site = SiteModel()
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(appPrefsWrapper.getLastSelectedQuickStartType()).thenReturn(NewSiteQuickStartType)
+        whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
@@ -93,7 +97,6 @@ class QuickStartCardSourceTest : BaseUnitTest() {
                 appPrefsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
-                analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
                 dynamicCardStore,
@@ -101,8 +104,10 @@ class QuickStartCardSourceTest : BaseUnitTest() {
                 quickStartDynamicCardsFeatureConfig,
                 contextProvider,
                 htmlMessageUtils,
+                quickStartTracker,
                 buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig
+                mySiteDashboardTabsFeatureConfig,
+                quickStartExistingUsersV2FeatureConfig
         )
         quickStartCardSource = QuickStartCardSource(
                 quickStartRepository,

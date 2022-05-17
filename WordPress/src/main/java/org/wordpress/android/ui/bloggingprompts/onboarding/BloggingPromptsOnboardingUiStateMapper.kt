@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import org.wordpress.android.R
+import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem

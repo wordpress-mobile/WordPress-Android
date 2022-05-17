@@ -154,7 +154,7 @@ class PageListViewModel @Inject constructor(
 
     fun onMenuAction(action: Action, pageItem: Page, context: Context): Boolean {
         completeEditHomePageTour(pageItem, context)
-        return pagesViewModel.onMenuAction(action, pageItem)
+        return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
     fun onItemTapped(pageItem: Page, context: Context) {

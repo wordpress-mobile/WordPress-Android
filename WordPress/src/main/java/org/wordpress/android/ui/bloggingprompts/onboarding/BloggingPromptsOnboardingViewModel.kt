@@ -18,7 +18,8 @@ import javax.inject.Inject
 class BloggingPromptsOnboardingViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val uiStateMapper: BloggingPromptsOnboardingUiStateMapper,
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val analyticsTracker: BloggingPromptsOnboardingAnalyticsTracker
 ) : ViewModel() {
     private val _uiState = MutableLiveData<BloggingPromptsOnboardingUiState>()
     val uiState: LiveData<BloggingPromptsOnboardingUiState> = _uiState
@@ -28,10 +29,15 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
 
     private lateinit var dialogType: DialogType
     private lateinit var bloggingPrompt: BloggingPrompt
+    private var hasTrackedScreenShown = false
 
     @Suppress("MaxLineLength")
     /* ktlint-disable max-line-length */
     fun start(type: DialogType) {
+        if (!hasTrackedScreenShown) {
+            hasTrackedScreenShown = true
+            analyticsTracker.trackScreenShown()
+        }
         dialogType = type
         // TODO @RenanLukas get BloggingPrompt from Store when it's ready
         bloggingPrompt = BloggingPrompt(
@@ -47,13 +53,20 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
 
     private fun onPrimaryButtonClick() {
         val action = when (dialogType) {
-            ONBOARDING -> OpenEditor(bloggingPrompt.id)
-            INFORMATION -> DismissDialog
+            ONBOARDING -> {
+                analyticsTracker.trackTryItNowClicked()
+                OpenEditor(bloggingPrompt.id)
+            }
+            INFORMATION -> {
+                analyticsTracker.trackGotItClicked()
+                DismissDialog
+            }
         }
         _action.value = action
     }
 
     private fun onSecondaryButtonClick() {
+        analyticsTracker.trackRemindMeClicked()
         if (siteStore.sitesCount > 1) {
             _action.value = OpenSitePicker(selectedSiteRepository.getSelectedSite())
         } else {

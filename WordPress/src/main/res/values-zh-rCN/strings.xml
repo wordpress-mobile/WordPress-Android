@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-23 13:59:48+0000
+Translation-Revision-Date: 2022-05-12 10:48:06+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
 -->
 <resources>
+    <string name="blogging_prompts_onboarding_got_it">知道了</string>
+    <string name="quick_start_dialog_view_your_site_message_short">点击“&lt;b&gt;%1$s&lt;/b&gt;”查看您的站点</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">选择%1$s设置%2$s，添加您喜欢的话题。</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">选择%1$s阅读器%2$s，查找其他站点。</string>
+    <string name="blogging_reminders_prompt_help_button_desc">了解更多提示</string>
+    <string name="photo_picker_video_thumbnail_unselected">未选择视频</string>
+    <string name="photo_picker_video_thumbnail_selected">已选择视频</string>
+    <string name="stats_insights_popular_title">🔥 人气最高的时间</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">您本周的访客数量比上周低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">您本周的访客数量比上周高 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_views_negative">您本周的预览数量比上周低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_views_positive">您本周的预览数量比上周高 %1$s。</string>
+    <string name="stats_timeframe_previous_week">上周</string>
+    <string name="scan_vault_press_active_on_site_subtitle">您的站点已受 VaultPress 保护。 您可以在下面找到指向您的 VaultPress 仪表盘的链接。</string>
     <string name="hpp_choose_and_create_site">创建站点</string>
     <string name="gutenberg_native_add_blocks_11d0841f">添加区块</string>
     <string name="initial_screen">初始屏幕</string>
@@ -16,7 +30,6 @@ Language: zh_CN
     <string name="new_site_creation_site_name_header_title">为您的 %s 网站命名</string>
     <string name="new_site_creation_site_name_title">站点名称</string>
     <string name="my_site_todays_stats_get_more_views_message">想建立受众群体？ 查看我们的&lt;a href=\"%1$s\"&gt;实用提示&lt;/a&gt;。</string>
-    <string name="stats_insights_views_and_visitors_message">您上周的浏览次数比之前一周%1$s %2$s。</string>
     <string name="stats_insights_views_and_visitors">浏览次数和访客人数</string>
     <string name="featured_image_removed_notice">已作为特色图片移除</string>
     <string name="featured_image_confirmation_notice">设为特色图片</string>
@@ -435,7 +448,6 @@ Language: zh_CN
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
-    <string name="gutenberg_native_add_blocks">添加区块</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
     <string name="gutenberg_native_what_is_alt_text">什么是alt文字？</string>
     <string name="gutenberg_native_transform_s_to">将%s转换为</string>
@@ -516,12 +528,12 @@ Language: zh_CN
     <string name="disable">禁用</string>
     <string name="quick_start_card_menu_unpin">取消钉选此项</string>
     <string name="quick_start_list_review_pages_subtitle">查看您的页面并进行更改，或者添加或移除页面。</string>
-    <string name="quick_start_list_view_site_title">访问您的站点</string>
+    <string name="quick_start_list_view_site_title">查看您的站点</string>
     <string name="quick_start_list_follow_site_subtitle">发现并关注能激发您灵感的站点。</string>
     <string name="quick_start_list_enable_sharing_title">社交分享</string>
     <string name="quick_start_list_enable_sharing_subtitle">自动将新文章共享到您的社交媒体</string>
     <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。</string>
-    <string name="quick_start_list_check_stats_title">查看您的统计信息</string>
+    <string name="quick_start_list_check_stats_title">查看站点统计信息</string>
     <string name="backup_download_status_failure_bullet2">我们仍会尝试创建您的可下载备份文件。</string>
     <string name="backup_download_status_failure_bullet1">我们找不到可说明您的可下载备份所需时长的状态。</string>
     <string name="backup_download_status_failure_heading">呃，我们找不到您的可下载备份状态</string>
@@ -1619,11 +1631,10 @@ Language: zh_CN
     <string name="quick_start_sites_type_customize">定制您的站点</string>
     <string name="quick_start_sites">后续步骤</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
-    <string name="quick_start_dialog_view_site_message">享受您的成果吧！</string>
     <string name="quick_start_dialog_upload_icon_title">选择您的唯一站点图标</string>
     <string name="quick_start_dialog_upload_icon_message">访客将在其浏览器中看到您的图标。添加自定义图标，打造精美的专业外观。</string>
     <string name="quick_start_dialog_explore_plans_message_short">点击%1$s套餐%2$s查看您的当前套餐和其他可选套餐</string>
-    <string name="quick_start_dialog_check_stats_message_short">点击%1$s统计信息%2$s查看您站点的效果。</string>
+    <string name="quick_start_dialog_check_stats_message_short">选择%1$s统计信息%2$s，查看您站点的表现。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">点击%1$s您的站点图标%2$s上传一个新图标</string>
     <string name="quick_start_dialog_publish_post_message">起草并发布文章。</string>
     <string name="quick_start_dialog_explore_plans_title">了解各个套餐</string>
@@ -1631,7 +1642,7 @@ Language: zh_CN
     <string name="quick_start_dialog_enable_sharing_title">启用文章共享</string>
     <string name="quick_start_dialog_enable_sharing_message">自动将新文章共享到社交媒体账户。</string>
     <string name="quick_start_dialog_check_stats_title">查看站点统计信息</string>
-    <string name="quick_start_dialog_check_stats_message">及时了解您站点的效果。</string>
+    <string name="quick_start_dialog_check_stats_message">及时了解您站点的表现。</string>
     <string name="quick_start_dialog_remove_next_steps_message">删除“后续步骤”将隐藏此站点中的所有导览。此操作无法撤销。</string>
     <string name="quick_start_dialog_remove_next_steps_title">删除后续步骤</string>
     <string name="quick_start_remove_next_steps_menu_title">删除此</string>
@@ -1801,7 +1812,7 @@ Language: zh_CN
     <string name="quick_start_list_create_site_title">创建站点</string>
     <string name="quick_start_list_create_site_subtitle">建立并运行您的站点。</string>
     <string name="quick_start_dialog_view_site_title">查看您的站点</string>
-    <string name="quick_start_dialog_view_site_message_short">轻按%1$s查看站点%2$s可预览您的站点</string>
+    <string name="quick_start_dialog_view_site_message">预览您的站点，查看访客将看到的内容。</string>
     <string name="quick_start_dialog_share_site_title">分享您的站点</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">轻按 %1$s 分享 %2$s 并继续</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">轻按 %1$s 连接 %2$s 可添加您的社交媒体账户</string>
@@ -1809,10 +1820,7 @@ Language: zh_CN
     <string name="quick_start_dialog_publish_post_title">发布文章</string>
     <string name="quick_start_dialog_publish_post_message_short">轻按%1$s“创建文章”%2$s，撰写一篇新文章</string>
     <string name="quick_start_dialog_need_help_button_negative">不，谢谢</string>
-    <string name="quick_start_dialog_follow_sites_title">关注其他站点</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">轻按%1$s搜索%2$s，查找具有类似兴趣的站点</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">轻按%1$s“阅读器”%2$s并继续</string>
-    <string name="quick_start_dialog_follow_sites_message">查找并关注您喜爱的站点，在他们发布新内容时可及时获取更新。</string>
+    <string name="quick_start_dialog_follow_sites_title">连接其他站点</string>
     <string name="quick_start_button_positive">前往</string>
     <string name="quick_start_button_negative_short">取消</string>
     <string name="quick_start_button_negative">现在不行</string>
