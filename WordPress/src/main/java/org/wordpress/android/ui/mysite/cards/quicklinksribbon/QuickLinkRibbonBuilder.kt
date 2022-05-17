@@ -16,7 +16,8 @@ class QuickLinkRibbonBuilder @Inject constructor(
     fun build(params: QuickLinkRibbonBuilderParams) = QuickLinkRibbon(
         quickLinkRibbonItems = getQuickLinkRibbonItems(params),
         showPagesFocusPoint = shouldShowPagesFocusPoint(params),
-        showStatsFocusPoint = shouldShowStatsFocusPoint(params)
+        showStatsFocusPoint = shouldShowStatsFocusPoint(params),
+        showMediaFocusPoint = shouldShowMediaFocusPoint(params)
     )
 
     private fun getQuickLinkRibbonItems(params: QuickLinkRibbonBuilderParams): MutableList<QuickLinkRibbonItem> {
@@ -42,7 +43,8 @@ class QuickLinkRibbonBuilder @Inject constructor(
                 QuickLinkRibbonItem(
                     label = R.string.media,
                     icon = R.drawable.ic_media_white_24dp,
-                    onClick = ListItemInteraction.create(params.onMediaClick)
+                    onClick = ListItemInteraction.create(params.onMediaClick),
+                    showFocusPoint = shouldShowMediaFocusPoint(params)
                 )
             )
 
@@ -66,6 +68,12 @@ class QuickLinkRibbonBuilder @Inject constructor(
     private fun shouldShowStatsFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
         return params.enableFocusPoints && params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
                 QuickStartStore.QUICK_START_CHECK_STATS_LABEL
+        )
+    }
+
+    private fun shouldShowMediaFocusPoint(params: QuickLinkRibbonBuilderParams): Boolean {
+        return params.enableFocusPoints && params.activeTask == quickStartRepository.quickStartType.getTaskFromString(
+                QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL
         )
     }
 }

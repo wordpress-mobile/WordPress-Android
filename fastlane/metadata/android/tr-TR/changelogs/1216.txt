@@ -1,0 +1,11 @@
+19.8:
+- Taslak yazılar için kaydedilmemiş değişiklikler önizlemesi
+- En Son Yazılar bloğundaki özellik görüntü ayarları
+- HTML/Görsel mod geçiş bildirimleri
+- Tam Gömme blok önizlemesi
+- Yerel Ayar Seçici görselleri
+- Bağımsız VideoPress ile daha uzun yüklemeler
+- Güncel Atomik site önizlemeleri
+- Medya Seçici talkback medya türleri
+- Latince olmayan dosya adı yüklemeleri
+- Yazılar ayarlarında önce çıkan görseli temizliği

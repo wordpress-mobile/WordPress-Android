@@ -32,13 +32,13 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
@@ -51,7 +51,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var dynamicCardStore: DynamicCardStore
@@ -63,6 +62,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
     @Mock lateinit var quickStartType: QuickStartType
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -95,7 +95,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 appPrefsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
-                analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
                 dynamicCardStore,
@@ -103,6 +102,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 quickStartDynamicCardsFeatureConfig,
                 contextProvider,
                 htmlMessageUtils,
+                quickStartTracker,
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 quickStartExistingUsersV2FeatureConfig

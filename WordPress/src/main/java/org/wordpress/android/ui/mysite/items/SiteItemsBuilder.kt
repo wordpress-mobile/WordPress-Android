@@ -33,6 +33,9 @@ class SiteItemsBuilder @Inject constructor(
         val showStatsFocusPoint = params.activeTask == checkStatsTask && params.enableStatsFocusPoint
         val showPagesFocusPoint = (params.activeTask == QuickStartNewSiteTask.EDIT_HOMEPAGE ||
                 params.activeTask == QuickStartNewSiteTask.REVIEW_PAGES) && params.enablePagesFocusPoint
+        val uploadMediaTask = quickStartRepository.quickStartType
+                .getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL)
+        val showMediaFocusPoint = params.activeTask == uploadMediaTask && params.enableMediaFocusPoint
 
         return listOfNotNull(
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(params.site),
@@ -55,7 +58,8 @@ class SiteItemsBuilder @Inject constructor(
                 ListItem(
                         R.drawable.ic_media_white_24dp,
                         UiStringRes(R.string.media),
-                        onClick = ListItemInteraction.create(ListItemAction.MEDIA, params.onClick)
+                        onClick = ListItemInteraction.create(ListItemAction.MEDIA, params.onClick),
+                        showFocusPoint = showMediaFocusPoint
                 ),
                 siteListItemBuilder.buildPagesItemIfAvailable(params.site, params.onClick, showPagesFocusPoint),
                 ListItem(

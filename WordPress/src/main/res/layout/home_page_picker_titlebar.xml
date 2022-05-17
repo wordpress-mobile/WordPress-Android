@@ -14,7 +14,7 @@
         android:tint="?attr/colorOnSurface" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/appBarTitle"
         style="@style/ModalLayoutPickerHeader"
         android:layout_width="0dp"
         android:layout_weight="1"
