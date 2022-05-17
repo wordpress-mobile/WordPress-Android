@@ -545,8 +545,6 @@ public interface AppComponent {
 
     void inject(HomePagePickerFragment object);
 
-    void inject(SiteCreationIntentsFragment object);
-
     void inject(SiteCreationSiteNameFragment object);
 
     void inject(SubfilterBottomSheetFragment object);

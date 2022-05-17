@@ -62,16 +62,14 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     private lateinit var hppViewModel: HomePagePickerViewModel
-    private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
     private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
     private val mainViewModel: SiteCreationMainVM by viewModels()
+    private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
         hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
-        siteCreationIntentsViewModel = ViewModelProvider(this, viewModelFactory)
-                .get(SiteCreationIntentsViewModel::class.java)
         siteCreationSiteNameViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(SiteCreationSiteNameViewModel::class.java)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
