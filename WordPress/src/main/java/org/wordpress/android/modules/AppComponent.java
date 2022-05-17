@@ -193,7 +193,6 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -253,9 +252,6 @@ public interface AppComponent {
     void inject(SignupEpilogueFragment object);
 
     void inject(PostSignupInterstitialActivity object);
-
-
-    void inject(SiteCreationPreviewFragment object);
 
     void inject(JetpackConnectionResultActivity object);
 
