@@ -198,6 +198,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
     public static final String ARG_EDITOR_PROMPT_ID = "editor_prompt_id";
     public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
+    public static final String ARG_STAT_TRACK = "stat_track";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -371,6 +372,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
             }
             checkDismissNotification();
+            checkTrackAnalyticsEvent();
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
@@ -438,6 +440,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
             final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             final int notificationId = intent.getIntExtra(ARG_DISMISS_NOTIFICATION, -1);
             notificationManager.cancel(notificationId);
+        }
+    }
+
+    private void checkTrackAnalyticsEvent() {
+        final Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(ARG_STAT_TRACK)) {
+            final Stat stat = (Stat) intent.getSerializableExtra(ARG_STAT_TRACK);
+            if (stat != null) {
+                mAnalyticsTrackerWrapper.track(stat);
+            }
         }
     }
 

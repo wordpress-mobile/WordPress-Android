@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.workers.reminder.prompt.PromptReminderNotifier
 
 class PromptReminderNotifierTest {
     private val contextProvider: ContextProvider = mock()
