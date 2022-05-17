@@ -36,7 +36,6 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     val action: LiveData<BloggingPromptsOnboardingAction> = _action
 
     private lateinit var dialogType: DialogType
-    private lateinit var bloggingPrompt: BloggingPrompt
     private var hasTrackedScreenShown = false
     private var site: SiteModel? = null
 
