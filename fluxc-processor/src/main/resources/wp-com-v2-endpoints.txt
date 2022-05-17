@@ -32,6 +32,8 @@
 
 /sites/$site/xposts
 
+/sites/$site/blogging-prompts
+
 /users/username/suggestions/
 
 /segments
@@ -43,3 +45,6 @@
 /me/gutenberg/
 
 /experiments/$version#String/assignments/$platform#String
+
+/auth/qr-code/validate
+/auth/qr-code/authenticate
