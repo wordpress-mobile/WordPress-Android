@@ -14,6 +14,13 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import org.wordpress.android.R
 import org.wordpress.android.util.extensions.setVisible
 
+sealed class LayoutsRowViewHolder(view: View) : RecyclerView.ViewHolder(view)
+
+class LayoutsFooterViewHolder(parent: ViewGroup, footerLayoutResId: Int) :
+        LayoutsRowViewHolder(
+                LayoutInflater.from(parent.context).inflate(footerLayoutResId, parent, false)
+        )
+
 /**
  * Modal Layout Picker layouts view holder
  */
@@ -24,7 +31,7 @@ class LayoutsItemViewHolder(
     private var nestedScrollStates: Bundle,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val recommendedDimensionProvider: ThumbDimensionProvider?
-) : RecyclerView.ViewHolder(
+) : LayoutsRowViewHolder(
         LayoutInflater.from(
                 parent.context
         ).inflate(R.layout.modal_layout_picker_layouts_row, parent, false)
