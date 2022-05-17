@@ -26,11 +26,23 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
+    aab_path = build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version, track: 'production')
 
     create_gh_release(app: app, version: version) if options[:create_release]
+
+    android_send_app_size_metrics(
+      api_url: ENV['APPMETRICS_BASE_URL'] = File.join('file://localhost/', ENV['PROJECT_ROOT_FOLDER'], 'build', "#{app}-app-size-metrics.json"),
+      use_gzip_content_encoding: false,
+      app_name: 'WordPress',
+      app_version_name: version['name'],
+      app_version_code: version['code'],
+      product_flavor: 'Vanilla',
+      build_type: 'Release',
+      source: 'Final Build',
+      aab_path: aab_path
+    )
   end
 
   #####################################################################################
@@ -81,11 +93,23 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_alpha_version()
-    build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Release')
+    aab_path = build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version, track: 'alpha') if options[:upload_to_play_store]
 
     create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
+
+    android_send_app_size_metrics(
+      api_url: ENV['APPMETRICS_BASE_URL'] = File.join('file://localhost/', ENV['PROJECT_ROOT_FOLDER'], 'build', "#{app}-app-size-metrics.json"),
+      use_gzip_content_encoding: false,
+      app_name: 'WordPress',
+      app_version_name: version['name'],
+      app_version_code: version['code'],
+      product_flavor: 'Zalpha',
+      build_type: 'Release',
+      source: 'Alpha',
+      aab_path: aab_path
+    )
   end
 
   #####################################################################################
@@ -109,11 +133,23 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
+    aab_path = build_bundle(app: app, version: version, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version: version, track: 'beta') if options[:upload_to_play_store]
 
     create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
+
+    android_send_app_size_metrics(
+      api_url: ENV['APPMETRICS_BASE_URL'] = File.join('file://localhost/', ENV['PROJECT_ROOT_FOLDER'], 'build', "#{app}-app-size-metrics.json"),
+      use_gzip_content_encoding: false,
+      app_name: 'WordPress',
+      app_version_name: version['name'],
+      app_version_code: version['code'],
+      product_flavor: 'Vanilla',
+      build_type: 'Release',
+      source: 'Beta',
+      aab_path: aab_path
+    )
   end
 
   #####################################################################################
@@ -137,11 +173,23 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version = android_get_release_version()
-    build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Debug')
+    aab_path = build_bundle(app: app, version: version, flavor: 'Zalpha', buildType: 'Debug')
 
     upload_build_to_play_store(app: app, version: version, track: 'internal') if options[:upload_to_play_store]
 
     create_gh_release(app: app, version: version, prerelease: true) if options[:create_release]
+
+    android_send_app_size_metrics(
+      api_url: ENV['APPMETRICS_BASE_URL'] = File.join('file://localhost/', ENV['PROJECT_ROOT_FOLDER'], 'build', "#{app}-app-size-metrics.json"),
+      use_gzip_content_encoding: false,
+      app_name: 'WordPress',
+      app_version_name: version['name'],
+      app_version_code: version['code'],
+      product_flavor: 'Zalpha',
+      build_type: 'Debug',
+      source: 'Internal',
+      aab_path: aab_path
+    )
   end
 
   #####################################################################################
