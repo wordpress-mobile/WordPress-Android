@@ -4,26 +4,36 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingReminders
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOffer
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferFeature
 import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
+import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao
+import org.wordpress.android.fluxc.persistence.bloggingprompts.BloggingPromptsDao.BloggingPromptEntity
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
+import org.wordpress.android.fluxc.persistence.coverters.StringListConverter
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao
 import org.wordpress.android.fluxc.persistence.dashboard.CardsDao.CardEntity
 
 @Database(
-    version = 6,
+    version = 7,
     entities = [
         BloggingReminders::class,
         PlanOffer::class,
         PlanOfferId::class,
         PlanOfferFeature::class,
         CommentEntity::class,
-        CardEntity::class
+        CardEntity::class,
+        BloggingPromptEntity::class
+    ]
+)
+@TypeConverters(
+    value = [
+        StringListConverter::class
     ]
 )
 abstract class WPAndroidDatabase : RoomDatabase() {
@@ -34,6 +44,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     abstract fun commentsDao(): CommentsDao
 
     abstract fun dashboardCardsDao(): CardsDao
+
+    abstract fun bloggingPromptsDao(): BloggingPromptsDao
 
     @Suppress("MemberVisibilityCanBePrivate")
     companion object {
