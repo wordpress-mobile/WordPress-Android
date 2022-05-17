@@ -155,7 +155,7 @@ class MySiteViewModel @Inject constructor(
     private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, Int>>>()
+    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartSiteMenuStep
             .switchMap { quickStartSiteMenuStep ->
