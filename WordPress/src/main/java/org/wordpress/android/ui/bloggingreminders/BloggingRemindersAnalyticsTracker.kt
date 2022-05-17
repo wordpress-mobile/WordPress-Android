@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Button.CONTINUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.SiteType.SELF_HOSTED
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.SiteType.WORDPRESS_COM
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Origin
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -28,9 +29,12 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         siteType = if (site.isWPCom) WORDPRESS_COM else SELF_HOSTED
     }
 
-    fun trackScreenShown(screen: Screen) = track(
+    fun trackScreenShown(screen: Screen, origin: Origin) = track(
             BLOGGING_REMINDERS_SCREEN_SHOWN,
-            mapOf(SCREEN_KEY to screen.trackingName)
+            mapOf(
+                    SCREEN_KEY to screen.trackingName,
+                    ORIGIN_KEY to origin.trackingName
+            )
     )
 
     fun trackPrimaryButtonPressed(screen: Screen) = trackButtonPressed(screen, CONTINUE)
@@ -64,6 +68,11 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
 
     fun trackNotificationReceived() = track(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED)
 
+    fun trackRemindersIncludePromptPressed(promptEnabled: Boolean) =
+            track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf(PROMPT_ENABLED_KEY to promptEnabled))
+
+    fun trackRemindersIncludePromptHelpPressed() = track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED)
+
     private fun track(stat: Stat, properties: Map<String, Any?> = emptyMap()) = analyticsTracker.track(
             stat,
             properties + (BLOG_TYPE_KEY to siteType?.trackingName)
@@ -89,8 +98,10 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
     companion object {
         private const val BLOG_TYPE_KEY = "blog_type"
         private const val SCREEN_KEY = "screen"
+        private const val ORIGIN_KEY = "origin"
         private const val BUTTON_KEY = "button"
         private const val SOURCE_KEY = "source"
+        private const val PROMPT_ENABLED_KEY = "enabled"
         private const val DAYS_OF_WEEK_COUNT_KEY = "days_of_week_count"
         private const val SELECTED_TIME_KEY = "selected_time"
     }

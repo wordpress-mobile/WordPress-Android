@@ -17,6 +17,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_COMPLETED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_START
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_RECEIVED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCHEDULED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCREEN_SHOWN
@@ -24,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Origin
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
@@ -63,9 +66,9 @@ class BloggingRemindersAnalyticsTrackerTest {
 
     @Test
     fun `trackScreenShown tracks correct event and properties`() {
-        bloggingRemindersAnalyticsTracker.trackScreenShown(PROLOGUE)
-        bloggingRemindersAnalyticsTracker.trackScreenShown(SELECTION)
-        bloggingRemindersAnalyticsTracker.trackScreenShown(EPILOGUE)
+        bloggingRemindersAnalyticsTracker.trackScreenShown(PROLOGUE, Origin.SITE_SETTINGS)
+        bloggingRemindersAnalyticsTracker.trackScreenShown(SELECTION, Origin.SITE_SETTINGS)
+        bloggingRemindersAnalyticsTracker.trackScreenShown(EPILOGUE, Origin.SITE_SETTINGS)
 
         mapCaptor().apply {
             verify(analyticsTracker, times(3)).track(eq(BLOGGING_REMINDERS_SCREEN_SHOWN), capture())
@@ -159,6 +162,18 @@ class BloggingRemindersAnalyticsTrackerTest {
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED), checkMap {
             assertThat(it).containsKey("blog_type")
         })
+    }
+
+    @Test
+    fun `trackRemindersIncludePromptPressed tracks correct event and properties`() {
+        bloggingRemindersAnalyticsTracker.trackRemindersIncludePromptPressed(true)
+        verify(analyticsTracker).track(BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf("enabled" to "true"))
+    }
+
+    @Test
+    fun `trackRemindersIncludePromptHelpPressed tracks correct event`() {
+        bloggingRemindersAnalyticsTracker.trackRemindersIncludePromptHelpPressed()
+        verify(analyticsTracker).track(BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED)
     }
 
     private fun mapCaptor() = argumentCaptor<Map<String, Any?>>()

@@ -158,11 +158,13 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private fun togglePromptSwitch() {
         _bloggingRemindersModel.value?.let { currentState ->
+            analyticsTracker.trackRemindersIncludePromptPressed(currentState.isPromptIncluded)
             _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = !currentState.isPromptIncluded)
         }
     }
 
     private fun showBloggingPromptDialog() {
+        analyticsTracker.trackRemindersIncludePromptHelpPressed()
         _showBloggingPromptHelpDialogVisible.value = Event(true)
     }
 
@@ -281,6 +283,11 @@ class BloggingRemindersViewModel @Inject constructor(
         PROLOGUE_SETTINGS("main"), // displayed from Site Settings before showing cadence selector
         SELECTION("day_picker"), // cadence selector
         EPILOGUE("all_set")
+    }
+
+    enum class Origin(val trackingName: String) {
+        SITE_SETTINGS("site_settings"),
+        BLOGGING_PROMPTS_INTRODUCTION("bloggging_prompts_introduction")
     }
 
     data class UiState(
