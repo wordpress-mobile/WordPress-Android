@@ -24,7 +24,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private var searchInputWithHeader: SearchInputWithHeader? = null
-        private val viewModel: SiteCreationDomainsViewModel by activityViewModels()
+    private val viewModel: SiteCreationDomainsViewModel by activityViewModels()
 
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
