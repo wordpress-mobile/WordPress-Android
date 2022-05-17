@@ -1,6 +1,0 @@
-19.7:
-- Schede Menu del sito e Home aggiunte alla schermata Il mio sito
-- Pulsante Aggiungi blocco reso più invisibile quando si apre l'editor a blocchi
-- Testo di errore di caricamento del blocco Media/Audio rimosso
-- Schermata Scopo del sito aggiunta al processo di creazione del sito
-- Risolto un arresto anomalo causato dai dettagli della notifica per i commenti nei blocchi File GB

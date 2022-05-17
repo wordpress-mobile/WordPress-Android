@@ -15,11 +15,11 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.Dyn
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import javax.inject.Inject
 
 class MySiteSourceManager @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val quickStartTracker: QuickStartTracker,
     private val currentAvatarSource: CurrentAvatarSource,
     private val domainRegistrationSource: DomainRegistrationSource,
     private val dynamicCardsSource: DynamicCardsSource,
@@ -112,14 +112,14 @@ class MySiteSourceManager @Inject constructor(
     suspend fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
         when (interaction) {
             is DynamicCardMenuInteraction.Remove -> {
-                analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
+                quickStartTracker.track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
                 dynamicCardsSource.removeItem(interaction.cardType)
                 quickStartCardSource.refresh()
             }
             is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
             is Unpin -> dynamicCardsSource.unpinItem()
             is Hide -> {
-                analyticsTrackerWrapper.track(Stat.QUICK_START_HIDE_CARD_TAPPED)
+                quickStartTracker.track(Stat.QUICK_START_HIDE_CARD_TAPPED)
                 dynamicCardsSource.hideItem(interaction.cardType)
                 quickStartCardSource.refresh()
             }

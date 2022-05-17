@@ -1,6 +1,0 @@
-19.7:
-- Guias de Menu do site e Página inicial adicionadas à tela Meu site
-- Aumento da visibilidade do botão Adicionar bloco quando o editor de bloco abre
-- Texto de erro ao fazer upload do bloco de mídia/áudio removido
-- Tela de intenção de site adicionada ao processo de criação de sites
-- Falha causada pelos detalhes de notificação resolvida para comentários em blocos de arquivo GB

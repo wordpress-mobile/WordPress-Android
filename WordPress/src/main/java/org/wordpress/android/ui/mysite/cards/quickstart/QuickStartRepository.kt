@@ -6,6 +6,8 @@ import com.google.android.material.snackbar.Snackbar.Callback.DISMISS_EVENT_SWIP
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -34,6 +36,9 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType
+import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -43,9 +48,9 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -64,7 +69,6 @@ class QuickStartRepository
     private val appPrefsWrapper: AppPrefsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val resourceProvider: ResourceProvider,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val eventBus: EventBusWrapper,
     private val dynamicCardStore: DynamicCardStore,
@@ -72,8 +76,10 @@ class QuickStartRepository
     private val quickStartDynamicCardsFeatureConfig: QuickStartDynamicCardsFeatureConfig,
     private val contextProvider: ContextProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
+    private val quickStartTracker: QuickStartTracker,
     buildConfigWrapper: BuildConfigWrapper,
-    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
+    quickStartForExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
 ) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -84,19 +90,21 @@ class QuickStartRepository
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
-    private val _onQuickStartSiteMenuStep = MutableLiveData<QuickStartSiteMenuStep?>()
+    private val _onQuickStartTabStep = MutableLiveData<QuickStartTabStep?>()
     private var _isQuickStartNoticeShown: Boolean = false
     private val isMySiteTabsEnabled = mySiteDashboardTabsFeatureConfig.isEnabled() &&
             buildConfigWrapper.isMySiteTabsEnabled &&
             selectedSiteRepository.getSelectedSite()?.isUsingWpComRestApi ?: true
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
-    val onQuickStartSiteMenuStep = _onQuickStartSiteMenuStep as LiveData<QuickStartSiteMenuStep?>
+    val onQuickStartTabStep = _onQuickStartTabStep as LiveData<QuickStartTabStep?>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
     val isQuickStartNoticeShown = _isQuickStartNoticeShown
-    var quickStartTaskOrigin = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
-    val quickStartType = NewSiteQuickStartType
-
+    var currentTab = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
+    val isQuickStartForExistingUsersV2FeatureEnabled = quickStartForExistingUsersV2FeatureConfig.isEnabled()
+    var quickStartTaskOriginTab = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
+    val quickStartType: QuickStartType
+        get() = appPrefsWrapper.getLastSelectedQuickStartType()
     private var pendingTask: QuickStartTask? = null
 
     fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
@@ -109,7 +117,7 @@ class QuickStartRepository
     fun resetTask() {
         clearActiveTask()
         clearPendingTask()
-        clearSiteMenuStep()
+        clearTabStep()
     }
 
     fun clearActiveTask() {
@@ -120,10 +128,16 @@ class QuickStartRepository
         pendingTask = null
     }
 
-    fun clearSiteMenuStep() {
-        if (_onQuickStartSiteMenuStep.value != null) {
-            _onQuickStartSiteMenuStep.value = null
+    fun clearTabStep() {
+        if (_onQuickStartTabStep.value != null) {
+            _onQuickStartTabStep.value = null
         }
+    }
+
+    fun checkAndSetQuickStartType(isNewSite: Boolean) {
+        if (!isQuickStartForExistingUsersV2FeatureEnabled) return
+        val quickStartType = if (isNewSite) NewSiteQuickStartType else ExistingSiteQuickStartType
+        appPrefsWrapper.setLastSelectedQuickStartType(quickStartType)
     }
 
     suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
@@ -152,9 +166,10 @@ class QuickStartRepository
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
         clearPendingTask()
-        clearSiteMenuStep()
+        clearTabStep()
         when {
-            isSiteMenuStepRequiredForTask(task) -> requestSiteMenuStepForTask(task)
+            isSiteMenuStepRequiredForTask(task) -> requestTabStepForTask(task, MySiteTabType.SITE_MENU)
+            isHomeStepRequiredForTask(task) -> requestTabStepForTask(task, MySiteTabType.DASHBOARD)
             task == QuickStartNewSiteTask.UPDATE_SITE_TITLE -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                         R.string.quick_start_dialog_update_site_title_message_short,
@@ -162,7 +177,7 @@ class QuickStartRepository
                 )
                 _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
             }
-            task == QuickStartNewSiteTask.VIEW_SITE -> {
+            task == quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL) -> {
                 val shortQuickStartMessage = resourceProvider.getString(
                         R.string.quick_start_dialog_view_your_site_message_short,
                         SiteUtils.getHomeURLOrHostName(selectedSiteRepository.getSelectedSite())
@@ -194,9 +209,10 @@ class QuickStartRepository
             setTaskDoneAndTrack(task, selectedSite.id)
             if (quickStartType.isEveryQuickStartTaskDone(quickStartStore, selectedSite.id.toLong())) {
                 quickStartStore.setQuickStartCompleted(selectedSite.id.toLong(), true)
-                analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
+                quickStartTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
+                showCompletedQuickStartNotice()
             }
         }
     }
@@ -206,18 +222,18 @@ class QuickStartRepository
         siteLocalId: Int
     ) {
         quickStartStore.setDoneTask(siteLocalId.toLong(), task, true)
-        analyticsTrackerWrapper.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
+        quickStartTracker.track(quickStartUtilsWrapper.getTaskCompletedTracker(task))
     }
 
-    private fun requestSiteMenuStepForTask(task: QuickStartTask) {
+    private fun requestTabStepForTask(task: QuickStartTask, tabType: MySiteTabType) {
         clearActiveTask()
         pendingTask = task
         val shortQuickStartMessage = resourceProvider.getString(
                 R.string.quick_start_site_menu_tab_message_short,
-                resourceProvider.getString(R.string.my_site_menu_tab_title)
+                resourceProvider.getString(tabType.stringResId)
         )
         _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(htmlCompat.fromHtml(shortQuickStartMessage)))))
-        _onQuickStartSiteMenuStep.postValue(QuickStartSiteMenuStep(true, task))
+        _onQuickStartTabStep.postValue(QuickStartTabStep(true, task, tabType))
     }
 
     fun requestNextStepOfTask(task: QuickStartTask) {
@@ -274,11 +290,28 @@ class QuickStartRepository
         }
     }
 
+    fun showCompletedQuickStartNotice() {
+        launch {
+            delay(QUICK_START_COMPLETED_NOTICE_DELAY)
+            val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
+                    "<b>${resourceProvider.getString(R.string.quick_start_completed_tour_title)}</b>" +
+                            " ${resourceProvider.getString(R.string.quick_start_completed_tour_subtitle)}"
+            )
+            _onSnackbar.postValue(Event(
+                    SnackbarMessageHolder(
+                            message = UiStringText(message),
+                            duration = QUICK_START_NOTICE_DURATION,
+                            isImportant = false
+                    )
+            ))
+        }
+    }
+
     private fun showQuickStartNotice(selectedSiteLocalId: Int) {
         val taskToPrompt = quickStartUtilsWrapper
                 .getNextUncompletedQuickStartTask(quickStartType, selectedSiteLocalId.toLong())
         if (taskToPrompt != null) {
-            analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
+            quickStartTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED)
             appPrefsWrapper.setQuickStartNoticeRequired(false)
             val taskNoticeDetails = QuickStartNoticeDetails.getNoticeForTask(taskToPrompt) ?: return
             val message = htmlMessageUtils.getHtmlMessageFromStringFormat(
@@ -303,25 +336,59 @@ class QuickStartRepository
     }
 
     private fun onQuickStartNoticeButtonAction(task: QuickStartTask) {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
         setActiveTask(task)
     }
 
     private fun onQuickStartNoticeNegativeAction(task: QuickStartTask) {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED)
         appPrefsWrapper.setLastSkippedQuickStartTask(task)
     }
 
     private fun isSiteMenuStepRequiredForTask(task: QuickStartTask) =
-            quickStartTaskOrigin == MySiteTabType.DASHBOARD && task.showInSiteMenu()
+            currentTab == MySiteTabType.DASHBOARD && task.isShownInSiteMenuTab()
 
-    private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartNewSiteTask.ENABLE_POST_SHARING,
-        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+    private fun isHomeStepRequiredForTask(task: QuickStartTask) =
+            quickStartTaskOriginTab == MySiteTabType.DASHBOARD &&
+                    currentTab == MySiteTabType.SITE_MENU &&
+                    task.isShownInHomeTab()
+
+    // the quick start focus point shown in case of when the default tab is site menu or dashboard varies
+    // this function checks whether the passed tasks is shown in site menu
+    private fun QuickStartTask.isShownInSiteMenuTab() =
+            when (quickStartTaskOriginTab) {
+                MySiteTabType.DASHBOARD ->
+                    when (this) {
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
+                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+                        else -> false
+                    }
+                MySiteTabType.SITE_MENU ->
+                    when (this) {
+                        quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL),
+                        quickStartType.getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL),
+                        QuickStartNewSiteTask.REVIEW_PAGES,
+                        QuickStartNewSiteTask.EDIT_HOMEPAGE,
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
+                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+                        else -> false
+                    }
+                else -> false
+            }
+
+    private fun QuickStartTask.isShownInHomeTab() = when (this) {
+        quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL),
+        quickStartType.getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL),
+        QuickStartNewSiteTask.REVIEW_PAGES,
+        QuickStartNewSiteTask.EDIT_HOMEPAGE -> true
         else -> false
     }
 
-    data class QuickStartSiteMenuStep(val isStarted: Boolean, val task: QuickStartTask? = null)
+    data class QuickStartTabStep(
+        val isStarted: Boolean,
+        val task: QuickStartTask? = null,
+        val mySiteTabType: MySiteTabType
+    )
 
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
@@ -331,5 +398,6 @@ class QuickStartRepository
 
     companion object {
         private const val QUICK_START_NOTICE_DURATION = 7000
+        private const val QUICK_START_COMPLETED_NOTICE_DELAY = 5000L
     }
 }

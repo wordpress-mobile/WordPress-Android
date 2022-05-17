@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-28 09:54:08+0000
+Translation-Revision-Date: 2022-05-12 11:19:54+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">非表示</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">回答</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">毎日のプロンプト </string>
+    <string name="blogging_prompts_onboarding_got_it">理解しました</string>
+    <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;をタップしてサイトを表示</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">好きなトピックを追加するには%1$s「設定」%2$sを選択します。</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">別のサイトを検索するには%1$s「Reader」%2$sを選択します。</string>
+    <string name="blogging_reminders_prompt_help_button_desc">プロンプトについて詳しく読む</string>
+    <string name="photo_picker_video_thumbnail_unselected">選択解除した動画</string>
+    <string name="photo_picker_video_thumbnail_selected">選択中の動画</string>
+    <string name="photo_picker_media_thumbnail_content_description">メディアサムネイル</string>
+    <string name="stats_insights_popular_title">🔥 最も人気のある時間</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">今週の訪問者数は先週と比べて%1$s人減りました。</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">今週の訪問者数は先週と比べて%1$s人増えました。</string>
+    <string name="stats_insights_views_and_visitors_views_negative">今週の訪問者数は先週と比べて%1$s人減りました。</string>
+    <string name="stats_insights_views_and_visitors_views_positive">今週の訪問者数は先週と比べて%1$s人増えました。</string>
+    <string name="stats_timeframe_previous_week">先週</string>
+    <string name="stats_timeframe_this_week">今週</string>
+    <string name="scan_vault_press_active_on_site_button_text">ダッシュボードを表示</string>
+    <string name="scan_vault_press_active_on_site_subtitle">サイトはすでに VaultPress で保護されています。 VaultPress ダッシュボードへのリンクは以下にあります。</string>
+    <string name="scan_vault_press_active_on_site_title">サイトに VaultPress を搭載済み</string>
+    <string name="locale_picker_current_language">現在の言語: </string>
     <string name="hpp_choose_and_create_site">サイトを作成</string>
     <string name="gutenberg_native_add_blocks_11d0841f">ブロックを追加</string>
     <string name="initial_screen">初期画面</string>
@@ -16,7 +39,6 @@ Language: ja_JP
     <string name="new_site_creation_site_name_header_title">%s サイトに名前を付けてください</string>
     <string name="new_site_creation_site_name_title">サイト名</string>
     <string name="my_site_todays_stats_get_more_views_message">読者を増やしたいとお考えですか ? &lt;a href=\"%1$s\"&gt;トップのヒント&lt;/a&gt;をご覧ください。</string>
-    <string name="stats_insights_views_and_visitors_message">先週の表示数は先々週より%1$s %2$sです。</string>
     <string name="stats_insights_views_and_visitors">表示数と訪問者数</string>
     <string name="featured_image_removed_notice">アイキャッチ画像を削除</string>
     <string name="featured_image_confirmation_notice">アイキャッチ画像として設定</string>
@@ -514,12 +536,11 @@ Language: ja_JP
     <string name="scan_fixing_threats_title_singular">脅威の修正</string>
     <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
     <string name="quick_start_card_menu_unpin">これを固定解除</string>
-    <string name="quick_start_list_view_site_title">サイトを表示</string>
     <string name="quick_start_list_follow_site_subtitle">参考になるサイトを探してフォローしましょう。</string>
     <string name="quick_start_list_enable_sharing_subtitle">新しい投稿を自分のソーシャルメディアと自動的に共有しましょう。</string>
     <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。</string>
     <string name="quick_start_list_enable_sharing_title">ソーシャル共有</string>
-    <string name="quick_start_list_check_stats_title">統計情報を確認</string>
+    <string name="quick_start_list_check_stats_title">サイト統計情報を確認</string>
     <string name="backup_download_status_failure_bullet2">ダウンロード可能なバックアップファイルの作成を試みます。</string>
     <string name="backup_download_status_failure_bullet1">ダウンロード可能なバックアップにかかる時間を示すステータスが見つかりませんでした。</string>
     <string name="backup_download_status_failure_heading">ダウンロード可能なバックアップのステータスが見つかりませんでした</string>
@@ -1619,18 +1640,16 @@ Language: ja_JP
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
     <string name="quick_start_dialog_explore_plans_message_short">現在のプランと、その他の利用可能なプランを表示するには %1$s プラン %2$s をタップします</string>
-    <string name="quick_start_dialog_view_site_message">完成しました。お楽しみください !</string>
     <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
-    <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには %1$s「統計情報」%2$s をタップします。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
     <string name="quick_start_dialog_publish_post_message">投稿の下書きを作成して公開してください。</string>
+    <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには%1$s「統計情報」%2$sを選択します。</string>
     <string name="quick_start_dialog_enable_sharing_title">投稿のシェアを有効化</string>
     <string name="quick_start_dialog_explore_plans_title">プランの内容を見る</string>
     <string name="quick_start_dialog_explore_plans_message">有料プランのマーケティングと SEO ツールについての詳細を読む。</string>
     <string name="quick_start_dialog_enable_sharing_message">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
     <string name="quick_start_remove_next_steps_menu_title">これを削除</string>
     <string name="quick_start_dialog_check_stats_title">サイト統計情報を確認</string>
-    <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
     <string name="quick_start_dialog_remove_next_steps_message">「次のステップ」を削除すると、このサイトのすべてのツアーが非表示になります。この操作を元に戻すことはできません。</string>
     <string name="quick_start_dialog_remove_next_steps_title">次のステップを削除</string>
     <string name="quick_start_complete_view_subtitle">リストが完了しました。おめでとうございます。</string>
@@ -1803,14 +1822,11 @@ Language: ja_JP
     <string name="quick_start_dialog_share_site_message">自分のソーシャルメディアアカウントと連携すると、サイトの新しい投稿が自動的に共有されるようになります。</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">%1$sシェアする%2$sをタップして続行</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s連携%2$sをタップして、SNS アカウントを追加</string>
-    <string name="quick_start_dialog_view_site_message_short">サイトをプレビューするには%1$sサイトを表示%2$sをタップします</string>
+    <string name="quick_start_dialog_view_site_message">サイトをプレビューして訪問者に表示される内容を確認できます。</string>
     <string name="quick_start_dialog_publish_post_title">投稿を公開</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s投稿の作成%2$sをタップして、新しい党呼応を作成します</string>
-    <string name="quick_start_dialog_follow_sites_title">他のサイトをフォロー</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">%1$s検索%2$sをタップして、興味が似たサイトを検索します</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">%1$sReader%2$sをタップして続行してください</string>
-    <string name="quick_start_dialog_follow_sites_message">興味のあるサイトを見つけて、更新が公開されたらすぐ見られるようにフォローしてみましょう。</string>
     <string name="quick_start_dialog_need_help_button_negative">いいえ、結構です</string>
+    <string name="quick_start_dialog_follow_sites_title">別のサイトを接続</string>
     <string name="quick_start_button_positive">移動</string>
     <string name="quick_start_button_negative_short">キャンセル</string>
     <string name="quick_start_button_negative">後で</string>

@@ -87,6 +87,7 @@ sealed class MySiteCardAndItemBuilderParams {
         val scanAvailable: Boolean = false,
         val enableStatsFocusPoint: Boolean = false,
         val enablePagesFocusPoint: Boolean = false,
+        val enableMediaFocusPoint: Boolean = false,
         val onClick: (ListItemAction) -> Unit
     ) : MySiteCardAndItemBuilderParams()
 

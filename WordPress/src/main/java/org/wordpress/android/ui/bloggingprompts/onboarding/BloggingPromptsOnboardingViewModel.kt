@@ -26,6 +26,7 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     private val uiStateMapper: BloggingPromptsOnboardingUiStateMapper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val bloggingPromptsStore: BloggingPromptsStore,
+    private val analyticsTracker: BloggingPromptsOnboardingAnalyticsTracker,
     @Named(BG_THREAD) val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiState = MutableLiveData<BloggingPromptsOnboardingUiState>()
@@ -35,9 +36,15 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     val action: LiveData<BloggingPromptsOnboardingAction> = _action
 
     private lateinit var dialogType: DialogType
+    private lateinit var bloggingPrompt: BloggingPrompt
+    private var hasTrackedScreenShown = false
     private var site: SiteModel? = null
 
     fun start(type: DialogType) {
+        if (!hasTrackedScreenShown) {
+            hasTrackedScreenShown = true
+            analyticsTracker.trackScreenShown()
+        }
         dialogType = type
 
         site = selectedSiteRepository.getSelectedSite()
@@ -48,15 +55,20 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     private fun onPrimaryButtonClick() = launch {
         val action = when (dialogType) {
             ONBOARDING -> {
+                analyticsTracker.trackTryItNowClicked()
                 val bloggingPrompt = bloggingPromptsStore.getPromptForDate(site!!, Date()).firstOrNull()?.model
                 OpenEditor(bloggingPrompt?.id ?: -1)
             }
-            INFORMATION -> DismissDialog
+            INFORMATION -> {
+                analyticsTracker.trackGotItClicked()
+                DismissDialog
+            }
         }
         _action.postValue(action)
     }
 
     private fun onSecondaryButtonClick() {
+        analyticsTracker.trackRemindMeClicked()
         if (siteStore.sitesCount > 1) {
             _action.value = OpenSitePicker(selectedSiteRepository.getSelectedSite())
         } else {
