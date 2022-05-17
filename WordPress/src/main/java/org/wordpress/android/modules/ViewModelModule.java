@@ -64,7 +64,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -330,11 +329,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ModalLayoutPickerViewModel.class)
     abstract ViewModel mlpViewModel(ModalLayoutPickerViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(HomePagePickerViewModel.class)
-    abstract ViewModel hppViewModel(HomePagePickerViewModel viewModel);
 
     @Binds
     @IntoMap

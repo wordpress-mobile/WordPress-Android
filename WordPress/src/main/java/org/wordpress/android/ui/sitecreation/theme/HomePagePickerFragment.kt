@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.theme
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +7,12 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.HomePagePickerFragmentBinding
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
@@ -31,6 +31,7 @@ import javax.inject.Inject
  * Implements the Home Page Picker UI
  */
 @Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var displayUtils: DisplayUtilsWrapper
@@ -39,15 +40,10 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
     @Inject lateinit var recommendedDimensionProvider: SiteDesignRecommendedDimensionProvider
-    private lateinit var viewModel: HomePagePickerViewModel
+    private val viewModel: HomePagePickerViewModel by activityViewModels()
 
     private val siteIntent: String?
         get() = arguments?.getString(ARG_SITE_INTENT)
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,8 +55,6 @@ class HomePagePickerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
         savedInstanceState?.let {
             viewModel.loadSavedState(it)

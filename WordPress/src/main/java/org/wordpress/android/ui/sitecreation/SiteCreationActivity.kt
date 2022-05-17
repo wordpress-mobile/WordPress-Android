@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
@@ -58,18 +57,16 @@ class SiteCreationActivity : LocaleAwareActivity(),
         OnHelpClickedListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
-    private lateinit var hppViewModel: HomePagePickerViewModel
     private val mainViewModel: SiteCreationMainVM by viewModels()
+    private val hppViewModel: HomePagePickerViewModel by viewModels()
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
-        hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
         mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
 
