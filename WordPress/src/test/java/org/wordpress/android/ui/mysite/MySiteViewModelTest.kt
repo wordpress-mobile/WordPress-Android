@@ -113,6 +113,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -173,6 +174,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var quickStartType: QuickStartType
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -348,7 +350,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
-                appPrefsWrapper
+                appPrefsWrapper,
+                quickStartTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1105,7 +1108,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
-        verify(analyticsTrackerWrapper)
+        verify(quickStartTracker)
                 .track(Stat.QUICK_START_TAPPED, mapOf("type" to QuickStartTaskType.CUSTOMIZE.toString()))
     }
 
@@ -1198,7 +1201,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartUtilsWrapper).startQuickStart(
                 siteLocalId,
                 false,
-                quickStartType
+                quickStartType,
+                quickStartTracker
         )
         verify(mySiteSourceManager).refreshQuickStart()
     }
@@ -1213,7 +1217,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartUtilsWrapper).startQuickStart(
                 siteLocalId,
                 false,
-                ExistingSiteQuickStartType
+                ExistingSiteQuickStartType,
+                quickStartTracker
         )
         verify(mySiteSourceManager).refreshQuickStart()
     }
@@ -1289,7 +1294,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
         viewModel.startQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
     @Test
@@ -1299,7 +1304,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.startQuickStart()
 
         verify(quickStartUtilsWrapper)
-                .startQuickStart(site.id, false, quickStartRepository.quickStartType)
+                .startQuickStart(site.id, false, quickStartRepository.quickStartType, quickStartTracker)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1307,7 +1312,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
         viewModel.ignoreQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     /* QUICK START SITE MENU STEP */

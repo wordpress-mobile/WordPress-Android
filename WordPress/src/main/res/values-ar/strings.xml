@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-25 16:54:07+0000
+Translation-Revision-Date: 2022-05-12 10:44:16+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">تجاهُل</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">إجابة</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">مطالبة يومية</string>
+    <string name="blogging_prompts_onboarding_got_it">فهمت</string>
+    <string name="quick_start_dialog_view_your_site_message_short">النقر على &lt;b&gt;%1$s&lt;/b&gt; لعرض موقعك</string>
+    <string name="quick_start_dialog_follow_sites_message_short_settings">حدِّد ⁦%1$s⁩ الإعدادات ⁦%2$s⁩ لإضافة موضوعات تنال إعجابك.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">حدِّد ⁦%1$s⁩ القارئ ⁦%2$s⁩ للعثور على مواقع أخرى.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">معرفة المزيد حول المطالبات</string>
+    <string name="photo_picker_video_thumbnail_unselected">تم إلغاء تحديد الفيديو</string>
+    <string name="photo_picker_video_thumbnail_selected">تم تحديد الفيديو</string>
+    <string name="photo_picker_media_thumbnail_content_description">الصورة المصغَّرة للوسائط</string>
+    <string name="stats_insights_popular_title">🔥 الوقت الأكثر شيوعًا</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">يقل زائروك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">يزيد زائروك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">تقل مشاهداتك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">تزيد مشاهداتك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
+    <string name="stats_timeframe_previous_week">الأسبوع الماضي</string>
+    <string name="stats_timeframe_this_week">هذا الأسبوع</string>
+    <string name="scan_vault_press_active_on_site_button_text">زيارة لوحة التحكم</string>
+    <string name="scan_vault_press_active_on_site_subtitle">أنت محمي بالفعل بواسطة VaultPress. يمكنك العثور على رابط إلى لوحة تحكم VaultPress الخاصة بك أدناه.</string>
+    <string name="scan_vault_press_active_on_site_title">يحتوي موقعك على VaultPress</string>
+    <string name="locale_picker_current_language">اللغة الحالية:</string>
     <string name="hpp_choose_and_create_site">إنشاء موقع</string>
     <string name="gutenberg_native_add_blocks_11d0841f">إضافة مكوِّنات</string>
     <string name="initial_screen">الشاشة الأولى</string>
@@ -516,6 +538,8 @@ Language: ar
     <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه.</string>
     <string name="quick_start_list_enable_sharing_title">المشاركة عبر شبكات التواصل الاجتماعي</string>
+    <string name="quick_start_list_view_site_title">مشاهدة موقعك</string>
+    <string name="quick_start_list_check_stats_title">التحقّق من إحصاءات موقعك</string>
     <string name="backup_download_status_failure_bullet2">سنستمر في محاولة إنشاء ملف النسخ الاحتياطي القابل للتنزيل.</string>
     <string name="backup_download_status_failure_bullet1">يتعذر علينا العثور على الحالة حتى نخبرك بالمدة التي ستستغرقها عملية النسخة الاحتياطية القابلة للتنزيل لديك.</string>
     <string name="restore_status_bullet_clock_icon_content_desc">أيقونة الساعة</string>
@@ -1618,6 +1642,7 @@ Language: ar
     <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
     <string name="quick_start_dialog_publish_post_message">اكتب مسودّة مقالة ثم أنشرها.</string>
+    <string name="quick_start_dialog_check_stats_message_short">حدِّد ⁦%1$s⁩ الإحصاءات ⁦%2$s⁩ لمعرفة مستوى أداء موقعك.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
     <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
     <string name="quick_start_dialog_explore_plans_title">استكشاف الخطط</string>
@@ -1627,6 +1652,7 @@ Language: ar
     <string name="quick_start_dialog_check_stats_title">التحقّق من إحصاءات موقعك</string>
     <string name="quick_start_dialog_remove_next_steps_message">ستؤدي إزالة الخطوات التالية إلى إخفاء جميع الجولات على هذا الموقع. لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="quick_start_complete_view_subtitle">تهانينا لك على إكمال قائمتك. عمل متقن.</string>
+    <string name="quick_start_dialog_check_stats_message">واكب التحديثات المتعلقة بأداء موقعك.</string>
     <string name="quick_start_complete_view_title">جميع المهام مكتملة!</string>
     <string name="quick_start_task_skip_menu_title">تخطي المهمة</string>
     <string name="notification_channel_reminder_title">تذكير</string>
@@ -1796,9 +1822,11 @@ Language: ar
     <string name="quick_start_dialog_share_site_message">اتصل بحساباتك على وسائل التواصل الاجتماعي – سيشارك موقعك مقالات جديدة تلقائيًّا.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">أقر على %1$s مشاركة %2$s للمتابعة</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">أنقر على %1$s الروابط %2$s لإضافة حساباتك على وسائل التواصل الاجتماعي</string>
+    <string name="quick_start_dialog_view_site_message">قم بمعاينة موقعك لرؤية ما سيراه الزائرون.</string>
     <string name="quick_start_dialog_publish_post_title">نشر مقالة</string>
     <string name="quick_start_dialog_publish_post_message_short">انقر على %1$sإنشاء مقالة%2$s لإنشاء مقالة جديدة</string>
     <string name="quick_start_dialog_need_help_button_negative">لا شكرًا</string>
+    <string name="quick_start_dialog_follow_sites_title">الربط بمواقع أخرى</string>
     <string name="quick_start_button_positive">انتقال</string>
     <string name="quick_start_button_negative_short">إلغاء</string>
     <string name="quick_start_button_negative">ليس الآن</string>

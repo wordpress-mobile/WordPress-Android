@@ -109,6 +109,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
+import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -241,6 +242,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject BloggingPromptsOnboardingNotificationScheduler mBloggingPromptsOnboardingNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
+    @Inject QuickStartTracker mQuickStartTracker;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -342,7 +344,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 } else if (isQuickStartRequestedFromPush) {
                     // when app is opened from Quick Start reminder switch to MySite fragment
                     mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
-                    AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_TAPPED);
+                    mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_TAPPED);
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {

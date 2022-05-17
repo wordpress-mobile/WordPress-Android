@@ -4,9 +4,9 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertNotNull
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
@@ -25,7 +25,10 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper()
     private val siteStore: SiteStore = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
-    private val classToTest = BloggingPromptsOnboardingViewModel(siteStore, uiStateMapper, selectedSiteRepository)
+    private val analyticsTracker: BloggingPromptsOnboardingAnalyticsTracker = mock()
+    private val classToTest = BloggingPromptsOnboardingViewModel(
+            siteStore, uiStateMapper, selectedSiteRepository, analyticsTracker
+    )
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
 
     private val viewStates = mutableListOf<BloggingPromptsOnboardingUiState>()
@@ -100,4 +103,42 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
                 (startState as Ready).onPrimaryButtonClick()
                 verify(actionObserver).onChanged(DismissDialog)
             }
+
+    @Test
+    fun `Should track screen shown only the first time start is called with ONBOARDING`() = runBlocking {
+        classToTest.start(ONBOARDING)
+        classToTest.start(ONBOARDING)
+        verify(analyticsTracker).trackScreenShown()
+    }
+
+    @Test
+    fun `Should track screen shown only the first time start is called with INFORMATION`() = runBlocking {
+        classToTest.start(INFORMATION)
+        classToTest.start(INFORMATION)
+        verify(analyticsTracker).trackScreenShown()
+    }
+
+    @Test
+    fun `Should track try it now clicked when onPrimaryButtonClick is called with ONBOARDING`() = runBlocking {
+        classToTest.start(ONBOARDING)
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+        verify(analyticsTracker).trackTryItNowClicked()
+    }
+
+    @Test
+    fun `Should track got it clicked when onPrimaryButtonClick is called with INFORMATION`() = runBlocking {
+        classToTest.start(INFORMATION)
+        val startState = viewStates[0]
+        (startState as Ready).onPrimaryButtonClick()
+        verify(analyticsTracker).trackGotItClicked()
+    }
+
+    @Test
+    fun `Should track remind me clicked when onSecondaryButtonClick is called`() = runBlocking {
+        classToTest.start(INFORMATION)
+        val startState = viewStates[0]
+        (startState as Ready).onSecondaryButtonClick()
+        verify(analyticsTracker).trackRemindMeClicked()
+    }
 }

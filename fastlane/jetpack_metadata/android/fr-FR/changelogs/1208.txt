@@ -1,6 +1,0 @@
-19.7 :
-- Ajout des onglets Menu du site et Accueil à l’écran Mon site
-- Visibilité accrue du bouton Ajouter un bloc à l’ouverture de l’éditeur de blocs
-- Suppression d’un message d’erreur lors de l’échec de chargement d’un bloc média/audio
-- Ajout de l’écran Intention du site au processus de création de site
-- Correction du plantage causé par les détails de notification pour les commentaires sur les blocs de fichiers GB
