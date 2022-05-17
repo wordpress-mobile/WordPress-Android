@@ -62,7 +62,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
@@ -255,10 +254,6 @@ abstract class ViewModelModule {
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationDomainsViewModel.class)
-    abstract ViewModel siteCreationDomainsViewModel(SiteCreationDomainsViewModel viewModel);
 
     @Binds
     @IntoMap

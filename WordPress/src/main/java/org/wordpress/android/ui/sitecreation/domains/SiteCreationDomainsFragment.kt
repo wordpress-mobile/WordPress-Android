@@ -4,11 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationDomainsScreenBinding
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -21,11 +21,11 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private var searchInputWithHeader: SearchInputWithHeader? = null
-    private lateinit var viewModel: SiteCreationDomainsViewModel
+        private val viewModel: SiteCreationDomainsViewModel by activityViewModels()
 
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
 
@@ -39,11 +39,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (requireActivity().application as WordPress).component().inject(this)
     }
 
     override fun getContentLayout(): Int {
@@ -84,9 +79,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun SiteCreationDomainsScreenBinding.initViewModel() {
-        viewModel = ViewModelProvider(this@SiteCreationDomainsFragment, viewModelFactory)
-                .get(SiteCreationDomainsViewModel::class.java)
-
         viewModel.uiState.observe(this@SiteCreationDomainsFragment, { uiState ->
             uiState?.let {
                 searchInputWithHeader?.updateHeader(requireActivity(), uiState.headerUiState)
