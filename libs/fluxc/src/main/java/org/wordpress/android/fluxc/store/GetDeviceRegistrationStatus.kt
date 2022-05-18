@@ -8,7 +8,7 @@ class GetDeviceRegistrationStatus @Inject constructor(
 ) {
     operator fun invoke(): Status {
         val deviceId = prefsWrapper.getFluxCPreferences().getString(NotificationStore.WPCOM_PUSH_DEVICE_SERVER_ID, null)
-        return if (deviceId?.isEmpty() == true) {
+        return if (deviceId.isNullOrEmpty()) {
             Status.UNREGISTERED
         } else {
             Status.REGISTERED

@@ -21,7 +21,7 @@ class GetDeviceRegistrationStatusTest {
     private val sut = GetDeviceRegistrationStatus(preferencesWrapper)
 
     @Test
-    fun `when device id is empty, return unregistered status`() {
+    fun `when device id is not empty, return registered status`() {
         // given
         whenever(preferences.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null)).doReturn("not-empty-id")
 
@@ -33,9 +33,21 @@ class GetDeviceRegistrationStatusTest {
     }
 
     @Test
-    fun `when device id is not empty, return registered status`() {
+    fun `when device id is empty, return unregistered status`() {
         // given
         whenever(preferences.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null)).doReturn("")
+
+        // when
+        val result = sut.invoke()
+
+        // then
+        assertEquals(GetDeviceRegistrationStatus.Status.UNREGISTERED, result)
+    }
+
+    @Test
+    fun `when device id is null, return unregistered status`() {
+        // given
+        whenever(preferences.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null)).doReturn(null)
 
         // when
         val result = sut.invoke()
