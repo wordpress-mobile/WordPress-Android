@@ -39,6 +39,20 @@ class QuickStartAdapter internal constructor(
         private set
     private var listener: OnQuickStartAdapterActionListener? = null
 
+    init {
+        tasks = ArrayList<QuickStartTask?>()
+        tasks.addAll(tasksUncompleted)
+        if (!tasksCompleted.isEmpty()) {
+            tasks.add(null) // adding null where the complete tasks header simplifies a lot of logic for us
+        }
+        this.isCompletedTasksListExpanded = isCompletedTasksListExpanded
+        if (this.isCompletedTasksListExpanded) {
+            tasks.addAll(tasksCompleted)
+        }
+        this.tasksUncompleted = tasksUncompleted
+        taskCompleted = tasksCompleted
+    }
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
         return when (viewType) {
@@ -191,6 +205,14 @@ class QuickStartAdapter internal constructor(
     inner class CompletedHeaderViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
         var chevron: ImageView
         var title: TextView
+
+        init {
+            chevron = inflate.findViewById(id.completed_tasks_header_chevron)
+            title = inflate.findViewById(id.completed_tasks_header_title)
+            val clickListener = View.OnClickListener { view: View? -> toggleCompletedTasksList() }
+            itemView.setOnClickListener(clickListener)
+        }
+
         private fun toggleCompletedTasksList() {
             val viewPropertyAnimator = chevron
                     .animate()
@@ -229,13 +251,6 @@ class QuickStartAdapter internal constructor(
                 override fun onAnimationRepeat(animation: Animator) {}
             })
         }
-
-        init {
-            chevron = inflate.findViewById(id.completed_tasks_header_chevron)
-            title = inflate.findViewById(id.completed_tasks_header_title)
-            val clickListener = View.OnClickListener { view: View? -> toggleCompletedTasksList() }
-            itemView.setOnClickListener(clickListener)
-        }
     }
 
     interface OnQuickStartAdapterActionListener {
@@ -249,19 +264,5 @@ class QuickStartAdapter internal constructor(
         private const val VIEW_TYPE_COMPLETED_TASKS_HEADER = 1
         private const val EXPANDED_CHEVRON_ROTATION = -180f
         private const val COLLAPSED_CHEVRON_ROTATION = 0f
-    }
-
-    init {
-        tasks = ArrayList<QuickStartTask?>()
-        tasks.addAll(tasksUncompleted)
-        if (!tasksCompleted.isEmpty()) {
-            tasks.add(null) // adding null where the complete tasks header simplifies a lot of logic for us
-        }
-        this.isCompletedTasksListExpanded = isCompletedTasksListExpanded
-        if (this.isCompletedTasksListExpanded) {
-            tasks.addAll(tasksCompleted)
-        }
-        this.tasksUncompleted = tasksUncompleted
-        taskCompleted = tasksCompleted
     }
 }
