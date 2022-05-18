@@ -238,10 +238,10 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    fun onScreenInBackground(isChangingConfigurations: Boolean?) {
+    fun onScreenInBackground(isChangingConfigurations: Boolean) {
         readerTracker.stop(MAIN_READER)
         wasPaused = true
-        if (isChangingConfigurations == false) {
+        if (!isChangingConfigurations) {
             dismissQuickStartSnackbarIfNeeded()
             if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
                 quickStartRepository.clearPendingTask()
