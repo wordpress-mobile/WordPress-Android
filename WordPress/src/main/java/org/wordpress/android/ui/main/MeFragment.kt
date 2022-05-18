@@ -64,6 +64,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig
 import org.wordpress.android.util.config.RecommendTheAppFeatureConfig
 import org.wordpress.android.util.config.UnifiedAboutFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -88,6 +89,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject lateinit var recommendTheAppFeatureConfig: RecommendTheAppFeatureConfig
     @Inject lateinit var sequencer: SnackbarSequencer
     @Inject lateinit var unifiedAboutFeatureConfig: UnifiedAboutFeatureConfig
+    @Inject lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -169,6 +171,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
+        if (qrCodeAuthFlowFeatureConfig.isEnabled()) {
+            rowQrcodeScan.isVisible = true
+
+            rowQrcodeScan.setOnClickListener {
+                viewModel.showQrcodeScan()
+            }
+        }
+
         initRecommendUiState()
 
         viewModel.showUnifiedAbout.observeEvent(viewLifecycleOwner, {
@@ -187,6 +197,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
             manageRecommendUiState(it)
         })
+
+        viewModel.showQrcodeScan.observeEvent(viewLifecycleOwner) {
+            ToastUtils.showToast(requireContext(), "Scan qrcode not available yet")
+        }
     }
 
     private fun MeFragmentBinding.setRecommendLoadingState(startShimmer: Boolean) {
