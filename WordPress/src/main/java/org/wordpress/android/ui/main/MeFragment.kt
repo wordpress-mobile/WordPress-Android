@@ -172,9 +172,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         if (qrCodeAuthFlowFeatureConfig.isEnabled()) {
-            rowQrcodeScan.isVisible = true
+            rowScanLoginCode.isVisible = true
 
-            rowQrcodeScan.setOnClickListener {
+            rowScanLoginCode.setOnClickListener {
                 viewModel.showQrcodeScan()
             }
         }
