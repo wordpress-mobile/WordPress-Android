@@ -5,26 +5,22 @@ import android.animation.Animator.AnimatorListener
 import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout.LayoutParams
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import org.wordpress.android.R
 import org.wordpress.android.R.dimen
-import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
-import org.wordpress.android.R.menu
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.Companion.getDetailsForTask
 import org.wordpress.android.util.AniUtils.Duration.SHORT
-import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 
 class QuickStartAdapter internal constructor(
     private val context: Context,
@@ -60,7 +56,9 @@ class QuickStartAdapter internal constructor(
                             layout.quick_start_list_item,
                             viewGroup,
                             false
-                    )
+                    ),
+                    tasks,
+                    listener
             )
             VIEW_TYPE_COMPLETED_TASKS_HEADER -> CompletedHeaderViewHolder(
                     inflater.inflate(
@@ -162,41 +160,9 @@ class QuickStartAdapter internal constructor(
         this.listener = listener
     }
 
-    inner class TaskViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
-        var icon: ImageView = inflate.findViewById(id.icon)
-        var subtitle: TextView = inflate.findViewById(id.subtitle)
-        var title: TextView = inflate.findViewById(id.title)
-        var divider: View = inflate.findViewById(id.divider)
-        var popupAnchor: View = inflate.findViewById(id.popup_anchor)
-
-        init {
-            val clickListener = View.OnClickListener {
-                listener?.onTaskTapped(tasks[adapterPosition])
-            }
-            val longClickListener = View.OnLongClickListener {
-                val popup = PopupMenu(context, popupAnchor)
-                popup.setOnMenuItemClickListener { item: MenuItem ->
-                    if (item.itemId == id.quick_start_task_menu_skip) {
-                        if (listener != null) {
-                            listener!!.onSkipTaskTapped(tasks[adapterPosition])
-                        }
-                        return@setOnMenuItemClickListener true
-                    }
-                    false
-                }
-                popup.inflate(menu.quick_start_task_menu)
-                popup.show()
-                true
-            }
-            itemView.setOnClickListener(clickListener)
-            itemView.setOnLongClickListener(longClickListener)
-            itemView.redirectContextClickToLongPressListener()
-        }
-    }
-
     inner class CompletedHeaderViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
-        var chevron: ImageView = inflate.findViewById(id.completed_tasks_header_chevron)
-        var title: TextView = inflate.findViewById(id.completed_tasks_header_title)
+        var chevron: ImageView = inflate.findViewById(R.id.completed_tasks_header_chevron)
+        var title: TextView = inflate.findViewById(R.id.completed_tasks_header_title)
 
         init {
             val clickListener = View.OnClickListener { toggleCompletedTasksList() }
