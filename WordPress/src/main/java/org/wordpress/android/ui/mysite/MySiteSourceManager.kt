@@ -7,6 +7,7 @@ import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsSource
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationSource
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardSource
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
@@ -27,6 +28,7 @@ class MySiteSourceManager @Inject constructor(
     private val selectedSiteSource: SelectedSiteSource,
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
+    bloggingPromptCardSource: BloggingPromptCardSource,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -37,7 +39,8 @@ class MySiteSourceManager @Inject constructor(
             domainRegistrationSource,
             scanAndBackupSource,
             dynamicCardsSource,
-            cardsSource
+            cardsSource,
+            bloggingPromptCardSource
     )
 
     private val showDashboardCards: Boolean
