@@ -193,14 +193,8 @@ import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteSearchResultView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
-import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
-import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
@@ -258,12 +252,6 @@ public interface AppComponent {
     void inject(SignupEpilogueFragment object);
 
     void inject(PostSignupInterstitialActivity object);
-
-    void inject(SiteCreationActivity object);
-
-    void inject(SiteCreationDomainsFragment object);
-
-    void inject(SiteCreationPreviewFragment object);
 
     void inject(JetpackConnectionResultActivity object);
 
@@ -545,12 +533,6 @@ public interface AppComponent {
 
     void inject(ModalLayoutPickerFragment object);
 
-    void inject(HomePagePickerFragment object);
-
-    void inject(SiteCreationIntentsFragment object);
-
-    void inject(SiteCreationSiteNameFragment object);
-
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
@@ -658,7 +640,7 @@ public interface AppComponent {
     void inject(EditCancelDialogFragment object);
 
     void inject(BloggingReminderBottomSheetFragment object);
-    
+
     void inject(LocalePickerBottomSheet object);
 
     void inject(CategoriesListFragment object);

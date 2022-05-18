@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.lifecycle.LiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -24,6 +25,7 @@ const val defaultTemplateSlug = "default"
 
 private const val ERROR_CONTEXT = "design"
 
+@HiltViewModel
 class HomePagePickerViewModel @Inject constructor(
     override val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
