@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.cancel
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
@@ -43,6 +44,7 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragme
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.config.PreloadThumbnailsFeatureConfig
 import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
@@ -63,6 +65,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private lateinit var hppViewModel: HomePagePickerViewModel
     private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
     private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
+    // TODO: remove this (it is for testing convenience)
+    @Inject internal lateinit var preloadThumbnailsFeatureConfig: PreloadThumbnailsFeatureConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +80,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
                 .get(SiteCreationSiteNameViewModel::class.java)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
         mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
+        if (preloadThumbnailsFeatureConfig.isEnabled()) {
+            mainViewModel.preloadThumbnails(this)
+        }
 
         observeVMState()
     }
@@ -177,6 +184,12 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
+        // Cancel preload job before displaying the theme picker.
+        if (target.wizardStep == SITE_DESIGNS) {
+            mainViewModel.preloadingJob?.cancel(
+                    "Preload did not complete before theme picker was shown."
+            )
+        }
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
