@@ -127,6 +127,8 @@ android {
         buildConfigField "boolean", "STATS_REVAMP_V2", "false"
         buildConfigField "boolean", "QUICK_START_EXISTING_USERS_V2", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
+        // Including this temporarily, to facilitate testing.
+        buildConfigField "boolean", "PRELOAD_THUMBNAILS", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"

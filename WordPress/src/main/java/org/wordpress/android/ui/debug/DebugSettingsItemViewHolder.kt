@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.debug
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsRowBinding
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
@@ -35,7 +42,7 @@ sealed class DebugSettingsItemViewHolder(
         }
     }
 
-    class FeatureViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_feature) {
+    class FeatureViewHolder(val parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_feature) {
         private val title = itemView.findViewById<TextView>(R.id.feature_title)
         private val enabled = itemView.findViewById<CheckBox>(R.id.feature_enabled)
         private val unknown = itemView.findViewById<ImageView>(R.id.unknown_icon)
@@ -57,8 +64,27 @@ sealed class DebugSettingsItemViewHolder(
                     unknown.visibility = View.VISIBLE
                 }
             }
-            enabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
-            itemView.setOnClickListener { item.toggleAction.toggle() }
+            // To facilitate testing, clear the Glide memory and disk caches every time the flag is toggled
+            enabled.setOnCheckedChangeListener { _, _ ->
+                item.toggleAction.toggle()
+                clearGlideCache()
+            }
+            itemView.setOnClickListener {
+                item.toggleAction.toggle()
+                clearGlideCache()
+            }
+        }
+
+        // Cheap hack for testing ;)
+        fun clearGlideCache() {
+            runBlocking {
+                Glide.get(parent.context).clearMemory()
+                Log.d("Glide", "memory cache cleared!")
+                async(Dispatchers.IO) {
+                    Glide.get(parent.context).clearDiskCache()
+                    Log.d("Glide", "disk cache cleared!")
+                }
+            }
         }
     }
 
