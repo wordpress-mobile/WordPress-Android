@@ -217,9 +217,7 @@ class ReaderViewModel @Inject constructor(
 
     fun onSettingsActionClicked() {
         if (isSettingsSupported()) {
-            if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
-                selectedSiteRepository.getSelectedSite()?.let { completeQuickStartFollowSiteTask() }
-            }
+            completeQuickStartFollowSiteTaskIfNeeded()
             _showSettings.value = Event(Unit)
         } else if (BuildConfig.DEBUG) {
             throw IllegalStateException("Settings should be hidden when isSettingsSupported returns false.")
@@ -244,9 +242,7 @@ class ReaderViewModel @Inject constructor(
         readerTracker.stop(MAIN_READER)
         wasPaused = true
         if (isChangingConfigurations == false) {
-            updateContentUiState(showQuickStartFocusPoint = false)
-            if (isQuickStartPromptShown) snackbarSequencer.dismissLastSnackbar()
-            isQuickStartPromptShown = false
+            dismissQuickStartSnackbarIfNeeded()
             if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
                 quickStartRepository.clearPendingTask()
             }
@@ -312,9 +308,18 @@ class ReaderViewModel @Inject constructor(
         updateContentUiState(showQuickStartFocusPoint = isSettingsSupported())
     }
 
-    private fun completeQuickStartFollowSiteTask() {
-        updateContentUiState(showQuickStartFocusPoint = false)
-        quickStartRepository.completeTask(getFollowSiteTask())
+    fun completeQuickStartFollowSiteTaskIfNeeded() {
+        if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
+            selectedSiteRepository.getSelectedSite()?.let {
+                updateContentUiState(showQuickStartFocusPoint = false)
+                quickStartRepository.completeTask(getFollowSiteTask())
+            }
+        }
+    }
+
+    fun dismissQuickStartSnackbarIfNeeded() {
+        if (isQuickStartPromptShown) snackbarSequencer.dismissLastSnackbar()
+        isQuickStartPromptShown = false
     }
 
     private fun getFollowSiteTask() =
