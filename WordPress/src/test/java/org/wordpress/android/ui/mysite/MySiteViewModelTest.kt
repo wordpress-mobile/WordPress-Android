@@ -21,6 +21,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,6 +40,9 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.test
@@ -109,6 +113,9 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType
+import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -125,7 +132,6 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -158,7 +164,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var snackbarSequencer: SnackbarSequencer
     @Mock lateinit var cardsBuilder: CardsBuilder
     @Mock lateinit var dynamicCardsBuilder: DynamicCardsBuilder
-    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
     @Mock lateinit var landOnTheEditorFeatureConfig: LandOnTheEditorFeatureConfig
     @Mock lateinit var mySiteSourceManager: MySiteSourceManager
     @Mock lateinit var cardsTracker: CardsTracker
@@ -168,6 +173,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var quickStartType: QuickStartType
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -177,6 +184,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private var answerRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
@@ -225,6 +233,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
+    private var onBloggingPromptAnswerClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -290,17 +299,25 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Suppress("LongMethod")
-    fun init(enableMySiteDashboardConfig: Boolean = false) = test {
+    fun init(
+        isMySiteDashboardTabsFeatureFlagEnabled: Boolean = true,
+        isBloggingPromptsFeatureConfigEnabled: Boolean = true
+    ) = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
         selectedSite.value = null
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptsFeatureConfigEnabled)
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(mySiteSourceManager.build(any(), anyOrNull())).thenReturn(partialStates)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(quickStartRepository.onQuickStartTabStep).thenReturn(quickStartTabStep)
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(enableMySiteDashboardConfig)
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
+                .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -326,7 +343,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 cardsBuilder,
                 dynamicCardsBuilder,
                 landOnTheEditorFeatureConfig,
-                mySiteDashboardPhase2FeatureConfig,
                 mySiteSourceManager,
                 cardsTracker,
                 siteItemsTracker,
@@ -334,7 +350,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
-                appPrefsWrapper
+                appPrefsWrapper,
+                quickStartTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -376,14 +393,14 @@ class MySiteViewModelTest : BaseUnitTest() {
                 dynamicCardMenu.add(it)
             }
         }
-        viewModel.onShowSwipeRefreshLayout.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                showSwipeRefreshLayout.add(it)
-            }
-        }
         viewModel.onShare.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 shareRequests.add(it)
+            }
+        }
+        viewModel.onAnswerBloggingPrompt.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                answerRequests++
             }
         }
         viewModel.onTrackWithTabSource.observeForever { event ->
@@ -414,23 +431,26 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* SITE STATE */
 
+    @InternalCoroutinesApi
     @Test
     fun `given my site tabs feature flag not enabled, when site is selected, then tabs are not visible`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+
+        initSelectedSite()
 
         assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
     }
 
     @Test
     fun `given my site tabs build config not enabled, when site is selected, then tabs are not visible`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isFalse
     }
 
     @Test
     fun `given my site tabs build config with flag enabled, when site is selected, then tabs are visible`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         assertThat((uiModels.last().state as SiteSelected).tabsUiState.showTabs).isTrue
     }
@@ -440,7 +460,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackConnected(false)
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 isSiteUsingWpComRestApi = false
         )
@@ -451,7 +470,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given site using wpcom rest api, when site is selected, then tabs are visible`() {
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 isSiteUsingWpComRestApi = true
         )
@@ -499,9 +517,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* SELECTED SITE - DEFAULT TAB */
 
+    @InternalCoroutinesApi
     @Test
     fun `given tabs not enabled, when site is selected, then default tab is not set`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         assertThat(tabNavigation).isEmpty()
     }
@@ -511,7 +532,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.DASHBOARD.label)
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label
         )
@@ -524,7 +544,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given tabs enabled + initial screen is site_menu, when site is selected, then default tab is site menu`() {
         whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(MySiteTabType.SITE_MENU.label)
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.SITE_MENU.label
         )
@@ -538,7 +557,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given tabs enabled, when site is created, then default tab is set`() {
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.SITE_MENU.label
         )
@@ -853,12 +871,26 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site info card url click opens site and completes View Site task`() = test {
-        invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
+    fun `given new site QS View Site task, when site info url clicked, site opened + View Site task completed`() =
+            test {
+                whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
+                        .thenReturn(QuickStartNewSiteTask.VIEW_SITE)
+                invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.VIEW_SITE)
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
-    }
+                verify(quickStartRepository).completeTask(QuickStartNewSiteTask.VIEW_SITE)
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
+            }
+
+    @Test
+    fun `given existing site QS View Site task, when site info url clicked, site opened + View Site task completed`() =
+            test {
+                whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_VIEW_SITE_LABEL))
+                        .thenReturn(QuickStartExistingSiteTask.VIEW_SITE)
+                invokeSiteInfoCardAction(SiteInfoHeaderCardAction.URL_CLICK)
+
+                verify(quickStartRepository).completeTask(QuickStartExistingSiteTask.VIEW_SITE)
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenSite(site))
+            }
 
     @Test
     fun `site info card switch click opens site picker`() = test {
@@ -950,12 +982,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action stats click completes CHECK_STATS task`() {
+    fun `given new site QS, when quick action stats clicked, then CHECK_STATS task completes`() {
         initSelectedSite()
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
     }
 
     @Test
@@ -964,7 +998,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
+        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -974,7 +1008,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -1066,7 +1100,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given site menu tab, when quick start card item is clicked, then quick start tapped is tracked`() {
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 isQuickStartDynamicCardEnabled = false,
                 isQuickStartInProgress = true,
@@ -1075,14 +1108,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
-        verify(analyticsTrackerWrapper)
+        verify(quickStartTracker)
                 .track(Stat.QUICK_START_TAPPED, mapOf("type" to QuickStartTaskType.CUSTOMIZE.toString()))
     }
 
     @Test
     fun `given dashboard tab, when quick start card item clicked, then quick start card item tapped is tracked`() {
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 isQuickStartDynamicCardEnabled = false,
                 isQuickStartInProgress = true,
@@ -1150,7 +1182,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when quick start task is clicked, then task is set as active task`() {
-        val task = QuickStartTask.VIEW_SITE
+        val task = QuickStartNewSiteTask.VIEW_SITE
         initSelectedSite(isQuickStartDynamicCardEnabled = false, isQuickStartInProgress = true)
 
         viewModel.onQuickStartTaskCardClick(task)
@@ -1161,43 +1193,92 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* START/IGNORE QUICK START + QUICK START DIALOG */
 
     @Test
-    fun `given QS dynamic cards cards feature is on, when check and start QS is triggered, then QS starts`() {
+    fun `given dynamic cards enabled + new site, when check & start QS triggered, then new site QS starts`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
 
-        verify(quickStartUtilsWrapper).startQuickStart(siteLocalId, false)
+        verify(quickStartUtilsWrapper).startQuickStart(
+                siteLocalId,
+                false,
+                quickStartType,
+                quickStartTracker
+        )
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
     @Test
+    fun `given dynamic cards enabled + existing site, when check & start QS triggered, then existing site QS starts`() {
+        whenever(quickStartRepository.quickStartType).thenReturn(ExistingSiteQuickStartType)
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
+
+        verify(quickStartUtilsWrapper).startQuickStart(
+                siteLocalId,
+                false,
+                ExistingSiteQuickStartType,
+                quickStartTracker
+        )
+        verify(mySiteSourceManager).refreshQuickStart()
+    }
+
     fun `given no selected site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `given QS is not available for the site, when check and start QS is triggered, then QSP is not shown`() {
+    fun `given QS is not available for new site, when check and start QS is triggered, then QSP is not shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
         assertThat(navigationActions).isEmpty()
     }
 
     @Test
-    fun `when check and start QS is triggered, then QSP is shown`() {
+    fun `given QS is not available for existing site, when check and start QS is triggered, then QSP is not shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = false)
+
+        assertThat(navigationActions).isEmpty()
+    }
+
+    @Test
+    fun `given new site, when check and start QS is triggered, then QSP is shown`() {
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
 
-        viewModel.checkAndStartQuickStart(siteLocalId, false)
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = true)
+
+        assertThat(navigationActions).containsExactly(
+                SiteNavigationAction.ShowQuickStartDialog(
+                        R.string.quick_start_dialog_need_help_manage_site_title,
+                        R.string.quick_start_dialog_need_help_manage_site_message,
+                        R.string.quick_start_dialog_need_help_manage_site_button_positive,
+                        R.string.quick_start_dialog_need_help_button_negative
+                )
+        )
+    }
+
+    @Test
+    fun `given existing site, when check and start QS is triggered, then QSP is shown`() {
+        whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+
+        viewModel.checkAndStartQuickStart(siteLocalId, false, isNewSite = false)
 
         assertThat(navigationActions).containsExactly(
                 SiteNavigationAction.ShowQuickStartDialog(
@@ -1213,7 +1294,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
         viewModel.startQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
     @Test
@@ -1222,7 +1303,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.startQuickStart()
 
-        verify(quickStartUtilsWrapper).startQuickStart(site.id, false)
+        verify(quickStartUtilsWrapper)
+                .startQuickStart(site.id, false, quickStartRepository.quickStartType, quickStartTracker)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1230,40 +1312,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
         viewModel.ignoreQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
-    }
-
-    /* QUICK START SITE MENU STEP */
-
-    @Test
-    fun `when quick start menu step is triggered, then site menu tab has quick start focus point`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
-
-        quickStartTabStep.value = QuickStartTabStep(true, QuickStartTask.VIEW_SITE, MySiteTabType.SITE_MENU)
-
-        assertThat((uiModels.last().state as SiteSelected).findSiteMenuTabUiState().showQuickStartFocusPoint).isTrue
-    }
-
-    @Test
-    fun `given site menu tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
-        val pendingTask = QuickStartTask.VIEW_SITE
-        quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.SITE_MENU)
-
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
-
-        verify(quickStartRepository).clearTabStep()
-    }
-
-    @Test
-    fun `given site menu tab has qs focus point, when tab is changed, then site menu pending task is active`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
-        val pendingTask = QuickStartTask.VIEW_SITE
-        quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.SITE_MENU)
-
-        viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
-
-        verify(quickStartRepository).setActiveTask(pendingTask)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     /* QUICK START SITE MENU STEP */
@@ -1271,12 +1320,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `when quick start menu step is triggered, then dashboard tab has quick start focus point`() {
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label
         )
 
-        quickStartTabStep.value = QuickStartTabStep(true, QuickStartTask.REVIEW_PAGES, MySiteTabType.DASHBOARD)
+        quickStartTabStep.value = QuickStartTabStep(true, QuickStartNewSiteTask.REVIEW_PAGES, MySiteTabType.DASHBOARD)
 
         assertThat((uiModels.last().state as SiteSelected).findDashboardTabUiState().showQuickStartFocusPoint).isTrue
     }
@@ -1284,11 +1332,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given dashboard tab has qs focus point, when tab is changed, then qs focus point is cleared`() {
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label
         )
-        val pendingTask = QuickStartTask.REVIEW_PAGES
+        val pendingTask = QuickStartNewSiteTask.REVIEW_PAGES
         quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.DASHBOARD)
 
         viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
@@ -1299,11 +1346,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given dashboard tab has qs focus point, when tab is changed, then dashboard pending task is active`() {
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label
         )
-        val pendingTask = QuickStartTask.REVIEW_PAGES
+        val pendingTask = QuickStartNewSiteTask.REVIEW_PAGES
         quickStartTabStep.value = QuickStartTabStep(true, pendingTask, MySiteTabType.DASHBOARD)
 
         viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
@@ -1428,18 +1474,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when dashboard cards are shown, then card shown event is tracked`() = test {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
 
         verify(cardsTracker, atLeastOnce()).trackShown(any())
-    }
-
-    @Test
-    fun `when dashboard cards are not shown, then card shown events are not tracked`() = test {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-        initSelectedSite()
-
-        verify(cardsTracker, never()).trackShown(any())
     }
 
     /* DASHBOARD POST CARD - POST ITEM */
@@ -1475,13 +1512,13 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     /* DASHBOARD BLOGGING PROMPT CARD */
 
+    @InternalCoroutinesApi
     @Test
     fun `blogging prompt card is added to the dashboard when FF is ON`() = test {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
-
+        init(isBloggingPromptsFeatureConfigEnabled = true)
         initSelectedSite()
 
-        verify(cardsBuilder).build(
+        verify(cardsBuilder, times(2)).build(
                 any(), any(), any(),
                 argWhere {
                     it.bloggingPromptCardBuilderParams.bloggingPrompt != null
@@ -1491,9 +1528,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `blogging prompt card is not added to the dashboard when FF is OFF`() = test {
-        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+        init(isBloggingPromptsFeatureConfigEnabled = false)
 
         initSelectedSite()
 
@@ -1516,6 +1554,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(onBloggingPromptShareClicked).invoke(expectedShareMessage)
 
         assertThat(shareRequests.last()).isEqualTo(expectedShareMessage)
+    }
+
+    @Test
+    fun `given blogging prompt card, when answer button is clicked, answer action is called`() = test {
+        initSelectedSite()
+
+        requireNotNull(onBloggingPromptAnswerClicked).invoke()
+
+        assertTrue(answerRequests == 1)
     }
 
     /* DASHBOARD ERROR SNACKBAR */
@@ -1599,7 +1646,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
         invokeItemClickAction(ListItemAction.PLAN)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.EXPLORE_PLANS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
     }
 
@@ -1614,7 +1661,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `pages item click emits OpenPages navigation event`() {
         invokeItemClickAction(ListItemAction.PAGES)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -1696,10 +1743,23 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click completes CHECK_STATS task`() {
+    fun `given new site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
+
         invokeItemClickAction(ListItemAction.STATS)
 
-        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
+    }
+
+    @Test
+    fun `given existing site QS stats task, when stats item clicked, then CHECK_STATS task completed`() {
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
+
+        invokeItemClickAction(ListItemAction.STATS)
+
+        verify(quickStartRepository).completeTask(QuickStartExistingSiteTask.CHECK_STATS)
     }
 
     @Test
@@ -1735,38 +1795,41 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
+        assertThat(findBackupListItem()).isNull()
     }
 
     @Test
     fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
-
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(1)).build(any<SiteItemsBuilderParams>())
+        assertThat(findScanListItem()).isNull()
     }
 
     @Test
     fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = true, backupAvailable = false)
 
-        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
+        assertThat(findScanListItem()).isNotNull
     }
 
     @Test
     fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        setUpSiteItemBuilder()
         initSelectedSite()
 
         jetpackCapabilities.value = JetpackCapabilities(scanAvailable = false, backupAvailable = true)
 
-        verify(siteItemsBuilder, times(2)).build(any<SiteItemsBuilderParams>())
+        assertThat(findBackupListItem()).isNotNull
     }
 
     /* ADD SITE ICON DIALOG */
@@ -1775,7 +1838,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when add site icon dialog +ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1783,7 +1846,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when change site icon dialog +ve btn clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Positive(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1791,7 +1854,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when add site icon dialog -ve btn is clicked, then upload site icon task marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1799,7 +1862,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when change site icon dialog -ve btn is clicked, then upload site icon task marked complete no refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Negative(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1807,7 +1870,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when site icon dialog is dismissed, then upload site icon task is marked complete without refresh`() {
         viewModel.onDialogInteraction(DialogInteraction.Dismissed(MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG))
 
-        verify(quickStartRepository).completeTask(task = QuickStartTask.UPLOAD_SITE_ICON)
+        verify(quickStartRepository).completeTask(task = QuickStartNewSiteTask.UPLOAD_SITE_ICON)
         verify(mySiteSourceManager, never()).refreshQuickStart()
     }
 
@@ -1867,47 +1930,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     /* SWIPE REFRESH */
-    @InternalCoroutinesApi
-    @Test
-    fun `given not first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
-        init(enableMySiteDashboardConfig = true)
-        viewModel.onResume() // first call
-
-        viewModel.onResume() // second call
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given not first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
-        init(enableMySiteDashboardConfig = false)
-        viewModel.onResume() // first call
-
-        viewModel.onResume() // second call
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given first resume and phase 2 enabled, when on resume, then swipe refresh layout is enabled`() = test {
-        init(enableMySiteDashboardConfig = true)
-
-        viewModel.onResume()
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(true)
-    }
-
-    @InternalCoroutinesApi
-    @Test
-    fun `given first resume and phase 2 disabled, when on resume, then swipe refresh layout is disabled`() = test {
-        init(enableMySiteDashboardConfig = false)
-
-        viewModel.onResume()
-
-        assertThat(showSwipeRefreshLayout.last()).isEqualTo(false)
-    }
 
     @Test
     fun `given refresh, when not invoked as PTR, then pull-to-refresh request is not tracked`() {
@@ -1931,17 +1953,19 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
         verify(analyticsTrackerWrapper).track(Stat.LANDING_EDITOR_SHOWN)
-        assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenHomepage(site, localHomepageId))
+        assertThat(navigationActions).containsExactly(
+                SiteNavigationAction.OpenHomepage(site, homepageLocalId = localHomepageId, isNewSite = true)
+        )
     }
 
     @Test
     fun `given the land on the editor feature is not enabled, then the home page editor is not shown`() = test {
         whenever(landOnTheEditorFeatureConfig.isEnabled()).thenReturn(false)
 
-        viewModel.performFirstStepAfterSiteCreation(siteLocalId, false)
+        viewModel.performFirstStepAfterSiteCreation(siteLocalId, isSiteTitleTaskCompleted = false, isNewSite = true)
 
         assertThat(navigationActions).isEmpty()
     }
@@ -1963,16 +1987,20 @@ class MySiteViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Test
     fun `given no post cards exist, when cardAndItems list is ordered, then dynamic card follow all cards`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(false)
-        initSelectedSite(isQuickStartDynamicCardEnabled = true)
+        site.setIsWPCom(false)
+        initSelectedSite(
+                isMySiteTabsBuildConfigEnabled = true,
+                isSiteUsingWpComRestApi = false,
+                isQuickStartDynamicCardEnabled = true,
+                initialScreen = MySiteTabType.SITE_MENU.label
+        )
 
-        assertThat(getLastItems().last()).isInstanceOf(DynamicCard::class.java)
+        assertThat(getSiteMenuTabLastItems().last()).isInstanceOf(DynamicCard::class.java)
     }
 
     @InternalCoroutinesApi
     @Test
     fun `given dashboard cards exist, when cardAndItems list is ordered, then dynamic cards precede dashboard cards`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isQuickStartDynamicCardEnabled = true)
 
         val dashboardCardsIndex = getLastItems().indexOfFirst { it is DashboardCards }
@@ -1984,7 +2012,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* STATE LISTS */
     @Test
     fun `given site select exists, then cardAndItem lists are not empty`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite(isQuickStartDynamicCardEnabled = false)
 
         assertThat(getLastItems().isNotEmpty())
@@ -1992,19 +2019,19 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(getSiteMenuTabLastItems().isNotEmpty())
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `given selected site with tabs disabled, when all cards and items, then qs card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+
+        initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).cardAndItems
-
         assertThat(items.filterIsInstance(QuickStartCard::class.java)).isNotEmpty
     }
 
     @Test
     fun `given selected site, when dashboard cards and items, then dashboard cards exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
 
         val items = (uiModels.last().state as SiteSelected).dashboardCardsAndItems
@@ -2014,7 +2041,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when dashboard cards and items, then list items not exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
         initSelectedSite()
 
@@ -2025,11 +2051,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard variant, when dashboard cards items, then qs card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label
         )
@@ -2041,11 +2065,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu default tab variant, when dashboard cards items, then qs card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.SITE_MENU.label
         )
@@ -2057,7 +2079,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when site menu cards and items, then dashboard cards not exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
         initSelectedSite()
 
@@ -2068,7 +2089,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site, when site menu cards and items, then list items exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
         initSelectedSite()
 
@@ -2079,11 +2099,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard default tab variant, when site menu cards + items, then qs card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label
         )
@@ -2095,11 +2113,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu default tab variant, when site menu cards and items, then qs card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.SITE_MENU.label
         )
@@ -2111,7 +2127,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with domain credit, when dashboard cards + items, then domain reg card does not exist`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
@@ -2122,7 +2137,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given selected site with domain credit, when site menu cards and items, then domain reg card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         initSelectedSite()
         isDomainCreditAvailable.value = DomainCreditAvailable(true)
 
@@ -2133,7 +2147,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given site menu tab is selected, when tab is changed, then site menu events are tracked`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.SITE_MENU))
 
@@ -2146,7 +2160,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given dashboard tab is selected, when tab is changed, then dashboard events are tracked`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         viewModel.onTabChanged(viewModel.orderedTabTypes.indexOf(MySiteTabType.DASHBOARD))
 
@@ -2168,11 +2182,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu initial screen, when site menu cards + items, then dynamic card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.SITE_MENU.label,
                 isQuickStartDynamicCardEnabled = true
@@ -2185,11 +2197,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard initial screen, when dashboard cards + items, then dynamic card exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label,
                 isQuickStartDynamicCardEnabled = true
@@ -2202,11 +2212,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + site menu initial screen, when dashboard cards + items, then dynamic card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.SITE_MENU.label,
                 isQuickStartDynamicCardEnabled = true
@@ -2219,11 +2227,9 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs enabled + dashboard initial screen, when site menu cards + items, then dynamic card not exists`() {
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(true)
         setUpSiteItemBuilder()
 
         initSelectedSite(
-                isMySiteDashboardTabsFeatureFlagEnabled = true,
                 isMySiteTabsBuildConfigEnabled = true,
                 initialScreen = MySiteTabType.DASHBOARD.label,
                 isQuickStartDynamicCardEnabled = true
@@ -2237,34 +2243,38 @@ class MySiteViewModelTest : BaseUnitTest() {
     /* TRACK WITH TAB SOURCE */
     @Test
     fun `given tabs are enabled, when pull to refresh invoked, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         viewModel.refresh(true)
 
         assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.MY_SITE_PULL_TO_REFRESH)
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when pull to refresh invoked, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         viewModel.refresh(true)
 
         assertThat(trackWithTabSource).isEmpty()
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when pull to refresh invoked, then pull-to-refresh is tracked`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         viewModel.refresh(true)
-
         assertThat(analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH))
     }
 
     @Test
     fun `given tabs are enabled, when quick link stats tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -2273,7 +2283,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are enabled, when quick link pages tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
@@ -2282,7 +2292,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are enabled, when quick link posts tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickActionsPostsClickAction).invoke()
 
@@ -2291,16 +2301,18 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are enabled, when quick link media tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickActionsMediaClickAction).invoke()
 
         assertThat(trackWithTabSource.last().stat).isEqualTo(Stat.QUICK_ACTION_MEDIA_TAPPED)
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link stats tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         requireNotNull(quickActionsStatsClickAction).invoke()
 
@@ -2308,9 +2320,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_STATS_TAPPED))
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link pages tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
@@ -2318,9 +2332,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_PAGES_TAPPED))
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link posts tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         requireNotNull(quickActionsPostsClickAction).invoke()
 
@@ -2328,9 +2344,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(analyticsTrackerWrapper.track(Stat.QUICK_ACTION_POSTS_TAPPED))
     }
 
+    @InternalCoroutinesApi
     @Test
     fun `given tabs are disabled, when quick link media tapped, then track with tab source is not requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = false, isMySiteTabsBuildConfigEnabled = false)
+        init(isMySiteDashboardTabsFeatureFlagEnabled = false)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = false)
 
         requireNotNull(quickActionsMediaClickAction).invoke()
 
@@ -2340,7 +2358,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are enabled, when quick link ribbon pages tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickLinkRibbonPagesClickAction).invoke()
 
@@ -2349,7 +2367,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are enabled, when quick link ribbon posts tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickLinkRibbonPostsClickAction).invoke()
 
@@ -2358,7 +2376,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are enabled, when quick link ribbon stats tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
@@ -2367,7 +2385,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given tabs are enabled, when quick link ribbon media tapped, then track with tab source is requested`() {
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isMySiteTabsBuildConfigEnabled = true)
+        initSelectedSite(isMySiteTabsBuildConfigEnabled = true)
 
         requireNotNull(quickLinkRibbonMediaClickAction).invoke()
 
@@ -2380,7 +2398,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         site.setIsWPCom(true)
 
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+        initSelectedSite()
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
@@ -2394,11 +2412,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(true)
         site.setIsJetpackConnected(true)
 
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+        initSelectedSite()
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.CHECK_STATS)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.CHECK_STATS)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStats(site))
     }
 
@@ -2409,7 +2427,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(false)
         site.setIsJetpackConnected(false)
 
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true, isSiteUsingWpComRestApi = false)
+        initSelectedSite(isSiteUsingWpComRestApi = false)
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
@@ -2423,7 +2441,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.setIsJetpackInstalled(true)
         site.setIsJetpackConnected(true)
 
-        initSelectedSite(isMySiteDashboardTabsFeatureFlagEnabled = true)
+        initSelectedSite()
 
         requireNotNull(quickLinkRibbonStatsClickAction).invoke()
 
@@ -2436,7 +2454,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).completeTask(QuickStartTask.REVIEW_PAGES)
+        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -2446,7 +2464,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickActionsPagesClickAction).invoke()
 
-        verify(quickStartRepository).requestNextStepOfTask(QuickStartTask.EDIT_HOMEPAGE)
+        verify(quickStartRepository).requestNextStepOfTask(QuickStartNewSiteTask.EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenPages(site))
     }
 
@@ -2475,11 +2493,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findDomainRegistrationCard() =
             getLastItems().find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
-    private fun SiteSelected.findSiteMenuTabUiState() =
-            tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.SITE_MENU }
-
     private fun SiteSelected.findDashboardTabUiState() =
             tabsUiState.tabUiStates.first { it.tabType == MySiteTabType.DASHBOARD }
+
+    private fun findBackupListItem() = getLastItems().filterIsInstance(ListItem::class.java)
+            .firstOrNull { it.primaryText == UiStringRes(R.string.backup) }
+
+    private fun findScanListItem() = getLastItems().filterIsInstance(ListItem::class.java)
+            .firstOrNull { it.primaryText == UiStringRes(R.string.scan) }
 
     private fun getLastItems() = (uiModels.last().state as SiteSelected).cardAndItems
 
@@ -2523,8 +2544,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     private fun initSelectedSite(
-        isMySiteDashboardTabsFeatureFlagEnabled: Boolean = false,
-        isMySiteTabsBuildConfigEnabled: Boolean = false,
+        isMySiteTabsBuildConfigEnabled: Boolean = true,
         isQuickStartDynamicCardEnabled: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         showStaleMessage: Boolean = false,
@@ -2538,7 +2558,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartUpdate.value = QuickStartUpdate(
                 categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureFlagEnabled)
         whenever(buildConfigWrapper.isMySiteTabsEnabled).thenReturn(isMySiteTabsBuildConfigEnabled)
         whenever(appPrefsWrapper.getMySiteInitialScreen()).thenReturn(initialScreen)
         if (isSiteUsingWpComRestApi) {
@@ -2568,8 +2587,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                     quickStartCard
             )
 
-            if (mySiteDashboardPhase2FeatureConfig.isEnabled())
-                listOfCards.add(dashboardCards)
+            listOfCards.add(dashboardCards)
             if (mySiteDashboardTabsFeatureConfig.isEnabled())
                 listOfCards.add(quickLinkRibbon)
             listOfCards
@@ -2604,8 +2622,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun setUpSiteItemBuilder() {
         doAnswer {
-            val items = initSiteItem(it)
-            listOf<MySiteCardAndItem>(items)
+            initSiteItems(it)
         }.whenever(siteItemsBuilder).build(any<SiteItemsBuilderParams>())
     }
 
@@ -2771,22 +2788,46 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun initBloggingPromptCard(mockInvocation: InvocationOnMock): BloggingPromptCardWithData {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
+        onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
-                onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit)
+                onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
+                onAnswerClick = onBloggingPromptAnswerClicked as (() -> Unit)
         )
     }
 
-    private fun initSiteItem(mockInvocation: InvocationOnMock): ListItem {
+    private fun initSiteItems(mockInvocation: InvocationOnMock): List<ListItem> {
         val params = (mockInvocation.arguments.filterIsInstance<SiteItemsBuilderParams>()).first()
-        return ListItem(
-                0,
-                UiStringRes(0),
-                onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick)
+        val items = mutableListOf<ListItem>()
+        items.add(
+                ListItem(
+                        0,
+                        UiStringRes(0),
+                        onClick = ListItemInteraction.create(ListItemAction.POSTS, params.onClick)
+                )
         )
+        if (params.scanAvailable) {
+            items.add(
+                    ListItem(
+                            0,
+                            UiStringRes(R.string.scan),
+                            onClick = mock()
+                    )
+            )
+        }
+        if (params.backupAvailable) {
+            items.add(
+                    ListItem(
+                            0,
+                            UiStringRes(R.string.backup),
+                            onClick = mock()
+                    )
+            )
+        }
+        return items
     }
 
     fun ViewModel.invokeOnCleared() {

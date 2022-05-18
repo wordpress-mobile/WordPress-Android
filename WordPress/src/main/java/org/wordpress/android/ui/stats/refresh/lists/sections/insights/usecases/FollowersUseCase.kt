@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -28,15 +27,17 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUiState
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
+import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -55,7 +56,8 @@ class FollowersUseCase(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val contentDescriptionHelper: ContentDescriptionHelper,
-    private val useCaseMode: UseCaseMode
+    private val useCaseMode: UseCaseMode,
+    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
 ) : BaseStatsUseCase<Pair<FollowersModel, FollowersModel>, FollowersUiState>(
         FOLLOWERS,
         mainDispatcher,
@@ -177,7 +179,11 @@ class FollowersUseCase(
         return items
     }
 
-    private fun buildTitle() = Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
+    private fun buildTitle() = if (statsRevampV2FeatureConfig.isEnabled()) {
+        Title(R.string.stats_view_followers)
+    } else {
+        Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
+    }
 
     private fun loadMore() {
         launch {
@@ -247,7 +253,8 @@ class FollowersUseCase(
         private val resourceProvider: ResourceProvider,
         private val popupMenuHandler: ItemPopupMenuHandler,
         private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val contentDescriptionHelper: ContentDescriptionHelper
+        private val contentDescriptionHelper: ContentDescriptionHelper,
+        private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 FollowersUseCase(
@@ -260,7 +267,8 @@ class FollowersUseCase(
                         analyticsTracker,
                         popupMenuHandler,
                         contentDescriptionHelper,
-                        useCaseMode
+                        useCaseMode,
+                        statsRevampV2FeatureConfig
                 )
     }
 }

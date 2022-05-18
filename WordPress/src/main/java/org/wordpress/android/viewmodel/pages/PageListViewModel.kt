@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
@@ -154,7 +154,7 @@ class PageListViewModel @Inject constructor(
 
     fun onMenuAction(action: Action, pageItem: Page, context: Context): Boolean {
         completeEditHomePageTour(pageItem, context)
-        return pagesViewModel.onMenuAction(action, pageItem)
+        return pagesViewModel.onMenuAction(action, pageItem, context)
     }
 
     fun onItemTapped(pageItem: Page, context: Context) {

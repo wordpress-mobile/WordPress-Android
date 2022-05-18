@@ -1,3 +1,4 @@
+@file:Suppress("MaximumLineLength")
 package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
@@ -9,10 +10,12 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -109,6 +112,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
+    private val _createPostWithBloggingPrompt = SingleLiveEvent<BloggingPrompt>()
+    val createPostWithBloggingPrompt: LiveData<BloggingPrompt> = _createPostWithBloggingPrompt
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
@@ -202,10 +208,22 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
     private fun onAnswerPromptActionClicked() {
         // TODO @klymyam add analytics
         _isBottomSheetShowing.postValue(Event(false))
-        _createAction.postValue(ANSWER_BLOGGING_PROMPT)
+
+        // TODO @RenanLukas get BloggingPrompt from Store when it's ready
+        val bloggingPrompt = BloggingPrompt(
+            id = 1234,
+            text = "Cast the movie of your life.",
+            content = "<!-- wp:pullquote -->\n" +
+                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                    "<!-- /wp:pullquote -->",
+            respondents = emptyList()
+        )
+        _createPostWithBloggingPrompt.postValue(bloggingPrompt)
     }
 
     private fun disableTooltip(site: SiteModel?) {
@@ -344,9 +362,14 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {
-        // For now, we only do this for the FOLLOW_SITE task.
-        val followSitesTaskFocusPointInfo = FocusPointInfo(FOLLOW_SITE, task == FOLLOW_SITE)
-        return listOf(followSitesTaskFocusPointInfo)
+        val followSiteTask = quickStartRepository.quickStartType
+                .getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
+        val followSitesTaskFocusPointInfo = FocusPointInfo(followSiteTask, task == followSiteTask)
+        val checkNotifsTaskFocusPointInfo = FocusPointInfo(
+                QuickStartExistingSiteTask.CHECK_NOTIFICATIONS,
+                task == QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
+        )
+        return listOf(followSitesTaskFocusPointInfo, checkNotifsTaskFocusPointInfo)
     }
 
     fun handleSiteRemoved() {

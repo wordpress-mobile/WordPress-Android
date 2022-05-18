@@ -67,7 +67,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked()
+        fun onNewPostButtonClicked(promptId: Int)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {
@@ -94,6 +94,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             imgIcon.setImageResource(getDrawableResForPosition(i))
             if (i == getPosition(READER)) {
                 customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+            }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
             itemView.addView(customView)

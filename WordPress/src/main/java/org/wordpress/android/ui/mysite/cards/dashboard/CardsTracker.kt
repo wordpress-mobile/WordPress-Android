@@ -7,13 +7,16 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
+import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type.QUICK_START
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class CardsTracker @Inject constructor(
     private val cardsShownTracker: CardsShownTracker,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val quickStartTracker: QuickStartTracker
 ) {
     enum class Type(val label: String) {
         ERROR("error"),
@@ -26,6 +29,7 @@ class CardsTracker @Inject constructor(
     enum class QuickStartSubtype(val label: String) {
         CUSTOMIZE("customize"),
         GROW("grow"),
+        GET_TO_KNOW_APP("get_to_know_app"),
         UNKNOWN("unkown")
     }
 
@@ -76,13 +80,12 @@ class CardsTracker @Inject constructor(
     }
 
     private fun trackCardItemClicked(type: String, subtype: String) {
-        analyticsTrackerWrapper.track(
-                Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED,
-                mapOf(
-                        TYPE to type,
-                        SUBTYPE to subtype
-                )
-        )
+        val props = mapOf(TYPE to type, SUBTYPE to subtype)
+        if (type == QUICK_START.label) {
+            quickStartTracker.track(Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED, props)
+        } else {
+            analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED, props)
+        }
     }
 
     fun resetShown() {
@@ -126,6 +129,7 @@ fun QuickStartTaskType.toSubtypeValue(): QuickStartSubtype {
     return when (this) {
         QuickStartTaskType.CUSTOMIZE -> QuickStartSubtype.CUSTOMIZE
         QuickStartTaskType.GROW -> QuickStartSubtype.GROW
+        QuickStartTaskType.GET_TO_KNOW_APP -> QuickStartSubtype.GET_TO_KNOW_APP
         QuickStartTaskType.UNKNOWN -> QuickStartSubtype.UNKNOWN
     }
 }

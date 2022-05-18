@@ -15,6 +15,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
@@ -36,7 +37,6 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel
     private lateinit var dialogType: DialogType
@@ -132,6 +132,8 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             toggleSecondaryButtonVisibility(readyState.isSecondaryButtonVisible)
             setSecondaryButtonListener { readyState.onSecondaryButtonClick() }
 
+            setDismissAnalyticsEvent(Stat.BLOGGING_PROMPTS_INTRODUCTION_SCREEN_DISMISSED, emptyMap())
+
             contentBottom.text = getString(readyState.contentBottomRes)
             contentNote.text = buildSpannedString {
                 bold { append("${getString(readyState.contentNoteTitle)} ") }
@@ -153,7 +155,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     private fun setupActionObserver() {
         viewModel.action.observe(this) { action ->
             when (action) {
-                is OpenEditor -> ActivityLauncher.openEditorInNewStack(activity)
+                is OpenEditor -> {
+                    activity?.let {
+                        startActivity(ActivityLauncher.openEditorWithBloggingPrompt(it, action.promptId))
+                    }
+                }
                 is OpenSitePicker -> {
                     val intent = Intent(context, SitePickerActivity::class.java).apply {
                         putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)

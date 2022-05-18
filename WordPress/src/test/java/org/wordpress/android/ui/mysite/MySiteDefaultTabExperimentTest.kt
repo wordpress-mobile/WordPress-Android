@@ -36,7 +36,13 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         init()
     }
 
-    fun init() {
+    fun init(
+        isMySiteDashboardTabsFeatureConfigEnabled: Boolean = true,
+        isMySiteDefaultTabExperimentFeatureConfigEnabled: Boolean = false
+    ) {
+        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteDashboardTabsFeatureConfigEnabled)
+        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled())
+                .thenReturn(isMySiteDefaultTabExperimentFeatureConfigEnabled)
         mySiteDefaultTabExperiment = MySiteDefaultTabExperiment(
                 mySiteDefaultTabExperimentFeatureConfig,
                 mySiteDefaultTabExperimentVariationDashboardFeatureConfig,
@@ -48,7 +54,7 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given my site tabs feature flag is enabled, when check and set variant, then app prefs is not set`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(false)
+        init(isMySiteDashboardTabsFeatureConfigEnabled = true)
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
 
@@ -57,8 +63,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given default tab experiment flag is not enabled, when check and set variant, then app prefs is not set`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(false)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = false
+        )
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
 
@@ -67,8 +75,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running, when variant is not assigned, then assigned prefs is set`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(false)
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
@@ -78,8 +88,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running, when variant is not assigned, then initial screen prefs is set`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(false)
         whenever(mySiteDefaultTabExperimentVariationDashboardFeatureConfig.isDashboardVariant()).thenReturn(false)
 
@@ -93,8 +105,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running, when variant is already set, then app prefs is not reset`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(true)
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
@@ -104,8 +118,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running, when variant is not assigned, then experiment inject properties are set`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(false)
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
@@ -115,8 +131,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running, when variant is already set, then experiment inject properties are not set`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(true)
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
@@ -126,8 +144,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running, when variant is not assigned, then assignment is tracked`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(false)
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
@@ -137,8 +157,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running, when variant is assigned, then assignment is not tracked`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(true)
 
         mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
@@ -148,8 +170,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running and unassigned, when request for reassign, then variant is not reassigned`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(false)
 
         mySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(MySiteTabType.SITE_MENU.trackingLabel)
@@ -162,8 +186,10 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
 
     @Test
     fun `given experiment is running and assigned, when request for reassign, then variant is reassigned`() {
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
+        init(
+                isMySiteDashboardTabsFeatureConfigEnabled = true,
+                isMySiteDefaultTabExperimentFeatureConfigEnabled = true
+        )
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(true)
 
         mySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(MySiteTabType.SITE_MENU.trackingLabel)
