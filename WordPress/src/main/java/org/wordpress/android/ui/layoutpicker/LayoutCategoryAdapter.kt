@@ -5,11 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryViewType.DEFAULT
+import org.wordpress.android.ui.layoutpicker.LayoutCategoryViewType.FOOTER
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryViewType.RECOMMENDED
 
 enum class LayoutCategoryViewType {
     DEFAULT,
     RECOMMENDED,
+    FOOTER,
 }
 
 /**
@@ -19,9 +21,11 @@ class LayoutCategoryAdapter(
     private var nestedScrollStates: Bundle,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val recommendedDimensionProvider: ThumbDimensionProvider? = null,
-    private val showRowDividers: Boolean = true
-) : Adapter<LayoutsItemViewHolder>() {
+    private val showRowDividers: Boolean = true,
+    private val footerLayoutResId: Int? = null
+) : Adapter<LayoutsRowViewHolder>() {
     private var items: List<LayoutCategoryUiState> = listOf()
+    private val shouldShowFooter get() = footerLayoutResId != null && items.isNotEmpty()
 
     fun update(newItems: List<LayoutCategoryUiState>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -34,29 +38,37 @@ class LayoutCategoryAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = items.size + if (shouldShowFooter) 1 else 0
 
-    override fun onBindViewHolder(holder: LayoutsItemViewHolder, position: Int) {
-        holder.bind(items[position])
+    override fun onBindViewHolder(holder: LayoutsRowViewHolder, position: Int) {
+        (holder as? LayoutsItemViewHolder)?.bind(items[position])
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (items[position].isRecommended) RECOMMENDED.ordinal else DEFAULT.ordinal
+        return when {
+            items.size <= position -> FOOTER.ordinal
+            items[position].isRecommended -> RECOMMENDED.ordinal
+            else -> DEFAULT.ordinal
+        }
     }
 
-    override fun onViewRecycled(holder: LayoutsItemViewHolder) {
+    override fun onViewRecycled(holder: LayoutsRowViewHolder) {
         super.onViewRecycled(holder)
-        holder.onRecycled()
+        (holder as? LayoutsItemViewHolder)?.onRecycled()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            LayoutsItemViewHolder(
-                    parent = parent,
-                    nestedScrollStates = nestedScrollStates,
-                    thumbDimensionProvider = thumbDimensionProvider,
-                    recommendedDimensionProvider = recommendedDimensionProvider,
-                    showRowDividers = showRowDividers
-            )
+            when (viewType) {
+                FOOTER.ordinal -> LayoutsFooterViewHolder(parent, footerLayoutResId!!)
+                else ->
+                    LayoutsItemViewHolder(
+                            parent = parent,
+                            nestedScrollStates = nestedScrollStates,
+                            thumbDimensionProvider = thumbDimensionProvider,
+                            recommendedDimensionProvider = recommendedDimensionProvider,
+                            showRowDividers = showRowDividers
+                    )
+            }
 
     fun onRestoreInstanceState(savedInstanceState: Bundle) {
         nestedScrollStates = savedInstanceState

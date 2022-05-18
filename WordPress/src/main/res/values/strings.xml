@@ -3396,6 +3396,7 @@
     <string name="hpp_recommended_title">Best for %s</string>
     <string name="hpp_recommended_subtitle">Picked for you</string>
     <string name="hpp_recommended_default_vertical">Blogging</string>
+    <string name="hpp_bottom_helper_text">Can\'t decide? You can change the theme at any time.</string>
 
     <!-- Stories -->
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>

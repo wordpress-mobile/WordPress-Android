@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
@@ -54,6 +55,7 @@ data class SiteCreationState(
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
+@HiltViewModel
 class SiteCreationMainVM @Inject constructor(
     private val tracker: SiteCreationTracker,
     private val wizardManager: WizardManager<SiteCreationStep>,
