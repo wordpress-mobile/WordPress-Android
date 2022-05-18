@@ -43,6 +43,9 @@ class MeViewModel
     private val _showUnifiedAbout = MutableLiveData<Event<Boolean>>()
     val showUnifiedAbout: LiveData<Event<Boolean>> = _showUnifiedAbout
 
+    private val _showQrcodeScan = MutableLiveData<Event<Boolean>>()
+    val showQrcodeScan: LiveData<Event<Boolean>> = _showQrcodeScan
+
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
         val error: String? = null,
@@ -80,6 +83,10 @@ class MeViewModel
 
     fun showUnifiedAbout() {
         _showUnifiedAbout.value = Event(true)
+    }
+
+    fun showQrcodeScan() {
+        _showQrcodeScan.value = Event(true)
     }
 
     fun onRecommendTheApp() {
