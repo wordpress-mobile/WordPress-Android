@@ -242,6 +242,7 @@ class ReaderViewModel @Inject constructor(
         readerTracker.stop(MAIN_READER)
         wasPaused = true
         if (!isChangingConfigurations) {
+            hideQuickStartFocusPointIfNeeded()
             dismissQuickStartSnackbarIfNeeded()
             if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
                 quickStartRepository.clearPendingTask()
@@ -311,7 +312,7 @@ class ReaderViewModel @Inject constructor(
     fun completeQuickStartFollowSiteTaskIfNeeded() {
         if (quickStartRepository.isPendingTask(getFollowSiteTask())) {
             selectedSiteRepository.getSelectedSite()?.let {
-                updateContentUiState(showQuickStartFocusPoint = false)
+                hideQuickStartFocusPointIfNeeded()
                 quickStartRepository.completeTask(getFollowSiteTask())
             }
         }
@@ -320,6 +321,13 @@ class ReaderViewModel @Inject constructor(
     fun dismissQuickStartSnackbarIfNeeded() {
         if (isQuickStartPromptShown) snackbarSequencer.dismissLastSnackbar()
         isQuickStartPromptShown = false
+    }
+
+    private fun hideQuickStartFocusPointIfNeeded() {
+        val currentUiState = _uiState.value as? ContentUiState
+        if (currentUiState?.settingsMenuItemUiState?.showQuickStartFocusPoint == true) {
+            updateContentUiState(showQuickStartFocusPoint = false)
+        }
     }
 
     private fun getFollowSiteTask() =
