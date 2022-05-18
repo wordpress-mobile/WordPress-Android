@@ -32,17 +32,16 @@ class QuickStartAdapter internal constructor(
     tasksCompleted: MutableList<QuickStartTask?>,
     isCompletedTasksListExpanded: Boolean
 ) : Adapter<ViewHolder>() {
-    private val tasks: MutableList<QuickStartTask?>
+    private val tasks: MutableList<QuickStartTask?> = mutableListOf()
     private val tasksUncompleted: MutableList<QuickStartTask?>
     private val taskCompleted: MutableList<QuickStartTask?>
+    private var listener: OnQuickStartAdapterActionListener? = null
     var isCompletedTasksListExpanded: Boolean
         private set
-    private var listener: OnQuickStartAdapterActionListener? = null
 
     init {
-        tasks = ArrayList<QuickStartTask?>()
         tasks.addAll(tasksUncompleted)
-        if (!tasksCompleted.isEmpty()) {
+        if (tasksCompleted.isNotEmpty()) {
             tasks.add(null) // adding null where the complete tasks header simplifies a lot of logic for us
         }
         this.isCompletedTasksListExpanded = isCompletedTasksListExpanded
@@ -50,7 +49,7 @@ class QuickStartAdapter internal constructor(
             tasks.addAll(tasksCompleted)
         }
         this.tasksUncompleted = tasksUncompleted
-        taskCompleted = tasksCompleted
+        this.taskCompleted = tasksCompleted
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -164,24 +163,17 @@ class QuickStartAdapter internal constructor(
     }
 
     inner class TaskViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
-        var icon: ImageView
-        var subtitle: TextView
-        var title: TextView
-        var divider: View
-        var popupAnchor: View
+        var icon: ImageView = inflate.findViewById(id.icon)
+        var subtitle: TextView = inflate.findViewById(id.subtitle)
+        var title: TextView = inflate.findViewById(id.title)
+        var divider: View = inflate.findViewById(id.divider)
+        var popupAnchor: View = inflate.findViewById(id.popup_anchor)
 
         init {
-            icon = inflate.findViewById(id.icon)
-            title = inflate.findViewById(id.title)
-            subtitle = inflate.findViewById(id.subtitle)
-            divider = inflate.findViewById(id.divider)
-            popupAnchor = inflate.findViewById(id.popup_anchor)
-            val clickListener = View.OnClickListener { view: View? ->
-                if (listener != null) {
-                    listener!!.onTaskTapped(tasks[adapterPosition])
-                }
+            val clickListener = View.OnClickListener {
+                listener?.onTaskTapped(tasks[adapterPosition])
             }
-            val longClickListener = View.OnLongClickListener { v: View? ->
+            val longClickListener = View.OnLongClickListener {
                 val popup = PopupMenu(context, popupAnchor)
                 popup.setOnMenuItemClickListener { item: MenuItem ->
                     if (item.itemId == id.quick_start_task_menu_skip) {
@@ -203,13 +195,11 @@ class QuickStartAdapter internal constructor(
     }
 
     inner class CompletedHeaderViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
-        var chevron: ImageView
-        var title: TextView
+        var chevron: ImageView = inflate.findViewById(id.completed_tasks_header_chevron)
+        var title: TextView = inflate.findViewById(id.completed_tasks_header_title)
 
         init {
-            chevron = inflate.findViewById(id.completed_tasks_header_chevron)
-            title = inflate.findViewById(id.completed_tasks_header_title)
-            val clickListener = View.OnClickListener { view: View? -> toggleCompletedTasksList() }
+            val clickListener = View.OnClickListener { toggleCompletedTasksList() }
             itemView.setOnClickListener(clickListener)
         }
 
