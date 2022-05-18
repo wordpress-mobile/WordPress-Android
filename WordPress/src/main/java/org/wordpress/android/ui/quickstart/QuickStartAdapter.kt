@@ -1,297 +1,266 @@
-package org.wordpress.android.ui.quickstart;
+package org.wordpress.android.ui.quickstart
 
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.content.Context;
-import android.graphics.Paint;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
-import android.view.animation.LinearInterpolator;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.animation.Animator
+import android.animation.Animator.AnimatorListener
+import android.content.Context
+import android.graphics.Paint
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout.LayoutParams
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import org.wordpress.android.R.dimen
+import org.wordpress.android.R.id
+import org.wordpress.android.R.layout
+import org.wordpress.android.R.menu
+import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.Companion.getDetailsForTask
+import org.wordpress.android.util.AniUtils.Duration.SHORT
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
-
-import org.wordpress.android.R;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.util.AniUtils.Duration;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
-    private Context mContext;
-    private List<QuickStartTask> mTasks;
-    private List<QuickStartTask> mTasksUncompleted;
-    private List<QuickStartTask> mTaskCompleted;
-    private boolean mIsCompletedTaskListExpanded;
-    private OnQuickStartAdapterActionListener mListener;
-
-    private static final int VIEW_TYPE_TASK = 0;
-    private static final int VIEW_TYPE_COMPLETED_TASKS_HEADER = 1;
-
-    private static final float EXPANDED_CHEVRON_ROTATION = -180;
-    private static final float COLLAPSED_CHEVRON_ROTATION = 0;
-
-    QuickStartAdapter(Context context, List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted,
-                      boolean isCompletedTasksListExpanded) {
-        mContext = context;
-        mTasks = new ArrayList<>();
-        mTasks.addAll(tasksUncompleted);
-        if (!tasksCompleted.isEmpty()) {
-            mTasks.add(null); // adding null where the complete tasks header simplifies a lot of logic for us
-        }
-        mIsCompletedTaskListExpanded = isCompletedTasksListExpanded;
-        if (mIsCompletedTaskListExpanded) {
-            mTasks.addAll(tasksCompleted);
-        }
-        mTasksUncompleted = tasksUncompleted;
-        mTaskCompleted = tasksCompleted;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        switch (viewType) {
-            case VIEW_TYPE_TASK:
-                return new TaskViewHolder(
-                        inflater.inflate(R.layout.quick_start_list_item, viewGroup, false));
-            case VIEW_TYPE_COMPLETED_TASKS_HEADER:
-                return new CompletedHeaderViewHolder(
-                        inflater.inflate(R.layout.quick_start_completed_tasks_list_header, viewGroup, false));
-            default:
-                throw new IllegalArgumentException("Unexpected view type");
+class QuickStartAdapter internal constructor(
+    private val mContext: Context,
+    tasksUncompleted: MutableList<QuickStartTask?>,
+    tasksCompleted: MutableList<QuickStartTask?>,
+    isCompletedTasksListExpanded: Boolean
+) : Adapter<ViewHolder>() {
+    private val mTasks: MutableList<QuickStartTask?>
+    private val mTasksUncompleted: MutableList<QuickStartTask?>
+    private val mTaskCompleted: MutableList<QuickStartTask?>
+    var isCompletedTasksListExpanded: Boolean
+        private set
+    private var mListener: OnQuickStartAdapterActionListener? = null
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+        val inflater = LayoutInflater.from(mContext)
+        return when (viewType) {
+            VIEW_TYPE_TASK -> TaskViewHolder(
+                    inflater.inflate(
+                            layout.quick_start_list_item,
+                            viewGroup,
+                            false
+                    )
+            )
+            VIEW_TYPE_COMPLETED_TASKS_HEADER -> CompletedHeaderViewHolder(
+                    inflater.inflate(
+                            layout.quick_start_completed_tasks_list_header,
+                            viewGroup,
+                            false
+                    )
+            )
+            else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        int viewType = getItemViewType(position);
-
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        val viewType = getItemViewType(position)
         if (viewType == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
-            CompletedHeaderViewHolder headerViewHolder = (CompletedHeaderViewHolder) viewHolder;
-            headerViewHolder.mTitle.setText(mContext.getString(R.string.quick_start_complete_tasks_header,
-                    mTaskCompleted.size()));
-
-            if (mIsCompletedTaskListExpanded) {
-                headerViewHolder.mChevron.setRotation(EXPANDED_CHEVRON_ROTATION);
-                headerViewHolder.mChevron.setContentDescription(
-                        mContext.getString(R.string.quick_start_completed_tasks_header_chevron_collapse_desc));
+            val headerViewHolder = viewHolder as CompletedHeaderViewHolder
+            headerViewHolder.mTitle.text = mContext.getString(
+                    string.quick_start_complete_tasks_header,
+                    mTaskCompleted.size
+            )
+            if (isCompletedTasksListExpanded) {
+                headerViewHolder.mChevron.rotation = EXPANDED_CHEVRON_ROTATION
+                headerViewHolder.mChevron.contentDescription = mContext.getString(string.quick_start_completed_tasks_header_chevron_collapse_desc)
             } else {
-                headerViewHolder.mChevron.setRotation(COLLAPSED_CHEVRON_ROTATION);
-                headerViewHolder.mChevron.setContentDescription(
-                        mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
+                headerViewHolder.mChevron.rotation = COLLAPSED_CHEVRON_ROTATION
+                headerViewHolder.mChevron.contentDescription = mContext.getString(string.quick_start_completed_tasks_header_chevron_expand_desc)
             }
-
-            int topMargin = mTasksUncompleted.size() > 0
-                    ? mContext.getResources().getDimensionPixelSize(R.dimen.margin_extra_large)
-                    : 0;
-            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, topMargin, 0, 0);
-            headerViewHolder.itemView.setLayoutParams(params);
-            return;
+            val topMargin = if (mTasksUncompleted.size > 0) mContext.resources.getDimensionPixelSize(
+                    dimen.margin_extra_large
+            ) else 0
+            val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            params.setMargins(0, topMargin, 0, 0)
+            headerViewHolder.itemView.layoutParams = params
+            return
         }
-
-        TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
-
-        QuickStartTask task = mTasks.get(position);
-        boolean isEnabled = mTasksUncompleted.contains(task);
-        taskViewHolder.mIcon.setEnabled(isEnabled);
-        taskViewHolder.mTitle.setEnabled(isEnabled);
-        taskViewHolder.itemView.setLongClickable(isEnabled);
-
+        val taskViewHolder = viewHolder as TaskViewHolder
+        val task: QuickStartTask? = mTasks[position]
+        val isEnabled = mTasksUncompleted.contains(task)
+        taskViewHolder.mIcon.isEnabled = isEnabled
+        taskViewHolder.mTitle.isEnabled = isEnabled
+        taskViewHolder.itemView.isLongClickable = isEnabled
         if (!isEnabled) {
-            taskViewHolder.mTitle.setPaintFlags(taskViewHolder.mTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            taskViewHolder.mTitle.paintFlags = taskViewHolder.mTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         }
 
         // Hide divider for tasks before header and end of list.
-        if (position == mTasksUncompleted.size() - 1 || position == mTasks.size() - 1) {
-            taskViewHolder.mDivider.setVisibility(View.INVISIBLE);
+        if (position == mTasksUncompleted.size - 1 || position == mTasks.size - 1) {
+            taskViewHolder.mDivider.visibility = View.INVISIBLE
         } else {
-            taskViewHolder.mDivider.setVisibility(View.VISIBLE);
+            taskViewHolder.mDivider.visibility = View.VISIBLE
         }
-
-        QuickStartTaskDetails quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(task);
-
-        if (quickStartTaskDetails == null) {
-            throw new IllegalStateException(task.toString() + " task is not recognized in adapter.");
-        }
-
-        taskViewHolder.mIcon.setImageResource(quickStartTaskDetails.getIconResId());
-        taskViewHolder.mTitle.setText(quickStartTaskDetails.getTitleResId());
-        taskViewHolder.mSubtitle.setText(quickStartTaskDetails.getSubtitleResId());
+        val quickStartTaskDetails = task?.let { getDetailsForTask(task) }
+                ?: throw IllegalStateException(task.toString() + " task is not recognized in adapter.")
+        taskViewHolder.mIcon.setImageResource(quickStartTaskDetails.iconResId)
+        taskViewHolder.mTitle.setText(quickStartTaskDetails.titleResId)
+        taskViewHolder.mSubtitle.setText(quickStartTaskDetails.subtitleResId)
     }
 
-    void updateContent(List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted) {
-        List<QuickStartTask> newList = new ArrayList<>(tasksUncompleted);
-        if (!tasksCompleted.isEmpty()) {
-            newList.add(null);
+    fun updateContent(
+        tasksUncompleted: List<QuickStartTask?>?,
+        tasksCompleted: List<QuickStartTask?>
+    ) {
+        val newList = mutableListOf<QuickStartTask?>()
+        tasksUncompleted?.let { newList.addAll(it) }
+        if (tasksCompleted.isNotEmpty()) {
+            newList.add(null)
         }
-        if (mIsCompletedTaskListExpanded) {
-            newList.addAll(tasksCompleted);
+        if (isCompletedTasksListExpanded) {
+            newList.addAll(tasksCompleted)
         }
-
-        mTaskCompleted.clear();
-        mTaskCompleted.addAll(tasksCompleted);
-        mTasksUncompleted.clear();
-        mTasksUncompleted.addAll(tasksUncompleted);
-
-        DiffUtil.DiffResult diffResult =
-                DiffUtil.calculateDiff(new QuickStartTasksDiffCallback(mTasks, newList));
-
-        mTasks.clear();
-        mTasks.addAll(newList);
-
-        diffResult.dispatchUpdatesTo(this);
+        mTaskCompleted.clear()
+        mTaskCompleted.addAll(tasksCompleted)
+        mTasksUncompleted.clear()
+        mTasksUncompleted.addAll(tasksUncompleted!!)
+        val diffResult = DiffUtil.calculateDiff(QuickStartTasksDiffCallback(mTasks, newList))
+        mTasks.clear()
+        mTasks.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
 
         // Notify adapter of each task change individually.  Using notifyDataSetChanged() kills list changing animation.
-        for (QuickStartTask task : mTasks) {
-            notifyItemChanged(mTasks.indexOf(task));
+        for (task in mTasks) {
+            notifyItemChanged(mTasks.indexOf(task))
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (position == mTasksUncompleted.size()) {
-            return VIEW_TYPE_COMPLETED_TASKS_HEADER;
+    override fun getItemViewType(position: Int): Int {
+        return if (position == mTasksUncompleted.size) {
+            VIEW_TYPE_COMPLETED_TASKS_HEADER
         } else {
-            return VIEW_TYPE_TASK;
+            VIEW_TYPE_TASK
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mTasks.size();
+    override fun getItemCount(): Int {
+        return mTasks.size
     }
 
-    void setOnTaskTappedListener(OnQuickStartAdapterActionListener listener) {
-        mListener = listener;
+    fun setOnTaskTappedListener(listener: OnQuickStartAdapterActionListener?) {
+        mListener = listener
     }
 
-    boolean isCompletedTasksListExpanded() {
-        return mIsCompletedTaskListExpanded;
-    }
+    inner class TaskViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
+        var mIcon: ImageView
+        var mSubtitle: TextView
+        var mTitle: TextView
+        var mDivider: View
+        var mPopupAnchor: View
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
-        ImageView mIcon;
-        TextView mSubtitle;
-        TextView mTitle;
-        View mDivider;
-        View mPopupAnchor;
-
-        TaskViewHolder(final View inflate) {
-            super(inflate);
-            mIcon = inflate.findViewById(R.id.icon);
-            mTitle = inflate.findViewById(R.id.title);
-            mSubtitle = inflate.findViewById(R.id.subtitle);
-            mDivider = inflate.findViewById(R.id.divider);
-            mPopupAnchor = inflate.findViewById(R.id.popup_anchor);
-
-            View.OnClickListener clickListener = view -> {
+        init {
+            mIcon = inflate.findViewById(id.icon)
+            mTitle = inflate.findViewById(id.title)
+            mSubtitle = inflate.findViewById(id.subtitle)
+            mDivider = inflate.findViewById(id.divider)
+            mPopupAnchor = inflate.findViewById(id.popup_anchor)
+            val clickListener = View.OnClickListener { view: View? ->
                 if (mListener != null) {
-                    mListener.onTaskTapped(mTasks.get(getAdapterPosition()));
+                    mListener!!.onTaskTapped(mTasks[adapterPosition])
                 }
-            };
-
-            View.OnLongClickListener longClickListener = v -> {
-                PopupMenu popup = new PopupMenu(mContext, mPopupAnchor);
-                popup.setOnMenuItemClickListener(item -> {
-                    if (item.getItemId() == R.id.quick_start_task_menu_skip) {
+            }
+            val longClickListener = View.OnLongClickListener { v: View? ->
+                val popup = PopupMenu(mContext, mPopupAnchor)
+                popup.setOnMenuItemClickListener { item: MenuItem ->
+                    if (item.itemId == id.quick_start_task_menu_skip) {
                         if (mListener != null) {
-                            mListener.onSkipTaskTapped(mTasks.get(getAdapterPosition()));
+                            mListener!!.onSkipTaskTapped(mTasks[adapterPosition])
                         }
-                        return true;
+                        return@setOnMenuItemClickListener true
                     }
-                    return false;
-                });
-                popup.inflate(R.menu.quick_start_task_menu);
-                popup.show();
-                return true;
-            };
-
-            itemView.setOnClickListener(clickListener);
-            itemView.setOnLongClickListener(longClickListener);
-            ViewExtensionsKt.redirectContextClickToLongPressListener(itemView);
+                    false
+                }
+                popup.inflate(menu.quick_start_task_menu)
+                popup.show()
+                true
+            }
+            itemView.setOnClickListener(clickListener)
+            itemView.setOnLongClickListener(longClickListener)
+            itemView.redirectContextClickToLongPressListener()
         }
     }
 
-    public class CompletedHeaderViewHolder extends RecyclerView.ViewHolder {
-        ImageView mChevron;
-        TextView mTitle;
-
-        CompletedHeaderViewHolder(final View inflate) {
-            super(inflate);
-            mChevron = inflate.findViewById(R.id.completed_tasks_header_chevron);
-            mTitle = inflate.findViewById(R.id.completed_tasks_header_title);
-
-            View.OnClickListener clickListener = view -> toggleCompletedTasksList();
-
-            itemView.setOnClickListener(clickListener);
-        }
-
-        private void toggleCompletedTasksList() {
-            ViewPropertyAnimator viewPropertyAnimator = mChevron
+    inner class CompletedHeaderViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
+        var mChevron: ImageView
+        var mTitle: TextView
+        private fun toggleCompletedTasksList() {
+            val viewPropertyAnimator = mChevron
                     .animate()
-                    .rotation(mIsCompletedTaskListExpanded ? COLLAPSED_CHEVRON_ROTATION : EXPANDED_CHEVRON_ROTATION)
-                    .setInterpolator(new LinearInterpolator())
-                    .setDuration(Duration.SHORT.toMillis(mContext));
-
-            viewPropertyAnimator.setListener(new AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    itemView.setEnabled(false);
+                    .rotation(if (isCompletedTasksListExpanded) COLLAPSED_CHEVRON_ROTATION else EXPANDED_CHEVRON_ROTATION)
+                    .setInterpolator(LinearInterpolator())
+                    .setDuration(SHORT.toMillis(mContext))
+            viewPropertyAnimator.setListener(object : AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {
+                    itemView.isEnabled = false
                 }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    int positionOfHeader = getAdapterPosition();
-                    int positionAfterHeader = positionOfHeader + 1;
-
-                    if (mIsCompletedTaskListExpanded) {
-                        mTasks.removeAll(mTaskCompleted);
-                        notifyItemRangeRemoved(positionAfterHeader, mTaskCompleted.size());
+                override fun onAnimationEnd(animation: Animator) {
+                    val positionOfHeader = adapterPosition
+                    val positionAfterHeader = positionOfHeader + 1
+                    if (isCompletedTasksListExpanded) {
+                        mTasks.removeAll(mTaskCompleted)
+                        notifyItemRangeRemoved(positionAfterHeader, mTaskCompleted.size)
                     } else {
-                        mTasks.addAll(mTaskCompleted);
-                        notifyItemRangeInserted(positionAfterHeader, mTaskCompleted.size());
+                        mTasks.addAll(mTaskCompleted)
+                        notifyItemRangeInserted(positionAfterHeader, mTaskCompleted.size)
                     }
 
                     // Update header background based after collapsed and expanded.
-                    notifyItemChanged(positionOfHeader);
-                    mIsCompletedTaskListExpanded = !mIsCompletedTaskListExpanded;
-                    itemView.setEnabled(true);
-
+                    notifyItemChanged(positionOfHeader)
+                    isCompletedTasksListExpanded = !isCompletedTasksListExpanded
+                    itemView.isEnabled = true
                     if (mListener != null) {
-                        mListener.onCompletedTasksListToggled(mIsCompletedTaskListExpanded);
+                        mListener!!.onCompletedTasksListToggled(isCompletedTasksListExpanded)
                     }
                 }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    itemView.setEnabled(true);
+                override fun onAnimationCancel(animation: Animator) {
+                    itemView.isEnabled = true
                 }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-                }
-            });
+                override fun onAnimationRepeat(animation: Animator) {}
+            })
+        }
+
+        init {
+            mChevron = inflate.findViewById(id.completed_tasks_header_chevron)
+            mTitle = inflate.findViewById(id.completed_tasks_header_title)
+            val clickListener = View.OnClickListener { view: View? -> toggleCompletedTasksList() }
+            itemView.setOnClickListener(clickListener)
         }
     }
 
     interface OnQuickStartAdapterActionListener {
-        void onSkipTaskTapped(QuickStartTask task);
+        fun onSkipTaskTapped(task: QuickStartTask?)
+        fun onTaskTapped(task: QuickStartTask?)
+        fun onCompletedTasksListToggled(isExpanded: Boolean)
+    }
 
-        void onTaskTapped(QuickStartTask task);
+    companion object {
+        private const val VIEW_TYPE_TASK = 0
+        private const val VIEW_TYPE_COMPLETED_TASKS_HEADER = 1
+        private const val EXPANDED_CHEVRON_ROTATION = -180f
+        private const val COLLAPSED_CHEVRON_ROTATION = 0f
+    }
 
-        void onCompletedTasksListToggled(boolean isExpanded);
+    init {
+        mTasks = ArrayList<QuickStartTask?>()
+        mTasks.addAll(tasksUncompleted)
+        if (!tasksCompleted.isEmpty()) {
+            mTasks.add(null) // adding null where the complete tasks header simplifies a lot of logic for us
+        }
+        this.isCompletedTasksListExpanded = isCompletedTasksListExpanded
+        if (this.isCompletedTasksListExpanded) {
+            mTasks.addAll(tasksCompleted)
+        }
+        mTasksUncompleted = tasksUncompleted
+        mTaskCompleted = tasksCompleted
     }
 }
