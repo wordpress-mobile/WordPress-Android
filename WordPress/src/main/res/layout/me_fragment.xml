@@ -163,25 +163,6 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
-                android:id="@+id/row_app_settings"
-                style="@style/MeListRowLayout">
-
-                <ImageView
-                    android:id="@+id/me_app_settings_icon"
-                    style="@style/MeListRowIcon"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_phone_white_24dp" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/me_app_settings_text_view"
-                    style="@style/MeListRowTextView"
-                    android:text="@string/me_btn_app_settings" />
-
-            </LinearLayout>
-
-            <View style="@style/MeListSectionDividerView" />
-
-            <LinearLayout
                 android:id="@+id/row_qrcode_scan"
                 style="@style/MeListRowLayout"
                 android:visibility="gone"
@@ -200,6 +181,24 @@
 
             </LinearLayout>
 
+            <View style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
+                android:id="@+id/row_app_settings"
+                style="@style/MeListRowLayout">
+
+                <ImageView
+                    android:id="@+id/me_app_settings_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_phone_white_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_app_settings_text_view"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/me_btn_app_settings" />
+
+            </LinearLayout>
 
             <View style="@style/MeListSectionDividerView" />
 
