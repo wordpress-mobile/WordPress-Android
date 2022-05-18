@@ -11,7 +11,6 @@ Language: ar
     <string name="blogging_prompts_answer_prompt_notification_title">مطالبة يومية</string>
     <string name="blogging_prompts_onboarding_got_it">فهمت</string>
     <string name="quick_start_dialog_view_your_site_message_short">النقر على &lt;b&gt;%1$s&lt;/b&gt; لعرض موقعك</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">حدِّد ⁦%1$s⁩ الإعدادات ⁦%2$s⁩ لإضافة موضوعات تنال إعجابك.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">حدِّد ⁦%1$s⁩ القارئ ⁦%2$s⁩ للعثور على مواقع أخرى.</string>
     <string name="blogging_reminders_prompt_help_button_desc">معرفة المزيد حول المطالبات</string>
     <string name="photo_picker_video_thumbnail_unselected">تم إلغاء تحديد الفيديو</string>

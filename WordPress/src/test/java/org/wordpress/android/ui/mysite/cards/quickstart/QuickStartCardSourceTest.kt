@@ -90,6 +90,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(appPrefsWrapper.getLastSelectedQuickStartType()).thenReturn(NewSiteQuickStartType)
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
@@ -365,6 +366,28 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         quickStartCardSource.refresh()
 
         assertThat(isRefreshing.last()).isFalse
+    }
+
+    @Test
+    fun `given quick start available for site, when source is refreshed, then non empty categories returned`() = test {
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
+        initStore()
+
+        quickStartCardSource.refresh()
+
+        val update = result.last()
+        assertThat(update.categories).isNotEmpty
+    }
+
+    @Test
+    fun `given quick start not available for site, when source is refreshed, then empty categories returned`() = test {
+        whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(false)
+        initStore()
+
+        quickStartCardSource.refresh()
+
+        val update = result.last()
+        assertThat(update.categories).isEmpty()
     }
 
     private fun triggerQSRefreshAfterSameTypeTasksAreComplete() {

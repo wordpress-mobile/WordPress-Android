@@ -11,7 +11,6 @@ Language: gl_ES
     <string name="blogging_prompts_answer_prompt_notification_title">Estímulo diario</string>
     <string name="blogging_prompts_onboarding_got_it">Entendido</string>
     <string name="quick_start_dialog_view_your_site_message_short">Toca &lt;b&gt;%1$s&lt;/b&gt; para ver o teu sitio</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Selecciona os %1$s axustes %2$s para engadir temas que che gusten.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Selecciona o %1$s Lector %2$s para descubrir outros sitios.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Aprende máis sobre os estímulos</string>
     <string name="photo_picker_video_thumbnail_unselected">Vídeo non seleccionado</string>
