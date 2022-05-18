@@ -182,6 +182,28 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
+                android:id="@+id/row_qrcode_scan"
+                style="@style/MeListRowLayout"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/me_qrcode_scan_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_baseline_qr_code_scanner_white_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_app_qrcode_scan_text_view"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/me_btn_qrcode_scan" />
+
+            </LinearLayout>
+
+
+            <View style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
                 android:id="@+id/row_support"
                 style="@style/MeListRowLayout">
 
