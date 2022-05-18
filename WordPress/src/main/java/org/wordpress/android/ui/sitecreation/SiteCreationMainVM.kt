@@ -1,14 +1,21 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -18,7 +25,9 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.experiments.SiteNameABExperiment
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -48,12 +57,27 @@ typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreati
 class SiteCreationMainVM @Inject constructor(
     private val tracker: SiteCreationTracker,
     private val wizardManager: WizardManager<SiteCreationStep>,
-    private val siteNameABExperiment: SiteNameABExperiment
+    private val siteNameABExperiment: SiteNameABExperiment,
+    private val networkUtils: NetworkUtilsWrapper,
+    private val dispatcher: Dispatcher,
+    private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
 ) : ViewModel() {
+    init {
+        // TODO: Remove the duplicate {,un}registration in the picker view model
+        dispatcher.register(fetchHomePageLayoutsUseCase)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(fetchHomePageLayoutsUseCase)
+    }
+
     private var isStarted = false
     private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
+
+    internal var preloadingJob: Job? = null
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
@@ -94,6 +118,25 @@ class SiteCreationMainVM @Inject constructor(
             wizardManager.showNextStep()
         }
     }
+
+    fun preloadThumbnails(context: Context) {
+        if (preloadingJob == null) {
+            preloadingJob = viewModelScope.launch (Dispatchers.IO) {
+                if (networkUtils.isNetworkAvailable()) {
+                    val response = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
+                    for (design in response.designs) {
+                        Glide.with(context)
+                                .downloadOnly()
+                                .load(design.previewMobile)
+                                .submit()
+                                .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+                    }
+                    preloadingJob = null
+                }
+            }
+        }
+    }
+
 
     fun writeToBundle(outState: Bundle) {
         outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
