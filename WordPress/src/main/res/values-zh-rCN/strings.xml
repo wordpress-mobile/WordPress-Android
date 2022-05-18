@@ -8,7 +8,6 @@ Language: zh_CN
 <resources>
     <string name="blogging_prompts_onboarding_got_it">知道了</string>
     <string name="quick_start_dialog_view_your_site_message_short">点击“&lt;b&gt;%1$s&lt;/b&gt;”查看您的站点</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">选择%1$s设置%2$s，添加您喜欢的话题。</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">选择%1$s阅读器%2$s，查找其他站点。</string>
     <string name="blogging_reminders_prompt_help_button_desc">了解更多提示</string>
     <string name="photo_picker_video_thumbnail_unselected">未选择视频</string>

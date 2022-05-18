@@ -10,7 +10,6 @@ Language: it
     <string name="blogging_prompts_answer_prompt_notification_title">Richiesta giornaliera</string>
     <string name="blogging_prompts_onboarding_got_it">OK</string>
     <string name="quick_start_dialog_view_your_site_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per visualizzare il tuo sito</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Seleziona %1$s Impostazioni %2$s per aggiungere gli argomenti che ti piacciono.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Seleziona %1$s Reader %2$s per cercare altri siti.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Leggi di più sulle richieste</string>
     <string name="photo_picker_video_thumbnail_unselected">Video non selezionato</string>
