@@ -175,7 +175,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             rowScanLoginCode.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
-                viewModel.showQrcodeScan()
+                viewModel.showScanLoginCode()
             }
         }
 
@@ -198,8 +198,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             manageRecommendUiState(it)
         })
 
-        viewModel.showQrcodeScan.observeEvent(viewLifecycleOwner) {
-            ToastUtils.showToast(requireContext(), "Scan qrcode not available yet")
+        viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
+            ToastUtils.showToast(requireContext(), "Scan login code not available yet")
         }
     }
 
