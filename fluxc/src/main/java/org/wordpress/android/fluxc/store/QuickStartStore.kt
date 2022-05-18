@@ -4,41 +4,67 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UNKNOWN
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GET_TO_KNOW_APP
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class QuickStartStore @Inject
-constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Dispatcher) : Store(dispatcher) {
-    enum class QuickStartTask constructor(
-        private val string: String,
-        val taskType: QuickStartTaskType,
+class QuickStartStore @Inject constructor(
+    private val quickStartSqlUtils: QuickStartSqlUtils,
+    dispatcher: Dispatcher
+) : Store(dispatcher) {
+    interface QuickStartTask {
+        val string: String
+        val taskType: QuickStartTaskType
         val order: Int
-    ) {
-        UNKNOWN("unknown", QuickStartTaskType.UNKNOWN, 0),
-        CREATE_SITE("create_site", CUSTOMIZE, 0),
-        UPDATE_SITE_TITLE("update_site_title", CUSTOMIZE, 1),
-        UPLOAD_SITE_ICON("upload_site_icon", CUSTOMIZE, 2),
-        EDIT_HOMEPAGE("edit_homepage", CUSTOMIZE, 3),
-        REVIEW_PAGES("review_pages", CUSTOMIZE, 4),
-        VIEW_SITE("view_site", CUSTOMIZE, 5),
-        ENABLE_POST_SHARING("enable_post_sharing", GROW, 7),
-        PUBLISH_POST("publish_post", GROW, 8),
-        FOLLOW_SITE("follow_site", GROW, 9),
-        CHECK_STATS("check_stats", GROW, 10),
-        EXPLORE_PLANS("explore_plans", GROW, 11);
+
+        companion object {
+            fun getAllTasks(): List<QuickStartTask> =
+                    QuickStartNewSiteTask.values().toList() +
+                            QuickStartExistingSiteTask.values().toList()
+
+            fun getTaskFromModel(model: QuickStartTaskModel) =
+                    getAllTasks().find {
+                        it.taskType.toString().equals(model.taskType, true) &&
+                            it.string.equals(model.taskName.toString(), true)
+                    } ?: UNKNOWN
+
+            fun getTasksByTaskType(taskType: QuickStartTaskType) =
+                    getAllTasks().filter { it.taskType == taskType }
+        }
+    }
+
+    enum class QuickStartNewSiteTask constructor(
+        override val string: String,
+        override val taskType: QuickStartTaskType,
+        override val order: Int
+    ) : QuickStartTask {
+        UNKNOWN(QUICK_START_UNKNOWN_LABEL, QuickStartTaskType.UNKNOWN, 0),
+        CREATE_SITE(QUICK_START_CREATE_SITE_LABEL, CUSTOMIZE, 0),
+        UPDATE_SITE_TITLE(QUICK_START_UPDATE_SITE_TITLE_LABEL, CUSTOMIZE, 1),
+        UPLOAD_SITE_ICON(QUICK_START_UPLOAD_SITE_ICON_LABEL, CUSTOMIZE, 2),
+        EDIT_HOMEPAGE(QUICK_START_EDIT_HOMEPAGE_LABEL, CUSTOMIZE, 3),
+        REVIEW_PAGES(QUICK_START_REVIEW_PAGES_LABEL, CUSTOMIZE, 4),
+        VIEW_SITE(QUICK_START_VIEW_SITE_LABEL, CUSTOMIZE, 5),
+        ENABLE_POST_SHARING(QUICK_START_ENABLE_POST_SHARING_LABEL, GROW, 7),
+        PUBLISH_POST(QUICK_START_PUBLISH_POST_LABEL, GROW, 8),
+        FOLLOW_SITE(QUICK_START_FOLLOW_SITE_LABEL, GROW, 9),
+        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GROW, 10),
+        EXPLORE_PLANS(QUICK_START_EXPLORE_PLANS_LABEL, GROW, 11);
 
         override fun toString(): String {
             return string
         }
 
         companion object {
-            fun fromString(string: String?): QuickStartTask {
-                for (value in QuickStartTask.values()) {
+            fun fromString(string: String?): QuickStartNewSiteTask {
+                for (value in values()) {
                     if (string.equals(value.toString(), true)) {
                         return value
                     }
@@ -46,9 +72,34 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
 
                 return UNKNOWN
             }
+        }
+    }
 
-            fun getTasksByType(taskType: QuickStartTaskType): List<QuickStartTask> {
-                return QuickStartTask.values().filter { it.taskType == taskType }
+    enum class QuickStartExistingSiteTask constructor(
+        override val string: String,
+        override val taskType: QuickStartTaskType,
+        override val order: Int
+    ) : QuickStartTask {
+        UNKNOWN(QUICK_START_UNKNOWN_LABEL, QuickStartTaskType.UNKNOWN, 0),
+        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GET_TO_KNOW_APP, 1),
+        CHECK_NOTIFICATIONS(QUICK_START_CHECK_NOTIFIATIONS_LABEL, GET_TO_KNOW_APP, 2),
+        VIEW_SITE(QUICK_START_VIEW_SITE_LABEL, GET_TO_KNOW_APP, 3),
+        UPLOAD_MEDIA(QUICK_START_UPLOAD_MEDIA_LABEL, GET_TO_KNOW_APP, 4),
+        FOLLOW_SITE(QUICK_START_FOLLOW_SITE_LABEL, GET_TO_KNOW_APP, 5);
+
+        override fun toString(): String {
+            return string
+        }
+
+        companion object {
+            fun fromString(string: String?): QuickStartExistingSiteTask {
+                for (value in values()) {
+                    if (string.equals(value.toString(), true)) {
+                        return value
+                    }
+                }
+
+                return UNKNOWN
             }
         }
     }
@@ -61,18 +112,6 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
 
         override fun toString(): String {
             return string
-        }
-
-        companion object {
-            fun fromString(string: String?): QuickStartTaskType {
-                for (value in QuickStartTaskType.values()) {
-                    if (string.equals(value.toString(), true)) {
-                        return value
-                    }
-                }
-
-                return UNKNOWN
-            }
         }
     }
 
@@ -88,43 +127,26 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
         return quickStartSqlUtils.getDoneCount(siteId)
     }
 
-    fun getShownCount(siteId: Long): Int {
-        return quickStartSqlUtils.getShownCount(siteId)
-    }
-
     fun hasDoneTask(siteId: Long, task: QuickStartTask): Boolean {
         return quickStartSqlUtils.hasDoneTask(siteId, task)
-    }
-
-    fun hasShownTask(siteId: Long, task: QuickStartTask): Boolean {
-        return quickStartSqlUtils.hasShownTask(siteId, task)
     }
 
     fun setDoneTask(siteId: Long, task: QuickStartTask, isDone: Boolean) {
         quickStartSqlUtils.setDoneTask(siteId, task, isDone)
     }
 
-    fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
-        quickStartSqlUtils.setShownTask(siteId, task, isShown)
-    }
-
     fun getCompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { quickStartSqlUtils.hasDoneTask(siteId, it) }
+        return QuickStartTask.getTasksByTaskType(taskType)
+                .filter { quickStartSqlUtils.hasDoneTask(siteId, it) }
                 .sortedBy { it.order }
     }
 
-    fun getUncompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { !quickStartSqlUtils.hasDoneTask(siteId, it) }
-                .sortedBy { it.order }
-    }
-
-    fun getShownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { quickStartSqlUtils.hasShownTask(siteId, it) }
-                .sortedBy { it.order }
-    }
-
-    fun getUnshownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
-        return QuickStartTask.getTasksByType(taskType).filter { !quickStartSqlUtils.hasShownTask(siteId, it) }
+    fun getUncompletedTasksByType(
+        siteId: Long,
+        taskType: QuickStartTaskType
+    ): List<QuickStartTask> {
+        return QuickStartTask.getTasksByTaskType(taskType)
+                .filter { !quickStartSqlUtils.hasDoneTask(siteId, it) }
                 .sortedBy { it.order }
     }
 
@@ -142,5 +164,22 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
 
     fun getQuickStartNotificationReceived(siteId: Long): Boolean {
         return quickStartSqlUtils.getQuickStartNotificationReceived(siteId)
+    }
+
+    companion object {
+        const val QUICK_START_UNKNOWN_LABEL = "unknown"
+        const val QUICK_START_CREATE_SITE_LABEL = "create_site"
+        const val QUICK_START_UPDATE_SITE_TITLE_LABEL = "update_site_title"
+        const val QUICK_START_UPLOAD_SITE_ICON_LABEL = "upload_site_icon"
+        const val QUICK_START_EDIT_HOMEPAGE_LABEL = "edit_homepage"
+        const val QUICK_START_REVIEW_PAGES_LABEL = "review_pages"
+        const val QUICK_START_VIEW_SITE_LABEL = "view_site"
+        const val QUICK_START_ENABLE_POST_SHARING_LABEL = "enable_post_sharing"
+        const val QUICK_START_PUBLISH_POST_LABEL = "publish_post"
+        const val QUICK_START_FOLLOW_SITE_LABEL = "follow_site"
+        const val QUICK_START_CHECK_STATS_LABEL = "check_stats"
+        const val QUICK_START_EXPLORE_PLANS_LABEL = "explore_plans"
+        const val QUICK_START_CHECK_NOTIFIATIONS_LABEL = "check_notifications"
+        const val QUICK_START_UPLOAD_MEDIA_LABEL = "upload_media"
     }
 }

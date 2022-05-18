@@ -45,3 +45,6 @@
 /me/gutenberg/
 
 /experiments/$version#String/assignments/$platform#String
+
+/auth/qr-code/validate
+/auth/qr-code/authenticate
