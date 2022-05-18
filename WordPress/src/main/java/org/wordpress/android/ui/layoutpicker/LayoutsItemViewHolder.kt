@@ -49,6 +49,7 @@ class LayoutsItemViewHolder(
                     RecyclerView.HORIZONTAL,
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
+            // TODO: use a shared instance of the pool (or alternatively, remove this?)
             setRecycledViewPool(RecyclerView.RecycledViewPool())
             adapter = LayoutsAdapter(parent.context, dimensionProvider)
 
