@@ -37,12 +37,9 @@ class BloggingPromptCardViewHolder(
 
         answerButton.setOnClickListener {
             card.onAnswerClick.invoke(card.promptId)
-            uiHelpers.updateVisibility(answerButton, false)
-            uiHelpers.updateVisibility(answeredPromptControls, true)
         }
         answeredButton.setOnClickListener {
-            uiHelpers.updateVisibility(answerButton, true)
-            uiHelpers.updateVisibility(answeredPromptControls, false)
+            card.onAnswerClick.invoke(card.promptId)
         }
         shareButton.setOnClickListener {
             card.onShareClick.invoke(
