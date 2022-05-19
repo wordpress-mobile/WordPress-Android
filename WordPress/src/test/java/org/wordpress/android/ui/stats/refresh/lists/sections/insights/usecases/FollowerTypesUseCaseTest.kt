@@ -49,7 +49,8 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
     private val wpComTitle = "WordPress"
     private val emailTitle = "Email"
     private val socialTitle = "Social"
-    private val contentDescription = "title, value"
+    private val contentDescriptionValue = "value, percentage of total followers"
+    private val contentDescription = "title: $contentDescriptionValue"
 
     @InternalCoroutinesApi
     @Before
@@ -69,8 +70,15 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
         whenever(followersStore.getEmailFollowers(site, LimitMode.Top(0))).thenReturn(emailModel)
         whenever(followersStore.getWpComFollowers(site, LimitMode.Top(0))).thenReturn(wpModel)
         whenever(publicizeStore.getPublicizeData(site, LimitMode.All)).thenReturn(socialModel)
-        whenever(contentDescriptionHelper.buildContentDescription(any(), any<Int>())).thenReturn(contentDescription)
+        whenever(contentDescriptionHelper.buildContentDescription(any(), any())).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(
+                resourceProvider.getString(
+                        eq(R.string.stats_total_followers_content_description),
+                        any<Int>(),
+                        any<String>()
+                )
+        ).then { contentDescriptionValue }
         whenever(resourceProvider.getString(R.string.stats_followers_wordpress_com)).then { wpComTitle }
         whenever(resourceProvider.getString(R.string.email)).then { emailTitle }
         whenever(resourceProvider.getString(R.string.stats_insights_social)).then { socialTitle }
