@@ -978,6 +978,7 @@
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
@@ -1002,6 +1003,7 @@
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
