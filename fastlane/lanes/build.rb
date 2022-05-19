@@ -310,4 +310,25 @@ platform :android do
     end
     "#{build_dir}#{name}"
   end
+
+  # Send Universal APK app size metrics for Installable Builds
+  # @called_by CI
+  #
+  # @option [String,Symbol] apk The path to the Universal APK to send metrics for
+  # @option [String] app_name The display name of the app to send metrics for. "WordPress" or "Jetpack"
+  # @option [String] version_name The `versionName` of the APK
+  #
+  lane :send_installable_build_app_metrics do |options|
+    basename = File.basename(options[:apk], '.apk')
+    android_send_app_size_metrics(
+      api_url: ENV['APPMETRICS_BASE_URL'] = File.join('file://localhost/', ENV['PROJECT_ROOT_FOLDER'], 'Artifacts', "#{basename}-app-size-metrics.json"),
+      use_gzip_content_encoding: false,
+      app_name: options[:app_name],
+      app_version_name: options[:version_name],
+      product_flavor: 'Jalapeno',
+      build_type: 'Debug',
+      source: 'Installable Build',
+      universal_apk_path: options[:apk]
+    )
+  end
 end

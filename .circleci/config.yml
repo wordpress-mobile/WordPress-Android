@@ -69,6 +69,11 @@ jobs:
             mkdir -p Artifacts
             mv WordPress/build/outputs/apk/wordpressJalapeno/debug/org.wordpress.android-wordpress-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
             mv WordPress/build/outputs/apk/jetpackJalapeno/debug/org.wordpress.android-jetpack-jalapeno-debug.apk "Artifacts/Jetpack-${VERSION_NAME}.apk"
+      - run:
+          name: Send App Size Metrics
+          command: |
+            bundle exec fastlane send_installable_build_app_metrics apk:"Artifacts/WordPress-${VERSION_NAME}.apk" app_name:WordPress version_name:"${VERSION_NAME}"
+            bundle exec fastlane send_installable_build_app_metrics apk:"Artifacts/Jetpack-${VERSION_NAME}.apk" app_name:Jetpack version_name:"${VERSION_NAME}"
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
