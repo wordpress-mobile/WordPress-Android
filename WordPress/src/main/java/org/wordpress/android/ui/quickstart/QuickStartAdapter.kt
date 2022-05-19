@@ -3,13 +3,10 @@ package org.wordpress.android.ui.quickstart
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.FrameLayout.LayoutParams
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.wordpress.android.R.dimen
 import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 
 class QuickStartAdapter internal constructor(
@@ -70,26 +67,11 @@ class QuickStartAdapter internal constructor(
                     isEnabled = tasksUncompleted.contains(tasks[position]),
                     shouldHideDivider = position == tasksUncompleted.size - 1 || position == tasks.size - 1
             )
-            is CompletedHeaderViewHolder -> {
-                viewHolder.title.text = context.getString(
-                        string.quick_start_complete_tasks_header,
-                        taskCompleted.size
-                )
-                if (isCompletedTasksListExpanded) {
-                    viewHolder.chevron.rotation = EXPANDED_CHEVRON_ROTATION
-                    viewHolder.chevron.contentDescription = context.getString(string.quick_start_completed_tasks_header_chevron_collapse_desc)
-                } else {
-                    viewHolder.chevron.rotation = COLLAPSED_CHEVRON_ROTATION
-                    viewHolder.chevron.contentDescription = context.getString(string.quick_start_completed_tasks_header_chevron_expand_desc)
-                }
-                val topMargin = if (tasksUncompleted.size > 0) context.resources.getDimensionPixelSize(
-                        dimen.margin_extra_large
-                ) else 0
-                val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-                params.setMargins(0, topMargin, 0, 0)
-                viewHolder.itemView.layoutParams = params
-                return
-            }
+            is CompletedHeaderViewHolder -> viewHolder.bind(
+                    isCompletedTasksListExpanded = isCompletedTasksListExpanded,
+                    taskCompletedSize = taskCompleted.size,
+                    tasksUncompletedSize = tasksUncompleted.size
+            )
         }
     }
 
@@ -137,7 +119,7 @@ class QuickStartAdapter internal constructor(
     }
 
     private fun getChevronRotation() =
-        if (isCompletedTasksListExpanded) COLLAPSED_CHEVRON_ROTATION else EXPANDED_CHEVRON_ROTATION
+            if (isCompletedTasksListExpanded) COLLAPSED_CHEVRON_ROTATION else EXPANDED_CHEVRON_ROTATION
 
     private fun onChevronAnimationCompleted(adapterPosition: Int) {
         val positionAfterHeader = adapterPosition + 1
@@ -164,7 +146,7 @@ class QuickStartAdapter internal constructor(
     companion object {
         private const val VIEW_TYPE_TASK = 0
         private const val VIEW_TYPE_COMPLETED_TASKS_HEADER = 1
-        private const val EXPANDED_CHEVRON_ROTATION = -180f
-        private const val COLLAPSED_CHEVRON_ROTATION = 0f
+        const val EXPANDED_CHEVRON_ROTATION = -180f
+        const val COLLAPSED_CHEVRON_ROTATION = 0f
     }
 }
