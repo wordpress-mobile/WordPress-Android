@@ -51,7 +51,7 @@ class FollowerTypesUseCase @Inject constructor(
     }
 
     private fun buildDataModel(wpComTotals: Int?, emailTotals: Int?, socialTotals: Int?): Map<FollowerType, Int> {
-        val map = HashMap<FollowerType, Int>()
+        val map = mutableMapOf<FollowerType, Int>()
         wpComTotals?.let {
             if (it > 0) {
                 map[WP_COM] = it
