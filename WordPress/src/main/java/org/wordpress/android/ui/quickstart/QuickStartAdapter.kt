@@ -1,24 +1,16 @@
 package org.wordpress.android.ui.quickstart
 
-import android.animation.Animator
-import android.animation.Animator.AnimatorListener
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout.LayoutParams
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.util.AniUtils.Duration.SHORT
 
 class QuickStartAdapter internal constructor(
     private val context: Context,
@@ -63,7 +55,9 @@ class QuickStartAdapter internal constructor(
                             layout.quick_start_completed_tasks_list_header,
                             viewGroup,
                             false
-                    )
+                    ),
+                    onChevronRotate = this::getChevronRotation,
+                    onChevronAnimationCompleted = this::onChevronAnimationCompleted
             )
             else -> throw IllegalArgumentException("Unexpected view type")
         }
@@ -142,53 +136,23 @@ class QuickStartAdapter internal constructor(
         this.listener = listener
     }
 
-    inner class CompletedHeaderViewHolder internal constructor(inflate: View) : ViewHolder(inflate) {
-        var chevron: ImageView = inflate.findViewById(R.id.completed_tasks_header_chevron)
-        var title: TextView = inflate.findViewById(R.id.completed_tasks_header_title)
+    private fun getChevronRotation() =
+        if (isCompletedTasksListExpanded) COLLAPSED_CHEVRON_ROTATION else EXPANDED_CHEVRON_ROTATION
 
-        init {
-            val clickListener = View.OnClickListener { toggleCompletedTasksList() }
-            itemView.setOnClickListener(clickListener)
+    private fun onChevronAnimationCompleted(adapterPosition: Int) {
+        val positionAfterHeader = adapterPosition + 1
+        if (isCompletedTasksListExpanded) {
+            tasks.removeAll(taskCompleted)
+            notifyItemRangeRemoved(positionAfterHeader, taskCompleted.size)
+        } else {
+            tasks.addAll(taskCompleted)
+            notifyItemRangeInserted(positionAfterHeader, taskCompleted.size)
         }
 
-        private fun toggleCompletedTasksList() {
-            val viewPropertyAnimator = chevron
-                    .animate()
-                    .rotation(if (isCompletedTasksListExpanded) COLLAPSED_CHEVRON_ROTATION else EXPANDED_CHEVRON_ROTATION)
-                    .setInterpolator(LinearInterpolator())
-                    .setDuration(SHORT.toMillis(context))
-            viewPropertyAnimator.setListener(object : AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {
-                    itemView.isEnabled = false
-                }
-
-                override fun onAnimationEnd(animation: Animator) {
-                    val positionOfHeader = adapterPosition
-                    val positionAfterHeader = positionOfHeader + 1
-                    if (isCompletedTasksListExpanded) {
-                        tasks.removeAll(taskCompleted)
-                        notifyItemRangeRemoved(positionAfterHeader, taskCompleted.size)
-                    } else {
-                        tasks.addAll(taskCompleted)
-                        notifyItemRangeInserted(positionAfterHeader, taskCompleted.size)
-                    }
-
-                    // Update header background based after collapsed and expanded.
-                    notifyItemChanged(positionOfHeader)
-                    isCompletedTasksListExpanded = !isCompletedTasksListExpanded
-                    itemView.isEnabled = true
-                    if (listener != null) {
-                        listener!!.onCompletedTasksListToggled(isCompletedTasksListExpanded)
-                    }
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                    itemView.isEnabled = true
-                }
-
-                override fun onAnimationRepeat(animation: Animator) {}
-            })
-        }
+        // Update header background based after collapsed and expanded.
+        notifyItemChanged(adapterPosition)
+        isCompletedTasksListExpanded = !isCompletedTasksListExpanded
+        listener?.onCompletedTasksListToggled(isCompletedTasksListExpanded)
     }
 
     interface OnQuickStartAdapterActionListener {
