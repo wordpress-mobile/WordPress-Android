@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.quickstart
 
+import android.graphics.Paint
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -42,5 +43,27 @@ class TaskViewHolder internal constructor(
         itemView.setOnClickListener(clickListener)
         itemView.setOnLongClickListener(longClickListener)
         itemView.redirectContextClickToLongPressListener()
+    }
+
+    fun bind(position: Int, isEnabled: Boolean, shouldHideDivider: Boolean) {
+        val task: QuickStartTask? = tasks[position]
+        this.icon.isEnabled = isEnabled
+        this.title.isEnabled = isEnabled
+        this.itemView.isLongClickable = isEnabled
+        if (!isEnabled) {
+            this.title.paintFlags = this.title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        }
+
+        // Hide divider for tasks before header and end of list.
+        if (shouldHideDivider) {
+            this.divider.visibility = View.INVISIBLE
+        } else {
+            this.divider.visibility = View.VISIBLE
+        }
+        val quickStartTaskDetails = task?.let { QuickStartTaskDetails.getDetailsForTask(task) }
+                ?: throw IllegalStateException(task.toString() + " task is not recognized in adapter.")
+        this.icon.setImageResource(quickStartTaskDetails.iconResId)
+        this.title.setText(quickStartTaskDetails.titleResId)
+        this.subtitle.setText(quickStartTaskDetails.subtitleResId)
     }
 }

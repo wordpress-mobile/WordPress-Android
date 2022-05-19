@@ -3,7 +3,6 @@ package org.wordpress.android.ui.quickstart
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.content.Context
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,6 @@ import org.wordpress.android.R.dimen
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.Companion.getDetailsForTask
 import org.wordpress.android.util.AniUtils.Duration.SHORT
 
 class QuickStartAdapter internal constructor(
@@ -72,49 +70,33 @@ class QuickStartAdapter internal constructor(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val viewType = getItemViewType(position)
-        if (viewType == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
-            val headerViewHolder = viewHolder as CompletedHeaderViewHolder
-            headerViewHolder.title.text = context.getString(
-                    string.quick_start_complete_tasks_header,
-                    taskCompleted.size
+        when (viewHolder) {
+            is TaskViewHolder -> viewHolder.bind(
+                    position = position,
+                    isEnabled = tasksUncompleted.contains(tasks[position]),
+                    shouldHideDivider = position == tasksUncompleted.size - 1 || position == tasks.size - 1
             )
-            if (isCompletedTasksListExpanded) {
-                headerViewHolder.chevron.rotation = EXPANDED_CHEVRON_ROTATION
-                headerViewHolder.chevron.contentDescription = context.getString(string.quick_start_completed_tasks_header_chevron_collapse_desc)
-            } else {
-                headerViewHolder.chevron.rotation = COLLAPSED_CHEVRON_ROTATION
-                headerViewHolder.chevron.contentDescription = context.getString(string.quick_start_completed_tasks_header_chevron_expand_desc)
+            is CompletedHeaderViewHolder -> {
+                viewHolder.title.text = context.getString(
+                        string.quick_start_complete_tasks_header,
+                        taskCompleted.size
+                )
+                if (isCompletedTasksListExpanded) {
+                    viewHolder.chevron.rotation = EXPANDED_CHEVRON_ROTATION
+                    viewHolder.chevron.contentDescription = context.getString(string.quick_start_completed_tasks_header_chevron_collapse_desc)
+                } else {
+                    viewHolder.chevron.rotation = COLLAPSED_CHEVRON_ROTATION
+                    viewHolder.chevron.contentDescription = context.getString(string.quick_start_completed_tasks_header_chevron_expand_desc)
+                }
+                val topMargin = if (tasksUncompleted.size > 0) context.resources.getDimensionPixelSize(
+                        dimen.margin_extra_large
+                ) else 0
+                val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                params.setMargins(0, topMargin, 0, 0)
+                viewHolder.itemView.layoutParams = params
+                return
             }
-            val topMargin = if (tasksUncompleted.size > 0) context.resources.getDimensionPixelSize(
-                    dimen.margin_extra_large
-            ) else 0
-            val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-            params.setMargins(0, topMargin, 0, 0)
-            headerViewHolder.itemView.layoutParams = params
-            return
         }
-        val taskViewHolder = viewHolder as TaskViewHolder
-        val task: QuickStartTask? = tasks[position]
-        val isEnabled = tasksUncompleted.contains(task)
-        taskViewHolder.icon.isEnabled = isEnabled
-        taskViewHolder.title.isEnabled = isEnabled
-        taskViewHolder.itemView.isLongClickable = isEnabled
-        if (!isEnabled) {
-            taskViewHolder.title.paintFlags = taskViewHolder.title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        }
-
-        // Hide divider for tasks before header and end of list.
-        if (position == tasksUncompleted.size - 1 || position == tasks.size - 1) {
-            taskViewHolder.divider.visibility = View.INVISIBLE
-        } else {
-            taskViewHolder.divider.visibility = View.VISIBLE
-        }
-        val quickStartTaskDetails = task?.let { getDetailsForTask(task) }
-                ?: throw IllegalStateException(task.toString() + " task is not recognized in adapter.")
-        taskViewHolder.icon.setImageResource(quickStartTaskDetails.iconResId)
-        taskViewHolder.title.setText(quickStartTaskDetails.titleResId)
-        taskViewHolder.subtitle.setText(quickStartTaskDetails.subtitleResId)
     }
 
     fun updateContent(
