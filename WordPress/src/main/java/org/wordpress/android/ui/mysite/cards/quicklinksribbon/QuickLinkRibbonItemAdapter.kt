@@ -46,6 +46,11 @@ class QuickLinkRibbonItemAdapter : Adapter<QuickLinkRibbonItemViewHolder>() {
         override fun areContentsTheSame(
             oldItemPosition: Int,
             newItemPosition: Int
-        ): Boolean = oldList[oldItemPosition] == newList[newItemPosition]
+        ): Boolean {
+            return if (oldList[oldItemPosition].showFocusPoint || newList[newItemPosition].showFocusPoint)
+                false
+            else
+                oldList[oldItemPosition] == newList[newItemPosition]
+        }
     }
 }
