@@ -1,18 +1,14 @@
 package org.wordpress.android.ui.quickstart
 
-import android.content.Context
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.wordpress.android.R.layout
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.quickstart.viewholders.CompletedHeaderViewHolder
 import org.wordpress.android.ui.quickstart.viewholders.TaskViewHolder
 
-class QuickStartAdapter internal constructor(
-    private val context: Context,
+class QuickStartAdapter(
     tasksUncompleted: MutableList<QuickStartTask?>,
     tasksCompleted: MutableList<QuickStartTask?>,
     isCompletedTasksListExpanded: Boolean
@@ -37,35 +33,24 @@ class QuickStartAdapter internal constructor(
         this.taskCompleted = tasksCompleted
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(context)
-        return when (viewType) {
-            VIEW_TYPE_TASK -> TaskViewHolder(
-                    inflater.inflate(
-                            layout.quick_start_list_item,
-                            viewGroup,
-                            false
-                    ),
-                    tasks,
-                    listener
-            )
-            VIEW_TYPE_COMPLETED_TASKS_HEADER -> CompletedHeaderViewHolder(
-                    inflater.inflate(
-                            layout.quick_start_completed_tasks_list_header,
-                            viewGroup,
-                            false
-                    ),
-                    onChevronRotate = this::getChevronRotation,
-                    onChevronAnimationCompleted = this::onChevronAnimationCompleted
-            )
-            else -> throw IllegalArgumentException("Unexpected view type")
-        }
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) = when (viewType) {
+        VIEW_TYPE_TASK -> TaskViewHolder(
+                parent = viewGroup,
+                tasks = tasks,
+                listener = listener
+        )
+        VIEW_TYPE_COMPLETED_TASKS_HEADER -> CompletedHeaderViewHolder(
+                parent = viewGroup,
+                onChevronRotate = this::getChevronRotation,
+                onChevronAnimationCompleted = this::onChevronAnimationCompleted
+        )
+        else -> throw IllegalArgumentException("Unexpected view type")
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         when (viewHolder) {
             is TaskViewHolder -> viewHolder.bind(
-                    position = position,
+                    task = tasks[position],
                     isEnabled = tasksUncompleted.contains(tasks[position]),
                     shouldHideDivider = position == tasksUncompleted.size - 1 || position == tasks.size - 1
             )

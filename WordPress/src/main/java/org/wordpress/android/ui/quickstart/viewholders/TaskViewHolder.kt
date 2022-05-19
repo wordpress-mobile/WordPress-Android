@@ -3,33 +3,29 @@ package org.wordpress.android.ui.quickstart.viewholders
 import android.graphics.Paint
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
+import org.wordpress.android.databinding.QuickStartListItemBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.viewBinding
 
-class TaskViewHolder internal constructor(
-    inflate: View,
+class TaskViewHolder(
+    parent: ViewGroup,
     private val tasks: List<QuickStartTask?>,
-    private val listener: OnQuickStartAdapterActionListener?
-) : ViewHolder(inflate) {
-    var icon: ImageView = inflate.findViewById(R.id.icon)
-    var subtitle: TextView = inflate.findViewById(R.id.subtitle)
-    var title: TextView = inflate.findViewById(R.id.title)
-    var divider: View = inflate.findViewById(R.id.divider)
-    var popupAnchor: View = inflate.findViewById(R.id.popup_anchor)
-
+    private val listener: OnQuickStartAdapterActionListener?,
+    private val binding: QuickStartListItemBinding = parent.viewBinding(QuickStartListItemBinding::inflate),
+) : ViewHolder(binding.root) {
     init {
         val clickListener = View.OnClickListener {
             listener?.onTaskTapped(tasks[adapterPosition])
         }
         val longClickListener = View.OnLongClickListener {
-            val popup = PopupMenu(itemView.context, popupAnchor)
+            val popup = PopupMenu(itemView.context, binding.popupAnchor)
             popup.setOnMenuItemClickListener { item: MenuItem ->
                 if (item.itemId == R.id.quick_start_task_menu_skip) {
                     listener?.onSkipTaskTapped(tasks[adapterPosition])
@@ -46,25 +42,21 @@ class TaskViewHolder internal constructor(
         itemView.redirectContextClickToLongPressListener()
     }
 
-    fun bind(position: Int, isEnabled: Boolean, shouldHideDivider: Boolean) {
-        val task: QuickStartTask? = tasks[position]
-        this.icon.isEnabled = isEnabled
-        this.title.isEnabled = isEnabled
-        this.itemView.isLongClickable = isEnabled
-        if (!isEnabled) {
-            this.title.paintFlags = this.title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        }
+    fun bind(task: QuickStartTask?, isEnabled: Boolean, shouldHideDivider: Boolean) {
+        with(binding) {
+            icon.isEnabled = isEnabled
+            title.isEnabled = isEnabled
+            itemView.isLongClickable = isEnabled
+            if (!isEnabled) title.paintFlags = title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
-        // Hide divider for tasks before header and end of list.
-        if (shouldHideDivider) {
-            this.divider.visibility = View.INVISIBLE
-        } else {
-            this.divider.visibility = View.VISIBLE
+            // Hide divider for tasks before header and end of list.
+            divider.visibility = if (shouldHideDivider) View.INVISIBLE else  View.VISIBLE
+
+            val quickStartTaskDetails = task?.let { QuickStartTaskDetails.getDetailsForTask(task) }
+                    ?: throw IllegalStateException(task.toString() + " task is not recognized in adapter.")
+            icon.setImageResource(quickStartTaskDetails.iconResId)
+            title.setText(quickStartTaskDetails.titleResId)
+            subtitle.setText(quickStartTaskDetails.subtitleResId)
         }
-        val quickStartTaskDetails = task?.let { QuickStartTaskDetails.getDetailsForTask(task) }
-                ?: throw IllegalStateException(task.toString() + " task is not recognized in adapter.")
-        this.icon.setImageResource(quickStartTaskDetails.iconResId)
-        this.title.setText(quickStartTaskDetails.titleResId)
-        this.subtitle.setText(quickStartTaskDetails.subtitleResId)
     }
 }
