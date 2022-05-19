@@ -113,13 +113,27 @@ class FollowerTypesUseCase @Inject constructor(
 
             domainModel.entries.forEach {
                 val title = getTitle(it.key)
-                val value = buildValuePercent(it.value, total)
+                val formattedPercentage = getFormattedPercentage(it.value, total)
+                val value = resourceProvider.getString(
+                        R.string.stats_value_percent,
+                        statsUtils.toFormattedString(it.value),
+                        formattedPercentage
+                )
+
+                val contentDescription = resourceProvider.getString(
+                        R.string.stats_total_followers_content_description,
+                        it.value,
+                        formattedPercentage
+                )
                 items.add(
                         ListItem(
                                 text = resourceProvider.getString(title),
                                 value = value,
                                 showDivider = domainModel.entries.indexOf(it) < domainModel.size - 1,
-                                contentDescription = contentDescriptionHelper.buildContentDescription(title, it.value)
+                                contentDescription = contentDescriptionHelper.buildContentDescription(
+                                        title,
+                                        contentDescription
+                                )
                         )
                 )
             }
@@ -129,24 +143,18 @@ class FollowerTypesUseCase @Inject constructor(
         return items
     }
 
-    private fun buildValuePercent(value: Int, total: Int): String {
+    private fun getFormattedPercentage(value: Int, total: Int): String {
         val percentage = if (total == 0 || value == 0) {
             0.0
         } else {
             value * PERCENT_HUNDRED / total
         }
 
-        val formattedPercentage = if (percentage == 0.0 || percentage >= 1.0) {
+        return if (percentage == 0.0 || percentage >= 1.0) {
             statsUtils.toFormattedString(percentage.toInt())
         } else {
             statsUtils.toFormattedString(percentage)
         }
-
-        return resourceProvider.getString(
-                R.string.stats_value_percent,
-                statsUtils.toFormattedString(value),
-                formattedPercentage
-        )
     }
 
     enum class FollowerType { WP_COM, EMAIL, SOCIAL }

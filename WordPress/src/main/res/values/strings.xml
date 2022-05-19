@@ -1003,6 +1003,7 @@
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
