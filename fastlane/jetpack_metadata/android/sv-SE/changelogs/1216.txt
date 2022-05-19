@@ -1,0 +1,8 @@
+19.8:
+- Inställningar för Utvald bild i blocket Senaste inlägg
+- Notiser vid växlande mellan HTML-läge och visuellt läge
+- Fullständig förhandsgranskning för inbäddningsblocket
+- Visuella element för språkversionsväljare
+- Längre uppladdningar med fristående VideoPress
+- TalkBack-mediatyper för mediaväljaren
+- URL för magisk registreringslänk

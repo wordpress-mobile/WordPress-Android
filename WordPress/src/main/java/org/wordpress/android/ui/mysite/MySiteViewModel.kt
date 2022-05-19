@@ -23,12 +23,11 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
+import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt
-import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -50,6 +49,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCa
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
@@ -82,6 +82,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -145,7 +146,8 @@ class MySiteViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val quickStartTracker: QuickStartTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -158,7 +160,7 @@ class MySiteViewModel @Inject constructor(
     private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<BloggingPrompt, SiteModel>>>()
+    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
             .switchMap { quickStartSiteMenuStep ->
@@ -221,7 +223,7 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShare = _onShare
-    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<BloggingPrompt, SiteModel>>>
+    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -258,7 +260,8 @@ class MySiteViewModel @Inject constructor(
                         visibleDynamicCards,
                         backupAvailable,
                         scanAvailable,
-                        cardsUpdate
+                        cardsUpdate,
+                        bloggingPromptsUpdate
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -289,7 +292,8 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -300,7 +304,8 @@ class MySiteViewModel @Inject constructor(
                 visibleDynamicCards,
                 backupAvailable,
                 scanAvailable,
-                cardsUpdate
+                cardsUpdate,
+                bloggingPromptUpdate
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -388,7 +393,8 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
@@ -428,27 +434,8 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                // TODO @klymyam fetch the actual blogging prompt
                                 bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
-                                    @Suppress("MagicNumber")
-                                    val dummyRespondent = BloggingPromptRespondent(
-                                            54279365,
-                                            "https://0.gravatar.com/avatar/cec64efa352617" +
-                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
-                                    )
-                                    @Suppress("MagicNumber")
-                                    BloggingPrompt(
-                                        1234,
-                                        "Cast the movie of your life",
-                                        "",
-                                        listOf(
-                                            dummyRespondent,
-                                            dummyRespondent,
-                                            dummyRespondent,
-                                            dummyRespondent,
-                                            dummyRespondent
-                                        )
-                                    )
+                                    bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
                                 onAnswerClick = this::onBloggingPromptAnswerClick
@@ -481,6 +468,7 @@ class MySiteViewModel @Inject constructor(
                         scanAvailable = scanAvailable,
                         enableStatsFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         enablePagesFocusPoint = shouldEnableSiteItemsFocusPoints(),
+                        enableMediaFocusPoint = shouldEnableSiteItemsFocusPoints(),
                         onClick = this::onItemClick
                 )
         )
@@ -675,7 +663,12 @@ class MySiteViewModel @Inject constructor(
                     )
                     getStatsNavigationActionForSite(selectedSite)
                 }
-                ListItemAction.MEDIA -> SiteNavigationAction.OpenMedia(selectedSite)
+                ListItemAction.MEDIA -> {
+                    quickStartRepository.requestNextStepOfTask(
+                            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+                    )
+                    SiteNavigationAction.OpenMedia(selectedSite)
+                }
                 ListItemAction.COMMENTS -> SiteNavigationAction.OpenUnifiedComments(selectedSite)
                 ListItemAction.VIEW_SITE -> {
                     SiteNavigationAction.OpenSite(selectedSite)
@@ -699,7 +692,7 @@ class MySiteViewModel @Inject constructor(
         if (defaultABExperimentTab == MySiteTabType.DASHBOARD) {
             cardsTracker.trackQuickStartCardItemClicked(type)
         } else {
-            analyticsTrackerWrapper.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
+            quickStartTracker.track(Stat.QUICK_START_TAPPED, mapOf(TYPE to type.toString()))
         }
         _onNavigation.value = Event(
                 SiteNavigationAction.OpenQuickStartFullScreenDialog(type, quickStartCardBuilder.getTitle(type))
@@ -802,6 +795,9 @@ class MySiteViewModel @Inject constructor(
     private fun quickActionMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_ACTION_MEDIA_TAPPED)
+        quickStartRepository.requestNextStepOfTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+        )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
@@ -831,6 +827,9 @@ class MySiteViewModel @Inject constructor(
     private fun onQuickLinkRibbonMediaClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         trackWithTabSourceIfNeeded(Stat.QUICK_LINK_RIBBON_MEDIA_TAPPED)
+        quickStartRepository.requestNextStepOfTask(
+                quickStartRepository.quickStartType.getTaskFromString(QUICK_START_UPLOAD_MEDIA_LABEL)
+        )
         _onNavigation.value = Event(SiteNavigationAction.OpenMedia(selectedSite))
     }
 
@@ -918,14 +917,14 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onRemoveNextStepsDialogPositiveButtonClicked() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_POSITIVE_TAPPED)
         quickStartRepository.skipQuickStart()
         refresh()
         clearActiveQuickStartTask()
     }
 
     private fun onRemoveNextStepsDialogNegativeButtonClicked() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
     }
 
     fun handleTakenSiteIcon(iconUrl: String?, source: PhotoPickerMediaSource?) {
@@ -1091,7 +1090,12 @@ class MySiteViewModel @Inject constructor(
     private fun startQuickStart(siteLocalId: Int, isSiteTitleTaskCompleted: Boolean) {
         if (siteLocalId != SelectedSiteRepository.UNAVAILABLE) {
             quickStartUtilsWrapper
-                    .startQuickStart(siteLocalId, isSiteTitleTaskCompleted, quickStartRepository.quickStartType)
+                    .startQuickStart(
+                            siteLocalId,
+                            isSiteTitleTaskCompleted,
+                            quickStartRepository.quickStartType,
+                            quickStartTracker
+                    )
             mySiteSourceManager.refreshQuickStart()
         }
     }
@@ -1116,14 +1120,14 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun startQuickStart() {
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
         startQuickStart(selectedSiteRepository.getSelectedSiteLocalId(), shouldMarkUpdateSiteTitleTaskComplete)
         shouldMarkUpdateSiteTitleTaskComplete = false
     }
 
     fun ignoreQuickStart() {
         shouldMarkUpdateSiteTitleTaskComplete = false
-        analyticsTrackerWrapper.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+        quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     private fun onPostItemClick(params: PostItemClickParams) {
@@ -1159,19 +1163,9 @@ class MySiteViewModel @Inject constructor(
         onShare.postValue(Event(message))
     }
 
-    @Suppress("MaxLineLength")
-    /* ktlint-disable max-line-length */
-    private fun onBloggingPromptAnswerClick() {
-        val bloggingPrompt = BloggingPrompt(
-                id = 1234,
-                text = "Cast the movie of your life.",
-                content = "<!-- wp:pullquote -->\n" +
-                        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                        "<!-- /wp:pullquote -->",
-                respondents = emptyList()
-        )
+    private fun onBloggingPromptAnswerClick(promptId: Int) {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onAnswerBloggingPrompt.postValue(Event(Pair(bloggingPrompt, selectedSite)))
+        _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

@@ -1,0 +1,8 @@
+19.8:
+- Son Yazılar blokunda özellik görsel ayarları
+- HTML/Görsel mod geçiş bildirimleri
+- Tam Gömülü blok önizlemesi
+- Yerel Ayar Seçici görselleri
+- Bağımsız VideoPress ile daha uzun yüklemeler
+- Ortam Seçici Talkback ortam türleri
+- Kayıt için sihirli bağlantı URL'si

@@ -20,7 +20,7 @@ class TrainOfAvatarsAdapterDiffCallback(
         val oldItem = oldItems[oldItemPosition]
         val newItem = newItems[newItemPosition]
         return when {
-            oldItem is AvatarItem && newItem is AvatarItem -> oldItem.userId == newItem.userId
+            oldItem is AvatarItem && newItem is AvatarItem -> oldItem.userAvatarUrl == newItem.userAvatarUrl
             oldItem is TrailingLabelTextItem && newItem is TrailingLabelTextItem -> true
             else -> false
         }

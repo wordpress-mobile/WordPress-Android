@@ -35,6 +35,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -75,6 +76,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
@@ -113,6 +115,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.quickstart.QuickStartType.ExistingSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -173,6 +176,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var quickStartType: QuickStartType
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -193,6 +197,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val emailAddress = "test@email.com"
     private val postId = 100
     private val localHomepageId = 1
+    private val bloggingPromptId = 123
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -231,7 +236,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
-    private var onBloggingPromptAnswerClicked: (() -> Unit)? = null
+    private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -267,6 +272,22 @@ class MySiteViewModelTest : BaseUnitTest() {
             )
     )
 
+    private val bloggingPromptsUpdate = MutableLiveData(
+            BloggingPromptUpdate(
+                    promptModel = BloggingPromptModel(
+                            id = bloggingPromptId,
+                            text = "text",
+                            title = "",
+                            content = "content",
+                            date = Date(),
+                            isAnswered = false,
+                            attribution = "",
+                            respondentsCount = 5,
+                            respondentsAvatarUrls = listOf()
+                    )
+            )
+    )
+
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
@@ -285,7 +306,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             cardsUpdate,
             quickStartUpdate,
             showSiteIconProgressBar,
-            selectedSite
+            selectedSite,
+            bloggingPromptsUpdate
     )
 
     @InternalCoroutinesApi
@@ -348,7 +370,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
-                appPrefsWrapper
+                appPrefsWrapper,
+                quickStartTracker
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1105,7 +1128,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         requireNotNull(quickStartTaskTypeItemClickAction).invoke(QuickStartTaskType.CUSTOMIZE)
 
-        verify(analyticsTrackerWrapper)
+        verify(quickStartTracker)
                 .track(Stat.QUICK_START_TAPPED, mapOf("type" to QuickStartTaskType.CUSTOMIZE.toString()))
     }
 
@@ -1198,7 +1221,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartUtilsWrapper).startQuickStart(
                 siteLocalId,
                 false,
-                quickStartType
+                quickStartType,
+                quickStartTracker
         )
         verify(mySiteSourceManager).refreshQuickStart()
     }
@@ -1213,7 +1237,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartUtilsWrapper).startQuickStart(
                 siteLocalId,
                 false,
-                ExistingSiteQuickStartType
+                ExistingSiteQuickStartType,
+                quickStartTracker
         )
         verify(mySiteSourceManager).refreshQuickStart()
     }
@@ -1289,7 +1314,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when start QS is triggered, then QS request dialog positive tapped is tracked`() {
         viewModel.startQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED)
     }
 
     @Test
@@ -1299,7 +1324,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.startQuickStart()
 
         verify(quickStartUtilsWrapper)
-                .startQuickStart(site.id, false, quickStartRepository.quickStartType)
+                .startQuickStart(site.id, false, quickStartRepository.quickStartType, quickStartTracker)
         verify(mySiteSourceManager).refreshQuickStart()
     }
 
@@ -1307,7 +1332,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when ignore QS is triggered, then QS request dialog negative tapped is tracked`() {
         viewModel.ignoreQuickStart()
 
-        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
+        verify(quickStartTracker).track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
     /* QUICK START SITE MENU STEP */
@@ -1555,7 +1580,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given blogging prompt card, when answer button is clicked, answer action is called`() = test {
         initSelectedSite()
 
-        requireNotNull(onBloggingPromptAnswerClicked).invoke()
+        requireNotNull(onBloggingPromptAnswerClicked).invoke(123)
 
         assertTrue(answerRequests == 1)
     }
@@ -2789,8 +2814,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
+                promptId = bloggingPromptId,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
-                onAnswerClick = onBloggingPromptAnswerClicked as (() -> Unit)
+                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
         )
     }
 

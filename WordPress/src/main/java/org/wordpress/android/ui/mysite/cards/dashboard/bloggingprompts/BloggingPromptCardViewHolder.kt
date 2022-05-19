@@ -36,7 +36,7 @@ class BloggingPromptCardViewHolder(
         }
 
         answerButton.setOnClickListener {
-            card.onAnswerClick.invoke()
+            card.onAnswerClick.invoke(card.promptId)
             uiHelpers.updateVisibility(answerButton, false)
             uiHelpers.updateVisibility(answeredPromptControls, true)
         }
@@ -59,22 +59,28 @@ class BloggingPromptCardViewHolder(
                 FlexDirection.ROW,
                 FlexWrap.NOWRAP
         ).apply { justifyContent = JustifyContent.CENTER }
-        answeredUsersRecycler.addItemDecoration(
-                AvatarItemDecorator(
-                        RtlUtils.isRtl(answeredUsersRecycler.context),
-                        answeredUsersRecycler.context,
-                        AVATAR_LEFT_OFFSET_DIMEN
-                )
-        )
-        answeredUsersRecycler.layoutManager = layoutManager
 
-        val adapter = TrainOfAvatarsAdapter(
-                imageManager,
-                uiHelpers
-        )
-        answeredUsersRecycler.adapter = adapter
+        if (card.numberOfAnswers > 0) {
+            uiHelpers.updateVisibility(answeredUsersRecycler, true)
+            answeredUsersRecycler.addItemDecoration(
+                    AvatarItemDecorator(
+                            RtlUtils.isRtl(answeredUsersRecycler.context),
+                            answeredUsersRecycler.context,
+                            AVATAR_LEFT_OFFSET_DIMEN
+                    )
+            )
+            answeredUsersRecycler.layoutManager = layoutManager
 
-        adapter.loadData(card.respondents)
+            val adapter = TrainOfAvatarsAdapter(
+                    imageManager,
+                    uiHelpers
+            )
+            answeredUsersRecycler.adapter = adapter
+
+            adapter.loadData(card.respondents)
+        } else {
+            uiHelpers.updateVisibility(answeredUsersRecycler, false)
+        }
     }
 }
 

@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-28 16:10:12+0000
+Translation-Revision-Date: 2022-05-12 11:16:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">ביטול</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">תשובה</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">הצעה יומית</string>
+    <string name="blogging_prompts_onboarding_got_it">הבנתי</string>
+    <string name="quick_start_dialog_view_your_site_message_short">יש להקיש על &lt;b&gt;%1$s&lt;/b&gt; כדי להציג את האתר שלך</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">יש לבחור ⁦%1$s⁩ Reader ⁦%2$s⁩ כדי למצוא אתרים אחרים.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">מידע נוסף על הצעות</string>
+    <string name="photo_picker_video_thumbnail_unselected">הבחירה בסרטון בוטלה</string>
+    <string name="photo_picker_video_thumbnail_selected">הסרטון נבחר</string>
+    <string name="photo_picker_media_thumbnail_content_description">תצוגה ממוזערת של המדיה</string>
+    <string name="stats_insights_popular_title">🔥 המועד הפופולרי ביותר</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">השבוע היו ⁦%1$s⁩ מבקרים פחות באתר לעומת השבוע הקודם.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">השבוע היו ⁦%1$s⁩ מבקרים יותר באתר לעומת השבוע הקודם.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">השבוע היו ⁦%1$s⁩ צפיות פחות באתר לעומת השבוע הקודם.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">השבוע היו ⁦%1$s⁩ צפיות יותר באתר לעומת השבוע הקודם.</string>
+    <string name="stats_timeframe_previous_week">השבוע הקודם</string>
+    <string name="stats_timeframe_this_week">השבוע</string>
+    <string name="scan_vault_press_active_on_site_button_text">מעבר ללוח בקרה</string>
+    <string name="scan_vault_press_active_on_site_subtitle">האתר שלך כבר מוגן באמצעות VaultPress. אפשר למצוא את הקישור ללוח הבקרה של VaultPress למטה.</string>
+    <string name="scan_vault_press_active_on_site_title">השירות של VaultPress מותקן באתר שלך</string>
+    <string name="locale_picker_current_language">השפה הנוכחית:</string>
     <string name="hpp_choose_and_create_site">יצירת אתר</string>
     <string name="gutenberg_native_add_blocks_11d0841f">להוסיף בלוקים</string>
     <string name="initial_screen">מסך ראשוני</string>
@@ -94,6 +116,7 @@ Language: he_IL
     <string name="site_creation_intent_beauty">טיפוח היופי</string>
     <string name="site_creation_intent_automotive">רכב</string>
     <string name="site_creation_intent_art">אומנות</string>
+    <string name="new_site_creation_intents_input_hint">לדוגמה, אופנה, שירה ופוליטיקה</string>
     <string name="new_site_creation_intents_title">נושא האתר</string>
     <string name="quick_start_site_menu_tab_message_short">יש להקיש &lt;b&gt;%1$s&lt;/b&gt; להמשך.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">להסיר מלוח הבקרה</string>
@@ -118,6 +141,7 @@ Language: he_IL
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">נראה שקריאות XML-RPC חסומות באתר הזה (קוד שגיאה 401). אם הניסיון להתחברות נכשל, יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
     <string name="login_error_xml_rpc_cannot_read_site">לא ניתן לקרוא את אתר WordPress בכתובת URL זו. יש להקיש על סמל העזרה כדי להציג את השאלות הנפוצות.</string>
     <string name="login_error_xml_rpc_services_disabled">שירותי XML-RPC באתר זה מנותקים.</string>
+    <string name="my_site_menu_tab_title">תפריט</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">החיפוש שלך כולל תווים שלא נתמכים בדומיינים של WordPress.com. התווים הבאים מותרים: A–Z‏, a–z,‏ 0–9.</string>
     <string name="my_site_todays_stat_card_title">הנתונים הסטטיסטיים של היום</string>
     <string name="my_site_error_within_card_subtitle">יש לבדוק את החיבור לאינטרנט ולרענן את העמוד.</string>
@@ -432,6 +456,7 @@ Language: he_IL
     <string name="gutenberg_native_custom_url">כתובת URL מותאמת</string>
     <string name="gutenberg_native_column_d">טור %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">יש לתאר בקצרה את הקישור כדי לסייע למשתמשים בקוראי מסכים</string>
+    <string name="gutenberg_native_add_blocks">להוסיף בלוקים</string>
     <string name="login_no_jetpack_sites">לא נמצאו אתרים של Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">מה זה טקסט חלופי?</string>
     <string name="gutenberg_native_transform_s_to">לשנות את %s אל</string>
@@ -516,6 +541,8 @@ Language: he_IL
     <string name="quick_start_list_enable_sharing_subtitle">לשתף באופן אוטומטי פוסטים חדשים ברשתות החברתיות.</string>
     <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו.</string>
     <string name="quick_start_list_enable_sharing_title">שיתוף ברשתות חברתיות</string>
+    <string name="quick_start_list_view_site_title">הצגת האתר שלך</string>
+    <string name="quick_start_list_check_stats_title">בדיקת הנתונים הסטטיסטיים של האתר שלך</string>
     <string name="backup_download_status_failure_bullet2">אנחנו נמשיך לנסות ליצור את קובץ הגיבוי שלך להורדה.</string>
     <string name="backup_download_status_failure_bullet1">לא הצלחנו למצוא את הסטטוס כדי לציין כמה זמן צפויה להימשך היצירה של הגיבוי להורדה.</string>
     <string name="backup_download_status_failure_heading">ניסינו אבל לא הצלחנו למצוא את הסטטוס של הגיבוי להורדה</string>
@@ -1618,6 +1645,7 @@ Language: he_IL
     <string name="quick_start_dialog_upload_icon_title">בחירת סמל אתר ייחודי</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
     <string name="quick_start_dialog_publish_post_message">רישום טיוטה ופרסום פוסט.</string>
+    <string name="quick_start_dialog_check_stats_message_short">יש לבחור ⁦%1$s⁩ נתונים סטטיסטיים ⁦%2$s⁩ כדי להציג את הביצועים של האתר שלך.</string>
     <string name="quick_start_dialog_explore_plans_title">עיון בתוכניות</string>
     <string name="quick_start_dialog_explore_plans_message">מידע נוסף על כלי שיווק ו-SEO בתוכניות שלנו בתשלום.</string>
     <string name="quick_start_dialog_enable_sharing_title">הפעלת השיתוף של הפוסטים</string>
@@ -1627,6 +1655,7 @@ Language: he_IL
     <string name="quick_start_dialog_remove_next_steps_title">הסרת השלבים הבאים</string>
     <string name="quick_start_remove_next_steps_menu_title">להסיר את הפריט</string>
     <string name="quick_start_complete_view_subtitle">ברכותינו על השלמת הרשימה. עבודה מצוינת.</string>
+    <string name="quick_start_dialog_check_stats_message">לקבל עדכונים על הביצועים של האתר שלך.</string>
     <string name="quick_start_complete_view_title">כל המשימות הושלמו!</string>
     <string name="quick_start_task_skip_menu_title">דילוג על המשימה</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">מזעור</string>
@@ -1796,9 +1825,11 @@ Language: he_IL
     <string name="quick_start_dialog_share_site_message">התחברות לחשבונות שלך ברשתות החברתיות – האתר שלך ישתף באופן אוטומטי פוסטים חדשים.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">יש להקיש על %1$s שיתוף %2$s כדי להמשיך</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">יש להקיש על %1$s חשבונות מקושרים %2$s כדי להוסיף חשבונות של רשתות חברתיות</string>
+    <string name="quick_start_dialog_view_site_message">באפשרותך להציג תצוגה מקדימה של האתר כדי לבחון מה יראו המבקרים.</string>
     <string name="quick_start_dialog_publish_post_title">פרסום פוסט</string>
     <string name="quick_start_dialog_publish_post_message_short">יש להקיש על %1$sיצירת פוסט%2$s כדי ליצור פוסט חדש</string>
     <string name="quick_start_dialog_need_help_button_negative">לא תודה</string>
+    <string name="quick_start_dialog_follow_sites_title">להתחבר עם אתרים אחרים</string>
     <string name="quick_start_button_positive">מעבר אל</string>
     <string name="quick_start_button_negative_short">ביטול</string>
     <string name="quick_start_button_negative">לא עכשיו</string>

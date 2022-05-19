@@ -67,6 +67,11 @@ enum class QuickStartNoticeDetails(
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL,
             R.string.quick_start_dialog_check_notifications_title,
             R.string.quick_start_dialog_check_notifications_message
+    ),
+    UPLOAD_MEDIA(
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL,
+            R.string.quick_start_list_upload_media_title,
+            R.string.quick_start_list_upload_media_subtitle
     );
 
     companion object {

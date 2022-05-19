@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import org.wordpress.android.R
-import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
@@ -19,11 +18,9 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
         onPrimaryButtonClick: () -> Unit,
         onSecondaryButtonClick: () -> Unit
     ): Ready {
-        val dummyRespondent = BloggingPromptRespondent(
-                54279365,
+        val dummyRespondent =
                 "https://0.gravatar.com/avatar/cec64efa352617" +
                         "c35743d8ed233ab410?s=96&d=identicon&r=G"
-        )
 
         val dummyRespondents = listOf(
                 dummyRespondent,
@@ -38,12 +35,7 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
                 dummyRespondents.size
         )
 
-        val avatarsTrain = dummyRespondents.take(3).map { respondent ->
-            AvatarItem(
-                    respondent.userId,
-                    respondent.avatarUrl
-            )
-        }
+        val avatarsTrain = dummyRespondents.take(3).map { respondent -> AvatarItem(respondent) }
                 .toMutableList<TrainOfAvatarsItem>()
                 .also { list -> list.add(TrailingLabelTextItem(trailingLabel, R.attr.colorPrimary)) }
 

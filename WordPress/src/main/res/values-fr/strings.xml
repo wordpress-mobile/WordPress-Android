@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-27 13:21:28+0000
+Translation-Revision-Date: 2022-05-13 14:28:59+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">Ignorer</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Réponse</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Incitation quotidienne</string>
+    <string name="blogging_prompts_onboarding_got_it">J’ai compris</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Appuyez sur &lt;b&gt;%1$s&lt;/b&gt; pour voir votre site</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Sélectionnez %1$s Lecteur %2$s pour rechercher d’autres sites.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Lire la suite sur les incitations</string>
+    <string name="photo_picker_video_thumbnail_unselected">Vidéo non sélectionnée</string>
+    <string name="photo_picker_video_thumbnail_selected">Vidéo sélectionnée</string>
+    <string name="photo_picker_media_thumbnail_content_description">Miniature média</string>
+    <string name="stats_insights_popular_title">🔥 Heure la plus populaire</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Votre nombre de visiteurs de cette semaine est inférieur de %1$s par rapport à la semaine précédente.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Votre nombre de visiteurs de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Votre nombre de vues de cette semaine est inférieur de %1$s par rapport la semaine précédente.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Votre nombre de vues de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
+    <string name="stats_timeframe_previous_week">La semaine précédente</string>
+    <string name="stats_timeframe_this_week">Cette semaine</string>
+    <string name="scan_vault_press_active_on_site_button_text">Se rendre sur le Tableau de bord</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Votre site est déjà protégé par VaultPress. Vous trouverez ci-dessous un lien vers votre tableau de bord VaultPress.</string>
+    <string name="scan_vault_press_active_on_site_title">Votre site comporte VaultPress</string>
+    <string name="locale_picker_current_language">Langue actuelle :</string>
     <string name="hpp_choose_and_create_site">Créer un site</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Ajouter des blocs</string>
     <string name="initial_screen">Écran initial</string>
@@ -434,6 +456,7 @@ Language: fr
     <string name="gutenberg_native_create_embed">Embarquer un contenu</string>
     <string name="gutenberg_native_column_d">Colonne %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Décrivez brièvement le lien pour aider l’utilisateur du lecteur d’écran</string>
+    <string name="gutenberg_native_add_blocks">Ajouter des blocs</string>
     <string name="login_no_jetpack_sites">Aucun site Jetpack trouvé</string>
     <string name="gutenberg_native_what_is_alt_text">Qu’est-ce que le texte alternatif ?</string>
     <string name="gutenberg_native_transform_s_to">Transformer %s en</string>
@@ -514,10 +537,12 @@ Language: fr
     <string name="disable">Désactiver</string>
     <string name="quick_start_card_menu_unpin">Désépingler</string>
     <string name="quick_start_list_review_pages_subtitle">Vérifiez vos pages et apportez des modifications, ou ajoutez ou supprimez des pages.</string>
+    <string name="quick_start_list_view_site_title">Voir votre site</string>
     <string name="quick_start_list_follow_site_subtitle">Découvrez et abonnez-vous aux sites qui vous inspirent.</string>
     <string name="quick_start_list_enable_sharing_title">Partage sur les réseaux sociaux</string>
     <string name="quick_start_list_enable_sharing_subtitle">Partagez automatiquement les nouveaux articles sur vos réseaux sociaux.</string>
     <string name="quick_start_list_update_site_title_subtitle">Donnez à votre site un nom qui reflète sa personnalité et son thème.</string>
+    <string name="quick_start_list_check_stats_title">Consulter les statistiques de votre site</string>
     <string name="backup_download_status_failure_bullet2">Nous essayerons encore de créer votre fichier de sauvegarde téléchargeable.</string>
     <string name="backup_download_status_failure_bullet1">L’état permettant d’indiquer la durée de création de votre sauvegarde téléchargeable est introuvable.</string>
     <string name="backup_download_status_failure_heading">L’état de votre sauvegarde téléchargeable est introuvable.</string>
@@ -1618,6 +1643,7 @@ Language: fr
     <string name="quick_start_dialog_upload_icon_title">Choisir une favicône unique </string>
     <string name="quick_start_dialog_upload_icon_message">Vos visiteurs verront votre icône dans leur navigateur. Ajoutez une icône personnalisée pour un aspect brillant et pro.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Appuyez sur %1$s Plan %2$s pour voir votre plan actuel et les autres plans disponibles</string>
+    <string name="quick_start_dialog_check_stats_message_short">Sélectionnez %1$s Statistiques %2$s pour voir comment votre site se comporte.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Appuyez sur %1$s Votre icône de site %2$s pour en téléverser une nouvelle</string>
     <string name="quick_start_dialog_publish_post_message">Rédiger un brouillon et publier un article de blog.</string>
     <string name="quick_start_dialog_explore_plans_title">Explorer les plans</string>
@@ -1625,6 +1651,7 @@ Language: fr
     <string name="quick_start_dialog_enable_sharing_title">Activer le partage d’article</string>
     <string name="quick_start_dialog_enable_sharing_message">Partager automatiquement les nouveaux articles sur vos comptes de réseaux sociaux.</string>
     <string name="quick_start_dialog_check_stats_title">Découvrez les statistiques de votre site</string>
+    <string name="quick_start_dialog_check_stats_message">Restez au courant des performances de votre site.</string>
     <string name="quick_start_dialog_remove_next_steps_message">« Retirer les étapes suivantes » cachera tous les accompagnements sur ce site. Cette action ne peut pas être annulée.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Retirer les étapes suivantes</string>
     <string name="quick_start_remove_next_steps_menu_title">Retirer ceci</string>
@@ -1794,6 +1821,7 @@ Language: fr
     <string name="quick_start_list_create_site_title">Créer votre site</string>
     <string name="quick_start_list_create_site_subtitle">Rendre votre site opérationnel</string>
     <string name="quick_start_dialog_view_site_title">Voir votre site</string>
+    <string name="quick_start_dialog_view_site_message">Prévisualisez votre site pour avoir un aperçu de ce que verront vos visiteurs.</string>
     <string name="quick_start_dialog_share_site_title">Partager votre site</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Appuyez sur %1$s Partage %2$s pour continuer</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Appuyez sur %1$s Connexions %2$s pour ajouter vos comptes de réseaux sociaux</string>
@@ -1801,6 +1829,7 @@ Language: fr
     <string name="quick_start_dialog_publish_post_title">Publier un article</string>
     <string name="quick_start_dialog_publish_post_message_short">Appuyez sur %1$s Créer un article %2$s pour créer un article</string>
     <string name="quick_start_dialog_need_help_button_negative">Non merci</string>
+    <string name="quick_start_dialog_follow_sites_title">Se connecter à d’autres sites</string>
     <string name="quick_start_button_positive">C\'est parti !</string>
     <string name="quick_start_button_negative_short">Annuler</string>
     <string name="quick_start_button_negative">Pas maintenant</string>
