@@ -11,7 +11,6 @@ Language: id
     <string name="blogging_prompts_answer_prompt_notification_title">Saran Harian</string>
     <string name="blogging_prompts_onboarding_got_it">Saya mengerti</string>
     <string name="quick_start_dialog_view_your_site_message_short">Ketuk &lt;b&gt;%1$s&lt;/b&gt; untuk melihat situs Anda</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Pilih %1$s Pengaturan %2$s untuk menambahkan topik yang Anda sukai.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Pilih %1$s Pembaca %2$s untuk menemukan situs lainnya.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Pelajari lebih lanjut tentang saran</string>
     <string name="photo_picker_video_thumbnail_unselected">Video tidak dipilih</string>

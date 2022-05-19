@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-12 10:46:28+0000
+Translation-Revision-Date: 2022-05-18 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
@@ -11,7 +11,6 @@ Language: zh_TW
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
     <string name="blogging_prompts_onboarding_got_it">知道了</string>
     <string name="quick_start_dialog_view_your_site_message_short">點選 &lt;b&gt;%1$s&lt;/b&gt; 即可檢視你的網站</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">選取「%1$s 設定 %2$s」來新增你喜愛的主題。</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">選取「%1$s 閱讀器 %2$s」來尋找其他網站。</string>
     <string name="blogging_reminders_prompt_help_button_desc">深入瞭解提示</string>
     <string name="photo_picker_video_thumbnail_unselected">已取消選取影片</string>
@@ -2363,6 +2362,7 @@ Language: zh_TW
     <string name="post_title">標題</string>
     <string name="menu_redo">重做</string>
     <string name="menu_undo">復原</string>
+    <string name="media_insert_unimplemented">很抱歉！ 此功能尚未推出 :(</string>
     <string name="error_media_small">媒體過小，無法顯示</string>
     <string name="editor_dropped_unsupported_files">警告：部分拖放項目不受支援！</string>
     <string name="editor_dropped_title_images_not_allowed">不可將圖片拖放至標題</string>

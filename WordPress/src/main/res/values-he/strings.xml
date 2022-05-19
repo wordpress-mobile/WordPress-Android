@@ -11,7 +11,6 @@ Language: he_IL
     <string name="blogging_prompts_answer_prompt_notification_title">הצעה יומית</string>
     <string name="blogging_prompts_onboarding_got_it">הבנתי</string>
     <string name="quick_start_dialog_view_your_site_message_short">יש להקיש על &lt;b&gt;%1$s&lt;/b&gt; כדי להציג את האתר שלך</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">יש לבחור ⁦%1$s⁩ הגדרות ⁦%2$s⁩ כדי להוסיף נושאים שמעניינים אותך.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">יש לבחור ⁦%1$s⁩ Reader ⁦%2$s⁩ כדי למצוא אתרים אחרים.</string>
     <string name="blogging_reminders_prompt_help_button_desc">מידע נוסף על הצעות</string>
     <string name="photo_picker_video_thumbnail_unselected">הבחירה בסרטון בוטלה</string>

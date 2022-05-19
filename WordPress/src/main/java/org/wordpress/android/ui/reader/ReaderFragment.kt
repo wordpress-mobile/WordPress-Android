@@ -102,7 +102,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onPause() {
         super.onPause()
-        viewModel.onScreenInBackground(activity?.isChangingConfigurations)
+        activity?.let { viewModel.onScreenInBackground(it.isChangingConfigurations) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

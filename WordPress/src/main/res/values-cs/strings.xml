@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-02 18:57:39+0000
+Translation-Revision-Date: 2022-05-18 13:04:38+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: cs_CZ
@@ -11,7 +11,6 @@ Language: cs_CZ
     <string name="blogging_prompts_answer_prompt_notification_title">Denní výzva</string>
     <string name="blogging_prompts_onboarding_got_it">Mám to</string>
     <string name="quick_start_dialog_view_your_site_message_short">Klepnutím na &lt;b&gt;%1$s&lt;/b&gt; zobrazíte svůj web</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Vyberte %1$s nastavení %2$s a přidejte témata, která se vám líbí.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Chcete-li najít další stránky, vyberte %1$s čtečku %2$s.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Další informace o výzvách</string>
     <string name="photo_picker_video_thumbnail_unselected">Výběr videa zrušen</string>
@@ -1820,6 +1819,7 @@ Language: cs_CZ
     <string name="set_parent">Nastavit nadřazenou stránku</string>
     <string name="quick_start_focus_point_description">kliknout zde</string>
     <string name="quick_start_list_create_site_title">Vytvořit stránku</string>
+    <string name="quick_start_completed_tour_subtitle">Dobrý pocit odškrtnout něco ze seznamu, co?</string>
     <string name="quick_start_list_create_site_subtitle">Zprovozněte svůj web</string>
     <string name="quick_start_dialog_view_site_title">Zobrazit stránku</string>
     <string name="quick_start_dialog_share_site_title">Sdílení stránky</string>

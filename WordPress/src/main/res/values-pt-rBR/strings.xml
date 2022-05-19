@@ -11,7 +11,6 @@ Language: pt_BR
     <string name="blogging_prompts_answer_prompt_notification_title">Sugestão diária</string>
     <string name="blogging_prompts_onboarding_got_it">Entendi</string>
     <string name="quick_start_dialog_view_your_site_message_short">Toque &lt;b&gt;%1$s&lt;/b&gt; para ver seu site</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Selecione %1$s configurações %2$s para adicionar tópicos que você gosta.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Selecione %1$s leitor %2$s para encontrar outros sites.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Saiba mais sobre as sugestões</string>
     <string name="photo_picker_video_thumbnail_unselected">Vídeo não selecionado</string>
