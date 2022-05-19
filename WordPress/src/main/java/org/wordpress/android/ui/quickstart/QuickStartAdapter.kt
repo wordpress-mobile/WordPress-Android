@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R.layout
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.ui.quickstart.viewholders.CompletedHeaderViewHolder
+import org.wordpress.android.ui.quickstart.viewholders.TaskViewHolder
 
 class QuickStartAdapter internal constructor(
     private val context: Context,

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.quickstart
+package org.wordpress.android.ui.quickstart.viewholders
 
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
+import org.wordpress.android.ui.quickstart.QuickStartAdapter
 import org.wordpress.android.util.AniUtils.Duration.SHORT
 
 class CompletedHeaderViewHolder internal constructor(

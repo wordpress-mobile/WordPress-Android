@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.quickstart
+package org.wordpress.android.ui.quickstart.viewholders
 
 import android.graphics.Paint
 import android.view.MenuItem
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 
 class TaskViewHolder internal constructor(
