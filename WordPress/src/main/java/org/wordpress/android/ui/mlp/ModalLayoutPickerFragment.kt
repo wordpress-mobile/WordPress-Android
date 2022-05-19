@@ -98,6 +98,9 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                 viewModel.onThumbnailModePressed()
             }
 
+            modalLayoutPickerLayoutsSkeleton.layoutsSkeleton.updateLayoutParams {
+                height = thumbDimensionProvider.rowHeight
+            }
             modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
                 height = thumbDimensionProvider.previewHeight
                 width = thumbDimensionProvider.previewWidth
