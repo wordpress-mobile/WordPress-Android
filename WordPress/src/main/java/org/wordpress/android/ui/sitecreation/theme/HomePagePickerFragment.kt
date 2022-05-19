@@ -83,9 +83,12 @@ class HomePagePickerFragment : Fragment() {
     private fun HomePagePickerFragmentBinding.setupUi() {
         siteCreationThemeHeader.title?.setText(R.string.hpp_title)
         siteCreationThemeHeader.subtitle?.isGone = true
+        modalLayoutPickerLayoutsSkeleton.layoutsSkeleton.updateLayoutParams {
+            height = recommendedDimensionProvider.rowHeight
+        }
         modalLayoutPickerLayoutsSkeleton.skeletonCardView.updateLayoutParams {
-            height = thumbDimensionProvider.previewHeight
-            width = thumbDimensionProvider.previewWidth
+            height = recommendedDimensionProvider.previewHeight
+            width = recommendedDimensionProvider.previewWidth
         }
     }
 
