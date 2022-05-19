@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.R
+import org.wordpress.android.databinding.QrcodeauthActivityBinding
 
 @AndroidEntryPoint
 class QRCodeAuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.qrcodeauth_activity)
+        with(QrcodeauthActivityBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            setSupportActionBar(toolbarMain)
+        }
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
