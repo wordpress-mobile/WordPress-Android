@@ -130,17 +130,28 @@ class FollowerTypesUseCase @Inject constructor(
     }
 
     private fun buildValuePercent(value: Int, total: Int): String {
-        val percentage = if (total == 0) {
-            0
+        val percentage = if (total == 0 || value == 0) {
+            0.0
         } else {
-            value * 100 / total
+            value * PERCENT_HUNDRED / total
         }
+
+        val formattedPercentage = if (percentage == 0.0 || percentage >= 1.0) {
+            statsUtils.toFormattedString(percentage.toInt())
+        } else {
+            statsUtils.toFormattedString(percentage)
+        }
+
         return resourceProvider.getString(
                 R.string.stats_value_percent,
                 statsUtils.toFormattedString(value),
-                statsUtils.toFormattedString(percentage)
+                formattedPercentage
         )
     }
 
     enum class FollowerType { WP_COM, EMAIL, SOCIAL }
+
+    companion object {
+        private const val PERCENT_HUNDRED = 100.0
+    }
 }
