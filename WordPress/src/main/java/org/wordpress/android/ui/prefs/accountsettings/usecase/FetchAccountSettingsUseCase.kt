@@ -18,7 +18,6 @@ class FetchAccountSettingsUseCase @Inject constructor(
     @Named(DEFAULT_CONTINUATION) private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-
     suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
         dispatcher.register(this@FetchAccountSettingsUseCase)
         continuationWrapper.suspendCoroutine {
@@ -32,4 +31,3 @@ class FetchAccountSettingsUseCase @Inject constructor(
         dispatcher.unregister(this)
     }
 }
-

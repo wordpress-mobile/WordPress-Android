@@ -19,7 +19,6 @@ class PushAccountSettingsUseCase @Inject constructor(
     @Named(CONCURRENT_CONTINUATION) private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-
     init {
         dispatcher.register(this@PushAccountSettingsUseCase)
     }

@@ -4,7 +4,6 @@ import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 class ConcurrentContinuationWrapper<T> : ContinuationWrapper<T> {
-
     private val continuationList = arrayListOf<CancellableContinuation<T>>()
 
     override val isWaiting: Boolean

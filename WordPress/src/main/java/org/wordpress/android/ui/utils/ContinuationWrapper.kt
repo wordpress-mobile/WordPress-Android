@@ -5,7 +5,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class DefaultContinuationWrapper<T> : ContinuationWrapper<T> {
-
     private var continuation: CancellableContinuation<T>? = null
 
     override val isWaiting: Boolean

@@ -17,7 +17,6 @@ const val CONCURRENT_CONTINUATION = "CONCURRENT_CONTINUATION"
 @Module
 @InstallIn(SingletonComponent::class)
 class AccountSettingsModule {
-
     @Provides
     @Singleton
     @Named(DEFAULT_CONTINUATION)
