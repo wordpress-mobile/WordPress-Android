@@ -1,0 +1,20 @@
+{
+  "updated": {
+    "blogging_prompts_settings": {
+      "is_potential_blogging_site": false,
+      "prompts_card_opted_in": true,
+      "prompts_reminders_opted_in": false,
+      "reminders_days": {
+        "monday": false,
+        "tuesday": false,
+        "wednesday": false,
+        "thursday": false,
+        "friday": false,
+        "saturday": false,
+        "sunday": true
+      },
+      "reminders_time": "10.33 UTC"
+    }
+  }
+}
+
