@@ -13,7 +13,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.BloggingRemindersMapper
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
 import org.wordpress.android.fluxc.model.BloggingRemindersModel.Day.MONDAY
-import org.wordpress.android.fluxc.network.rest.wpcom.bloggingreminders.BloggingRemindersRestClient
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao.BloggingReminders
 import org.wordpress.android.fluxc.test
@@ -23,7 +22,6 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 class BloggingRemindersStoreTest {
     @Mock lateinit var bloggingRemindersDao: BloggingRemindersDao
     @Mock lateinit var mapper: BloggingRemindersMapper
-    @Mock lateinit var restClient: BloggingRemindersRestClient
     private lateinit var store: BloggingRemindersStore
     private val siteId = 1
     private val testHour = 10
@@ -31,7 +29,7 @@ class BloggingRemindersStoreTest {
 
     @Before
     fun setUp() {
-        store = BloggingRemindersStore(bloggingRemindersDao, restClient, mapper, initCoroutineEngine())
+        store = BloggingRemindersStore(bloggingRemindersDao, mapper, initCoroutineEngine())
     }
 
     @Test
