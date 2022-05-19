@@ -362,9 +362,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_CHECK_STATS_SKIPPED:
                 predefinedEventProperties.put("task_name", "check_stats");
                 break;
-            case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
-                predefinedEventProperties.put("task_name", "explore_plans");
-                break;
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "view_site");
                 break;
@@ -382,9 +379,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_LIST_CHECK_STATS_TAPPED:
                 predefinedEventProperties.put("task_name", "check_stats");
-                break;
-            case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
-                predefinedEventProperties.put("task_name", "explore_plans");
                 break;
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "create_site");
@@ -409,9 +403,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_CHECK_STATS_COMPLETED:
                 predefinedEventProperties.put("task_name", "check_stats");
-                break;
-            case QUICK_START_EXPLORE_PLANS_COMPLETED:
-                predefinedEventProperties.put("task_name", "explore_plans");
                 break;
             case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
             case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
@@ -1855,7 +1846,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_FOLLOW_SITE_SKIPPED:
             case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
             case QUICK_START_LIST_CHECK_STATS_SKIPPED:
-            case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
             case QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED:
             case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
             case QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED:
@@ -1869,7 +1859,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_FOLLOW_SITE_TAPPED:
             case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
             case QUICK_START_LIST_CHECK_STATS_TAPPED:
-            case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
             case QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED:
             case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
             case QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED:
@@ -1883,7 +1872,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_FOLLOW_SITE_TASK_COMPLETED:
             case QUICK_START_UPLOAD_ICON_COMPLETED:
             case QUICK_START_CHECK_STATS_COMPLETED:
-            case QUICK_START_EXPLORE_PLANS_COMPLETED:
             case QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED:
             case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
             case QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED:
