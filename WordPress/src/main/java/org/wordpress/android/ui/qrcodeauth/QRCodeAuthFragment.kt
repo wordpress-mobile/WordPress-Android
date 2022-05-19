@@ -9,7 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.QrcodeauthFragmentBinding
 
 @AndroidEntryPoint
-class QRCodeAuthFragment : Fragment() {
+class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     private val viewModel: QRCodeAuthViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
