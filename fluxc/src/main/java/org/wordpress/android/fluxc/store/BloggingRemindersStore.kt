@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.model.BloggingRemindersMapper
 import org.wordpress.android.fluxc.model.BloggingRemindersModel
+import org.wordpress.android.fluxc.network.rest.wpcom.bloggingreminders.BloggingRemindersRestClient
 import org.wordpress.android.fluxc.persistence.BloggingRemindersDao
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T
@@ -14,6 +15,7 @@ import javax.inject.Singleton
 class BloggingRemindersStore
 @Inject constructor(
     private val bloggingRemindersDao: BloggingRemindersDao,
+    private val bloggingRemindersRestClient: BloggingRemindersRestClient,
     private val mapper: BloggingRemindersMapper,
     private val coroutineEngine: CoroutineEngine
 ) {
