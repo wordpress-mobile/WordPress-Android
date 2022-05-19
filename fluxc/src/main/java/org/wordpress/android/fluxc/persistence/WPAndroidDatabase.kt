@@ -177,8 +177,9 @@ abstract class WPAndroidDatabase : RoomDatabase() {
         val MIGRATION_7_8 = object : Migration(7, 8) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
-                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN promptCardOptedIn INTEGER NOT NULL")
-                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN promptRemindersOptedIn INTEGER NOT NULL")
+                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN isPromptCardOptedIn INTEGER NOT NULL")
+                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN isPromptRemindersOptedIn INTEGER NOT NULL")
+                    execSQL("ALTER TABLE BloggingReminders ADD COLUMN isPotentialBloggingSite INTEGER NOT NULL")
                 }
             }
         }
