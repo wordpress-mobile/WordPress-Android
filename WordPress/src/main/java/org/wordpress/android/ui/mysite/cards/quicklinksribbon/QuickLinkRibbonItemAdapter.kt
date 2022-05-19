@@ -47,10 +47,11 @@ class QuickLinkRibbonItemAdapter : Adapter<QuickLinkRibbonItemViewHolder>() {
             oldItemPosition: Int,
             newItemPosition: Int
         ): Boolean {
-            return if (oldList[oldItemPosition].showFocusPoint || newList[newItemPosition].showFocusPoint)
+            return if (oldList[oldItemPosition].showFocusPoint || newList[newItemPosition].showFocusPoint) {
                 false
-            else
+            } else {
                 oldList[oldItemPosition] == newList[newItemPosition]
+            }
         }
     }
 }
