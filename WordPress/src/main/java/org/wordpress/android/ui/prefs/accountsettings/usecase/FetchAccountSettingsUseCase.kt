@@ -13,14 +13,14 @@ import org.wordpress.android.ui.utils.ContinuationWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-class FetchAccountSettingsUseCaseImpl @Inject constructor(
+class FetchAccountSettingsUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Named(DEFAULT_CONTINUATION) private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) : FetchAccountSettingsUseCase {
+) {
 
-    override suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
-        dispatcher.register(this@FetchAccountSettingsUseCaseImpl)
+    suspend fun fetchNewSettings(): OnAccountChanged = withContext(ioDispatcher) {
+        dispatcher.register(this@FetchAccountSettingsUseCase)
         continuationWrapper.suspendCoroutine {
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
         }
@@ -33,6 +33,3 @@ class FetchAccountSettingsUseCaseImpl @Inject constructor(
     }
 }
 
-interface FetchAccountSettingsUseCase {
-    suspend fun fetchNewSettings(): OnAccountChanged
-}

@@ -11,7 +11,4 @@ class AccountSettingsRepository @Inject constructor(
     pushAccountSettingsUseCaseImpl: PushAccountSettingsUseCase,
     getSitesUseCaseImpl: GetSitesUseCase,
     getAccountUseCaseImpl: GetAccountUseCase
-) : FetchAccountSettingsUseCase by fetchNewAccountSettingsUseCaseImpl,
-        PushAccountSettingsUseCase by pushAccountSettingsUseCaseImpl,
-        GetSitesUseCase by getSitesUseCaseImpl,
-        GetAccountUseCase by getAccountUseCaseImpl
+)

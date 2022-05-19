@@ -8,15 +8,11 @@ import org.wordpress.android.modules.IO_THREAD
 import javax.inject.Inject
 import javax.inject.Named
 
-class GetSitesUseCaseImpl @Inject constructor(
+class GetSitesUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val siteStore: SiteStore
-) : GetSitesUseCase {
-    override suspend fun get(): List<SiteModel> = withContext(ioDispatcher) {
+) {
+    suspend fun get(): List<SiteModel> = withContext(ioDispatcher) {
         siteStore.sitesAccessedViaWPComRest
     }
-}
-
-interface GetSitesUseCase {
-    suspend fun get(): List<SiteModel>
 }

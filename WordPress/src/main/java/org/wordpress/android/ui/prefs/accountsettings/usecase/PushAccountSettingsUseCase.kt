@@ -14,37 +14,37 @@ import org.wordpress.android.ui.utils.ContinuationWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-class PushAccountSettingsUseCaseImpl @Inject constructor(
+class PushAccountSettingsUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Named(CONCURRENT_CONTINUATION) private val continuationWrapper: ContinuationWrapper<OnAccountChanged>,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) : PushAccountSettingsUseCase {
+) {
 
     init {
-        dispatcher.register(this@PushAccountSettingsUseCaseImpl)
+        dispatcher.register(this@PushAccountSettingsUseCase)
     }
 
-    override suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
+    suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["primary_site_ID"] = blogId }
         return updateAccountSettings(addPayload)
     }
 
-    override suspend fun cancelPendingEmailChange(): OnAccountChanged {
+    suspend fun cancelPendingEmailChange(): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email_change_pending"] = "false" }
         return updateAccountSettings(addPayload)
     }
 
-    override suspend fun updateEmail(newEmail: String): OnAccountChanged {
+    suspend fun updateEmail(newEmail: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_email"] = newEmail }
         return updateAccountSettings(addPayload)
     }
 
-    override suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged {
+    suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["user_URL"] = newWebAddress }
         return updateAccountSettings(addPayload)
     }
 
-    override suspend fun updatePassword(newPassword: String): OnAccountChanged {
+    suspend fun updatePassword(newPassword: String): OnAccountChanged {
         val addPayload: (PushAccountSettingsPayload) -> Unit = { it.params["password"] = newPassword }
         return updateAccountSettings(addPayload)
     }
@@ -66,12 +66,4 @@ class PushAccountSettingsUseCaseImpl @Inject constructor(
             dispatcher.unregister(this)
         }
     }
-}
-
-interface PushAccountSettingsUseCase {
-    suspend fun updatePrimaryBlog(blogId: String): OnAccountChanged
-    suspend fun cancelPendingEmailChange(): OnAccountChanged
-    suspend fun updateEmail(newEmail: String): OnAccountChanged
-    suspend fun updateWebAddress(newWebAddress: String): OnAccountChanged
-    suspend fun updatePassword(newPassword: String): OnAccountChanged
 }
