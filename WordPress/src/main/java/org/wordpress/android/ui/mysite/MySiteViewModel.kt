@@ -1248,6 +1248,8 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
+        siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
+                .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultABExperimentTab) }
         siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
                 .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
     }
@@ -1255,6 +1257,7 @@ class MySiteViewModel @Inject constructor(
     private fun resetShownTrackers() {
         domainRegistrationCardShownTracker.resetShown()
         cardsTracker.resetShown()
+        quickStartTracker.resetShown()
     }
 
     private fun trackTabChanged(isSiteMenu: Boolean) {
