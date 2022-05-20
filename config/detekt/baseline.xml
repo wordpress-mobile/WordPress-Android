@@ -273,7 +273,6 @@
     <ID>MaximumLineLength:org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel.kt:47</ID>
     <ID>MaximumLineLength:org.wordpress.android.workers.reminder.PromptReminderNotifier.kt:43</ID>
     <ID>MaximumLineLength:org.wordpress.android.viewmodel.main.WPMainActivityViewModel.kt:220</ID>
-    <ID>MaximumLineLength:org.wordpress.android.ui.mysite.MySiteViewModel.kt:1142</ID>
     <ID>MemberNameEqualsClassName:ActivityLogTypeFilterViewModel.kt$ActivityLogTypeFilterViewModel.Action$lateinit var action: (() -&gt; Unit)</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:51</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:53</ID>

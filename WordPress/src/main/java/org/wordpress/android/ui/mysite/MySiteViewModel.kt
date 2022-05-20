@@ -1165,18 +1165,8 @@ class MySiteViewModel @Inject constructor(
         onShare.postValue(Event(message))
     }
 
-    @Suppress("MaxLineLength")
-    /* ktlint-disable max-line-length */
     private fun onBloggingPromptAnswerClick(promptId: Int) {
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
-        val bloggingPrompt = BloggingPrompt(
-                id = 1234,
-                text = "Cast the movie of your life.",
-                content = "<!-- wp:pullquote -->\n" +
-                        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                        "<!-- /wp:pullquote -->",
-                respondents = emptyList()
-        )
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
     }
