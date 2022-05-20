@@ -7,7 +7,6 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import com.google.android.material.card.MaterialCardView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPrompCardBinding
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
@@ -35,7 +34,7 @@ class BloggingPromptCardViewHolder(
 
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
-            showCardMenu(this.root)
+            showCardMenu()
         }
 
         answerButton.setOnClickListener {
@@ -87,8 +86,8 @@ class BloggingPromptCardViewHolder(
         }
     }
 
-    private fun showCardMenu(bloggingPromptCardView: MaterialCardView) {
-        val quickStartPopupMenu = PopupMenu(bloggingPromptCardView.context, bloggingPromptCardView)
+    private fun MySiteBloggingPrompCardBinding.showCardMenu() {
+        val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
         quickStartPopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
