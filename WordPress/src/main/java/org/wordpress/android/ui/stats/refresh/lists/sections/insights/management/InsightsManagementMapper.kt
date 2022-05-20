@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.AUTHORS_COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TYPES
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
@@ -116,5 +117,6 @@ class InsightsManagementMapper
         AUTHORS_COMMENTS -> string.stats_comments_authors
         POSTS_COMMENTS -> string.stats_comments_posts_and_pages
         FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
+        FOLLOWER_TYPES -> null
     }
 }

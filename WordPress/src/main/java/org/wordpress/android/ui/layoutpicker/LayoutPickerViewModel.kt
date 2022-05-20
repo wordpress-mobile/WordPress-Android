@@ -322,6 +322,7 @@ abstract class LayoutPickerViewModel(
     }
 
     private fun resetState(selected: String?, selectedCategories: ArrayList<String>, previewMode: String) {
+        if (isLoading) return
         val state = uiState.value as? Content ?: Content()
         updateUiState(
                 state.copy(

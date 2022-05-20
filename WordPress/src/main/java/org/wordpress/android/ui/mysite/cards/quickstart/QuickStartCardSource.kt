@@ -26,7 +26,8 @@ class QuickStartCardSource @Inject constructor(
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         quickStartRepository.resetTask()
-        if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteLocalId.toLong(), EDIT_HOMEPAGE)) {
             quickStartRepository.setTaskDoneAndTrack(EDIT_HOMEPAGE, siteLocalId)
             refresh()
@@ -41,7 +42,9 @@ class QuickStartCardSource @Inject constructor(
         }
         return merge(quickStartTaskTypes, quickStartRepository.activeTask) { types, activeTask ->
             val categories =
-                    if (quickStartRepository.quickStartType
+                    if (selectedSite != null &&
+                            quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite) &&
+                            quickStartRepository.quickStartType
                                     .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())) {
                         types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
                                 ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()

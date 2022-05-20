@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-12 11:19:35+0000
+Translation-Revision-Date: 2022-05-16 14:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
@@ -11,7 +11,6 @@ Language: ko_KR
     <string name="blogging_prompts_answer_prompt_notification_title">일일 프롬프트</string>
     <string name="blogging_prompts_onboarding_got_it">알겠습니다</string>
     <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;을(를) 눌러서 사이트 보기</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">원하는 주제를 추가하려면 %1$s 설정 %2$s을(를) 선택하세요.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">다른 사이트를 찾으려면 %1$s 리더 %2$s을(를) 선택하세요.</string>
     <string name="blogging_reminders_prompt_help_button_desc">프롬프트 더 알아보기</string>
     <string name="photo_picker_video_thumbnail_unselected">비디오 선택 안 됨</string>
@@ -2365,6 +2364,7 @@ Language: ko_KR
     <string name="post_title">제목</string>
     <string name="menu_redo">다시하기</string>
     <string name="menu_undo">실행 취소</string>
+    <string name="media_insert_unimplemented">죄송합니다! 기능이 아직 구현되지 않았습니다.</string>
     <string name="error_media_small">미디어가 너무 작아서 표시할 수 없습니다</string>
     <string name="editor_dropped_unsupported_files">경고: 삭제된 항목이 모두 지원되는 것은 아닙니다!</string>
     <string name="editor_dropped_title_images_not_allowed">제목에서 이미지를 삭제할 수 없습니다</string>
