@@ -20,6 +20,10 @@ class FetchHomePageLayoutsUseCase @Inject constructor(
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val betaSiteDesigns: BetaSiteDesignsFeatureConfig
 ) {
+    enum class GROUP(val key: String) {
+        STABLE("stable"),
+        BETA("beta")
+    }
     private var continuation: Continuation<OnStarterDesignsFetched>? = null
 
     suspend fun fetchStarterDesigns(): OnStarterDesignsFetched {
@@ -30,7 +34,7 @@ class FetchHomePageLayoutsUseCase @Inject constructor(
                 thumbDimensionProvider.previewWidth.toFloat(),
                 thumbDimensionProvider.previewHeight.toFloat(),
                 thumbDimensionProvider.scale.toFloat(),
-                "stable", "beta"
+                GROUP.STABLE.key, GROUP.BETA.key
         ) else FetchStarterDesignsPayload(
                 thumbDimensionProvider.previewWidth.toFloat(),
                 thumbDimensionProvider.previewHeight.toFloat(),

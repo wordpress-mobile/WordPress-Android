@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
+import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase.GROUP
 import org.wordpress.android.util.config.BetaSiteDesignsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
@@ -61,8 +62,8 @@ class FetchHomePageLayoutsUseCaseTest {
         verify(dispatcher).dispatch(dispatchCaptor.capture())
         assertThat(requireNotNull(dispatchCaptor.firstValue.payload as FetchStarterDesignsPayload).groups).isEqualTo(
                 arrayOf(
-                        "stable",
-                        "beta"
+                        GROUP.STABLE.key,
+                        GROUP.BETA.key
                 )
         )
     }
