@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.databinding.DebugSettingsRowBinding
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.UiItem
@@ -42,7 +40,10 @@ sealed class DebugSettingsItemViewHolder(
         }
     }
 
-    class FeatureViewHolder(val parent: ViewGroup) : DebugSettingsItemViewHolder(parent, R.layout.debug_settings_feature) {
+    class FeatureViewHolder(val parent: ViewGroup) : DebugSettingsItemViewHolder(
+            parent,
+            R.layout.debug_settings_feature
+    ) {
         private val title = itemView.findViewById<TextView>(R.id.feature_title)
         private val enabled = itemView.findViewById<CheckBox>(R.id.feature_enabled)
         private val unknown = itemView.findViewById<ImageView>(R.id.unknown_icon)
