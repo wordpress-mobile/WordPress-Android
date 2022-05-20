@@ -856,6 +856,12 @@
         <item name="android:paddingEnd">@dimen/margin_medium</item>
     </style>
 
+    <style name="MySiteCardBloggingPromptTitle" parent="@style/MySiteCardItemTitle">
+        <item name="android:maxLines">3</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+    </style>
+
     <!--People Management Styles-->
     <style name="PersonAvatar">
         <item name="android:layout_width">@dimen/people_avatar_sz</item>

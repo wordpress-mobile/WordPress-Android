@@ -163,6 +163,27 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
+                android:id="@+id/row_scan_login_code"
+                style="@style/MeListRowLayout"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/me_scan_login_code_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_baseline_qr_code_scanner_white_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_scan_login_code_text_view"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/me_btn_scan_login_code" />
+
+            </LinearLayout>
+
+            <View style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
                 android:id="@+id/row_app_settings"
                 style="@style/MeListRowLayout">
 

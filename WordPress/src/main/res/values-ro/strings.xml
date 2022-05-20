@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-10 16:49:05+0000
+Translation-Revision-Date: 2022-05-18 10:59:25+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="quick_start_list_upload_media_title">Încarcă fotografii sau videoclipuri</string>
+    <string name="quick_start_list_upload_media_subtitle">Aduci elemente media pe site direct din dispozitiv sau cameră</string>
+    <string name="quick_start_sites_type_get_to_know_app">Fă cunoștință cu aplicația</string>
+    <string name="quick_start_completed_tour_title">Felicitări! Te descurci foarte bine&lt;br/&gt;</string>
+    <string name="pages_copy_link">Copiază legătura</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Selectează %1$s și %2$s pentru a încărca elemente media. Le poți adăuga în articole/pagini de pe orice dispozitiv.</string>
+    <string name="quick_start_dialog_check_notifications_title">Vezi notificările</string>
+    <string name="quick_start_dialog_upload_media_message">Selectează %1$s Media %2$s pentru a vedea biblioteca actuală.</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Selectează %1$s fila Notificări %2$s pentru a primi actualizări din mers.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Folosește &lt;b&gt; Descoperă &lt;/b&gt; pentru a găsi site-uri și etichete.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Folosește &lt;b&gt; Descoperă &lt;/b&gt; pentru a găsi site-uri și etichete. Încearcă să selectezi %1$s Setări %2$s pentru a adăuga subiecte care îți plac.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatură video</string>
+    <string name="stats_details_top_commentators">Cei mai activi comentatori</string>
+    <string name="stats_insights_total_stats_positive">Cu %1$s mai mult decât în săptămâna anterioară</string>
+    <string name="stats_insights_total_stats_negative">Cu %1$s mai puțin decât în săptămâna anterioară</string>
+    <string name="quick_start_list_check_notification_subtitle">Primești actualizări în timp real, chiar din buzunar</string>
+    <string name="quick_start_dialog_check_notifications_message">Primești actualizări în timp real, chiar din buzunar.</string>
+    <string name="stats_view_total_likes">Total aprecieri</string>
+    <string name="stats_view_total_comments">Total comentarii</string>
+    <string name="stats_view_total_followers">Total urmăritori</string>
+    <string name="stats_published_seconds_ago">Publicat acum câteva secunde</string>
+    <string name="stats_published_a_minute_ago">Publicat acum un minut</string>
+    <string name="stats_published_minutes_ago">Publicat acum %1$d minute</string>
+    <string name="stats_published_an_hour_ago">Publicat acum o oră</string>
+    <string name="stats_published_hours_ago">Publicat acum %1$d ore</string>
+    <string name="stats_published_a_day_ago">Publicat acum o zi</string>
+    <string name="stats_published_days_ago">Publicat acum %1$d zile</string>
+    <string name="stats_published_a_month_ago">Publicat acum o lună</string>
+    <string name="stats_published_months_ago">Publicat acum %1$d luni</string>
+    <string name="stats_published_a_year_ago">Publicat acum un an</string>
+    <string name="stats_published_years_ago">Publicat acum %1$d ani</string>
     <string name="blogging_prompts_onboarding_got_it">Am înțeles</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Răspunde</string>
     <string name="blogging_prompts_notification_dismiss">Închide</string>
     <string name="quick_start_dialog_view_your_site_message_short">Atinge &lt;b&gt;%1$s&lt;/b&gt; pentru a vedea site-ul</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Îndemn zilnic</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Selectează %1$s Cititor %2$s pentru a găsi alte site-uri.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Selectează %1$s Setări %2$s pentru a adăuga subiecte care îți plac.</string>
     <string name="stats_insights_popular_title">🔥 Cea mai populară oră</string>
     <string name="photo_picker_media_thumbnail_content_description">Miniatura media</string>
     <string name="photo_picker_video_thumbnail_selected">Video selectat</string>
@@ -1821,6 +1851,7 @@ Language: ro
     <string name="quick_start_focus_point_description">atinge aici</string>
     <string name="quick_start_list_create_site_title">Creează-ți site-ul</string>
     <string name="quick_start_list_create_site_subtitle">Obții un site care funcționează și rulează.</string>
+    <string name="quick_start_completed_tour_subtitle">Nu te simți bine când bifezi lucrurile dintr-o listă?</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Atinge %1$s Partajare %2$s pentru a continua</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Atinge %1$s Conexiuni %2$s pentru a-ți adăuga conturile din media socială</string>
     <string name="quick_start_dialog_share_site_title">Partajează-ți site-ul</string>
@@ -2730,8 +2761,8 @@ Language: ro
     <string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
     <string name="dlg_sure_to_delete_comment">Ștergi definitiv acest comentariu?</string>
     <string name="mnu_comment_delete_permanently">Ștergere</string>
-    <string name="mnu_comment_untrash">Restaurare</string>
     <string name="comment_deleted_permanently">Am șters comentariul</string>
+    <string name="mnu_comment_untrash">Restaurează</string>
     <string name="comments_empty_list_filtered_spam">Niciun comentariu spam</string>
     <string name="could_not_load_page">Nu pot încărca pagina</string>
     <string name="comment_status_all">Tot</string>

@@ -66,6 +66,7 @@ class ReaderInterestsViewModel @Inject constructor(
         this.currentLanguage = currentLanguage
         this.parentViewModel = parentViewModel
         this.entryPoint = entryPoint
+        parentViewModel?.dismissQuickStartSnackbarIfNeeded()
         loadUserTags()
     }
 
@@ -166,6 +167,8 @@ class ReaderInterestsViewModel @Inject constructor(
                             )
                     )
             )
+
+            parentViewModel?.completeQuickStartFollowSiteTaskIfNeeded()
         }
     }
 
