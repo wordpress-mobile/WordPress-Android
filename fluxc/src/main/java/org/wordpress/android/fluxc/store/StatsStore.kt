@@ -18,11 +18,15 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_REMINDER
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_SCHEDULE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
@@ -138,6 +142,52 @@ class StatsStore
                 updateTypes(site, addedItems)
             }
 
+    suspend fun addActionType(site: SiteModel, type: InsightType) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "addActionType") {
+                val types = mutableListOf<InsightType>()
+
+                when (type) {
+                    ACTION_REMINDER -> {
+                        types.addAll(getAddedInsights(site))
+
+                        val popularCardIndex = types.indexOf(MOST_POPULAR_DAY_AND_HOUR)
+                        val popularCardExists = popularCardIndex != -1
+                        val reminderCardNotExists = types.indexOf(ACTION_REMINDER) == -1
+
+                        if (popularCardExists && reminderCardNotExists)
+                            types.add(popularCardIndex + 1, ACTION_REMINDER)
+
+                        if (reminderCardNotExists) updateTypes(site, types)
+                    }
+                    ACTION_GROW -> {
+                        types.addAll(getAddedInsights(site))
+
+                        val totalFollowersIndex = types.indexOf(TOTAL_FOLLOWERS)
+                        val totalFollowersCardExists = totalFollowersIndex != -1
+                        val growCardNotExists = types.indexOf(ACTION_GROW) == -1
+
+                        if (totalFollowersCardExists && growCardNotExists)
+                            types.add(totalFollowersIndex + 1, ACTION_GROW)
+
+                        if (growCardNotExists) updateTypes(site, types)
+                    }
+                    ACTION_SCHEDULE -> {
+                        types.addAll(getAddedInsights(site))
+
+                        val popularCardIndex = types.indexOf(MOST_POPULAR_DAY_AND_HOUR)
+                        val popularCardExists = popularCardIndex != -1
+                        val reminderCardExists = types.indexOf(ACTION_REMINDER) != -1
+                        val scheduleCardNotExists = types.indexOf(ACTION_SCHEDULE) == -1
+                        val scheduleCardIndex = if (reminderCardExists) 2 else 1
+
+                        if (popularCardExists && scheduleCardNotExists)
+                            types.add(popularCardIndex + scheduleCardIndex, ACTION_SCHEDULE)
+
+                        if (scheduleCardNotExists) updateTypes(site, types)
+                    }
+                }
+            }
+
     suspend fun addType(site: SiteModel, type: InsightType) =
             coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "addType") {
                 val addedItems = getAddedInsights(site) + type
@@ -187,13 +237,22 @@ class StatsStore
         FOLLOWERS,
         TODAY_STATS,
         POSTING_ACTIVITY,
-        PUBLICIZE
+        PUBLICIZE,
+        ACTION_GROW,
+        ACTION_REMINDER,
+        ACTION_SCHEDULE
     }
 
     enum class ManagementType : StatsType {
         NEWS_CARD,
         CONTROL
     }
+
+//    enum class ActionType: StatsType {
+//        GROW,
+//        REMINDER,
+//        SCHEDULE
+//    }
 
     enum class TimeStatsType : StatsType {
         OVERVIEW,
