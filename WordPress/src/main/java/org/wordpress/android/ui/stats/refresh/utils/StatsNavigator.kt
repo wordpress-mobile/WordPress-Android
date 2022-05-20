@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.SetBloggingReminders
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAnnualStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
@@ -240,6 +241,9 @@ class StatsNavigator @Inject constructor(
             }
             is ViewTotalFollowersStats -> {
                 ActivityLauncher.viewTotalFollowersDetail(activity, siteProvider.siteModel)
+            }
+            is SetBloggingReminders -> {
+                ActivityLauncher.showSetBloggingReminders(activity, siteProvider.siteModel)
             }
         }
     }

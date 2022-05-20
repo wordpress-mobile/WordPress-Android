@@ -1516,6 +1516,10 @@ public class ActivityLauncher {
         StatsDetailActivity.startForInsightsDetail(context, site);
     }
 
+    public static void showSetBloggingReminders(Context context, SiteModel site) {
+        openEditorWithBloggingPrompt(context, 0);
+    }
+
     public static void viewMediaPickerForResult(Activity activity,
                                                 @NonNull SiteModel site,
                                                 @NonNull MediaBrowserType browserType) {

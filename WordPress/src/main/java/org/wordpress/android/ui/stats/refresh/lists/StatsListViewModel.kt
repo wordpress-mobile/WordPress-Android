@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
@@ -48,14 +49,15 @@ import javax.inject.Named
 
 const val SCROLL_EVENT_DELAY = 2000L
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     protected val dateSelector: StatsDateSelector,
     popupMenuHandler: ItemPopupMenuHandler? = null,
-    private val newsCardHandler: NewsCardHandler? = null
+    private val newsCardHandler: NewsCardHandler? = null,
+    private val actionCardHandler: ActionCardHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -91,7 +93,11 @@ abstract class StatsListViewModel(
         it ?: DateSelectorUiModel(false)
     }
 
-    val typesChanged = merge(popupMenuHandler?.typeMoved, newsCardHandler?.cardDismissed)
+    val typesChanged = merge(
+            popupMenuHandler?.typeMoved,
+            newsCardHandler?.cardDismissed,
+            actionCardHandler?.cardDismissed
+    )
 
     val scrollTo = newsCardHandler?.scrollTo
 
@@ -185,14 +191,16 @@ class InsightsListViewModel
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory,
     popupMenuHandler: ItemPopupMenuHandler,
-    newsCardHandler: NewsCardHandler
+    newsCardHandler: NewsCardHandler,
+    actionCardHandler: ActionCardHandler
 ) : StatsListViewModel(
         mainDispatcher,
         insightsUseCase,
         analyticsTracker,
         dateSelectorFactory.build(INSIGHTS),
         popupMenuHandler,
-        newsCardHandler
+        newsCardHandler,
+        actionCardHandler
 )
 
 class YearsListViewModel @Inject constructor(

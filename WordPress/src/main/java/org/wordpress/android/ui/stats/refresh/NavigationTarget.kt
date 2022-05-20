@@ -49,4 +49,6 @@ sealed class NavigationTarget {
         val statsGranularity: StatsGranularity,
         val selectedDate: Date?
     ) : NavigationTarget()
+
+    object SetBloggingReminders : NavigationTarget()
 }
