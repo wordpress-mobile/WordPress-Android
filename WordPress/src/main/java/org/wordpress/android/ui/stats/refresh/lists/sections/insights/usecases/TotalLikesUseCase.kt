@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_LIKES
+import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
@@ -27,6 +29,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,7 +39,9 @@ class TotalLikesUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val visitsAndViewsStore: VisitsAndViewsStore,
+    private val latestPostStore: LatestPostInsightsStore,
     private val statsSiteProvider: StatsSiteProvider,
+    private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val totalStatsMapper: TotalStatsMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -119,6 +124,9 @@ class TotalLikesUseCase @Inject constructor(
             items.add(buildTitle())
             items.add(totalStatsMapper.buildTotalLikesValue(domainModel.dates))
             items.add(totalStatsMapper.buildTotalLikesInformation(domainModel.dates))
+            if (totalStatsMapper.shouldShowLikesGuideCard(domainModel.dates)) {
+                buildLatestPostGuideCard(items)
+            }
         } else {
             AppLog.e(T.STATS, "There is no data to be shown in the total likes block")
         }
@@ -129,6 +137,21 @@ class TotalLikesUseCase @Inject constructor(
             string.stats_view_total_likes,
             navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
     )
+
+    private fun buildLatestPostGuideCard(items: MutableList<BlockListItem>) {
+        val postModel = latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
+        postModel?.let {
+            if (it.postTitle.isNotBlank()) {
+                items.add(
+                        ListItemGuideCard(resourceProvider.getString(
+                                string.stats_insights_likes_guide_card,
+                                it.postURL,
+                                it.postTitle,
+                                it.postLikeCount
+                        )))
+            }
+        }
+    }
 
     private fun onViewMoreClick() {
         analyticsTracker.track(
@@ -143,7 +166,9 @@ class TotalLikesUseCase @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val visitsAndViewsStore: VisitsAndViewsStore,
+        private val latestPostStore: LatestPostInsightsStore,
         private val statsSiteProvider: StatsSiteProvider,
+        private val resourceProvider: ResourceProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val totalStatsMapper: TotalStatsMapper,
         private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -155,7 +180,9 @@ class TotalLikesUseCase @Inject constructor(
                         mainDispatcher,
                         backgroundDispatcher,
                         visitsAndViewsStore,
+                        latestPostStore,
                         statsSiteProvider,
+                        resourceProvider,
                         statsDateFormatter,
                         totalStatsMapper,
                         analyticsTracker,
