@@ -1031,6 +1031,18 @@
     <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_new">New</string>
 
+    <string name="stats_action_card_grow_audience_title">Grow your audience</string>
+    <string name="stats_action_card_grow_audience_message">💡We have easily digestible lessons taught by the best bloggers to grow your blog.</string>
+    <string name="stats_action_card_grow_audience_button_label">Check the course</string>
+
+    <string name="stats_action_card_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Set the reminder to post regularly to keep your readers engaged and attract new visitors.</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Set reminders</string>
+
+    <string name="stats_action_card_schedule_post_title">Schedule your post</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schedule to post your content at its best time from your drafts.</string>
+    <string name="stats_action_card_schedule_post_button_label">Schedule</string>
+
     <!-- Stats refreshed widgets -->
 
     <string name="stats_widget_add">Add widget</string>

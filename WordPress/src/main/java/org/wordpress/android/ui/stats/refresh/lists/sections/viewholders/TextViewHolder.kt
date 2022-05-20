@@ -35,14 +35,13 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         textItem.bolds?.forEach { bold ->
             spannableString.withBoldSpan(bold)
         }
-        textItem.color?.forEach { color ->
+        textItem.color?.forEach { (color, string) ->
             spannableString.setSpan(
                     ForegroundColorSpan(
-                            if (color.first() == '-') ContextCompat.getColor(text.context, R.color.stats_color_negative)
-                                else ContextCompat.getColor(text.context, R.color.stats_color_positive)
+                            ContextCompat.getColor(text.context, color)
                     ),
-                    loadedText.indexOf(color),
-                    loadedText.indexOf(color) + color.length,
+                    loadedText.indexOf(string),
+                    loadedText.indexOf(string) + string.length,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE
             )
         }

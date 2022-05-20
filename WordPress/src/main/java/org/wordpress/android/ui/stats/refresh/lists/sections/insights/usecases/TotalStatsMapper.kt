@@ -50,7 +50,13 @@ class TotalStatsMapper @Inject constructor(
             R.string.stats_insights_total_stats_negative
         }
 
-        return Text(text = resourceProvider.getString(stringRes, change), color = listOf(change))
+        return Text(
+                text = resourceProvider.getString(stringRes, change),
+                color = when {
+                    positive -> mapOf(R.color.stats_color_positive to change)
+                    else -> mapOf(R.color.stats_color_negative to change)
+                }
+        )
     }
 
     private fun sum(list: List<Long>): String {

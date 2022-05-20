@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTION_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
@@ -91,6 +92,7 @@ class BlockDiffCallback(
                 DIALOG_BUTTONS,
                 TAG_ITEM,
                 IMAGE_ITEM,
+                ACTION_CARD,
                 EMPTY -> oldItem == newItem
             }
         } else {
