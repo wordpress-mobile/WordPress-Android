@@ -38,7 +38,6 @@ class CardsShownTrackerTest {
         verifyQuickStartCardShownTracked(Type.QUICK_START.label, "quick_start_${NewSiteQuickStartType.trackingLabel}")
     }
 
-
     @Test
     fun `when post card create first card is shown, then create first shown event is tracked`() {
         cardsShownTracker.track(buildDashboardCards(PostCardType.CREATE_FIRST))
