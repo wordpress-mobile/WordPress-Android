@@ -199,7 +199,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         })
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
-            ToastUtils.showToast(requireContext(), "Scan login code not available yet")
+            ActivityLauncher.viewQRCodeAuthFlow(requireContext())
         }
     }
 

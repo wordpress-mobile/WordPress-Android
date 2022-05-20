@@ -93,6 +93,7 @@ import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
@@ -1704,5 +1705,10 @@ public class ActivityLauncher {
 
     public static void viewDebugCookies(@NonNull Context context) {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
+    }
+
+    public static void viewQRCodeAuthFlow(@NonNull Context context) {
+        Intent intent = new Intent(context, QRCodeAuthActivity.class);
+        context.startActivity(intent);
     }
 }

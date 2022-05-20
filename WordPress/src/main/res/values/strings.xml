@@ -4143,4 +4143,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
         <item>@string/initial_screen_entry_value_home</item>
         <item>@string/initial_screen_entry_value_menu</item>
     </string-array>
+
+    <!-- QRCode Auth Flow -->
+    <string name="qrcode_auth_flow" translatable="false">Scan Login Code</string>
+
 </resources>
