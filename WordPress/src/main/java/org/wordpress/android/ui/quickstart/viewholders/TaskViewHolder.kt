@@ -18,7 +18,7 @@ class TaskViewHolder(
     parent: ViewGroup,
     private val tasks: List<QuickStartTask?>,
     private val listener: OnQuickStartAdapterActionListener?,
-    private val binding: QuickStartListItemBinding = parent.viewBinding(QuickStartListItemBinding::inflate),
+    private val binding: QuickStartListItemBinding = parent.viewBinding(QuickStartListItemBinding::inflate)
 ) : ViewHolder(binding.root) {
     init {
         val clickListener = View.OnClickListener {
@@ -50,7 +50,7 @@ class TaskViewHolder(
             if (!isEnabled) title.paintFlags = title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
 
             // Hide divider for tasks before header and end of list.
-            divider.visibility = if (shouldHideDivider) View.INVISIBLE else  View.VISIBLE
+            divider.visibility = if (shouldHideDivider) View.INVISIBLE else View.VISIBLE
 
             val quickStartTaskDetails = task?.let { QuickStartTaskDetails.getDetailsForTask(task) }
                     ?: throw IllegalStateException(task.toString() + " task is not recognized in adapter.")

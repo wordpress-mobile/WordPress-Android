@@ -45,6 +45,7 @@ class CompletedHeaderViewHolder(
                 itemView.isEnabled = true
             }
 
+            @Suppress("EmptyFunctionBlock")
             override fun onAnimationRepeat(animation: Animator) {}
         })
     }
