@@ -1127,8 +1127,26 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_next_date_tapped";
             case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
                 return "stats_followers_view_more_tapped";
+            case STATS_TOTAL_LIKES_VIEW_MORE_TAPPED:
+                return "stats_total_likes_view_more_tapped";
+            case STATS_TOTAL_LIKES_ERROR:
+                return "stats_total_likes_error";
+            case STATS_TOTAL_COMMENTS_VIEW_MORE_TAPPED:
+                return "stats_total_comments_view_more_tapped";
+            case STATS_TOTAL_COMMENTS_ERROR:
+                return "stats_total_comments_error";
+            case STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED:
+                return "stats_total_followers_view_more_tapped";
             case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
                 return "stats_tags_and_categories_view_more_tapped";
+            case STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED:
+                return "stats_views_and_visitors_view_more_tapped";
+            case STATS_VIEWS_AND_VISITORS_ERROR:
+                return "stats_views_and_visitors_error";
+            case STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED:
+                return "stats_views_and_visitors_line_chart_tapped";
+            case STATS_VIEWS_AND_VISITORS_TYPE_TAPPED:
+                return "stats_views_and_visitors_type_tapped";
             case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
                 return "stats_publicize_view_more_tapped";
             case STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED:
@@ -1423,6 +1441,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_intent_question_search_focused";
             case ENHANCED_SITE_CREATION_INTENT_QUESTION_EXPERIMENT:
                 return "enhanced_site_creation_intent_question_experiment";
+            case ENHANCED_SITE_CREATION_SITE_NAME_EXPERIMENT:
+                return "enhanced_site_creation_site_name_experiment";
+            case ENHANCED_SITE_CREATION_SITE_NAME_VIEWED:
+                return "enhanced_site_creation_site_name_viewed";
+            case ENHANCED_SITE_CREATION_SITE_NAME_CANCELED:
+                return "enhanced_site_creation_site_name_canceled";
+            case ENHANCED_SITE_CREATION_SITE_NAME_SKIPPED:
+                return "enhanced_site_creation_site_name_skipped";
+            case ENHANCED_SITE_CREATION_SITE_NAME_ENTERED:
+                return "enhanced_site_creation_site_name_entered";
             case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
                 return "layout_picker_preview_mode_changed";
             case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:
@@ -1773,6 +1801,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_STARTED:
                 return "quick_start_started";
+            case QUICK_START_TAPPED:
+                return "quick_start_tapped";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
@@ -2193,6 +2223,106 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_default_tab_experiment_variant_assigned";
             case APP_SETTINGS_INITIAL_SCREEN_CHANGED:
                 return "app_settings_initial_screen_changed";
+            case CHANGE_USERNAME_DISPLAYED:
+                return "change_username_displayed";
+            case CHANGE_USERNAME_DISMISSED:
+                return "change_username_dismissed";
+            case CHANGE_USERNAME_SEARCH_PERFORMED:
+                return "change_username_search_performed";
+            case ADD_SITE_ALERT_DISPLAYED:
+                return "add_site_alert_displayed";
+            case MY_SITE_SITE_SWITCHER_TAPPED:
+                return "my_site_site_switcher_tapped";
+            case SITE_SWITCHER_DISPLAYED:
+                return "site_switcher_displayed";
+            case SITE_SWITCHER_SEARCH_PERFORMED:
+                return "site_switcher_search_performed";
+            case SITE_SWITCHER_TOGGLE_BLOG_VISIBLE:
+                return "site_switcher_toggle_blog_visible";
+            case SITE_SWITCHER_TOGGLED_EDIT_TAPPED:
+                return "site_switcher_toggled_edit_tapped";
+            case SITE_SWITCHER_ADD_SITE_TAPPED:
+                return "site_switcher_add_site_tapped";
+            case SITE_SWITCHER_DISMISSED:
+                return "site_switcher_dismissed";
+            case SETTINGS_DID_CHANGE:
+                return "settings_did_change";
+            case APP_SETTINGS_APPEARANCE_CHANGED:
+                return "app_settings_appearance_changed";
+            case APP_SETTINGS_PRIVACY_SETTINGS_TAPPED:
+                return "app_settings_privacy_settings_tapped";
+            case APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED:
+                return "app_settings_open_device_settings_tapped";
+            case APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED:
+                return "app_settings_max_image_size_changed";
+            case APP_SETTINGS_IMAGE_QUALITY_CHANGED:
+                return "app_settings_image_quality_changed";
+            case APP_SETTINGS_REMOVE_LOCATION_FROM_MEDIA_CHANGED:
+                return "app_settings_remove_location_from_media_changed";
+            case APP_SETTINGS_VIDEO_OPTIMIZATION_CHANGED:
+                return "app_settings_video_optimization_changed";
+            case APP_SETTINGS_MAX_VIDEO_SIZE_CHANGED:
+                return "app_settings_max_video_size_changed";
+            case APP_SETTINGS_VIDEO_QUALITY_CHANGED:
+                return "app_settings_video_quality_changed";
+            case PRIVACY_SETTINGS_OPENED:
+                return "privacy_settings_opened";
+            case PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED:
+                return "privacy_settings_report_crashes_toggled";
+            case SHARING_BUTTONS_EDIT_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_sharing_buttons_changed";
+            case SHARING_BUTTONS_EDIT_MORE_SHARING_BUTTONS_CHANGED:
+                return "sharing_buttons_edit_more_sharing_buttons_changed";
+            case PEOPLE_MANAGEMENT_USER_INVITED:
+                return "people_management_user_invited";
+            case PEOPLE_MANAGEMENT_FILTER_CHANGED:
+                return "people_management_filter_changed";
+            case READER_FILTER_SHEET_CLEARED:
+                return "reader_filter_sheet_cleared";
+            case READER_FILTER_SHEET_DISMISSED:
+                return "reader_filter_sheet_dismissed";
+            case READER_FILTER_SHEET_DISPLAYED:
+                return "reader_filter_sheet_displayed";
+            case READER_FILTER_SHEET_ITEM_SELECTED:
+                return "reader_filter_sheet_item_selected";
+            case READER_FILTER_SHEET_TAB_SELECTED:
+                return "reader_filter_sheet_tab_selected";
+            case READER_SEARCH_HISTORY_CLEARED:
+                return "reader_search_history_cleared";
+            case READER_MANAGE_VIEW_DISMISSED:
+                return "reader_manage_view_dismissed";
+            case READER_MANAGE_VIEW_DISPLAYED:
+                return "reader_manage_view_displayed";
+            case READER_ARTICLE_IMAGE_TAPPED:
+                return "reader_article_image_tapped";
+            case READER_ARTICLE_LINK_TAPPED:
+                return "reader_article_link_tapped";
+            case READER_ARTICLE_FILE_DOWNLOAD_TAPPED:
+                return "reader_article_file_download_tapped";
+            case READER_ARTICLE_PAGE_JUMP_TAPPED:
+                return "reader_article_page_jump_tapped";
+            case READER_ARTICLE_FEATURED_IMAGE_TAPPED:
+                return "reader_article_featured_image_tapped";
+            case READER_ARTICLE_CUSTOM_VIEW_SHOWN:
+                return "reader_article_custom_view_shown";
+            case READER_ARTICLE_CUSTOM_VIEW_HIDDEN:
+                return "reader_article_custom_view_hidden";
+            case WEBVIEW_DISMISSED:
+                return "webview_dismissed";
+            case WEBVIEW_DISPLAYED:
+                return "webview_displayed";
+            case WEBVIEW_NAVIGATED_BACK:
+                return "webview_navigated_back";
+            case WEBVIEW_NAVIGATED_FORWARD:
+                return "webview_navigated_forward";
+            case WEBVIEW_OPEN_IN_BROWSER_TAPPED:
+                return "webview_open_in_browser_tapped";
+            case WEBVIEW_RELOAD_TAPPED:
+                return "webview_reload_tapped";
+            case WEBVIEW_SHARE_TAPPED:
+                return "webview_share_tapped";
+            case WEBVIEW_PREVIEW_DEVICE_CHANGED:
+                return "webview_preview_device_changed";
         }
         return null;
     }

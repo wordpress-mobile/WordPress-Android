@@ -88,7 +88,7 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         verify(
                 appPrefsWrapper,
                 atLeastOnce()
-        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteTabType.SITE_MENU.label)
+        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteTabType.SITE_MENU.trackingLabel)
     }
 
     @Test
@@ -152,12 +152,12 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(false)
 
-        mySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(MySiteTabType.SITE_MENU.label)
+        mySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(MySiteTabType.SITE_MENU.trackingLabel)
 
         verify(
                 appPrefsWrapper,
                 never()
-        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteTabType.SITE_MENU.label)
+        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteTabType.SITE_MENU.trackingLabel)
     }
 
     @Test
@@ -166,11 +166,11 @@ class MySiteDefaultTabExperimentTest : BaseUnitTest() {
         whenever(mySiteDefaultTabExperimentFeatureConfig.isEnabled()).thenReturn(true)
         whenever(appPrefsWrapper.isMySiteDefaultTabExperimentVariantAssigned()).thenReturn(true)
 
-        mySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(MySiteTabType.SITE_MENU.label)
+        mySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(MySiteTabType.SITE_MENU.trackingLabel)
 
         verify(
                 appPrefsWrapper,
                 atLeastOnce()
-        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteTabType.SITE_MENU.label)
+        ).setInitialScreenFromMySiteDefaultTabExperimentVariant(MySiteTabType.SITE_MENU.trackingLabel)
     }
 }

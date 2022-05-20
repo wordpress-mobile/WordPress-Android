@@ -1,0 +1,6 @@
+19.7:
+- De tabbladen Sitemenu en Startpagina toegevoegd aan het scherm Mijn site
+- De knop Blok toevoegen duidelijker gemaakt bij het openen van de blokeditor
+- Foutmeldingstekst bij mislukte upload van media-/audioblok verwijderd
+- Scherm Doel van site toegevoegd aan het aanmaakproces voor sites
+- Crashen verholpen dat werd veroorzaakt door meldingsgegevens voor opmerkingen bij GB-bestandsblokken

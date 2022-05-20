@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <org.wordpress.android.widgets.QuickStartFocusPoint
-        android:id="@+id/quick_start_focus_point"
+        android:id="@+id/quick_link_item_quick_start_focus_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/quick_start_focus_point_description"

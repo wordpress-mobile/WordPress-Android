@@ -13,25 +13,30 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
+import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
@@ -55,6 +60,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -104,6 +110,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
+    private val _createPostWithBloggingPrompt = SingleLiveEvent<BloggingPrompt>()
+    val createPostWithBloggingPrompt: LiveData<BloggingPrompt> = _createPostWithBloggingPrompt
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
@@ -131,6 +140,17 @@ class WPMainActivityViewModel @Inject constructor(
 
     private fun loadMainActions(site: SiteModel?) {
         val actionsList = ArrayList<MainActionListItem>()
+
+        if (bloggingPromptsFeatureConfig.isEnabled()) {
+            actionsList.add(
+                    AnswerBloggingPromptAction(
+                            actionType = ANSWER_BLOGGING_PROMPT,
+                            promptTitle = UiStringText("Cast the movie of your life"),
+                            isAnswered = false,
+                            onClickAction = ::onAnswerPromptActionClicked
+                    )
+            )
+        }
 
         actionsList.add(
                 CreateAction(
@@ -184,6 +204,24 @@ class WPMainActivityViewModel @Inject constructor(
                 _showQuickStarInBottomSheet.postValue(false)
             }
         }
+    }
+
+    @Suppress("MaxLineLength")
+    /* ktlint-disable max-line-length */
+    private fun onAnswerPromptActionClicked() {
+        // TODO @klymyam add analytics
+        _isBottomSheetShowing.postValue(Event(false))
+
+        // TODO @RenanLukas get BloggingPrompt from Store when it's ready
+        val bloggingPrompt = BloggingPrompt(
+            id = 1234,
+            text = "Cast the movie of your life.",
+            content = "<!-- wp:pullquote -->\n" +
+                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
+                    "<!-- /wp:pullquote -->",
+            respondents = emptyList()
+        )
+        _createPostWithBloggingPrompt.postValue(bloggingPrompt)
     }
 
     private fun disableTooltip(site: SiteModel?) {

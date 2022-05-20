@@ -1,0 +1,8 @@
+- Unsaved changes preview for draft posts
+- Feature image settings in Latest Post block
+- HTML/Visual mode switch notices
+- Full Embed block preview
+- Locale Picker visuals
+- Longer uploads with standalone VideoPress
+- Up-to-date Atomic site previews
+- Non-Latin filename uploads

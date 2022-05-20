@@ -66,8 +66,8 @@ public enum QuickStartNoticeDetails {
     }
 
     private final QuickStartTask mTask;
-    private int mTitleResId;
-    private int mMessageResId;
+    private final int mTitleResId;
+    private final int mMessageResId;
 
     public QuickStartTask getTask() {
         return mTask;

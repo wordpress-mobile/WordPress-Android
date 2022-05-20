@@ -45,8 +45,13 @@ class VideoThumbnailViewHolder(
                 item.url,
                 FIT_CENTER
         )
+        imgThumbnail.apply {
+            contentDescription = resources.getString(R.string.photo_picker_video_thumbnail_content_description)
+        }
         mediaThumbnailViewUtils.setupListeners(
-                imgThumbnail, item.isSelected,
+                imgThumbnail,
+                true,
+                item.isSelected,
                 item.toggleAction,
                 item.clickAction,
                 animateSelection

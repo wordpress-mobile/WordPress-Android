@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-08 09:54:10+0000
+Translation-Revision-Date: 2022-04-23 13:59:48+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/3.0.0
 Language: zh_CN
 -->
 <resources>
+    <string name="hpp_choose_and_create_site">创建站点</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">添加区块</string>
+    <string name="initial_screen">初始屏幕</string>
+    <string name="blogging_prompts_onboarding_notification_action">了解更多</string>
+    <string name="blogging_prompts_onboarding_notification_text">培养写作习惯，成为更优秀的作家。 轻点了解详情。</string>
+    <string name="blogging_prompts_onboarding_notification_title">WordPress 移动应用新功能：提示</string>
+    <string name="new_site_creation_site_name_header_subtitle">好的名称应简短易记。\n您之后可以对此进行更改。</string>
+    <string name="new_site_creation_site_name_header_title">为您的 %s 网站命名</string>
+    <string name="new_site_creation_site_name_title">站点名称</string>
+    <string name="my_site_todays_stats_get_more_views_message">想建立受众群体？ 查看我们的&lt;a href=\"%1$s\"&gt;实用提示&lt;/a&gt;。</string>
+    <string name="stats_insights_views_and_visitors_message">您上周的浏览次数比之前一周%1$s %2$s。</string>
+    <string name="stats_insights_views_and_visitors">浏览次数和访客人数</string>
     <string name="featured_image_removed_notice">已作为特色图片移除</string>
     <string name="featured_image_confirmation_notice">设为特色图片</string>
     <string name="featured_image_replace_dialog_cancel">保留当前图片</string>
@@ -83,13 +95,12 @@ Language: zh_CN
     <string name="site_creation_intent_beauty">美容</string>
     <string name="site_creation_intent_automotive">汽车</string>
     <string name="site_creation_intent_art">艺术</string>
-    <string name="new_site_creation_intents_input_hint">例如 时尚、诗歌、政治</string>
+    <string name="new_site_creation_intents_input_hint">例如： 时尚、诗歌、政治</string>
     <string name="new_site_creation_intents_title">站点主题</string>
     <string name="quick_start_site_menu_tab_message_short">轻点“&lt;b&gt;%1$s&lt;/b&gt;”继续。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">从仪表盘中移除</string>
     <string name="my_site_blogging_prompt_card_menu_skip">跳过此提示</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">查看更多提示</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d 条回复</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">共享博客提示</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 已回复</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">回复提示</string>
@@ -99,7 +110,7 @@ Language: zh_CN
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">此颜色搭配可能不便于用户阅读。 不妨尝试使用较浅的背景颜色和/或较深的文本颜色。</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">此颜色搭配可能不便于用户阅读。 不妨尝试使用较深的背景颜色和/或较浅的文本颜色。</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">未能插入媒体。\n点按获取更多信息。</string>
-    <string name="new_site_creation_intents_header_subtitle">请从以下列表中选择主题或输入自己的主题</string>
+    <string name="new_site_creation_intents_header_subtitle">请从以下列表中选择一个主题，或输入自己的主题</string>
     <string name="new_site_creation_intents_header_title">您的网站是关于什么的？</string>
     <string name="notification_channel_weekly_roundup_title">每周综述</string>
     <string name="my_site_dashboard_tab_title">首页</string>
@@ -109,7 +120,7 @@ Language: zh_CN
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 调用似乎已被该站点屏蔽（错误代码 401）。 如果尝试登录失败，可点击帮助图标查看常见问题解答。</string>
     <string name="login_error_xml_rpc_cannot_read_site">无法通过该 URL 读取 WordPress 站点。 点击帮助图标查看常见问题解答。</string>
     <string name="login_error_xml_rpc_services_disabled">本站点禁用 XML-RPC 服务。</string>
-    <string name="my_site_menu_tab_title">站点菜单</string>
+    <string name="my_site_menu_tab_title">菜单</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">您的搜索中包含 WordPress.com 域名不支持的字符。 允许使用以下字符：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">请检查您网络连接并刷新页面。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">转至统计数据</string>

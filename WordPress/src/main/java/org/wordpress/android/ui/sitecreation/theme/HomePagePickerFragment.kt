@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.viewmodel.observeEvent
@@ -38,6 +40,7 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var displayUtils: DisplayUtilsWrapper
     @Inject internal lateinit var uiHelper: UiHelpers
+    @Inject lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
@@ -88,9 +91,12 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setupUi() {
-        homePagePickerTitlebar.title.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
+        homePagePickerTitlebar.title.isInvisible = !displayUtils.isPhoneLandscape()
         modalLayoutPickerHeaderSection.modalLayoutPickerTitleRow?.header?.setText(R.string.hpp_title)
         modalLayoutPickerHeaderSection.modalLayoutPickerSubtitleRow?.description?.setText(R.string.hpp_subtitle)
+        if (siteNameFeatureConfig.isEnabled()) {
+            homePagePickerBottomToolbar.chooseButton.setText(R.string.hpp_choose_and_create_site)
+        }
     }
 
     private fun HomePagePickerFragmentBinding.setupViewModel() {
@@ -177,13 +183,11 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun HomePagePickerFragmentBinding.setScrollListener() {
-        if (isPhoneLandscape()) return // Always visible
+        if (displayUtils.isPhoneLandscape()) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
         viewModel.onAppBarOffsetChanged(0, scrollThreshold)
     }
-
-    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
 }
