@@ -10,7 +10,6 @@ Language: sq_AL
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Përgjigje</string>
     <string name="blogging_prompts_onboarding_got_it">E mora vesh</string>
     <string name="quick_start_dialog_view_your_site_message_short">Prekni &lt;b&gt;%1$s&lt;/b&gt; që të shihni sajtin tuaj</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Përzgjidhni %1$s Rregullime %2$s që të shtoni subjekte që ju pëlqejnë.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Përzgjidhni %1$s Lexues %2$s që të gjeni sajte të tjerë.</string>
     <string name="photo_picker_media_thumbnail_content_description">Miniaturë Media</string>
     <string name="stats_insights_popular_title">Koha Më Popullore</string>
