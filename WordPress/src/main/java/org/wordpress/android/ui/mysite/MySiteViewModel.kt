@@ -35,6 +35,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
@@ -1247,6 +1248,8 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
+        siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
+                .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
     }
 
     private fun resetShownTrackers() {

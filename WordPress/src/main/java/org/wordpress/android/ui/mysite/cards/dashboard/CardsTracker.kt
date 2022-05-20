@@ -7,9 +7,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.QuickStartSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
-import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type.QUICK_START
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
@@ -81,7 +81,7 @@ class CardsTracker @Inject constructor(
 
     private fun trackCardItemClicked(type: String, subtype: String) {
         val props = mapOf(TYPE to type, SUBTYPE to subtype)
-        if (type == QUICK_START.label) {
+        if (type == Type.QUICK_START.label) {
             quickStartTracker.track(Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED, props)
         } else {
             analyticsTrackerWrapper.track(Stat.MY_SITE_DASHBOARD_CARD_ITEM_TAPPED, props)
@@ -94,6 +94,10 @@ class CardsTracker @Inject constructor(
 
     fun trackShown(dashboardCards: DashboardCards) {
         cardsShownTracker.track(dashboardCards)
+    }
+
+    fun trackQuickStartCardShown(quickStartType: QuickStartType) {
+        cardsShownTracker.trackQuickStartCardShown(quickStartType)
     }
 
     companion object {
