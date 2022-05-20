@@ -48,6 +48,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.A
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AuthorsCommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ManagementControlUseCase
@@ -550,9 +551,11 @@ class StatsModule {
     @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASES)
     fun provideFollowersDetailUseCases(
         totalFollowersUseCaseFactory: TotalFollowersUseCaseFactory,
+        followerTypesUseCase: FollowerTypesUseCase,
         followersUseCaseFactory: FollowersUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
             totalFollowersUseCaseFactory.build(VIEW_ALL),
+            followerTypesUseCase,
             followersUseCaseFactory.build(BLOCK)
     )
 
@@ -574,7 +577,7 @@ class StatsModule {
             mainDispatcher,
             statsSiteProvider,
             useCases,
-            { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWERS) },
+            { listOf(InsightType.TOTAL_FOLLOWERS, InsightType.FOLLOWER_TYPES, InsightType.FOLLOWERS) },
             uiModelMapper::mapInsights
     )
 

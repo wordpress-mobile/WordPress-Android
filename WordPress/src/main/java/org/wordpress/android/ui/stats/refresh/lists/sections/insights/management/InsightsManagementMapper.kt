@@ -120,9 +120,9 @@ class InsightsManagementMapper
         AUTHORS_COMMENTS -> string.stats_comments_authors
         POSTS_COMMENTS -> string.stats_comments_posts_and_pages
         FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
+        FOLLOWER_TYPES -> null
         ACTION_REMINDER -> R.string.stats_action_card_blogging_reminders_title
         ACTION_GROW -> R.string.stats_action_card_grow_audience_title
         ACTION_SCHEDULE -> R.string.stats_action_card_schedule_post_title
-        FOLLOWER_TYPES -> R.string.stats_view_follower_totals // Temporary, until PR is merged
     }
 }
