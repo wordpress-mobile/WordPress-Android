@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class TotalStatsMapper @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils
@@ -33,6 +34,20 @@ class TotalStatsMapper @Inject constructor(
         val positive = currentWeekComments.sum() >= previousWeekComments.sum()
 
         return ValueWithChartItem(currentWeekSumFormatted, currentWeekComments, positive)
+    }
+
+    fun shouldShowCommentsGuideCard(dates: List<PeriodData>): Boolean {
+        return getCurrentWeekDays(dates, COMMENTS).sum() > 0
+    }
+
+    @Suppress("FunctionOnlyReturningConstant")
+    fun shouldShowFollowersGuideCard(): Boolean {
+        // TODO: After the card is updated with percentage change
+        return true
+    }
+
+    fun shouldShowLikesGuideCard(dates: List<PeriodData>): Boolean {
+        return getCurrentWeekDays(dates, LIKES).sum() > 0
     }
 
     fun buildTotalLikesInformation(dates: List<PeriodData>) = buildTotalInformation(dates, LIKES)
