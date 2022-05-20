@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-05 09:54:08+0000
+Translation-Revision-Date: 2022-05-17 21:34:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
@@ -11,7 +11,6 @@ Language: sv_SE
     <string name="blogging_prompts_answer_prompt_notification_title">Dagligt förslag</string>
     <string name="blogging_prompts_onboarding_got_it">Jag förstår</string>
     <string name="quick_start_dialog_view_your_site_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att visa din webbplats</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Välj %1$sInställningar%2$s för att lägga till ämnen som du gillar.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Välj %1$sLäsare%2$s för att hitta andra webbplatser.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Lär dig mer om förslag</string>
     <string name="photo_picker_video_thumbnail_unselected">Video avmarkerad</string>
@@ -1821,6 +1820,7 @@ Language: sv_SE
     <string name="quick_start_focus_point_description">tryck här</string>
     <string name="quick_start_list_create_site_title">Skapa din webbplats</string>
     <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats.</string>
+    <string name="quick_start_completed_tour_subtitle">Visst är det skönt att kunna bocka av i en lista!</string>
     <string name="quick_start_dialog_view_site_title">Visa din webbplats</string>
     <string name="quick_start_dialog_view_site_message">Förhandsgranska din webbplats för att se vad dina besökare kommer att se.</string>
     <string name="quick_start_dialog_share_site_title">Dela din webbplats</string>

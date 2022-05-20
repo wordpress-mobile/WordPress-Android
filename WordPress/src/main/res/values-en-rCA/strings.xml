@@ -11,7 +11,6 @@ Language: en_CA
     <string name="blogging_prompts_answer_prompt_notification_title">Daily Prompt</string>
     <string name="blogging_prompts_onboarding_got_it">Got it</string>
     <string name="quick_start_dialog_view_your_site_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to view your site</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Select %1$s Settings %2$s to add topics you like.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Select %1$s Reader %2$s to find other sites.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Learn more about prompts</string>
     <string name="photo_picker_video_thumbnail_unselected">Video unselected</string>
