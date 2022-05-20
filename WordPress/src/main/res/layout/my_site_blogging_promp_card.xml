@@ -53,7 +53,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/prompt_content"
-            style="@style/MySiteCardItemTitle"
+            style="@style/MySiteCardBloggingPromptTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"

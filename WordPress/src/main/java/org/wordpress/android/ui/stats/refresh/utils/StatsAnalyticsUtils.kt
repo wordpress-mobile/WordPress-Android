@@ -4,6 +4,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.ALL_TIME_VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.TODAY_VIEWS
@@ -25,6 +26,9 @@ private const val TODAY_WIDGET_PROPERTY = "today"
 private const val WEEKLY_VIEWS_WIDGET_PROPERTY = "weekly_views"
 private const val ALL_TIME_WIDGET_PROPERTY = "all_time"
 private const val MINIFIED_WIDGET_PROPERTY = "minified"
+private const val TOTAL_LIKES_PROPERTY = "total_likes_detail"
+private const val TOTAL_COMMENTS_PROPERTY = "total_comments_detail"
+private const val TOTAL_FOLLOWERS_PROPERTY = "total_followers_detail"
 
 fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranularity) {
     val property = when (granularity) {
@@ -42,9 +46,12 @@ fun AnalyticsTrackerWrapper.trackWithSection(stat: Stat, section: StatsSection) 
         StatsSection.WEEKS -> WEEKS_PROPERTY
         StatsSection.MONTHS -> MONTHS_PROPERTY
         StatsSection.YEARS -> YEARS_PROPERTY
-        StatsSection.INSIGHTS -> INSIGHTS_PROPERTY
+        StatsSection.INSIGHTS, INSIGHT_DETAIL -> INSIGHTS_PROPERTY
         StatsSection.DETAIL -> DETAIL_PROPERTY
         StatsSection.ANNUAL_STATS -> ANNUAL_STATS_PROPERTY
+        StatsSection.TOTAL_LIKES_DETAIL -> TOTAL_LIKES_PROPERTY
+        StatsSection.TOTAL_COMMENTS_DETAIL -> TOTAL_COMMENTS_PROPERTY
+        StatsSection.TOTAL_FOLLOWERS_DETAIL -> TOTAL_FOLLOWERS_PROPERTY
     }
     this.track(stat, mapOf(GRANULARITY_PROPERTY to property))
 }

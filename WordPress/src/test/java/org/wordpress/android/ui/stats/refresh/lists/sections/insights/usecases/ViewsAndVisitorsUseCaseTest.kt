@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
@@ -59,6 +60,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var useCaseMode: UseCaseMode
     private lateinit var useCase: ViewsAndVisitorsUseCase
     private val site = SiteModel()
     private val siteId = 1L
@@ -83,7 +85,8 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 statsWidgetUpdaters,
                 localeManagerWrapper,
-                resourceProvider
+                resourceProvider,
+                useCaseMode
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)

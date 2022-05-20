@@ -1,8 +1,8 @@
-- Feature image settings in Latest Post block
-- HTML/Visual mode switch notices
-- Full Embed block preview
-- Locale Picker visuals
-- Longer uploads with standalone VideoPress
-- Up-to-date Atomic site previews
-- Media Picker talkback media types
-- Signup magic link URL
+- In-app site domain purchases
+- Drag-and-drop blocks in the editor
+- Better color contrast on Cover blocks
+- Buttons block formatting options stay visible
+- Separate Quick Start tasks for new vs existing sites
+- Copy Link for published pages
+- Link To/Image Size settings in Gallery blocks
+- No tour banner in unsupported block editor

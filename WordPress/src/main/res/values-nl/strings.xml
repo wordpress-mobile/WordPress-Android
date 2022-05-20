@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-29 14:30:00+0000
+Translation-Revision-Date: 2022-05-02 07:23:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
@@ -16,14 +16,15 @@ Language: nl
     <string name="new_site_creation_site_name_header_title">Geef je %s website een naam</string>
     <string name="new_site_creation_site_name_title">Naam site</string>
     <string name="my_site_todays_stats_get_more_views_message">Wil je je publiek vergroten? Check onze &lt;a href=\"%1$s\"&gt;beste tips&lt;/a&gt;.</string>
-    <string name="stats_insights_views_and_visitors_message">Je weergaven van de afgelopen week zijn %1$s %2$s dan de week daarvoor.</string>
     <string name="stats_insights_views_and_visitors">Weergaven en bezoekers</string>
+    <string name="featured_image_removed_notice">Verwijderd als uitgelichte afbeelding</string>
     <string name="featured_image_confirmation_notice">Instellen als uitgelichte afbeelding</string>
     <string name="featured_image_replace_dialog_cancel">Actueel houden</string>
     <string name="featured_image_replace_dialog_confirm">Vervang uitgelichte afbeelding</string>
     <string name="featured_image_replace_dialog_description">Je hebt al een uitgelichte afbeelding ingesteld. Wil je die vervangen door de nieuwe afbeelding?</string>
     <string name="featured_image_replace_dialog_title">Huidige uitgelichte afbeelding vervangen?</string>
     <string name="dialog_dismiss_try_block_editor">Negeren</string>
+    <string name="dialog_body_try_block_editor">We zullen binnenkort de klassieke editor voor nieuwe berichten verwijderen, maar dit zal geen invloed hebben op het bewerken van je bestaande berichten of pagina\'s. Neem alvast een voorsprong door de blok-editor nu in te schakelen in de site-instellingen.</string>
     <string name="dialog_title_try_block_editor">Probeer de nieuwe blok-editor</string>
     <string name="menu_toolbar_title">Bewerk %s blok</string>
     <string name="long_post_dlg_saving">Bezig met opslaan</string>
@@ -418,7 +419,6 @@ Language: nl
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
-    <string name="gutenberg_native_add_blocks">Blokken toevoegen</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
@@ -499,12 +499,10 @@ Language: nl
     <string name="disable">Uitschakelen</string>
     <string name="quick_start_card_menu_unpin">Losmaken</string>
     <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
-    <string name="quick_start_list_view_site_title">Bezoek je site</string>
     <string name="quick_start_list_follow_site_subtitle">Ontdek en volg sites die je inspireren.</string>
     <string name="quick_start_list_enable_sharing_title">Sociaal delen</string>
     <string name="quick_start_list_enable_sharing_subtitle">Deel automatisch nieuwe berichten op je social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Geef je site een naam die de persoonlijkheid en het onderwerp weerspiegelt.</string>
-    <string name="quick_start_list_check_stats_title">Bekijk je statistieken</string>
     <string name="backup_download_status_failure_bullet2">We zullen nog steeds proberen om je downloadbare back-upbestand te maken.</string>
     <string name="backup_download_status_failure_bullet1">We konden de status niet vinden om aan te geven hoe lang je downloadbare back-up zal duren.</string>
     <string name="backup_download_status_failure_heading">We konden je downloadbare back-up status niet vinden</string>
@@ -1598,11 +1596,9 @@ Language: nl
     <string name="quick_start_sites_type_customize">Pas je site aan</string>
     <string name="quick_start_sites">Volgende stappen</string>
     <string name="quick_start_complete_tasks_header">Voltooi (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Veel plezier met je voltooide product!</string>
     <string name="quick_start_dialog_upload_icon_title">Kies een unieke site pictogram</string>
     <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tik op %1$s Abonnement %2$s om je huidige abonnement en andere beschikbare abonnementen in te zien</string>
-    <string name="quick_start_dialog_check_stats_message_short">Tik op %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
     <string name="quick_start_dialog_publish_post_message">Stel een bericht op en publiceer het.</string>
     <string name="quick_start_dialog_explore_plans_title">Abonnementen verkennen</string>
@@ -1610,7 +1606,6 @@ Language: nl
     <string name="quick_start_dialog_enable_sharing_title">Berichten delen inschakelen</string>
     <string name="quick_start_dialog_enable_sharing_message">Deel nieuwe berichten automatisch op je socialmedia-accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Controleer je site-statistieken</string>
-    <string name="quick_start_dialog_check_stats_message">Houd de prestaties van je site bij.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Door \'Volgende stappen\' te verwijderen, worden alle rondleidingen op deze site verborgen. Deze actie kan niet ongedaan worden gemaakt.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Volgende stappen verwijderen</string>
     <string name="quick_start_remove_next_steps_menu_title">Verwijder dit</string>
@@ -1780,7 +1775,6 @@ Language: nl
     <string name="quick_start_list_create_site_title">Je site maken</string>
     <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site.</string>
     <string name="quick_start_dialog_view_site_title">Je site bekijken</string>
-    <string name="quick_start_dialog_view_site_message_short">Tik op %1$s Site bekijken %2$s om een voorbeeld te zien van je site</string>
     <string name="quick_start_dialog_share_site_title">Je site delen</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tik op %1$s Delen %2$s om door te gaan</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tik op %1$s Verbindingen %2$s om je socialmedia-accounts toe te voegen</string>
@@ -1788,10 +1782,6 @@ Language: nl
     <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
     <string name="quick_start_dialog_publish_post_message_short">Tik op %1$s Bericht aanmaken %2$s om een nieuw bericht aan te maken</string>
     <string name="quick_start_dialog_need_help_button_negative">Nee, dank je</string>
-    <string name="quick_start_dialog_follow_sites_title">Andere sites volgen</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tik op %1$s Zoeken %2$s om te zoeken naar sites met dezelfde onderwerpen</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Tik op %1$s Reader %2$s om door te gaan</string>
-    <string name="quick_start_dialog_follow_sites_message">Ontdek sites die je aanspreken en volg ze om updates te ontvangen wanneer nieuwe inhoud wordt gepost.</string>
     <string name="quick_start_button_positive">Starten</string>
     <string name="quick_start_button_negative_short">Annuleren</string>
     <string name="quick_start_button_negative">Niet nu</string>

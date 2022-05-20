@@ -180,6 +180,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
 
         event.suggestions
+                .filter { !it.is_free }
                 .map {
                     val product = products?.firstOrNull { product -> product.productId == it.product_id }
                     DomainSuggestionItem(

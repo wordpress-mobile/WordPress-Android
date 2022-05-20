@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
@@ -26,7 +26,8 @@ class QuickStartCardSource @Inject constructor(
 
     override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<QuickStartUpdate> {
         quickStartRepository.resetTask()
-        if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
+        val selectedSite = selectedSiteRepository.getSelectedSite()
+        if (selectedSite?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteLocalId.toLong(), EDIT_HOMEPAGE)) {
             quickStartRepository.setTaskDoneAndTrack(EDIT_HOMEPAGE, siteLocalId)
             refresh()
@@ -40,12 +41,16 @@ class QuickStartCardSource @Inject constructor(
             }
         }
         return merge(quickStartTaskTypes, quickStartRepository.activeTask) { types, activeTask ->
-            val categories = if (quickStartUtilsWrapper.isQuickStartInProgress(siteLocalId)) {
-                types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
-                        ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()
-            } else {
-                listOf()
-            }
+            val categories =
+                    if (selectedSite != null &&
+                            quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite) &&
+                            quickStartRepository.quickStartType
+                                    .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())) {
+                        types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
+                                ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()
+                    } else {
+                        listOf()
+                    }
             getState(QuickStartUpdate(activeTask, categories))
         }
     }

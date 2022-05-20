@@ -1,22 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-22 11:58:19+0000
+Translation-Revision-Date: 2022-05-17 21:34:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0
+Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">Avfärda</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Svar</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Dagligt förslag</string>
+    <string name="blogging_prompts_onboarding_got_it">Jag förstår</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att visa din webbplats</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Välj %1$sLäsare%2$s för att hitta andra webbplatser.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Lär dig mer om förslag</string>
+    <string name="photo_picker_video_thumbnail_unselected">Video avmarkerad</string>
+    <string name="photo_picker_video_thumbnail_selected">Video markerad</string>
+    <string name="photo_picker_media_thumbnail_content_description">Miniatyr av mediafil</string>
+    <string name="stats_insights_popular_title">🔥 Populäraste tidpunkten</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Antalet besökare den här veckan är %1$s lägre än föregående vecka.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Antalet besökare den här veckan är %1$s högre än föregående vecka.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Antalet visningar den här veckan är %1$s lägre än föregående vecka.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Antalet visningar den här veckan är %1$s högre än föregående vecka.</string>
+    <string name="stats_timeframe_previous_week">Föregående vecka</string>
+    <string name="stats_timeframe_this_week">Denna vecka</string>
+    <string name="scan_vault_press_active_on_site_button_text">Besök adminpanelen</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Din webbplats är redan skyddad av VaultPress. Du kan hitta en länk till din adminpanel för VaultPress nedan.</string>
+    <string name="scan_vault_press_active_on_site_title">Din webbplats har VaultPress</string>
+    <string name="locale_picker_current_language">Nuvarande språk:</string>
     <string name="hpp_choose_and_create_site">Skapa webbplats</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Lägg till block</string>
     <string name="initial_screen">Initial skärm</string>
     <string name="blogging_prompts_onboarding_notification_action">Lär dig mer</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
-    <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
+    <string name="blogging_prompts_onboarding_notification_title">Nytt i WordPress mobilapp: Förslag</string>
     <string name="new_site_creation_site_name_header_subtitle">Ett bra namn är kort och lätt att komma ihåg.\nDu kan ändra det senare.</string>
-    <string name="new_site_creation_site_name_header_title">Give your %s website a name</string>
+    <string name="new_site_creation_site_name_header_title">Ge din %s-webbplats ett namn</string>
     <string name="new_site_creation_site_name_title">Webbplatsnamn</string>
     <string name="my_site_todays_stats_get_more_views_message">Interested in building your audience? Check out our &lt;a href=\"%1$s\"&gt;top tips&lt;/a&gt;.</string>
-    <string name="stats_insights_views_and_visitors_message">Your last weeks views are %1$s %2$s than previous week.</string>
     <string name="stats_insights_views_and_visitors">Visningar och besökare</string>
     <string name="featured_image_removed_notice">Borttagen som utvald bild </string>
     <string name="featured_image_confirmation_notice">Ställ in som utvald bild</string>
@@ -1619,11 +1640,10 @@ Language: sv_SE
     <string name="quick_start_sites_type_customize">Anpassa din webbplats</string>
     <string name="quick_start_sites">Gå vidare</string>
     <string name="quick_start_complete_tasks_header">Klart (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Njut av din färdiga produkt!</string>
     <string name="quick_start_dialog_upload_icon_title">Välj en unik webbplats-ikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
     <string name="quick_start_dialog_explore_plans_message_short">Tryck på %1$spaket%2$s för att se ditt nuvarande paket och andra paket du kan välja</string>
-    <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$s statistik %2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
     <string name="quick_start_dialog_publish_post_message">Gör ett utkast och publicera ett inlägg.</string>
     <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
@@ -1800,8 +1820,9 @@ Language: sv_SE
     <string name="quick_start_focus_point_description">tryck här</string>
     <string name="quick_start_list_create_site_title">Skapa din webbplats</string>
     <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats.</string>
+    <string name="quick_start_completed_tour_subtitle">Visst är det skönt att kunna bocka av i en lista!</string>
     <string name="quick_start_dialog_view_site_title">Visa din webbplats</string>
-    <string name="quick_start_dialog_view_site_message_short">Tryck på %1$s Visa webbplats %2$s för att förhandsvisa din webbplats</string>
+    <string name="quick_start_dialog_view_site_message">Förhandsgranska din webbplats för att se vad dina besökare kommer att se.</string>
     <string name="quick_start_dialog_share_site_title">Dela din webbplats</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tryck på %1$sdelning%2$s för att fortsätta</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tryck på %1$skopplingar%2$s för att lägga till dina konton i sociala media</string>
@@ -1809,10 +1830,7 @@ Language: sv_SE
     <string name="quick_start_dialog_publish_post_title">Publicera ett inlägg</string>
     <string name="quick_start_dialog_publish_post_message_short">Tryck på %1$s Skapa ett inlägg %2$s för att skapa ett nytt inlägg</string>
     <string name="quick_start_dialog_need_help_button_negative">Nej tack</string>
-    <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser kring liknande ämnen</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Tryck på %1$s Läsaren %2$s för att fortsätta</string>
-    <string name="quick_start_dialog_follow_sites_message">Hitta webbplatser som inspirerar dig och följ dem för att få uppdateringar när de publicerar.</string>
+    <string name="quick_start_dialog_follow_sites_title">Anslut med andra webbplatser</string>
     <string name="quick_start_button_positive">Kör</string>
     <string name="quick_start_button_negative_short">Avbryt</string>
     <string name="quick_start_button_negative">Inte nu</string>

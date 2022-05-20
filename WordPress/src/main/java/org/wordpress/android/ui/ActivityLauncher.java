@@ -1072,9 +1072,11 @@ public class ActivityLauncher {
         editPageForResult(intent, fragment, site, pageLocalId, loadAutoSaveRevision, RequestCodes.EDIT_POST);
     }
 
-    public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId) {
+    public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
+                                                boolean isNewSite) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
         editPageForResult(intent, fragment, site, homeLocalId, false, RequestCodes.EDIT_LANDING_PAGE);
     }
 
@@ -1490,6 +1492,28 @@ public class ActivityLauncher {
         StatsDetailActivity.Companion
                 .start(context, site, post.getRemotePostId(), StatsConstants.ITEM_TYPE_POST, post.getTitle(),
                         post.getLink());
+    }
+
+    public static void viewTotalLikesDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalLikesDetail(context, site);
+    }
+
+    public static void viewTotalCommentsDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalCommentsDetail(context, site);
+    }
+
+    public static void viewTotalFollowersDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalFollowersDetail(context, site);
+    }
+
+    public static void viewInsightsDetail(Context context, SiteModel site) {
+        if (site == null) {
+            return;
+        }
+        StatsDetailActivity.startForInsightsDetail(context, site);
     }
 
     public static void viewMediaPickerForResult(Activity activity,

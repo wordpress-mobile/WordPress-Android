@@ -23,11 +23,13 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.bloggingprompts.BloggingPrompt
 import org.wordpress.android.test
@@ -43,6 +45,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
@@ -71,6 +74,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var quickStartType: QuickStartType
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -98,6 +102,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         whenever(buildConfigWrapper.getAppVersionName()).thenReturn("14.7")
+        whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL))
+                .thenReturn(FOLLOW_SITE)
         activeTask = MutableLiveData()
         externalFocusPointEvents = mutableListOf()
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
@@ -666,24 +673,39 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when the active task needs to show an focus point, emit visible focus point info`() {
+    fun `when follow site is active task, then only follow site visible focus point shown`() {
         activeTask.value = FOLLOW_SITE
 
-        assertThat(externalFocusPointEvents).containsExactly(listOf(visibleFollowSiteFocusPointInfo))
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+        )
+    }
+
+    @Test
+    fun `when check notifications is active task, then only check notifications visible focus point shown`() {
+        activeTask.value = CHECK_NOTIFICATIONS
+
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(invisibleFollowSiteFocusPointInfo, visibleCheckNotificationsFocusPointInfo)
+        )
     }
 
     @Test
     fun `when the active task doesn't need to show an external focus point, emit invisible focus point info`() {
         activeTask.value = VIEW_SITE
 
-        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+        )
     }
 
     @Test
     fun `when the active task is null, emit invisible focus point info`() {
         activeTask.value = null
 
-        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
+        )
     }
 
     @Test
@@ -695,9 +717,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         activeTask.value = FOLLOW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(
-                listOf(visibleFollowSiteFocusPointInfo),
-                listOf(invisibleFollowSiteFocusPointInfo),
-                listOf(visibleFollowSiteFocusPointInfo)
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
+                listOf(invisibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo),
+                listOf(visibleFollowSiteFocusPointInfo, invisibleCheckNotificationsFocusPointInfo)
         )
     }
 
@@ -797,5 +819,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     companion object {
         val visibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, true)
         val invisibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, false)
+
+        val visibleCheckNotificationsFocusPointInfo = FocusPointInfo(CHECK_NOTIFICATIONS, true)
+        val invisibleCheckNotificationsFocusPointInfo = FocusPointInfo(CHECK_NOTIFICATIONS, false)
     }
 }
