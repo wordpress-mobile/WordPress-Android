@@ -50,7 +50,7 @@ sealed class InsightsManagementViewHolder(
 
         fun bind(insight: InsightModel, payload: Payload? = null) {
             if (payload == null) {
-                title.setText(insight.name)
+                insight.name?.let { title.setText(it) }
                 title.isEnabled = insight.status == ADDED
                 container.setOnClickListener {
                     insight.onClick.click()

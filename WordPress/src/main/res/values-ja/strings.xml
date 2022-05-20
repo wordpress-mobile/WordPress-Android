@@ -11,7 +11,6 @@ Language: ja_JP
     <string name="blogging_prompts_answer_prompt_notification_title">毎日のプロンプト </string>
     <string name="blogging_prompts_onboarding_got_it">理解しました</string>
     <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;をタップしてサイトを表示</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">好きなトピックを追加するには%1$s「設定」%2$sを選択します。</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">別のサイトを検索するには%1$s「Reader」%2$sを選択します。</string>
     <string name="blogging_reminders_prompt_help_button_desc">プロンプトについて詳しく読む</string>
     <string name="photo_picker_video_thumbnail_unselected">選択解除した動画</string>
