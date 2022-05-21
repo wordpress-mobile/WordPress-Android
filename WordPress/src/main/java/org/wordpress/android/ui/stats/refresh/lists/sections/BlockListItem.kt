@@ -5,6 +5,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
@@ -340,5 +341,9 @@ sealed class BlockListItem(val type: Type) {
             get() = blocks.fold(0) { acc, block -> acc + block.label.hashCode() }
     }
 
-    data class ListItemGuideCard(val text: String) : BlockListItem(GUIDE_CARD)
+    data class ListItemGuideCard(
+        val text: String,
+        val links: List<Clickable>? = null,
+        val bolds: List<String>? = null
+    ) : BlockListItem(GUIDE_CARD)
 }

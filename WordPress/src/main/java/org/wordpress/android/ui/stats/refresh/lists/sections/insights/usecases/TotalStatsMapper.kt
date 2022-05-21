@@ -40,10 +40,8 @@ class TotalStatsMapper @Inject constructor(
         return getCurrentWeekDays(dates, COMMENTS).sum() > 0
     }
 
-    @Suppress("FunctionOnlyReturningConstant")
-    fun shouldShowFollowersGuideCard(): Boolean {
-        // TODO: After the card is updated with percentage change
-        return true
+    fun shouldShowFollowersGuideCard(domainModel: Int): Boolean {
+        return domainModel <= 0
     }
 
     fun shouldShowLikesGuideCard(dates: List<PeriodData>): Boolean {

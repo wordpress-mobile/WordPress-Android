@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_TOTAL_LIKES_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -13,14 +14,17 @@ import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTotalLikesStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -125,7 +129,7 @@ class TotalLikesUseCase @Inject constructor(
             items.add(totalStatsMapper.buildTotalLikesValue(domainModel.dates))
             items.add(totalStatsMapper.buildTotalLikesInformation(domainModel.dates))
             if (totalStatsMapper.shouldShowLikesGuideCard(domainModel.dates)) {
-                buildLatestPostGuideCard(items)
+                buildLatestPostGuideCard(items, this::onLinkClicked)
             }
         } else {
             AppLog.e(T.STATS, "There is no data to be shown in the total likes block")
@@ -138,19 +142,37 @@ class TotalLikesUseCase @Inject constructor(
             navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
     )
 
-    private fun buildLatestPostGuideCard(items: MutableList<BlockListItem>) {
+    private fun buildLatestPostGuideCard(
+        items: MutableList<BlockListItem>,
+        navigationAction: (params: LinkClickParams) -> Unit
+    ) {
         val postModel = latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
         postModel?.let {
             if (it.postTitle.isNotBlank()) {
                 items.add(
-                        ListItemGuideCard(resourceProvider.getString(
-                                string.stats_insights_likes_guide_card,
-                                it.postURL,
-                                it.postTitle,
-                                it.postLikeCount
-                        )))
+                        ListItemGuideCard(
+                                text = resourceProvider.getString(
+                                        string.stats_insights_likes_guide_card,
+                                        it.postTitle,
+                                        it.postLikeCount
+                                ),
+                                links = listOf(Clickable(
+                                                link = it.postTitle,
+                                                navigationAction = ListItemInteraction.create(
+                                                        data = LinkClickParams(it.postId, it.postURL),
+                                                        action = navigationAction
+                                                )
+                                        )
+                                ),
+                                bolds = listOf(it.postLikeCount.toString())
+                        ))
             }
         }
+    }
+
+    private fun onLinkClicked(params: LinkClickParams) {
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
+        navigateTo(ViewPost(params.postId, params.postUrl))
     }
 
     private fun onViewMoreClick() {

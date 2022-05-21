@@ -55,7 +55,7 @@ class TotalFollowersUseCase @Inject constructor(
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         items.add(ValueWithChartItem(domainModel.toString()))
-        if (totalStatsMapper.shouldShowFollowersGuideCard()) {
+        if (totalStatsMapper.shouldShowFollowersGuideCard(domainModel)) {
             items.add(ListItemGuideCard(resourceProvider.getString(string.stats_insights_followers_guide_card)))
         }
         return items
@@ -71,7 +71,7 @@ class TotalFollowersUseCase @Inject constructor(
                 AnalyticsTracker.Stat.STATS_TOTAL_FOLLOWERS_VIEW_MORE_TAPPED,
                 statsSiteProvider.siteModel
         )
-        navigateTo(ViewTotalFollowersStats) // TODO: Connect this to proper second level navigation later
+        navigateTo(ViewTotalFollowersStats)
     }
 
     class TotalFollowersUseCaseFactory @Inject constructor(
