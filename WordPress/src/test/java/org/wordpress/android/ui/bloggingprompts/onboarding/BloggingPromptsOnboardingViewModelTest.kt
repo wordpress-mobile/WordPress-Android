@@ -1,17 +1,26 @@
 package org.wordpress.android.ui.bloggingprompts.onboarding
 
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
@@ -20,14 +29,37 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import java.util.Date
 
+@InternalCoroutinesApi
 class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     private val uiStateMapper = BloggingPromptsOnboardingUiStateMapper()
     private val siteStore: SiteStore = mock()
     private val selectedSiteRepository: SelectedSiteRepository = mock()
+    private val bloggingPromptsStore: BloggingPromptsStore = mock()
     private val analyticsTracker: BloggingPromptsOnboardingAnalyticsTracker = mock()
-    private val classToTest = BloggingPromptsOnboardingViewModel(
-            siteStore, uiStateMapper, selectedSiteRepository, analyticsTracker
+
+    private val bloggingPrompt = BloggingPromptsResult(
+            model = BloggingPromptModel(
+                    id = 123,
+                    text = "title",
+                    title = "",
+                    content = "content",
+                    date = Date(),
+                    isAnswered = false,
+                    attribution = "",
+                    respondentsCount = 5,
+                    respondentsAvatarUrls = listOf()
+            )
+    )
+
+    private var classToTest = BloggingPromptsOnboardingViewModel(
+            siteStore,
+            uiStateMapper,
+            selectedSiteRepository,
+            bloggingPromptsStore,
+            analyticsTracker,
+            TEST_DISPATCHER
     )
     private val actionObserver: Observer<BloggingPromptsOnboardingAction> = mock()
 
@@ -37,6 +69,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
     fun setup() {
         classToTest.action.observeForever(actionObserver)
         classToTest.uiState.observeForever { if (it != null) viewStates.add(it) }
+        whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
     }
 
     @Test
@@ -49,14 +82,17 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
 
     // ONBOARDING dialog type actions
 
-    /* ktlint-disable max-line-length */
     @Test
     fun `Should trigger OpenEditor action when primary button is tapped`() = runBlocking {
+        val selectedSiteModel = SiteModel()
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(selectedSiteModel)
         classToTest.start(ONBOARDING)
 
         val startState = viewStates[0]
         (startState as Ready).onPrimaryButtonClick()
-        verify(actionObserver).onChanged(OpenEditor(1234))
+
+        verify(bloggingPromptsStore, times(1)).getPromptForDate(eq(selectedSiteModel), any())
+        verify(actionObserver).onChanged(OpenEditor(123))
     }
 
     @Test
