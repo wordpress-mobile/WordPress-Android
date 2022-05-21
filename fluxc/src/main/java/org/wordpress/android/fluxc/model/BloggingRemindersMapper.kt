@@ -13,8 +13,9 @@ import javax.inject.Inject
 
 class BloggingRemindersMapper
 @Inject constructor() {
-    fun toDatabaseModel(domainModel: BloggingRemindersModel): BloggingReminders = with(domainModel) {
-        return BloggingReminders(
+    fun toDatabaseModel(domainModel: BloggingRemindersModel): BloggingReminders =
+        with(domainModel) {
+            return BloggingReminders(
                 localSiteId = this.siteId,
                 monday = enabledDays.contains(MONDAY),
                 tuesday = enabledDays.contains(TUESDAY),
@@ -24,12 +25,14 @@ class BloggingRemindersMapper
                 saturday = enabledDays.contains(SATURDAY),
                 sunday = enabledDays.contains(SUNDAY),
                 hour = this.hour,
-                minute = this.minute
-        )
-    }
+                minute = this.minute,
+                isPromptRemindersOptedIn = domainModel.isPromptIncluded
+            )
+        }
 
-    fun toDomainModel(databaseModel: BloggingReminders): BloggingRemindersModel = with(databaseModel) {
-        return BloggingRemindersModel(
+    fun toDomainModel(databaseModel: BloggingReminders): BloggingRemindersModel =
+        with(databaseModel) {
+            return BloggingRemindersModel(
                 siteId = localSiteId,
                 enabledDays = mutableSetOf<Day>().let { list ->
                     if (monday) list.add(MONDAY)
@@ -42,7 +45,8 @@ class BloggingRemindersMapper
                     list
                 },
                 hour = hour,
-                minute = minute
-        )
-    }
+                minute = minute,
+                isPromptIncluded = isPromptRemindersOptedIn
+            )
+        }
 }
