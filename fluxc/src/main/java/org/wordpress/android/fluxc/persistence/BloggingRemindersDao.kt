@@ -35,8 +35,6 @@ abstract class BloggingRemindersDao {
         var sunday: Boolean = false,
         var hour: Int = 10,
         var minute: Int = 0,
-        var isPromptCardOptedIn: Boolean = false,
-        var isPromptRemindersOptedIn: Boolean = false,
-        var isPotentialBloggingSite: Boolean = false
+        var isPromptRemindersOptedIn: Boolean = false
     )
 }
