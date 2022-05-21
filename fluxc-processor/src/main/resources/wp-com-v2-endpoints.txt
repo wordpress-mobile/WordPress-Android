@@ -33,7 +33,6 @@
 /sites/$site/xposts
 
 /sites/$site/blogging-prompts
-/sites/$site/blogging-prompts/settings
 
 /users/username/suggestions/
 
