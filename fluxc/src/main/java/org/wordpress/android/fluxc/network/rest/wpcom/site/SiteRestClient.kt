@@ -999,6 +999,23 @@ class SiteRestClient @Inject constructor(
                 // as /me/sites/ and /sites/$site/ can return different responses for this
                 site.memoryLimit = max(wpMemoryLimit, wpMaxMemoryLimit)
             }
+
+            val bloggingPromptsSettings = from.options.blogging_prompts_settings
+
+            bloggingPromptsSettings?.let {
+                site.setIsBloggingPromptsOptedIn(it.prompts_reminders_opted_in)
+                site.setIsBloggingPromptsCardOptedIn(it.prompts_card_opted_in)
+                site.setIsPotentialBloggingSite(it.is_potential_blogging_site)
+                site.setIsBloggingReminderOnMonday(it.reminders_days["monday"] ?: false)
+                site.setIsBloggingReminderOnTuesday(it.reminders_days["tuesday"] ?: false)
+                site.setIsBloggingReminderOnWednesday(it.reminders_days["wednesday"] ?: false)
+                site.setIsBloggingReminderOnThursday(it.reminders_days["thursday"] ?: false)
+                site.setIsBloggingReminderOnFriday(it.reminders_days["friday"] ?: false)
+                site.setIsBloggingReminderOnSaturday(it.reminders_days["saturday"] ?: false)
+                site.setIsBloggingReminderOnSunday(it.reminders_days["sunday"] ?: false)
+                site.bloggingReminderHour = it.reminders_time.split(".")[0].toInt()
+                site.bloggingReminderMinute = it.reminders_time.split(".")[1].toInt()
+            }
         }
         if (from.plan != null) {
             try {
