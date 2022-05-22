@@ -47,6 +47,6 @@ class ActionCardReminderUseCase @Inject constructor(
 
     private fun onDismiss() {
 //         analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
-         actionCardHandler.dismiss(ActionType.REMINDER)
+        actionCardHandler.dismiss(ActionType.REMINDER)
     }
 }
