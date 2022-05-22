@@ -31,7 +31,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
-import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem.Pie
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -42,13 +43,17 @@ import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongParameterList")
 class ReferrersUseCase(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -59,8 +64,10 @@ class ReferrersUseCase(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val statsUtils: StatsUtils,
+    private val resourceProvider: ResourceProvider,
     private val useCaseMode: UseCaseMode,
-    private val popupMenuHandler: ReferrerPopupMenuHandler
+    private val popupMenuHandler: ReferrerPopupMenuHandler,
+    private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
@@ -112,6 +119,9 @@ class ReferrersUseCase(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
+            if (statsRevampV2FeatureConfig.isEnabled()) {
+                items.add(buildPieChartItem(domainModel))
+            }
             items.add(header)
             domainModel.groups.forEachIndexed { index, group ->
                 val contentDescription =
@@ -194,6 +204,35 @@ class ReferrersUseCase(
             }
         }
         return items
+    }
+
+    private fun buildPieChartItem(domainModel: ReferrersModel): PieChartItem {
+        val firstPie = Pie(domainModel.groups.first().name.orEmpty(), domainModel.groups.first().total ?: 0)
+        val secondPie = if (domainModel.groups.size > 1) {
+            Pie(domainModel.groups[1].name.orEmpty(), domainModel.groups[1].total ?: 0)
+        } else {
+            null
+        }
+        val othersPie = if (domainModel.groups.size > 2) {
+            Pie(
+                    resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
+                    domainModel.totalViews - firstPie.value - (secondPie?.value ?: 0)
+            )
+        } else {
+            null
+        }
+        val pies = listOfNotNull(firstPie, secondPie, othersPie)
+        val totalLabel = resourceProvider.getString(R.string.stats_referrers_pie_chart_total_label)
+        val totalValue = pies.sumOf { it.value }
+        return PieChartItem(
+                pies,
+                totalLabel,
+                totalValue,
+                contentDescriptionHelper.buildContentDescription(
+                        R.string.stats_referrers_pie_chart_total_label,
+                        totalValue
+                )
+        )
     }
 
     private fun buildTextStyle(spam: Boolean) = if (spam) LIGHT else TextStyle.NORMAL
@@ -282,8 +321,10 @@ class ReferrersUseCase(
         private val selectedDateProvider: SelectedDateProvider,
         private val contentDescriptionHelper: ContentDescriptionHelper,
         private val statsUtils: StatsUtils,
+        private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val popupMenuHandler: ReferrerPopupMenuHandler
+        private val popupMenuHandler: ReferrerPopupMenuHandler,
+        private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 ReferrersUseCase(
@@ -296,8 +337,10 @@ class ReferrersUseCase(
                         analyticsTracker,
                         contentDescriptionHelper,
                         statsUtils,
+                        resourceProvider,
                         useCaseMode,
-                        popupMenuHandler
+                        popupMenuHandler,
+                        statsRevampV2FeatureConfig
                 )
     }
 }

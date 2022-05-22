@@ -33,11 +33,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Heade
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
@@ -46,6 +48,8 @@ import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 private const val itemsToLoad = 6
@@ -61,10 +65,14 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var tracker: AnalyticsTrackerWrapper
     @Mock lateinit var contentDescriptionHelper: ContentDescriptionHelper
     @Mock lateinit var statsUtils: StatsUtils
+    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var popupMenuHandler: ReferrerPopupMenuHandler
+    @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var useCase: ReferrersUseCase
     private val firstGroupViews = 50
-    private val secondGroupViews = 30
+    private val secondGroupViews = 50
+    private val thirdGroupViews = 40
+    private val totalViews = firstGroupViews + secondGroupViews + thirdGroupViews
     private val singleReferrer = Group(
             "group1",
             "Group 1",
@@ -74,18 +82,30 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             listOf(),
             false
     )
-    private val referrer1 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", false)
-    private val referrer2 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", true)
-    private val group = Group(
+    private val singleReferrer2 = Group(
             "group2",
             "Group 2",
             "group2.jpg",
             "group2.com",
             secondGroupViews,
+            listOf(),
+            false
+    )
+    private val referrer1 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", false)
+    private val referrer2 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", true)
+    private val group = Group(
+            "group3",
+            "Group 3",
+            "group3.jpg",
+            "group3.com",
+            secondGroupViews,
             listOf(referrer1, referrer2),
             true
     )
+    private val othersLabel = "Others"
+    private val totalLabel = "total"
     private val contentDescription = "title, views"
+
     @InternalCoroutinesApi
     @Before
     fun setUp() {
@@ -99,8 +119,10 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 tracker,
                 contentDescriptionHelper,
                 statsUtils,
+                resourceProvider,
                 BLOCK,
-                popupMenuHandler
+                popupMenuHandler,
+                statsRevampV2FeatureConfig
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -110,18 +132,24 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                         listOf(selectedDate)
                 )
         )
-        whenever(contentDescriptionHelper.buildContentDescription(
-                any(),
-                any<String>(),
-                any()
-        )).thenReturn(contentDescription)
+        whenever(resourceProvider.getString(R.string.stats_referrers_pie_chart_others)).thenReturn(othersLabel)
+        whenever(resourceProvider.getString(R.string.stats_referrers_pie_chart_total_label)).thenReturn(totalLabel)
+        whenever(contentDescriptionHelper.buildContentDescription(any(), any())).thenReturn(contentDescription)
+        whenever(
+                contentDescriptionHelper.buildContentDescription(
+                        any(),
+                        any<String>(),
+                        any()
+                )
+        ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(statsRevampV2FeatureConfig.isEnabled()).thenReturn(true)
     }
 
     @Test
     fun `maps referrers to UI model`() = test {
         val forced = false
-        val model = ReferrersModel(10, 15, listOf(singleReferrer, group), false)
+        val model = ReferrersModel(10, totalViews, listOf(singleReferrer, group, singleReferrer2), false)
         whenever(store.getReferrers(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(store.fetchReferrers(site,
                 statsGranularity, limitMode, selectedDate, forced)).thenReturn(
@@ -143,41 +171,43 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     }
 
     private fun List<BlockListItem>.assertNonExpandedList(): ExpandableItem {
-        assertThat(this).hasSize(4)
+        assertThat(this).hasSize(6)
         assertTitle(this[0])
-        assertLabel(this[1])
+        assertPieChartItem(this[1])
+        assertLabel(this[2])
         assertSingleItem(
-                this[2],
+                this[3],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon,
                 singleReferrer.markedAsSpam
         )
-        return assertExpandableItem(this[3], group.name!!, group.total!!, group.icon, group.markedAsSpam)
+        return assertExpandableItem(this[4], group.name!!, group.total!!, group.icon, group.markedAsSpam)
     }
 
     private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
-        assertThat(this).hasSize(7)
+        assertThat(this).hasSize(9)
         assertTitle(this[0])
-        assertLabel(this[1])
+        assertPieChartItem(this[1])
+        assertLabel(this[2])
         assertSingleItem(
-                this[2],
+                this[3],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon,
                 singleReferrer.markedAsSpam
         )
-        val expandableItem = assertExpandableItem(this[3], group.name!!, group.total!!, group.icon, group.markedAsSpam)
-        assertSingleItem(this[4], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
-        assertSingleItem(this[5], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
-        assertThat(this[6]).isEqualTo(Divider)
+        val expandableItem = assertExpandableItem(this[4], group.name!!, group.total!!, group.icon, group.markedAsSpam)
+        assertSingleItem(this[5], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
+        assertSingleItem(this[6], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
+        assertThat(this[7]).isEqualTo(Divider)
         return expandableItem
     }
 
     @Test
     fun `adds view more button when hasMore`() = test {
         val forced = false
-        val model = ReferrersModel(10, 15, listOf(singleReferrer), true)
+        val model = ReferrersModel(10, totalViews, listOf(singleReferrer), true)
         whenever(store.getReferrers(site, statsGranularity, limitMode, selectedDate)).thenReturn(model)
         whenever(store.fetchReferrers(site,
                 statsGranularity, limitMode, selectedDate, forced)).thenReturn(
@@ -190,17 +220,18 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         assertThat(result.type).isEqualTo(TimeStatsType.REFERRERS)
         assertThat(result.state).isEqualTo(UseCaseState.SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(4)
+            assertThat(this).hasSize(5)
             assertTitle(this[0])
-            assertLabel(this[1])
+            assertPieChartItem(this[1])
+            assertLabel(this[2])
             assertSingleItem(
-                    this[2],
+                    this[3],
                     singleReferrer.name!!,
                     singleReferrer.total,
                     singleReferrer.icon,
                     singleReferrer.markedAsSpam
             )
-            assertLink(this[3])
+            assertLink(this[4])
         }
     }
 
@@ -241,6 +272,21 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_referrers)
+    }
+
+    private fun assertPieChartItem(item: BlockListItem) {
+        assertThat(item.type).isEqualTo(PIE_CHART)
+        assertThat((item as PieChartItem).entries.first().label).isEqualTo(singleReferrer.name)
+        assertThat((item).entries.first().value).isEqualTo(singleReferrer.total)
+        if (item.entries.size > 1) {
+            assertThat((item).entries[1].label).isEqualTo(group.name)
+            assertThat((item).entries[1].value).isEqualTo(group.total)
+        }
+        if (item.entries.size > 2) {
+            assertThat((item).entries[2].label).isEqualTo(othersLabel)
+            assertThat((item).entries[2].value).isEqualTo(totalViews - firstGroupViews - secondGroupViews)
+        }
+        assertThat((item).totalLabel).isEqualTo(totalLabel)
     }
 
     private fun assertLabel(item: BlockListItem) {
