@@ -51,4 +51,6 @@ sealed class NavigationTarget {
     ) : NavigationTarget()
 
     object SetBloggingReminders : NavigationTarget()
+    object CheckCourse : NavigationTarget()
+    object SchedulePost : NavigationTarget()
 }

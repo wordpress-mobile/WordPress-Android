@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.store.StatsStore.ActionType
 import org.wordpress.android.fluxc.store.StatsStore.ActionType.GROW
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.SetBloggingReminders
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.CheckCourse
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemActionCard
@@ -43,7 +43,7 @@ class ActionCardGrowUseCase @Inject constructor(
 
     private fun onCheckCourse() {
 //        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
-        navigateTo(SetBloggingReminders)
+        navigateTo(CheckCourse)
     }
 
     private fun onDismiss() {

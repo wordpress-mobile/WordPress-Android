@@ -1518,7 +1518,21 @@ public class ActivityLauncher {
     }
 
     public static void showSetBloggingReminders(Context context, SiteModel site) {
-        openEditorWithBloggingPrompt(context, 0);
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_BLOGGING_REMINDERS, true);
+        intent.putExtra(WPMainActivity.ARG_SELECTED_SITE, site.getId());
+        context.startActivity(intent);
+    }
+
+    public static void showSchedulingPost(Context context, SiteModel site) {
+        Intent intent = PostsListActivity.buildIntent(
+                context,
+                site,
+                PostListType.DRAFTS,
+                false,
+                null
+        );
+        context.startActivity(intent);
     }
 
     public static void viewMediaPickerForResult(Activity activity,

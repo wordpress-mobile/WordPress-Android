@@ -5,7 +5,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.StatsStore.ActionType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.SetBloggingReminders
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.SchedulePost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemActionCard
@@ -44,7 +44,7 @@ class ActionCardScheduleUseCase @Inject constructor(
 
     private fun onSchedule() {
         // analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
-        navigateTo(SetBloggingReminders)
+        navigateTo(SchedulePost)
     }
 
     private fun onDismiss() {
