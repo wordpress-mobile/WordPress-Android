@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "4de62a51362cbfcc4abbf87b3aaa292a",
+    "identityHash": "2736fe36a94391a27a29424999c6cd2c",
     "entities": [
       {
         "tableName": "BloggingReminders",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localSiteId` INTEGER NOT NULL, `monday` INTEGER NOT NULL, `tuesday` INTEGER NOT NULL, `wednesday` INTEGER NOT NULL, `thursday` INTEGER NOT NULL, `friday` INTEGER NOT NULL, `saturday` INTEGER NOT NULL, `sunday` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `isPromptCardOptedIn` INTEGER NOT NULL, `isPromptRemindersOptedIn` INTEGER NOT NULL, `isPotentialBloggingSite` INTEGER NOT NULL, PRIMARY KEY(`localSiteId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localSiteId` INTEGER NOT NULL, `monday` INTEGER NOT NULL, `tuesday` INTEGER NOT NULL, `wednesday` INTEGER NOT NULL, `thursday` INTEGER NOT NULL, `friday` INTEGER NOT NULL, `saturday` INTEGER NOT NULL, `sunday` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `isPromptRemindersOptedIn` INTEGER NOT NULL, PRIMARY KEY(`localSiteId`))",
         "fields": [
           {
             "fieldPath": "localSiteId",
@@ -69,20 +69,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "isPromptCardOptedIn",
-            "columnName": "isPromptCardOptedIn",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "isPromptRemindersOptedIn",
             "columnName": "isPromptRemindersOptedIn",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isPotentialBloggingSite",
-            "columnName": "isPotentialBloggingSite",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -507,7 +495,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4de62a51362cbfcc4abbf87b3aaa292a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2736fe36a94391a27a29424999c6cd2c')"
     ]
   }
 }
