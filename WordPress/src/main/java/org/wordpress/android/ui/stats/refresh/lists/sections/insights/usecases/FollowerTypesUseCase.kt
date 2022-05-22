@@ -117,7 +117,7 @@ class FollowerTypesUseCase @Inject constructor(
             val pieChartItem = PieChartItem(
                     pies,
                     totalLabel,
-                    totalValue,
+                    statsUtils.toFormattedString(totalValue),
                     COLOR_LIST,
                     contentDescriptionHelper.buildContentDescription(
                             R.string.stats_follower_types_pie_chart_total_label,

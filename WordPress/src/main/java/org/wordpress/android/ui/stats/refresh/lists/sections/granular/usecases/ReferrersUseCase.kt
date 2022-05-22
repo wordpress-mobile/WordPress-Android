@@ -227,7 +227,7 @@ class ReferrersUseCase(
         return PieChartItem(
                 pies,
                 totalLabel,
-                totalValue,
+                statsUtils.toFormattedString(totalValue),
                 COLOR_LIST,
                 contentDescriptionHelper.buildContentDescription(
                         R.string.stats_referrers_pie_chart_total_label,
