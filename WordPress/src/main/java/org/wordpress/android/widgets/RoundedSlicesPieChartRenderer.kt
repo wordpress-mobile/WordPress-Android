@@ -24,6 +24,7 @@ class RoundedSlicesPieChartRenderer(chart: PieChart) : PieChartRenderer(chart, c
     init {
         chart.setDrawRoundedSlices(true)
         chart.isDrawHoleEnabled = false
+        chart.setTouchEnabled(false)
     }
 
     // These are suppressed instead of fixing for keeping the similarity with super class function
