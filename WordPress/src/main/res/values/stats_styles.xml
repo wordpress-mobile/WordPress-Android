@@ -341,6 +341,10 @@
     <style name="InsightsManagementItem" parent="TextAppearance.MaterialComponents.Body1" />
 
     <!-- Stats Revamp styles -->
+    <style name="StatsPieChartTotalText" parent="TextAppearance.MaterialComponents.Body2" />
+
+    <style name="StatsPieChartLegends" parent="TextAppearance.MaterialComponents.Body2" />
+
     <style name="StatsLegendsBlue" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:layout_marginTop">24dp</item>
         <item name="android:layout_marginBottom">4dp</item>

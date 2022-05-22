@@ -178,6 +178,7 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_extra_extra_large">32sp</dimen>
+    <dimen name="text_sz_extra_extra_extra_large">34sp</dimen>
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
@@ -538,6 +539,7 @@
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
+    <dimen name="stats_pie_chart_slice_width">16dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
     <dimen name="stats_list_card_horizontal_spacing">4dp</dimen>
     <dimen name="stats_list_card_top_spacing">4dp</dimen>
