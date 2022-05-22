@@ -228,6 +228,7 @@ class ReferrersUseCase(
                 pies,
                 totalLabel,
                 totalValue,
+                COLOR_LIST,
                 contentDescriptionHelper.buildContentDescription(
                         R.string.stats_referrers_pie_chart_total_label,
                         totalValue
@@ -342,5 +343,9 @@ class ReferrersUseCase(
                         popupMenuHandler,
                         statsRevampV2FeatureConfig
                 )
+    }
+
+    companion object {
+        private val COLOR_LIST = listOf(R.color.blue, R.color.blue_80, R.color.blue_5)
     }
 }

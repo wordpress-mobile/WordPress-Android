@@ -45,12 +45,11 @@ class PieChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(parent, R.
                 inSpans(AbsoluteSizeSpan(textSize.toInt())) { append("\n${item.total}") }
             }
 
-            val entries = mapToPieEntry(item.entries)
-            val dataSet = getDataSet(entries)
+            val dataSet = getDataSet(item)
             dataSet.sliceSpace = DisplayUtils.pxToDp(context, sliceWidth.toInt()).toFloat()
             data = PieData(dataSet)
 
-            addLegends(item.entries)
+            addLegends(item)
         }
         itemView.contentDescription = item.contentDescription
     }
@@ -65,20 +64,19 @@ class PieChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(parent, R.
         chart.doOnLayout { chart.holeRadius = (1 - 2 * sliceWidth / chart.width) * PERCENT_HUNDRED }
     }
 
-    private fun getDataSet(entries: List<PieEntry>) = PieDataSet(entries, null).apply {
+    private fun getDataSet(item: PieChartItem) = PieDataSet(mapToPieEntry(item.entries), null).apply {
         label = null
         setDrawValues(false)
-        colors = COLOR_LIST.map { ContextCompat.getColor(chart.context, it) }
-
+        colors = item.colors.map { ContextCompat.getColor(chart.context, it) }
         selectionShift = 0f // Needed for removing extra highlighting space in chart size
     }
 
-    private fun addLegends(entries: List<Pie>) {
-        entries.forEachIndexed { index, pie ->
+    private fun addLegends(item: PieChartItem) {
+        item.entries.forEachIndexed { index, pie ->
             ItemPieChartLegendBinding.inflate(LayoutInflater.from(legends.context), legends, true).apply {
                 val textView = root.findViewById<TextView>(R.id.text)
                 textView.text = pie.label
-                val colorRes = COLOR_LIST[index % entries.size]
+                val colorRes = item.colors[index % item.entries.size]
                 val color = ContextCompat.getColor(root.context, colorRes)
                 TextViewCompat.setCompoundDrawableTintList(textView, ColorStateList.valueOf(color))
             }
@@ -88,6 +86,5 @@ class PieChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(parent, R.
     companion object {
         private const val PERCENT_HUNDRED = 100
         private const val MIN_PIE_CHART_RATIO = 0.039f
-        private val COLOR_LIST = listOf(R.color.blue, R.color.blue_5, R.color.orange_30)
     }
 }

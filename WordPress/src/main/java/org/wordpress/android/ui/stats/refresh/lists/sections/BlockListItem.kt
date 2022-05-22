@@ -263,6 +263,7 @@ sealed class BlockListItem(val type: Type) {
         val entries: List<Pie>,
         val totalLabel: String,
         val total: Int,
+        val colors: List<Int>,
         val contentDescription: String
     ) : BlockListItem(PIE_CHART) {
         data class Pie(val label: String, val value: Int)

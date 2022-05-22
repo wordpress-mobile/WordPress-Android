@@ -118,6 +118,7 @@ class FollowerTypesUseCase @Inject constructor(
                     pies,
                     totalLabel,
                     totalValue,
+                    COLOR_LIST,
                     contentDescriptionHelper.buildContentDescription(
                             R.string.stats_follower_types_pie_chart_total_label,
                             totalValue
@@ -183,5 +184,6 @@ class FollowerTypesUseCase @Inject constructor(
 
     companion object {
         private const val PERCENT_HUNDRED = 100.0
+        private val COLOR_LIST = listOf(R.color.blue, R.color.blue_5, R.color.orange_30)
     }
 }
