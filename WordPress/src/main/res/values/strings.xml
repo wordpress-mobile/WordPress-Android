@@ -1394,6 +1394,7 @@
     <string name="stats_file_downloads">File downloads</string>
     <string name="stats_file_downloads_title_label">File</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_follower_types_pie_chart_total_label">Totals</string>
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
