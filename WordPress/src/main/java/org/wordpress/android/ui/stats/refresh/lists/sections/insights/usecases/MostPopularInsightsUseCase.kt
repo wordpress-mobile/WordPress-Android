@@ -5,8 +5,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_REMINDER
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_SCHEDULE
+import org.wordpress.android.fluxc.store.StatsStore.ActionType.REMINDER
+import org.wordpress.android.fluxc.store.StatsStore.ActionType.SCHEDULE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.modules.BG_THREAD
@@ -96,10 +96,10 @@ class MostPopularInsightsUseCase
     private fun addActionCards() {
         val model = mostPopularStore.getMostPopularInsights(statsSiteProvider.siteModel)
         val popular = model?.let { it.highestDayOfWeek > 0 || it.highestHour > 0 } == true
-        if (popular) actionCardHandler.addCard(ACTION_REMINDER) else actionCardHandler.removeCard(ACTION_REMINDER)
+        if (!popular) actionCardHandler.dismiss(REMINDER)
 
-        val draftsExist = postStore.getPostsWithLocalChanges(statsSiteProvider.siteModel).size > 0
-        if (draftsExist) actionCardHandler.addCard(ACTION_SCHEDULE) else actionCardHandler.removeCard(ACTION_SCHEDULE)
+        val noDraft = postStore.getPostsWithLocalChanges(statsSiteProvider.siteModel).size == 0
+        if (noDraft) actionCardHandler.dismiss(SCHEDULE)
     }
 
     private fun buildTitle() = Title(

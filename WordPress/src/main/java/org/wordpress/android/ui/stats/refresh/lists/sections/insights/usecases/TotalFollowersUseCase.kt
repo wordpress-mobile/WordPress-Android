@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
+import org.wordpress.android.fluxc.store.StatsStore.ActionType.GROW
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.modules.BG_THREAD
@@ -56,7 +56,7 @@ class TotalFollowersUseCase @Inject constructor(
 
     private fun addActionCard() {
         val followers = summaryStore.getSummary(statsSiteProvider.siteModel)?.followers
-        if (followers == 0) actionCardHandler.addCard(ACTION_GROW) else actionCardHandler.removeCard(ACTION_GROW)
+        if (followers != 0) actionCardHandler.dismiss(GROW)
     }
 
     private fun buildTitle() = TitleWithMore(

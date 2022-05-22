@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
+import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -34,6 +35,7 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var useCaseMode: UseCaseMode
+    @Mock lateinit var actionCardHandler: ActionCardHandler
     private lateinit var useCase: TotalFollowersUseCase
     private val followers = 100
 
@@ -46,7 +48,8 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
                 insightsStore,
                 statsSiteProvider,
                 analyticsTrackerWrapper,
-                useCaseMode
+                useCaseMode,
+                actionCardHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }
