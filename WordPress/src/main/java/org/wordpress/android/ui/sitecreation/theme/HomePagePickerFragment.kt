@@ -69,7 +69,8 @@ class HomePagePickerFragment : Fragment() {
                         viewModel.nestedScrollStates,
                         thumbDimensionProvider,
                         recommendedDimensionProvider,
-                        isPageLayoutCategory = false,
+                        showRowDividers = false,
+                        useLargeCategoryHeading = true,
                         footerLayoutResId = R.layout.home_page_picker_footer
                 )
             }

@@ -29,7 +29,8 @@ class LayoutsFooterViewHolder(parent: ViewGroup, footerLayoutResId: Int) :
 class LayoutsItemViewHolder(
     parent: ViewGroup,
     private val prefetchItemCount: Int = 4,
-    private val isPageLayoutCategory: Boolean,
+    private val showRowDividers: Boolean,
+    private val useLargeCategoryHeading: Boolean,
     private var nestedScrollStates: Bundle,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val recommendedDimensionProvider: ThumbDimensionProvider?
@@ -51,7 +52,7 @@ class LayoutsItemViewHolder(
         itemView.updateLayoutParams {
             height = dimensionProvider.rowHeight
         }
-        itemView.findViewById<View>(R.id.layouts_row_separator_line).isVisible = isPageLayoutCategory
+        itemView.findViewById<View>(R.id.layouts_row_separator_line).isVisible = showRowDividers
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
             layoutManager = LinearLayoutManager(
                     context,
@@ -78,7 +79,7 @@ class LayoutsItemViewHolder(
         title.setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
                 title.resources.getDimensionPixelSize(
-                        if (isPageLayoutCategory) dimen.text_sz_large else dimen.text_sz_extra_large
+                        if (useLargeCategoryHeading) dimen.text_sz_extra_large else dimen.text_sz_large
                 ).toFloat()
         )
 
