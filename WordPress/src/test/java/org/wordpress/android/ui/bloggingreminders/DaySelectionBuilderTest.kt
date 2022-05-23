@@ -74,7 +74,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `builds UI model with no selected days`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute, isPromptIncluded = false)
         val dayLabel = UiStringText("Not set")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -92,7 +92,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `builds UI model with selected days`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, isPromptIncluded = false)
         val dayLabel = UiStringText("Twice a week")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -110,7 +110,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `click on a day select day`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute, isPromptIncluded = false)
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel)).thenReturn(UiStringText("Once a week"))
 
         val uiModel = daySelectionBuilder.buildSelection(
@@ -129,7 +129,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `primary button disabled when model is empty and is first time flow`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute, isPromptIncluded = false)
 
         val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, true, onConfirm)
 
@@ -144,7 +144,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `primary button enabled when model is not empty and is first time flow`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, isPromptIncluded = false)
 
         val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, true, onConfirm)
 
@@ -159,7 +159,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `primary button enabled when model is empty and is not first time flow`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute, isPromptIncluded = false)
 
         val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, false, onConfirm)
 
@@ -176,7 +176,7 @@ class DaySelectionBuilderTest {
     fun `primary button shows a different label when blogging prompt FF is on`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
 
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, isPromptIncluded = false)
 
         val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, true, onConfirm)
 
@@ -191,7 +191,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `click on primary button confirm selection`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, false)
 
         val primaryButton = daySelectionBuilder.buildPrimaryButton(bloggingRemindersModel, false, onConfirm)
 
@@ -204,7 +204,7 @@ class DaySelectionBuilderTest {
     fun `include prompt switch is visible when days are selected`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
 
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, false)
         val dayLabel = UiStringText("Twice a week")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -223,7 +223,7 @@ class DaySelectionBuilderTest {
 
     @Test
     fun `include prompt switch is not visible when days are not selected`() {
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, hour = hour, minute = minute, isPromptIncluded = false)
         val dayLabel = UiStringText("Not set")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -244,7 +244,7 @@ class DaySelectionBuilderTest {
     fun `single include prompt switch is visible when FF is on`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
 
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, false)
         val dayLabel = UiStringText("Twice a week")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -265,7 +265,7 @@ class DaySelectionBuilderTest {
     fun `include prompt switch is not visible when FF is off`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
 
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, false)
         val dayLabel = UiStringText("Twice a week")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -286,7 +286,7 @@ class DaySelectionBuilderTest {
     fun `click on a prompt switch toggles the prompt state`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
 
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute,false)
         val dayLabel = UiStringText("Twice a week")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
@@ -309,7 +309,7 @@ class DaySelectionBuilderTest {
     fun `click on a blogging prompt help button shows blogging prompt dialog`() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
 
-        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute)
+        val bloggingRemindersModel = BloggingRemindersUiModel(1, setOf(WEDNESDAY, SUNDAY), hour, minute, false)
         val dayLabel = UiStringText("Twice a week")
         whenever(dayLabelUtils.buildNTimesLabel(bloggingRemindersModel))
                 .thenReturn(dayLabel)
