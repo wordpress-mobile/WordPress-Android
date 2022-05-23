@@ -10,18 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_GET_TO_KNOW_APP_COLLAPSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_GET_TO_KNOW_APP_EXPANDED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_LIST_CUSTOMIZE_COLLAPSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_LIST_CUSTOMIZE_EXPANDED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_LIST_GROW_COLLAPSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_LIST_GROW_EXPANDED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_CUSTOMIZE_DISMISSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_CUSTOMIZE_VIEWED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GROW_DISMISSED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GROW_VIEWED
 import org.wordpress.android.databinding.QuickStartDialogFragmentBinding
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.CREATE_SITE
@@ -69,19 +57,12 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tasksType = arguments?.getSerializable(EXTRA_TYPE) as QuickStartTaskType? ?: QuickStartTaskType.UNKNOWN
+        quickStartTracker.trackQuickStartListViewed(tasksType)
         val isCompletedTasksListExpanded = (savedInstanceState != null
                 && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED))
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         val tasksUncompleted = quickStartStore.getUncompletedTasksByType(selectedSiteLocalId, tasksType)
         val tasksCompleted = quickStartStore.getCompletedTasksByType(selectedSiteLocalId, tasksType)
-
-        when (tasksType) {
-            QuickStartTaskType.CUSTOMIZE -> quickStartTracker.track(QUICK_START_TYPE_CUSTOMIZE_VIEWED)
-            QuickStartTaskType.GROW -> quickStartTracker.track(QUICK_START_TYPE_GROW_VIEWED)
-            QuickStartTaskType.GET_TO_KNOW_APP -> quickStartTracker.track(QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED)
-            QuickStartTaskType.UNKNOWN -> Unit // Do Nothing
-        }
-
         with(binding) {
             setupCompleteView( tasksUncompleted.isEmpty(), isCompletedTasksListExpanded)
             setupQuickStartList(tasksUncompleted, tasksCompleted, isCompletedTasksListExpanded)
@@ -128,13 +109,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     }
 
     override fun onDismissClicked(controller: FullScreenDialogController): Boolean {
-        when (tasksType) {
-            QuickStartTaskType.CUSTOMIZE -> quickStartTracker.track(QUICK_START_TYPE_CUSTOMIZE_DISMISSED)
-            QuickStartTaskType.GROW -> quickStartTracker.track(QUICK_START_TYPE_GROW_DISMISSED)
-            QuickStartTaskType.GET_TO_KNOW_APP -> quickStartTracker.track(QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED)
-            QuickStartTaskType.UNKNOWN -> {
-            }
-        }
+        quickStartTracker.trackQuickStartListDismissed(tasksType)
         controller.dismiss()
         return true
     }
@@ -172,19 +147,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     }
 
     override fun onCompletedTasksListToggled(isExpanded: Boolean) {
-        when (tasksType) {
-            QuickStartTaskType.CUSTOMIZE -> quickStartTracker.track(
-                    if (isExpanded) QUICK_START_LIST_CUSTOMIZE_EXPANDED else QUICK_START_LIST_CUSTOMIZE_COLLAPSED
-            )
-            QuickStartTaskType.GROW -> quickStartTracker.track(
-                    if (isExpanded) QUICK_START_LIST_GROW_EXPANDED else QUICK_START_LIST_GROW_COLLAPSED
-            )
-            QuickStartTaskType.GET_TO_KNOW_APP -> quickStartTracker.track(
-                    if (isExpanded) QUICK_START_GET_TO_KNOW_APP_EXPANDED else QUICK_START_GET_TO_KNOW_APP_COLLAPSED
-            )
-            QuickStartTaskType.UNKNOWN -> {
-            }
-        }
+        quickStartTracker.trackQuickStartListToggled(tasksType, isExpanded)
         if (quickStartStore.getUncompletedTasksByType(
                         selectedSiteRepository.getSelectedSiteLocalId().toLong(),
                         tasksType
