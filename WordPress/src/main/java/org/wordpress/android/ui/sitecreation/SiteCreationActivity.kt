@@ -178,11 +178,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
             SITE_DESIGNS -> {
                 // Cancel preload job before displaying the theme picker.
-                if (target.wizardStep == SITE_DESIGNS) {
-                    mainViewModel.preloadingJob?.cancel(
-                            "Preload did not complete before theme picker was shown."
-                    )
-                }
+                mainViewModel.preloadingJob?.cancel("Preload did not complete before theme picker was shown.")
                 HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
             }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(

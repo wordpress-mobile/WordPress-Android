@@ -22,6 +22,7 @@ class LayoutCategoryAdapter(
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val recommendedDimensionProvider: ThumbDimensionProvider? = null,
     private val showRowDividers: Boolean = true,
+    private val useLargeCategoryHeading: Boolean = false,
     private val footerLayoutResId: Int? = null
 ) : Adapter<LayoutsRowViewHolder>() {
     private var items: List<LayoutCategoryUiState> = listOf()
@@ -66,7 +67,8 @@ class LayoutCategoryAdapter(
                             nestedScrollStates = nestedScrollStates,
                             thumbDimensionProvider = thumbDimensionProvider,
                             recommendedDimensionProvider = recommendedDimensionProvider,
-                            showRowDividers = showRowDividers
+                            showRowDividers = showRowDividers,
+                            useLargeCategoryHeading = useLargeCategoryHeading
                     )
             }
 

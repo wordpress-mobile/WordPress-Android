@@ -65,7 +65,6 @@ class SiteCreationMainVM @Inject constructor(
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
 ) : ViewModel() {
     init {
-        // TODO: Remove the duplicate {,un}registration in the picker view model
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
 

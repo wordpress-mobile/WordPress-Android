@@ -70,6 +70,7 @@ class HomePagePickerFragment : Fragment() {
                         thumbDimensionProvider,
                         recommendedDimensionProvider,
                         showRowDividers = false,
+                        useLargeCategoryHeading = true,
                         footerLayoutResId = R.layout.home_page_picker_footer
                 )
             }
