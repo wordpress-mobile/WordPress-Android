@@ -85,7 +85,8 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         tasksUncompleted: List<QuickStartTask>,
         tasksCompleted: List<QuickStartTask>
     ) {
-        quickStartAdapter = QuickStartAdapter(tasksUncompleted, tasksCompleted)
+        val tasks = QuickStartTask.getTasksByTaskType(tasksType).filterNot { it.taskType == QuickStartTaskType.UNKNOWN }
+        quickStartAdapter = QuickStartAdapter(tasks, tasksUncompleted, tasksCompleted)
         quickStartAdapter.setOnTaskTappedListener(this@QuickStartFullScreenDialogFragment)
         list.layoutManager = LinearLayoutManager(requireContext())
         list.adapter = quickStartAdapter
