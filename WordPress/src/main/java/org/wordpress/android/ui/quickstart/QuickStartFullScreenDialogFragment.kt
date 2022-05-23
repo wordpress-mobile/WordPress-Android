@@ -96,7 +96,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         if (!showSnackbarIfNeeded(task)) {
             val result = Bundle()
             result.putSerializable(RESULT_TASK, task as Serializable?)
-            dialogController!!.confirm(result)
+            dialogController?.confirm(result)
         }
     }
 
