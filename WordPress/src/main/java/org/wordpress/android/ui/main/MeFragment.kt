@@ -171,7 +171,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (qrCodeAuthFlowFeatureConfig.isEnabled()) {
+        if (qrCodeAuthFlowFeatureConfig.isEnabled() && BuildConfig.ENABLE_QRCODE_AUTH_FLOW) {
             rowScanLoginCode.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
@@ -199,7 +199,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         })
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
-            ToastUtils.showToast(requireContext(), "Scan login code not available yet")
+            ActivityLauncher.viewQRCodeAuthFlow(requireContext())
         }
     }
 
