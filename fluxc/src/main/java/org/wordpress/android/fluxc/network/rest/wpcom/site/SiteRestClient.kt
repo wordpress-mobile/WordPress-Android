@@ -1013,8 +1013,12 @@ class SiteRestClient @Inject constructor(
                 site.setIsBloggingReminderOnFriday(it.reminders_days["friday"] ?: false)
                 site.setIsBloggingReminderOnSaturday(it.reminders_days["saturday"] ?: false)
                 site.setIsBloggingReminderOnSunday(it.reminders_days["sunday"] ?: false)
-                site.bloggingReminderHour = it.reminders_time.split(".")[0].toInt()
-                site.bloggingReminderMinute = it.reminders_time.split(".")[1].toInt()
+                try {
+                    site.bloggingReminderHour = it.reminders_time.split(".")[0].toInt()
+                    site.bloggingReminderMinute = it.reminders_time.split(".")[1].toInt()
+                } catch (ex: NumberFormatException) {
+                    AppLog.e(API, "Received malformed blogging reminder time: " + ex.message)
+                }
             }
         }
         if (from.plan != null) {
