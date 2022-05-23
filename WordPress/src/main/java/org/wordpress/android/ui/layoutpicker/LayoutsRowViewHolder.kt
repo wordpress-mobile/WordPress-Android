@@ -39,6 +39,7 @@ class LayoutsItemViewHolder(
                 parent.context
         ).inflate(R.layout.modal_layout_picker_layouts_row, parent, false)
 ) {
+    private val rowDivider: View = itemView.findViewById(R.id.layouts_row_separator_line)
     private val title: TextView = itemView.findViewById(R.id.title)
     private val subtitle: TextView = itemView.findViewById(R.id.subtitle)
     private var currentItem: LayoutCategoryUiState? = null
@@ -52,7 +53,6 @@ class LayoutsItemViewHolder(
         itemView.updateLayoutParams {
             height = dimensionProvider.rowHeight
         }
-        itemView.findViewById<View>(R.id.layouts_row_separator_line).isVisible = showRowDividers
         itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
             layoutManager = LinearLayoutManager(
                     context,
@@ -74,6 +74,7 @@ class LayoutsItemViewHolder(
     fun bind(category: LayoutCategoryUiState) {
         currentItem = category
 
+        rowDivider.isVisible = showRowDividers
         title.text = category.description
 
         title.setTextSize(
