@@ -125,8 +125,8 @@ class QuickStartAdapter(
     }
 
     interface OnQuickStartAdapterActionListener {
-        fun onSkipTaskTapped(task: QuickStartTask?)
-        fun onTaskTapped(task: QuickStartTask?)
+        fun onSkipTaskTapped(task: QuickStartTask)
+        fun onTaskTapped(task: QuickStartTask)
         fun onCompletedTasksListToggled(isExpanded: Boolean)
     }
 

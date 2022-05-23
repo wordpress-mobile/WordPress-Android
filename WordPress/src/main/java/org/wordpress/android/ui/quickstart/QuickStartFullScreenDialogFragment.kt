@@ -181,7 +181,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
         return true
     }
 
-    override fun onTaskTapped(task: QuickStartTask?) {
+    override fun onTaskTapped(task: QuickStartTask) {
         mQuickStartTracker.track(getQuickStartListTappedTracker(task))
         if (!showSnackbarIfNeeded(task)) {
             val result = Bundle()
@@ -200,7 +200,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
         }
     }
 
-    override fun onSkipTaskTapped(task: QuickStartTask?) {
+    override fun onSkipTaskTapped(task: QuickStartTask) {
         mQuickStartTracker.track(getQuickStartListSkippedTracker(task))
         val selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId()
         mQuickStartStore.setDoneTask(selectedSiteLocalId.toLong(), task, true)
