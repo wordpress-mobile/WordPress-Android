@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 
 class QuickStartTasksDiffCallback(
-    private val oldList: List<QuickStartTask>,
-    private val newList: List<QuickStartTask>
+    private val oldList: List<QuickStartTask?>,
+    private val newList: List<QuickStartTask?>
 ) : DiffUtil.Callback() {
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition] == newList[newItemPosition]

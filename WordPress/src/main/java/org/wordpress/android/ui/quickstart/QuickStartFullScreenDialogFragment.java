@@ -117,10 +117,10 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
 
         mQuickStartAdapter = new QuickStartAdapter(
-                requireContext(),
                 tasksUncompleted,
                 tasksCompleted,
-                isCompletedTasksListExpanded);
+                isCompletedTasksListExpanded
+        );
 
         if (tasksUncompleted.isEmpty()) {
             mQuickStartCompleteView.setVisibility(!isCompletedTasksListExpanded ? View.VISIBLE : View.GONE);
