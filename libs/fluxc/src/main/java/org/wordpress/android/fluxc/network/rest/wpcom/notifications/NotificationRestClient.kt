@@ -75,7 +75,7 @@ class NotificationRestClient @Inject constructor(
                         "version_code" to PackageUtils.getVersionCode(appContext).toString(),
                         "os_version" to Build.VERSION.RELEASE,
                         "device_uuid" to uuid
-                ).toMap(),
+                ),
                 body = null,
                 RegisterDeviceRestResponse::class.java
         )
