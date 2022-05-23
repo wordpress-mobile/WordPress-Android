@@ -44,7 +44,6 @@ import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragme
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
-import org.wordpress.android.util.config.PreloadThumbnailsFeatureConfig
 import org.wordpress.android.util.config.SiteNameFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
@@ -65,17 +64,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
     private val hppViewModel: HomePagePickerViewModel by viewModels()
     private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
     private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
-    // TODO: remove this (it is for testing convenience)
-    @Inject internal lateinit var preloadThumbnailsFeatureConfig: PreloadThumbnailsFeatureConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.site_creation_activity)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
         mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
-        if (preloadThumbnailsFeatureConfig.isEnabled()) {
-            mainViewModel.preloadThumbnails(this)
-        }
+        mainViewModel.preloadThumbnails(this)
 
         observeVMState()
     }
