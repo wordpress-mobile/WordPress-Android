@@ -44,9 +44,9 @@ class QuickStartFullScreenDialogFragment : Fragment(),
         FullScreenDialogContent,
         OnQuickStartAdapterActionListener {
     private var dialogController: FullScreenDialogController? = null
-    private var quickStartAdapter: QuickStartAdapter? = null
     private var quickStartCompleteView: ActionableEmptyView? = null
     private var tasksType: QuickStartTaskType = QuickStartTaskType.CUSTOMIZE
+    private lateinit var quickStartAdapter: QuickStartAdapter
 
     @Inject lateinit var quickStartTracker: QuickStartTracker
     @Inject lateinit var quickStartStore: QuickStartStore
@@ -150,7 +150,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
         if (tasksUncompleted.isEmpty()) {
             quickStartCompleteView?.visibility = if (!isCompletedTasksListExpanded) View.VISIBLE else View.GONE
         }
-        quickStartAdapter!!.setOnTaskTappedListener(this@QuickStartFullScreenDialogFragment)
+        quickStartAdapter.setOnTaskTappedListener(this@QuickStartFullScreenDialogFragment)
         list.layoutManager = LinearLayoutManager(requireContext())
         list.adapter = quickStartAdapter
         // Disable default change animations to avoid blinking effect when adapter data is changed.
@@ -189,33 +189,30 @@ class QuickStartFullScreenDialogFragment : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (quickStartAdapter != null) {
-            outState.putBoolean(
-                    KEY_COMPLETED_TASKS_LIST_EXPANDED,
-                    quickStartAdapter!!.isCompletedTasksListExpanded
-            )
-        }
+        outState.putBoolean(
+                KEY_COMPLETED_TASKS_LIST_EXPANDED,
+                quickStartAdapter.isCompletedTasksListExpanded
+        )
     }
 
     override fun onSkipTaskTapped(task: QuickStartTask) {
         quickStartTracker.track(getQuickStartListSkippedTracker(task))
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId()
         quickStartStore.setDoneTask(selectedSiteLocalId.toLong(), task, true)
-        if (quickStartAdapter != null) {
-            val uncompletedTasks: List<QuickStartTask?> = quickStartStore.getUncompletedTasksByType(
-                    selectedSiteLocalId.toLong(),
-                    tasksType
-            )
-            quickStartAdapter!!.updateContent(
-                    uncompletedTasks,
-                    quickStartStore.getCompletedTasksByType(
-                            selectedSiteLocalId.toLong(),
-                            tasksType
-                    )
-            )
-            if (uncompletedTasks.isEmpty() && !quickStartAdapter!!.isCompletedTasksListExpanded) {
-                toggleCompletedView(true)
-            }
+
+        val uncompletedTasks: List<QuickStartTask?> = quickStartStore.getUncompletedTasksByType(
+                selectedSiteLocalId.toLong(),
+                tasksType
+        )
+        quickStartAdapter.updateContent(
+                uncompletedTasks,
+                quickStartStore.getCompletedTasksByType(
+                        selectedSiteLocalId.toLong(),
+                        tasksType
+                )
+        )
+        if (uncompletedTasks.isEmpty() && !quickStartAdapter.isCompletedTasksListExpanded) {
+            toggleCompletedView(true)
         }
     }
 
