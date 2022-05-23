@@ -26,6 +26,7 @@ class LayoutsFooterViewHolder(parent: ViewGroup, footerLayoutResId: Int) :
 /**
  * Modal Layout Picker layouts view holder
  */
+@Suppress("LongParameterList")
 class LayoutsItemViewHolder(
     parent: ViewGroup,
     private val prefetchItemCount: Int = 4,
