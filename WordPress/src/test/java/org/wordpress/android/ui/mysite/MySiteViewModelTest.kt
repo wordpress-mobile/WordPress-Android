@@ -97,6 +97,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -175,6 +176,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var viewModel: MySiteViewModel
@@ -371,6 +373,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
                 appPrefsWrapper,
+                bloggingPromptsCardAnalyticsTracker,
                 quickStartTracker
         )
         uiModels = mutableListOf()
