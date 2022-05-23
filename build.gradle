@@ -12,7 +12,7 @@ ext {
     coroutinesVersion = '1.5.2'
     androidxWorkVersion = "2.7.0"
 
-    fluxCVersion = 'trunk-c5a745e60ccb39fc8178a146d467c3221d931bb1'
+    fluxCVersion = '2418-525ef9f193152e8cb274035a3470fa9aa46d980d'
 
     appCompatVersion = '1.0.2'
     androidxCoreVersion = '1.3.2'
