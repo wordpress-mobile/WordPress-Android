@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_LIKES_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.VIEWS_AND_VISITORS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
@@ -68,6 +70,7 @@ abstract class StatsListViewModel(
         INSIGHT_DETAIL(R.string.stats),
         TOTAL_LIKES_DETAIL(R.string.stats_view_total_likes),
         TOTAL_COMMENTS_DETAIL(R.string.stats_view_total_comments),
+        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_followers),
         ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
@@ -240,3 +243,15 @@ class TotalCommentsDetailListViewModel @Inject constructor(
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(TOTAL_COMMENTS_DETAIL))
+
+class TotalFollowersDetailListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(
+        mainDispatcher,
+        statsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(TOTAL_FOLLOWERS_DETAIL)
+)

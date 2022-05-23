@@ -28,13 +28,13 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -93,6 +93,7 @@ import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailActivity;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
@@ -372,7 +373,7 @@ public class ActivityLauncher {
     }
 
     public static Intent openEditorWithPromptAndDismissNotificationIntent(
-            @NonNull final Context context, final int notificationId, final BloggingPrompt bloggingPrompt
+            @NonNull final Context context, final int notificationId, final BloggingPromptModel bloggingPrompt
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
@@ -1072,9 +1073,11 @@ public class ActivityLauncher {
         editPageForResult(intent, fragment, site, pageLocalId, loadAutoSaveRevision, RequestCodes.EDIT_POST);
     }
 
-    public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId) {
+    public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
+                                                boolean isNewSite) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
         editPageForResult(intent, fragment, site, homeLocalId, false, RequestCodes.EDIT_LANDING_PAGE);
     }
 
@@ -1502,6 +1505,11 @@ public class ActivityLauncher {
         StatsDetailActivity.startForTotalCommentsDetail(context, site);
     }
 
+    public static void viewTotalFollowersDetail(Context context, SiteModel site) {
+        if (site == null) return;
+        StatsDetailActivity.startForTotalFollowersDetail(context, site);
+    }
+
     public static void viewInsightsDetail(Context context, SiteModel site) {
         if (site == null) {
             return;
@@ -1697,5 +1705,10 @@ public class ActivityLauncher {
 
     public static void viewDebugCookies(@NonNull Context context) {
         context.startActivity(new Intent(context, DebugCookiesActivity.class));
+    }
+
+    public static void viewQRCodeAuthFlow(@NonNull Context context) {
+        Intent intent = new Intent(context, QRCodeAuthActivity.class);
+        context.startActivity(intent);
     }
 }

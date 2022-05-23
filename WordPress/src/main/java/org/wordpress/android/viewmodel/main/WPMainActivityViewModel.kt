@@ -1,3 +1,4 @@
+@file:Suppress("MaximumLineLength")
 package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
@@ -5,15 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -43,6 +46,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
@@ -61,6 +65,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -110,8 +115,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
-    private val _createPostWithBloggingPrompt = SingleLiveEvent<BloggingPrompt>()
-    val createPostWithBloggingPrompt: LiveData<BloggingPrompt> = _createPostWithBloggingPrompt
+    private val _createPostWithBloggingPrompt = SingleLiveEvent<Int>()
+    val createPostWithBloggingPrompt: LiveData<Int> = _createPostWithBloggingPrompt
 
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
@@ -138,18 +143,24 @@ class WPMainActivityViewModel @Inject constructor(
         updateFeatureAnnouncements()
     }
 
-    private fun loadMainActions(site: SiteModel?) {
+    private fun loadMainActions(site: SiteModel?) = launch {
         val actionsList = ArrayList<MainActionListItem>()
-
         if (bloggingPromptsFeatureConfig.isEnabled()) {
-            actionsList.add(
-                    AnswerBloggingPromptAction(
-                            actionType = ANSWER_BLOGGING_PROMPT,
-                            promptTitle = UiStringText("Cast the movie of your life"),
-                            isAnswered = false,
-                            onClickAction = ::onAnswerPromptActionClicked
-                    )
-            )
+            val prompt = site?.let {
+                bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+            }
+
+            prompt?.let {
+                actionsList.add(
+                        AnswerBloggingPromptAction(
+                                actionType = ANSWER_BLOGGING_PROMPT,
+                                promptTitle = UiStringText(it.text),
+                                isAnswered = prompt.isAnswered,
+                                promptId = prompt.id,
+                                onClickAction = ::onAnswerPromptActionClicked
+                        )
+                )
+            }
         }
 
         actionsList.add(
@@ -206,22 +217,10 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    @Suppress("MaxLineLength")
-    /* ktlint-disable max-line-length */
-    private fun onAnswerPromptActionClicked() {
+    private fun onAnswerPromptActionClicked(promptId: Int) {
         // TODO @klymyam add analytics
         _isBottomSheetShowing.postValue(Event(false))
-
-        // TODO @RenanLukas get BloggingPrompt from Store when it's ready
-        val bloggingPrompt = BloggingPrompt(
-            id = 1234,
-            text = "Cast the movie of your life.",
-            content = "<!-- wp:pullquote -->\n" +
-                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                    "<!-- /wp:pullquote -->",
-            respondents = emptyList()
-        )
-        _createPostWithBloggingPrompt.postValue(bloggingPrompt)
+        _createPostWithBloggingPrompt.postValue(promptId)
     }
 
     private fun disableTooltip(site: SiteModel?) {
@@ -360,9 +359,14 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {
-        // For now, we only do this for the FOLLOW_SITE task.
-        val followSitesTaskFocusPointInfo = FocusPointInfo(FOLLOW_SITE, task == FOLLOW_SITE)
-        return listOf(followSitesTaskFocusPointInfo)
+        val followSiteTask = quickStartRepository.quickStartType
+                .getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
+        val followSitesTaskFocusPointInfo = FocusPointInfo(followSiteTask, task == followSiteTask)
+        val checkNotifsTaskFocusPointInfo = FocusPointInfo(
+                QuickStartExistingSiteTask.CHECK_NOTIFICATIONS,
+                task == QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
+        )
+        return listOf(followSitesTaskFocusPointInfo, checkNotifsTaskFocusPointInfo)
     }
 
     fun handleSiteRemoved() {

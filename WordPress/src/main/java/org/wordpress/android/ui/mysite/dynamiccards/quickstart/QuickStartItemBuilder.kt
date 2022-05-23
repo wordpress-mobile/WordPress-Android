@@ -126,6 +126,8 @@ class QuickStartItemBuilder
             QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL ->
                 R.drawable.img_illustration_quick_start_task_explore_plans
             QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> R.drawable.img_illustration_quick_start_task_create_site
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL ->
+                R.drawable.img_illustration_quick_start_task_placeholder
             else -> R.drawable.img_illustration_quick_start_task_placeholder
         }
     }

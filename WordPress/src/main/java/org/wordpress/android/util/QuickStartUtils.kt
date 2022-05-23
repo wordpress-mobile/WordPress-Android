@@ -185,6 +185,7 @@ object QuickStartUtils {
                 SiteUtils.isAccessedViaWPComRest(siteModel))
     }
 
+    @Suppress("ComplexMethod")
     @JvmStatic
     fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
         return when (task.string) {
@@ -200,10 +201,13 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_TAPPED
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_LIST_UPLOAD_MEDIA_TAPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
 
+    @Suppress("ComplexMethod")
     @JvmStatic
     fun getQuickStartListSkippedTracker(task: QuickStartTask): Stat {
         return when (task.string) {
@@ -221,10 +225,13 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL -> Stat.QUICK_START_LIST_CHECK_NOTIFICATIONS_SKIPPED
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_LIST_UPLOAD_MEDIA_SKIPPED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }
 
+    @Suppress("ComplexMethod")
     fun getTaskCompletedTracker(task: QuickStartTask): Stat {
         return when (task.string) {
             QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
@@ -238,6 +245,9 @@ object QuickStartUtils {
             QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
+            QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL ->
+                Stat.QUICK_START_CHECK_NOTIFICATIONS_TASK_COMPLETED
+            QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL -> Stat.QUICK_START_UPLOAD_MEDIA_TASK_COMPLETED
             else -> throw IllegalStateException("The task '$task' is not valid")
         }
     }

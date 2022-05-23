@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-26 15:54:07+0000
+Translation-Revision-Date: 2022-05-16 14:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">해제</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">답변</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">일일 프롬프트</string>
+    <string name="blogging_prompts_onboarding_got_it">알겠습니다</string>
+    <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;을(를) 눌러서 사이트 보기</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">다른 사이트를 찾으려면 %1$s 리더 %2$s을(를) 선택하세요.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">프롬프트 더 알아보기</string>
+    <string name="photo_picker_video_thumbnail_unselected">비디오 선택 안 됨</string>
+    <string name="photo_picker_video_thumbnail_selected">비디오 선택됨</string>
+    <string name="photo_picker_media_thumbnail_content_description">미디어 썸네일</string>
+    <string name="stats_insights_popular_title">🔥 가장 인기 있는 시간</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">이번 주 방문자는 이전 주보다 %1$s 적습니다.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">이번 주 방문자는 이전 주보다 %1$s 많습니다.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">이번 주 조회수는 이전 주보다 %1$s 적습니다.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">이번 주 조회수는 이전 주보다 %1$s 많습니다.</string>
+    <string name="stats_timeframe_previous_week">이전 주</string>
+    <string name="stats_timeframe_this_week">이번 주</string>
+    <string name="scan_vault_press_active_on_site_button_text">알림판 방문</string>
+    <string name="scan_vault_press_active_on_site_subtitle">사이트가 이미 VaultPress로 보호되고 있습니다. 아래에서 VaultPress 알림판 링크를 찾을 수 있습니다.</string>
+    <string name="scan_vault_press_active_on_site_title">사이트에 VaultPress가 있음</string>
+    <string name="locale_picker_current_language">현재 언어:</string>
     <string name="hpp_choose_and_create_site">사이트 만들기</string>
     <string name="gutenberg_native_add_blocks_11d0841f">블록 추가</string>
     <string name="initial_screen">초기 화면</string>
@@ -512,10 +534,12 @@ Language: ko_KR
     <string name="disable">비활성화</string>
     <string name="quick_start_card_menu_unpin">이 항목 고정 취소</string>
     <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
+    <string name="quick_start_list_view_site_title">사이트 보기</string>
     <string name="quick_start_list_follow_site_subtitle">회원님께 영감을 주는 사이트를 발견하고 팔로우하세요.</string>
     <string name="quick_start_list_enable_sharing_title">소셜 공유</string>
     <string name="quick_start_list_enable_sharing_subtitle">새 글을 소셜 미디어에 자동으로 공유합니다.</string>
     <string name="quick_start_list_update_site_title_subtitle">개성과 게시글을 반영하는 이름을 사이트에 지정하세요.</string>
+    <string name="quick_start_list_check_stats_title">사이트 통계 확인</string>
     <string name="backup_download_status_failure_bullet2">그래도 다운로드 가능한 백업 파일 만들기는 시도됩니다.</string>
     <string name="backup_download_status_failure_bullet1">다운로드 가능한 백업에 걸리는 시간을 알려주는 상태를 찾을 수 없습니다.</string>
     <string name="backup_download_status_failure_heading">다운로드 가능한 백업 상태를 찾을 수 없습니다.</string>
@@ -1616,6 +1640,7 @@ Language: ko_KR
     <string name="quick_start_dialog_upload_icon_title">고유한 사이트 아이콘 선택</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
     <string name="quick_start_dialog_explore_plans_message_short">현재 요금제 및 사용 가능한 다른 요금제를 보려면 %1$s요금제%2$s를 탭합니다.</string>
+    <string name="quick_start_dialog_check_stats_message_short">사이트의 성과를 참조하려면 %1$s 통계 %2$s을(를) 선택합니다.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
     <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 글을 게시하세요.</string>
     <string name="quick_start_dialog_explore_plans_title">요금제 둘러보기</string>
@@ -1623,6 +1648,7 @@ Language: ko_KR
     <string name="quick_start_dialog_enable_sharing_title">글 공유 설정</string>
     <string name="quick_start_dialog_enable_sharing_message">새 글을 소셜 미디어 계정에 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>
+    <string name="quick_start_dialog_check_stats_message">사이트의 성과를 최신 상태로 유지하세요.</string>
     <string name="quick_start_dialog_remove_next_steps_message">다음 단계를 제거하면 이 사이트의 모든 둘러보기가 숨겨집니다. 이 작업은 되돌릴 수 없습니다.</string>
     <string name="quick_start_dialog_remove_next_steps_title">다음 단계 제거</string>
     <string name="quick_start_remove_next_steps_menu_title">제거</string>
@@ -1792,6 +1818,7 @@ Language: ko_KR
     <string name="quick_start_list_create_site_title">사이트 만들기</string>
     <string name="quick_start_list_create_site_subtitle">사이트 가동 및 작동</string>
     <string name="quick_start_dialog_view_site_title">사이트 보기</string>
+    <string name="quick_start_dialog_view_site_message">새 사이트를 미리 보며 방문자에게 표시되는 내용을 참조하세요.</string>
     <string name="quick_start_dialog_share_site_title">사이트 공유</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">%1$s 공유 %2$s를 탭하여 계속하기</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s 연결 %2$s을 탭하여 소셜 미디어 계정 추가</string>
@@ -1799,6 +1826,7 @@ Language: ko_KR
     <string name="quick_start_dialog_publish_post_title">글 게시</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s 게시물 작성 %2$s을 탭하여 새 게시물 작성하기</string>
     <string name="quick_start_dialog_need_help_button_negative">안 함</string>
+    <string name="quick_start_dialog_follow_sites_title">다른 사이트와 연결</string>
     <string name="quick_start_button_positive">이동</string>
     <string name="quick_start_button_negative_short">취소</string>
     <string name="quick_start_button_negative">지금 안 함</string>
@@ -2336,6 +2364,7 @@ Language: ko_KR
     <string name="post_title">제목</string>
     <string name="menu_redo">다시하기</string>
     <string name="menu_undo">실행 취소</string>
+    <string name="media_insert_unimplemented">죄송합니다! 기능이 아직 구현되지 않았습니다.</string>
     <string name="error_media_small">미디어가 너무 작아서 표시할 수 없습니다</string>
     <string name="editor_dropped_unsupported_files">경고: 삭제된 항목이 모두 지원되는 것은 아닙니다!</string>
     <string name="editor_dropped_title_images_not_allowed">제목에서 이미지를 삭제할 수 없습니다</string>

@@ -36,13 +36,10 @@ class BloggingPromptCardViewHolder(
         }
 
         answerButton.setOnClickListener {
-            card.onAnswerClick.invoke()
-            uiHelpers.updateVisibility(answerButton, false)
-            uiHelpers.updateVisibility(answeredPromptControls, true)
+            card.onAnswerClick.invoke(card.promptId)
         }
         answeredButton.setOnClickListener {
-            uiHelpers.updateVisibility(answerButton, true)
-            uiHelpers.updateVisibility(answeredPromptControls, false)
+            card.onAnswerClick.invoke(card.promptId)
         }
         shareButton.setOnClickListener {
             card.onShareClick.invoke(
@@ -59,22 +56,28 @@ class BloggingPromptCardViewHolder(
                 FlexDirection.ROW,
                 FlexWrap.NOWRAP
         ).apply { justifyContent = JustifyContent.CENTER }
-        answeredUsersRecycler.addItemDecoration(
-                AvatarItemDecorator(
-                        RtlUtils.isRtl(answeredUsersRecycler.context),
-                        answeredUsersRecycler.context,
-                        AVATAR_LEFT_OFFSET_DIMEN
-                )
-        )
-        answeredUsersRecycler.layoutManager = layoutManager
 
-        val adapter = TrainOfAvatarsAdapter(
-                imageManager,
-                uiHelpers
-        )
-        answeredUsersRecycler.adapter = adapter
+        if (card.numberOfAnswers > 0) {
+            uiHelpers.updateVisibility(answeredUsersRecycler, true)
+            answeredUsersRecycler.addItemDecoration(
+                    AvatarItemDecorator(
+                            RtlUtils.isRtl(answeredUsersRecycler.context),
+                            answeredUsersRecycler.context,
+                            AVATAR_LEFT_OFFSET_DIMEN
+                    )
+            )
+            answeredUsersRecycler.layoutManager = layoutManager
 
-        adapter.loadData(card.respondents)
+            val adapter = TrainOfAvatarsAdapter(
+                    imageManager,
+                    uiHelpers
+            )
+            answeredUsersRecycler.adapter = adapter
+
+            adapter.loadData(card.respondents)
+        } else {
+            uiHelpers.updateVisibility(answeredUsersRecycler, false)
+        }
     }
 }
 

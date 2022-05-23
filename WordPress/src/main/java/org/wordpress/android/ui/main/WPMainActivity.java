@@ -51,6 +51,7 @@ import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -108,6 +109,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
+import org.wordpress.android.ui.quickstart.QuickStartTracker;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -240,6 +242,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject BloggingPromptsOnboardingNotificationScheduler mBloggingPromptsOnboardingNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
+    @Inject QuickStartTracker mQuickStartTracker;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -341,7 +344,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 } else if (isQuickStartRequestedFromPush) {
                     // when app is opened from Quick Start reminder switch to MySite fragment
                     mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
-                    AnalyticsTracker.track(Stat.QUICK_START_NOTIFICATION_TAPPED);
+                    mQuickStartTracker.track(Stat.QUICK_START_NOTIFICATION_TAPPED);
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -628,8 +631,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mViewModel.getCreatePostWithBloggingPrompt().observe(this, bloggingPrompt -> {
-            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.getId());
+        mViewModel.getCreatePostWithBloggingPrompt().observe(this, promptId -> {
+            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId);
         });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
@@ -961,7 +964,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (pageType == PageType.READER) {
             // MySite fragment might not be attached to activity, so we need to remove focus point from here
             QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
-            mQuickStartRepository.requestNextStepOfTask(QuickStartNewSiteTask.FOLLOW_SITE);
+            QuickStartTask followSiteTask = mQuickStartRepository
+                    .getQuickStartType().getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL);
+            mQuickStartRepository.requestNextStepOfTask(followSiteTask);
+        }
+
+        if (pageType == PageType.NOTIFS) {
+            // MySite fragment might not be attached to activity, so we need to remove focus point from here
+            QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.root_view_main));
+            mQuickStartRepository.completeTask(QuickStartExistingSiteTask.CHECK_NOTIFICATIONS);
         }
 
         mViewModel.onPageChanged(
@@ -1261,7 +1272,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             int size = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
             int horizontalOffset;
             int verticalOffset;
-            if (QuickStartNewSiteTask.FOLLOW_SITE.equals(activeTask)) {
+            QuickStartTask followSiteTask = mQuickStartRepository
+                    .getQuickStartType().getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL);
+            if (followSiteTask.equals(activeTask)) {
                 horizontalOffset = targetView != null ? ((targetView.getWidth() / 2 - size + getResources()
                         .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset))) : 0;
                 verticalOffset = 0;

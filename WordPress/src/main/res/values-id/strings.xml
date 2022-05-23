@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-21 22:00:50+0000
+Translation-Revision-Date: 2022-05-12 11:18:45+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="blogging_prompts_notification_dismiss">Tutup</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Jawaban</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Saran Harian</string>
+    <string name="blogging_prompts_onboarding_got_it">Saya mengerti</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Ketuk &lt;b&gt;%1$s&lt;/b&gt; untuk melihat situs Anda</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Pilih %1$s Pembaca %2$s untuk menemukan situs lainnya.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Pelajari lebih lanjut tentang saran</string>
+    <string name="photo_picker_video_thumbnail_unselected">Video tidak dipilih</string>
+    <string name="photo_picker_video_thumbnail_selected">Video dipilih</string>
+    <string name="photo_picker_media_thumbnail_content_description">Gambar Poster Media</string>
+    <string name="stats_insights_popular_title">🔥 Waktu Paling Populer</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Pengunjung Anda minggu ini %1$s lebih rendah dari minggu sebelumnya.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Pengunjung Anda minggu ini %1$s lebih tinggi dari minggu sebelumnya.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Tayangan Anda minggu ini %1$s lebih rendah dari minggu sebelumnya.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Tayangan Anda minggu ini %1$s lebih tinggi dari minggu sebelumnya.</string>
+    <string name="stats_timeframe_previous_week">Minggu Sebelumnya</string>
+    <string name="stats_timeframe_this_week">Minggu Ini</string>
+    <string name="scan_vault_press_active_on_site_button_text">Kunjungi Dasbor</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Situs Anda sudah dilindungi oleh VaultPress. Anda dapat menemukan tautan ke dasbor VaultPress di bawah ini.</string>
+    <string name="scan_vault_press_active_on_site_title">Situs Anda memiliki VaultPress</string>
+    <string name="locale_picker_current_language">Bahasa saat ini:</string>
     <string name="hpp_choose_and_create_site">Buat situs</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Tambah blok</string>
     <string name="initial_screen">Layar Awal</string>
@@ -434,6 +456,7 @@ Language: id
     <string name="gutenberg_native_create_embed">Buat sematan</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Menjelaskan secara singkat tautan untuk membantu pengguna pembaca layar</string>
+    <string name="gutenberg_native_add_blocks">Tambahkan blok</string>
     <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
     <string name="gutenberg_native_what_is_alt_text">Apa itu teks alt?</string>
     <string name="gutenberg_native_transform_s_to">Ubah %s menjadi</string>
@@ -514,10 +537,12 @@ Language: id
     <string name="disable">Nonaktifkan</string>
     <string name="quick_start_card_menu_unpin">Lepas sematan ini</string>
     <string name="quick_start_list_review_pages_subtitle">Periksa halaman dan lakukan perubahan, atau tambahkan atau hapus halaman.</string>
+    <string name="quick_start_list_view_site_title">Lihat situs Anda</string>
     <string name="quick_start_list_follow_site_subtitle">Temukan dan ikuti situs yang menginspirasi Anda.</string>
     <string name="quick_start_list_enable_sharing_title">Berbagi melalui media sosial</string>
     <string name="quick_start_list_enable_sharing_subtitle">Bagikan pos baru secara otomatis ke media sosial Anda.</string>
     <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda.</string>
+    <string name="quick_start_list_check_stats_title">Periksa statistik situs Anda</string>
     <string name="backup_download_status_failure_bullet2">Kami masih mencoba membuat file cadangan yang dapat diunduh.</string>
     <string name="backup_download_status_failure_bullet1">Kami tidak dapat menemukan status untuk memberitahukan kapan cadangan yang dapat diunduh ini selesai.</string>
     <string name="backup_download_status_failure_heading">Hmm, kami tidak dapat menemukan status cadangan yang dapat diunduh</string>
@@ -1618,6 +1643,7 @@ Language: id
     <string name="quick_start_dialog_upload_icon_title">Pilih ikon situs yang unik</string>
     <string name="quick_start_dialog_upload_icon_message">Pengunjung Anda akan melihat ikon Anda di browser. Tambahkan ikon khusus untuk tampilan yang lebih profesional dan elegan.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ketuk %1$s Paket %2$s untuk melihat paket Anda saat ini dan paket yang tersedia</string>
+    <string name="quick_start_dialog_check_stats_message_short">Pilih %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ketuk %1$s Ikon Situs Anda %2$s untuk mengunggah ikon baru</string>
     <string name="quick_start_dialog_publish_post_message">Buat konsep dan publikasikan pos.</string>
     <string name="quick_start_dialog_explore_plans_title">Pelajari paket</string>
@@ -1794,6 +1820,7 @@ Language: id
     <string name="quick_start_list_create_site_title">Buat situs Anda</string>
     <string name="quick_start_list_create_site_subtitle">Buat situs Anda dan kelola.</string>
     <string name="quick_start_dialog_view_site_title">Lihat situs Anda</string>
+    <string name="quick_start_dialog_view_site_message">Pratinjau situs Anda untuk mengetahui tampilan situs yang akan dilihat oleh pengunjung.</string>
     <string name="quick_start_dialog_share_site_title">Bagikan situs Anda</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Ketuk %1$s Berbagi %2$s untuk melanjutkan</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Ketuk %1$s Koneksi %2$s untuk menambahkan akun media sosial Anda</string>
@@ -1801,6 +1828,7 @@ Language: id
     <string name="quick_start_dialog_publish_post_title">Publikasikan pos</string>
     <string name="quick_start_dialog_publish_post_message_short">Ketuk %1$s Buat Pos %2$s untuk membuat pos baru</string>
     <string name="quick_start_dialog_need_help_button_negative">Tidak, terima kasih</string>
+    <string name="quick_start_dialog_follow_sites_title">Hubungkan dengan situs lainnya</string>
     <string name="quick_start_button_positive">Ayo</string>
     <string name="quick_start_button_negative_short">Batal</string>
     <string name="quick_start_button_negative">Jangan sekarang</string>

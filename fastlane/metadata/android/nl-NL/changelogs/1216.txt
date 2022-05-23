@@ -1,0 +1,10 @@
+19.8:
+- Voorvertoning van niet opgeslagen wijzigingen voor conceptberichten
+- Instellingen voor uitgelichte afbeelding in blok nieuwste bericht
+- HTML/Visuele modus wissel berichten
+- Volledige insluit blok voorvertoning
+- Lokale kiezer visueel
+- Langere uploads met standalone VideoPress
+- Media kiezer talkback mediatypes
+- Niet Latijnse bestandsnaam uploads
+- Wis uitgelichte afbeelding in berichtinstellingen

@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:backgroundTint="?attr/colorSurface"
         android:id="@+id/avatar"
         style="@style/ReaderImageView.Avatar.Small"
         android:layout_gravity="center_vertical"

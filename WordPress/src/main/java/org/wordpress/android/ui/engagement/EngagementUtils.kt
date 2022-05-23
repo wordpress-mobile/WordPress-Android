@@ -34,6 +34,6 @@ class EngagementUtils @Inject constructor() {
     }
 
     fun likesToTrainOfFaces(likes: List<LikeModel>) = likes.map {
-        AvatarItem(userId = it.likerId, userAvatarUrl = it.likerAvatarUrl!!)
+        AvatarItem(userAvatarUrl = it.likerAvatarUrl!!)
     }
 }

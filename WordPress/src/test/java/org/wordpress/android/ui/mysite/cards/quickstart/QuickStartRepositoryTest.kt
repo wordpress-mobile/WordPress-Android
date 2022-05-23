@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.test
@@ -31,15 +32,16 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
+import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
+import org.wordpress.android.util.config.QuickStartExistingUsersV2FeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -49,7 +51,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var dynamicCardStore: DynamicCardStore
@@ -59,7 +60,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var quickStartExistingUsersV2FeatureConfig: QuickStartExistingUsersV2FeatureConfig
     @Mock lateinit var quickStartType: QuickStartType
+    @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -83,6 +86,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() = test {
+        whenever(appPrefsWrapper.getLastSelectedQuickStartType()).thenReturn(quickStartType)
+        whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
@@ -90,7 +95,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 appPrefsWrapper,
                 selectedSiteRepository,
                 resourceProvider,
-                analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
                 dynamicCardStore,
@@ -98,10 +102,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 quickStartDynamicCardsFeatureConfig,
                 contextProvider,
                 htmlMessageUtils,
+                quickStartTracker,
                 buildConfigWrapper,
-                mySiteDashboardTabsFeatureConfig
+                mySiteDashboardTabsFeatureConfig,
+                quickStartExistingUsersV2FeatureConfig
         )
-        quickStartRepository.quickStartType = quickStartType
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
         quickStartTabStep = mutableListOf()
@@ -228,10 +233,26 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given task origin dashboard tab + current tab is menu, when task is activated, then tab step is started`() {
+    fun `given new site + task origin dashboard + current tab menu, when task activated, then tab step started`() {
         quickStartRepository.currentTab = MySiteTabType.SITE_MENU
         quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartNewSiteTask.CHECK_STATS)
         val task = dashboardTasks.random()
+        initQuickStartInProgress()
+
+        quickStartRepository.setActiveTask(task)
+
+        assertThat(quickStartTabStep.last()).isEqualTo(QuickStartTabStep(true, task, MySiteTabType.DASHBOARD))
+    }
+
+    @Test
+    fun `given existing site + task origin dashboard + current tab menu, when task activated, then tab step started`() {
+        quickStartRepository.currentTab = MySiteTabType.SITE_MENU
+        quickStartRepository.quickStartTaskOriginTab = MySiteTabType.DASHBOARD
+        whenever(quickStartType.getTaskFromString(QuickStartStore.QUICK_START_CHECK_STATS_LABEL))
+                .thenReturn(QuickStartExistingSiteTask.CHECK_STATS)
+        val task = QuickStartExistingSiteTask.CHECK_STATS
         initQuickStartInProgress()
 
         quickStartRepository.setActiveTask(task)
@@ -326,7 +347,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `when all task are completed, then completed notice is triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        initStore(QuickStartNewSiteTask.EXPLORE_PLANS)
+        initStore(nextUncompletedTask = QuickStartNewSiteTask.EXPLORE_PLANS)
         quickStartRepository.setActiveTask(QuickStartNewSiteTask.EXPLORE_PLANS)
         whenever(quickStartType.isEveryQuickStartTaskDone(quickStartStore, site.id.toLong())).thenReturn(true)
 

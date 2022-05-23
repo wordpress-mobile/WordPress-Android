@@ -978,6 +978,7 @@
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
@@ -1002,6 +1003,7 @@
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
@@ -2323,6 +2325,7 @@
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
+    <string name="me_btn_scan_login_code">Scan Login Code</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
@@ -3075,6 +3078,7 @@
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags. Try selecting %1$s Settings %2$s to add topics you like.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus" tools:ignore="UnusedResources">Select %1$s plus %2$s to upload media. You can add it to your posts/ pages from any device.</string>
     <string name="quick_start_dialog_follow_sites_title">Connect with other sites</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
@@ -3094,10 +3098,14 @@
     <string name="quick_start_dialog_edit_homepage_title">Edit your homepage</string>
     <string name="quick_start_dialog_edit_homepage_message">Change, add, or remove content from your site\'s homepage.</string>
     <string name="quick_start_dialog_edit_homepage_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Select the %1$s Notifications tab %2$s to get updates on the go.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short" tools:ignore="UnusedResources">Select %1$s Homepage %2$s to edit your Homepage.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
+    <string name="quick_start_dialog_check_notifications_title">Check your notifications</string>
+    <string name="quick_start_dialog_check_notifications_message">Get real time updates from your pocket.</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
+    <string name="quick_start_dialog_upload_media_message">Select %1$s Media %2$s to see your current library.</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
     <string name="quick_start_list_check_stats_title">Check your site stats</string>
@@ -3122,10 +3130,14 @@
     <string name="quick_start_list_edit_homepage_title" translatable="false">@string/quick_start_dialog_edit_homepage_title</string>
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
+    <string name="quick_start_list_check_notification_subtitle">Get real time updates from your pocket</string>
+    <string name="quick_start_list_check_notification_title" translatable="false">@string/quick_start_dialog_check_notifications_title</string>
+    <string name="quick_start_list_upload_media_title">Upload photos or videos</string>
+    <string name="quick_start_list_upload_media_subtitle">Bring media straight from your device or camera to your site</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
-    <string name="quick_start_sites_type_get_to_know_app">Get to know the WordPress app</string>
+    <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
@@ -4131,4 +4143,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
         <item>@string/initial_screen_entry_value_home</item>
         <item>@string/initial_screen_entry_value_menu</item>
     </string-array>
+
+    <!-- QRCode Auth Flow -->
+    <string name="qrcode_auth_flow" translatable="false">Scan Login Code</string>
+
 </resources>
