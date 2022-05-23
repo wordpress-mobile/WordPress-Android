@@ -177,17 +177,19 @@ class SiteCreationActivity : LocaleAwareActivity(),
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
-        // Cancel preload job before displaying the theme picker.
-        if (target.wizardStep == SITE_DESIGNS) {
-            mainViewModel.preloadingJob?.cancel(
-                    "Preload did not complete before theme picker was shown."
-            )
-        }
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
             SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
-            SITE_DESIGNS -> HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
+            SITE_DESIGNS -> {
+                // Cancel preload job before displaying the theme picker.
+                if (target.wizardStep == SITE_DESIGNS) {
+                    mainViewModel.preloadingJob?.cancel(
+                            "Preload did not complete before theme picker was shown."
+                    )
+                }
+                HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
+            }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle
             )
