@@ -18,6 +18,10 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.accountsettings.usecase.FetchAccountSettingsUseCase
+import org.wordpress.android.ui.prefs.accountsettings.usecase.GetAccountUseCase
+import org.wordpress.android.ui.prefs.accountsettings.usecase.GetSitesUseCase
+import org.wordpress.android.ui.prefs.accountsettings.usecase.PushAccountSettingsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -32,8 +36,11 @@ class AccountSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private var accountsSettingsRepository: AccountSettingsRepository
-) : ScopedViewModel(mainDispatcher) {
+    private val fetchAccountSettingsUseCase: FetchAccountSettingsUseCase,
+    private val pushAccountSettingsUseCase: PushAccountSettingsUseCase,
+    private val getAccountUseCase: GetAccountUseCase,
+    private val getSitesUseCase: GetSitesUseCase
+    ) : ScopedViewModel(mainDispatcher) {
     var fetchNewSettingsJob: Job? = null
     init {
         viewModelScope.launch {
@@ -41,7 +48,7 @@ class AccountSettingsViewModel @Inject constructor(
         }
         if (networkUtilsWrapper.isNetworkAvailable()) {
             fetchNewSettingsJob = viewModelScope.launch {
-                val onAccountChanged = accountsSettingsRepository.fetchNewSettings()
+                val onAccountChanged = fetchAccountSettingsUseCase.fetchNewSettings()
                 if (onAccountChanged.isError) {
                     handleError(onAccountChanged.error)
                 }
@@ -56,8 +63,8 @@ class AccountSettingsViewModel @Inject constructor(
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
         val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
         val primarySiteViewModel = siteViewModels
-                ?.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId }
-        val account = accountsSettingsRepository.account
+                ?.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId }
+        val account = getAccountUseCase.account
         return AccountSettingsUiState(
                 userNameSettingsUiState = UserNameSettingsUiState(
                         account.userName,
@@ -80,13 +87,13 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private suspend fun getSitesAccessedViaWPComRest() {
-        val siteViewModels = accountsSettingsRepository.getSitesAccessedViaWPComRest().map {
+        val siteViewModels = getSitesUseCase.get().map {
             SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
         }
         _accountSettingsUiState.update { state ->
             state.copy(
                     primarySiteSettingsUiState = PrimarySiteSettingsUiState(
-                         siteViewModels.firstOrNull { it.siteId == accountsSettingsRepository.account.primarySiteId },
+                         siteViewModels.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId },
                          siteViewModels
                     )
             )
@@ -94,7 +101,7 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private fun cancelPendingEmailChange() {
-        onAccountSettingsChange { accountsSettingsRepository.cancelPendingEmailChange() }
+        onAccountSettingsChange { pushAccountSettingsUseCase.cancelPendingEmailChange() }
     }
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
@@ -120,7 +127,7 @@ class AccountSettingsViewModel @Inject constructor(
         }
 
         onAccountSettingsChange(optimisticallyUiState) {
-            accountsSettingsRepository.updatePrimaryBlog(siteRemoteId.toString())
+            pushAccountSettingsUseCase.updatePrimaryBlog(siteRemoteId.toString())
         }
     }
 
@@ -135,7 +142,7 @@ class AccountSettingsViewModel @Inject constructor(
                 )
             }
         }
-        onAccountSettingsChange(optimisticallyUiState) { accountsSettingsRepository.updateEmail(newEmail) }
+        onAccountSettingsChange(optimisticallyUiState) { pushAccountSettingsUseCase.updateEmail(newEmail) }
     }
 
     fun onWebAddressChanged(newWebAddress: String) {
@@ -146,7 +153,7 @@ class AccountSettingsViewModel @Inject constructor(
                 )
             }
         }
-        onAccountSettingsChange(optimisticallyUiState) { accountsSettingsRepository.updateWebAddress(newWebAddress) }
+        onAccountSettingsChange(optimisticallyUiState) { pushAccountSettingsUseCase.updateWebAddress(newWebAddress) }
     }
 
     fun onPasswordChanged(newPassword: String) {
@@ -157,7 +164,7 @@ class AccountSettingsViewModel @Inject constructor(
                     ),
             )
         }
-        onAccountSettingsChange { accountsSettingsRepository.updatePassword(newPassword) }
+        onAccountSettingsChange { pushAccountSettingsUseCase.updatePassword(newPassword) }
     }
 
     private fun onAccountSettingsChange(
@@ -258,9 +265,4 @@ class AccountSettingsViewModel @Inject constructor(
         val changePasswordSettingsUiState: ChangePasswordSettingsUiState,
         val error: String?
     )
-
-    override fun onCleared() {
-        accountsSettingsRepository.onCleanUp()
-        super.onCleared()
-    }
 }
