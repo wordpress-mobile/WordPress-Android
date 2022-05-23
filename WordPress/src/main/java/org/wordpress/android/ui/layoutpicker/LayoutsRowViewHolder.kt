@@ -56,7 +56,6 @@ class LayoutsItemViewHolder(
                     RecyclerView.HORIZONTAL,
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
-            setRecycledViewPool(RecyclerView.RecycledViewPool())
             adapter = LayoutsAdapter(parent.context, dimensionProvider)
 
             addOnScrollListener(object : OnScrollListener() {

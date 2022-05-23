@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.cancel
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
@@ -69,6 +70,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         setContentView(R.layout.site_creation_activity)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
         mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
+        mainViewModel.preloadThumbnails(this)
 
         observeVMState()
     }
@@ -174,7 +176,15 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
             SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
-            SITE_DESIGNS -> HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
+            SITE_DESIGNS -> {
+                // Cancel preload job before displaying the theme picker.
+                if (target.wizardStep == SITE_DESIGNS) {
+                    mainViewModel.preloadingJob?.cancel(
+                            "Preload did not complete before theme picker was shown."
+                    )
+                }
+                HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
+            }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle
             )
