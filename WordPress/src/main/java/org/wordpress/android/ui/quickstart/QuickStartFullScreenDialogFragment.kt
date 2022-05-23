@@ -23,6 +23,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListSkippedTracker
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListTappedTracker
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.io.Serializable
 import javax.inject.Inject
@@ -58,20 +59,17 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tasksType = arguments?.getSerializable(EXTRA_TYPE) as QuickStartTaskType? ?: QuickStartTaskType.UNKNOWN
         quickStartTracker.trackQuickStartListViewed(tasksType)
-        val isCompletedTasksListExpanded = (savedInstanceState != null
-                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED))
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         val tasksUncompleted = quickStartStore.getUncompletedTasksByType(selectedSiteLocalId, tasksType)
         val tasksCompleted = quickStartStore.getCompletedTasksByType(selectedSiteLocalId, tasksType)
         with(binding) {
-            setupCompleteView( tasksUncompleted.isEmpty(), isCompletedTasksListExpanded)
-            setupQuickStartList(tasksUncompleted, tasksCompleted, isCompletedTasksListExpanded)
+            setupCompleteView(tasksUncompleted.isEmpty())
+            setupQuickStartList(tasksUncompleted, tasksCompleted)
         }
     }
 
     private fun QuickStartDialogFragmentBinding.setupCompleteView(
-        isTasksUncompletedEmpty: Boolean,
-        isCompletedTasksListExpanded: Boolean
+        isTasksUncompletedEmpty: Boolean
     ) {
         val completeViewImage = when (tasksType) {
             QuickStartTaskType.CUSTOMIZE -> R.drawable.img_illustration_site_brush_191dp
@@ -80,19 +78,14 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
             QuickStartTaskType.UNKNOWN -> R.drawable.img_illustration_site_brush_191dp
         }
         setCompleteViewImage(completeViewImage)
-        quickStartCompleteView.visibility = if (!isCompletedTasksListExpanded && isTasksUncompletedEmpty) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        quickStartCompleteView.setVisible(isTasksUncompletedEmpty)
     }
 
     private fun QuickStartDialogFragmentBinding.setupQuickStartList(
         tasksUncompleted: List<QuickStartTask>,
-        tasksCompleted: List<QuickStartTask>,
-        isCompletedTasksListExpanded: Boolean
+        tasksCompleted: List<QuickStartTask>
     ) {
-        quickStartAdapter = QuickStartAdapter(tasksUncompleted, tasksCompleted, isCompletedTasksListExpanded)
+        quickStartAdapter = QuickStartAdapter(tasksUncompleted, tasksCompleted)
         quickStartAdapter.setOnTaskTappedListener(this@QuickStartFullScreenDialogFragment)
         list.layoutManager = LinearLayoutManager(requireContext())
         list.adapter = quickStartAdapter
@@ -123,14 +116,6 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(
-                KEY_COMPLETED_TASKS_LIST_EXPANDED,
-                quickStartAdapter.isCompletedTasksListExpanded
-        )
-    }
-
     override fun onSkipTaskTapped(task: QuickStartTask) {
         quickStartTracker.track(getQuickStartListSkippedTracker(task))
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId()
@@ -141,19 +126,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
 
         quickStartAdapter.updateContent(uncompletedTasks, completedTasks)
 
-        if (uncompletedTasks.isEmpty() && !quickStartAdapter.isCompletedTasksListExpanded) {
-            binding.toggleCompletedView(true)
-        }
-    }
-
-    override fun onCompletedTasksListToggled(isExpanded: Boolean) {
-        quickStartTracker.trackQuickStartListToggled(tasksType, isExpanded)
-        if (quickStartStore.getUncompletedTasksByType(
-                        selectedSiteRepository.getSelectedSiteLocalId().toLong(),
-                        tasksType
-                ).isEmpty()) {
-            binding.toggleCompletedView(!isExpanded)
-        }
+        if (uncompletedTasks.isEmpty()) binding.toggleCompletedView(true)
     }
 
     private fun QuickStartDialogFragmentBinding.setCompleteViewImage(imageResourceId: Int) {
@@ -188,7 +161,6 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     }
 
     companion object {
-        const val KEY_COMPLETED_TASKS_LIST_EXPANDED = "completed_tasks_list_expanded"
         const val EXTRA_TYPE = "EXTRA_TYPE"
         const val RESULT_TASK = "RESULT_TASK"
         fun newBundle(type: QuickStartTaskType?): Bundle {

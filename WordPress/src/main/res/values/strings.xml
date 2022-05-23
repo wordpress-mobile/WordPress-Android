@@ -3038,8 +3038,6 @@
     <string name="fab_create_desc">Create a post</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
     <string name="navigate_forward_desc">Go forward</string>
     <string name="navigate_back_desc">Go back</string>
