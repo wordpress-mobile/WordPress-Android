@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
-import android.nfc.FormatException
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.formatter.ValueFormatter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
@@ -37,13 +36,6 @@ class LineChartLabelFormatter @Inject constructor(
     // Apr 12
     private fun formatLabelDate(date: Date?): String {
         val labelFormatter = SimpleDateFormat("MMM d", Locale.getDefault())
-        var dateLabel: String? = null
-
-        try {
-            dateLabel = date?.let { labelFormatter.format(it) }
-        } catch (e: FormatException) {
-            e.printStackTrace()
-        }
-        return dateLabel.toString()
+        return date?.let { labelFormatter.format(it) }.toString()
     }
 }
