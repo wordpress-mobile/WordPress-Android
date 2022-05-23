@@ -4,18 +4,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartTaskCard
 import org.wordpress.android.ui.quickstart.viewholders.TaskViewHolder
 
 class QuickStartAdapter : ListAdapter<QuickStartTaskCard, ViewHolder>(QuickStartAdapterDiffCallback) {
-    private var listener: OnQuickStartAdapterActionListener? = null
-
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) = when (viewType) {
-        VIEW_TYPE_TASK -> TaskViewHolder(
-                parent = viewGroup,
-                listener = listener
-        )
+        VIEW_TYPE_TASK -> TaskViewHolder(parent = viewGroup)
         else -> throw IllegalArgumentException("Unexpected view type")
     }
 
@@ -34,15 +28,6 @@ class QuickStartAdapter : ListAdapter<QuickStartTaskCard, ViewHolder>(QuickStart
 
     override fun getItemCount(): Int {
         return currentList.size
-    }
-
-    fun setOnTaskTappedListener(listener: OnQuickStartAdapterActionListener?) {
-        this.listener = listener
-    }
-
-    interface OnQuickStartAdapterActionListener {
-        fun onSkipTaskTapped(task: QuickStartTask)
-        fun onTaskTapped(task: QuickStartTask)
     }
 
     object QuickStartAdapterDiffCallback : DiffUtil.ItemCallback<QuickStartTaskCard>() {

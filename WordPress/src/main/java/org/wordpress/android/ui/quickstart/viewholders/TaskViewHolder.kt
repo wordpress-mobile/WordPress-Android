@@ -8,7 +8,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartListItemBinding
-import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartTaskCard
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
@@ -16,18 +15,17 @@ import org.wordpress.android.util.extensions.viewBinding
 
 class TaskViewHolder(
     parent: ViewGroup,
-    private val listener: OnQuickStartAdapterActionListener?,
     private val binding: QuickStartListItemBinding = parent.viewBinding(QuickStartListItemBinding::inflate)
 ) : ViewHolder(binding.root) {
     fun bind(taskCard: QuickStartTaskCard, shouldHideDivider: Boolean) {
         val clickListener = View.OnClickListener {
-            listener?.onTaskTapped(taskCard.task)
+            taskCard.onTaskTapped(taskCard.task)
         }
         val longClickListener = View.OnLongClickListener {
             val popup = PopupMenu(itemView.context, binding.popupAnchor)
             popup.setOnMenuItemClickListener { item: MenuItem ->
                 if (item.itemId == R.id.quick_start_task_menu_skip) {
-                    taskCard.let { listener?.onSkipTaskTapped(it.task) }
+                    taskCard.let { taskCard.onSkipTaskTapped(it.task) }
                     return@setOnMenuItemClickListener true
                 }
                 false

@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListSkippedTracker
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListTappedTracker
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
@@ -26,8 +25,7 @@ import java.io.Serializable
 import javax.inject.Inject
 
 class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_fragment),
-        FullScreenDialogContent,
-        OnQuickStartAdapterActionListener {
+        FullScreenDialogContent {
     private var dialogController: FullScreenDialogController? = null
     private var tasksType: QuickStartTaskType = QuickStartTaskType.CUSTOMIZE
     private lateinit var quickStartAdapter: QuickStartAdapter
@@ -61,7 +59,6 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
 
     private fun QuickStartDialogFragmentBinding.setupQuickStartList() {
         quickStartAdapter = QuickStartAdapter()
-        quickStartAdapter.setOnTaskTappedListener(this@QuickStartFullScreenDialogFragment)
         list.layoutManager = LinearLayoutManager(requireContext())
         list.adapter = quickStartAdapter
         // Disable default change animations to avoid blinking effect when adapter data is changed.
@@ -73,7 +70,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         val tasks = QuickStartTask.getTasksByTaskType(tasksType).filterNot { it.taskType == QuickStartTaskType.UNKNOWN }
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         val tasksCompleted = quickStartStore.getCompletedTasksByType(selectedSiteLocalId, tasksType)
-        val taskCards = tasks.map { QuickStartTaskCard(it, tasksCompleted.contains(it)) }
+        val taskCards = tasks.mapToQuickStartTaskCard(tasksCompleted)
         quickStartAdapter.submitList(taskCards)
     }
 
@@ -91,7 +88,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         return true
     }
 
-    override fun onTaskTapped(task: QuickStartTask) {
+    private fun onTaskTapped(task: QuickStartTask) {
         quickStartTracker.track(getQuickStartListTappedTracker(task))
         if (!showSnackbarIfNeeded(task)) {
             val result = Bundle()
@@ -100,7 +97,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         }
     }
 
-    override fun onSkipTaskTapped(task: QuickStartTask) {
+    private fun onSkipTaskTapped(task: QuickStartTask) {
         quickStartTracker.track(getQuickStartListSkippedTracker(task))
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         quickStartStore.setDoneTask(selectedSiteLocalId, task, true)
@@ -125,9 +122,20 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         _binding = null
     }
 
+    private fun List<QuickStartTask>.mapToQuickStartTaskCard(tasksCompleted: List<QuickStartTask>) = this.map {
+        QuickStartTaskCard(
+                task = it,
+                isCompleted = tasksCompleted.contains(it),
+                onTaskTapped = this@QuickStartFullScreenDialogFragment::onTaskTapped,
+                onSkipTaskTapped = this@QuickStartFullScreenDialogFragment::onSkipTaskTapped
+        )
+    }
+
     data class QuickStartTaskCard(
         val task: QuickStartTask,
-        val isCompleted: Boolean
+        val isCompleted: Boolean,
+        val onTaskTapped: (task: QuickStartTask) -> Unit,
+        val onSkipTaskTapped: (task: QuickStartTask) -> Unit
     )
 
     companion object {
