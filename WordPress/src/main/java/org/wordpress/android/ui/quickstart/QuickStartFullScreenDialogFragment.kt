@@ -10,9 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_GET_TO_KNOW_APP_COLLAPSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_GET_TO_KNOW_APP_EXPANDED
@@ -65,7 +62,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View {
         val rootView = inflater.inflate(
-                layout.quick_start_dialog_fragment,
+                R.layout.quick_start_dialog_fragment,
                 container,
                 false
         ) as ViewGroup
@@ -91,7 +88,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
                                 QuickStartTaskType.CUSTOMIZE
                         )
                 )
-                setCompleteViewImage(drawable.img_illustration_site_brush_191dp)
+                setCompleteViewImage(R.drawable.img_illustration_site_brush_191dp)
                 quickStartTracker.track(QUICK_START_TYPE_CUSTOMIZE_VIEWED)
             }
             QuickStartTaskType.GROW -> {
@@ -107,7 +104,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
                                 QuickStartTaskType.GROW
                         )
                 )
-                setCompleteViewImage(drawable.img_illustration_site_about_182dp)
+                setCompleteViewImage(R.drawable.img_illustration_site_about_182dp)
                 quickStartTracker.track(QUICK_START_TYPE_GROW_VIEWED)
             }
             QuickStartTaskType.GET_TO_KNOW_APP -> {
@@ -124,7 +121,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
                                 QuickStartTaskType.GET_TO_KNOW_APP
                         )
                 )
-                setCompleteViewImage(drawable.img_illustration_site_about_182dp)
+                setCompleteViewImage(R.drawable.img_illustration_site_about_182dp)
                 quickStartTracker.track(QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED)
             }
             QuickStartTaskType.UNKNOWN -> {
@@ -140,7 +137,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
                                 QuickStartTaskType.CUSTOMIZE
                         )
                 )
-                setCompleteViewImage(drawable.img_illustration_site_brush_191dp)
+                setCompleteViewImage(R.drawable.img_illustration_site_brush_191dp)
             }
         }
         val isCompletedTasksListExpanded = (savedInstanceState != null
@@ -261,7 +258,7 @@ class QuickStartFullScreenDialogFragment : Fragment(),
         return if (task === CREATE_SITE) {
             make(
                     requireView(),
-                    string.quick_start_list_create_site_message,
+                    R.string.quick_start_list_create_site_message,
                     Snackbar.LENGTH_LONG
             ).show()
             true
