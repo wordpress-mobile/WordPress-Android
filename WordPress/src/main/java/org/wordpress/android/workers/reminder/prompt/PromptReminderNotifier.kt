@@ -6,15 +6,17 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat.Action.Builder
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
+import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
@@ -25,6 +27,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.workers.reminder.ReminderNotification
 import org.wordpress.android.workers.reminder.ReminderNotificationManager
+import java.util.Date
 import javax.inject.Inject
 
 class PromptReminderNotifier @Inject constructor(
@@ -34,6 +37,7 @@ class PromptReminderNotifier @Inject constructor(
     val accountStore: AccountStore,
     val reminderNotificationManager: ReminderNotificationManager,
     val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    val bloggingPromptsStore: BloggingPromptsStore,
     val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker
 ) {
     // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
@@ -41,23 +45,16 @@ class PromptReminderNotifier @Inject constructor(
 
     @Suppress("MaxLineLength", "MagicNumber")
     /* ktlint-disable max-line-length */
-    fun notify(siteId: Int) {
+    suspend fun notify(siteId: Int) {
         val notificationId = REMINDER_NOTIFICATION_ID + siteId
         val context = contextProvider.getContext()
         val site = siteStore.getSiteByLocalId(siteId) ?: return
-        // TODO @RenanLukas get BloggingPrompt from Store when it's ready
-        val bloggingPrompt = BloggingPrompt(
-            id = 1234,
-            text = "Cast the movie of your life.",
-            content = "<!-- wp:pullquote -->\n" +
-                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                    "<!-- /wp:pullquote -->",
-            respondents = emptyList()
-        )
+
+        val prompt = bloggingPromptsStore.getPromptForDate(site, Date()).firstOrNull()?.model
         val contentPendingIntent =
-                createContentPendingIntent(context, notificationId + 1, notificationId, bloggingPrompt)
+                createContentPendingIntent(context, notificationId + 1, notificationId, prompt)
         val openEditorPendingIntent =
-                createOpenEditorPendingIntent(context, notificationId + 2, notificationId, bloggingPrompt)
+                createOpenEditorPendingIntent(context, notificationId + 2, notificationId, prompt)
         val dismissNotificationButtonPendingIntent = createDismissNotificationButtonPendingIntent(
             context,
             notificationId + 3,
@@ -79,7 +76,7 @@ class PromptReminderNotifier @Inject constructor(
             contentTitle = resourceProvider.getString(
                     string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
             ),
-            contentText = bloggingPrompt.text,
+            contentText = prompt?.text.orEmpty(),
             priority = PRIORITY_DEFAULT,
             category = CATEGORY_REMINDER,
             autoCancel = true,
@@ -127,7 +124,7 @@ class PromptReminderNotifier @Inject constructor(
         context: Context,
         openEditorRequestCode: Int,
         notificationId: Int,
-        bloggingPrompt: BloggingPrompt
+        bloggingPrompt: BloggingPromptModel?
     ) = PendingIntent.getActivity(
         context,
         openEditorRequestCode,
@@ -141,7 +138,7 @@ class PromptReminderNotifier @Inject constructor(
         context: Context,
         openEditorRequestCode: Int,
         notificationId: Int,
-        bloggingPrompt: BloggingPrompt
+        bloggingPrompt: BloggingPromptModel?
     ) = PendingIntent.getActivity(
         context,
         openEditorRequestCode,

@@ -32,8 +32,8 @@ class PromptReminderNotifierTest {
             accountStore = accountStore,
             reminderNotificationManager = reminderNotificationManager,
             bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig,
-            bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker,
-            bloggingPromptsStore = bloggingPromptsStore
+            bloggingPromptsStore = bloggingPromptsStore,
+            bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker
     )
 
     @Test
