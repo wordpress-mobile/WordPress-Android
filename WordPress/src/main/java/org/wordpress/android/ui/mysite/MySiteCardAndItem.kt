@@ -173,7 +173,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val title: UiString,
                         val excerpt: UiString,
                         @DrawableRes val imageRes: Int,
-                        override val footerLink: FooterLink
+                        override val footerLink: FooterLink,
+                        val onClick: ListItemInteraction
                     ) : PostCard(
                             dashboardCardType = DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS,
                             footerLink = footerLink
