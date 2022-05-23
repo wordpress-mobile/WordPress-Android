@@ -56,23 +56,25 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tasksType = arguments?.getSerializable(EXTRA_TYPE) as QuickStartTaskType? ?: QuickStartTaskType.UNKNOWN
         quickStartTracker.trackQuickStartListViewed(tasksType)
-        val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
-        val tasksUncompleted = quickStartStore.getUncompletedTasksByType(selectedSiteLocalId, tasksType)
-        val tasksCompleted = quickStartStore.getCompletedTasksByType(selectedSiteLocalId, tasksType)
-        binding.setupQuickStartList(tasksUncompleted, tasksCompleted)
+        binding.setupQuickStartList()
     }
 
-    private fun QuickStartDialogFragmentBinding.setupQuickStartList(
-        tasksUncompleted: List<QuickStartTask>,
-        tasksCompleted: List<QuickStartTask>
-    ) {
-        val tasks = QuickStartTask.getTasksByTaskType(tasksType).filterNot { it.taskType == QuickStartTaskType.UNKNOWN }
-        quickStartAdapter = QuickStartAdapter(tasks, tasksUncompleted, tasksCompleted)
+    private fun QuickStartDialogFragmentBinding.setupQuickStartList() {
+        quickStartAdapter = QuickStartAdapter()
         quickStartAdapter.setOnTaskTappedListener(this@QuickStartFullScreenDialogFragment)
         list.layoutManager = LinearLayoutManager(requireContext())
         list.adapter = quickStartAdapter
         // Disable default change animations to avoid blinking effect when adapter data is changed.
         (list.itemAnimator as DefaultItemAnimator?)?.supportsChangeAnimations = false
+        updateQuickStartList()
+    }
+
+    private fun updateQuickStartList() {
+        val tasks = QuickStartTask.getTasksByTaskType(tasksType).filterNot { it.taskType == QuickStartTaskType.UNKNOWN }
+        val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
+        val tasksCompleted = quickStartStore.getCompletedTasksByType(selectedSiteLocalId, tasksType)
+        val taskCards = tasks.map { QuickStartTaskCard(it, tasksCompleted.contains(it)) }
+        quickStartAdapter.submitList(taskCards)
     }
 
     override fun setController(controller: FullScreenDialogController) {
@@ -100,13 +102,9 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
 
     override fun onSkipTaskTapped(task: QuickStartTask) {
         quickStartTracker.track(getQuickStartListSkippedTracker(task))
-        val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId()
-        quickStartStore.setDoneTask(selectedSiteLocalId.toLong(), task, true)
-
-        val uncompletedTasks = quickStartStore.getUncompletedTasksByType(selectedSiteLocalId.toLong(), tasksType)
-        val completedTasks = quickStartStore.getCompletedTasksByType(selectedSiteLocalId.toLong(), tasksType)
-
-        quickStartAdapter.updateContent(uncompletedTasks, completedTasks)
+        val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
+        quickStartStore.setDoneTask(selectedSiteLocalId, task, true)
+        updateQuickStartList()
     }
 
     private fun showSnackbarIfNeeded(task: QuickStartTask?): Boolean {
@@ -126,6 +124,11 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         super.onDestroyView()
         _binding = null
     }
+
+    data class QuickStartTaskCard(
+        val task: QuickStartTask,
+        val isCompleted: Boolean
+    )
 
     companion object {
         const val EXTRA_TYPE = "EXTRA_TYPE"
