@@ -35,6 +35,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -75,6 +76,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
@@ -195,6 +197,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val emailAddress = "test@email.com"
     private val postId = 100
     private val localHomepageId = 1
+    private val bloggingPromptId = 123
     private lateinit var site: SiteModel
     private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
@@ -233,7 +236,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onTodaysStatsCardFooterLinkClick: (() -> Unit) = {}
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
-    private var onBloggingPromptAnswerClicked: (() -> Unit)? = null
+    private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -269,6 +272,22 @@ class MySiteViewModelTest : BaseUnitTest() {
             )
     )
 
+    private val bloggingPromptsUpdate = MutableLiveData(
+            BloggingPromptUpdate(
+                    promptModel = BloggingPromptModel(
+                            id = bloggingPromptId,
+                            text = "text",
+                            title = "",
+                            content = "content",
+                            date = Date(),
+                            isAnswered = false,
+                            attribution = "",
+                            respondentsCount = 5,
+                            respondentsAvatarUrls = listOf()
+                    )
+            )
+    )
+
     private var quickActionsStatsClickAction: (() -> Unit)? = null
     private var quickActionsPagesClickAction: (() -> Unit)? = null
     private var quickActionsPostsClickAction: (() -> Unit)? = null
@@ -287,7 +306,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             cardsUpdate,
             quickStartUpdate,
             showSiteIconProgressBar,
-            selectedSite
+            selectedSite,
+            bloggingPromptsUpdate
     )
 
     @InternalCoroutinesApi
@@ -1560,7 +1580,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `given blogging prompt card, when answer button is clicked, answer action is called`() = test {
         initSelectedSite()
 
-        requireNotNull(onBloggingPromptAnswerClicked).invoke()
+        requireNotNull(onBloggingPromptAnswerClicked).invoke(123)
 
         assertTrue(answerRequests == 1)
     }
@@ -2793,8 +2813,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 respondents = emptyList(),
                 numberOfAnswers = 5,
                 isAnswered = false,
+                promptId = bloggingPromptId,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
-                onAnswerClick = onBloggingPromptAnswerClicked as (() -> Unit)
+                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
         )
     }
 
