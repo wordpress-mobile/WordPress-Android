@@ -133,8 +133,8 @@ class SiteCreationMainVM @Inject constructor(
                                 .submit()
                                 .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
                     }
-                    preloadingJob = null
                 }
+                preloadingJob = null
             }
         }
     }
