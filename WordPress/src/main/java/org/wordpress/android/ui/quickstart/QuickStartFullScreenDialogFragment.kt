@@ -19,11 +19,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener
-import org.wordpress.android.util.AniUtils
-import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListSkippedTracker
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListTappedTracker
-import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import java.io.Serializable
 import javax.inject.Inject
@@ -62,23 +59,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         val selectedSiteLocalId = selectedSiteRepository.getSelectedSiteLocalId().toLong()
         val tasksUncompleted = quickStartStore.getUncompletedTasksByType(selectedSiteLocalId, tasksType)
         val tasksCompleted = quickStartStore.getCompletedTasksByType(selectedSiteLocalId, tasksType)
-        with(binding) {
-            setupCompleteView(tasksUncompleted.isEmpty())
-            setupQuickStartList(tasksUncompleted, tasksCompleted)
-        }
-    }
-
-    private fun QuickStartDialogFragmentBinding.setupCompleteView(
-        isTasksUncompletedEmpty: Boolean
-    ) {
-        val completeViewImage = when (tasksType) {
-            QuickStartTaskType.CUSTOMIZE -> R.drawable.img_illustration_site_brush_191dp
-            QuickStartTaskType.GROW -> R.drawable.img_illustration_site_about_182dp
-            QuickStartTaskType.GET_TO_KNOW_APP -> R.drawable.img_illustration_site_about_182dp
-            QuickStartTaskType.UNKNOWN -> R.drawable.img_illustration_site_brush_191dp
-        }
-        setCompleteViewImage(completeViewImage)
-        quickStartCompleteView.setVisible(isTasksUncompletedEmpty)
+        binding.setupQuickStartList(tasksUncompleted, tasksCompleted)
     }
 
     private fun QuickStartDialogFragmentBinding.setupQuickStartList(
@@ -126,21 +107,6 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         val completedTasks = quickStartStore.getCompletedTasksByType(selectedSiteLocalId.toLong(), tasksType)
 
         quickStartAdapter.updateContent(uncompletedTasks, completedTasks)
-
-        if (uncompletedTasks.isEmpty()) binding.toggleCompletedView(true)
-    }
-
-    private fun QuickStartDialogFragmentBinding.setCompleteViewImage(imageResourceId: Int) {
-        quickStartCompleteView.image.setImageResource(imageResourceId)
-        quickStartCompleteView.image.visibility = View.VISIBLE
-    }
-
-    private fun QuickStartDialogFragmentBinding.toggleCompletedView(isVisible: Boolean) {
-        if (isVisible) {
-            AniUtils.fadeIn(quickStartCompleteView, SHORT)
-        } else {
-            AniUtils.fadeOut(quickStartCompleteView, SHORT)
-        }
     }
 
     private fun showSnackbarIfNeeded(task: QuickStartTask?): Boolean {
