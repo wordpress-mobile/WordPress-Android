@@ -32,7 +32,6 @@ class MShot(val url: String)
 class GlideMShotsLoader(noRedirectsRequestQueue: RequestQueue) : ModelLoader<MShot, InputStream> {
     private val requestFactory = VolleyRequestFactory { url, callback, priority, headers ->
         VolleyStreamFetcher.GlideRequest(url, callback, priority, headers).apply {
-            setShouldCache(false) // <- Maybe we should add this here to avoid duplicating cache in Volley?
             retryPolicy = DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, MAX_RETRIES, DEFAULT_BACKOFF_MULT)
         }
     }
