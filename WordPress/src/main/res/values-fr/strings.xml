@@ -11,7 +11,6 @@ Language: fr
     <string name="blogging_prompts_answer_prompt_notification_title">Incitation quotidienne</string>
     <string name="blogging_prompts_onboarding_got_it">J’ai compris</string>
     <string name="quick_start_dialog_view_your_site_message_short">Appuyez sur &lt;b&gt;%1$s&lt;/b&gt; pour voir votre site</string>
-    <string name="quick_start_dialog_follow_sites_message_short_settings">Sélectionnez %1$s Réglages %2$s pour ajouter les thèmes de votre choix.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Sélectionnez %1$s Lecteur %2$s pour rechercher d’autres sites.</string>
     <string name="blogging_reminders_prompt_help_button_desc">Lire la suite sur les incitations</string>
     <string name="photo_picker_video_thumbnail_unselected">Vidéo non sélectionnée</string>

@@ -2357,6 +2357,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "webview_share_tapped";
             case WEBVIEW_PREVIEW_DEVICE_CHANGED:
                 return "webview_preview_device_changed";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_ANSWER_PROMPT_CLICKED:
+                return "blogging_prompts_my_site_card_answer_prompt_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_SHARE_CLICKED:
+                return "blogging_prompts_my_site_card_share_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_CLICKED:
+                return "blogging_prompts_my_site_card_menu_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_VIEW_MORE_PROMPTS_CLICKED:
+                return "blogging_prompts_my_site_card_menu_view_more_prompts_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_SKIP_THIS_PROMPT_CLICKED:
+                return "blogging_prompts_my_site_card_menu_skip_this_prompt_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_CLICKED:
+                return "blogging_prompts_my_site_card_menu_remove_from_dashboard_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_SKIP_THIS_PROMPT_UNDO_CLICKED:
+                return "blogging_prompts_my_site_card_menu_skip_this_prompt_undo_tapped";
+            case BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_UNDO_CLICKED:
+                return "blogging_prompts_my_site_card_menu_remove_from_dashboard_undo_tapped";
             case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_VIEWED:
                 return "blogging_prompts_introduction_modal_viewed";
             case BLOGGING_PROMPTS_INTRODUCTION_SCREEN_DISMISSED:
