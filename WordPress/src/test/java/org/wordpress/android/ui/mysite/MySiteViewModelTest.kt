@@ -95,6 +95,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -1479,7 +1480,27 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(cardsTracker, atLeastOnce()).trackShown(any())
     }
 
-    /* DASHBOARD POST CARD - POST ITEM */
+    /* DASHBOARD POST CARD */
+
+    @Test
+    fun `when create first post card is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+            }
+
+    @Test
+    fun `when create next post card is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_NEXT, NOT_SET))
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+            }
 
     @Test
     fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
@@ -1502,12 +1523,39 @@ class MySiteViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `given post card, when item is clicked, then event is tracked`() = test {
+    fun `given scheduled post card, when item is clicked, then event is tracked`() = test {
         initSelectedSite()
 
         requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
 
         verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
+    }
+
+    @Test
+    fun `given draft post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.DRAFT)
+    }
+
+    @Test
+    fun `given create first post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.CREATE_FIRST)
+    }
+
+    @Test
+    fun `given create next post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_NEXT, NOT_SET))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.CREATE_NEXT)
     }
 
     /* DASHBOARD BLOGGING PROMPT CARD */
