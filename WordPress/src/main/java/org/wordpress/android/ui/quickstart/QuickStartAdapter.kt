@@ -9,13 +9,13 @@ import org.wordpress.android.ui.quickstart.viewholders.CompletedHeaderViewHolder
 import org.wordpress.android.ui.quickstart.viewholders.TaskViewHolder
 
 class QuickStartAdapter(
-    tasksUncompleted: MutableList<QuickStartTask?>,
-    tasksCompleted: MutableList<QuickStartTask?>,
+    tasksUncompleted: List<QuickStartTask>,
+    tasksCompleted: List<QuickStartTask>,
     isCompletedTasksListExpanded: Boolean
 ) : Adapter<ViewHolder>() {
     private val tasks: MutableList<QuickStartTask?> = mutableListOf()
-    private val tasksUncompleted: MutableList<QuickStartTask?>
-    private val taskCompleted: MutableList<QuickStartTask?>
+    private val tasksUncompleted: MutableList<QuickStartTask> = mutableListOf()
+    private val taskCompleted: MutableList<QuickStartTask> = mutableListOf()
     private var listener: OnQuickStartAdapterActionListener? = null
     var isCompletedTasksListExpanded: Boolean
         private set
@@ -29,8 +29,8 @@ class QuickStartAdapter(
         if (this.isCompletedTasksListExpanded) {
             tasks.addAll(tasksCompleted)
         }
-        this.tasksUncompleted = tasksUncompleted
-        this.taskCompleted = tasksCompleted
+        this.tasksUncompleted.addAll(tasksUncompleted)
+        this.taskCompleted.addAll(tasksCompleted)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) = when (viewType) {
@@ -63,8 +63,8 @@ class QuickStartAdapter(
     }
 
     fun updateContent(
-        tasksUncompleted: List<QuickStartTask?>?,
-        tasksCompleted: List<QuickStartTask?>
+        tasksUncompleted: List<QuickStartTask>?,
+        tasksCompleted: List<QuickStartTask>
     ) {
         val newList = mutableListOf<QuickStartTask?>()
         tasksUncompleted?.let { newList.addAll(it) }

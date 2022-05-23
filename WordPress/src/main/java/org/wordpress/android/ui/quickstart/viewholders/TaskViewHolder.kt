@@ -22,13 +22,13 @@ class TaskViewHolder(
 ) : ViewHolder(binding.root) {
     init {
         val clickListener = View.OnClickListener {
-            listener?.onTaskTapped(tasks[adapterPosition])
+            tasks[adapterPosition]?.let { listener?.onTaskTapped(it) }
         }
         val longClickListener = View.OnLongClickListener {
             val popup = PopupMenu(itemView.context, binding.popupAnchor)
             popup.setOnMenuItemClickListener { item: MenuItem ->
                 if (item.itemId == R.id.quick_start_task_menu_skip) {
-                    listener?.onSkipTaskTapped(tasks[adapterPosition])
+                    tasks[adapterPosition]?.let { listener?.onSkipTaskTapped(it) }
                     return@setOnMenuItemClickListener true
                 }
                 false
