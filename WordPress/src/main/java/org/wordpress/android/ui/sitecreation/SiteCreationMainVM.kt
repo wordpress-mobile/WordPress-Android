@@ -62,7 +62,7 @@ class SiteCreationMainVM @Inject constructor(
     private val siteNameABExperiment: SiteNameABExperiment,
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
-    private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
+    private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
 ) : ViewModel() {
     init {
         // TODO: Remove the duplicate {,un}registration in the picker view model
@@ -123,7 +123,7 @@ class SiteCreationMainVM @Inject constructor(
 
     fun preloadThumbnails(context: Context) {
         if (preloadingJob == null) {
-            preloadingJob = viewModelScope.launch (Dispatchers.IO) {
+            preloadingJob = viewModelScope.launch(Dispatchers.IO) {
                 if (networkUtils.isNetworkAvailable()) {
                     val response = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
                     for (design in response.designs) {
@@ -138,7 +138,6 @@ class SiteCreationMainVM @Inject constructor(
             }
         }
     }
-
 
     fun writeToBundle(outState: Bundle) {
         outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
