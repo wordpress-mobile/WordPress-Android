@@ -7,7 +7,6 @@ const val EMAIL_PREFERENCE_KEY = "EMAIL_PREFERENCE_KEY"
 const val PRIMARYSITE_PREFERENCE_KEY = "PRIMARYSITE_PREFERENCE_KEY"
 const val WEBADDRESS_PREFERENCE_KEY = "WEBADDRESS_PREFERENCE_KEY"
 class AcountSettingsOptimisticUpdateHandler @Inject constructor() {
-
     private val optimisticallyChangedPreferenceMap = mutableMapOf<String, List<String>>()
 
     fun applyOptimisticallyChangedPreferences(state: AccountSettingsUiState): AccountSettingsUiState {
@@ -17,7 +16,7 @@ class AcountSettingsOptimisticUpdateHandler @Inject constructor() {
                 EMAIL_PREFERENCE_KEY -> {
                     uiState = uiState.copy(
                             emailSettingsUiState = state.emailSettingsUiState.copy(
-                                    newEmail = arrayOfValues.first(),
+                                    newEmail = arrayOfValues.last(),
                                     hasPendingEmailChange = true
                             )
                     )
@@ -25,15 +24,15 @@ class AcountSettingsOptimisticUpdateHandler @Inject constructor() {
                 WEBADDRESS_PREFERENCE_KEY -> {
                     uiState = uiState.copy(
                             webAddressSettingsUiState = state.webAddressSettingsUiState.copy(
-                                    webAddress = arrayOfValues.first()
+                                    webAddress = arrayOfValues.last()
                             )
                     )
                 }
                 PRIMARYSITE_PREFERENCE_KEY -> {
                     uiState = uiState.copy(
                             primarySiteSettingsUiState = state.primarySiteSettingsUiState.copy(
-                                    primarySite = state.primarySiteSettingsUiState.sites?.firstOrNull {
-                                        it.siteId == arrayOfValues.first()
+                                    primarySite = state.primarySiteSettingsUiState.sites?.lastOrNull {
+                                        it.siteId == arrayOfValues.last()
                                                 .toLong()
                                     })
                     )
