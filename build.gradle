@@ -44,7 +44,7 @@ ext {
 
 buildscript {
     ext.kotlinVersion = '1.6.10'
-    ext.navComponentVersion = '2.3.5'
+    ext.navComponentVersion = '2.4.2'
     ext.detektVersion = '1.15.0'
     ext.daggerVersion = '2.41'
 
