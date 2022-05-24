@@ -27,7 +27,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
 class AccountSettingsViewModelTest : BaseUnitTest(){
-
     private lateinit var viewModel: AccountSettingsViewModel
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -42,7 +41,6 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
     @Before
     fun setUp() = test {
-
         whenever(account.primarySiteId).thenReturn(3L)
         whenever(account.userName).thenReturn("old_wordpressuser_username")
         whenever(account.displayName).thenReturn("old_wordpressuser_displayname")
@@ -104,7 +102,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 .isEqualTo(accountsSettingsRepository.account.webAddress)
     }
 
-    //Username default
+    // Username default
     @Test
     fun `The userName should be updated with the account information from account Repository`() = test {
         val mUiState = viewModel.accountSettingsUiState.value
@@ -159,7 +157,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 Assertions.assertThat(mUiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(false)
             }
 
-    //Email default
+    // Email default
     @Test
     fun `The email address should be updated with the account information from account Repository`() = test {
         whenever(accountsSettingsRepository.account.email).thenReturn("old_wordpressuser")
@@ -200,7 +198,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 Assertions.assertThat(mUiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
             }
 
-    //Email change
+    // Email change
     @Test
     fun `When the user tries to update a new email address, optimistically show the user as if the new email address change even before updating in the server`() = test {
         // Given
@@ -256,7 +254,6 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Cleanup
                 job.cancel()
-
             }
 
     @Test
@@ -288,7 +285,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 job.cancel()
             }
 
-    //cancel pending email
+    // cancel pending email
     @Test
     fun `When the user tries to cancels a pending email change and on error response, the user should still be shown of pending email change`() =
             test {
@@ -345,7 +342,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 job.cancel()
             }
 
-    //Primary site default
+    // Primary site default
     @Test
     fun `If primary site is available, Should show primary site with the account information from accountSettingsRepository `() =
             test {
@@ -375,7 +372,6 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 val mUiState = viewModel.accountSettingsUiState.value
                 Assertions.assertThat(mUiState.primarySiteSettingsUiState?.primarySite).isEqualTo(null)
                 Assertions.assertThat(mUiState.primarySiteSettingsUiState?.sites?.size).isEqualTo(0)
-
             }
 
     @Test
@@ -459,7 +455,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 job.cancel()
             }
 
-    //Web Address default
+    // Web Address default
     @Test
     fun `If Web Address is available, Should show Web Address with the account information from AccountSettingsRepository`() =
             test {
@@ -472,7 +468,6 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 )
                 val mUiState = viewModel.accountSettingsUiState.value
                 Assertions.assertThat(mUiState.webAddressSettingsUiState.webAddress).isEqualTo("old_webaddress")
-
             }
 
     @Test
@@ -548,7 +543,6 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     @Test
     fun `When the user tries to update the new password, show changing password progress dialog until it receives the server response`() =
             test {
-
                 // Observe uiState change
                 initialiseViewModel()
                 val uiStateList  = mutableListOf<AccountSettingsUiState>()
@@ -566,7 +560,6 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Cleanup
                 job.cancel()
-
             }
 
     @Test
@@ -611,5 +604,4 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 accountsSettingsRepository
         )
     }
-
 }
