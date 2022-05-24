@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITO
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewViewsAndVisitorsDetail
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -39,7 +40,9 @@ import javax.inject.Named
 import kotlin.math.ceil
 
 const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
+const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-traffic/"
 
+@Suppress("TooManyFunctions")
 class ViewsAndVisitorsUseCase
 @Inject constructor(
     private val statsGranularity: StatsGranularity,
@@ -193,7 +196,8 @@ class ViewsAndVisitorsUseCase
             items.add(
                     viewsAndVisitorsMapper.buildInformation(
                             domainModel.dates,
-                            uiState.selectedPosition
+                            uiState.selectedPosition,
+                            this::onTopTipsLinkClick
                     )
             )
             items.add(
@@ -222,6 +226,10 @@ class ViewsAndVisitorsUseCase
                         selectedDateProvider.getSelectedDate(statsGranularity)
                 )
         )
+    }
+
+    private fun onTopTipsLinkClick() {
+        navigateTo(ViewUrl(TOP_TIPS_URL))
     }
 
     private fun onBarSelected(period: String?) {

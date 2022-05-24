@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Views
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Visitors
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -146,9 +148,24 @@ class ViewsAndVisitorsMapper
 
     fun buildInformation(
         dates: List<PeriodData>,
-        selectedPosition: Int
+        selectedPosition: Int,
+        navigationAction: (() -> Unit?)? = null
     ): Text {
         val (thisWeekCount, prevWeekCount) = mapDatesToWeeks(dates, selectedPosition)
+
+        if (thisWeekCount <= 0 || prevWeekCount <= 0) {
+            return Text(
+                    text = resourceProvider.getString(string.stats_insights_views_and_visitors_visitors_empty_state),
+                    links = listOf(
+                            Clickable(
+                                    icon = R.drawable.ic_external_white_24dp,
+                                    navigationAction = ListItemInteraction.create(
+                                            action = { navigationAction?.invoke() }
+                                    )
+                            )
+                    )
+            )
+        }
 
         val positive = thisWeekCount >= (prevWeekCount ?: 0)
         val change = statsUtils.buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = true)

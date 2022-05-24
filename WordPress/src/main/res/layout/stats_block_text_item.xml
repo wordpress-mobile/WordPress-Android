@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     style="@style/StatsBlockLine"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/one_line_list_item_height"
-    android:paddingStart="@dimen/margin_extra_large"
-    android:paddingEnd="@dimen/margin_extra_large">
+    android:minHeight="@dimen/one_line_list_item_height">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         style="@style/StatsBlockText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:text="@string/unknown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/text_icon"
+        tools:text="@string/stats_insights_views_and_visitors_visitors_empty_state" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/text_icon"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="@string/unknown" />
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        app:icon="@drawable/ic_external_white_24dp"
+        app:iconTint="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible"/>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
