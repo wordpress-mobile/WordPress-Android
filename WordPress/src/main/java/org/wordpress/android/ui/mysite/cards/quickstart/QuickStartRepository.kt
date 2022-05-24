@@ -359,8 +359,7 @@ class QuickStartRepository
             when (quickStartTaskOriginTab) {
                 MySiteTabType.DASHBOARD ->
                     when (this) {
-                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
-                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
                         else -> false
                     }
                 MySiteTabType.SITE_MENU ->
@@ -369,8 +368,7 @@ class QuickStartRepository
                         quickStartType.getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL),
                         QuickStartNewSiteTask.REVIEW_PAGES,
                         QuickStartNewSiteTask.EDIT_HOMEPAGE,
-                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
-                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
                         else -> false
                     }
                 else -> false

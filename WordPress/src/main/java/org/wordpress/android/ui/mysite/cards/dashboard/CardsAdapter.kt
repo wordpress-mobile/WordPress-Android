@@ -15,6 +15,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorWithinCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
@@ -24,7 +25,8 @@ import org.wordpress.android.util.image.ImageManager
 
 class CardsAdapter(
     private val imageManager: ImageManager,
-    private val uiHelpers: UiHelpers
+    private val uiHelpers: UiHelpers,
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
 ) : Adapter<CardViewHolder<*>>() {
     private val items = mutableListOf<DashboardCard>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<*> {
@@ -40,7 +42,8 @@ class CardsAdapter(
             DashboardCardType.BLOGGING_PROMPT_CARD.ordinal -> BloggingPromptCardViewHolder(
                     parent,
                     uiHelpers,
-                    imageManager
+                    imageManager,
+                    bloggingPromptsCardAnalyticsTracker
             )
             else -> throw IllegalArgumentException("Unexpected view type")
         }

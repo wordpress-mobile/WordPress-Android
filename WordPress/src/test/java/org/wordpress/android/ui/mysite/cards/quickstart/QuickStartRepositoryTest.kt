@@ -71,8 +71,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private val siteLocalId = 1
 
     private val siteMenuTasks = listOf(
-            QuickStartNewSiteTask.ENABLE_POST_SHARING,
-            QuickStartNewSiteTask.EXPLORE_PLANS
+            QuickStartNewSiteTask.ENABLE_POST_SHARING
     )
 
     private val dashboardTasks = listOf(
@@ -347,11 +346,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `when all task are completed, then completed notice is triggered`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        initStore(nextUncompletedTask = QuickStartNewSiteTask.EXPLORE_PLANS)
-        quickStartRepository.setActiveTask(QuickStartNewSiteTask.EXPLORE_PLANS)
+        initStore(nextUncompletedTask = QuickStartNewSiteTask.CHECK_STATS)
+        quickStartRepository.setActiveTask(QuickStartNewSiteTask.CHECK_STATS)
         whenever(quickStartType.isEveryQuickStartTaskDone(quickStartStore, site.id.toLong())).thenReturn(true)
 
-        quickStartRepository.completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
+        quickStartRepository.completeTask(QuickStartNewSiteTask.CHECK_STATS)
 
         assertThat(snackbars).isNotEmpty
     }

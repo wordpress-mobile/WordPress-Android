@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-13 11:51:26+0000
+Translation-Revision-Date: 2022-05-22 10:12:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
 -->
 <resources>
+    <string name="pages_copy_link">Copiar ligazón</string>
+    <string name="quick_start_completed_tour_title">Noraboa! Xa sabes manexarte&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Coñece a aplicación</string>
+    <string name="quick_start_list_upload_media_subtitle">Sube os medios directamente ao teu sitio desde o teu dispositivo ou cámara</string>
+    <string name="quick_start_list_upload_media_title">Sube fotos ou vídeos</string>
+    <string name="quick_start_list_check_notification_subtitle">Obtén actualizacións en tempo real desde o teu peto</string>
+    <string name="quick_start_dialog_upload_media_message">Selecciona %1$s Medios %2$s para ver a túa biblioteca actual.</string>
+    <string name="quick_start_dialog_check_notifications_message">Obtén actualizacións en tempo real desde o teu peto.</string>
+    <string name="quick_start_dialog_check_notifications_title">Comproba os teus avisos</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Selecciona a %1$s Pestana de avisos %2$s para recibir actualizacións sobre a marcha.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Selecciona %1$s Máis %2$s para subir medios. Podes engadilos ás túas entradas ou páxinas desde calquera dispositivo.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios e etiquetas.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios e etiquetas. Proba a seleccionar %1$s Axustes %2$s para engadir temáticas que che gusten.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatura de vídeo</string>
+    <string name="stats_details_top_commentators">Principais comentaristas</string>
+    <string name="stats_insights_total_stats_negative">%1$s menos que a semana anterior</string>
+    <string name="stats_insights_total_stats_positive">%1$s máis que a semana anterior</string>
+    <string name="stats_published_years_ago">Publicada fai %1$d anos</string>
+    <string name="stats_published_a_year_ago">Publicada fai un ano</string>
+    <string name="stats_published_months_ago">Publicada fai %1$d meses</string>
+    <string name="stats_published_a_month_ago">Publicada fai un mes</string>
+    <string name="stats_published_days_ago">Publicada fai %1$d días</string>
+    <string name="stats_published_a_day_ago">Publicada fai un día</string>
+    <string name="stats_published_hours_ago">Publicada fai %1$d horas</string>
+    <string name="stats_published_an_hour_ago">Publicada fai unha hora</string>
+    <string name="stats_published_minutes_ago">Publicada fai %1$d minutos</string>
+    <string name="stats_published_a_minute_ago">Publicada fai un minuto</string>
+    <string name="stats_published_seconds_ago">Publicada fai uns segundos</string>
+    <string name="stats_view_total_followers">Total de seguidores</string>
+    <string name="stats_view_total_comments">Total de comentarios</string>
+    <string name="stats_view_total_likes">Total de «Gústame»</string>
     <string name="blogging_prompts_notification_dismiss">Descartar</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Resposta</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Estímulo diario</string>
@@ -1820,6 +1851,7 @@ Language: gl_ES
     <string name="quick_start_focus_point_description">toca aquí</string>
     <string name="quick_start_list_create_site_title">Crea o teu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Pon o teu sitio en marcha.</string>
+    <string name="quick_start_completed_tour_subtitle">A que se sinte un ben terminando unha lista?</string>
     <string name="quick_start_dialog_view_site_title">Ver o teu sitio</string>
     <string name="quick_start_dialog_view_site_message">Previsualiza o teu sitio para ver o que verán os teus visitantes.</string>
     <string name="quick_start_dialog_share_site_title">Comparte o teu sitio</string>

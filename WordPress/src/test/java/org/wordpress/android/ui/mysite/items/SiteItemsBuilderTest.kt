@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.items
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -13,7 +12,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.EXPLORE_PLANS
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -119,24 +117,6 @@ class SiteItemsBuilderTest {
     }
 
     /* QUICK START - FOCUS POINT */
-
-    @Ignore("Ignored after a decision was made to hide the Plans screen.")
-    @Test
-    fun `passes parameter to show focus point to plan item`() {
-        val showPlansFocusPoint = true
-        setupHeaders(addPlanItem = true, showPlansFocusPoint = showPlansFocusPoint)
-
-        val buildSiteItems = siteItemsBuilder.build(
-                SiteItemsBuilderParams(
-                        site = siteModel,
-                        onClick = SITE_ITEM_ACTION,
-                        activeTask = EXPLORE_PLANS
-                )
-        )
-
-        assertThat(buildSiteItems.first()).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint))
-    }
-
     @Test
     fun `given pages focus point enabled, when card built, showFocusPoint should be true`() {
         val showPagesFocusPoint = true
