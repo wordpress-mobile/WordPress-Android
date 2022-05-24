@@ -94,10 +94,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
                 res = mGson.fromJson(json, mClass);
             }
             return Response.success(res, createCacheEntry(response));
-        } catch (UnsupportedEncodingException e) {
-            logRequestPath();
-            return Response.error(new ParseError(e));
-        } catch (JsonSyntaxException e) {
+        } catch (UnsupportedEncodingException | JsonSyntaxException e) {
             logRequestPath();
             return Response.error(new ParseError(e));
         }
