@@ -187,8 +187,8 @@ class ViewsAndVisitorsUseCase
                     viewsAndVisitorsMapper.buildChart(
                             domainModel.dates,
                             statsGranularity,
-                            this::onBarSelected,
-                            this::onBarChartDrawn,
+                            this::onLineSelected,
+                            this::onLineChartDrawn,
                             uiState.selectedPosition,
                             selectedItem.period
                     )
@@ -232,7 +232,7 @@ class ViewsAndVisitorsUseCase
         navigateTo(ViewUrl(TOP_TIPS_URL))
     }
 
-    private fun onBarSelected(period: String?) {
+    private fun onLineSelected(period: String?) {
         analyticsTracker.trackGranular(
                 AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED,
                 statsGranularity
@@ -254,11 +254,11 @@ class ViewsAndVisitorsUseCase
         updateUiState { it.copy(selectedPosition = position) }
     }
 
-    private fun onBarChartDrawn(visibleBarCount: Int) {
-        updateUiState { it.copy(visibleBarCount = visibleBarCount) }
+    private fun onLineChartDrawn(visibleLineCount: Int) {
+        updateUiState { it.copy(visibleLineCount = visibleLineCount) }
     }
 
-    data class UiState(val selectedPosition: Int = 0, val visibleBarCount: Int? = null)
+    data class UiState(val selectedPosition: Int = 0, val visibleLineCount: Int? = null)
 
     class ViewsAndVisitorsUseCaseFactory
     @Inject constructor(

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-17 21:34:50+0000
+Translation-Revision-Date: 2022-05-20 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="pages_copy_link">Kopiera länk</string>
+    <string name="quick_start_completed_tour_title">Grattis! Du kan det här&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Lär känna appen</string>
+    <string name="quick_start_list_upload_media_subtitle">Överför media till din webbplats direkt från din enhet eller kamera</string>
+    <string name="quick_start_list_upload_media_title">Ladda upp foton eller videoklipp</string>
+    <string name="quick_start_list_check_notification_subtitle">Få uppdateringar i realtid direkt i fickan</string>
+    <string name="quick_start_dialog_upload_media_message">Välj %1$sMedia%2$s för att se ditt nuvarande bibliotek.</string>
+    <string name="quick_start_dialog_check_notifications_message">Få uppdateringar i realtid direkt i fickan.</string>
+    <string name="quick_start_dialog_check_notifications_title">Kolla dina notiser</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Välj fliken %1$sNotiser%2$s för att få uppdateringar i farten.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Välj %1$splustecknet%2$s för att ladda upp media Du kan lägga till det i dina inlägg/på dina sidor från valfri enhet.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Använd &lt;b&gt;Upptäck&lt;/b&gt; för att hitta webbplatser och etiketter.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Använd &lt;b&gt;Upptäck&lt;/b&gt; för att hitta webbplatser och etiketter. Prova att välja %1$sInställningar%2$s för att lägga till ämnen som du gillar.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatyrbild för videoklipp</string>
+    <string name="stats_details_top_commentators">Toppkommenterare</string>
+    <string name="stats_insights_total_stats_negative">%1$s lägre än föregående vecka</string>
+    <string name="stats_insights_total_stats_positive">%1$s högre än föregående vecka</string>
+    <string name="stats_published_years_ago">Publicerades för %1$d år sedan</string>
+    <string name="stats_published_a_year_ago">Publicerades för ett år sedan</string>
+    <string name="stats_published_months_ago">Publicerades för %1$d månader sedan</string>
+    <string name="stats_published_a_month_ago">Publicerades för en månad sedan</string>
+    <string name="stats_published_days_ago">Publicerades för %1$d dagar sedan</string>
+    <string name="stats_published_a_day_ago">Publicerades för en dag sedan</string>
+    <string name="stats_published_hours_ago">Publicerades för %1$d timmar sedan</string>
+    <string name="stats_published_an_hour_ago">Publicerades för en timme sedan</string>
+    <string name="stats_published_minutes_ago">Publicerades för %1$d minuter sedan</string>
+    <string name="stats_published_a_minute_ago">Publicerades för en minut sedan</string>
+    <string name="stats_published_seconds_ago">Publicerades för några sekunder sedan</string>
+    <string name="stats_view_total_followers">Totalt antal följare</string>
+    <string name="stats_view_total_comments">Kommentarer totalt</string>
+    <string name="stats_view_total_likes">Gillamarkeringar totalt</string>
     <string name="blogging_prompts_notification_dismiss">Avfärda</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Svar</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Dagligt förslag</string>

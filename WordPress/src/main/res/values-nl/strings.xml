@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-02 07:23:33+0000
+Translation-Revision-Date: 2022-05-23 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="pages_copy_link">Link kopiëren</string>
+    <string name="quick_start_completed_tour_title">Gefeliciteerd! Je weet hoe alles werkt&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Leer de app gebruiken</string>
+    <string name="quick_start_list_upload_media_subtitle">Upload media direct vanuit je apparaat of camera naar je site</string>
+    <string name="quick_start_list_upload_media_title">Foto’s of video’s uploaden</string>
+    <string name="quick_start_list_check_notification_subtitle">Ontvang realtime updates in je broekzak</string>
+    <string name="quick_start_dialog_upload_media_message">Selecteer %1$s Media %2$s om je huidige bibliotheek te bekijken.</string>
+    <string name="quick_start_dialog_check_notifications_message">Ontvang realtime updates in je broekzak.</string>
+    <string name="quick_start_dialog_check_notifications_title">Controleer je meldingen</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Selecteer het %1$s tabblad Meldingen %2$s om onderweg updates te ontvangen.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Selecteer het %1$s plusje %2$s om media te uploaden. Je kan vanuit elk apparaat media aan je berichten/pagina\'s toevoegen.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Gebruik &lt;b&gt; Ontdekken &lt;/b&gt; om sites en tags te zoeken.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Gebruik &lt;b&gt; Ontdekken &lt;/b&gt; om sites en tags te zoeken. Probeer eens %1$s Instellingen %2$s te selecteren om onderwerpen toe te voegen die je leuk vindt.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatuurafbeelding video</string>
+    <string name="stats_details_top_commentators">Top commentators</string>
+    <string name="stats_insights_total_stats_negative">%1$s minder dan de vorige week</string>
+    <string name="stats_insights_total_stats_positive">%1$s meer dan de vorige week</string>
+    <string name="stats_view_total_followers">Totaal aantal e-mailvolgers</string>
+    <string name="stats_view_total_comments">Totaal aantal reacties</string>
+    <string name="stats_view_total_likes">Totaal aantal vind-ik-leuks</string>
     <string name="hpp_choose_and_create_site">Maak site</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Blokken toevoegen</string>
     <string name="initial_screen">Startscherm</string>
@@ -419,6 +439,7 @@ Language: nl
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
+    <string name="gutenberg_native_add_blocks">Blokken toevoegen</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>

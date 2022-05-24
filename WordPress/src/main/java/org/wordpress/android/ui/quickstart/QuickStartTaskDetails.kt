@@ -63,12 +63,6 @@ enum class QuickStartTaskDetails(
             R.string.quick_start_list_check_stats_subtitle,
             R.drawable.ic_stats_alt_white_24dp
     ),
-    EXPLORE_PLANS(
-            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL,
-            R.string.quick_start_list_explore_plans_title,
-            R.string.quick_start_list_explore_plans_subtitle,
-            R.drawable.ic_plans_white_24dp
-    ),
     EDIT_HOMEPAGE(
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL,
             R.string.quick_start_list_edit_homepage_title,

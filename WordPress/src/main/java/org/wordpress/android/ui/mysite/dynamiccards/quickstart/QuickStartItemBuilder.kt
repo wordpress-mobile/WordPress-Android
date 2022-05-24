@@ -123,8 +123,6 @@ class QuickStartItemBuilder
                 R.drawable.img_illustration_quick_start_task_edit_your_homepage
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL ->
                 R.drawable.img_illustration_quick_start_task_review_site_pages
-            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL ->
-                R.drawable.img_illustration_quick_start_task_explore_plans
             QuickStartStore.QUICK_START_CREATE_SITE_LABEL -> R.drawable.img_illustration_quick_start_task_create_site
             QuickStartStore.QUICK_START_CHECK_NOTIFIATIONS_LABEL ->
                 R.drawable.img_illustration_quick_start_task_placeholder
