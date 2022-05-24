@@ -43,7 +43,7 @@
 
         <include
             android:id="@+id/quick_start_get_to_know_app"
-            layout="@layout/quick_start_task_type_item"
+            layout="@layout/quick_start_task_type_grow_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="gone"

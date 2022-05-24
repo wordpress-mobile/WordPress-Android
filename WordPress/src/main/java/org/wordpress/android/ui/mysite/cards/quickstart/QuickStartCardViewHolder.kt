@@ -12,6 +12,7 @@ import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
 import org.wordpress.android.databinding.QuickStartCardBinding
+import org.wordpress.android.databinding.QuickStartTaskTypeGrowItemBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
@@ -53,6 +54,24 @@ class QuickStartCardViewHolder(
     }
 
     private fun QuickStartTaskTypeItemBinding.update(
+        taskType: QuickStartTaskType,
+        taskTypeItems: List<QuickStartTaskTypeItem>
+    ) {
+        val hasItemOfTaskType = taskTypeItems.any { it.quickStartTaskType == taskType }
+        itemRoot.setVisible(hasItemOfTaskType)
+        if (!hasItemOfTaskType) return
+        val item = taskTypeItems.first { it.quickStartTaskType == taskType }
+        with(itemTitle) {
+            text = uiHelpers.getTextOfUiString(itemView.context, item.title)
+            isEnabled = item.titleEnabled
+            paintFlags(item)
+        }
+        itemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
+        itemProgress.update(item)
+        itemRoot.setOnClickListener { item.onClick.click() }
+    }
+
+    private fun QuickStartTaskTypeGrowItemBinding.update(
         taskType: QuickStartTaskType,
         taskTypeItems: List<QuickStartTaskTypeItem>
     ) {
