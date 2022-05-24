@@ -48,11 +48,6 @@ enum class QuickStartNoticeDetails(
             R.string.quick_start_dialog_check_stats_title,
             R.string.quick_start_dialog_check_stats_message
     ),
-    EXPLORE_PLANS(
-            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL,
-            R.string.quick_start_dialog_explore_plans_title,
-            R.string.quick_start_dialog_explore_plans_message
-    ),
     EDIT_HOMEPAGE(
             QuickStartStore.QUICK_START_EDIT_HOMEPAGE_LABEL,
             R.string.quick_start_dialog_edit_homepage_title,
