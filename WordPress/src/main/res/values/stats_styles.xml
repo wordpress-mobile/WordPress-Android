@@ -365,4 +365,9 @@
         <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
         <item name="android:drawableTint">@color/stats_legend_previous_week</item>
     </style>
+
+    <style name="StatsWidget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/bg_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
+    </style>
 </resources>

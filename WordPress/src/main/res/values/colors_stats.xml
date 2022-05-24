@@ -17,4 +17,6 @@
     <color name="stats_legend_previous_week">@color/gray_60</color>
     <color name="stats_color_positive">@color/green_50</color>
     <color name="stats_color_negative">@color/red_50</color>
+    <color name="stats_tool_tip_caption">@color/gray_10</color>
+    <color name="stats_tool_tip_body">@color/white</color>
 </resources>
