@@ -1,15 +1,3 @@
-// MERGEFIX
-buildscript {
-    ext.daggerVersion = '2.41'
-
-    repositories {
-        google()
-    }
-
-    dependencies {
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
-    }
-}
 plugins {
     id "com.automattic.android.fetchstyle"
     id "io.gitlab.arturbosch.detekt"
