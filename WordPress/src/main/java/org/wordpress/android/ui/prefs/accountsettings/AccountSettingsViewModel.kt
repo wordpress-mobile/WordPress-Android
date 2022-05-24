@@ -42,7 +42,7 @@ class AccountSettingsViewModel @Inject constructor(
     private val getAccountUseCase: GetAccountUseCase,
     private val getSitesUseCase: GetSitesUseCase,
     private val optimisticUpdateHandler: AcountSettingsOptimisticUpdateHandler
-    ) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(mainDispatcher) {
     var fetchNewSettingsJob: Job? = null
     init {
         viewModelScope.launch {
@@ -125,15 +125,19 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onEmailChanged(newEmail: String) {
-        val addOptimisticUpdate =  optimisticUpdateHandler.update(EMAIL_PREFERENCE_KEY,newEmail)
+        val addOptimisticUpdate = optimisticUpdateHandler.update(EMAIL_PREFERENCE_KEY, newEmail)
         val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(EMAIL_PREFERENCE_KEY)
-        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) { pushAccountSettingsUseCase.updateEmail(newEmail) }
+        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) {
+            pushAccountSettingsUseCase.updateEmail(newEmail)
+        }
     }
 
     fun onWebAddressChanged(newWebAddress: String) {
-        val addOptimisticUpdate =  optimisticUpdateHandler.update(WEBADDRESS_PREFERENCE_KEY,newWebAddress)
+        val addOptimisticUpdate = optimisticUpdateHandler.update(WEBADDRESS_PREFERENCE_KEY, newWebAddress)
         val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(WEBADDRESS_PREFERENCE_KEY)
-        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) { pushAccountSettingsUseCase.updateWebAddress(newWebAddress) }
+        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) {
+            pushAccountSettingsUseCase.updateWebAddress(newWebAddress)
+        }
     }
 
     fun onPasswordChanged(newPassword: String) {
@@ -190,7 +194,7 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onToastShown(toastMessage: String) {
-        if(_accountSettingsUiState.value.error.equals(toastMessage)){
+        if (_accountSettingsUiState.value.error.equals(toastMessage)) {
             updateErrorUiState(null)
         }
     }
