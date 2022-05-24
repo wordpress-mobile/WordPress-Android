@@ -15,6 +15,7 @@ object FluxCCrashLoggerProvider {
         private set
 
     fun initLogger(logger: FluxCCrashLogger) {
+        if (crashLogger != null) throw IllegalStateException("FLuxCCrashLogger is already initialized")
         crashLogger = logger
     }
 }
