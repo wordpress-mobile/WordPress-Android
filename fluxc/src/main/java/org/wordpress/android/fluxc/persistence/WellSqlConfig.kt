@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 173
+        return 174
     }
 
     override fun getDbName(): String {
@@ -1847,6 +1847,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 172 -> migrate(version) {
                     db.execSQL("ALTER TABLE EditorTheme ADD QUOTE_BLOCK_V2 BOOLEAN")
+                }
+                173 -> migrate(version) {
+                    db.execSQL("DELETE FROM QuickStartTaskModel WHERE TASK_NAME='explore_plans' " +
+                        "AND TASK_TYPE='grow';")
                 }
             }
         }
