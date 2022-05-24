@@ -13,8 +13,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_NEXT
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -75,7 +73,7 @@ class PostCardBuilder @Inject constructor(
                     onClick = onFooterLinkClick
             ),
             onClick = ListItemInteraction.create(
-                    PostItemClickParams(postCardType = CREATE_FIRST, postId = NOT_SET),
+                    PostItemClickParams(postCardType = PostCardType.CREATE_FIRST, postId = NOT_SET),
                     onPostItemClick
             )
     )
@@ -93,7 +91,7 @@ class PostCardBuilder @Inject constructor(
                     onClick = onFooterLinkClick
             ),
             onClick = ListItemInteraction.create(
-                    PostItemClickParams(postCardType = CREATE_NEXT, postId = NOT_SET),
+                    PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
                     onPostItemClick
             )
     )
