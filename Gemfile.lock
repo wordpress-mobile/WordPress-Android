@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:wordpress-mobile/release-toolkit
-  revision: f1d098a1bdd9edb117c230c934f3d8fa715b1cba
+  revision: f4d314a91342e6497ccc8f43a47878d5c6f2f061
   branch: app-size-metrics+android-universal-apk
   specs:
     fastlane-plugin-wpmreleasetoolkit (4.1.0)
@@ -205,7 +205,7 @@ GEM
     octokit (4.22.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
-    oj (3.13.11)
+    oj (3.13.13)
     optimist (3.0.1)
     options (2.3.2)
     optparse (0.1.1)
