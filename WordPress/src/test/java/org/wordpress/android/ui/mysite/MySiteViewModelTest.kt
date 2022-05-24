@@ -1666,10 +1666,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
+    fun `plan item click emits OpenPlan navigation event`() {
         invokeItemClickAction(ListItemAction.PLAN)
 
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
     }
 
