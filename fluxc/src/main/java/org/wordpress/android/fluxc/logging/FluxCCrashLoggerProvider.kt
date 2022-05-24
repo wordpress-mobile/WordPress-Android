@@ -4,6 +4,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 
 object FluxCCrashLoggerProvider {
+    @Volatile
     var crashLogger: FluxCCrashLogger? = null
         get() {
             if (field == null) {
