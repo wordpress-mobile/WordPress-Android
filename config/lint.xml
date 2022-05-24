@@ -89,4 +89,17 @@
     </issue>
 
     <issue id="InvalidFragmentVersionForActivityResult" severity="ignore" />
+    <!--
+        There are several bugs reported for several lifecycle-livedata versions. Here is a couple:
+        * https://issuetracker.google.com/issues/169249668
+        * https://issuetracker.google.com/issues/189967522
+
+        There are several bug fix reports in ther lifecycle release notes. I can see 5 bug fixes
+        related to it if I search for `NullSafeMutableLiveData`:
+        * https://developer.android.com/jetpack/androidx/releases/lifecycle NullSafeMutableLiveData)
+
+        We are disabling this check for now as it results in a crash, but we should try to enable
+        it again as we update our `lifecycle` version.
+    --!>
+    <issue id="NullSafeMutableLiveData" severity="ignore" />
 </lint>
