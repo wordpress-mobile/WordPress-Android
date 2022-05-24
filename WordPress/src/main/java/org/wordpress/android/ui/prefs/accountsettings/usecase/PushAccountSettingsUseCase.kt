@@ -63,7 +63,7 @@ class PushAccountSettingsUseCase @Inject constructor(
         continuationWrapper.continueWith(event)
     }
 
-    fun onCleared(){
+    fun onCleared() {
         dispatcher.unregister(this)
     }
 }
