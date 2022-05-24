@@ -3038,8 +3038,6 @@
     <string name="fab_create_desc">Create a post</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
     <string name="navigate_forward_desc">Go forward</string>
     <string name="navigate_back_desc">Go back</string>
@@ -3061,8 +3059,6 @@
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
@@ -3106,7 +3102,6 @@
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_upload_media_message">Select %1$s Media %2$s to see your current library.</string>
-    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
     <string name="quick_start_list_check_stats_title">Check your site stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
