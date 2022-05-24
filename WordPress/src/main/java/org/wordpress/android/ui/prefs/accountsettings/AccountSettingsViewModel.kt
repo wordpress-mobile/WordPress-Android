@@ -32,14 +32,16 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+const val ONE_SITE = 1
 class AccountSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val fetchAccountSettingsUseCase: FetchAccountSettingsUseCase,
     private val pushAccountSettingsUseCase: PushAccountSettingsUseCase,
     private val getAccountUseCase: GetAccountUseCase,
-    private val getSitesUseCase: GetSitesUseCase
+    private val getSitesUseCase: GetSitesUseCase,
+    private val optimisticUpdateHandler: AcountSettingsOptimisticUpdateHandler
     ) : ScopedViewModel(mainDispatcher) {
     var fetchNewSettingsJob: Job? = null
     init {
@@ -61,11 +63,11 @@ class AccountSettingsViewModel @Inject constructor(
     val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
 
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
-        val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
+        val siteViewModels = _accountSettingsUiState.value.primarySiteSettingsUiState.sites
         val primarySiteViewModel = siteViewModels
                 ?.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId }
         val account = getAccountUseCase.account
-        return AccountSettingsUiState(
+        val uistate = AccountSettingsUiState(
                 userNameSettingsUiState = UserNameSettingsUiState(
                         account.userName,
                         account.displayName,
@@ -84,6 +86,7 @@ class AccountSettingsViewModel @Inject constructor(
                 changePasswordSettingsUiState = ChangePasswordSettingsUiState(false),
                 error = null
         )
+        return optimisticUpdateHandler.applyOptimisticallyChangedPreferences(uistate)
     }
 
     private suspend fun getSitesAccessedViaWPComRest() {
@@ -114,46 +117,23 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onPrimarySiteChanged(siteRemoteId: Long) {
-        val optimisticallyUiState = {
-            val siteViewModel = _accountSettingsUiState.value.primarySiteSettingsUiState?.sites
-                    ?.firstOrNull { it.siteId == siteRemoteId }
-            _accountSettingsUiState.update {
-                it.copy(
-                        primarySiteSettingsUiState = it.primarySiteSettingsUiState?.copy(
-                                primarySite = siteViewModel
-                        )
-                )
-            }
-        }
-
-        onAccountSettingsChange(optimisticallyUiState) {
+        val addOptimisticUpdate = optimisticUpdateHandler.update(PRIMARYSITE_PREFERENCE_KEY, siteRemoteId.toString())
+        val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(PRIMARYSITE_PREFERENCE_KEY)
+        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) {
             pushAccountSettingsUseCase.updatePrimaryBlog(siteRemoteId.toString())
         }
     }
 
     fun onEmailChanged(newEmail: String) {
-        val optimisticallyUiState = {
-            _accountSettingsUiState.update {
-                it.copy(
-                        emailSettingsUiState = it.emailSettingsUiState.copy(
-                                hasPendingEmailChange = true,
-                                newEmail = newEmail
-                        )
-                )
-            }
-        }
-        onAccountSettingsChange(optimisticallyUiState) { pushAccountSettingsUseCase.updateEmail(newEmail) }
+        val addOptimisticUpdate =  optimisticUpdateHandler.update(EMAIL_PREFERENCE_KEY,newEmail)
+        val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(EMAIL_PREFERENCE_KEY)
+        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) { pushAccountSettingsUseCase.updateEmail(newEmail) }
     }
 
     fun onWebAddressChanged(newWebAddress: String) {
-        val optimisticallyUiState = {
-            _accountSettingsUiState.update {
-                it.copy(
-                        webAddressSettingsUiState = it.webAddressSettingsUiState.copy(webAddress = newWebAddress),
-                )
-            }
-        }
-        onAccountSettingsChange(optimisticallyUiState) { pushAccountSettingsUseCase.updateWebAddress(newWebAddress) }
+        val addOptimisticUpdate =  optimisticUpdateHandler.update(WEBADDRESS_PREFERENCE_KEY,newWebAddress)
+        val removeOptimisticUpdate = optimisticUpdateHandler.removeFirstChange(WEBADDRESS_PREFERENCE_KEY)
+        onAccountSettingsChange(addOptimisticUpdate, removeOptimisticUpdate) { pushAccountSettingsUseCase.updateWebAddress(newWebAddress) }
     }
 
     fun onPasswordChanged(newPassword: String) {
@@ -168,17 +148,20 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private fun onAccountSettingsChange(
-        optimisticallyChangeUiState: (() -> Unit?)? = null,
+        addOptimisticUpdate: (() -> Unit?)? = null,
+        removeOptimisticUpdate: (() -> Unit?)? = null,
         updateAccountSettings: suspend () -> OnAccountChanged
     ) {
-        optimisticallyChangeUiState?.invoke()
+        addOptimisticUpdate?.invoke()
+        updateAccountSettingsUiState()
         fetchNewSettingsJob?.cancel()
         viewModelScope.launch {
             val onAccountChangedEvent = updateAccountSettings.invoke()
+            removeOptimisticUpdate?.invoke()
+            updateAccountSettingsUiState()
             if (onAccountChangedEvent.isError) {
                 handleError(onAccountChangedEvent.error)
             }
-            updateAccountSettingsUiState()
         }
     }
 
