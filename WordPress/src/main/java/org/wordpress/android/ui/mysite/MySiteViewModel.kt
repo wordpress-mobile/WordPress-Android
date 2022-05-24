@@ -61,6 +61,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -148,6 +149,7 @@ class MySiteViewModel @Inject constructor(
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
@@ -1163,6 +1165,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptAnswerClick(promptId: Int) {
+        bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
     }
