@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 174
+        return 175
     }
 
     override fun getDbName(): String {
@@ -1861,6 +1861,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_SUNDAY BOOLEAN")
                     db.execSQL("ALTER TABLE SiteModel ADD BLOGGING_REMINDER_HOUR INTEGER")
                     db.execSQL("ALTER TABLE SiteModel ADD BLOGGING_REMINDER_MINUTE INTEGER")
+                }
+                174 -> migrate(version) {
+                    db.execSQL("ALTER TABLE PostModel ADD ANSWERED_PROMPT_ID INTEGER")
                 }
             }
         }
