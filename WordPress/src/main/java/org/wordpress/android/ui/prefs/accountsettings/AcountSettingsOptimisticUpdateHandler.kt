@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.prefs.accountsettings
 
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel.AccountSettingsUiState
+import javax.inject.Inject
 
 const val EMAIL_PREFERENCE_KEY = "EMAIL_PREFERENCE_KEY"
 const val PRIMARYSITE_PREFERENCE_KEY = "PRIMARYSITE_PREFERENCE_KEY"
 const val WEBADDRESS_PREFERENCE_KEY = "WEBADDRESS_PREFERENCE_KEY"
-class AcountSettingsOptimisticUpdateHandler {
+class AcountSettingsOptimisticUpdateHandler @Inject constructor() {
 
     private val optimisticallyChangedPreferenceMap = mutableMapOf<String, List<String>>()
 
@@ -31,7 +32,7 @@ class AcountSettingsOptimisticUpdateHandler {
                 PRIMARYSITE_PREFERENCE_KEY -> {
                     uiState = uiState.copy(
                             primarySiteSettingsUiState = state.primarySiteSettingsUiState.copy(
-                                    primarySite = state.primarySiteSettingsUiState.sites?.first {
+                                    primarySite = state.primarySiteSettingsUiState.sites?.firstOrNull {
                                         it.siteId == arrayOfValues.first()
                                                 .toLong()
                                     })
