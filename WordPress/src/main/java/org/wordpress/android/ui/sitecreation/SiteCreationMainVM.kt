@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCas
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.experiments.SiteNameABExperiment
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -62,7 +64,8 @@ class SiteCreationMainVM @Inject constructor(
     private val siteNameABExperiment: SiteNameABExperiment,
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
-    private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
+    private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
+    private val imageManager: ImageManager
 ) : ViewModel() {
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
@@ -126,11 +129,7 @@ class SiteCreationMainVM @Inject constructor(
                 if (networkUtils.isNetworkAvailable()) {
                     val response = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
                     for (design in response.designs) {
-                        Glide.with(context)
-                                .downloadOnly()
-                                .load(design.previewMobile)
-                                .submit()
-                                .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+                        imageManager.preload(context, MShot(design.previewMobile))
                     }
                 }
                 preloadingJob = null

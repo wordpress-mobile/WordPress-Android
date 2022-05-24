@@ -34,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.experiments.SiteNameABExperiment
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -64,6 +65,7 @@ class SiteCreationMainVMTest {
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
+    @Mock lateinit var imageManager: ImageManager
     private val wizardManagerNavigatorLiveData = SingleLiveEvent<SiteCreationStep>()
 
     private lateinit var viewModel: SiteCreationMainVM
@@ -286,6 +288,7 @@ class SiteCreationMainVMTest {
             siteNameABExperiment,
             networkUtils,
             dispatcher,
-            fetchHomePageLayoutsUseCase
+            fetchHomePageLayoutsUseCase,
+            imageManager
     )
 }
