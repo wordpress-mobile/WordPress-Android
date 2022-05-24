@@ -77,11 +77,11 @@ public class PostRestClient extends BaseWPComRestClient {
     LikesUtilsProvider mLikesUtilsProvider;
 
     @Inject public PostRestClient(Context appContext,
-                          Dispatcher dispatcher,
-                          @Named("regular") RequestQueue requestQueue,
-                          AccessToken accessToken,
-                          UserAgent userAgent,
-                          LikesUtilsProvider likesUtilsProvider) {
+                                  Dispatcher dispatcher,
+                                  @Named("regular") RequestQueue requestQueue,
+                                  AccessToken accessToken,
+                                  UserAgent userAgent,
+                                  LikesUtilsProvider likesUtilsProvider) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mLikesUtilsProvider = likesUtilsProvider;
     }
@@ -208,7 +208,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
                     }
                 }
-                                                                                                );
+        );
         add(request);
     }
 
@@ -377,7 +377,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
                     }
                 }
-                                                                                                   );
+        );
         add(request);
     }
 
@@ -504,16 +504,20 @@ public class PostRestClient extends BaseWPComRestClient {
         if (from.getPostThumbnail() != null) {
             post.setFeaturedImageId(from.getPostThumbnail().getId());
         }
+
         post.setPostFormat(from.getFormat());
+
         if (from.getGeo() != null) {
             post.setLatitude(from.getGeo().latitude);
             post.setLongitude(from.getGeo().longitude);
-        } else {
-            List<PostMetaData> metaDataList = from.getMetadata();
-            if (metaDataList != null) {
-                for (PostMetaData metaData : metaDataList) {
-                    String key = metaData.getKey();
-                    if (key != null && metaData.getValue() != null) {
+        }
+
+        List<PostMetaData> metaDataList = from.getMetadata();
+        if (metaDataList != null) {
+            for (PostMetaData metaData : metaDataList) {
+                String key = metaData.getKey();
+                if (key != null && metaData.getValue() != null) {
+                    if (from.getGeo() == null) { // check geo values if post does not have them
                         try {
                             if (key.equals("geo_longitude")) {
                                 Object metaDataValue = metaData.getValue();
@@ -529,6 +533,13 @@ public class PostRestClient extends BaseWPComRestClient {
                             }
                         } catch (NumberFormatException nfe) {
                             AppLog.w(T.POSTS, "Geo location found in wrong format in the post metadata.");
+                        }
+                    }
+
+                    if (key.equals("_jetpack_blogging_prompt_key")) {
+                        Object metaDataValue = metaData.getValue();
+                        if (metaDataValue instanceof Integer) {
+                            post.setAnsweredPromptId((int) metaDataValue);
                         }
                     }
                 }
@@ -631,9 +642,17 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("featured_image", "");
         }
 
+        List<Map<String, Object>> metadata = new ArrayList<>();
+        if (post.getAnsweredPromptId() > 0) {
+            Map<String, Object> answeredPromptParams = new HashMap<>();
+            answeredPromptParams.put("key", "_jetpack_blogging_prompt_key");
+            answeredPromptParams.put("value", post.getAnsweredPromptId());
+            answeredPromptParams.put("operation", "update");
+            metadata.add(answeredPromptParams);
+        }
+
         if (post.hasLocation()) {
             // Location data was added to the post
-            List<Map<String, Object>> metadata = new ArrayList<>();
             PostLocation location = post.getLocation();
 
             Map<String, Object> latitudeParams = new HashMap<>();
@@ -648,11 +667,8 @@ public class PostRestClient extends BaseWPComRestClient {
 
             metadata.add(latitudeParams);
             metadata.add(longitudeParams);
-            params.put("metadata", metadata);
         } else if (post.shouldDeleteLatitude() || post.shouldDeleteLongitude()) {
             // The post used to have location data, but the user deleted it - clear location data on the server
-            List<Map<String, Object>> metadata = new ArrayList<>();
-
             if (post.shouldDeleteLatitude()) {
                 Map<String, Object> latitudeParams = new HashMap<>();
                 latitudeParams.put("key", "geo_latitude");
@@ -666,7 +682,9 @@ public class PostRestClient extends BaseWPComRestClient {
                 longitudeParams.put("operation", "delete");
                 metadata.add(longitudeParams);
             }
+        }
 
+        if (!metadata.isEmpty()) {
             params.put("metadata", metadata);
         }
 
