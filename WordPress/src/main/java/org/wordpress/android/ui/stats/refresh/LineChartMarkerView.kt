@@ -183,6 +183,7 @@ class LineChartMarkerView @Inject constructor(
             path.lineTo(0f, 0f)
             path.offset(posX + offset.x, posY + offset.y)
         }
+        path.close()
 
         // translate to the correct position and draw
         canvas?.apply {
