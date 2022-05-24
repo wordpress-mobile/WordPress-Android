@@ -48,9 +48,8 @@ class PieChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(parent, R.
             val dataSet = getDataSet(item)
             dataSet.sliceSpace = DisplayUtils.pxToDp(context, sliceWidth.toInt()).toFloat()
             data = PieData(dataSet)
-
-            addLegends(item)
         }
+        addLegends(item)
         itemView.contentDescription = item.contentDescription
     }
 
@@ -64,11 +63,14 @@ class PieChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(parent, R.
         chart.doOnLayout { chart.holeRadius = (1 - 2 * sliceWidth / chart.width) * PERCENT_HUNDRED }
     }
 
-    private fun getDataSet(item: PieChartItem) = PieDataSet(mapToPieEntry(item.entries), null).apply {
-        label = null
-        setDrawValues(false)
-        colors = item.colors.map { ContextCompat.getColor(chart.context, it) }
-        selectionShift = 0f // Needed for removing extra highlighting space in chart size
+    private fun getDataSet(item: PieChartItem): PieDataSet {
+        val pieChartEntries = item.entries.filter { it.value > 0 }
+        return PieDataSet(mapToPieEntry(pieChartEntries), null).apply {
+            label = null
+            setDrawValues(false)
+            colors = item.colors.map { ContextCompat.getColor(chart.context, it) }
+            selectionShift = 0f // Needed for removing extra highlighting space in chart size
+        }
     }
 
     private fun addLegends(item: PieChartItem) {

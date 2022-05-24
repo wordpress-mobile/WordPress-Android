@@ -54,21 +54,9 @@ class FollowerTypesUseCase @Inject constructor(
 
     private fun buildDataModel(wpComTotals: Int?, emailTotals: Int?, socialTotals: Int?): Map<FollowerType, Int> {
         val map = mutableMapOf<FollowerType, Int>()
-        wpComTotals?.let {
-            if (it > 0) {
-                map[WP_COM] = it
-            }
-        }
-        emailTotals?.let {
-            if (it > 0) {
-                map[EMAIL] = it
-            }
-        }
-        socialTotals?.let {
-            if (it > 0) {
-                map[SOCIAL] = it
-            }
-        }
+        wpComTotals?.let { map[WP_COM] = it }
+        emailTotals?.let { map[EMAIL] = it }
+        socialTotals?.let { map[SOCIAL] = it }
         return map
     }
 
@@ -174,7 +162,6 @@ class FollowerTypesUseCase @Inject constructor(
     }
 
     private fun mapToPie(domainModel: Map<FollowerType, Int>) = domainModel
-            .filter { it.value != 0 } // Don't add zero values
             .map {
                 val label = resourceProvider.getString(getTitle(it.key))
                 Pie(label, it.value)
