@@ -1,1 +1,1 @@
-WordPress - 网站和博客构建工具
+WordPress - 网站构建器

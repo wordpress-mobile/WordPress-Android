@@ -48,6 +48,16 @@ class EditorActionsProviderTest {
     }
 
     @Test
+    fun `Verify actions of a PUBLISHED post in Landing Editor mode`() {
+        // Arrange & Act
+        val (primaryAction, secondaryAction) =
+                getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = true, isLandInTheEditor = true)
+        // Assert
+        assertThat(primaryAction).isEqualTo(PrimaryEditorAction.CONTINUE)
+        assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.NONE)
+    }
+
+    @Test
     fun `Verify actions of a SCHEDULED post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
@@ -120,9 +130,10 @@ class EditorActionsProviderTest {
 
     private fun getPrimaryAndSecondaryActions(
         postStatus: PostStatus,
-        userCanPublish: Boolean
+        userCanPublish: Boolean,
+        isLandInTheEditor: Boolean = false
     ): Pair<PrimaryEditorAction, SecondaryEditorAction> = Pair(
-            actionsProvider.getPrimaryAction(postStatus, userCanPublish),
+            actionsProvider.getPrimaryAction(postStatus, userCanPublish, isLandInTheEditor),
             actionsProvider.getSecondaryAction(postStatus, userCanPublish)
     )
 }

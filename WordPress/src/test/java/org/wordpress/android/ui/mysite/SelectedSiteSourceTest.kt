@@ -66,13 +66,15 @@ class SelectedSiteSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given selected site, when build is invoked, then refresh is true`() = test {
+    fun `given selected site, when build is invoked, then refresh changes from true to false`() = test {
         initSelectedSiteSource(hasSelectedSite = true)
         source.refresh.observeForever { isRefreshing.add(it) }
 
+        assertThat(isRefreshing.last()).isTrue
+
         source.build(testScope(), siteLocalId).observeForever { result.add(it) }
 
-        assertThat(isRefreshing.last()).isTrue
+        assertThat(isRefreshing.last()).isFalse
     }
 
     @Test

@@ -1,7 +1,0 @@
-18.8:
-- Dapatkan saran tautan alih-alih tautan papan klip yang terisi otomatis untuk blok Tombol dan Gambar.
-- Klik "Salin Tautan" untuk membagikan tautan pos yang telah diposkan.
-- Tab menu penyisip sesuai dengan bahasa perangkat Anda.
-- Pilihan media perangkat terbuka saat membuat blok Galeri.
-- Masalah bug ukuran font dan tampilan RTL telah diperbaiki.
-- Mengedit tautan blok Sematan di Pengaturan Blok.

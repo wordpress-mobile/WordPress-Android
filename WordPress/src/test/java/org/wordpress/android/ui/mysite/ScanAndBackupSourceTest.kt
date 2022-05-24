@@ -117,13 +117,13 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when source is invoked, then refresh is false`() = test {
+    fun `when build is invoked, then refresh is true`() = test {
         initScanAndBackupSource(hasSelectedSite = true, scanPurchased = true, backupPurchased = true)
         scanAndBackupSource.refresh.observeForever { isRefreshing.add(it) }
 
         scanAndBackupSource.build(testScope(), siteLocalId)
 
-        assertThat(isRefreshing.last()).isFalse
+        assertThat(isRefreshing.last()).isTrue
     }
 
     @Test

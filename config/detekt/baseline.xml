@@ -270,11 +270,10 @@
     <ID>MaxLineLength:StoryMediaSaveUploadBridge.kt$StoryMediaSaveUploadBridge.&lt;no name provided&gt;$// here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image</ID>
     <ID>MaxLineLength:WPWebViewUsageCategory.kt$WPWebViewUsageCategory$*</ID>
     <ID>MaxLineLength:XPostsCapabilityChecker.kt$XPostsCapabilityChecker$// suggestions, but because the response will almost always be empty, it's not an expensive call.</ID>
+    <ID>MaximumLineLength:org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel.kt:47</ID>
+    <ID>MaximumLineLength:org.wordpress.android.workers.reminder.PromptReminderNotifier.kt:43</ID>
+    <ID>MaximumLineLength:org.wordpress.android.viewmodel.main.WPMainActivityViewModel.kt:220</ID>
     <ID>MemberNameEqualsClassName:ActivityLogTypeFilterViewModel.kt$ActivityLogTypeFilterViewModel.Action$lateinit var action: (() -&gt; Unit)</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:252</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:254</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:84</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:86</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:51</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:53</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase.kt:25</ID>
@@ -336,6 +335,7 @@
     <ID>ReturnCount:UploadActionUseCase.kt$UploadActionUseCase$fun getAutoUploadAction(post: PostImmutableModel, site: SiteModel): UploadAction</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun endsWithDelimiter(string: String): Boolean</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun removeDelimiterFromItemIfPresent(item: String?): String?</ID>
+    <ID>ReturnCount:AccountSettingsRepository.kt$AccountSettingsRepository$ private fun getFirstAvailableContinuation(): Continuation&lt;OnAccountChanged>?</ID>
     <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())</ID>
     <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*postsToRefresh.map { LocalId(it.id) }.toTypedArray())</ID>
     <ID>SpreadOperator:PageListViewModel.kt$PageListViewModel$(*event.mediaList.map { it.mediaId }.toLongArray())</ID>
@@ -349,6 +349,7 @@
     <ID>TooGenericExceptionCaught:ColorUnderlineSpan.kt$ColorUnderlineSpan$e: Exception</ID>
     <ID>TooGenericExceptionCaught:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:MediaPickerActivity.kt$MediaPickerActivity$e: RuntimeException</ID>
+    <ID>TooGenericExceptionCaught:PagesViewModel.kt$PagesViewModel$e: NullPointerException</ID>
     <ID>TooGenericExceptionCaught:PostListAction.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:UploadStarter.kt$UploadStarter$e: Exception</ID>
     <ID>TooGenericExceptionThrown:ActionableEmptyView.kt$ActionableEmptyView$throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")</ID>
@@ -485,6 +486,7 @@
     <ID>TooManyFunctions:WPMainNavigationView.kt$WPMainNavigationView : BottomNavigationViewOnNavigationItemSelectedListenerOnNavigationItemReselectedListener</ID>
     <ID>TooManyFunctions:WPWebViewViewModel.kt$WPWebViewViewModel : ViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:ZendeskHelper.kt$ZendeskHelper</ID>
+    <ID>TooManyFunctions:AccountSettingsRepository.kt$AccountSettingsRepository</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val activityViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val headerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:HomePagePickerViewModel.kt$const val defaultTemplateSlug = "default"</ID>

@@ -100,8 +100,7 @@ public class GCMMessageHandler {
     private final ArrayMap<Integer, Bundle> mActiveNotificationsMap;
     private final NotificationHelper mNotificationHelper;
 
-    @Inject
-    GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker) {
+    @Inject GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker) {
         mActiveNotificationsMap = new ArrayMap<>();
         mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker);
     }
@@ -544,27 +543,23 @@ public class GCMMessageHandler {
         }
 
         private PendingIntent getCommentActionPendingIntent(Context context, Intent intent) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionPendingIntentForService(context, intent);
-            } else {
-                return getCommentActionPendingIntentForActivity(context, intent);
-            }
+            return getCommentActionPendingIntentForService(context, intent);
         }
 
         private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent) {
-            return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        }
+            int flags = PendingIntent.FLAG_CANCEL_CURRENT;
+            if (Build.VERSION.SDK_INT >= 31) flags |= PendingIntent.FLAG_MUTABLE;
 
-        private PendingIntent getCommentActionPendingIntentForActivity(Context context, Intent intent) {
-            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            return PendingIntent.getService(
+                    context,
+                    0,
+                    intent,
+                    flags
+            );
         }
 
         private Intent getCommentActionReplyIntent(Context context, String noteId) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionIntentForService(context);
-            } else {
-                return getCommentActionIntentForActivity(context, noteId);
-            }
+            return getCommentActionIntentForService(context);
         }
 
         private Intent getCommentActionIntent(Context context) {
@@ -573,18 +568,6 @@ public class GCMMessageHandler {
 
         private Intent getCommentActionIntentForService(Context context) {
             return new Intent(context, NotificationsProcessingService.class);
-        }
-
-        private Intent getCommentActionIntentForActivity(Context context, String noteId) {
-            Intent intent = new Intent(context, WPMainActivity.class);
-            intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setAction("android.intent.action.MAIN");
-            intent.addCategory("android.intent.category.LAUNCHER");
-            intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-            intent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
-            return intent;
         }
 
         private Bitmap getLargeIconBitmap(Context context, String iconUrl, boolean shouldCircularizeIcon) {
@@ -797,9 +780,13 @@ public class GCMMessageHandler {
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
 
                 resultIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
-                        | PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(
+                        context,
+                        pushId,
+                        resultIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT
+                        | PendingIntent.FLAG_IMMUTABLE
+                );
                 builder.setContentIntent(pendingIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.notify(pushId, builder.build());
@@ -992,9 +979,12 @@ public class GCMMessageHandler {
                     .setOnlyAlertOnce(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX);
 
-            PendingIntent pendingIntent =
-                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    context,
+                    AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG,
+                    pushAuthIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
             builder.setContentIntent(pendingIntent);
 
 
@@ -1013,9 +1003,12 @@ public class GCMMessageHandler {
             authApproveIntent.setAction("android.intent.action.MAIN");
             authApproveIntent.addCategory("android.intent.category.LAUNCHER");
 
-            PendingIntent authApprovePendingIntent =
-                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
-                            PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent authApprovePendingIntent = PendingIntent.getActivity(
+                    context,
+                    AUTH_PUSH_REQUEST_CODE_APPROVE,
+                    authApproveIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
 
             builder.addAction(R.drawable.ic_checkmark_white_24dp, context.getText(R.string.approve),
                     authApprovePendingIntent);
@@ -1024,10 +1017,12 @@ public class GCMMessageHandler {
             Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
             authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
                     NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
-            PendingIntent authIgnorePendingIntent = PendingIntent.getService(context,
+            PendingIntent authIgnorePendingIntent = PendingIntent.getService(
+                    context,
                     AUTH_PUSH_REQUEST_CODE_IGNORE,
                     authIgnoreIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
             builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
                     authIgnorePendingIntent);
 

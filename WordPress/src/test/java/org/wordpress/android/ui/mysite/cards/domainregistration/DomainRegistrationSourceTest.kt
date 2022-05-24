@@ -107,7 +107,7 @@ class DomainRegistrationSourceTest : BaseUnitTest() {
 
         source.build(testScope(), siteLocalId)
 
-        assertThat(isRefreshing.first()).isTrue
+        assertThat(isRefreshing.last()).isTrue
     }
 
     @Test

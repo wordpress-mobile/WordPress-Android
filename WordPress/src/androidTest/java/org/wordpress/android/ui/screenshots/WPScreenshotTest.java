@@ -2,17 +2,14 @@ package org.wordpress.android.ui.screenshots;
 
 import android.provider.Settings;
 
+import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.Espresso;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.e2e.pages.PostsListPage;
@@ -42,26 +39,23 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
 @LargeTest
-@RunWith(AndroidJUnit4.class)
+@HiltAndroidTest
 public class WPScreenshotTest extends BaseTest {
     @ClassRule
     public static final WPLocaleTestRule LOCALE_TEST_RULE = new WPLocaleTestRule();
 
-
-    @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class,
-            false, false);
 
     private DemoModeEnabler mDemoModeEnabler = new DemoModeEnabler();
 
     @Test
     public void wPScreenshotTest() {
         if (!BuildConfig.IS_JETPACK_APP) {
-            mActivityTestRule.launchActivity(null);
+            ActivityScenario.launch(WPLaunchActivity.class);
             Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
             // Enable Demo Mode

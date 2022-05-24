@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-12-08 01:00:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.1
 Language: az
 -->
 <resources>
@@ -58,7 +58,6 @@ Language: az
     <string name="stats_search_terms_unknown_search_terms">Bilinməyən Axtarış Kriteriyaları</string>
     <string name="stats_view_authors">Müəlliflər</string>
     <string name="stats_view_search_terms">Axtarış Kriteriyaları</string>
-    <string name="comments_fetching">Şərhlər alınır…</string>
     <string name="pages_fetching">Səhifələr alınır…</string>
     <string name="posts_fetching">Yazılar alınır…</string>
     <string name="media_fetching">Media faylı alınır…</string>
@@ -100,7 +99,6 @@ Language: az
     <string name="browse_our_faq_button">SVS səhifəmizə göz atın</string>
     <string name="error_publish_empty_post">Boş bir yazı dərc edilə bilməz</string>
     <string name="error_refresh_unauthorized_pages">Səhifələrə baxma və ya redaktə etmə izniniz yoxdur</string>
-    <string name="error_refresh_unauthorized_comments">Şərhlərə baxma və ya redaktə etmə izniniz yoxdur</string>
     <string name="older_month">Bir aydan əski</string>
     <string name="more">Daha çox</string>
     <string name="older_two_days">2 gündən əski</string>
@@ -161,14 +159,11 @@ Language: az
     <string name="mnu_comment_unapprove">Rədd et</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_trash">Zibil qutusu</string>
-    <string name="dlg_approving_comments">Təsdiqlənir</string>
-    <string name="dlg_unapproving_comments">Rədd edilir</string>
-    <string name="dlg_spamming_comments">Spam olaraq işarələnir</string>
-    <string name="dlg_trashing_comments">Zibil qutusuna göndərilir</string>
     <string name="dlg_confirm_trash_comments">Zibil qutusuna göndərilsinmi?</string>
     <string name="trash">Zibil</string>
     <string name="page_settings">Səhifə parametrləri</string>
     <string name="local_draft">Yerli qaralama</string>
+    <string name="horizontal_alignment">Üfüqi qruplaşma</string>
     <string name="post_settings">Yazı parametrləri</string>
     <string name="comment_status_approved">Təsdiqlənən</string>
     <string name="comment_status_unapproved">Gözləyir</string>
@@ -181,6 +176,7 @@ Language: az
     <string name="media_error_no_permission">Media kitabxanasına baxma izniniz yoxdur</string>
     <string name="cannot_delete_multi_media_items">Bəzi media faylları silinmədi. Daha sonra təkrar yoxlayın.</string>
     <string name="link_enter_url_text">Bağlantı mətni (seçimə bağlı)</string>
+    <string name="create_a_link">Bağlantı yarat</string>
     <string name="remove_account">Saytı sil</string>
     <string name="notifications_empty_all">Bildiriş yoxdur…</string>
     <string name="share_link">Bağlantını paylaş</string>
@@ -245,6 +241,10 @@ Language: az
     <string name="posts">Yazılar</string>
     <string name="no_network_title">Şəbəkə əlçatan deyil</string>
     <string name="pages">Səhifələr</string>
+    <string name="caption">Başlıq(istəyə bağlı)</string>
+    <string name="width">genişlik</string>
+    <string name="featured">Fərdi təsvir olaraq istifadə edin</string>
+    <string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Versiya</string>

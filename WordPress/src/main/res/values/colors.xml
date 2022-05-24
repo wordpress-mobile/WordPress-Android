@@ -111,4 +111,7 @@
     <color name="grey_lighten_20">#c8d7e1</color>
     <color name="grey_300">#ffe0e0e0</color>
     <color name="grey_900">#ff212121</color>
+
+    <!-- Site creation  -->
+    <color name="site_creation_intent_item_emoji_bg">@color/grey_lighten_30</color>
 </resources>

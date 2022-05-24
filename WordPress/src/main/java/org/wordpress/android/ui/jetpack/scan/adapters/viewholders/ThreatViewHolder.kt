@@ -6,8 +6,8 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.getColorFromAttribute
-import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.setVisible
 
 class ThreatViewHolder(
     private val uiHelpers: UiHelpers,

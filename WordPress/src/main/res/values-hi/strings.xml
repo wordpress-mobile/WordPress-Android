@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-02 23:45:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.1
 Language: hi_IN
 -->
 <resources>
@@ -80,6 +80,7 @@ Language: hi_IN
     <string name="notifications_label_new_notifications">नई सूचनाएं I</string>
     <string name="like">लाइक</string>
     <string name="timespan_now">अब</string>
+    <string name="visual_editor">विजुअल सम्पादक</string>
     <string name="image_width">चौड़ाई </string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
@@ -223,10 +224,10 @@ Language: hi_IN
     <string name="edit_comment">टिप्पणी संपादित करें</string>
     <string name="cancel_edit">संपादन रद्द करें</string>
     <string name="category_name">श्रेणी नाम</string>
+    <string name="create_a_link">एक कड़ी बनाएं</string>
     <string name="image_settings">छवि सेटिंग्स</string>
     <string name="learn_more">और जानें</string>
     <string name="link_enter_url_text">कड़ी शब्द (वैकल्पिक)</string>
-    <string name="dlg_spamming_comments">स्पैम के रूप में चिन्हित</string>
     <string name="new_media">नया मीडिया</string>
     <string name="new_post">नया पोस्ट</string>
     <string name="open_source_licenses">मुक्त स्रोत लाइसेंस</string>
@@ -242,21 +243,19 @@ Language: hi_IN
     <string name="trash">कचरा पेटी</string>
     <string name="comment_status_trash">कचरा पेटी में डाला गया</string>
     <string name="mnu_comment_unapprove">अस्वीकृत</string>
-    <string name="dlg_unapproving_comments">अस्वीकृत किया जा रहा</string>
     <string name="mnu_comment_approve">स्वीकृत करे</string>
     <string name="comment_status_approved">स्वीकृत किया गया</string>
-    <string name="dlg_approving_comments">स्वीकृत किया जा रहा</string>
     <string name="connection_error">कनेक्शन त्रुटि</string>
     <string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
     <string name="select_categories">श्रेणियों को चुने</string>
     <string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
     <string name="toast_comment_unedited">टिप्पणी नहीं बदला है</string>
     <string name="dlg_confirm_trash_comments">कचरा पेटी में भेजें?</string>
-    <string name="dlg_trashing_comments">कचरा पेटी में भेजा जा रहा</string>
     <string name="sure_to_cancel_edit_comment">इस टिप्पणी का संपादन रद्द करें?</string>
     <string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
     <string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
     <string name="post_not_found">पोस्ट लोड करते समय एक त्रुटि हुई.पोस्ट को रिफ्रेश करे और फिर से प्रयास करें</string>
+    <string name="horizontal_alignment">क्षैतिज संरेखण</string>
     <string name="local_changes">स्थानीय परिवर्तन</string>
     <string name="local_draft">स्थानीय प्रारूप</string>
     <string name="error_blog_hidden">यह ब्लॉग छिपा हुआ है और लोड नहीं किया जा सकता है. सेटिंग्स में इसे फिर से सक्रिय करे और फिर कोशिश करें.</string>
@@ -327,8 +326,13 @@ Language: hi_IN
     <string name="no_network_title">नेटवर्क उपलब्ध नहीं </string>
     <string name="pages">पृष्ठे</string>
     <string name="posts">पोस्ट</string>
+    <string name="width">चौडाई</string>
+    <string name="caption">शीर्षक (वैकल्पिक)</string>
+    <string name="featured">विशेष छवि के रुप में उपयोग करें</string>
+    <string name="featured_in_post">पोस्ट सामग्री में छवि को शामिल करे</string>
     <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
+    <string name="uploading">अपलोड किया जा रहा</string>
     <string name="version">संस्करण</string>
     <string name="tos">सेवा की शर्तें</string>
     <string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
@@ -343,7 +347,6 @@ Language: hi_IN
     <string name="categories">श्रेणिया</string>
     <string name="title">शीर्षक</string>
     <string name="tags_separate_with_commas">टैग को अल्पविराम से अलग करे \n</string>
-    <string name="dlg_deleting_comments">टिप्पणियों को हटाना</string>
     <string name="sdcard_title">एसडी कार्ड आवश्यक है</string>
     <string name="media">मीडिया</string>
     <string name="delete">हटाये</string>

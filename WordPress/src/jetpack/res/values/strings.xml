@@ -6,6 +6,9 @@
     <!-- About View -->
     <string name="app_title">Jetpack for Android</string>
 
+    <!-- Post-Signup Interstitial -->
+    <string name="post_signup_interstitial_title">Welcome to Jetpack</string>
+
     <!-- Login Prologue -->
     <string name="app_tagline">Site security and performance from your pocket</string>
     <string name="continue_with_wpcom_no_signup">Log in with WordPress.com</string>

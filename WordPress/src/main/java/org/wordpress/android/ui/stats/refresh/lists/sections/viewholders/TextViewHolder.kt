@@ -7,13 +7,15 @@ import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
@@ -32,6 +34,17 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
         textItem.bolds?.forEach { bold ->
             spannableString.withBoldSpan(bold)
+        }
+        textItem.color?.forEach { color ->
+            spannableString.setSpan(
+                    ForegroundColorSpan(
+                            if (color.first() == '-') ContextCompat.getColor(text.context, R.color.stats_color_negative)
+                                else ContextCompat.getColor(text.context, R.color.stats_color_positive)
+                    ),
+                    loadedText.indexOf(color),
+                    loadedText.indexOf(color) + color.length,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+            )
         }
         text.text = spannableString
         text.linksClickable = true

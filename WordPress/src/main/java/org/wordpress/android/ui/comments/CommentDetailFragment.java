@@ -72,6 +72,10 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.CommentSource;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -90,7 +94,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -98,12 +102,10 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.UnifiedCommentsCommentEditFeatureConfig;
-import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -137,22 +139,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
-
-    enum CommentSource {
-        NOTIFICATION,
-        SITE_COMMENTS;
-
-        AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
-            switch (this) {
-                case NOTIFICATION:
-                    return AnalyticsCommentActionSource.NOTIFICATIONS;
-                case SITE_COMMENTS:
-                    return AnalyticsCommentActionSource.SITE_COMMENTS;
-            }
-            throw new IllegalArgumentException(
-                    this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
-        }
-    }
 
     private CommentModel mComment;
     private SiteModel mSite;
@@ -191,7 +177,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ImageManager mImageManager;
-    @Inject UnifiedCommentsListFeatureConfig mUnifiedCommentsListFeatureConfig;
     @Inject CommentsStore mCommentsStore;
     @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
     @Inject UnifiedCommentsCommentEditFeatureConfig mUnifiedCommentsCommentEditFeatureConfig;
@@ -342,7 +327,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Toast.makeText(view1.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         mEditReply = mLayoutReply.findViewById(R.id.edit_comment);
         mEditReply.initializeWithPrefix('@');
@@ -391,7 +376,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             Toast.makeText(v.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(buttonExpand);
         setReplyUniqueId();
 
         // hide comment like button until we know it can be enabled in showCommentAsNotification()
@@ -654,8 +639,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
-            AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
-                    mCommentSource.toAnalyticsCommentActionSource(), mSite);
         }
     }
 
@@ -669,6 +652,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         CommentModel updatedComment = mCommentsStoreAdapter.getCommentByLocalId(mComment.getId());
         if (updatedComment != null) {
             setComment(updatedComment, mSite);
+        }
+        if (mNotificationsDetailListFragment != null) {
+            mNotificationsDetailListFragment.refreshBlocksForEditedComment(mNote.getId());
         }
     }
 
@@ -685,12 +671,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
-        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled() && mCommentSource == CommentSource.SITE_COMMENTS) {
-            Intent intent = new Intent(getActivity(), UnifiedCommentsEditActivity.class);
-            intent.putExtra(WordPress.SITE, mSite);
-            if (mComment != null) {
-                intent.putExtra(UnifiedCommentsEditActivity.KEY_COMMENT_ID, mComment.getId());
-            }
+        if (mUnifiedCommentsCommentEditFeatureConfig.isEnabled()) {
+            final CommentIdentifier commentIdentifier = mapCommentIdentifier();
+            final Intent intent =
+                    UnifiedCommentsEditActivity.createIntent(requireActivity(), commentIdentifier, mSite);
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
         } else {
             Intent intent = new Intent(getActivity(), EditCommentActivity.class);
@@ -700,6 +684,18 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 intent.putExtra(EditCommentActivity.KEY_NOTE_ID, mNote.getId());
             }
             startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+        }
+    }
+
+    @Nullable
+    private CommentIdentifier mapCommentIdentifier() {
+        switch (mCommentSource) {
+            case SITE_COMMENTS:
+                return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
+            case NOTIFICATION:
+                return new NotificationCommentIdentifier(mNote.getId(), mNote.getCommentId());
+            default:
+                return null;
         }
     }
 
@@ -762,9 +758,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(mComment.getDatePublished()),
                 WordPress.getContext()));
 
-        int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz,
-                getString(R.string.comment_unable_to_show_error));
+        String renderingError = getString(R.string.comment_unable_to_show_error);
+        mTxtContent.post(() -> CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(),
+                mTxtContent.getWidth(), mTxtContent.getLineHeight(), renderingError));
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
@@ -1211,7 +1207,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canEdit() {
-        return (mSite != null && canModerate());
+        return mSite != null && (mSite.getHasCapabilityEditOthersPosts() || mSite.isSelfHostedAdmin());
     }
 
     private boolean canLike() {

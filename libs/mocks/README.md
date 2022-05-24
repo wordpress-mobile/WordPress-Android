@@ -9,7 +9,7 @@ Network mocking for testing the WordPress mobile apps
 To use this library in your project, you must set it up as a subtree.
 From the root of your main project, add the subtree:
 
-    $ git subtree add --prefix=libs/mocks git@github.com:wordpress-mobile/WordPressMocks.git develop
+    $ git subtree add --prefix=libs/mocks git@github.com:wordpress-mobile/WordPressMocks.git trunk
 
 This will create a new directory, `libs/mocks`, containing the contents of this repository.
 
@@ -49,7 +49,7 @@ Here `8282` is the port to run the server on. It can now be accessed from `http:
 
 You can fetch the latest changes made to this library into your project using:
 
-    $ git subtree pull --prefix=libs/mocks git@github.com:wordpress-mobile/WordPressMocks.git develop --squash
+    $ git subtree pull --prefix=libs/mocks git@github.com:wordpress-mobile/WordPressMocks.git trunk --squash
 
 And you can push your own changes upstream to `WordPressMocks` using:
 
@@ -61,17 +61,17 @@ Note: You can add this repository as a remote to simplify the `git subtree push`
 
 This will allow to use this form instead:
 
-    $ git subtree pull --prefix=libs/mocks mockslib develop --squash
-    
-    
-## Creating a mock file 
+    $ git subtree pull --prefix=libs/mocks mockslib trunk --squash
 
-The JSON files used by WireMock to handle requests and are located in `src/main/assets`.  To generate one of these files 
+
+## Creating a mock file
+
+The JSON files used by WireMock to handle requests and are located in `src/main/assets`.  To generate one of these files
 you're first going to want to set up [Charles Proxy](https://www.charlesproxy.com/) (or similar) to work with your Android emulator.
- If you've never done this I found 
-[this article](https://medium.com/@daptronic/the-android-emulator-and-charles-proxy-a-love-story-595c23484e02) to be a 
+ If you've never done this I found
+[this article](https://medium.com/@daptronic/the-android-emulator-and-charles-proxy-a-love-story-595c23484e02) to be a
 good place to start. Once you've done that you'll want to walk through the specfic flow you're testing and store the JSON contents
-of the necessary responses in the `jsonBody` field of the `response` field in the mock file. 
+of the necessary responses in the `jsonBody` field of the `response` field in the mock file.
 
 Here's an example of what this might look like,
 
@@ -93,10 +93,10 @@ Here's an example of what this might look like,
         }
     }
 }
-``` 
+```
 
-These files are used to match network requests while the tests are being run. For more on request matching with 
-WireMock check out [their documentation](http://wiremock.org/docs/request-matching/). 
+These files are used to match network requests while the tests are being run. For more on request matching with
+WireMock check out [their documentation](http://wiremock.org/docs/request-matching/).
 
 ## License ##
 

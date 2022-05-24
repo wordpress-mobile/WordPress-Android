@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -16,7 +18,7 @@ class UnifiedCommentsEditActivity : LocaleAwareActivity() {
         }
 
         val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-        val commentId: Int = intent.getIntExtra(KEY_COMMENT_ID, 0)
+        val commentIdentifier = requireNotNull(intent.getParcelableExtra<CommentIdentifier>(KEY_COMMENT_IDENTIFIER))
 
         val fm = supportFragmentManager
         var editCommentFragment = fm.findFragmentByTag(
@@ -24,7 +26,7 @@ class UnifiedCommentsEditActivity : LocaleAwareActivity() {
         ) as? UnifiedCommentsEditFragment
 
         if (editCommentFragment == null) {
-            editCommentFragment = UnifiedCommentsEditFragment.newInstance(site, commentId)
+            editCommentFragment = UnifiedCommentsEditFragment.newInstance(site, commentIdentifier)
             fm.beginTransaction()
                     .add(R.id.fragment_container, editCommentFragment, TAG_UNIFIED_EDIT_COMMENT_FRAGMENT)
                     .commit()
@@ -32,8 +34,18 @@ class UnifiedCommentsEditActivity : LocaleAwareActivity() {
     }
 
     companion object {
-        const val KEY_COMMENT_ID = "key_comment_id"
+        @JvmStatic
+        fun createIntent(
+            context: Context,
+            commentIdentifier: CommentIdentifier,
+            siteModel: SiteModel
+        ): Intent =
+                Intent(context, UnifiedCommentsEditActivity::class.java).apply {
+                    putExtra(KEY_COMMENT_IDENTIFIER, commentIdentifier)
+                    putExtra(WordPress.SITE, siteModel)
+                }
 
+        private const val KEY_COMMENT_IDENTIFIER = "key_comment_identifier"
         private const val TAG_UNIFIED_EDIT_COMMENT_FRAGMENT = "tag_unified_edit_comment_fragment"
     }
 }

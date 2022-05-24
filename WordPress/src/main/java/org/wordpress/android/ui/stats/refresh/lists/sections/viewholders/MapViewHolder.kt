@@ -24,7 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,

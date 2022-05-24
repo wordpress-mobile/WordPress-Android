@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.1
 Language: ms
 -->
 <resources>
@@ -139,6 +139,7 @@ Language: ms
     <string name="turn_on">Hidupkan</string>
     <string name="error_media_parse_error">Respons tidak disangka dari pelayan</string>
     <string name="upload_finished_toast">Tidak boleh memuat naik kerana ianya telahpun selesai</string>
+    <string name="media_insert_unimplemented">Maaf! Ciri belum lagi dilaksanakan :(</string>
     <string name="menu_redo">Buat Semula</string>
     <string name="post_title">Tajuk</string>
     <string name="menu_undo">Kembali ke asal</string>
@@ -365,12 +366,19 @@ Language: ms
     <string name="error_fetch_email_followers_list">Tidak boleh mendapatkan pengikut emel laman</string>
     <string name="error_fetch_followers_list">Tidak boleh mendapatkan pengikut laman</string>
     <string name="editor_failed_uploads_switch_html">Sebahagian muat naik media telah gagal. Anda tidak boleh menukar ke mod HTML\ndalam keadaan ini. in this state. Buang semua muat naik yang gagal dan bersambung?</string>
+    <string name="visual_editor">Penyunting visual</string>
+    <string name="image_thumbnail">Imej kecil</string>
     <string name="image_caption">Sari Kata</string>
+    <string name="image_alt_text">Teks alt</string>
     <string name="image_link_to">Paut ke</string>
     <string name="image_width">Lebar</string>
     <string name="image_settings_save_toast">Penukaran disimpan</string>
     <string name="image_settings_dismiss_dialog_title">Buang penukaran yang tidak disimpan?</string>
     <string name="stop_upload_dialog_title">Berhenti memuat naik?</string>
+    <string name="alert_error_adding_media">Ralat berlaku semasa menyisip media</string>
+    <string name="alert_action_while_uploading">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
+    <string name="alert_insert_image_html_mode">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
+    <string name="uploading_gallery_placeholder">Memuat naik galeri…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Jemputan dihantar tetapi ralat berlaku!</string>
     <string name="invite_sent">Jemputan berjaya dihantar</string>
@@ -431,6 +439,7 @@ Language: ms
     <string name="start_over">Mula Semula</string>
     <string name="editor_remove_failed_uploads">Buangkan muatnaik yang gagal</string>
     <string name="site_settings_advanced_header">Lanjutan</string>
+    <string name="button_skip">Langkau</string>
     <string name="xmlrpc_missing_method_error">Tidak boleh berhubung. Kaedah XML-RPC yang diperlukan tiada pada pelayan.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
@@ -683,7 +692,6 @@ Language: ms
     <string name="auth_required">Log masuk semula untuk meneruskan.</string>
     <string name="stats_view_authors">Pengarang</string>
     <string name="error_notification_open">Tidak dapat membuka pemberitahuan</string>
-    <string name="comments_fetching">Mengambil ulasan…</string>
     <string name="media_fetching">Mengambil media…</string>
     <string name="pages_fetching">Mengambil halaman…</string>
     <string name="posts_fetching">Mengambil kiriman…</string>
@@ -735,7 +743,6 @@ Language: ms
     <string name="signing_out">Melog keluar…</string>
     <string name="reader_label_view_original">Lihat artikel asal</string>
     <string name="error_refresh_unauthorized_pages">Anda tidak mempunyai kebenaran melihat atau menyunting halaman</string>
-    <string name="error_refresh_unauthorized_comments">Anda tidak mempunyai kebenaran melihat atau menyunting ulasan</string>
     <string name="older_month">Lebih dari sebulan</string>
     <string name="error_refresh_unauthorized_posts">Anda tidak mempunyai kebenaran melihat atau menyunting kiriman</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
@@ -770,17 +777,16 @@ Language: ms
     <string name="media_gallery_type_thumbnail_grid">Grid gambar kenit</string>
     <string name="cannot_delete_multi_media_items">Sesetengah media tidak boleh dihapuskan pada masa ini. Cuba sebentar lagi.</string>
     <string name="link_enter_url_text">Teks pautan (pilihan)</string>
+    <string name="create_a_link">Cipta pautan</string>
     <string name="local_draft">Draf setempat</string>
     <string name="select_categories">Pilih kategori</string>
     <string name="cancel_edit">Batal edit</string>
     <string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
     <string name="mnu_comment_trash">Sampah</string>
-    <string name="dlg_approving_comments">Meluluskan</string>
-    <string name="dlg_unapproving_comments">Tidak meluluskan</string>
-    <string name="dlg_trashing_comments">Hantar ke sampah</string>
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
     <string name="trash">Sampah</string>
     <string name="saving_changes">Simpan perubahan</string>
+    <string name="horizontal_alignment">Jajaran melintang</string>
     <string name="comment_status_approved">Diluluskan</string>
     <string name="comment_status_unapproved">Menunggu</string>
     <string name="comment_status_spam">Spam</string>
@@ -811,7 +817,6 @@ Language: ms
     <string name="content_required">Ulasan diwajibkan</string>
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
-    <string name="dlg_spamming_comments">Ditanda sebagai spam</string>
     <string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>
     <string name="notifications_empty_all">Belum ada pemberitahuan.</string>
     <string name="media_error_no_permission">Anda tidak mempunyai kebenaran untuk melihat pustaka media</string>
@@ -878,12 +883,17 @@ Language: ms
     <string name="password">Kata laluan</string>
     <string name="log_in">Log masuk</string>
     <string name="reader">Pembaca</string>
+    <string name="featured">Guna sebagai imej yang diketengahkan</string>
+    <string name="featured_in_post">Sertakan imej dalam kandungan kiriman</string>
     <string name="no_network_title">Tiada rangkaian yang tersedia</string>
     <string name="pages">Laman</string>
+    <string name="caption">Sari kata (pilihan)</string>
+    <string name="width">Lebar</string>
     <string name="posts">Kiriman</string>
     <string name="anonymous">Tak bernama</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Memuat naik…</string>
     <string name="version">Versi</string>
     <string name="tos">Terma Perkhidmatan</string>
     <string name="app_title">WordPress untuk Android</string>
@@ -898,7 +908,6 @@ Language: ms
     <string name="categories">Kategori</string>
     <string name="title">Tajuk</string>
     <string name="tags_separate_with_commas">Pisahkan tag dengan tanda koma</string>
-    <string name="dlg_deleting_comments">Menghapuskan ulasan</string>
     <string name="sdcard_title">Kad SD Diperlukan</string>
     <string name="media">Media</string>
     <string name="delete">Hapus</string>

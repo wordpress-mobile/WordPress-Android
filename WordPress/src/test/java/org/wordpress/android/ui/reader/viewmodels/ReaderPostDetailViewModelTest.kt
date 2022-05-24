@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -25,14 +26,19 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.ReaderComment
+import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
@@ -44,8 +50,6 @@ import org.wordpress.android.ui.engagement.utils.GetLikesTestConfig.TEST_CONFIG_
 import org.wordpress.android.ui.engagement.utils.getGetLikesState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenUrl
@@ -70,6 +74,7 @@ import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -80,6 +85,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.TrainOfFacesUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
@@ -141,6 +147,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+    @Mock private lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
+    @Mock private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -153,6 +161,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     private val snackbarEvents = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private val readerPost = createDummyReaderPost(2)
+    private val readerCommentSnippetList = createDummyReaderPostCommentSnippetList()
     private val site = SiteModel().apply { siteId = readerPost.blogId }
 
     private lateinit var relatedPosts: ReaderSimplePostList
@@ -183,7 +192,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 htmlMessageUtils,
                 contextProvider,
                 networkUtilsWrapper,
-                commentsSnippetFeatureConfig
+                commentsSnippetFeatureConfig,
+                readerCommentTableWrapper,
+                readerCommentServiceStarterWrapper
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
@@ -201,6 +212,13 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                         anyOrNull()
                 )
         ).thenReturn(readerPost)
+
+        whenever(
+                readerCommentTableWrapper.getCommentsForPostSnippet(
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(readerCommentSnippetList)
 
         whenever(
                 postDetailsUiStateBuilder.mapPostToUiState(
@@ -240,12 +258,24 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             )
         }
 
+        whenever(
+                postDetailsUiStateBuilder.buildCommentSnippetUiState(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenAnswer {
+            createDummyCommentSnippetUiState()
+        }
+
         whenever(reblogUseCase.onReblogSiteSelected(ArgumentMatchers.anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
 
         whenever(likesEnhancementsFeatureConfig.isEnabled()).thenReturn(true)
         whenever(getLikesHandler.snackbarEvents).thenReturn(snackbarEvents)
         whenever(getLikesHandler.likesStatusUpdate).thenReturn(getLikesState)
+
+        whenever(commentsSnippetFeatureConfig.isEnabled()).thenReturn(true)
 
         likesCaptor = argumentCaptor()
     }
@@ -856,7 +886,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Test
     fun `ui state show likers faces when data available`() {
         val likesState = getGetLikesState(TEST_CONFIG_1) as LikesData
-        val likers = MutableList(5) { mock<FaceItem>() }
+        val likers = MutableList(5) { mock<AvatarItem>() }
         val testTextString = "10 bloggers like this."
 
         getLikesState.value = likesState
@@ -873,7 +903,14 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
             assertThat(showLoading).isFalse
-            assertThat(engageItemsList).isEqualTo(likers + BloggersLikingTextItem(UiStringText(testTextString)))
+            assertThat(engageItemsList).isEqualTo(
+                    likers + TrailingLabelTextItem(
+                            UiStringText(
+                                    testTextString
+                            ),
+                            R.attr.wpColorOnSurfaceMedium
+                    )
+            )
             assertThat(showEmptyState).isFalse
             assertThat(emptyStateTitle).isNull()
         }
@@ -913,6 +950,60 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         assertThat(navigation.last().peekContent()).isInstanceOf(ShowEngagedPeopleList::class.java)
     }
 
+    @Test
+    fun `navigating back from comments updates data in snippet and bottom bar`() {
+        val commentSnippetUiStates = init().commentSnippetUiState
+
+        val modifiedPost = createDummyReaderPost(readerPost.postId)
+        modifiedPost.numReplies = 10
+        whenever(
+                readerPostTableWrapper.getBlogPost(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(modifiedPost)
+
+        whenever(
+                postDetailsUiStateBuilder.buildCommentSnippetUiState(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenAnswer {
+            createDummyCommentSnippetUiState(10)
+        }
+
+        viewModel.onUserNavigateFromComments()
+
+        assertThat(viewModel.post?.numReplies).isEqualTo(10)
+
+        assertThat(commentSnippetUiStates).isNotEmpty
+        with(commentSnippetUiStates.last()) {
+            assertThat(commentsNumber).isEqualTo(10)
+        }
+    }
+
+    @Test
+    fun `onRefreshCommentsData does not start comment snippet service for external posts`() {
+        val externalPost = createDummyReaderPost(1, isWpComPost = false)
+        whenever(
+                readerPostTableWrapper.getBlogPost(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(externalPost)
+
+        viewModel.onRefreshCommentsData(1, 1)
+
+        verify(readerCommentServiceStarterWrapper, never()).startServiceForCommentSnippet(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull()
+        )
+    }
+
     private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(null, false))
@@ -920,15 +1011,25 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
-        this.postId = id
-        this.blogId = id * 100
-        this.feedId = id * 1000
-        this.title = "DummyPost"
-        this.featuredVideo = id.toString()
-        this.featuredImage = "/featured_image/$id/url"
-        this.isExternal = !isWpComPost
-    }
+    private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost =
+            ReaderPost().apply {
+                this.postId = id
+                this.blogId = id * 100
+                this.feedId = id * 1000
+                this.title = "DummyPost"
+                this.featuredVideo = id.toString()
+                this.featuredImage = "/featured_image/$id/url"
+                this.isExternal = !isWpComPost
+                this.numReplies = 1
+            }
+
+    private fun createDummyReaderPostCommentSnippetList(): ReaderCommentList =
+            ReaderCommentList().apply {
+                val comment = ReaderComment()
+                comment.commentId = 3
+
+                add(comment)
+            }
 
     private fun createDummyReaderPostDetailsUiState(
         post: ReaderPost,
@@ -999,6 +1100,12 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             railcarJsonStrings = emptyList()
     )
 
+    private fun createDummyCommentSnippetUiState(numberOfComments: Int = 1) = CommentSnippetUiState(
+            commentsNumber = numberOfComments,
+            showFollowConversation = true,
+            emptyList()
+    )
+
     private fun init(
         showPost: Boolean = true,
         isRelatedPost: Boolean = false,
@@ -1023,6 +1130,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             likesUiStates.add(it)
         }
 
+        val commentSnippetUiStates = mutableListOf<CommentSnippetUiState>()
+        viewModel.commentSnippetState.observeForever {
+            commentSnippetUiStates.add(it)
+        }
+
         val interceptedUri = INTERCEPTED_URI.takeIf { interceptedUrPresent }
 
         if (offerSignIn) {
@@ -1042,7 +1154,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 uiStates,
                 navigation,
                 msgs,
-                likesUiStates
+                likesUiStates,
+                commentSnippetUiStates
         )
     }
 
@@ -1050,6 +1163,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         val uiStates: List<UiState>,
         val navigation: List<Event<ReaderNavigationEvents>>,
         val snackbarMsgs: List<Event<SnackbarMessageHolder>>,
-        val likesUiState: List<TrainOfFacesUiState>
+        val likesUiState: List<TrainOfFacesUiState>,
+        val commentSnippetUiState: List<CommentSnippetUiState>
     )
 }

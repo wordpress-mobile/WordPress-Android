@@ -13,11 +13,13 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_DESIGNS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.experiments.SiteNameABExperiment
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -34,6 +36,8 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
+    val siteIntent: String? = null,
+    val siteName: String? = null,
     val segmentId: Long? = null,
     val siteDesign: String? = null,
     val domain: String? = null
@@ -43,7 +47,8 @@ typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreati
 
 class SiteCreationMainVM @Inject constructor(
     private val tracker: SiteCreationTracker,
-    private val wizardManager: WizardManager<SiteCreationStep>
+    private val wizardManager: WizardManager<SiteCreationStep>,
+    private val siteNameABExperiment: SiteNameABExperiment
 ) : ViewModel() {
     private var isStarted = false
     private var siteCreationCompleted = false
@@ -71,10 +76,11 @@ class SiteCreationMainVM @Inject constructor(
     private val _onBackPressedObservable = SingleLiveEvent<Unit>()
     val onBackPressedObservable: LiveData<Unit> = _onBackPressedObservable
 
-    fun start(savedInstanceState: Bundle?) {
+    fun start(savedInstanceState: Bundle?, siteCreationSource: SiteCreationSource) {
         if (isStarted) return
         if (savedInstanceState == null) {
-            tracker.trackSiteCreationAccessed()
+            tracker.trackSiteCreationAccessed(siteCreationSource)
+            tracker.trackSiteNameExperimentVariation(siteNameABExperiment.getVariation())
             siteCreationState = SiteCreationState()
         } else {
             siteCreationCompleted = savedInstanceState.getBoolean(KEY_SITE_CREATION_COMPLETED, false)
@@ -93,6 +99,26 @@ class SiteCreationMainVM @Inject constructor(
         outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
         outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
+    }
+
+    fun onSiteIntentSelected(intent: String) {
+        siteCreationState = siteCreationState.copy(siteIntent = intent)
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteIntentSkipped() {
+        siteCreationState = siteCreationState.copy(siteIntent = null)
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteNameSkipped() {
+        siteCreationState = siteCreationState.copy(siteName = null)
+        wizardManager.showNextStep()
+    }
+
+    fun onSiteNameEntered(siteName: String) {
+        siteCreationState = siteCreationState.copy(siteName = siteName)
+        wizardManager.showNextStep()
     }
 
     fun onSiteDesignSelected(siteDesign: String) {
@@ -121,7 +147,7 @@ class SiteCreationMainVM @Inject constructor(
 
     private fun clearOldSiteCreationState(wizardStep: SiteCreationStep) {
         when (wizardStep) {
-            SEGMENTS -> { }
+            SITE_DESIGNS -> { }
             DOMAINS -> siteCreationState.domain?.let {
                 siteCreationState = siteCreationState.copy(domain = null)
             }
@@ -139,7 +165,7 @@ class SiteCreationMainVM @Inject constructor(
         val stepCount = wizardManager.stepsCount
         val firstStep = stepPosition == 1
         val lastStep = stepPosition == stepCount
-        val singleInBetweenStepDomains = wizardManager.stepsCount == 3 && step.name == DOMAINS.name
+        val singleInBetweenStepDomains = step.name == DOMAINS.name
 
         return when {
             firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)

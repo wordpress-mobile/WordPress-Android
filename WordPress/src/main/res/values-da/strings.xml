@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.1
 Language: da_DK
 -->
 <resources>
@@ -44,6 +44,7 @@ Language: da_DK
     <string name="site_settings_export_content_title">Eksporter indhold</string>
     <string name="contact_support">Kontakt support</string>
     <string name="site_settings_advanced_header">Avanceret</string>
+    <string name="button_skip">Spring over</string>
     <string name="alignment_center">Centreret</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -109,7 +110,6 @@ Language: da_DK
     <string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
     <string name="stats_view_authors">Forfattere</string>
     <string name="stats_view_search_terms">Søgeord</string>
-    <string name="comments_fetching">Henter kommentarer…</string>
     <string name="pages_fetching">Henter sider…</string>
     <string name="error_notification_open">Kunne ikke åbne notifikation</string>
     <string name="posts_fetching">Henter indlæg…</string>
@@ -152,7 +152,6 @@ Language: da_DK
     <string name="error_publish_empty_post">Kan ikke udgive omt indlæg</string>
     <string name="error_refresh_unauthorized_posts">Du har ikke tilladelse til at vise eller redigere indlæg</string>
     <string name="error_refresh_unauthorized_pages">Du har ikke tilladelse til at vise eller redigere sider</string>
-    <string name="error_refresh_unauthorized_comments">Du har ikke tilladelse til at vise eller redigere kommentarer</string>
     <string name="older_last_week">Ældre end en uge</string>
     <string name="comment">Kommentar</string>
     <string name="comment_trashed">Kommentar slettet</string>
@@ -201,6 +200,7 @@ Language: da_DK
     <string name="error_moderate_comment">Kunne ikke moderere</string>
     <string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
     <string name="error_load_comment">Kunne ikke loade kommentaren</string>
+    <string name="create_a_link">Opret et link</string>
     <string name="select_categories">Vælg kategorier</string>
     <string name="connection_error">Forbindelsesfejl</string>
     <string name="learn_more">Lær mere</string>
@@ -218,10 +218,6 @@ Language: da_DK
     <string name="trash">Papirkurv</string>
     <string name="saving_changes">Gemmer ændringer</string>
     <string name="dlg_confirm_trash_comments">Smid i papirkurven?</string>
-    <string name="dlg_approving_comments">Godkender</string>
-    <string name="dlg_unapproving_comments">Fjerner godkendelse</string>
-    <string name="dlg_spamming_comments">Markerer som spam</string>
-    <string name="dlg_trashing_comments">Smider i papirkurven</string>
     <string name="view_in_browser">Vis i browser</string>
     <string name="add_new_category">Tilføj ny kategori</string>
     <string name="category_name">Kategorinavn</string>
@@ -236,6 +232,7 @@ Language: da_DK
     <string name="open_source_licenses">Open source-licenser</string>
     <string name="cancel_edit">Fortryd redigering</string>
     <string name="reader_title_applog">Applikationslog</string>
+    <string name="horizontal_alignment">Vandret justering</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
     <string name="sure_to_cancel_edit_comment">Annuller redigering af denne kommentar?</string>
@@ -307,11 +304,16 @@ Language: da_DK
     <string name="username">Brugernavn</string>
     <string name="reader">Læser</string>
     <string name="pages">Sider</string>
+    <string name="width">Bredde</string>
     <string name="posts">Indlæg</string>
     <string name="anonymous">Anonym</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
+    <string name="caption">Billedtekst (valgfri)</string>
+    <string name="featured">Brug som fremhævet billede</string>
+    <string name="featured_in_post">Inkluder billede i indhold</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
+    <string name="uploading">Uploader</string>
     <string name="version">Version</string>
     <string name="app_title">WordPress til Android</string>
     <string name="tos">Brugskrav</string>
@@ -327,7 +329,6 @@ Language: da_DK
     <string name="title">Titel</string>
     <string name="categories">Kategorier</string>
     <string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
-    <string name="dlg_deleting_comments">Sletter kommentarer</string>
     <string name="sdcard_title">SD-kort påkrævet</string>
     <string name="media">Medier</string>
     <string name="delete">Slet</string>

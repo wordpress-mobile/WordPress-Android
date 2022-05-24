@@ -1,0 +1,10 @@
+19.8:
+- Förhandsgranskning av osparade ändringar för inläggsutkast
+- Inställningar för Utvald bild i blocket Senaste inlägg
+- Notiser vid växlande mellan HTML-läge och visuellt läge
+- Fullständig förhandsgranskning för inbäddningsblocket
+- Visuella element för språkversionsväljare
+- Längre uppladdningar med fristående VideoPress
+- TalkBack-mediatyper för mediaväljaren
+- Uppladdningar av filer med icke-latinska tecken i filnamnet
+- Rensa utvald bild i inläggsinställningarna

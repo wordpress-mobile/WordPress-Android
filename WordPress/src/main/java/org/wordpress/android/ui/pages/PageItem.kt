@@ -197,6 +197,7 @@ sealed class PageItem(open val type: Type) {
         SET_AS_HOMEPAGE(R.id.set_as_homepage),
         SET_AS_POSTS_PAGE(R.id.set_as_posts_page),
         COPY(R.id.copy),
+        COPY_LINK(R.id.copy_page_link),
         PUBLISH_NOW(R.id.publish_now),
         MOVE_TO_DRAFT(R.id.move_to_draft),
         DELETE_PERMANENTLY(R.id.delete_permanently),

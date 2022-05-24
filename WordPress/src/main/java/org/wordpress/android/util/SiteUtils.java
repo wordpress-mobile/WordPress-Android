@@ -191,21 +191,13 @@ public class SiteUtils {
     }
 
     public static void enableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
-        // Send the setting to the server
         dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
                 new DesignateMobileEditorPayload(siteModel, GB_EDITOR_NAME)));
-        // Update the local site
-        siteModel.setMobileEditor(GB_EDITOR_NAME);
-        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
     public static void disableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
-        // Send the setting to the server
         dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
                 new DesignateMobileEditorPayload(siteModel, AZTEC_EDITOR_NAME)));
-        // Update the local site
-        siteModel.setMobileEditor(AZTEC_EDITOR_NAME);
-        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
     public static boolean isBlockEditorDefaultForNewPost(@Nullable SiteModel site) {
@@ -350,6 +342,10 @@ public class SiteUtils {
         return site != null && (site.isWPCom() || site.isWPComAtomic());
     }
 
+    public static boolean supportsTiledGalleryFeature(SiteModel site) {
+        return site != null && site.isWPCom();
+    }
+
     public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, minimalJetpackVersion));
     }
@@ -383,7 +379,6 @@ public class SiteUtils {
     @NonNull
     public static FetchSitesPayload getFetchSitesPayload() {
         ArrayList<SiteFilter> siteFilters = new ArrayList<>();
-        if (BuildConfig.IS_JETPACK_APP) siteFilters.add(SiteFilter.JETPACK);
-        return new FetchSitesPayload(siteFilters);
+        return new FetchSitesPayload(siteFilters, !BuildConfig.IS_JETPACK_APP);
     }
 }

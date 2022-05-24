@@ -1,7 +1,0 @@
-18.8:
-- Få länkförslag istället för automatiskt ifyllda urklippslänkar för knapp- och bildblock.
-- Klicka på "Kopiera länk" för att dela publicerade inläggslänkar.
-- Infogarmenyns flikar matchar din enhets språk.
-- Enhetens mediaalternativ öppnas när du skapar ett galleriblock.
-- Textstorleksfel och visuella RTL-fel har åtgärdats.
-- Redigera länk för inbäddningsblock i blockinställningarna.

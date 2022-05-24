@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2021-10-23 23:05:18+0000
+Translation-Revision-Date: 2022-02-14 03:28:36+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.1
 Language: sr_RS
 -->
 <resources>
+    <string name="reader_comment_menu_trash">Пребаци у Отпад</string>
+    <string name="reader_comment_menu_spam">Означи као Непожељно</string>
+    <string name="reader_comment_menu_unapprove">Поништи одобрење</string>
+    <string name="about_automattic_app_icon_description">Иконица апликације</string>
+    <string name="about_automattic_back_icon_description">Иконица за повратак</string>
+    <string name="about_automattic_logo_description">Лого Automattic-а</string>
+    <string name="about_automattic_wordpress">Вордпрес</string>
+    <string name="about_automattic_woocommerce">WooCommerce</string>
+    <string name="about_automattic_tumblr">Tumblr</string>
+    <string name="about_automattic_jetpack">Jetpack</string>
+    <string name="about_automattic_source_code_item_title">Изворни код</string>
+    <string name="about_automattic_privacy_policy_item_title">Политика приватности</string>
+    <string name="about_automattic_terms_of_service_item_title">Услови коришћења</string>
+    <string name="about_automattic_work_with_us_item_subtitle">Ради од било где</string>
+    <string name="about_automattic_work_with_us_item_title">Ради с нама</string>
+    <string name="about_automattic_family_item_title">Automattic породица</string>
+    <string name="about_automattic_twitter_item_title">Твитер</string>
+    <string name="about_automattic_instagram_item_title">Инстаграм</string>
+    <string name="about_automattic_share_with_friends_item_title">Подели с пријатељима</string>
+    <string name="gutenberg_native_add_media">Додај саржај</string>
+    <string name="gutenberg_native_address_settings">Подешавања адресе</string>
+    <string name="about_automattic_version_label">Верзија %1$s</string>
+    <string name="about_blog">Блог</string>
+    <string name="about_automattic_main_page_title">О %1$s</string>
+    <string name="gutenberg_native_the_basics">Основе</string>
+    <string name="gutenberg_native_selected_default">Одабрано: Уобичајено</string>
+    <string name="gutenberg_native_get_support">Тражи подршку</string>
+    <string name="gutenberg_native_font_size">Величина слова</string>
+    <string name="gutenberg_native_1_s_2_s">%1$s (%2$s)</string>
+    <string name="gutenberg_native_contact_support">Контактирајте подршку</string>
     <string name="gutenberg_native_use_icon_button">Користите дугме иконице</string>
     <string name="gutenberg_native_search_input_field">Поље за унос претраге</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Дугме за претрагу. Тренутни текст на дугмету је</string>
@@ -21,10 +51,8 @@ Language: sr_RS
     <string name="threat_fix_all_confirmation_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1s потенцијалних претњи са %2s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
     <string name="quick_start_card_menu_hide">Сакриј за сада</string>
-    <string name="quick_start_list_view_site_title">Посетите своје веб место</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
     <string name="quick_start_list_enable_sharing_title">Дељење на друштвеним мрежама</string>
-    <string name="quick_start_list_check_stats_title">Проверите своју статистику</string>
     <string name="restore_warning_action_button">Потврди</string>
     <string name="gutenberg_native_replace_file">Замени датотеку</string>
     <string name="gutenberg_native_replace_audio">Замени звучни запис</string>
@@ -44,12 +72,28 @@ Language: sr_RS
     <string name="restore_complete_visit_site_button_content_description">Дугме за посети веб место</string>
     <string name="restore_complete_done_button_content_description">Дугме за урађено</string>
     <string name="restore_progress_label">%1$s%%</string>
+    <string name="restore_progress_description_with_two_parameters">Враћамо Ваш сајт назад на %1$s %2$s.</string>
+    <string name="restore_progress_header">Тренутно се враћа сајт</string>
+    <string name="restore_progress_icon_content_description">Иконица враћања сајта</string>
     <string name="restore_warning_header">Упозорење</string>
+    <string name="restore_details_action_button_content_description">Дугме враћања сајта</string>
     <string name="backup_download_complete_failed_action_button_content_description">Дугме за урађено</string>
     <string name="backup_download_complete_failed_action_button">Урађено</string>
+    <string name="restore_details_icon_content_description">Иконица враћања</string>
+    <string name="restore_details_action_button">Врати сајт</string>
+    <string name="restore_details_header">Врати сајт</string>
+    <string name="restore">Поврати</string>
     <string name="backup_download_complete_failed_title">Неуспело преузимање</string>
+    <string name="web_preview_tablet">Таблет</string>
+    <string name="web_preview_mobile">Мобилни</string>
+    <string name="quick_start_card_menu_remove">Не приказуј поново</string>
+    <string name="quick_start_dialog_edit_homepage_title">Уреди своју почетну страницу</string>
+    <string name="reader_menu_mark_as_unseen">Означи као непрегледано</string>
+    <string name="reader_menu_mark_as_seen">Означи као прегледано</string>
     <string name="scan_history_all_threats_tab">Све</string>
     <string name="scan_history_menu_title">Историја</string>
+    <string name="scan_history_ignored_threats_tab">Игнорисано</string>
+    <string name="scan_history_fixed_threats_tab">Поправљено</string>
     <string name="backup_item_sqls">База података веб места</string>
     <string name="backup_item_roots_hint">(садржи wp-config.php и све не-Вордпресове датотеке)</string>
     <string name="backup_item_media_uploads">Отпремања садржаја</string>
@@ -86,7 +130,6 @@ Language: sr_RS
     <string name="reader_discover_no_posts_title">Нема недавних чланака</string>
     <string name="scan">Скенирај</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Јохан Брант&lt;/b&gt; је одговорио на ваш чланак</string>
-    <string name="hpp_skip_button">Прескочи</string>
     <string name="hpp_choose_button">Одабери</string>
     <string name="hpp_title">Одаберите дизајн</string>
     <string name="prepublishing_nudges_add_category_button">Додај категорију</string>
@@ -112,7 +155,6 @@ Language: sr_RS
     <string name="login_prologue_title_fifth">Пратите своје омиљене локације и откривајте нове блогове.</string>
     <string name="media_loading_failed">Учитавање садржаја није успело</string>
     <string name="reader_discover_recommended_blogs_header">Веб места за праћење</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' није у потпуности подржан</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Дајемо све од себе да додамо нове блокове са сваком објавом.</string>
     <string name="gutenberg_native_help_button">Дугме помоћи</string>
     <string name="gutenberg_native_edit_using_web_editor">Уреди помоћу веб уређивача</string>
@@ -284,7 +326,6 @@ Language: sr_RS
     <string name="site_settings_posts_page">Страница чланака</string>
     <string name="site_settings_static_homepage">Статична почетна страница</string>
     <string name="site_settings_classic_blog">Класичан блог</string>
-    <string name="suggestion_invalid">%s није исправан %s</string>
     <string name="site_settings_accept_homepage">Прихвати</string>
     <string name="site_settings_failed_to_load_pages">Неуспело учитавање страница</string>
     <string name="site_settings_homepage_settings">Подешавања почетне странице</string>
@@ -614,7 +655,6 @@ Language: sr_RS
     <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
     <string name="quick_start_sites">Наредни кораци</string>
     <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Уживајте у свом готовом производу!</string>
     <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
     <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
     <string name="quick_start_dialog_explore_plans_title">Истражи планове</string>
@@ -773,10 +813,8 @@ Language: sr_RS
     <string name="quick_start_list_create_site_title">Креирај свој сајт</string>
     <string name="quick_start_dialog_view_site_title">Види свој сајт</string>
     <string name="quick_start_dialog_share_site_title">Подели свој сајт</string>
-    <string name="quick_start_dialog_view_site_message_short">Додирни %1$s Види сајт %2$s за преглед свог сајта</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Додирни %1$s Дељење %2$s за наставак</string>
     <string name="quick_start_dialog_publish_post_title">Објави чланак</string>
-    <string name="quick_start_dialog_follow_sites_title">Прати друге сајтове</string>
     <string name="quick_start_dialog_need_help_button_negative">Не, хвала</string>
     <string name="quick_start_button_positive">Крени</string>
     <string name="quick_start_button_negative_short">Откажи</string>
@@ -900,7 +938,6 @@ Language: sr_RS
     <string name="notification_settings_followed_dialog_email_posts_daily">Дневно</string>
     <string name="notification_settings_followed_dialog_notification_posts_switch">Нови чланци</string>
     <string name="notification_settings_followed_dialog_email_posts_switch">ошаљи ми нове чланке електронском поштом</string>
-    <string name="comment_title">%s на %s</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Сви моји праћени сајтови</string>
     <string name="notification_settings_category_followed_sites">Праћени сајтови</string>
     <string name="dialog_confirm_delete_permanently_post">Да ли сте сигурни да желите да трајно обришете овај чланак?</string>
@@ -1712,7 +1749,6 @@ Language: sr_RS
     <string name="stats_search_terms_unknown_search_terms">Непознати термини за претрагу</string>
     <string name="stats_view_authors">Аутори</string>
     <string name="stats_view_search_terms">Термини за претрагу</string>
-    <string name="comments_fetching">Добављам коментаре…</string>
     <string name="posts_fetching">Добављам чланке…</string>
     <string name="media_fetching">Добављам медије…</string>
     <string name="pages_fetching">Добављам стране…</string>
@@ -1752,7 +1788,6 @@ Language: sr_RS
     <string name="reader_title_photo_viewer">%1$d од %2$d</string>
     <string name="error_publish_empty_post">Није могуће објавити празан чланак</string>
     <string name="error_refresh_unauthorized_posts">Немате дозволу да прегледате или уређујете чланке</string>
-    <string name="error_refresh_unauthorized_comments">Немате дозволу да прегледате или уређујете коментаре</string>
     <string name="older_month">Старије од месец дана</string>
     <string name="more">Више</string>
     <string name="older_two_days">Старије од два дана</string>
@@ -1821,9 +1856,6 @@ Language: sr_RS
     <string name="mnu_comment_approve">Одобри</string>
     <string name="mnu_comment_unapprove">Поништи одобрење</string>
     <string name="mnu_comment_trash">Отпад</string>
-    <string name="dlg_approving_comments">Одобравам</string>
-    <string name="dlg_unapproving_comments">Поништавам одобрење</string>
-    <string name="dlg_trashing_comments">Померам на отпад</string>
     <string name="dlg_confirm_trash_comments">Помери на отпад?</string>
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
     <string name="trash">Отпад</string>
@@ -1838,6 +1870,7 @@ Language: sr_RS
     <string name="image_settings">Подешавања слике</string>
     <string name="cannot_delete_multi_media_items">Неки медији тренутно не могу бити обрисани. Пробајте поново касније.</string>
     <string name="link_enter_url_text">Текст везе (опционо)</string>
+    <string name="create_a_link">Направите везу</string>
     <string name="local_draft">Локални нацрт</string>
     <string name="post_settings">Подешавања чланка</string>
     <string name="wordpress_blog">Вордпрес блог</string>
@@ -1847,7 +1880,7 @@ Language: sr_RS
     <string name="view_in_browser">Погледајте у прегледачу веба</string>
     <string name="reader_title_applog">Белешка апликације</string>
     <string name="fatal_db_error">Дошло је до грешке током прављења базе података апликације. Покушајте поново са инсталацијом апликације.</string>
-    <string name="dlg_spamming_comments">Означавам као непожељно</string>
+    <string name="horizontal_alignment">Водоравно поравнање</string>
     <string name="mnu_comment_spam">Непожељни коментар</string>
     <string name="comment_status_spam">Непожељни коментар</string>
     <string name="post_not_found">Дошло је до грешке током учитавања чланка. Освежите списак чланака и пробајте поново.</string>
@@ -1929,9 +1962,13 @@ Language: sr_RS
     <string name="log_in">Пријавите се</string>
     <string name="reader">Читач</string>
     <string name="pages">Стране</string>
+    <string name="featured">Користи као препоручену слику</string>
     <string name="no_network_title">Нема доступне мреже</string>
+    <string name="caption">Натпис (опционо)</string>
+    <string name="width">Ширина</string>
     <string name="posts">Чланци</string>
     <string name="anonymous">Анониман</string>
+    <string name="featured_in_post">Укључи слику у садржај чланка</string>
     <string name="ok">У реду</string>
     <string name="done">обављено</string>
     <string name="link_enter_url">URL</string>
@@ -1950,7 +1987,6 @@ Language: sr_RS
     <string name="title">Наслов</string>
     <string name="categories">Категорије</string>
     <string name="tags_separate_with_commas">Одвојите ознаке зарезима</string>
-    <string name="dlg_deleting_comments">Брисање коментара</string>
     <string name="sdcard_title">SD картица неопходна</string>
     <string name="media">Медији</string>
     <string name="delete">Обриши</string>

@@ -1,7 +1,0 @@
-18.8:
-- Ontvang linksuggesties in plaats van automatisch ingevulde klembordlinks voor Knop- en Afbeeldingblokken.
-- Klik op 'Link kopiëren' om links voor gepubliceerde berichten te delen.
-- Menutabbladen bij de invoeger komen overeen met de taal van je apparaat.
-- Opties met apparaatmedia worden geopend wanneer je een Galerijblok aanmaakt.
-- Bug met lettertypegrootte en visuele problemen met rechts-naar-links zijn verholpen.
-- Link voor Insluitblok bewerken bij blokinstellingen.

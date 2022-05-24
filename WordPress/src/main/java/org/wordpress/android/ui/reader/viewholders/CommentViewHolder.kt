@@ -23,7 +23,6 @@ class CommentViewHolder(
     override fun onBind(itemUiState: CommentSnippetItemState) = with(binding) {
         val state = itemUiState as CommentState
 
-        shareCommentButton.visibility = View.GONE
         actionsContainer.visibility = View.GONE
         divider.visibility = View.GONE
 
@@ -38,12 +37,14 @@ class CommentViewHolder(
         textCommentDate.text = state.datePublished
         imageManager.loadIntoCircle(imageCommentAvatar, AVATAR, state.avatarUrl)
         authorBadge.visibility = if (state.showAuthorBadge) View.VISIBLE else View.GONE
+        commentActionButtonContainer.visibility = View.GONE
 
         threadedCommentsUtils.setLinksClickable(textCommentText, state.isPrivatePost)
         CommentUtils.displayHtmlComment(
                 textCommentText,
                 state.commentText,
                 threadedCommentsUtils.getMaxWidthForContent(),
+                textCommentText.lineHeight,
                 itemView.resources.getString(R.string.comment_unable_to_show_error)
         )
     }

@@ -14,7 +14,7 @@ import org.wordpress.android.util.RtlUtils
 import kotlin.math.roundToInt
 
 /**
- * CommentListItemDecoration adds margin to the start of the divider and skipp drawing divider for list sub-headers.
+ * This ItemDecoration adds margin to the start of the divider and skipp drawing divider for list sub-headers.
  * Based on DividerItemDecoration.
  */
 class UnifiedCommentListItemDecoration(val context: Context) : ItemDecoration() {

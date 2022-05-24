@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.comments.CommentsMapper
-import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload
@@ -41,7 +40,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.config.UnifiedCommentsListFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -53,8 +51,6 @@ import kotlin.coroutines.CoroutineContext
 )
 @Singleton
 class CommentsStoreAdapter @Inject constructor(
-    private val unifiedCommentsListFeatureConfig: UnifiedCommentsListFeatureConfig,
-    private val legacyStore: CommentStore,
     private val unifiedStore: CommentsStore,
     private val commentsMapper: CommentsMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -66,52 +62,38 @@ class CommentsStoreAdapter @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
 
-    private fun shouldUseRoomStore() = unifiedCommentsListFeatureConfig.isEnabled()
-
     fun getCommentsForSite(
         site: SiteModel?,
         orderByDateAscending: Boolean,
         limit: Int,
         vararg statuses: CommentStatus
     ): List<CommentModel> {
-        return if (shouldUseRoomStore()) {
-            runBlocking {
+        return runBlocking {
                 withContext(bgDispatcher) {
                     unifiedStore.getCommentsForSite(site, orderByDateAscending, limit, *statuses).map {
                         commentsMapper.commentEntityToLegacyModel(it)
                     }
                 }
-            }
-        } else {
-            legacyStore.getCommentsForSite(site, orderByDateAscending, limit, *statuses)
         }
     }
 
     fun getCommentByLocalId(localId: Int): CommentModel? {
-        return if (shouldUseRoomStore()) {
-            runBlocking {
+        return runBlocking {
                 withContext(bgDispatcher) {
                     unifiedStore.getCommentByLocalId(localId.toLong()).firstOrNull()?.let {
                         commentsMapper.commentEntityToLegacyModel(it)
                     }
                 }
-            }
-        } else {
-            legacyStore.getCommentByLocalId(localId)
         }
     }
 
     fun getCommentBySiteAndRemoteId(site: SiteModel, remoteCommentId: Long): CommentModel? {
-        return if (shouldUseRoomStore()) {
-            runBlocking {
+        return runBlocking {
                 withContext(bgDispatcher) {
                     unifiedStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()?.let {
                         commentsMapper.commentEntityToLegacyModel(it)
                     }
                 }
-            }
-        } else {
-            legacyStore.getCommentBySiteAndRemoteId(site, remoteCommentId)
         }
     }
 
@@ -131,8 +113,7 @@ class CommentsStoreAdapter @Inject constructor(
             return
         }
 
-        val actionToDispatch = if (shouldUseRoomStore()) {
-            when (action.type as CommentAction) {
+        val actionToDispatch = when (action.type as CommentAction) {
                 FETCH_COMMENTS -> CommentsActionBuilder.newFetchCommentsAction(action.payload as FetchCommentsPayload)
                 FETCH_COMMENT -> CommentsActionBuilder.newFetchCommentAction(action.payload as RemoteCommentPayload)
                 CREATE_NEW_COMMENT -> CommentsActionBuilder.newCreateNewCommentAction(
@@ -156,9 +137,6 @@ class CommentsStoreAdapter @Inject constructor(
                     logOrCrash("CommentsStoreAdapter->dispatch: action received ${action.type} was not expected")
                     null
                 }
-            }
-        } else {
-            action
         }
 
         actionToDispatch?.let {

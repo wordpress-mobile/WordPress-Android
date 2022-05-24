@@ -34,7 +34,7 @@
         android:icon="@drawable/ic_shortcut_create_post"
         android:shortcutId="new_post"
         android:shortcutShortLabel="@string/new_post"
-        android:enabled="false">
+        android:enabled="true">
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="org.wordpress.android.ui.main.WPMainActivity"

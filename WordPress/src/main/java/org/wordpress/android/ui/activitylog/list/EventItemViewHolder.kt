@@ -12,7 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 
 class EventItemViewHolder(
     parent: ViewGroup,

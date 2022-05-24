@@ -32,6 +32,7 @@ public class ReaderEvents {
         public FollowedTagsChanged(boolean didSucceed) {
             mDidSucceed = didSucceed;
         }
+
         public boolean didSucceed() {
             return mDidSucceed;
         }
@@ -259,10 +260,10 @@ public class ReaderEvents {
         private final boolean mDidSucceed;
 
         public RelatedPostsUpdated(
-            @NonNull ReaderPost sourcePost,
-            @NonNull ReaderSimplePostList localRelatedPosts,
-            @NonNull ReaderSimplePostList globalRelatedPosts,
-            boolean didSucceed
+                @NonNull ReaderPost sourcePost,
+                @NonNull ReaderSimplePostList localRelatedPosts,
+                @NonNull ReaderSimplePostList globalRelatedPosts,
+                boolean didSucceed
         ) {
             mSourcePostId = sourcePost.postId;
             mSourceSiteId = sourcePost.blogId;
@@ -325,5 +326,23 @@ public class ReaderEvents {
     }
 
     public static class DoSignIn {
+    }
+
+    public static class CommentModerated {
+        private final boolean mIsSuccess;
+        private final long mCommentId;
+
+        public CommentModerated(boolean isSuccess, long commentId) {
+            mIsSuccess = isSuccess;
+            mCommentId = commentId;
+        }
+
+        public boolean isSuccess() {
+            return mIsSuccess;
+        }
+
+        public long getCommentId() {
+            return mCommentId;
+        }
     }
 }

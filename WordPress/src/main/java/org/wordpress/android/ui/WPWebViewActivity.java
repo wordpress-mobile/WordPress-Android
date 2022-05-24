@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -244,6 +245,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         mPreviewModeSelectorPopup = new PreviewModeSelectorPopup(this, mPreviewModeButton);
 
         setupToolbar();
+
+        mViewModel.track(Stat.WEBVIEW_DISPLAYED);
     }
 
     private void setupToolbar() {
@@ -888,8 +891,10 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         int itemID = item.getItemId();
 
         if (itemID == android.R.id.home) {
+            mViewModel.track(Stat.WEBVIEW_DISMISSED);
             setResultIfNeeded();
         } else if (itemID == R.id.menu_refresh) {
+            mViewModel.track(Stat.WEBVIEW_RELOAD_TAPPED);
             mWebView.reload();
             return true;
         }
@@ -918,6 +923,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             refreshBackForwardNavButtons();
         } else {
             super.onBackPressed();
+            mViewModel.track(Stat.WEBVIEW_DISMISSED);
             setResultIfNeeded();
         }
     }

@@ -164,7 +164,19 @@ jobs:
           name: Create GitHub Release
           command: |
             bundle exec fastlane create_gh_release
-
+  Dependency Tree Diff:
+    executor:
+      name: android/default
+      api-version: "28"
+    steps:
+      - checkout
+      - copy-gradle-properties
+      - run:
+          name: Build dependency diff report
+          command: |
+            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              ./tools/dependency-tree-diff/dependency-tree-diff.sh
+            fi
 
   Connected Tests:
     parameters:
@@ -198,7 +210,7 @@ jobs:
           test-targets: notPackage org.wordpress.android.ui.screenshots
           device: model=Pixel2,version=28,locale=en,orientation=portrait
           project: api-project-108380595987
-          timeout: 10m
+          timeout: 20m
           num-flaky-test-attempts: 2
           results-history-name: CircleCI WordPress Connected Tests
       - android/save-gradle-cache
@@ -269,7 +281,7 @@ jobs:
         type: boolean
         default: true
     macos:
-      xcode: 11.6.0
+      xcode: 13.2.1
     working_directory: /tmp/workspace
     steps:
       - attach_workspace:
@@ -279,9 +291,9 @@ jobs:
           keys:
             - &homebrew-cache-key v2-brew-imagemagick-{{ checksum "Gemfile.lock" }}
       - run:
-          name: Brew Install ImageMagick
+          name: Brew Install ImageMagick and drawText
           command: |
-            brew install pkg-config imagemagick
+            brew install pkg-config imagemagick automattic/build-tools/drawText
             brew cleanup
       - save_cache:
           paths:
@@ -348,17 +360,18 @@ workflows:
         - << pipeline.parameters.generate_screenshots >>
         - << pipeline.parameters.release_build >>
     jobs:
+      - Dependency Tree Diff
       - Installable Build:
           filters:
             branches:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
           post-to-slack: true
-          # Always run connected tests on develop and release branches
+          # Always run connected tests on trunk and release branches
           filters:
             branches:
               only:
-                - develop
+                - trunk
                 - /^release.*/
                 - /^gutenberg\/integrate_release_.*/
   Optional Tests:
@@ -373,7 +386,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - develop
+                - trunk
                 - /^release.*/
                 - /^gutenberg\/integrate_release_.*/
                 - /pull\/[0-9]+/

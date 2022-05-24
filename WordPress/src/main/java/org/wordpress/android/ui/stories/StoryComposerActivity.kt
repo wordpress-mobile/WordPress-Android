@@ -153,7 +153,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMetadataProvider(this)
         setStoryDiscardListener(this)
         setStoriesAnalyticsListener(StoriesAnalyticsReceiver())
-        setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
+        setNotificationTrackerProvider((application as WordPress).storyNotificationTrackerProvider)
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
         setGenericAnnouncementDialogProvider(this)
@@ -194,8 +194,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
         }
 
-        val postEditorAnalyticsSession =
-                savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession?
+        val postEditorAnalyticsSession = savedInstanceState?.let { bundle ->
+            PostEditorAnalyticsSession.fromBundle(bundle, STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
+        }
 
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StoryComposerViewModel::class.java)

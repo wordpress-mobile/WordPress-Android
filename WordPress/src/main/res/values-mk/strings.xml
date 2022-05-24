@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.1
 Language: mk
 -->
 <resources>
@@ -38,7 +38,6 @@ Language: mk
     <string name="reader_label_like">Сака</string>
     <string name="reader_label_comments_closed">Коментари затворени</string>
     <string name="error_refresh_unauthorized_pages">Немате дозвола за гледање или уредување на страници</string>
-    <string name="error_refresh_unauthorized_comments">Немате дозвола за гледање или уредување на коментари</string>
     <string name="error_refresh_unauthorized_posts">Немате дозвола за гледање или уредување на написи</string>
     <string name="error_publish_empty_post">Неможе да се објави празен напис</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
@@ -82,9 +81,11 @@ Language: mk
     <string name="cancel_edit">Откажи промени</string>
     <string name="post_not_found">Настана грешка при вчитување на написот. Освежи ги написите и обиди се повторно.</string>
     <string name="learn_more">Научи повеќе</string>
+    <string name="create_a_link">Креирај врска</string>
     <string name="page_settings">Подесувања на страницата</string>
     <string name="http_authorization_required">Ауторизација е потребна</string>
     <string name="mnu_comment_spam">Спам</string>
+    <string name="horizontal_alignment">Хоризонтално порамнување</string>
     <string name="dlg_confirm_trash_comments">Испрати во корпа?</string>
     <string name="post_settings">Подесувања на напис</string>
     <string name="comment_status_approved">Одобрено</string>
@@ -102,9 +103,6 @@ Language: mk
     <string name="edit_comment">Измени коментар</string>
     <string name="mnu_comment_approve">Одобри</string>
     <string name="mnu_comment_trash">Отпадок</string>
-    <string name="dlg_approving_comments">Одобрување</string>
-    <string name="dlg_spamming_comments">Обележување како спам</string>
-    <string name="dlg_trashing_comments">Испраќање во отпадок</string>
     <string name="trash">Отпадок</string>
     <string name="view_in_browser">Види во прелистувач</string>
     <string name="local_changes">Локални промени</string>
@@ -120,7 +118,6 @@ Language: mk
     <string name="local_draft">Локални нацрти</string>
     <string name="link_enter_url_text">Сврзи текст (опционален)</string>
     <string name="mnu_comment_unapprove">Не одобрувај</string>
-    <string name="dlg_unapproving_comments">Не се одобрува</string>
     <string name="open_source_licenses">Отворен код лиценци</string>
     <string name="file_error_create">Неможе да се созададе темп архива за медиа испраќање. Ве волиме да обезбедите доволоно простор на вашиот уред</string>
     <string name="new_post">Нов напис</string>
@@ -178,10 +175,14 @@ Language: mk
     <string name="password">Лозинка</string>
     <string name="username">Корисничко име</string>
     <string name="reader">Читач</string>
+    <string name="width">Широчина</string>
     <string name="anonymous">Анонимно</string>
     <string name="posts">Написи</string>
+    <string name="caption">Наслов (изборно)</string>
     <string name="pages">Страници</string>
     <string name="no_network_title">Не е достапна мрежа</string>
+    <string name="featured_in_post">Вклучете ги сликите во содржината на написот</string>
+    <string name="featured">Користи како избрана слика</string>
     <string name="ok">Добро</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови за користење</string>

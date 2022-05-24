@@ -24,7 +24,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import java.io.File
 
 @RunWith(MockitoJUnitRunner::class)
-@UseExperimental(InternalCoroutinesApi::class)
+@InternalCoroutinesApi
 class GetMediaModelUseCaseTest : BaseUnitTest() {
     @Test
     fun `loadMediaByLocalId loads models from db and returns them`() = test {

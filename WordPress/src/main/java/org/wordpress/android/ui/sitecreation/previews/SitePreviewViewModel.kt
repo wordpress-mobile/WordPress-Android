@@ -86,7 +86,8 @@ class SitePreviewViewModel @Inject constructor(
     private var loadingAnimationJob: Job? = null
 
     private lateinit var siteCreationState: SiteCreationState
-    private lateinit var urlWithoutScheme: String
+    private var urlWithoutScheme: String? = null
+    private var siteTitle: String? = null
     private var lastReceivedServiceState: SiteCreationServiceState? = null
     private var serviceStateForRetry: SiteCreationServiceState? = null
     private var createSiteState: CreateSiteState = SiteNotCreated
@@ -133,7 +134,8 @@ class SitePreviewViewModel @Inject constructor(
         }
         isStarted = true
         this.siteCreationState = siteCreationState
-        urlWithoutScheme = requireNotNull(siteCreationState.domain)
+        urlWithoutScheme = siteCreationState.domain
+        siteTitle = siteCreationState.siteName
 
         val restoredState = savedState?.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)
 
@@ -167,7 +169,8 @@ class SitePreviewViewModel @Inject constructor(
                 val serviceData = SiteCreationServiceData(
                         segmentIdentifier,
                         siteDesign,
-                        urlWithoutScheme
+                        urlWithoutScheme,
+                        siteTitle
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
             }
@@ -220,9 +223,10 @@ class SitePreviewViewModel @Inject constructor(
             IDLE, CREATE_SITE -> {
             } // do nothing
             SUCCESS -> {
+                val remoteSiteId = (event.payload as Pair<*, *>).first as Long
+                urlWithoutScheme = urlUtils.removeScheme(event.payload.second as String).trimEnd('/')
+                createSiteState = SiteNotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
                 startPreLoadingWebView()
-                val remoteSiteId = event.payload as Long
-                createSiteState = SiteNotInLocalDb(remoteSiteId)
                 fetchNewlyCreatedSiteModel(remoteSiteId)
                 _onSiteCreationCompleted.asyncCall()
             }
@@ -248,9 +252,9 @@ class SitePreviewViewModel @Inject constructor(
                 val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                     "Site successfully fetched but has not been found in the local db."
                 }
-                CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
+                CreateSiteState.SiteCreationCompleted(siteBySiteId.id, !siteTitle.isNullOrBlank())
             } else {
-                SiteNotInLocalDb(remoteSiteId)
+                SiteNotInLocalDb(remoteSiteId, !siteTitle.isNullOrBlank())
             }
         }
     }
@@ -277,12 +281,14 @@ class SitePreviewViewModel @Inject constructor(
             }
         }
         // Load the newly created site in the webview
-        val urlToLoad = urlUtils.addUrlSchemeIfNeeded(
-                url = urlWithoutScheme,
-                addHttps = isWordPressComSubDomain(urlWithoutScheme)
-        )
-        AppLog.v(T.SITE_CREATION, "Site preview will load for url: $urlToLoad")
-        _preloadPreview.postValue(urlToLoad)
+        urlWithoutScheme?.let { url ->
+            val urlToLoad = urlUtils.addUrlSchemeIfNeeded(
+                    url = url,
+                    addHttps = isWordPressComSubDomain(url)
+            )
+            AppLog.v(T.SITE_CREATION, "Site preview will load for url: $urlToLoad")
+            _preloadPreview.postValue(urlToLoad)
+        }
     }
 
     fun onUrlLoaded() {
@@ -306,16 +312,17 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     private fun createSitePreviewData(): SitePreviewData {
-        val subDomain = urlUtils.extractSubDomain(urlWithoutScheme)
-        val fullUrl = urlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
+        val url = urlWithoutScheme ?: ""
+        val subDomain = urlUtils.extractSubDomain(url)
+        val fullUrl = urlUtils.addUrlSchemeIfNeeded(url, true)
         val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
         val domainIndices: Pair<Int, Int> = Pair(
-                Math.min(subDomainIndices.second, urlWithoutScheme.length),
-                urlWithoutScheme.length
+                Math.min(subDomainIndices.second, url.length),
+                url.length
         )
         return SitePreviewData(
                 fullUrl,
-                urlWithoutScheme,
+                url,
                 subDomainIndices,
                 domainIndices
         )
@@ -427,12 +434,12 @@ class SitePreviewViewModel @Inject constructor(
          * before the request is finished.
          */
         @Parcelize
-        data class SiteNotInLocalDb(val remoteSiteId: Long) : CreateSiteState()
+        data class SiteNotInLocalDb(val remoteSiteId: Long, val isSiteTitleTaskComplete: Boolean) : CreateSiteState()
 
         /**
          * The site has been successfully created and stored into local db.
          */
         @Parcelize
-        data class SiteCreationCompleted(val localSiteId: Int) : CreateSiteState()
+        data class SiteCreationCompleted(val localSiteId: Int, val isSiteTitleTaskComplete: Boolean) : CreateSiteState()
     }
 }

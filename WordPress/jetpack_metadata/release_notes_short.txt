@@ -1,0 +1,8 @@
+- In-app site domain purchases
+- Drag/drop editor blocks
+- Cover block color contrast
+- Buttons block formatting visibility fix
+- Separate new/existing site Quick Start tasks
+- Copy Link to published pages
+- Gallery block Link To/Image Size settings
+- No tour banner in unsupported editor

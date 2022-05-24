@@ -47,12 +47,12 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when buildSource is invoked, then refresh is false`() = test {
+    fun `when buildSource is invoked, then refresh is true`() = test {
         currentAvatarSource.refresh.observeForever { isRefreshing.add(it) }
 
         currentAvatarSource.build(testScope())
 
-        assertThat(isRefreshing.last()).isFalse
+        assertThat(isRefreshing.last()).isTrue
     }
 
     @Test

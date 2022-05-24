@@ -717,6 +717,15 @@ public class AnalyticsUtils {
         AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
 
+    public static void trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat stat,
+                                                               AnalyticsCommentActionSource actionSource,
+                                                               @Nullable ReaderPost post) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
+
+        AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
+    }
+
     public static void trackFollowCommentsWithReaderPostDetails(
             AnalyticsTracker.Stat stat,
             long blogId,
@@ -820,6 +829,10 @@ public class AnalyticsUtils {
     public static void trackBlockEditorEvent(String event, SiteModel site, Map<String, Object> properties) {
         if (event.equals("editor_block_inserted")) {
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_INSERTED, site, properties);
+        }
+
+        if (event.equals("editor_block_moved")) {
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_MOVED, site, properties);
         }
     }
 }

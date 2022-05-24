@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.posts;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -116,6 +114,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.support.ZendeskHelper;
@@ -184,7 +183,6 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -212,6 +210,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
+import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -239,9 +238,9 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
+import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
-import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -272,6 +271,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
+    public static final String EXTRA_IS_LANDING_EDITOR = "isLandingEditor";
+    public static final String EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE = "isLandingEditorOpenedForNewSite";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_UPLOAD_NOT_STARTED = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
@@ -286,6 +287,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_PAGE_TITLE = "pageTitle";
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
+    public static final String EXTRA_PROMPT_ID = "extraPromptId";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -297,6 +299,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
+    private static final String STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -348,6 +351,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private boolean mIsNewPost;
     private boolean mIsPage;
+    private boolean mIsLandingEditor;
     private boolean mHasSetPostContent;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
     @Nullable private Boolean mIsXPostsCapable = null;
@@ -407,9 +411,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject UpdateFeaturedImageUseCase mUpdateFeaturedImageUseCase;
     @Inject GlobalStyleSupportFeatureConfig mGlobalStyleSupportFeatureConfig;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject BloggingPromptsStore mBloggingPromptsStore;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
+    private EditorBloggingPromptsViewModel mEditorBloggingPromptsViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -450,11 +456,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void newPostFromShareAction() {
         Intent intent = getIntent();
-        final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
-        final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text));
-
-        newPostSetup(title, content);
+        if (isMediaTypeIntent(intent)) {
+            newPostSetup();
+            setPostMediaFromShareAction();
+        } else {
+            final String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+            final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+            String content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text));
+            newPostSetup(title, content);
+        }
     }
 
     private void newReblogPostSetup() {
@@ -512,6 +522,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.register(this);
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
+        mEditorBloggingPromptsViewModel =
+                new ViewModelProvider(this, mViewModelFactory).get(EditorBloggingPromptsViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -519,6 +531,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
+
+        mIsLandingEditor = getIntent().getExtras().getBoolean(EXTRA_IS_LANDING_EDITOR);
 
         // TODO: Make sure to use the latest fresh info about the site we've in the DB
         // set only the editor setting for now.
@@ -899,6 +913,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     return null;
                 })
         );
+        mEditorBloggingPromptsViewModel.getOnBloggingPromptLoaded().observe(this, event -> {
+            event.applyIfNotHandled(promptContent -> {
+                    mEditPostRepository.updateAsync(postModel -> {
+                        postModel.setContent(promptContent);
+                        return true;
+                    }, (postModel, result) -> {
+                        refreshEditorContent();
+                        return null;
+                    });
+                return null;
+            });
+        });
     }
 
     private void initializePostObject() {
@@ -1039,6 +1065,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mEditorFragment != null) {
             getSupportFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
         }
+
+        // We must save the media capture path when the activity is destroyed to handle orientation changes during
+        // photo capture (see: https://github.com/wordpress-mobile/WordPress-Android/issues/11296)
+        outState.putString(STATE_KEY_MEDIA_CAPTURE_PATH, mMediaCapturePath);
     }
 
     @Override
@@ -1049,6 +1079,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
             mEditorPhotoPicker.showPhotoPicker(mSite);
         }
+
+        // Restore media capture path for orientation changes during photo capture
+        mMediaCapturePath = savedInstanceState.getString(STATE_KEY_MEDIA_CAPTURE_PATH, "");
     }
 
     @Override
@@ -1060,7 +1093,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private PrimaryEditorAction getPrimaryAction() {
         return mEditorActionsProvider
-                .getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite));
+                .getPrimaryAction(mEditPostRepository.getStatus(), UploadUtils.userCanPublish(mSite), mIsLandingEditor);
     }
 
     private String getPrimaryActionText() {
@@ -1627,6 +1660,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case UPDATE:
+            case CONTINUE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
                 checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
@@ -1924,8 +1958,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onHistoryItemClicked(@NonNull Revision revision, @NonNull List<Revision> revisions) {
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
+        final long postId = mEditPostRepository.getRemotePostId();
+        ActivityLauncher.viewHistoryDetailForResult(
+                this, mRevision, getRevisionsIds(revisions), postId, mSite.getSiteId()
+        );
+    }
 
-        ActivityLauncher.viewHistoryDetailForResult(this, mRevision, revisions);
+    private long[] getRevisionsIds(@NonNull final List<Revision> revisions) {
+        final long[] idsArray = new long[revisions.size()];
+        for (int i = 0; i < revisions.size(); i++) {
+            final Revision current = revisions.get(i);
+            idsArray[i] = current.getRevisionId();
+        }
+        return idsArray;
     }
 
     private void loadRevision() {
@@ -1964,6 +2009,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         i.putExtra(EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_IS_LANDING_EDITOR, mIsLandingEditor);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mEditPostRepository.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
@@ -2274,8 +2320,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
 
-        // If this.mIsXPostsCapable has not been set, default to allowing xPosts
-        boolean enableXPosts = mIsXPostsCapable == null || mIsXPostsCapable;
+        // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based
+        // WP.com sites so, gate with `isUsingWpComRestApi()`
+        // If this.mIsXPostsCapable has not been set, default to allowing xPosts.
+        boolean enableXPosts = mSite.isUsingWpComRestApi() && (mIsXPostsCapable == null || mIsXPostsCapable);
 
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
@@ -2291,6 +2339,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return new GutenbergPropsBuilder(
                 SiteUtils.supportsContactInfoFeature(mSite),
                 SiteUtils.supportsLayoutGridFeature(mSite),
+                SiteUtils.supportsTiledGalleryFeature(mSite),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
@@ -2464,18 +2513,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return null;
             });
         }
+        setPostMediaFromShareAction();
+    }
+
+    private void setPostMediaFromShareAction() {
+        Intent intent = getIntent();
 
         // Check for shared media
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
             String action = intent.getAction();
-            String type = intent.getType();
             ArrayList<Uri> sharedUris;
 
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 sharedUris = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
             } else {
                 // For a single media share, we only allow images and video types
-                if (type != null && (type.startsWith("image") || type.startsWith("video"))) {
+                if (isMediaTypeIntent(intent)) {
                     sharedUris = new ArrayList<>();
                     sharedUris.add(intent.getParcelableExtra(Intent.EXTRA_STREAM));
                 } else {
@@ -2489,6 +2542,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorMedia.addNewMediaItemsToEditorAsync(sharedUris, false);
             }
         }
+    }
+
+    private boolean isMediaTypeIntent(Intent intent) {
+        String type = intent.getType();
+        return type != null && (type.startsWith("image") || type.startsWith("video"));
     }
 
     private void setFeaturedImageId(final long mediaId, final boolean imagePicked, final boolean isGutenbergEditor) {
@@ -3030,13 +3088,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            requestTemporaryPermissions(dragEvent);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private void requestTemporaryPermissions(DragEvent dragEvent) {
         requestDragAndDropPermissions(dragEvent);
     }
 
@@ -3202,7 +3253,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorMedia.addExistingMediaToEditorAsync(mediaList, AddExistingMediaSource.WP_MEDIA_LIBRARY);
             }
         }
-
         onEditorFinalTouchesBeforeShowing();
     }
 
@@ -3245,6 +3295,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // unless the user cancelled editing in which case we should continue as normal and attach the listener
         if (!replaceBlockActionWaiting || mStoryEditingCancelled) {
             mStoriesEventListener.startListening();
+        }
+
+        // Start VM, load prompt and populate Editor with content after edit IS ready.
+        final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
+        if (promptId >= 0) {
+            mEditorBloggingPromptsViewModel.start(mSite, promptId);
         }
     }
 
@@ -3569,7 +3625,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 new FetchMediaListPayload(mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
         mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
     }
-
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)

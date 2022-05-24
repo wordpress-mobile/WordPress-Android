@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.annotation.AttrRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -12,7 +13,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.datasets.ReaderCommentTable
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.LikeModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -23,6 +25,9 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngagementUtils
 import org.wordpress.android.ui.engagement.GetLikesHandler
@@ -43,9 +48,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.BloggersLikingTextItem
-import org.wordpress.android.ui.reader.adapters.TrainOfFacesItem.FaceItem
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowEngagedPeopleList
@@ -61,7 +63,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.services.ReaderCommentService
+import org.wordpress.android.ui.reader.services.comment.wrapper.ReaderCommentServiceStarterWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState
@@ -119,7 +121,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val contextProvider: ContextProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig
+    private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
+    private val readerCommentTableWrapper: ReaderCommentTableWrapper,
+    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -182,7 +186,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     data class TrainOfFacesUiState(
         val showLikeFacesTrainContainer: Boolean,
         val showLoading: Boolean,
-        val engageItemsList: List<TrainOfFacesItem>,
+        val engageItemsList: List<TrainOfAvatarsItem>,
         val showEmptyState: Boolean,
         val emptyStateTitle: UiString? = null,
         val contentDescription: UiString,
@@ -290,21 +294,22 @@ class ReaderPostDetailViewModel @Inject constructor(
         if (!commentsSnippetFeatureConfig.isEnabled()) return
 
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
-
         post?.let {
-            val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
-                    it.blogId,
-                    it.postId,
-                    it.numReplies
-            ) ?: true
+            if (!post.isExternal) {
+                val isRepliesDataChanged = lastRenderedRepliesData?.isMatchingPostCommentsStatus(
+                        it.blogId,
+                        it.postId,
+                        it.numReplies
+                ) ?: true
 
-            if (!isRepliesDataChanged) return
+                if (!isRepliesDataChanged) return
 
-            ReaderCommentService.startServiceForCommentSnippet(
-                    contextProvider.getContext(),
-                    blogId,
-                    postId
-            )
+                readerCommentServiceStarterWrapper.startServiceForCommentSnippet(
+                        contextProvider.getContext(),
+                        blogId,
+                        postId
+                )
+            }
         }
     }
 
@@ -438,6 +443,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onFeaturedImageClicked(blogId: Long, featuredImageUrl: String) {
+        readerTracker.track(Stat.READER_ARTICLE_FEATURED_IMAGE_TAPPED)
         val site = siteStore.getSiteBySiteId(blogId)
         _navigationEvents.value = Event(
                 ReaderNavigationEvents.ShowMediaPreview(site = site, featuredImage = featuredImageUrl)
@@ -697,64 +703,71 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun getContentDescription(
         goingToShowFaces: Boolean,
-        items: List<TrainOfFacesItem>
+        items: List<TrainOfAvatarsItem>
     ) = if (goingToShowFaces) {
         when (val lastItem = items.lastOrNull()) {
-            is BloggersLikingTextItem -> lastItem.text
-            is FaceItem, null -> UiStringText("")
+            is TrailingLabelTextItem -> lastItem.text
+            is AvatarItem, null -> UiStringText("")
         }
     } else {
         UiStringText("")
     }
 
-    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfFacesItem> {
+    @Suppress("LongMethod")
+    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfAvatarsItem> {
+        @AttrRes val labelColor = R.attr.wpColorOnSurfaceMedium
         return when {
             showEmptyState -> {
                 listOf()
             }
             numLikes == 1 && iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes == 2 && iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_you_plus_one_like_text
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes > 2 && iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_you_plus_others_like_text,
                                         numLikes - 1
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes == 1 && !iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_one_blogger_likes_text
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             numLikes > 1 && !iLiked -> {
-                BloggersLikingTextItem(
+                TrailingLabelTextItem(
                         UiStringText(
                                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                                         R.string.like_faces_others_like_text,
                                         numLikes
                                 )
-                        )
+                        ),
+                        labelColor
                 ).toList()
             }
             else -> {
@@ -763,9 +776,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun BloggersLikingTextItem.toList() = listOf(this)
+    private fun TrailingLabelTextItem.toList() = listOf(this)
 
-    private fun getLikersEssentials(updateLikesState: GetLikesState?): Triple<List<TrainOfFacesItem>, Int, Boolean> {
+    private fun getLikersEssentials(updateLikesState: GetLikesState?): Triple<List<TrainOfAvatarsItem>, Int, Boolean> {
         return when (updateLikesState) {
             is LikesData -> {
                 val liked = isLikedByCurrentUser(updateLikesState.iLike)
@@ -892,7 +905,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             // Check the cache
             val comments: ReaderCommentList? = post?.let {
                 withContext(bgDispatcher) {
-                    ReaderCommentTable.getCommentsForPostSnippet(
+                    readerCommentTableWrapper.getCommentsForPostSnippet(
                             it,
                             READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
                     ) ?: ReaderCommentList()
@@ -900,6 +913,35 @@ class ReaderPostDetailViewModel @Inject constructor(
             }
 
             _commentSnippetState.value = getUpdatedSnippetState(comments, event.result)
+        }
+    }
+
+    fun onUserNavigateFromComments() {
+        // reload post from DB and update UI state
+        val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
+        currentUiState?.let {
+            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+                this.post = post
+                onUpdatePost(post)
+            }
+        }
+
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            // reload comments from DB and update comments snippet if they are not being loaded
+            if (_commentSnippetState.value !is CommentSnippetState.Loading) {
+                launch(mainDispatcher) {
+                    val comments: ReaderCommentList? = post?.let {
+                        withContext(bgDispatcher) {
+                            readerCommentTableWrapper.getCommentsForPostSnippet(
+                                    it,
+                                    READER_COMMENTS_TO_REQUEST_FOR_POST_SNIPPET
+                            ) ?: ReaderCommentList()
+                        }
+                    }
+
+                    _commentSnippetState.value = getUpdatedSnippetState(comments, CHANGED)
+                }
+            }
         }
     }
 

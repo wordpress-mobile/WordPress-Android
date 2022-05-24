@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class StatsViewModelTest : BaseUnitTest() {
@@ -53,6 +55,7 @@ class StatsViewModelTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsModuleActivateUseCase: StatsModuleActivateUseCase
     @Mock lateinit var notificationsTracker: SystemNotificationsTracker
+    @Mock lateinit var todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -71,7 +74,8 @@ class StatsViewModelTest : BaseUnitTest() {
                 statsSiteProvider,
                 newsCardHandler,
                 statsModuleActivateUseCase,
-                notificationsTracker
+                notificationsTracker,
+                todaysStatsCardFeatureConfig
         )
 
         viewModel.start(1, false, null, null, false, null)
@@ -84,7 +88,9 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
-        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED)
+        /* First one is default insights section selection which is set when no value is passed to vm for
+           initial section */
+        verify(analyticsTracker, times(2)).track(STATS_INSIGHTS_ACCESSED)
     }
 
     @Test
