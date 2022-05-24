@@ -1317,10 +1317,10 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Your this week\'s views are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Your this week\'s views are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Your this week\'s visitors are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Your this week\'s visitors are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Your views this week are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
@@ -1366,6 +1366,10 @@
     <string name="stats_insights_management_general">General</string>
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
     <string name="stats_insights_management_activity">Activity</string>
+
+    <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
+    <string name="stats_insights_comments_guide_card">💡See your top contributors by tapping VIEW MORE.</string>
+    <string name="stats_insights_followers_guide_card">💡You can try leaving a comment as a gesture to encourage blog engagement in return to gain more followers.</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
@@ -3050,8 +3054,6 @@
     <string name="fab_create_desc">Create a post</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
     <string name="navigate_forward_desc">Go forward</string>
     <string name="navigate_back_desc">Go back</string>
@@ -3073,8 +3075,6 @@
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
@@ -3084,8 +3084,6 @@
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
     <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
-    <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
-    <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message" translatable="false">@string/quick_start_list_follow_site_subtitle</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Select %1$s Reader %2$s to find other sites.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags. Try selecting %1$s Settings %2$s to add topics you like.</string>
@@ -3100,7 +3098,6 @@
     <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Select %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
-    <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
     <string name="quick_start_dialog_view_site_message">Preview your site to see what your visitors will see.</string>
@@ -3118,7 +3115,6 @@
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_upload_media_message">Select %1$s Media %2$s to see your current library.</string>
-    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
     <string name="quick_start_list_check_stats_title">Check your site stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
@@ -3128,8 +3124,6 @@
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
     <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
     <string name="quick_start_list_enable_sharing_title">Social sharing</string>
-    <string name="quick_start_list_explore_plans_subtitle" translatable="false">@string/quick_start_dialog_explore_plans_message</string>
-    <string name="quick_start_list_explore_plans_title" translatable="false">@string/quick_start_dialog_explore_plans_title</string>
     <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
     <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
     <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>

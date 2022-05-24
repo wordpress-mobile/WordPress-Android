@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.GUIDE_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
@@ -90,6 +91,7 @@ class BlockDiffCallback(
                 REFERRED_ITEM,
                 QUICK_SCAN_ITEM,
                 DIALOG_BUTTONS,
+                GUIDE_CARD,
                 TAG_ITEM,
                 IMAGE_ITEM,
                 ACTION_CARD,

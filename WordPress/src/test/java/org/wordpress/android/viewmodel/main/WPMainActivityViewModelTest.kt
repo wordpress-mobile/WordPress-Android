@@ -12,6 +12,8 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -22,6 +24,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
@@ -31,7 +34,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.U
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
@@ -54,6 +58,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 @InternalCoroutinesApi
@@ -74,6 +79,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock lateinit var quickStartType: QuickStartType
 
     private val featureAnnouncement = FeatureAnnouncement(
@@ -93,6 +99,20 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                     )
             )
     )
+
+    private val bloggingPrompt = BloggingPromptsResult(
+            model = BloggingPromptModel(
+                    id = 123,
+                    text = "title",
+                    title = "",
+                    content = "content",
+                    date = Date(),
+                    isAnswered = false,
+                    attribution = "",
+                    respondentsCount = 5,
+                    respondentsAvatarUrls = listOf()
+            )
+    )
     private lateinit var activeTask: MutableLiveData<QuickStartTask?>
     private lateinit var externalFocusPointEvents: MutableList<List<FocusPointInfo>>
     private var fabUiState: MainFabUiState? = null
@@ -109,6 +129,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         externalFocusPointEvents = mutableListOf()
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
         viewModel = WPMainActivityViewModel(
                 featureAnnouncementProvider,
                 buildConfigWrapper,
@@ -120,6 +141,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 siteStore,
                 mySiteDefaultTabExperiment,
                 bloggingPromptsFeatureConfig,
+                bloggingPromptsStore,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -385,32 +407,26 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet does show prompt card when FF is ON`() {
+    fun `bottom sheet does show prompt card when FF is ON`() = runBlockingTest {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
         assertThat(hasBloggingPromptAction).isTrue()
     }
 
-    /* ktlint-disable max-line-length */
     @Test
-    fun `bottom sheet action is answer BP when the BP answer button is clicked`() {
+    fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = runBlockingTest {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
         val action = viewModel.mainActions.value?.firstOrNull {
             it.actionType == ANSWER_BLOGGING_PROMPT
         } as AnswerBloggingPromptAction?
         assertThat(action).isNotNull
-        action!!.onClickAction?.invoke()
-        val bloggingPrompt = BloggingPrompt(
-            id = 1234,
-            text = "Cast the movie of your life.",
-            content = "<!-- wp:pullquote -->\n" +
-                    "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                    "<!-- /wp:pullquote -->",
-            respondents = emptyList()
-        )
-        assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(bloggingPrompt)
+
+        val promptId = 123
+
+        action!!.onClickAction?.invoke(promptId)
+        assertThat(viewModel.createPostWithBloggingPrompt.value).isEqualTo(promptId)
     }
 
     @Test

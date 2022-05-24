@@ -27,6 +27,7 @@ sealed class MainActionListItem {
         override val actionType: ActionType,
         val promptTitle: UiString,
         val isAnswered: Boolean,
-        val onClickAction: (() -> Unit)?
+        val promptId: Int,
+        val onClickAction: ((promptId: Int) -> Unit)?
     ) : MainActionListItem()
 }

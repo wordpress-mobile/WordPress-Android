@@ -28,13 +28,13 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -373,7 +373,7 @@ public class ActivityLauncher {
     }
 
     public static Intent openEditorWithPromptAndDismissNotificationIntent(
-            @NonNull final Context context, final int notificationId, final BloggingPrompt bloggingPrompt
+            @NonNull final Context context, final int notificationId, final BloggingPromptModel bloggingPrompt
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);

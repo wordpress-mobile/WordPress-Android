@@ -28,10 +28,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class TotalFollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: SummaryStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var totalStatsMapper: TotalStatsMapper
+    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var useCaseMode: UseCaseMode
@@ -47,6 +50,8 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 insightsStore,
                 statsSiteProvider,
+                resourceProvider,
+                totalStatsMapper,
                 analyticsTrackerWrapper,
                 useCaseMode,
                 actionCardHandler

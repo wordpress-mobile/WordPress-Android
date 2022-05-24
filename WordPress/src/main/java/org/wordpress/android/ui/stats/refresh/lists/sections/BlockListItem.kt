@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTION_CARD
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.GUIDE_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
@@ -83,7 +85,8 @@ sealed class BlockListItem(val type: Type) {
         REFERRED_ITEM,
         QUICK_SCAN_ITEM,
         DIALOG_BUTTONS,
-        ACTION_CARD
+        ACTION_CARD,
+        GUIDE_CARD
     }
 
     data class Title(
@@ -348,4 +351,10 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val negativeButtonText: Int,
         val negativeAction: ListItemInteraction
     ) : BlockListItem(ACTION_CARD)
+
+    data class ListItemGuideCard(
+        val text: String,
+        val links: List<Clickable>? = null,
+        val bolds: List<String>? = null
+    ) : BlockListItem(GUIDE_CARD)
 }
