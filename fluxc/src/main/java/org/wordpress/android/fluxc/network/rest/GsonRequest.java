@@ -11,6 +11,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.Nullable;
+import org.wordpress.android.fluxc.logging.FluxCCrashLogger;
+import org.wordpress.android.fluxc.logging.FluxCCrashLoggerProvider;
 import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.io.UnsupportedEncodingException;
@@ -93,8 +95,10 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
             }
             return Response.success(res, createCacheEntry(response));
         } catch (UnsupportedEncodingException e) {
+            logRequestPath();
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {
+            logRequestPath();
             return Response.error(new ParseError(e));
         }
     }
@@ -106,5 +110,27 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrEmptyArray.class,
                 new JsonObjectOrEmptyArrayDeserializer());
         return gsonBuilder;
+    }
+
+    private void logRequestPath() {
+        FluxCCrashLogger logger = FluxCCrashLoggerProvider.INSTANCE.getCrashLogger();
+        if (logger != null) {
+            String path = getPath();
+            if (path != null) {
+                logger.recordEvent(path, "Request path");
+            }
+        }
+    }
+
+    private String getPath() {
+        Map<String, String> params = getParams();
+        String path = null;
+        // If JetpackTunnel is being used the actual path is stored in `path` parameter
+        if (params != null && params.get("path") != null) {
+            path = params.get("path");
+        } else if (mUri != null) {
+            path = mUri.getPath();
+        }
+        return path;
     }
 }
