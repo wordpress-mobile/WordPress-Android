@@ -63,7 +63,7 @@ class AccountSettingsViewModel @Inject constructor(
     val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
 
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
-        val siteViewModels = _accountSettingsUiState.value.primarySiteSettingsUiState.sites
+        val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
         val primarySiteViewModel = siteViewModels
                 ?.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId }
         val account = getAccountUseCase.account
