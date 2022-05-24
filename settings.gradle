@@ -3,7 +3,7 @@ pluginManagement {
     gradle.ext.agpVersion = '4.2.2'
     gradle.ext.daggerVersion = "2.41"
     gradle.ext.detektVersion = '1.15.0'
-    gradle.ext.navComponentVersion = '2.3.5'
+    gradle.ext.navComponentVersion = '2.4.2'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -36,9 +36,6 @@ pluginManagement {
             // TODO: Remove this when fetchstyle starts supporting Plugin Marker Artifacts
             if (requested.id.id == "com.automattic.android.fetchstyle") {
                 useModule("com.automattic.android:fetchstyle:1.1")
-            }
-            if (requested.id.id == "androidx.navigation.safeargs.kotlin") {
-                useModule("androidx.navigation:navigation-safe-args-gradle-plugin:$gradle.ext.navComponentVersion")
             }
             // TODO: Remove this when 'dagger.hilt' starts supporting Plugin Marker Artifacts
             if (requested.id.id == 'dagger.hilt.android.plugin') {
