@@ -3059,8 +3059,6 @@
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
