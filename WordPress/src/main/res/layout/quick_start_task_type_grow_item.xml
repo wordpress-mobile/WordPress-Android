@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_root"
+    style="@style/QuickStartTypeRow"
+    android:padding="@dimen/my_site_card_row_padding">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/item_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/margin_extra_large">
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/item_title"
+            style="@style/QuickStartTypeGrowTitle"
+            android:text="@string/quick_start_sites_type_get_to_know_app"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/item_subtitle"
+            style="@style/QuickStartTypeSubtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_title"
+            tools:text="1 of 6 complete" />
+
+
+
+        <!-- The ProgressBar component does not support determinate mode when using a
+            circular progress bar style. To work around this, we set a horizontal style
+            coupled with a custom circular drawable that has an equivalent structure,
+            which allow us to tint both its background and foreground layers programmatically. -->
+        <ProgressBar
+            android:id="@+id/item_progress"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:indeterminate="false"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:progressDrawable="@drawable/quick_start_card_horizontal_progress_drawable"
+            app:layout_constraintTop_toBottomOf="@+id/item_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:progress="75"
+            tools:progressBackgroundTint="@color/primary_0"
+            tools:progressTint="@color/colorPrimary"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/item_icon"
+        style="@style/QuickStartGrowIcon"
+        android:contentDescription="@null"
+        tools:src="@drawable/ic_tour_illustration"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
