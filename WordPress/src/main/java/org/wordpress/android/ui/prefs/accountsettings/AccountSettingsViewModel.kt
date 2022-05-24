@@ -200,9 +200,15 @@ class AccountSettingsViewModel @Inject constructor(
         errorMessage?.let { updateErrorUiState(it) }
     }
 
-    private fun updateErrorUiState(errorMessage: String) {
+    private fun updateErrorUiState(errorMessage: String?) {
         _accountSettingsUiState.update {
             it.copy(error = errorMessage)
+        }
+    }
+
+    fun onToastShown(toastMessage: String) {
+        if(_accountSettingsUiState.value.error.equals(toastMessage)){
+            updateErrorUiState(null)
         }
     }
 
