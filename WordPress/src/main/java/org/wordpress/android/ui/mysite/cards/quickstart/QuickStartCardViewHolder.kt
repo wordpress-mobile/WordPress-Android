@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.quickstart
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Paint
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -39,6 +40,8 @@ class QuickStartCardViewHolder(
 
     private fun MySiteCardToolbarBinding.update(card: QuickStartCard) {
         mySiteCardToolbarTitle.text = uiHelpers.getTextOfUiString(itemView.context, card.title)
+        mySiteCardToolbarTitle.isVisible = card.titleVisible
+        mySiteCardToolbarIcon.isVisible = card.iconVisible
         mySiteCardToolbarMore.isVisible = card.moreMenuVisible
         mySiteCardToolbarMore.setOnClickListener { showQuickStartCardMenu(card.onRemoveMenuItemClick) }
     }
@@ -82,7 +85,6 @@ class QuickStartCardViewHolder(
         with(itemTitle) {
             text = uiHelpers.getTextOfUiString(itemView.context, item.title)
             isEnabled = item.titleEnabled
-            paintFlags(item)
         }
         itemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
         itemProgress.update(item)
