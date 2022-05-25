@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 174
+        return 175
     }
 
     override fun getDbName(): String {
@@ -1851,6 +1851,20 @@ open class WellSqlConfig : DefaultWellConfig {
                 173 -> migrate(version) {
                     db.execSQL("DELETE FROM QuickStartTaskModel WHERE TASK_NAME='explore_plans' " +
                         "AND TASK_TYPE='grow';")
+                }
+                174 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_PROMPTS_OPTED_IN BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_PROMPTS_CARD_OPTED_IN BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_POTENTIAL_BLOGGING_SITE BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_MONDAY BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_TUESDAY BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_WEDNESDAY BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_THURSDAY BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_FRIDAY BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_SATURDAY BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_REMINDER_ON_SUNDAY BOOLEAN")
+                    db.execSQL("ALTER TABLE SiteModel ADD BLOGGING_REMINDER_HOUR INTEGER")
+                    db.execSQL("ALTER TABLE SiteModel ADD BLOGGING_REMINDER_MINUTE INTEGER")
                 }
             }
         }
