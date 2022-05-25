@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
-import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickLinkRibbonListBinding
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinkRibbon
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
@@ -33,17 +32,13 @@ class QuickLinkRibbonViewHolder(
         setOnTouchItemListener()
         (quickLinkRibbonItemList.adapter as QuickLinkRibbonItemAdapter).update(quickLinkRibbon.quickLinkRibbonItems)
         if (quickLinkRibbon.showStatsFocusPoint) {
-            quickLinkRibbonItemList.smoothScrollToPosition(quickLinkRibbon.quickLinkRibbonItems.size)
-        }
-        if (quickLinkRibbon.showPagesFocusPoint) {
             quickLinkRibbonItemList.smoothScrollToPosition(0)
         }
+        if (quickLinkRibbon.showPagesFocusPoint) {
+            quickLinkRibbonItemList.smoothScrollToPosition(2)
+        }
         if (quickLinkRibbon.showMediaFocusPoint) {
-            val mediaItem = quickLinkRibbon.quickLinkRibbonItems.firstOrNull { it.label == R.string.media }
-            mediaItem?.let {
-                val mediaItemIndex = quickLinkRibbon.quickLinkRibbonItems.indexOf(it)
-                quickLinkRibbonItemList.smoothScrollToPosition(mediaItemIndex)
-            }
+            quickLinkRibbonItemList.smoothScrollToPosition(quickLinkRibbon.quickLinkRibbonItems.size)
         }
     }
 

@@ -110,8 +110,9 @@ class CardsShownTrackerTest {
                     title = UiStringText(""),
                     footerLink = FooterLink(UiStringText(""), onClick = mock()),
                     excerpt = UiStringText(""),
-                    imageRes = 0
-            )
+                    imageRes = 0,
+                    onClick = mock()
+                )
             )
 
     private fun buildPostCardsWithItems(postCardType: PostCardType) = listOf(

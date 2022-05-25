@@ -1135,11 +1135,12 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
+                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
+                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
                 PostCardType.DRAFT -> _onNavigation.value =
                         Event(SiteNavigationAction.EditDraftPost(site, params.postId))
                 PostCardType.SCHEDULED -> _onNavigation.value =
                         Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
-                else -> Unit // Do nothing
             }
         }
     }
