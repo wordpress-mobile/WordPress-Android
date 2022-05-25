@@ -4,6 +4,7 @@ import android.graphics.Paint
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
@@ -25,7 +26,7 @@ class TaskViewHolder(
         val quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(taskCard.task)
                 ?: throw IllegalStateException("$taskCard task is not recognized in adapter.")
         with(binding) {
-            updateIcon(isEnabled, quickStartTaskDetails.iconResId)
+            updateIcon(isEnabled, quickStartTaskDetails.iconResId, quickStartTaskDetails.iconBackgroundColorResId)
             updateTitle(isEnabled, quickStartTaskDetails.titleResId)
             updateSubtitle(quickStartTaskDetails.subtitleResId)
             updateQuickStartTaskCardView(isEnabled)
@@ -33,10 +34,16 @@ class TaskViewHolder(
         updateClickListeners(taskCard, isEnabled)
     }
 
-    private fun QuickStartListItemBinding.updateIcon(isEnabled: Boolean, @DrawableRes iconResId: Int) {
+    private fun QuickStartListItemBinding.updateIcon(
+        isEnabled: Boolean,
+        @DrawableRes iconResId: Int,
+        @ColorRes iconBackgroundColorResId: Int
+    ) {
         with(icon) {
-            this.isEnabled = isEnabled
-            icon.setImageResource(iconResId)
+            val context = itemView.context
+            setImageResource(iconResId)
+            val tintResId = if (isEnabled) iconBackgroundColorResId else R.color.material_on_surface_emphasis_low
+            background.setTint(ContextCompat.getColor(context, tintResId))
         }
     }
 
