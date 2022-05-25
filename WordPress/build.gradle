@@ -280,8 +280,10 @@ android {
         related to it if I search for `NullSafeMutableLiveData`:
         * https://developer.android.com/jetpack/androidx/releases/lifecycle NullSafeMutableLiveData)
 
-        We are disabling this check for now as it results in a crash, but we should try to enable
-        it again as we update our `lifecycle` version.
+        We are disabling this check for now as the lint task crashes due to the bugs mentioned above.
+        We should try to enable it again as we update our `lifecycle` version. We already have
+        several `NullSafeMutableLiveData` lint issues we need to address, so it's an important
+        check for us to keep enabled.
 
         Disabling this from `lint.xml` file doesn't seem to work, that's why it's added here.
         */
