@@ -16,17 +16,14 @@ class BloggingPromptsOnboardingUiStateMapperTest {
 
     private val expectedRespondents = listOf(
             AvatarItem(
-                    54279365,
                     "https://0.gravatar.com/avatar/cec64efa352617" +
                             "c35743d8ed233ab410?s=96&d=identicon&r=G"
             ),
             AvatarItem(
-                    54279365,
                     "https://0.gravatar.com/avatar/cec64efa352617" +
                             "c35743d8ed233ab410?s=96&d=identicon&r=G"
             ),
             AvatarItem(
-                    54279365,
                     "https://0.gravatar.com/avatar/cec64efa352617" +
                             "c35743d8ed233ab410?s=96&d=identicon&r=G"
             ),

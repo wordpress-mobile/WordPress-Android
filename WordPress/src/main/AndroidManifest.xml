@@ -760,6 +760,12 @@
             android:label="@string/add_new_category"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!-- QR Code Auth Flow -->
+        <activity
+            android:name=".ui.qrcodeauth.QRCodeAuthActivity"
+            android:label="@string/qrcode_auth_flow"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"

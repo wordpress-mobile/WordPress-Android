@@ -22,7 +22,8 @@ import org.wordpress.android.util.image.ImageManager
 class BloggingPromptCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers,
-    private val imageManager: ImageManager
+    private val imageManager: ImageManager,
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
 ) : CardViewHolder<MySiteBloggingPrompCardBinding>(
         parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
 ) {
@@ -32,19 +33,18 @@ class BloggingPromptCardViewHolder(
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
         bloggingPromptCardMenu.setOnClickListener {
+            bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
             showCardMenu()
         }
 
         answerButton.setOnClickListener {
-            card.onAnswerClick.invoke()
-            uiHelpers.updateVisibility(answerButton, false)
-            uiHelpers.updateVisibility(answeredPromptControls, true)
+            card.onAnswerClick.invoke(card.promptId)
         }
         answeredButton.setOnClickListener {
-            uiHelpers.updateVisibility(answerButton, true)
-            uiHelpers.updateVisibility(answeredPromptControls, false)
+            card.onAnswerClick.invoke(card.promptId)
         }
         shareButton.setOnClickListener {
+            bloggingPromptsCardAnalyticsTracker.trackMySiteCardShareClicked()
             card.onShareClick.invoke(
                     uiHelpers.getTextOfUiString(
                             shareButton.context,
@@ -59,31 +59,42 @@ class BloggingPromptCardViewHolder(
                 FlexDirection.ROW,
                 FlexWrap.NOWRAP
         ).apply { justifyContent = JustifyContent.CENTER }
-        answeredUsersRecycler.addItemDecoration(
-                AvatarItemDecorator(
-                        RtlUtils.isRtl(answeredUsersRecycler.context),
-                        answeredUsersRecycler.context,
-                        AVATAR_LEFT_OFFSET_DIMEN
-                )
-        )
-        answeredUsersRecycler.layoutManager = layoutManager
 
-        val adapter = TrainOfAvatarsAdapter(
-                imageManager,
-                uiHelpers
-        )
-        answeredUsersRecycler.adapter = adapter
+        if (card.numberOfAnswers > 0) {
+            uiHelpers.updateVisibility(answeredUsersRecycler, true)
+            answeredUsersRecycler.addItemDecoration(
+                    AvatarItemDecorator(
+                            RtlUtils.isRtl(answeredUsersRecycler.context),
+                            answeredUsersRecycler.context,
+                            AVATAR_LEFT_OFFSET_DIMEN
+                    )
+            )
+            answeredUsersRecycler.layoutManager = layoutManager
 
-        adapter.loadData(card.respondents)
+            val adapter = TrainOfAvatarsAdapter(
+                    imageManager,
+                    uiHelpers
+            )
+            answeredUsersRecycler.adapter = adapter
+
+            adapter.loadData(card.respondents)
+        } else {
+            uiHelpers.updateVisibility(answeredUsersRecycler, false)
+        }
     }
-}
 
-private fun MySiteBloggingPrompCardBinding.showCardMenu() {
-    val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
-    quickStartPopupMenu.setOnMenuItemClickListener {
-        return@setOnMenuItemClickListener true
+    private fun MySiteBloggingPrompCardBinding.showCardMenu() {
+        val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
+        quickStartPopupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
+                R.id.skip -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+            }
+            return@setOnMenuItemClickListener true
+        }
+        quickStartPopupMenu.inflate(R.menu.blogging_prompt_card_menu)
+        MenuCompat.setGroupDividerEnabled(quickStartPopupMenu.menu, true)
+        quickStartPopupMenu.show()
     }
-    quickStartPopupMenu.inflate(R.menu.blogging_prompt_card_menu)
-    MenuCompat.setGroupDividerEnabled(quickStartPopupMenu.menu, true)
-    quickStartPopupMenu.show()
 }

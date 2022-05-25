@@ -21,6 +21,8 @@ import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
+typealias PromptID = Int
+
 sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
     enum class Type {
         SITE_INFO_CARD,
@@ -212,8 +214,9 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val respondents: List<TrainOfAvatarsItem>,
                         val numberOfAnswers: Int,
                         val isAnswered: Boolean,
+                        val promptId: Int,
                         val onShareClick: (String) -> Unit,
-                        val onAnswerClick: () -> Unit
+                        val onAnswerClick: (PromptID) -> Unit
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }
