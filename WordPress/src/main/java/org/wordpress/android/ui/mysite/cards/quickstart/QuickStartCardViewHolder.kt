@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite.cards.quickstart
 
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.Paint
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -26,6 +25,8 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.viewBinding
+
+const val PERCENT_HUNDRED = 100
 
 class QuickStartCardViewHolder(
     parent: ViewGroup,
@@ -88,7 +89,12 @@ class QuickStartCardViewHolder(
         }
         itemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
         itemProgress.update(item)
+        showCompletedIconIfNeeded(item.progress)
         itemRoot.setOnClickListener { item.onClick.click() }
+    }
+
+    private fun QuickStartTaskTypeGrowItemBinding.showCompletedIconIfNeeded(progress: Int) {
+        taskCompletedIcon.setVisible(progress == PERCENT_HUNDRED)
     }
 
     private fun MaterialTextView.paintFlags(item: QuickStartTaskTypeItem) {
