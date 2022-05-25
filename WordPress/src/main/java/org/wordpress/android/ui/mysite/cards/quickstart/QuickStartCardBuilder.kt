@@ -91,7 +91,7 @@ class QuickStartCardBuilder @Inject constructor() {
         return if (progress == PERCENT_HUNDRED && isNewQuickStartType)
             R.color.green_40
         else
-            R.color.primary
+            R.color.colorPrimary
     }
 
     fun getTitle(taskType: QuickStartTaskType): Int {
