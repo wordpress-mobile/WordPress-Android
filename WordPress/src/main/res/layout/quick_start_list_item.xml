@@ -29,9 +29,27 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/title"
                 style="@style/QuickStartTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/completed_checkmark"
                 app:layout_constraintStart_toEndOf="@+id/icon"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/quick_start_list_create_site_title" />
+
+            <ImageView
+                android:id="@+id/completed_checkmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_large"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_checkmark"
+                android:tint="@color/gray"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
             <View
                 android:id="@+id/popup_anchor"
