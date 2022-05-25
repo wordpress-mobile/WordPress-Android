@@ -8,7 +8,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartListItemBinding
-import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartTaskCard
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard.QuickStartTaskCard
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.viewBinding
