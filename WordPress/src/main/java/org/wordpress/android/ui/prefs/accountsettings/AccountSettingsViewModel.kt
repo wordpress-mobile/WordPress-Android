@@ -162,8 +162,10 @@ class AccountSettingsViewModel @Inject constructor(
         removeOptimisticUpdate: (() -> Unit?)? = null,
         updateAccountSettings: suspend () -> OnAccountChanged
     ) {
-        addOptimisticUpdate?.invoke()
-        updateAccountSettingsUiState()
+        addOptimisticUpdate?.let {
+            it.invoke()
+            updateAccountSettingsUiState()
+        }
         fetchNewSettingsJob?.cancel()
         viewModelScope.launch {
             val onAccountChangedEvent = updateAccountSettings.invoke()
