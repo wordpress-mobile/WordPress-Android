@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/QuickStartLayout">
+    android:id="@+id/quick_start_task_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_medium"
+    app:cardElevation="@dimen/unelevated_card_elevation">
 
-    <ImageView
-        android:id="@+id/icon"
-        style="@style/QuickStartIcon"
-        android:importantForAccessibility="no"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_gridicons_site_white_24dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout style="@style/QuickStartLayout">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/QuickStartTitle"
-        app:layout_constraintStart_toEndOf="@+id/icon"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/quick_start_list_create_site_title" />
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/QuickStartIcon"
+            android:importantForAccessibility="no"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_gridicons_site_white_24dp" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/subtitle"
-        style="@style/QuickStartSubtitle"
-        app:layout_constraintStart_toEndOf="@+id/icon"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        tools:text="@string/quick_start_list_create_site_subtitle" />
+        <TextView
+            android:id="@+id/title"
+            style="@style/QuickStartTitle"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/quick_start_list_create_site_title" />
 
-    <View
-        android:id="@+id/divider"
-        style="@style/QuickStartDivider"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/subtitle" />
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/subtitle"
+            style="@style/QuickStartSubtitle"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:text="@string/quick_start_list_create_site_subtitle" />
 
-    <View
-        android:id="@+id/popup_anchor"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/divider"
+            style="@style/QuickStartDivider"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/subtitle" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/popup_anchor"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
