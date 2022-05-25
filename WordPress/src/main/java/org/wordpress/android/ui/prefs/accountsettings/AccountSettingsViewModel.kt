@@ -44,6 +44,9 @@ class AccountSettingsViewModel @Inject constructor(
     private val optimisticUpdateHandler: AcountSettingsOptimisticUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     var fetchNewSettingsJob: Job? = null
+    private var _accountSettingsUiState = MutableStateFlow(getAccountSettingsUiState())
+    val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
+
     init {
         viewModelScope.launch {
             getSitesAccessedViaWPComRest()
@@ -59,11 +62,9 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
-    private var _accountSettingsUiState = MutableStateFlow(getAccountSettingsUiState())
-    val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
-
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
         val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
+        val showChangePasswordProgressDialog = _accountSettingsUiState?.value?.changePasswordSettingsUiState?.showChangePasswordProgressDialog ?: false
         val primarySiteViewModel = siteViewModels
                 ?.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId }
         val account = getAccountUseCase.account
@@ -83,7 +84,7 @@ class AccountSettingsViewModel @Inject constructor(
                         siteViewModels
                 ),
                 webAddressSettingsUiState = WebAddressSettingsUiState(account.webAddress),
-                changePasswordSettingsUiState = ChangePasswordSettingsUiState(false),
+                changePasswordSettingsUiState = ChangePasswordSettingsUiState(showChangePasswordProgressDialog),
                 error = null
         )
         return optimisticUpdateHandler.applyOptimisticallyChangedPreferences(uistate)
@@ -141,14 +142,19 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     fun onPasswordChanged(newPassword: String) {
+        showChangePasswordDialog(true)
+        onAccountSettingsChange { pushAccountSettingsUseCase.updatePassword(newPassword) }
+        showChangePasswordDialog(false)
+    }
+
+    private fun showChangePasswordDialog(show: Boolean){
         _accountSettingsUiState.update {
             it.copy(
                     changePasswordSettingsUiState = it.changePasswordSettingsUiState.copy(
-                            showChangePasswordProgressDialog = true
+                            showChangePasswordProgressDialog = show
                     ),
             )
         }
-        onAccountSettingsChange { pushAccountSettingsUseCase.updatePassword(newPassword) }
     }
 
     private fun onAccountSettingsChange(
