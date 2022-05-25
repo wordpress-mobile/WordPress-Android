@@ -271,16 +271,14 @@ class PreviewImageFragment : Fragment(R.layout.preview_image_fragment) {
         // TODO: Temporarily added if check to fix this occasional crash
         // https://stackoverflow.com/q/51060762/193545
         if (navController.currentDestination?.id == R.id.preview_dest) {
-            outputFileExtension?.let {
-                navController.navigate(
-                        PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(
-                                inputFilePath,
-                                outputFileExtension,
-                                shouldReturnToPreviewScreen
-                        ),
-                        navOptions
-                )
-            }
+            navController.navigate(
+                    PreviewImageFragmentDirections.actionPreviewFragmentToCropFragment(
+                            inputFilePath,
+                            outputFileExtension,
+                            shouldReturnToPreviewScreen
+                    ),
+                    navOptions
+            )
         }
     }
 
