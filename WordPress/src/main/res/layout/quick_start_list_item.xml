@@ -34,12 +34,6 @@
             tools:text="@string/quick_start_list_create_site_subtitle" />
 
         <View
-            android:id="@+id/divider"
-            style="@style/QuickStartDivider"
-            app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/subtitle" />
-
-        <View
             android:id="@+id/popup_anchor"
             android:layout_width="1dp"
             android:layout_height="1dp"

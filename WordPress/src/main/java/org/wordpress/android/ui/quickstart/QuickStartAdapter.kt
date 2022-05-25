@@ -15,10 +15,7 @@ class QuickStartAdapter : ListAdapter<QuickStartTaskCard, ViewHolder>(QuickStart
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         when (viewHolder) {
-            is TaskViewHolder -> viewHolder.bind(
-                    taskCard = getItem(position),
-                    shouldHideDivider = position == itemCount - 1
-            )
+            is TaskViewHolder -> viewHolder.bind(taskCard = getItem(position))
         }
     }
 

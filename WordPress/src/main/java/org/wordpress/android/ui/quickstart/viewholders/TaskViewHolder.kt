@@ -17,7 +17,7 @@ class TaskViewHolder(
     parent: ViewGroup,
     private val binding: QuickStartListItemBinding = parent.viewBinding(QuickStartListItemBinding::inflate)
 ) : ViewHolder(binding.root) {
-    fun bind(taskCard: QuickStartTaskCard, shouldHideDivider: Boolean) {
+    fun bind(taskCard: QuickStartTaskCard) {
         val clickListener = View.OnClickListener {
             taskCard.onTaskTapped(taskCard.task)
         }
@@ -44,9 +44,6 @@ class TaskViewHolder(
             title.isEnabled = isEnabled
             itemView.isLongClickable = isEnabled
             if (!isEnabled) title.paintFlags = title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-
-            // Hide divider for tasks before header and end of list.
-            divider.visibility = if (shouldHideDivider) View.INVISIBLE else View.VISIBLE
 
             val quickStartTaskDetails = QuickStartTaskDetails.getDetailsForTask(taskCard.task)
                     ?: throw IllegalStateException("$taskCard task is not recognized in adapter.")
