@@ -47,7 +47,7 @@ class QuickStartCardBuilder @Inject constructor() {
         val quickStartTaskType = category.taskType
         val countCompleted = category.completedTasks.size
         val countUncompleted = category.uncompletedTasks.size
-        val progress = PERCENT_HUNDRED
+        val progress = getProgress(countCompleted, countCompleted + countUncompleted)
         val isNewQuickStartType = category.taskType == QuickStartTaskType.GET_TO_KNOW_APP
 
         return QuickStartTaskTypeItem(
@@ -73,7 +73,7 @@ class QuickStartCardBuilder @Inject constructor() {
         countCompleted: Int,
         totalCount: Int
     ): UiString {
-        return if (progress == PERCENT_HUNDRED || isNewQuickStartType)
+        return if (progress == PERCENT_HUNDRED && isNewQuickStartType)
             UiStringRes(
                     R.string.quick_start_sites_type_all_tasks_completed,
             )
