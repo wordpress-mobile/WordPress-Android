@@ -35,9 +35,7 @@ class QuickStartCardBuilder @Inject constructor() {
             isNewQuickStartType(quickStartCategories)
 
     private fun isNewQuickStartType(quickStartCategories: List<QuickStartCategory>): Boolean {
-        if (quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP })
-            return true
-        return false
+        return quickStartCategories.any { it.taskType == QuickStartTaskType.GET_TO_KNOW_APP }
     }
 
     private fun buildQuickStartTaskTypeItem(
@@ -73,11 +71,11 @@ class QuickStartCardBuilder @Inject constructor() {
         countCompleted: Int,
         totalCount: Int
     ): UiString {
-        return if (progress == PERCENT_HUNDRED && isNewQuickStartType)
+        return if (progress == PERCENT_HUNDRED && isNewQuickStartType) {
             UiStringRes(
-                    R.string.quick_start_sites_type_all_tasks_completed,
+                    R.string.quick_start_sites_type_all_tasks_completed
             )
-        else
+        } else {
             UiStringResWithParams(
                     R.string.quick_start_sites_type_tasks_completed,
                     listOf(
@@ -85,13 +83,15 @@ class QuickStartCardBuilder @Inject constructor() {
                             UiStringText("$totalCount")
                     )
             )
+        }
     }
 
     fun getProgressColor(progress: Int, isNewQuickStartType: Boolean): Int {
-        return if (progress == PERCENT_HUNDRED && isNewQuickStartType)
+        return if (progress == PERCENT_HUNDRED && isNewQuickStartType) {
             R.color.green_40
-        else
+        } else {
             R.color.colorPrimary
+        }
     }
 
     fun getTitle(taskType: QuickStartTaskType): Int {
