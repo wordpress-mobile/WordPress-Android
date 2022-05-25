@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/QuickStartLayout">
-
-    <View
-        android:id="@+id/popup_anchor"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/margin_extra_large" />
 
     <ImageView
         android:id="@+id/icon"
         style="@style/QuickStartIcon"
         android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_gridicons_site_white_24dp" />
 
     <TextView
         android:id="@+id/title"
         style="@style/QuickStartTitle"
-        android:layout_toEndOf="@+id/icon"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/quick_start_list_create_site_title" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
         style="@style/QuickStartSubtitle"
-        android:layout_below="@+id/title"
-        android:layout_toEndOf="@+id/icon"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         tools:text="@string/quick_start_list_create_site_subtitle" />
 
     <View
         android:id="@+id/divider"
         style="@style/QuickStartDivider"
-        android:layout_below="@+id/subtitle"
-        android:layout_alignStart="@+id/title" />
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle" />
 
-</RelativeLayout>
+    <View
+        android:id="@+id/popup_anchor"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
