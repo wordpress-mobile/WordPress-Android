@@ -52,7 +52,7 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_checkmark"
-                android:tint="@color/gray"
+                android:tint="@color/quick_start_task_card_completed_checkmark"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

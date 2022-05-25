@@ -15,6 +15,7 @@ import org.wordpress.android.databinding.QuickStartListItemBinding
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard.QuickStartTaskCard
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.viewBinding
 
 class TaskViewHolder(
@@ -29,6 +30,7 @@ class TaskViewHolder(
             updateIcon(isEnabled, quickStartTaskDetails.iconResId, quickStartTaskDetails.iconBackgroundColorResId)
             updateTitle(isEnabled, quickStartTaskDetails.titleResId)
             updateSubtitle(quickStartTaskDetails.subtitleResId)
+            updateCompletedCheckmark(isEnabled)
             updateQuickStartTaskCardView(isEnabled)
         }
         updateClickListeners(taskCard, isEnabled)
@@ -57,6 +59,10 @@ class TaskViewHolder(
 
     private fun QuickStartListItemBinding.updateSubtitle(@StringRes subtitleResId: Int) {
         subtitle.setText(subtitleResId)
+    }
+
+    private fun QuickStartListItemBinding.updateCompletedCheckmark(isEnabled: Boolean) {
+        completedCheckmark.setVisible(!isEnabled)
     }
 
     private fun QuickStartListItemBinding.updateQuickStartTaskCardView(isEnabled: Boolean) {

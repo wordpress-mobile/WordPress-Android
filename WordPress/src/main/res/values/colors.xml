@@ -71,6 +71,7 @@
 
     <!-- Quick Start Task Cards -->
     <color name="quick_start_task_card_background">@color/gray_0</color>
+    <color name="quick_start_task_card_completed_checkmark">@color/gray_5</color>
 
     <!-- Quick Start Task Dynamic Cards -->
     <color name="quick_start_task_card_illustration_background">@color/gray_0</color>

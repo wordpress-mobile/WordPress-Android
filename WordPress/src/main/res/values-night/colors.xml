@@ -52,6 +52,7 @@
 
     <!-- Quick Start Task Cards -->
     <color name="quick_start_task_card_background">@color/material_on_surface_emphasis_low</color>
+    <color name="quick_start_task_card_completed_checkmark">@color/material_on_surface_disabled</color>
 
     <!-- Quick Start Task Dynamic Cards -->
     <color name="quick_start_task_card_illustration_background">#2C2C2E</color>
