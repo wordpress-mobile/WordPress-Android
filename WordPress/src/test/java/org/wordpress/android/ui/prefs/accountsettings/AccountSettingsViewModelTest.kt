@@ -38,7 +38,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     @Mock private lateinit var pushAccountSettingsUseCase: PushAccountSettingsUseCase
     @Mock private lateinit var getSitesUseCase: GetSitesUseCase
     @Mock private lateinit var getAccountUseCase: GetAccountUseCase
-    private val optimisticUpdateHandler = AcountSettingsOptimisticUpdateHandler()
+    private val optimisticUpdateHandler = AccountSettingsOptimisticUpdateHandler()
     @Mock private lateinit var account: AccountModel
 
     private val siteViewModels = mutableListOf<SiteViewModel>().apply {

@@ -41,7 +41,7 @@ class AccountSettingsViewModel @Inject constructor(
     private val pushAccountSettingsUseCase: PushAccountSettingsUseCase,
     private val getAccountUseCase: GetAccountUseCase,
     private val getSitesUseCase: GetSitesUseCase,
-    private val optimisticUpdateHandler: AcountSettingsOptimisticUpdateHandler
+    private val optimisticUpdateHandler: AccountSettingsOptimisticUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
     private var fetchNewSettingsJob: Job? = null
     private var _accountSettingsUiState = MutableStateFlow(getAccountSettingsUiState())
