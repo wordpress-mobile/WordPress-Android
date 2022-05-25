@@ -29,7 +29,7 @@ class TaskViewHolder(
         with(binding) {
             updateIcon(isEnabled, quickStartTaskDetails.iconResId, quickStartTaskDetails.iconBackgroundColorResId)
             updateTitle(isEnabled, quickStartTaskDetails.titleResId)
-            updateSubtitle(quickStartTaskDetails.subtitleResId)
+            updateSubtitle(quickStartTaskDetails.subtitleResId, quickStartTaskDetails.showSubtitle)
             updateCompletedCheckmark(isEnabled)
             updateQuickStartTaskCardView(isEnabled)
         }
@@ -57,8 +57,12 @@ class TaskViewHolder(
         }
     }
 
-    private fun QuickStartListItemBinding.updateSubtitle(@StringRes subtitleResId: Int) {
+    private fun QuickStartListItemBinding.updateSubtitle(
+        @StringRes subtitleResId: Int,
+        showSubtitle: Boolean
+    ) {
         subtitle.setText(subtitleResId)
+        subtitle.setVisible(showSubtitle)
     }
 
     private fun QuickStartListItemBinding.updateCompletedCheckmark(isEnabled: Boolean) {
