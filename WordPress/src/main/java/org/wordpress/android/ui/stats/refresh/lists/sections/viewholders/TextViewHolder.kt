@@ -8,12 +8,12 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -23,7 +23,6 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         R.layout.stats_block_text_item
 ) {
     private val text = itemView.findViewById<TextView>(R.id.text)
-    private val icon = itemView.findViewById<MaterialButton>(R.id.text_icon)
 
     fun bind(textItem: Text) {
         val loadedText = textItem.text
@@ -32,15 +31,29 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val spannableString = SpannableString(loadedText)
         textItem.links?.forEach { link ->
             link.link?.let {
-                spannableString.withClickableSpan(text.context, link.link) {
+                spannableString.withClickableSpan(text.context, it) {
                     link.navigationAction.click()
                 }
             }
             link.icon?.let {
-                icon.icon = ContextCompat.getDrawable(text.context, it)
-                icon.visibility = View.VISIBLE
-                icon.setOnClickListener {
+                spannableString.withClickableSpan(
+                        text.context,
+                        loadedText.last().toString()
+                ) {
                     link.navigationAction.click()
+                }
+
+                val drawable = ContextCompat.getDrawable(text.context, it)
+                drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                drawable?.setTint(ContextCompat.getColor(text.context, R.color.primary))
+
+                drawable?.let { icon ->
+                    spannableString.setSpan(
+                            ImageSpan(icon),
+                            loadedText.length - 1,
+                            loadedText.length,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
         }
