@@ -382,7 +382,7 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
-        intent.putExtra(WPMainActivity.ARG_STAT_TRACK, stat);
+        intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
         return intent;
     }
 

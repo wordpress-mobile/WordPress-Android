@@ -20,7 +20,7 @@ class DismissNotificationReceiver : BroadcastReceiver() {
     }
 
     private fun trackAnalyticsEvent(intent: Intent) {
-        val stat = intent.getSerializableExtra(EXTRA_STAT) as Stat?
+        val stat = intent.getSerializableExtra(EXTRA_STAT_TO_TRACK) as Stat?
         if (stat != null) {
             analyticsTrackerWrapper.track(stat)
         }
@@ -34,12 +34,12 @@ class DismissNotificationReceiver : BroadcastReceiver() {
 
     companion object {
         private const val EXTRA_NOTIFICATION_ID = "EXTRA_NOTIFICATION_ID"
-        private const val EXTRA_STAT = "EXTRA_STAT"
+        private const val EXTRA_STAT_TO_TRACK = "EXTRA_STAT_TO_TRACK"
 
         fun newIntent(context: Context, notificationId: Int, stat: Stat? = null): Intent =
                 Intent(context, DismissNotificationReceiver::class.java).apply {
                     putExtra(EXTRA_NOTIFICATION_ID, notificationId)
-                    putExtra(EXTRA_STAT, stat)
+                    putExtra(EXTRA_STAT_TO_TRACK, stat)
                 }
     }
 }
