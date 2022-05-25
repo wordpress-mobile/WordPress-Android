@@ -449,6 +449,7 @@
     <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
 
     <dimen name="quick_start_task_list_header_image_width">80dp</dimen>
+    <dimen name="quick_start_task_card_view_corner_radius">10dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>

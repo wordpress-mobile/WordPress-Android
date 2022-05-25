@@ -10,6 +10,7 @@
         android:id="@+id/quick_start_task_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/quick_start_task_card_view_corner_radius"
         app:cardElevation="@dimen/unelevated_card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
