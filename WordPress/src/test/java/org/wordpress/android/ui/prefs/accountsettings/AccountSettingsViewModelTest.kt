@@ -32,7 +32,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 @InternalCoroutinesApi
 class AccountSettingsViewModelTest : BaseUnitTest(){
     private lateinit var viewModel: AccountSettingsViewModel
-    @Mock private lateinit var resourceProvider: ResourceProvidergit
+    @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var fetchAccountSettingsUseCase:FetchAccountSettingsUseCase
     @Mock private lateinit var pushAccountSettingsUseCase: PushAccountSettingsUseCase

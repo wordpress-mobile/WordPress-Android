@@ -43,7 +43,7 @@ class AccountSettingsViewModel @Inject constructor(
     private val getSitesUseCase: GetSitesUseCase,
     private val optimisticUpdateHandler: AcountSettingsOptimisticUpdateHandler
 ) : ScopedViewModel(mainDispatcher) {
-    var fetchNewSettingsJob: Job? = null
+    private var fetchNewSettingsJob: Job? = null
     private var _accountSettingsUiState = MutableStateFlow(getAccountSettingsUiState())
     val accountSettingsUiState: StateFlow<AccountSettingsUiState> = _accountSettingsUiState.asStateFlow()
 
@@ -64,7 +64,8 @@ class AccountSettingsViewModel @Inject constructor(
 
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
         val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
-        val showChangePasswordProgressDialog = _accountSettingsUiState?.value?.changePasswordSettingsUiState?.showChangePasswordProgressDialog ?: false
+        val showChangePasswordProgressDialog = _accountSettingsUiState?.value?.changePasswordSettingsUiState
+                ?.showChangePasswordProgressDialog ?: false
         val primarySiteViewModel = siteViewModels
                 ?.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId }
         val account = getAccountUseCase.account
@@ -147,7 +148,7 @@ class AccountSettingsViewModel @Inject constructor(
         showChangePasswordDialog(false)
     }
 
-    private fun showChangePasswordDialog(show: Boolean){
+    private fun showChangePasswordDialog(show: Boolean) {
         _accountSettingsUiState.update {
             it.copy(
                     changePasswordSettingsUiState = it.changePasswordSettingsUiState.copy(
