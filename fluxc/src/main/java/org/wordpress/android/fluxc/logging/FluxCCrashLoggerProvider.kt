@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.logging
 
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.MAIN
 
 object FluxCCrashLoggerProvider {
     @Volatile
@@ -15,7 +16,20 @@ object FluxCCrashLoggerProvider {
         private set
 
     fun initLogger(logger: FluxCCrashLogger) {
-        if (crashLogger != null) throw IllegalStateException("FLuxCCrashLogger is already initialized")
-        crashLogger = logger
+        if (crashLogger == null) {
+            synchronized(FluxCCrashLoggerProvider.javaClass) {
+                if (crashLogger == null) {
+                    crashLogger = logger
+                } else {
+                    logAlreadyInitialized()
+                }
+            }
+        } else {
+            logAlreadyInitialized()
+        }
+    }
+
+    private fun logAlreadyInitialized() {
+        AppLog.w(MAIN, "FluxCCrashLoggerProvider already initialized.")
     }
 }
