@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Origin
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.EPILOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.PROLOGUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen.SELECTION
@@ -66,9 +65,9 @@ class BloggingRemindersAnalyticsTrackerTest {
 
     @Test
     fun `trackScreenShown tracks correct event and properties`() {
-        bloggingRemindersAnalyticsTracker.trackScreenShown(PROLOGUE, Origin.SITE_SETTINGS)
-        bloggingRemindersAnalyticsTracker.trackScreenShown(SELECTION, Origin.SITE_SETTINGS)
-        bloggingRemindersAnalyticsTracker.trackScreenShown(EPILOGUE, Origin.SITE_SETTINGS)
+        bloggingRemindersAnalyticsTracker.trackScreenShown(PROLOGUE)
+        bloggingRemindersAnalyticsTracker.trackScreenShown(SELECTION)
+        bloggingRemindersAnalyticsTracker.trackScreenShown(EPILOGUE)
 
         mapCaptor().apply {
             verify(analyticsTracker, times(3)).track(eq(BLOGGING_REMINDERS_SCREEN_SHOWN), capture())
