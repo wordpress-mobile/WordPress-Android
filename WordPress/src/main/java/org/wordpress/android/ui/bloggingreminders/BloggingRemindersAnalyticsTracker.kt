@@ -94,7 +94,6 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
     companion object {
         private const val BLOG_TYPE_KEY = "blog_type"
         private const val SCREEN_KEY = "screen"
-        private const val ORIGIN_KEY = "origin"
         private const val BUTTON_KEY = "button"
         private const val SOURCE_KEY = "source"
         private const val PROMPT_ENABLED_KEY = "enabled"
