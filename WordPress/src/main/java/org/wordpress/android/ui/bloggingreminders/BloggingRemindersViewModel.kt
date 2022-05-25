@@ -285,11 +285,6 @@ class BloggingRemindersViewModel @Inject constructor(
         EPILOGUE("all_set")
     }
 
-    enum class Origin(val trackingName: String) {
-        SITE_SETTINGS("site_settings"),
-        BLOGGING_PROMPTS_INTRODUCTION("bloggging_prompts_introduction")
-    }
-
     data class UiState(
         val uiItems: List<BloggingRemindersItem>,
         val primaryButton: PrimaryButton? = null

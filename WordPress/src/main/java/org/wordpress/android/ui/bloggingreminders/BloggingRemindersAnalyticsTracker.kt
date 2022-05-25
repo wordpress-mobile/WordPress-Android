@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Button.CONTINUE
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.SiteType.SELF_HOSTED
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.SiteType.WORDPRESS_COM
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Origin
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel.Screen
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -29,12 +28,9 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         siteType = if (site.isWPCom) WORDPRESS_COM else SELF_HOSTED
     }
 
-    fun trackScreenShown(screen: Screen, origin: Origin) = track(
+    fun trackScreenShown(screen: Screen) = track(
             BLOGGING_REMINDERS_SCREEN_SHOWN,
-            mapOf(
-                    SCREEN_KEY to screen.trackingName,
-                    ORIGIN_KEY to origin.trackingName
-            )
+            mapOf(SCREEN_KEY to screen.trackingName)
     )
 
     fun trackPrimaryButtonPressed(screen: Screen) = trackButtonPressed(screen, CONTINUE)
