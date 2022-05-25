@@ -65,7 +65,7 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
     fun trackNotificationReceived() = track(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED)
 
     fun trackRemindersIncludePromptPressed(promptEnabled: Boolean) =
-            track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf(PROMPT_ENABLED_KEY to promptEnabled))
+            track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf(PROMPT_ENABLED_KEY to "$promptEnabled"))
 
     fun trackRemindersIncludePromptHelpPressed() = track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED)
 
