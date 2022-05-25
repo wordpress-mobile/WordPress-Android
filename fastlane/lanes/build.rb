@@ -222,7 +222,7 @@ platform :android do
       build_type: "Debug"
     )
 
-    upload_installable_build(product: 'wordpress')
+    upload_installable_build(product: 'WordPress')
   end
 
   #####################################################################################
@@ -244,7 +244,7 @@ platform :android do
       build_type: "Debug"
     )
 
-    upload_installable_build(product: 'jetpack')
+    upload_installable_build(product: 'Jetpack')
   end
 
   #####################################################################################
@@ -308,20 +308,23 @@ platform :android do
   end
 
   def upload_installable_build(product:)
+
+    filename = "#{product.downcase}-installable-build-#{generate_installable_build_number}.apk"
+
     upload_path = upload_to_s3(
       bucket: 'a8c-apps-public-artifacts',
-      key: "#{product}-installable-build-#{generate_installable_build_number}.apk",
+      key: filename,
       file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
     )
 
     install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
     qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{URI::encode( install_url )}&choe=UTF-8"
-    comment_body = "You can test the changes on this Pull Request by <a href='#{install_url}'>downloading an installable build</a>, or scanning this QR code:<br><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a>"
+    comment_body = "You can test the #{product} changes on this Pull Request by <a href='#{install_url}'>downloading an installable build (#{filename})</a>, or scanning this QR code:<br><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a>"
 
     comment_on_pr(
       project: GHHELPER_REPO,
       pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
-      reuse_identifier: "#{product}-installable-build-link",
+      reuse_identifier: "#{product.downcase}-installable-build-link",
       body: comment_body
     ) unless ENV['BUILDKITE_PULL_REQUEST'].nil?
   end
