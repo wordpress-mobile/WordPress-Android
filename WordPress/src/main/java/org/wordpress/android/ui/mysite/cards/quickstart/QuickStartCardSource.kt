@@ -43,9 +43,7 @@ class QuickStartCardSource @Inject constructor(
         return merge(quickStartTaskTypes, quickStartRepository.activeTask) { types, activeTask ->
             val categories =
                     if (selectedSite != null &&
-                            quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite) &&
-                            quickStartRepository.quickStartType
-                                    .isQuickStartInProgress(quickStartStore, siteLocalId.toLong())) {
+                            quickStartUtilsWrapper.isQuickStartAvailableForTheSite(selectedSite)) {
                         types?.map { quickStartRepository.buildQuickStartCategory(siteLocalId, it) }
                                 ?.filter { !isEmptyCategory(siteLocalId, it.taskType) } ?: listOf()
                     } else {
