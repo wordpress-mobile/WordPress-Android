@@ -49,7 +49,7 @@ class AccountSettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getSitesAccessedViaWPComRest()
+            getSites()
         }
         if (networkUtilsWrapper.isNetworkAvailable()) {
             fetchNewSettingsJob = viewModelScope.launch {
@@ -63,12 +63,12 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private fun getAccountSettingsUiState(): AccountSettingsUiState {
+        val account = getAccountUseCase.account
         val siteViewModels = _accountSettingsUiState?.value?.primarySiteSettingsUiState?.sites
         val showChangePasswordProgressDialog = _accountSettingsUiState?.value?.changePasswordSettingsUiState
                 ?.showChangePasswordProgressDialog ?: false
         val primarySiteViewModel = siteViewModels
-                ?.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId }
-        val account = getAccountUseCase.account
+                ?.firstOrNull { it.siteId == account.primarySiteId }
         val uistate = AccountSettingsUiState(
                 userNameSettingsUiState = UserNameSettingsUiState(
                         account.userName,
@@ -91,7 +91,7 @@ class AccountSettingsViewModel @Inject constructor(
         return optimisticUpdateHandler.applyOptimisticallyChangedPreferences(uistate)
     }
 
-    private suspend fun getSitesAccessedViaWPComRest() {
+    private suspend fun getSites() {
         val siteViewModels = getSitesUseCase.get().map {
             SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
         }
@@ -183,7 +183,7 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private fun handleError(accountError: AccountError) {
-        val errorMessage: String? = when (accountError.type) {
+        val errorMessage = when (accountError.type) {
             SETTINGS_FETCH_GENERIC_ERROR -> resourceProvider.getString(string.error_fetch_account_settings)
             SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR -> resourceProvider.getString(string.error_disabled_apis)
             SETTINGS_POST_ERROR -> {
@@ -191,9 +191,9 @@ class AccountSettingsViewModel @Inject constructor(
                         string.error_post_account_settings
                 )
             }
-            else -> null
+            else -> resourceProvider.getString(string.error_post_account_settings)
         }
-        errorMessage?.let { updateErrorUiState(it) }
+        updateErrorUiState(errorMessage)
     }
 
     private fun updateErrorUiState(errorMessage: String?) {
