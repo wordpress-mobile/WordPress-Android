@@ -714,6 +714,7 @@
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <activity
