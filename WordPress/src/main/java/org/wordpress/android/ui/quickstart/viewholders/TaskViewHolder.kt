@@ -5,6 +5,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QuickStartListItemBinding
@@ -40,6 +41,7 @@ class TaskViewHolder(
 
         val isEnabled = !taskCard.isCompleted
         with(binding) {
+            updateQuickStartTaskCardView(isEnabled)
             icon.isEnabled = isEnabled
             title.isEnabled = isEnabled
             itemView.isLongClickable = isEnabled
@@ -50,6 +52,20 @@ class TaskViewHolder(
             icon.setImageResource(quickStartTaskDetails.iconResId)
             title.setText(quickStartTaskDetails.titleResId)
             subtitle.setText(quickStartTaskDetails.subtitleResId)
+        }
+    }
+
+    private fun QuickStartListItemBinding.updateQuickStartTaskCardView(isEnabled: Boolean) {
+        val context = itemView.context
+        with (quickStartTaskCardView) {
+            if (isEnabled) {
+                setCardBackgroundColor(ContextCompat.getColor(context, R.color.quick_start_task_card_background))
+                strokeWidth = 0
+            } else {
+                setCardBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
+                strokeColor = ContextCompat.getColor(context, R.color.material_on_surface_emphasis_low)
+                strokeWidth = context.resources.getDimensionPixelSize(R.dimen.unelevated_card_stroke_width)
+            }
         }
     }
 }

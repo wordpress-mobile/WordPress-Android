@@ -7,7 +7,7 @@
     android:layout_margin="@dimen/margin_medium">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/quick_start_task_card"
+        android:id="@+id/quick_start_task_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="@dimen/unelevated_card_elevation"
@@ -73,7 +73,7 @@
         android:layout_marginTop="@dimen/margin_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quick_start_task_card"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_task_card_view"
         tools:text="@string/quick_start_list_create_site_subtitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
