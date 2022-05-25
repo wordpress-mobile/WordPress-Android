@@ -1617,11 +1617,8 @@ Language: vi_VN
     <string name="quick_start_complete_tasks_header">Hoàn thành (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Chọn biểu tượng blog</string>
     <string name="quick_start_dialog_upload_icon_message">Khách truy cập trang sẽ thấy biểu tượng của bạn trên trình duyệt. Thêm một biểu tượng xinh đẹp hoặc chuyên nghiệp.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Nhấn %1$s Gói dịch vụ %2$s để xem gói hiện tại của bạn và những gói khác.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
     <string name="quick_start_dialog_publish_post_message">Tạo nháp và đăng một bài viết.</string>
-    <string name="quick_start_dialog_explore_plans_title">Tìm hiểu các gói</string>
-    <string name="quick_start_dialog_explore_plans_message">Học về marketing và công cụ SEO trong các gói nâng cấp.</string>
     <string name="quick_start_dialog_enable_sharing_title">Bật chia sẻ bài viết</string>
     <string name="quick_start_dialog_enable_sharing_message">Tự động chia sẻ bài mới tới những mạng xã hội của bạn.</string>
     <string name="quick_start_dialog_check_stats_title">Kiểm tra thống kê blog</string>

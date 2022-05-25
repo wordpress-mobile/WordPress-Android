@@ -1666,15 +1666,12 @@ Language: zh_TW
     <string name="quick_start_sites">後續步驟</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">你的訪客會在他們的瀏覽器上看到你的圖示。新增自訂圖示會讓網站看起來更專業幹練。</string>
-    <string name="quick_start_dialog_explore_plans_message_short">點選%1$s方案%2$s以查看你目前的方案和其他可用方案</string>
     <string name="quick_start_sites_type_grow">讀者持續成長</string>
     <string name="quick_start_sites_type_customize">自訂你的網站</string>
     <string name="quick_start_dialog_upload_icon_title">選擇專屬網站圖示</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">點選%1$s你的網站圖示%2$s以上傳新圖示</string>
     <string name="quick_start_dialog_publish_post_message">撰寫草稿並發表文章。</string>
     <string name="quick_start_dialog_check_stats_message_short">選取「%1$s 統計資料 %2$s」以查看網站成效。</string>
-    <string name="quick_start_dialog_explore_plans_title">探索各種方案</string>
-    <string name="quick_start_dialog_explore_plans_message">深入瞭解付費專案中的行銷和 SEO 工具。</string>
     <string name="quick_start_dialog_enable_sharing_title">啟用文章分享功能</string>
     <string name="quick_start_dialog_enable_sharing_message">自動將新文章分享到社交媒體帳號。</string>
     <string name="quick_start_dialog_check_stats_title">檢視網站統計資料</string>

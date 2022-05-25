@@ -1670,12 +1670,9 @@ Language: ko_KR
     <string name="quick_start_complete_tasks_header">완료(%d)</string>
     <string name="quick_start_dialog_upload_icon_title">고유한 사이트 아이콘 선택</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">현재 요금제 및 사용 가능한 다른 요금제를 보려면 %1$s요금제%2$s를 탭합니다.</string>
     <string name="quick_start_dialog_check_stats_message_short">사이트의 성과를 참조하려면 %1$s 통계 %2$s을(를) 선택합니다.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
     <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 글을 게시하세요.</string>
-    <string name="quick_start_dialog_explore_plans_title">요금제 둘러보기</string>
-    <string name="quick_start_dialog_explore_plans_message">유료 요금제의 마케팅 및 SEO 도구에 대해 알아보세요.</string>
     <string name="quick_start_dialog_enable_sharing_title">글 공유 설정</string>
     <string name="quick_start_dialog_enable_sharing_message">새 글을 소셜 미디어 계정에 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>

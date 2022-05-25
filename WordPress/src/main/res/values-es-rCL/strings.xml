@@ -64,10 +64,7 @@ Language: es_CL
     <string name="quick_start_sites">Siguientes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu ícono en su navegador. Agrega un ícono personalizado para un look pulido y profesional.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Puntea %1$s Plan %2$s para ver su plan actual y otros planes disponibles</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Puntea %1$sEl Icono de tu Sitio%2$s para cargar uno nuevo</string>
-    <string name="quick_start_dialog_explore_plans_title">Explora los planes</string>
-    <string name="quick_start_dialog_explore_plans_message">Obtén información sobre las herramientas de marketing y SEO en nuestros planes pagados.</string>
     <string name="quick_start_dialog_enable_sharing_title">Habilita el compartir publicaciones</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente nuevas publicaciones en tus cuentas de redes sociales.</string>
     <string name="quick_start_dialog_check_stats_title">Consulta las estadísticas de tu sitio</string>
