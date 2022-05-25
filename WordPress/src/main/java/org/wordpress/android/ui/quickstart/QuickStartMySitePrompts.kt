@@ -66,13 +66,6 @@ enum class QuickStartMySitePrompts constructor(
             R.string.quick_start_dialog_check_stats_message_short,
             R.drawable.ic_stats_alt_white_24dp
     ),
-    EXPLORE_PLANS(
-            QuickStartStore.QUICK_START_EXPLORE_PLANS_LABEL,
-            -1,
-            -1,
-            R.string.quick_start_dialog_explore_plans_message_short,
-            R.drawable.ic_plans_white_24dp
-    ),
     REVIEW_PAGES(
             QuickStartStore.QUICK_START_REVIEW_PAGES_LABEL,
             -1,

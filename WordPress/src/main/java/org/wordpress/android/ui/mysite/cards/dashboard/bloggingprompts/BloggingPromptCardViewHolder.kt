@@ -22,7 +22,8 @@ import org.wordpress.android.util.image.ImageManager
 class BloggingPromptCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers,
-    private val imageManager: ImageManager
+    private val imageManager: ImageManager,
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
 ) : CardViewHolder<MySiteBloggingPrompCardBinding>(
         parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
 ) {
@@ -32,6 +33,7 @@ class BloggingPromptCardViewHolder(
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
         bloggingPromptCardMenu.setOnClickListener {
+            bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
             showCardMenu()
         }
 
@@ -42,6 +44,7 @@ class BloggingPromptCardViewHolder(
             card.onAnswerClick.invoke(card.promptId)
         }
         shareButton.setOnClickListener {
+            bloggingPromptsCardAnalyticsTracker.trackMySiteCardShareClicked()
             card.onShareClick.invoke(
                     uiHelpers.getTextOfUiString(
                             shareButton.context,
@@ -79,14 +82,19 @@ class BloggingPromptCardViewHolder(
             uiHelpers.updateVisibility(answeredUsersRecycler, false)
         }
     }
-}
 
-private fun MySiteBloggingPrompCardBinding.showCardMenu() {
-    val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
-    quickStartPopupMenu.setOnMenuItemClickListener {
-        return@setOnMenuItemClickListener true
+    private fun MySiteBloggingPrompCardBinding.showCardMenu() {
+        val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
+        quickStartPopupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
+                R.id.skip -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+            }
+            return@setOnMenuItemClickListener true
+        }
+        quickStartPopupMenu.inflate(R.menu.blogging_prompt_card_menu)
+        MenuCompat.setGroupDividerEnabled(quickStartPopupMenu.menu, true)
+        quickStartPopupMenu.show()
     }
-    quickStartPopupMenu.inflate(R.menu.blogging_prompt_card_menu)
-    MenuCompat.setGroupDividerEnabled(quickStartPopupMenu.menu, true)
-    quickStartPopupMenu.show()
 }
