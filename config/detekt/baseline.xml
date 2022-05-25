@@ -270,8 +270,6 @@
     <ID>MaxLineLength:StoryMediaSaveUploadBridge.kt$StoryMediaSaveUploadBridge.&lt;no name provided&gt;$// here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image</ID>
     <ID>MaxLineLength:WPWebViewUsageCategory.kt$WPWebViewUsageCategory$*</ID>
     <ID>MaxLineLength:XPostsCapabilityChecker.kt$XPostsCapabilityChecker$// suggestions, but because the response will almost always be empty, it's not an expensive call.</ID>
-    <ID>MaximumLineLength:org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel.kt:47</ID>
-    <ID>MaximumLineLength:org.wordpress.android.viewmodel.main.WPMainActivityViewModel.kt:220</ID>
     <ID>MemberNameEqualsClassName:ActivityLogTypeFilterViewModel.kt$ActivityLogTypeFilterViewModel.Action$lateinit var action: (() -&gt; Unit)</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:51</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostDatePickerDialogFragment.kt:53</ID>

@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-02 07:23:33+0000
+Translation-Revision-Date: 2022-05-23 17:57:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="pages_copy_link">Link kopiëren</string>
+    <string name="quick_start_completed_tour_title">Gefeliciteerd! Je weet hoe alles werkt&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Leer de app gebruiken</string>
+    <string name="quick_start_list_upload_media_subtitle">Upload media direct vanuit je apparaat of camera naar je site</string>
+    <string name="quick_start_list_upload_media_title">Foto’s of video’s uploaden</string>
+    <string name="quick_start_list_check_notification_subtitle">Ontvang realtime updates in je broekzak</string>
+    <string name="quick_start_dialog_upload_media_message">Selecteer %1$s Media %2$s om je huidige bibliotheek te bekijken.</string>
+    <string name="quick_start_dialog_check_notifications_message">Ontvang realtime updates in je broekzak.</string>
+    <string name="quick_start_dialog_check_notifications_title">Controleer je meldingen</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Selecteer het %1$s tabblad Meldingen %2$s om onderweg updates te ontvangen.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Selecteer het %1$s plusje %2$s om media te uploaden. Je kan vanuit elk apparaat media aan je berichten/pagina\'s toevoegen.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Gebruik &lt;b&gt; Ontdekken &lt;/b&gt; om sites en tags te zoeken.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Gebruik &lt;b&gt; Ontdekken &lt;/b&gt; om sites en tags te zoeken. Probeer eens %1$s Instellingen %2$s te selecteren om onderwerpen toe te voegen die je leuk vindt.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatuurafbeelding video</string>
+    <string name="stats_details_top_commentators">Top commentators</string>
+    <string name="stats_insights_total_stats_negative">%1$s minder dan de vorige week</string>
+    <string name="stats_insights_total_stats_positive">%1$s meer dan de vorige week</string>
+    <string name="stats_view_total_followers">Totaal aantal e-mailvolgers</string>
+    <string name="stats_view_total_comments">Totaal aantal reacties</string>
+    <string name="stats_view_total_likes">Totaal aantal vind-ik-leuks</string>
+    <string name="blogging_prompts_notification_dismiss">Sluiten</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Dagelijkse opdracht</string>
+    <string name="blogging_prompts_onboarding_got_it">Duidelijk</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Tik op &lt;b&gt;%1$s&lt;/b&gt; om je site te bekijken</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Selecteer %1$s Lezer %2$s om andere sites te zoeken.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Meer informatie over opdrachten</string>
+    <string name="photo_picker_video_thumbnail_unselected">Video gedeselecteerd</string>
+    <string name="photo_picker_video_thumbnail_selected">Video geselecteerd</string>
+    <string name="photo_picker_media_thumbnail_content_description">Miniatuurafbeelding media</string>
+    <string name="stats_insights_popular_title">Populairste tijd</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Het aantal bezoekers van deze week is %1$s minder dan de vorige week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Het aantal bezoekers van deze week is %1$s meer dan de vorige week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Het aantal weergaven van deze week is %1$s minder dan de vorige week.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Het aantal weergaven van deze week is %1$s meer dan de vorige week.</string>
+    <string name="scan_vault_press_active_on_site_button_text">Naar het dashboard gaan</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Je site wordt al beschermd door VaultPress. Hieronder staat een link naar je VaultPress-dashboard.</string>
     <string name="hpp_choose_and_create_site">Maak site</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Blokken toevoegen</string>
     <string name="initial_screen">Startscherm</string>
@@ -40,8 +77,10 @@ Language: nl
     <string name="dialog_title">Link invoegen</string>
     <string name="editor_title_beta">Beta</string>
     <string name="toast_content_info_editor_not_ready">Editor is nog steeds aan het laden</string>
+    <string name="toast_content_info_failed">Kon contentstructuur niet krijgen</string>
     <string name="dialog_content_info_body">Blokken: %1$d\nWoorden: %2$d\nKarakters: %3$d</string>
     <string name="dialog_content_info_title">Structuur van de inhoud</string>
+    <string name="media_bar_description_library">Kies een media uit de WordPress-mediabibliotheek</string>
     <string name="media_bar_description_gallery">Kies een mediabestand uit de galerij</string>
     <string name="media_bar_description_camera">Foto of video maken met camera</string>
     <string name="pixel_suffix">%dpx</string>
@@ -52,9 +91,16 @@ Language: nl
     <string name="blogging_prompts_onboarding_card_prompt">Maak de film van je leven.</string>
     <string name="blogging_prompts_onboarding_remind_me">Herinner me</string>
     <string name="blogging_prompts_onboarding_try_it_now">Probeer het nu</string>
+    <string name="blogging_prompts_onboarding_content_note_content">Je vindt meer informatie en kunt te allen tijde herinneringen instellen via Mijn site &gt; Instellingen &gt; Blog-herinneringen</string>
     <string name="blogging_prompts_onboarding_content_note_title">Let op:</string>
+    <string name="blogging_prompts_onboarding_content_bottom">We zullen je iedere dag een nieuwe opdracht laten zien op je dashboard, zodat jij je creativiteit de vrije loop kunt laten!</string>
+    <string name="blogging_prompts_onboarding_content_top">De beste manier om een betere schrijver te worden, is door elke dag wat te schrijven en dat met anderen te delen - hier kunnen deze opdrachten je mee helpen!</string>
     <string name="blogging_prompts_onboarding_header_title">Introductie van prompts</string>
     <string name="blogging_prompt_set_reminders">Herinneringen instellen</string>
+    <string name="blogging_reminders_prompt_subtitle">Bij deze herinnering zit een dagelijkse opdracht</string>
+    <string name="blogging_reminders_prompt_title">Dagelijkse opdracht bijvoegen</string>
+    <string name="post_publishing_set_up_blogging_prompts_message">Je trekt nieuwe lezers aan door regelmatig content te plaatsen. Vertel ons wanneer je wilt gaan schrijven en wij zullen je dan een herinnering sturen!</string>
+    <string name="set_your_blogging_prompts_title">Word een betere schrijver door elke dag te schrijven</string>
     <string name="site_creation_intent_writing_poetry">Schrijven &amp; poëzie</string>
     <string name="site_creation_intent_travel">Reizen</string>
     <string name="site_creation_intent_technology">Technologie</string>
@@ -78,6 +124,7 @@ Language: nl
     <string name="site_creation_intent_fashion">Mode</string>
     <string name="site_creation_intent_diy">DIY</string>
     <string name="site_creation_intent_education">Opleiding</string>
+    <string name="site_creation_intent_community_nonprofit">Community en non-profit</string>
     <string name="site_creation_intent_business">Zakelijk</string>
     <string name="site_creation_intent_books">Boeken</string>
     <string name="site_creation_intent_beauty">Schoonheid</string>
@@ -86,13 +133,17 @@ Language: nl
     <string name="new_site_creation_intents_input_hint">Bijv. mode, poëzie, politiek</string>
     <string name="new_site_creation_intents_title">Onderwerp van de site</string>
     <string name="quick_start_site_menu_tab_message_short">Tik op &lt;b&gt;%1$s&lt;/b&gt; om door te gaan.</string>
+    <string name="my_site_blogging_prompt_card_menu_remove">Uit dashboard verwijderen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Sla deze prompt over</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Bekijk meer prompts</string>
+    <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-opdracht delen</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Beantwoord</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Antwoord prompt</string>
     <string name="my_site_blogging_prompt_card_title">Prompts</string>
     <string name="my_site_all_tab_title">Alle</string>
     <string name="site_settings_blogging_reminders_and_prompts_title">Herinneringen en prompts</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Deze kleurencombinatie is mogelijk lastig te lezen. Gebruik een lichtere achtergrondkleur en/of een donkerdere tekstkleur.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Deze kleurencombinatie is mogelijk lastig te lezen. Gebruik een donkerdere achtergrondkleur en/of een lichtere tekstkleur.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Media invoegen mislukt.\nTik voor meer info.</string>
     <string name="new_site_creation_intents_header_subtitle">Kies een onderwerp van de lijst hieronder of typ zelf je eigen onderwerp.</string>
     <string name="new_site_creation_intents_header_title">Waar gaat je site over?</string>
@@ -419,6 +470,7 @@ Language: nl
     <string name="gutenberg_native_create_embed">Maak insluiting</string>
     <string name="gutenberg_native_column_d">Kolom %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Beschrijf kort de link om de scherm reader gebruiker te helpen</string>
+    <string name="gutenberg_native_add_blocks">Blokken toevoegen</string>
     <string name="login_no_jetpack_sites">Geen Jetpack sites gevonden</string>
     <string name="gutenberg_native_what_is_alt_text">Wat is alt tekst?</string>
     <string name="gutenberg_native_transform_s_to">Transformeer %s naar</string>
@@ -499,10 +551,12 @@ Language: nl
     <string name="disable">Uitschakelen</string>
     <string name="quick_start_card_menu_unpin">Losmaken</string>
     <string name="quick_start_list_review_pages_subtitle">Controleer je pagina\'s en maak wijzigingen, of voeg pagina\'s toe of verwijder ze.</string>
+    <string name="quick_start_list_view_site_title">Website bekijken</string>
     <string name="quick_start_list_follow_site_subtitle">Ontdek en volg sites die je inspireren.</string>
     <string name="quick_start_list_enable_sharing_title">Sociaal delen</string>
     <string name="quick_start_list_enable_sharing_subtitle">Deel automatisch nieuwe berichten op je social media.</string>
     <string name="quick_start_list_update_site_title_subtitle">Geef je site een naam die de persoonlijkheid en het onderwerp weerspiegelt.</string>
+    <string name="quick_start_list_check_stats_title">Controleer je site-statistieken</string>
     <string name="backup_download_status_failure_bullet2">We zullen nog steeds proberen om je downloadbare back-upbestand te maken.</string>
     <string name="backup_download_status_failure_bullet1">We konden de status niet vinden om aan te geven hoe lang je downloadbare back-up zal duren.</string>
     <string name="backup_download_status_failure_heading">We konden je downloadbare back-up status niet vinden</string>
@@ -695,6 +749,7 @@ Language: nl
     <string name="scan_in_minutes_ago">%s minuut(en) geleden</string>
     <string name="scan_in_hours_ago">%s uur(en) geleden</string>
     <string name="scan_this_site">deze site</string>
+    <string name="scan_idle_last_scan_description">De laatste scan van Jetpack vond plaats op %1$s. We hebben toen geen risico\'s gevonden. %2$s</string>
     <string name="scan_idle_threats_found_title">Je site loopt mogelijk een risico</string>
     <string name="scan_idle_no_threats_found_title">Maak je nergens zorgen over</string>
     <string name="scan_again">Scan opnieuw</string>
@@ -1402,6 +1457,7 @@ Language: nl
     <string name="share_desc">Delen</string>
     <string name="navigate_back_desc">Terugkeren</string>
     <string name="navigate_forward_desc">Doorgaan</string>
+    <string name="calendar_scheduled_post_description">\'%1$s\' ingepland voor publicatie op \'%2$s\' in uw WordPress-app \n %3$s</string>
     <string name="calendar_scheduled_post_title">Ingepland WordPress bericht: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" wordt over 10 minuten gepubliceerd</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" wordt over 1 uur gepubliceerd</string>
@@ -1598,11 +1654,8 @@ Language: nl
     <string name="quick_start_complete_tasks_header">Voltooi (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Kies een unieke site pictogram</string>
     <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tik op %1$s Abonnement %2$s om je huidige abonnement en andere beschikbare abonnementen in te zien</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
     <string name="quick_start_dialog_publish_post_message">Stel een bericht op en publiceer het.</string>
-    <string name="quick_start_dialog_explore_plans_title">Abonnementen verkennen</string>
-    <string name="quick_start_dialog_explore_plans_message">Bekijk meer informatie over de marketing- en SEO-tools van onze betaalde abonnementen.</string>
     <string name="quick_start_dialog_enable_sharing_title">Berichten delen inschakelen</string>
     <string name="quick_start_dialog_enable_sharing_message">Deel nieuwe berichten automatisch op je socialmedia-accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Controleer je site-statistieken</string>
@@ -1775,6 +1828,7 @@ Language: nl
     <string name="quick_start_list_create_site_title">Je site maken</string>
     <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site.</string>
     <string name="quick_start_dialog_view_site_title">Je site bekijken</string>
+    <string name="quick_start_dialog_view_site_message">Bekijk een voorbeeld van je site om te zien wat je bezoekers zien.</string>
     <string name="quick_start_dialog_share_site_title">Je site delen</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tik op %1$s Delen %2$s om door te gaan</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tik op %1$s Verbindingen %2$s om je socialmedia-accounts toe te voegen</string>
@@ -1782,6 +1836,7 @@ Language: nl
     <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
     <string name="quick_start_dialog_publish_post_message_short">Tik op %1$s Bericht aanmaken %2$s om een nieuw bericht aan te maken</string>
     <string name="quick_start_dialog_need_help_button_negative">Nee, dank je</string>
+    <string name="quick_start_dialog_follow_sites_title">Maak verbinding met andere sites</string>
     <string name="quick_start_button_positive">Starten</string>
     <string name="quick_start_button_negative_short">Annuleren</string>
     <string name="quick_start_button_negative">Niet nu</string>

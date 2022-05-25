@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.stats.insights.LatestPostInsightsStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
@@ -46,6 +47,7 @@ import java.util.Calendar
 class TotalLikesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: VisitsAndViewsStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
+    @Mock lateinit var latestPostStore: LatestPostInsightsStore
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var totalStatsMapper: TotalStatsMapper
@@ -69,7 +71,9 @@ class TotalLikesUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
                 store,
+                latestPostStore,
                 statsSiteProvider,
+                resourceProvider,
                 statsDateFormatter,
                 totalStatsMapper,
                 analyticsTrackerWrapper,

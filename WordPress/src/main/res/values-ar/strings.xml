@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-12 10:44:16+0000
+Translation-Revision-Date: 2022-05-19 15:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="quick_start_completed_tour_title">تهانينا! أنت تعلم كيفية التعامل مع هذا الأمر&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">التعرُّف على التطبيق</string>
+    <string name="quick_start_list_upload_media_subtitle">إحضار الوسائط مباشرةً من جهازك أو الكاميرا الخاصة بك إلى موقعك</string>
+    <string name="quick_start_list_upload_media_title">رفع الصور أو مقاطع الفيديو</string>
+    <string name="quick_start_list_check_notification_subtitle">الحصول على تحديثات في الوقت الفعلي من جيبك</string>
+    <string name="quick_start_dialog_upload_media_message">حدِّد ⁦%1$s⁩الوسائط⁦%2$s⁩ للاطلاع على مكتبتك الحالية.</string>
+    <string name="quick_start_dialog_check_notifications_message">احصل على تحديثات في الوقت الفعلي من جيبك.</string>
+    <string name="quick_start_dialog_check_notifications_message_short">حدِّد علامة تبويب ⁦%1$s⁩التنبيهات⁦%2$s⁩ للحصول على تحديثات في أثناء التنقل.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">حدِّد ⁦%1$s⁩علامة الجمع⁦%2$s⁩ لرفع الوسائط. يمكنك إضافتها إلى تدويناتك/ صفحاتك من أي جهاز.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">استخدم &lt;b&gt;الاكتشاف&lt;/b&gt; للعثور على المواقع والوسوم.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">استخدم &lt;b&gt;الاكتشاف&lt;/b&gt; للعثور على المواقع والوسوم. جرَّب تحديد ⁦%1$s⁩الإعدادات⁦%2$s⁩ لإضافة موضوعات تنال إعجابك.</string>
+    <string name="photo_picker_video_thumbnail_content_description">صورة مصغَّرة للفيديو</string>
+    <string name="stats_details_top_commentators">أفضل المعلقين</string>
+    <string name="stats_insights_total_stats_negative">⁦%1$s⁩ أقل من الأسبوع الماضي</string>
+    <string name="stats_insights_total_stats_positive">⁦%1$s⁩ أعلى من الأسبوع الماضي</string>
+    <string name="stats_published_years_ago">تم النشر منذ ⁦%1$d⁩ من السنوات</string>
+    <string name="stats_published_a_year_ago">تم النشر منذ سنة</string>
+    <string name="stats_published_months_ago">تم النشر منذ ⁦%1$d⁩ من الأشهر</string>
+    <string name="stats_published_a_month_ago">تم النشر منذ شهر</string>
+    <string name="stats_published_days_ago">تم النشر منذ ⁦%1$d⁩ من الأيام</string>
+    <string name="stats_published_a_day_ago">تم النشر منذ يوم</string>
+    <string name="stats_published_hours_ago">تم النشر منذ ⁦%1$d⁩ من الساعات</string>
+    <string name="stats_published_an_hour_ago">تم النشر منذ ساعة</string>
+    <string name="stats_published_minutes_ago">تم النشر منذ ⁦%1$d⁩ من الدقائق</string>
+    <string name="stats_published_a_minute_ago">تم النشر منذ دقيقة</string>
+    <string name="stats_published_seconds_ago">تم النشر منذ ثوانٍ</string>
+    <string name="stats_view_total_followers">إجمالي المتابعين</string>
     <string name="blogging_prompts_notification_dismiss">تجاهُل</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">إجابة</string>
     <string name="blogging_prompts_answer_prompt_notification_title">مطالبة يومية</string>
@@ -1635,7 +1662,6 @@ Language: ar
     <string name="quick_start_sites_type_customize">تخصيص موقعك</string>
     <string name="quick_start_sites">الخطوات التالية</string>
     <string name="quick_start_complete_tasks_header">مكتمل (%d)</string>
-    <string name="quick_start_dialog_explore_plans_message_short">أنقر على %1$s الخطة %2$s لمشاهدة خطتك الحالية والخطط الأخرى المتاحة</string>
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
     <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
@@ -1643,8 +1669,6 @@ Language: ar
     <string name="quick_start_dialog_publish_post_message">اكتب مسودّة مقالة ثم أنشرها.</string>
     <string name="quick_start_dialog_check_stats_message_short">حدِّد ⁦%1$s⁩ الإحصاءات ⁦%2$s⁩ لمعرفة مستوى أداء موقعك.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
-    <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
-    <string name="quick_start_dialog_explore_plans_title">استكشاف الخطط</string>
     <string name="quick_start_dialog_enable_sharing_message">شارك المقالات الجديدة تلقائيًّا على حساباتك على وسائل التواصل الاجتماعي.</string>
     <string name="quick_start_dialog_remove_next_steps_title">إزالة الخطوات التالية</string>
     <string name="quick_start_remove_next_steps_menu_title">إزالة هذا</string>
@@ -1816,6 +1840,7 @@ Language: ar
     <string name="quick_start_focus_point_description">انقر هنا</string>
     <string name="quick_start_list_create_site_title">إنشاء موقعك</string>
     <string name="quick_start_list_create_site_subtitle">اجعل موقعك جاهزًا للعمل.</string>
+    <string name="quick_start_completed_tour_subtitle">أليس من الأفضل حذف أشياء من القائمة؟</string>
     <string name="quick_start_dialog_view_site_title">عرض موقعك</string>
     <string name="quick_start_dialog_share_site_title">مشاركة موقعك</string>
     <string name="quick_start_dialog_share_site_message">اتصل بحساباتك على وسائل التواصل الاجتماعي – سيشارك موقعك مقالات جديدة تلقائيًّا.</string>

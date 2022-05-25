@@ -441,7 +441,6 @@
     <dimen name="quick_start_focus_point_small_size">30dp</dimen>
     <dimen name="quick_start_focus_point_small_offset_negative">-15dp</dimen>
     <dimen name="quick_start_focus_point_elevation">100dp</dimen>
-    <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
     <dimen name="quick_start_task_card_width">168dp</dimen>

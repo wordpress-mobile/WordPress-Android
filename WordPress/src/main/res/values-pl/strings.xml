@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-13 10:11:41+0000
+Translation-Revision-Date: 2022-05-23 08:56:37+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: pl
@@ -1489,14 +1489,11 @@ Language: pl
     <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Stuknij %1$s Plan %2$s aby sprawdzić swój aktualny plan sibskrypcji i inne dostępne plany. </string>
     <string name="quick_start_sites">Następne kroki</string>
     <string name="quick_start_dialog_upload_icon_title">Wybierz unikatową ikonę witryny</string>
     <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
     <string name="quick_start_dialog_check_stats_message_short">Wybierz %1$s statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
-    <string name="quick_start_dialog_explore_plans_title">Eksploruj plany subskrypcji</string>
-    <string name="quick_start_dialog_explore_plans_message">Dowiedz się więcej o narzędziach SEO w naszych płatnych planach subskrypcji.</string>
     <string name="quick_start_dialog_enable_sharing_title">Uaktywnij udostępnianie wpisów</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatycznie udostępniaj nowe wpisy na swoich kontach mediów społecznościowych.</string>
     <string name="quick_start_dialog_check_stats_title">Sprawdź statystyki swojej witryny</string>
@@ -1826,7 +1823,7 @@ Language: pl
     <string name="content_description_people_looking_charts">Ludzie analizujący grafiki i wykresy</string>
     <string name="dialog_confirm_delete_permanently_post">Czy jesteś pewien, że chciał(a)byś bezpowrotnie usunąć ten wpis?</string>
     <string name="content_description_person_reading_device_notification">Osoba czytająca na urządzeniu z powiadomieniami</string>
-    <string name="comment_title">%1$s do %2$s</string>
+    <string name="comment_title">%1$s - %2$s</string>
     <string name="notification_channel_important_title">Ważne</string>
     <string name="notification_channel_general_title">Ogólne</string>
     <string name="photo_picker_use_photo">Użyj tego zdjęcia</string>
@@ -2556,7 +2553,7 @@ Language: pl
     <string name="site_settings_list_editor_summary_one">1 element</string>
     <string name="approve_auto_if_previously_approved">Komentarze znanych użytkowników</string>
     <string name="approve_auto">Wszyscy użytkownicy</string>
-    <string name="approve_manual">Nie zatwierdzaj komentarzy automatycznie</string>
+    <string name="approve_manual">Brak komentarzy</string>
     <string name="site_settings_paging_summary_other">%d komentarzy na stronie</string>
     <string name="site_settings_paging_summary_one">1 komentarz na stronie</string>
     <string name="site_settings_multiple_links_summary_other">Wymagane zatwierdzenie dla więcej niż %d odnośników</string>

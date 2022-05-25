@@ -1637,7 +1637,6 @@ Language: cs_CZ
     <string name="plans_loading_error_no_plans_title">Nelze načíst plány</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites">Další kroky</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Klepnutím na plán %1$s %2$s zobrazíte aktuální plán a další dostupné plány</string>
     <string name="quick_start_dialog_upload_icon_message">Návštěvníci uvidí vaši ikonu ve svém prohlížeči. Přidejte vlastní ikonu pro vyleštěný profesionální vzhled.</string>
     <string name="quick_start_dialog_upload_icon_title">Nahrát ikonu webu</string>
     <string name="quick_start_complete_tasks_header">Kompletní (%d)</string>
@@ -1647,8 +1646,6 @@ Language: cs_CZ
     <string name="quick_start_dialog_upload_site_icon_message_short">Klepnutím na ikonu %1$s vašeho webu %2$s nahrajte novou</string>
     <string name="quick_start_dialog_check_stats_message_short">Klepnutím na %1$s Statistiky %2$s zobrazíte výkon svého webu.</string>
     <string name="quick_start_dialog_enable_sharing_title">Povolit sdílení příspěvků</string>
-    <string name="quick_start_dialog_explore_plans_message">Zjistěte více o marketingových a SEO nástrojích v našich placených plánech.</string>
-    <string name="quick_start_dialog_explore_plans_title">Prozkoumejte plány</string>
     <string name="quick_start_dialog_enable_sharing_message">Automaticky sdílejte nové příspěvky se svými účty sociálních médií.</string>
     <string name="quick_start_complete_view_subtitle">Gratulujeme k dokončení vašeho seznamu. Dobře odvedená práce.</string>
     <string name="quick_start_remove_next_steps_menu_title">Odebrat toto</string>

@@ -657,7 +657,6 @@ Language: sr_RS
     <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
     <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
-    <string name="quick_start_dialog_explore_plans_title">Истражи планове</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
     <string name="quick_start_dialog_remove_next_steps_title">Уклони наредне кораке</string>
     <string name="quick_start_remove_next_steps_menu_title">Уклони ово</string>
