@@ -34,7 +34,7 @@ class BloggingPromptCardViewHolder(
 
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
-            showCardMenu()
+            showCardMenu(card)
         }
 
         answerButton.setOnClickListener {
@@ -83,12 +83,15 @@ class BloggingPromptCardViewHolder(
         }
     }
 
-    private fun MySiteBloggingPrompCardBinding.showCardMenu() {
+    private fun MySiteBloggingPrompCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
         val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
         quickStartPopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
-                R.id.skip -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                R.id.skip -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                    card.onSkipClick.invoke()
+                }
                 R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
             }
             return@setOnMenuItemClickListener true

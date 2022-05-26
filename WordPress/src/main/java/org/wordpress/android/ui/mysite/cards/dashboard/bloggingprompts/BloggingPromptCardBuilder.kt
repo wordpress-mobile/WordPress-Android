@@ -28,7 +28,8 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 isAnswered = false,
                 promptId = params.bloggingPrompt.id,
                 onShareClick = params.onShareClick,
-                onAnswerClick = params.onAnswerClick
+                onAnswerClick = params.onAnswerClick,
+                onSkipClick = params.onSkipClick
         )
     }
 }

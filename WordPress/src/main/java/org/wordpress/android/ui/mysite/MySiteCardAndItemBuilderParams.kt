@@ -94,6 +94,7 @@ sealed class MySiteCardAndItemBuilderParams {
     data class BloggingPromptCardBuilderParams(
         val bloggingPrompt: BloggingPromptModel?,
         val onShareClick: (message: String) -> Unit,
-        val onAnswerClick: (promptId: Int) -> Unit
+        val onAnswerClick: (promptId: Int) -> Unit,
+        val onSkipClick: () -> Unit
     ) : MySiteCardAndItemBuilderParams()
 }
