@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.greenrobot.eventbus.Subscribe
@@ -51,6 +52,7 @@ class StatsSiteProvider
         start(selectedSiteRepository.getSelectedSiteLocalId())
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun clear() {
         if (_siteChanged.value != null) {
             _siteChanged.value = null
