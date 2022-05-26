@@ -8,7 +8,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/quick_start_item_title"
-        style="@style/QuickStartTypeGrowTitle"
+        style="@style/NewQuickStartTypeTitle"
         android:layout_width="0dp"
         android:text="@string/quick_start_sites_type_get_to_know_app"
         app:layout_constraintEnd_toStartOf="@+id/quick_start_item_icon"
@@ -17,7 +17,7 @@
 
     <ImageView
         android:id="@+id/quick_start_item_icon"
-        style="@style/QuickStartGrowIcon"
+        style="@style/NewQuickStartIcon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:contentDescription="@null"
