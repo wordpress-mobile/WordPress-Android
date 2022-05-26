@@ -270,24 +270,6 @@ android {
         checkDependencies = true
         checkGeneratedSources = true
         lintConfig file("${project.rootDir}/config/lint.xml")
-
-        /*
-        There are several bugs reported for several lifecycle-livedata versions. Here is a couple:
-        * https://issuetracker.google.com/issues/169249668
-        * https://issuetracker.google.com/issues/189967522
-
-        There are several bug fix reports in ther lifecycle release notes. I can see 5 bug fixes
-        related to it if I search for `NullSafeMutableLiveData`:
-        * https://developer.android.com/jetpack/androidx/releases/lifecycle NullSafeMutableLiveData)
-
-        We are disabling this check for now as the lint task crashes due to the bugs mentioned above.
-        We should try to enable it again as we update our `lifecycle` version. We already have
-        several `NullSafeMutableLiveData` lint issues we need to address, so it's an important
-        check for us to keep enabled.
-
-        Disabling this from `lint.xml` file doesn't seem to work, that's why it's added here.
-        */
-        disable "NullSafeMutableLiveData"
     }
 
     packagingOptions {
