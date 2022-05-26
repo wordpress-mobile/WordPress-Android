@@ -78,7 +78,7 @@ class ReferrersUseCase(
         statsGranularity,
         SelectedGroup()
 ) {
-    private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
+    private val itemsToLoad = if (useCaseMode == BLOCK) BLOCK_ITEM_COUNT else VIEW_ALL_ITEM_COUNT
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
 
@@ -112,7 +112,7 @@ class ReferrersUseCase(
     override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        if (useCaseMode == BLOCK) {
+        if (useCaseMode != VIEW_ALL) {
             items.add(Title(R.string.stats_referrers))
         }
 
@@ -208,21 +208,23 @@ class ReferrersUseCase(
     }
 
     private fun buildPieChartItem(domainModel: ReferrersModel): PieChartItem {
-        val firstPie = Pie(domainModel.groups.first().name.orEmpty(), domainModel.groups.first().total ?: 0)
-        val secondPie = if (domainModel.groups.size > 1) {
-            Pie(domainModel.groups[1].name.orEmpty(), domainModel.groups[1].total ?: 0)
-        } else {
-            null
-        }
-        val othersPie = if (domainModel.groups.size > 2) {
-            Pie(
-                    resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
-                    domainModel.totalViews - firstPie.value - (secondPie?.value ?: 0)
-            )
-        } else {
-            null
-        }
-        val pies = listOfNotNull(firstPie, secondPie, othersPie)
+        val wordPressGroup = domainModel.groups.find { it.groupId == GROUP_ID_WORDPRESS }
+        val wordPressPie = Pie(
+                resourceProvider.getString(R.string.stats_referrers_pie_chart_wordpress),
+                wordPressGroup?.total ?: 0
+        )
+
+        val searchGroup = domainModel.groups.find { it.groupId == GROUP_ID_SEARCH }
+        val searchPie = Pie(
+                resourceProvider.getString(R.string.stats_referrers_pie_chart_search),
+                searchGroup?.total ?: 0
+        )
+
+        val othersPie = Pie(
+                resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
+                domainModel.totalViews - wordPressPie.value - searchPie.value
+        )
+        val pies = listOf(wordPressPie, searchPie, othersPie)
         val totalLabel = resourceProvider.getString(R.string.stats_referrers_pie_chart_total_label)
         val totalValue = pies.sumOf { it.value }
         return PieChartItem(
@@ -348,5 +350,7 @@ class ReferrersUseCase(
 
     companion object {
         private val COLOR_LIST = listOf(R.color.blue, R.color.blue_80, R.color.blue_5)
+        private const val GROUP_ID_WORDPRESS = "WordPress.com Reader"
+        private const val GROUP_ID_SEARCH = "Search Engines"
     }
 }
