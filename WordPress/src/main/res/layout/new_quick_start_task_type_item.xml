@@ -2,39 +2,39 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_root"
+    android:id="@+id/quick_start_item_root"
     style="@style/QuickStartTypeRow"
     android:padding="@dimen/my_site_card_row_padding">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/item_title"
+        android:id="@+id/quick_start_item_title"
         style="@style/QuickStartTypeGrowTitle"
         android:layout_width="0dp"
         android:text="@string/quick_start_sites_type_get_to_know_app"
-        app:layout_constraintEnd_toStartOf="@+id/item_icon"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_item_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/item_icon"
+        android:id="@+id/quick_start_item_icon"
         style="@style/QuickStartGrowIcon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_tour_illustration"
-        app:layout_constraintBottom_toBottomOf="@+id/item_progress"
+        app:layout_constraintBottom_toBottomOf="@+id/quick_start_item_progress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/item_title" />
+        app:layout_constraintTop_toTopOf="@+id/quick_start_item_title" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/item_subtitle"
+        android:id="@+id/quick_start_item_subtitle"
         style="@style/QuickStartTypeSubtitle"
         android:layout_width="0dp"
         android:layout_marginTop="4dp"
         app:layout_constraintEnd_toStartOf="@+id/task_completed_icon"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_title"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_item_title"
         tools:text="1 of 6 complete" />
 
     <ImageView
@@ -46,22 +46,22 @@
         tools:visibility="visible"
         android:src="@drawable/ic_baseline_check_24"
         app:tint="@color/green_40"
-        app:layout_constraintBottom_toBottomOf="@+id/item_subtitle"
-        app:layout_constraintEnd_toStartOf="@+id/item_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/quick_start_item_subtitle"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_item_icon"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintTop_toTopOf="@+id/item_subtitle" />
+        app:layout_constraintTop_toTopOf="@+id/quick_start_item_subtitle" />
 
     <ProgressBar
-        android:id="@+id/item_progress"
+        android:id="@+id/quick_start_item_progress"
         style="?android:progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="4dp"
         android:layout_marginTop="@dimen/margin_medium"
         android:indeterminate="false"
         android:progressDrawable="@drawable/quick_start_card_horizontal_progress_drawable"
-        app:layout_constraintEnd_toStartOf="@+id/item_icon"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_item_icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_item_subtitle"
         tools:progress="100"
         tools:progressBackgroundTint="@color/primary_0"
         tools:progressTint="@color/colorPrimary" />

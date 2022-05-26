@@ -11,8 +11,8 @@ import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteCardToolbarBinding
+import org.wordpress.android.databinding.NewQuickStartTaskTypeItemBinding
 import org.wordpress.android.databinding.QuickStartCardBinding
-import org.wordpress.android.databinding.QuickStartTaskTypeGrowItemBinding
 import org.wordpress.android.databinding.QuickStartTaskTypeItemBinding
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
@@ -75,25 +75,25 @@ class QuickStartCardViewHolder(
         itemRoot.setOnClickListener { item.onClick.click() }
     }
 
-    private fun QuickStartTaskTypeGrowItemBinding.update(
+    private fun NewQuickStartTaskTypeItemBinding.update(
         taskType: QuickStartTaskType,
         taskTypeItems: List<QuickStartTaskTypeItem>
     ) {
         val hasItemOfTaskType = taskTypeItems.any { it.quickStartTaskType == taskType }
-        itemRoot.setVisible(hasItemOfTaskType)
+        quickStartItemRoot.setVisible(hasItemOfTaskType)
         if (!hasItemOfTaskType) return
         val item = taskTypeItems.first { it.quickStartTaskType == taskType }
-        with(itemTitle) {
+        with(quickStartItemTitle) {
             text = uiHelpers.getTextOfUiString(itemView.context, item.title)
             isEnabled = item.titleEnabled
         }
-        itemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
-        itemProgress.update(item)
+        quickStartItemSubtitle.text = uiHelpers.getTextOfUiString(itemView.context, item.subtitle)
+        quickStartItemProgress.update(item)
         showCompletedIconIfNeeded(item.progress)
-        itemRoot.setOnClickListener { item.onClick.click() }
+        quickStartItemRoot.setOnClickListener { item.onClick.click() }
     }
 
-    private fun QuickStartTaskTypeGrowItemBinding.showCompletedIconIfNeeded(progress: Int) {
+    private fun NewQuickStartTaskTypeItemBinding.showCompletedIconIfNeeded(progress: Int) {
         taskCompletedIcon.setVisible(progress == PERCENT_HUNDRED)
     }
 
