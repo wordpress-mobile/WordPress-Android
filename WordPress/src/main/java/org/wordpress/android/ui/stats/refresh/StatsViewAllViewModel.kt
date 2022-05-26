@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -69,6 +70,7 @@ class StatsViewAllViewModel(
         dateSelector.updateDateSelector()
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onPullToRefresh() {
         _showSnackbarMessage.value = null
         refreshData()
@@ -94,6 +96,7 @@ class StatsViewAllViewModel(
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     override fun onCleared() {
         _showSnackbarMessage.value = null
         useCase.clear()
