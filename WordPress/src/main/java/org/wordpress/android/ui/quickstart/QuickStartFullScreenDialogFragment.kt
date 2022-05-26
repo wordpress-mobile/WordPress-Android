@@ -24,6 +24,7 @@ import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.Qu
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListSkippedTracker
 import org.wordpress.android.util.QuickStartUtils.getQuickStartListTappedTracker
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
@@ -42,6 +43,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var quickStartCardBuilder: QuickStartCardBuilder
+    @Inject lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     private var _binding: QuickStartDialogFragmentBinding? = null
     private val binding get() = _binding!!
@@ -82,7 +84,12 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
         val taskCards = tasks.mapToQuickStartTaskCard(tasksCompleted)
         val headerTitleResId = quickStartCardBuilder.getTitle(tasksType)
         val quickStartList = mutableListOf<QuickStartListCard>().apply {
-            add(QuickStartHeaderCard(UiStringRes(headerTitleResId)))
+            add(
+                    QuickStartHeaderCard(
+                            title = UiStringRes(headerTitleResId),
+                            shouldShowHeaderImage = !displayUtilsWrapper.isLandscape()
+                    )
+            )
             addAll(taskCards)
         }.toList()
         quickStartAdapter.submitList(quickStartList)
@@ -146,7 +153,11 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
     }
 
     sealed class QuickStartListCard {
-        data class QuickStartHeaderCard(val title: UiString) : QuickStartListCard()
+        data class QuickStartHeaderCard(
+            val title: UiString,
+            val shouldShowHeaderImage: Boolean
+        ) : QuickStartListCard()
+
         data class QuickStartTaskCard(
             val task: QuickStartTask,
             val isCompleted: Boolean,
