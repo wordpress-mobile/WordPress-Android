@@ -7,6 +7,7 @@ import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
@@ -26,11 +27,9 @@ class PromptReminderNotifier @Inject constructor(
     val accountStore: AccountStore,
     val reminderNotificationManager: ReminderNotificationManager,
     val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
-    val bloggingPromptsStore: BloggingPromptsStore
+    val bloggingPromptsStore: BloggingPromptsStore,
+    private val bloggingRemindersStore: BloggingRemindersStore
 ) {
-    // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
-    var hasOptedInBloggingPromptsReminders = true
-
     suspend fun notify(siteId: Int) {
         val notificationId = REMINDER_NOTIFICATION_ID + siteId
         val context = contextProvider.getContext()
@@ -89,11 +88,17 @@ class PromptReminderNotifier @Inject constructor(
         //  analyticsTracker.trackNotificationReceived()
     }
 
-    fun shouldNotify(siteId: Int): Boolean {
+    suspend fun shouldNotify(siteId: Int): Boolean {
         val hasAccessToken = accountStore.hasAccessToken()
         val isBloggingPromptsEnabled = bloggingPromptsFeatureConfig.isEnabled()
         val siteModel = siteStore.getSiteByLocalId(siteId)
-        val hasOptedInBloggingPromptsReminders = siteModel != null && hasOptedInBloggingPromptsReminders
+
+        val isPromptOptedIn = bloggingRemindersStore.bloggingRemindersModel(siteId).firstOrNull()?.isPromptIncluded
+                ?: false
+        // TODO @klymyam check the value from the site model when we will start syncing the settings with remote
+        // val isPromptOptedIn = siteModel.isBloggingPromptsOptedIn
+
+        val hasOptedInBloggingPromptsReminders = siteModel != null && isPromptOptedIn
         return hasAccessToken && isBloggingPromptsEnabled && hasOptedInBloggingPromptsReminders
     }
 

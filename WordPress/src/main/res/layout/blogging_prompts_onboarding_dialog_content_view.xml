@@ -17,6 +17,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/content_top">
 
+        <View
+            android:id="@+id/card_cover_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <include
             android:id="@+id/prompt_card"
             layout="@layout/my_site_blogging_promp_card"
@@ -27,22 +36,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/card_cover_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content_top"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:maxEms="70"
         android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintBottom_toTopOf="@+id/prompt_card_container"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,10 +54,11 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content_bottom"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
         android:gravity="center"
+        android:maxEms="70"
         android:textAppearance="?attr/textAppearanceBody1"
         app:layout_constraintBottom_toTopOf="@+id/content_note"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +80,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/content_bottom"
-        tools:text="@string/blogging_prompts_onboarding_content_note" />
-
+        tools:text="@string/blogging_prompts_onboarding_content_note_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
