@@ -164,7 +164,10 @@ class ViewsAndVisitorsMapper
 
         if (thisWeekCount <= 0 || prevWeekCount <= 0) {
             return Text(
-                    text = resourceProvider.getString(string.stats_insights_views_and_visitors_visitors_empty_state),
+                    text = resourceProvider.getString(
+                            string.stats_insights_views_and_visitors_visitors_empty_state,
+                            EXTERNAL_LINK_ICON_TOKEN
+                    ),
                     links = listOf(
                             Clickable(
                                     icon = R.drawable.ic_external_white_24dp,
@@ -247,5 +250,9 @@ class ViewsAndVisitorsMapper
         val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
 
         return Pair(thisWeekCount, prevWeekCount)
+    }
+
+    companion object {
+        const val EXTERNAL_LINK_ICON_TOKEN = "ICON"
     }
 }

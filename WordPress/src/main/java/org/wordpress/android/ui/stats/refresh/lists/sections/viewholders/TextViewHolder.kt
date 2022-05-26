@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.Companion.EXTERNAL_LINK_ICON_TOKEN
 import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
@@ -38,7 +39,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             link.icon?.let {
                 spannableString.withClickableSpan(
                         text.context,
-                        loadedText.last().toString()
+                        loadedText.takeLast(EXTERNAL_LINK_ICON_TOKEN.length)
                 ) {
                     link.navigationAction.click()
                 }
@@ -50,7 +51,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 drawable?.let { icon ->
                     spannableString.setSpan(
                             ImageSpan(icon),
-                            loadedText.length - 1,
+                            loadedText.indexOf(EXTERNAL_LINK_ICON_TOKEN),
                             loadedText.length,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
