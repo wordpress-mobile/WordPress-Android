@@ -28,7 +28,7 @@ class MySiteSourceManager @Inject constructor(
     private val selectedSiteSource: SelectedSiteSource,
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
-    bloggingPromptCardSource: BloggingPromptCardSource,
+    private val bloggingPromptCardSource: BloggingPromptCardSource,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
@@ -101,6 +101,10 @@ class MySiteSourceManager @Inject constructor(
         selectedSiteSource.updateSiteSettingsIfNecessary()
         currentAvatarSource.refresh()
         if (selectedSiteRepository.hasSelectedSite()) quickStartCardSource.refresh()
+    }
+
+    fun refreshBloggingPrompt() {
+        bloggingPromptCardSource.refresh()
     }
 
     /* QUICK START */
