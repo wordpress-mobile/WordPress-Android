@@ -58,7 +58,7 @@ class DomainRegistrationDetailsViewModel @Inject constructor(
     private var siteCheckTries = 0
 
     private var supportedCountries: List<SupportedDomainCountry>? = null
-    private val _supportedStates = MutableLiveData<List<SupportedStateResponse>>()
+    private val _supportedStates = MutableLiveData<List<SupportedStateResponse>?>()
 
     private val _uiState = MutableLiveData<DomainRegistrationDetailsUiState>()
     val uiState: LiveData<DomainRegistrationDetailsUiState>
