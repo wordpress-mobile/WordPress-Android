@@ -2,6 +2,7 @@
 
 20.0
 -----
+* [*] Quick Start: The "Get to know the WordPress app" card has a fresh new look [#16629]
 
 
 19.9
