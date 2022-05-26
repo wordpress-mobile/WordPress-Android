@@ -87,7 +87,7 @@ class QuickStartFullScreenDialogFragment : Fragment(R.layout.quick_start_dialog_
             add(
                     QuickStartHeaderCard(
                             title = UiStringRes(headerTitleResId),
-                            shouldShowHeaderImage = !displayUtilsWrapper.isLandscape()
+                            shouldShowHeaderImage = !displayUtilsWrapper.isPhoneLandscape()
                     )
             )
             addAll(taskCards)
