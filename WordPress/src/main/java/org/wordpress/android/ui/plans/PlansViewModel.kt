@@ -40,9 +40,9 @@ class PlansViewModel @Inject constructor(
     val listStatus: LiveData<PlansListStatus>
         get() = _listStatus
 
-    private val _plans = MutableLiveData<List<PlanOffersModel>>()
-    private val _cachedPlans = MutableLiveData<List<PlanOffersModel>>()
-    val plans: LiveData<List<PlanOffersModel>>
+    private val _plans = MutableLiveData<List<PlanOffersModel>?>()
+    private val _cachedPlans = MutableLiveData<List<PlanOffersModel>?>()
+    val plans: LiveData<List<PlanOffersModel>?>
         get() = _plans
 
     private val _showDialog = SingleLiveEvent<PlanOffersModel>()
