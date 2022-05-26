@@ -33,6 +33,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -175,6 +176,8 @@ public class AppPrefs {
 
         // Used to indicate if the variant has been assigned for the My Site Tab experiment
         MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED,
+
+        SKIPPED_BLOGGING_PROMPT_DAY,
     }
 
     /**
@@ -1373,6 +1376,22 @@ public class AppPrefs {
 
     public static void setMySiteDefaultTabExperimentVariantAssigned() {
         setBoolean(DeletablePrefKey.MY_SITE_DEFAULT_TAB_EXPERIMENT_VARIANT_ASSIGNED, true);
+    }
+
+    public static Date getSkippedPromptDay() {
+        long promptSkippedMillis = getLong(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY);
+        if (promptSkippedMillis == 0) {
+            return null;
+        }
+        return new Date(promptSkippedMillis);
+    }
+
+    public static void setSkippedPromptDay(@Nullable Date date) {
+        if (date == null) {
+            remove(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY);
+            return;
+        }
+        setLong(DeletablePrefKey.SKIPPED_BLOGGING_PROMPT_DAY, date.getTime());
     }
 
     public static void setInitialScreenFromMySiteDefaultTabExperimentVariant(String variant) {
