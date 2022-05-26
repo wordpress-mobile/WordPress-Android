@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.BLOCK_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.VIEW_ALL_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
@@ -119,7 +120,7 @@ class ReferrersUseCase(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
-            if (statsRevampV2FeatureConfig.isEnabled()) {
+            if (statsRevampV2FeatureConfig.isEnabled() && useCaseMode == BLOCK_DETAIL) {
                 items.add(buildPieChartItem(domainModel))
             }
             items.add(header)
