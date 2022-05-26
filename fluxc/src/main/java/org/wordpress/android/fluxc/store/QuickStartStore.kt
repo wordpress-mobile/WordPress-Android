@@ -55,8 +55,7 @@ class QuickStartStore @Inject constructor(
         ENABLE_POST_SHARING(QUICK_START_ENABLE_POST_SHARING_LABEL, GROW, 7),
         PUBLISH_POST(QUICK_START_PUBLISH_POST_LABEL, GROW, 8),
         FOLLOW_SITE(QUICK_START_FOLLOW_SITE_LABEL, GROW, 9),
-        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GROW, 10),
-        EXPLORE_PLANS(QUICK_START_EXPLORE_PLANS_LABEL, GROW, 11);
+        CHECK_STATS(QUICK_START_CHECK_STATS_LABEL, GROW, 10);
 
         override fun toString(): String {
             return string
@@ -178,7 +177,6 @@ class QuickStartStore @Inject constructor(
         const val QUICK_START_PUBLISH_POST_LABEL = "publish_post"
         const val QUICK_START_FOLLOW_SITE_LABEL = "follow_site"
         const val QUICK_START_CHECK_STATS_LABEL = "check_stats"
-        const val QUICK_START_EXPLORE_PLANS_LABEL = "explore_plans"
         const val QUICK_START_CHECK_NOTIFIATIONS_LABEL = "check_notifications"
         const val QUICK_START_UPLOAD_MEDIA_LABEL = "upload_media"
     }
