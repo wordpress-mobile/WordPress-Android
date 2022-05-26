@@ -40,8 +40,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
-    private val _onIntentSelected = SingleLiveEvent<String>()
-    val onIntentSelected: LiveData<String> = _onIntentSelected
+    private val _onIntentSelected = SingleLiveEvent<String?>()
+    val onIntentSelected: LiveData<String?> = _onIntentSelected
 
     fun start() {
         if (isInitialized) return
