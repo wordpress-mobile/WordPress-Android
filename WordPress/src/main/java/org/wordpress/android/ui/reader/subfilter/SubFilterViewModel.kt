@@ -290,11 +290,7 @@ class SubFilterViewModel @Inject constructor(
 
     fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
         val currentValue = _filtersMatchCount.value
-
-        currentValue?.let {
-            it.put(category, count)
-        }
-
+        currentValue?.put(category, count)
         _filtersMatchCount.postValue(currentValue)
     }
 
