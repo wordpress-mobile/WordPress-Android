@@ -71,7 +71,7 @@ class TaskViewHolder(
 
     private fun QuickStartListItemBinding.updateQuickStartTaskCardView(isEnabled: Boolean) {
         val context = itemView.context
-        with (quickStartTaskCardView) {
+        with(quickStartTaskCardView) {
             if (isEnabled) {
                 setCardBackgroundColor(ContextCompat.getColor(context, R.color.quick_start_task_card_background))
                 strokeWidth = 0

@@ -16,4 +16,3 @@ class HeaderViewHolder(
         uiHelpers.setTextOrHide(binding.headerTitle, card.title)
     }
 }
-
