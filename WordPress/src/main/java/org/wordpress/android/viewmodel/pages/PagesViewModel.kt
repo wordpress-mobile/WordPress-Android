@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
@@ -361,6 +362,7 @@ class PagesViewModel
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onSpecificPageRequested(remotePageId: Long) {
         if (isInitialized) {
             val page = pageMap[remotePageId]
@@ -934,6 +936,7 @@ class PagesViewModel
         site.isWPCom && site.hasCapabilityEditOthersPages
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     private fun updateViewStateTriggerPagerChange(
         isAuthorFilterVisible: Boolean? = null,
         authorFilterSelection: AuthorFilterSelection? = null,

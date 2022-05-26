@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.subfilter
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -288,6 +289,7 @@ class SubFilterViewModel @Inject constructor(
         changeSubfilter(getCurrentSubfilterValue(), false, mTagFragmentStartedWith)
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
         val currentValue = _filtersMatchCount.value
         currentValue?.put(category, count)
