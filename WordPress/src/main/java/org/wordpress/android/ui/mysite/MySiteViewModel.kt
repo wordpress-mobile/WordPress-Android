@@ -1,4 +1,5 @@
 @file:Suppress("MaximumLineLength")
+
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
@@ -112,6 +113,9 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.File
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -436,11 +440,12 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
+                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled && !isPromptSkippedToday()) {
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
-                                onAnswerClick = this::onBloggingPromptAnswerClick
+                                onAnswerClick = this::onBloggingPromptAnswerClick,
+                                onSkipClick = this::onBloggingPromptSkipClicked
                         )
                 ),
                 QuickLinkRibbonBuilderParams(
@@ -1136,7 +1141,7 @@ class MySiteViewModel @Inject constructor(
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+                        Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
                 PostCardType.DRAFT -> _onNavigation.value =
                         Event(SiteNavigationAction.EditDraftPost(site, params.postId))
                 PostCardType.SCHEDULED -> _onNavigation.value =
@@ -1169,6 +1174,39 @@ class MySiteViewModel @Inject constructor(
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
+    }
+
+    private fun onBloggingPromptSkipClicked() {
+        appPrefsWrapper.setSkippedPromptDay(Date())
+        mySiteSourceManager.refreshBloggingPrompt()
+
+        val snackbar = SnackbarMessageHolder(
+                message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
+                buttonTitle = UiStringRes(R.string.undo),
+                buttonAction = {
+                    appPrefsWrapper.setSkippedPromptDay(null)
+                    mySiteSourceManager.refreshBloggingPrompt()
+                },
+                isImportant = true
+        )
+
+        _onSnackbarMessage.postValue(Event(snackbar))
+    }
+
+
+    fun isPromptSkippedToday(): Boolean {
+        val promptSkippedDate = appPrefsWrapper.getSkippedPromptDay()
+        return promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
+    }
+
+    fun isSameDay(date1: Date, date2: Date): Boolean {
+        val localDate1: LocalDate = date1.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+        val localDate2: LocalDate = date2.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+        return localDate1.isEqual(localDate2)
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
@@ -1324,7 +1362,7 @@ class MySiteViewModel @Inject constructor(
         fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
             tabUiState.copy(
                     showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
-                                quickStartTabStep.isStarted,
+                            quickStartTabStep.isStarted,
                     pendingTask = quickStartTabStep?.task
             )
         }
