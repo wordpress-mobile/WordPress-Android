@@ -53,6 +53,7 @@ import org.wordpress.android.widgets.WPSnackbar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.min
 
 @Suppress("LongParameterList")
 class ReferrersUseCase(
@@ -79,6 +80,7 @@ class ReferrersUseCase(
         SelectedGroup()
 ) {
     private val itemsToLoad = if (useCaseMode == BLOCK) BLOCK_ITEM_COUNT else VIEW_ALL_ITEM_COUNT
+    private val itemsToShow = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
 
@@ -124,7 +126,8 @@ class ReferrersUseCase(
                 items.add(buildPieChartItem(domainModel))
             }
             items.add(header)
-            domainModel.groups.forEachIndexed { index, group ->
+            val itemCount = min(itemsToShow, domainModel.groups.size)
+            domainModel.groups.subList(0, itemCount).forEachIndexed { index, group ->
                 val contentDescription =
                         contentDescriptionHelper.buildContentDescription(
                                 header,
