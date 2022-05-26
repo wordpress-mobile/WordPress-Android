@@ -69,9 +69,9 @@ class BaseListUseCase(
             distinct = false
     )
 
-    private val mutableSnackbarMessage = MutableLiveData<Int>()
+    private val mutableSnackbarMessage = MutableLiveData<Int?>()
     val snackbarMessage: LiveData<SnackbarMessageHolder> = mutableSnackbarMessage.map {
-        SnackbarMessageHolder(UiStringRes(it))
+        it?.let { SnackbarMessageHolder(UiStringRes(it)) }
     }
 
     private val mutableListSelected = SingleLiveEvent<Unit>()
