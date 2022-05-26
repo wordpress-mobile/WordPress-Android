@@ -52,6 +52,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostUtils.Origin
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -248,7 +249,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             val site = it.first
             val bloggingPromptId = it.second
             ActivityLauncher.addNewPostForResult(
-                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPromptId
+                    activity,
+                    site,
+                    false,
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                    bloggingPromptId,
+                    Origin.MY_SITE_CARD_ANSWER_PROMPT
             )
         }
     }

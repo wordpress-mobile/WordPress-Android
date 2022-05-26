@@ -364,21 +364,27 @@ public class ActivityLauncher {
 
     public static Intent openEditorWithBloggingPrompt(
             @NonNull final Context context,
-            final int promptId
+            final int promptId,
+            final PostUtils.Origin origin
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, origin);
         return intent;
     }
 
     public static Intent openEditorWithPromptAndDismissNotificationIntent(
-            @NonNull final Context context, final int notificationId, final BloggingPromptModel bloggingPrompt
+            @NonNull final Context context,
+            final int notificationId,
+            final BloggingPromptModel bloggingPrompt,
+            final PostUtils.Origin origin
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, origin);
         return intent;
     }
 
@@ -449,7 +455,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
@@ -896,9 +902,12 @@ public class ActivityLauncher {
             SiteModel site,
             boolean isPromo,
             PagePostCreationSourcesDetail source,
-            final int promptId
+            final int promptId,
+            final PostUtils.Origin origin
     ) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId);
+        addNewPostForResult(
+            new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId, origin
+        );
     }
 
     public static void addNewPostForResult(
@@ -907,7 +916,8 @@ public class ActivityLauncher {
             SiteModel site,
             boolean isPromo,
             PagePostCreationSourcesDetail source,
-            final int promptId
+            final int promptId,
+            final PostUtils.Origin origin
     ) {
         if (site == null) {
             return;
@@ -918,6 +928,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
+        intent.putExtra(EditPostActivity.EXTRA_ORIGIN, origin);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

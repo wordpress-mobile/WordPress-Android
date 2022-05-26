@@ -1524,6 +1524,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_icon_uploaded";
             case MY_SITE_ICON_UPLOAD_UNSUCCESSFUL:
                 return "my_site_icon_upload_unsuccessful";
+            case MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED:
+                return "my_site_create_sheet_answer_prompt_tapped";
             case THEMES_ACCESSED_THEMES_BROWSER:
                 return "themes_theme_browser_accessed";
             case THEMES_ACCESSED_SEARCH:

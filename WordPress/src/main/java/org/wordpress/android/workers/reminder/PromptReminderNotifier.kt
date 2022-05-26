@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
+import org.wordpress.android.ui.posts.PostUtils.Origin
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -45,7 +46,8 @@ class PromptReminderNotifier @Inject constructor(
                 ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(
                         context,
                         notificationId,
-                        prompt
+                        prompt,
+                        Origin.BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT
                 ),
                 PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

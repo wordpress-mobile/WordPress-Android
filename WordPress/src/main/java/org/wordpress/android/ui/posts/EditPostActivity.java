@@ -142,6 +142,7 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageRe
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
+import org.wordpress.android.ui.posts.PostUtils.Origin;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
@@ -288,6 +289,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
     public static final String EXTRA_PROMPT_ID = "extraPromptId";
+    public static final String EXTRA_ORIGIN = "origin";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -973,8 +975,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         reattachUploadingMediaForAztec();
 
+        final Origin origin = (Origin) getIntent().getSerializableExtra(EXTRA_ORIGIN);
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
-        PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
+        PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite, origin);
         mIsConfigChange = false;
     }
 

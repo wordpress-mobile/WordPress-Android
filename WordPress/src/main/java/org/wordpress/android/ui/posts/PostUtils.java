@@ -191,7 +191,7 @@ public class PostUtils {
         }
     }
 
-    public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site) {
+    public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site, @Nullable final Origin origin) {
         Map<String, Object> properties = new HashMap<>();
         PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
@@ -201,6 +201,9 @@ public class PostUtils {
                 site.getId(), post.getId()) ? "1" : "0");
         properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                 PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+        if (origin != null) {
+            properties.put(AnalyticsUtils.ORIGIN_KEY, origin.trackingValue);
+        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,
                 properties);
     }
@@ -586,5 +589,22 @@ public class PostUtils {
 
     public static boolean contentContainsWPStoryGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(WP_STORIES_GUTENBERG_BLOCK_START));
+    }
+
+    public enum Origin {
+        BLOGGING_PROMPTS_INTRODUCTION("bloggging_prompts_introduction"),
+        BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT("blogging_reminders_notification_answer_prompt"),
+        MY_SITE_CARD_ANSWER_PROMPT("my_site_card_answer_prompt"),
+        ADD_NEW_SHEET_ANSWER_PROMPT("add_new_sheet_answer_prompt");
+
+        private final String trackingValue;
+
+        private Origin(@NonNull final String trackingValue) {
+            this.trackingValue = trackingValue;
+        }
+
+        public String getTrackingValue() {
+            return trackingValue;
+        }
     }
 }

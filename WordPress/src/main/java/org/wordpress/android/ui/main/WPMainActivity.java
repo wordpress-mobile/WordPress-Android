@@ -104,6 +104,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostUtils.Origin;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -198,6 +199,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
     public static final String ARG_EDITOR_PROMPT_ID = "editor_prompt_id";
     public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
+    public static final String ARG_EDITOR_ORIGIN = "editor_origin";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -632,7 +634,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mViewModel.getCreatePostWithBloggingPrompt().observe(this, promptId -> {
-            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId);
+            handleNewPostAction(
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId, Origin.ADD_NEW_SHEET_ANSWER_PROMPT
+            );
         });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
@@ -684,7 +688,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         initSelectedSite();
                     }
                     final int promptId = intent.getIntExtra(ARG_EDITOR_PROMPT_ID, -1);
-                    onNewPostButtonClicked(promptId);
+                    final Origin origin = (Origin) intent.getSerializableExtra(ARG_EDITOR_ORIGIN);
+                    onNewPostButtonClicked(promptId, origin);
                     break;
                 case ARG_STATS:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -988,8 +993,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     // user tapped the new post button in the bottom navbar
     @Override
-    public void onNewPostButtonClicked(final int promptId) {
-        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR, promptId);
+    public void onNewPostButtonClicked(final int promptId, @NonNull final Origin origin) {
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR, promptId, origin);
     }
 
     private void handleNewPageAction(String title, String content, String template,
@@ -1007,14 +1012,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void handleNewPostAction(PagePostCreationSourcesDetail source, final int promptId) {
+    private void handleNewPostAction(PagePostCreationSourcesDetail source, final int promptId, final Origin origin) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
             return;
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId, origin);
     }
 
     private void handleNewStoryAction() {
