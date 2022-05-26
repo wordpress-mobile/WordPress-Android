@@ -723,14 +723,6 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
-    <style name="QuickStartDivider">
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:background">?android:attr/listDivider</item>
-        <item name="android:layout_height">@dimen/divider_size</item>
-        <item name="android:layout_width">match_parent</item>
-    </style>
-
     <style name="QuickStartTypeRow">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
