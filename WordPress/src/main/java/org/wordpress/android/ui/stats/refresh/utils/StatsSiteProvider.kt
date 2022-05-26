@@ -26,8 +26,8 @@ class StatsSiteProvider
     var siteModel = SiteModel()
         private set
 
-    private val mutableSiteChanged = MutableLiveData<Event<SiteUpdateResult>>()
-    val siteChanged: LiveData<Event<SiteUpdateResult>> = mutableSiteChanged
+    private val _siteChanged = MutableLiveData<Event<SiteUpdateResult>>()
+    val siteChanged: LiveData<Event<SiteUpdateResult>> = _siteChanged
     private val maxAttempts = 3
     private var counter = 0
 
@@ -52,8 +52,8 @@ class StatsSiteProvider
     }
 
     fun clear() {
-        if (mutableSiteChanged.value != null) {
-            mutableSiteChanged.value = null
+        if (_siteChanged.value != null) {
+            _siteChanged.value = null
         }
     }
 
@@ -68,14 +68,14 @@ class StatsSiteProvider
             if (site.siteId != 0L) {
                 counter = 0
                 siteModel = site
-                mutableSiteChanged.value = Event(SiteConnected(site.siteId))
+                _siteChanged.value = Event(SiteConnected(site.siteId))
             } else {
                 if (counter < maxAttempts) {
                     counter++
                     dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
                 } else {
                     counter = 0
-                    mutableSiteChanged.value = Event(NotConnectedJetpackSite)
+                    _siteChanged.value = Event(NotConnectedJetpackSite)
                 }
             }
         }
