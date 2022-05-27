@@ -171,7 +171,8 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
                                 siteId,
                                 setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
                                 hour,
-                                minute
+                                minute,
+                                false
                         )
                 )
         ).thenReturn(dayLabel)
@@ -423,7 +424,7 @@ class BloggingRemindersViewModelTest : BaseUnitTest() {
     private fun initEmptyStore(): BloggingRemindersUiModel {
         val emptyModel = BloggingRemindersModel(siteId)
         whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(flowOf(emptyModel))
-        return BloggingRemindersUiModel(siteId, hour = hour, minute = minute)
+        return BloggingRemindersUiModel(siteId, hour = hour, minute = minute, isPromptIncluded = false)
     }
 
     private fun assertPrologue() {

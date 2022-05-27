@@ -1670,12 +1670,9 @@ Language: it
     <string name="quick_start_complete_tasks_header">Completato (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Scegli un\'icona del sito univoca</string>
     <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tocca %1$s Piano %2$s per visualizzare il tuo piano attuale e altri piani disponibili</string>
     <string name="quick_start_dialog_check_stats_message_short">Seleziona %1$s Statistiche %2$s per vedere come sta andando il tuo sito.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
     <string name="quick_start_dialog_publish_post_message">Elabora una bozza e pubblica un articolo.</string>
-    <string name="quick_start_dialog_explore_plans_title">Scopri i piani</string>
-    <string name="quick_start_dialog_explore_plans_message">Scopri gli strumenti SEO e di marketing nei nostri piani a pagamento.</string>
     <string name="quick_start_dialog_enable_sharing_title">Abilita la condivisione dell\'articolo</string>
     <string name="quick_start_dialog_enable_sharing_message">Condividi automaticamente nuovi articoli sui tuoi social media.</string>
     <string name="quick_start_dialog_check_stats_title">Controlla le statistiche del tuo sito</string>

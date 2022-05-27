@@ -82,6 +82,7 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
+import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -670,4 +671,6 @@ public interface AppComponent {
     void inject(CommentSnippetAdapter object);
 
     void inject(BloggingPromptsOnboardingDialogFragment object);
+
+    void inject(DismissNotificationReceiver object);
 }
