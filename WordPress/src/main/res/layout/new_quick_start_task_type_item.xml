@@ -23,7 +23,7 @@
         android:contentDescription="@null"
         android:src="@drawable/img_quick_start_tour_illustration"
         app:layout_constraintBottom_toBottomOf="@+id/quick_start_item_progress"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_item_more"
         app:layout_constraintTop_toTopOf="@+id/quick_start_item_title" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -65,5 +65,22 @@
         tools:progress="100"
         tools:progressBackgroundTint="@color/primary_0"
         tools:progressTint="@color/colorPrimary" />
+
+    <ImageView
+        android:id="@+id/quick_start_item_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/content_description_more"
+        android:focusable="true"
+        android:src="@drawable/ic_more_vert_white_24dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
