@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 11:54:08+0000
+Translation-Revision-Date: 2022-05-25 01:12:49+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
@@ -37,19 +37,26 @@ Language: zh_CN
     <string name="stats_view_total_followers">粉丝总数</string>
     <string name="stats_view_total_comments">评论总数</string>
     <string name="stats_view_total_likes">总赞数</string>
+    <string name="blogging_prompts_notification_dismiss">忽略</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
     <string name="blogging_prompts_onboarding_got_it">知道了</string>
     <string name="quick_start_dialog_view_your_site_message_short">点击“&lt;b&gt;%1$s&lt;/b&gt;”查看您的站点</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">选择%1$s阅读器%2$s，查找其他站点。</string>
     <string name="blogging_reminders_prompt_help_button_desc">了解更多提示</string>
     <string name="photo_picker_video_thumbnail_unselected">未选择视频</string>
     <string name="photo_picker_video_thumbnail_selected">已选择视频</string>
+    <string name="photo_picker_media_thumbnail_content_description">媒体缩略图</string>
     <string name="stats_insights_popular_title">🔥 人气最高的时间</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_views_and_visitors_visitors_negative">您本周的访客数量比上周低 %1$s。</string>
     <string name="stats_insights_views_and_visitors_visitors_positive">您本周的访客数量比上周高 %1$s。</string>
     <string name="stats_insights_views_and_visitors_views_negative">您本周的预览数量比上周低 %1$s。</string>
     <string name="stats_insights_views_and_visitors_views_positive">您本周的预览数量比上周高 %1$s。</string>
     <string name="stats_timeframe_previous_week">上周</string>
+    <string name="stats_timeframe_this_week">本周</string>
+    <string name="scan_vault_press_active_on_site_button_text">访问仪表盘</string>
     <string name="scan_vault_press_active_on_site_subtitle">您的站点已受 VaultPress 保护。 您可以在下面找到指向您的 VaultPress 仪表盘的链接。</string>
+    <string name="locale_picker_current_language">当前语言：</string>
     <string name="hpp_choose_and_create_site">创建站点</string>
     <string name="gutenberg_native_add_blocks_11d0841f">添加区块</string>
     <string name="initial_screen">初始屏幕</string>
@@ -478,6 +485,7 @@ Language: zh_CN
     <string name="gutenberg_native_create_embed">创建嵌入</string>
     <string name="gutenberg_native_column_d">列 %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">简短描述此链接以帮助使用读屏软件的用户。</string>
+    <string name="gutenberg_native_add_blocks">添加区块</string>
     <string name="login_no_jetpack_sites">未找到Jetpack站点</string>
     <string name="gutenberg_native_what_is_alt_text">什么是alt文字？</string>
     <string name="gutenberg_native_transform_s_to">将%s转换为</string>
@@ -1663,12 +1671,9 @@ Language: zh_CN
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">选择您的唯一站点图标</string>
     <string name="quick_start_dialog_upload_icon_message">访客将在其浏览器中看到您的图标。添加自定义图标，打造精美的专业外观。</string>
-    <string name="quick_start_dialog_explore_plans_message_short">点击%1$s套餐%2$s查看您的当前套餐和其他可选套餐</string>
     <string name="quick_start_dialog_check_stats_message_short">选择%1$s统计信息%2$s，查看您站点的表现。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">点击%1$s您的站点图标%2$s上传一个新图标</string>
     <string name="quick_start_dialog_publish_post_message">起草并发布文章。</string>
-    <string name="quick_start_dialog_explore_plans_title">了解各个套餐</string>
-    <string name="quick_start_dialog_explore_plans_message">了解付费套餐中的营销和搜索引擎优化工具。</string>
     <string name="quick_start_dialog_enable_sharing_title">启用文章共享</string>
     <string name="quick_start_dialog_enable_sharing_message">自动将新文章共享到社交媒体账户。</string>
     <string name="quick_start_dialog_check_stats_title">查看站点统计信息</string>

@@ -76,6 +76,8 @@ class BloggingPromptCardSource @Inject constructor(
         if (selectedSite != null && selectedSite.id == siteLocalId) {
             if (bloggingPromptsFeatureConfig.isEnabled()) {
                 fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite)
+            } else {
+                onRefreshedMainThread()
             }
         } else {
             postErrorState()

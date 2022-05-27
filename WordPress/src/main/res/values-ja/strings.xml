@@ -1669,14 +1669,11 @@ Language: ja_JP
     <string name="quick_start_complete_tasks_header">完了 (%d)</string>
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
-    <string name="quick_start_dialog_explore_plans_message_short">現在のプランと、その他の利用可能なプランを表示するには %1$s プラン %2$s をタップします</string>
     <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
     <string name="quick_start_dialog_publish_post_message">投稿の下書きを作成して公開してください。</string>
     <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには%1$s「統計情報」%2$sを選択します。</string>
     <string name="quick_start_dialog_enable_sharing_title">投稿のシェアを有効化</string>
-    <string name="quick_start_dialog_explore_plans_title">プランの内容を見る</string>
-    <string name="quick_start_dialog_explore_plans_message">有料プランのマーケティングと SEO ツールについての詳細を読む。</string>
     <string name="quick_start_dialog_enable_sharing_message">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
     <string name="quick_start_remove_next_steps_menu_title">これを削除</string>
     <string name="quick_start_dialog_check_stats_title">サイト統計情報を確認</string>

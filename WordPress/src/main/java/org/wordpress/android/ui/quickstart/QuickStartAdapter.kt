@@ -4,41 +4,54 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartTaskCard
+import org.apache.commons.lang3.NotImplementedException
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard.QuickStartHeaderCard
+import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.QuickStartListCard.QuickStartTaskCard
+import org.wordpress.android.ui.quickstart.viewholders.HeaderViewHolder
 import org.wordpress.android.ui.quickstart.viewholders.TaskViewHolder
+import org.wordpress.android.ui.utils.UiHelpers
 
-class QuickStartAdapter : ListAdapter<QuickStartTaskCard, ViewHolder>(QuickStartAdapterDiffCallback) {
+class QuickStartAdapter(
+    private val uiHelpers: UiHelpers
+) : ListAdapter<QuickStartListCard, ViewHolder>(QuickStartAdapterDiffCallback) {
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) = when (viewType) {
+        VIEW_TYPE_HEADER -> HeaderViewHolder(parent = viewGroup, uiHelpers = uiHelpers)
         VIEW_TYPE_TASK -> TaskViewHolder(parent = viewGroup)
         else -> throw IllegalArgumentException("Unexpected view type")
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         when (viewHolder) {
-            is TaskViewHolder -> viewHolder.bind(
-                    taskCard = getItem(position),
-                    shouldHideDivider = position == itemCount - 1
-            )
+            is HeaderViewHolder -> viewHolder.bind(getItem(position) as QuickStartHeaderCard)
+            is TaskViewHolder -> viewHolder.bind(getItem(position) as QuickStartTaskCard)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return VIEW_TYPE_TASK
+        return if (position == 0) VIEW_TYPE_HEADER else VIEW_TYPE_TASK
     }
 
     override fun getItemCount(): Int {
         return currentList.size
     }
 
-    object QuickStartAdapterDiffCallback : DiffUtil.ItemCallback<QuickStartTaskCard>() {
-        override fun areItemsTheSame(oldItem: QuickStartTaskCard, updatedItem: QuickStartTaskCard) =
-                oldItem.task.string == updatedItem.task.string
+    object QuickStartAdapterDiffCallback : DiffUtil.ItemCallback<QuickStartListCard>() {
+        override fun areItemsTheSame(oldItem: QuickStartListCard, updatedItem: QuickStartListCard): Boolean {
+            return when {
+                oldItem is QuickStartHeaderCard && updatedItem is QuickStartHeaderCard -> true
+                (oldItem is QuickStartTaskCard && updatedItem is QuickStartTaskCard) &&
+                        (oldItem.task.string == updatedItem.task.string) -> true
+                else -> throw NotImplementedException("Diff not implemented yet")
+            }
+        }
 
-        override fun areContentsTheSame(oldItem: QuickStartTaskCard, newItem: QuickStartTaskCard) =
+        override fun areContentsTheSame(oldItem: QuickStartListCard, newItem: QuickStartListCard) =
                 oldItem == newItem
     }
 
     companion object {
-        private const val VIEW_TYPE_TASK = 0
+        private const val VIEW_TYPE_HEADER = 0
+        private const val VIEW_TYPE_TASK = 1
     }
 }
