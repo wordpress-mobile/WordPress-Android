@@ -19,8 +19,8 @@
 
     <ImageView
         android:id="@+id/quick_start_task_completed_icon"
-        android:layout_width="@dimen/margin_extra_large"
-        android:layout_height="@dimen/margin_extra_large"
+        android:layout_width="@dimen/new_quick_start_card_task_completed_icon_size"
+        android:layout_height="@dimen/new_quick_start_card_task_completed_icon_size"
         android:contentDescription="@null"
         android:src="@drawable/ic_baseline_check_24"
         android:visibility="gone"
