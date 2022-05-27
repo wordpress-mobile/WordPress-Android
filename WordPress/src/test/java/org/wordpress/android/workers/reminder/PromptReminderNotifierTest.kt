@@ -14,10 +14,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.workers.reminder.prompt.PromptReminderNotifier
 
 class PromptReminderNotifierTest {
     private val contextProvider: ContextProvider = mock()
@@ -27,6 +29,7 @@ class PromptReminderNotifierTest {
     private val accountStore: AccountStore = mock()
     private val reminderNotificationManager: ReminderNotificationManager = mock()
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig = mock()
+    private val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker = mock()
     private val bloggingRemindersStore: BloggingRemindersStore = mock()
     private val bloggingReminder: BloggingRemindersModel = mock()
 
@@ -38,7 +41,7 @@ class PromptReminderNotifierTest {
             reminderNotificationManager = reminderNotificationManager,
             bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig,
             bloggingPromptsStore = bloggingPromptsStore,
-            bloggingRemindersStore
+            bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker
     )
 
     @Before
@@ -70,7 +73,7 @@ class PromptReminderNotifierTest {
         val siteId = 123
         val siteModel: SiteModel = mock()
 
-        whenever(bloggingReminder.isPromptIncluded).thenReturn(false)
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
         assertFalse(classToTest.shouldNotify(123))
     }
@@ -81,7 +84,7 @@ class PromptReminderNotifierTest {
                 val siteId = 123
                 val siteModel: SiteModel = mock()
 
-                whenever(bloggingReminder.isPromptIncluded).thenReturn(true)
+                whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
                 whenever(accountStore.hasAccessToken()).thenReturn(true)
                 whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
                 whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)

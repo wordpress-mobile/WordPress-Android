@@ -11,6 +11,7 @@ import org.wordpress.android.workers.reminder.ReminderScheduler.Companion.DEFAUl
 import org.wordpress.android.workers.reminder.ReminderScheduler.Companion.REMINDER_HOUR
 import org.wordpress.android.workers.reminder.ReminderScheduler.Companion.REMINDER_MINUTE
 import org.wordpress.android.workers.reminder.ReminderScheduler.Companion.REMINDER_SITE_ID
+import org.wordpress.android.workers.reminder.prompt.PromptReminderNotifier
 
 class ReminderWorker(
     val context: Context,

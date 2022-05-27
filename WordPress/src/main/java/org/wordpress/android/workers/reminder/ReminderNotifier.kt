@@ -58,7 +58,7 @@ class ReminderNotifier @Inject constructor(
         reminderNotificationManager.notify(REMINDER_NOTIFICATION_ID + siteId, reminderNotification)
 
         analyticsTracker.setSite(siteId)
-        analyticsTracker.trackNotificationReceived()
+        analyticsTracker.trackNotificationReceived(false)
     }
 
     fun shouldNotify(siteId: Int) =
