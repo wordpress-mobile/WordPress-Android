@@ -86,7 +86,7 @@ class QuickStartCardViewHolder(
     private fun NewQuickStartTaskTypeItemBinding.update(
         taskType: QuickStartTaskType,
         taskTypeItems: List<QuickStartTaskTypeItem>,
-        onRemoveMenuItemClick: ListItemInteraction,
+        onRemoveMenuItemClick: ListItemInteraction
     ) {
         val hasItemOfTaskType = taskTypeItems.any { it.quickStartTaskType == taskType }
         quickStartItemRoot.setVisible(hasItemOfTaskType)
