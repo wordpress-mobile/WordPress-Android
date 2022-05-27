@@ -105,7 +105,7 @@ class StatsStore
             }
 
     fun hideActionCard(type: ActionType) =
-            coroutineEngine.run(AppLog.T.STATS, this, "hideInsightsReminderActionCard") {
+            coroutineEngine.run(AppLog.T.STATS, this, "hideActionCard($type)") {
                 when (type) {
                     GROW -> {
                         preferenceUtils.getFluxCPreferences()
@@ -129,7 +129,7 @@ class StatsStore
     }
 
     fun isActionCardShowing(type: ActionType) =
-            coroutineEngine.run(AppLog.T.STATS, this, "isInsightsReminderCardShowing") {
+            coroutineEngine.run(AppLog.T.STATS, this, "isActionCardShowing($type)") {
                 when (type) {
                     GROW -> {
                         preferenceUtils
