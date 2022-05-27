@@ -37,7 +37,7 @@ class PageParentSearchViewModel
         pageParentViewModel.searchPages.removeObserver(searchObserver)
     }
 
-    private val searchObserver = Observer<List<PageItem>> { pageItems ->
+    private val searchObserver = Observer<List<PageItem>?> { pageItems ->
         if (pageItems != null) {
             loadFoundPages(pageItems)
         } else {

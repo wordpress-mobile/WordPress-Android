@@ -56,8 +56,8 @@ class PageParentViewModel
     private val _saveParent = SingleLiveEvent<Unit>()
     val saveParent: LiveData<Unit> = _saveParent
 
-    private val _searchPages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val searchPages: LiveData<List<PageItem>> = _searchPages
+    private val _searchPages: MutableLiveData<List<PageItem>?> = MutableLiveData()
+    val searchPages: LiveData<List<PageItem>?> = _searchPages
 
     private var _lastSearchQuery = ""
     val lastSearchQuery: String
