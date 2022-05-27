@@ -52,7 +52,7 @@ class QuickStartSqlUtils
                 .asModel.firstOrNull()
     }
 
-    private fun getQuickStartStatus(siteId: Long): QuickStartStatusModel? {
+    fun getQuickStartStatus(siteId: Long): QuickStartStatusModel? {
         return WellSql.select(QuickStartStatusModel::class.java)
                 .where().beginGroup()
                 .equals(QuickStartStatusModelTable.SITE_ID, siteId)
