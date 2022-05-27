@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-19 12:54:07+0000
+Translation-Revision-Date: 2022-05-27 14:35:49+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
@@ -1679,6 +1679,7 @@ Language: id
     <string name="quick_start_dialog_enable_sharing_title">Aktifkan berbagi pos</string>
     <string name="quick_start_dialog_enable_sharing_message">Bagikan pos baru secara otomatis ke akun media sosial Anda.</string>
     <string name="quick_start_dialog_check_stats_title">Periksa statistik situs Anda</string>
+    <string name="quick_start_dialog_check_stats_message">Ketahui info terbaru mengenai performa situs Anda.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Menghapus Langkah Berikutnya akan menyembunyikan semua tur di situs ini. Tindakan ini tidak dapat diurungkan.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Hapus Langkah Berikutnya</string>
     <string name="quick_start_remove_next_steps_menu_title">Hapus langkah ini</string>

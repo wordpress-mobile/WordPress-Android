@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-19 15:54:07+0000
+Translation-Revision-Date: 2022-05-27 14:32:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
@@ -1847,6 +1847,7 @@ Language: he_IL
     <string name="set_parent">הגדרת הורה</string>
     <string name="quick_start_focus_point_description">יש להקיש כאן</string>
     <string name="quick_start_list_create_site_title">יצירת האתר שלך</string>
+    <string name="quick_start_completed_tour_subtitle">שמחים שהשלמת את המטרה שהצבת לעצמך!</string>
     <string name="quick_start_list_create_site_subtitle">הפעל את האתר שלך.</string>
     <string name="quick_start_dialog_view_site_title">הצגת האתר שלך</string>
     <string name="quick_start_dialog_share_site_title">שיתוף האתר שלך</string>
