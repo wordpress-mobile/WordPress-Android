@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.store.StatsStore.ActionType
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SetBloggingReminders
@@ -20,7 +20,7 @@ class ActionCardReminderUseCase @Inject constructor(
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val actionCardHandler: ActionCardHandler,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-) : StatelessUseCase<Boolean>(ActionType.REMINDER, mainDispatcher, backgroundDispatcher, listOf()) {
+) : StatelessUseCase<Boolean>(InsightType.ACTION_REMINDER, mainDispatcher, backgroundDispatcher, listOf()) {
     override suspend fun loadCachedData() = true
 
     override suspend fun fetchRemoteData(forced: Boolean): State<Boolean> = State.Data(true)
@@ -43,10 +43,11 @@ class ActionCardReminderUseCase @Inject constructor(
     private fun onSetReminders() {
 //        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
         navigateTo(SetBloggingReminders)
+        actionCardHandler.dismiss(InsightType.ACTION_REMINDER)
     }
 
     private fun onDismiss() {
 //         analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
-        actionCardHandler.dismiss(ActionType.REMINDER)
+        actionCardHandler.dismiss(InsightType.ACTION_REMINDER)
     }
 }

@@ -96,7 +96,7 @@ abstract class StatsListViewModel(
     val typesChanged = merge(
             popupMenuHandler?.typeMoved,
             newsCardHandler?.cardDismissed,
-            actionCardHandler?.cardDismissed
+            actionCardHandler?.actionCard
     )
 
     val scrollTo = newsCardHandler?.scrollTo

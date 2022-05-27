@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.ActionType
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.viewmodel.Event
@@ -18,17 +18,24 @@ import javax.inject.Singleton
 class ActionCardHandler
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val statsStore: StatsStore
+    private val statsStore: StatsStore,
+    private val statsSiteProvider: StatsSiteProvider
 ) {
     private val coroutineScope = CoroutineScope(mainDispatcher)
 
-    private val mutableCardDismissed = MutableLiveData<Event<StatsType>>()
-    val cardDismissed: LiveData<Event<StatsType>> = mutableCardDismissed
+    private val mutableActionCard = MutableLiveData<Event<StatsType>>()
+    val actionCard: LiveData<Event<StatsType>> = mutableActionCard
 
-    fun dismiss(type: ActionType) = coroutineScope.launch {
-        if (statsStore.isActionCardShowing(type)) {
-            statsStore.hideActionCard(type)
+    fun display(type: InsightType) = coroutineScope.launch {
+        // It is set to be shown only once per site
+        if (!statsStore.isActionTypeShown(statsSiteProvider.siteModel, type)) {
+            statsStore.addActionType(statsSiteProvider.siteModel, type)
         }
-        mutableCardDismissed.value = Event(type)
+        mutableActionCard.value = Event(type)
+    }
+
+    fun dismiss(type: InsightType) = coroutineScope.launch {
+        statsStore.removeType(statsSiteProvider.siteModel, type)
+        mutableActionCard.value = Event(type)
     }
 }

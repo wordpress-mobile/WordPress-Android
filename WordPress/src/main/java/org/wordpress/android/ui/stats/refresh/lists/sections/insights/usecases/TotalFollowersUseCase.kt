@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.store.StatsStore.ActionType.GROW
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.modules.BG_THREAD
@@ -55,7 +55,7 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     override fun buildUiModel(domainModel: Int): List<BlockListItem> {
-        addActionCard()
+        addActionCard(domainModel)
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         items.add(ValueWithChartItem(domainModel.toString()))
@@ -65,9 +65,8 @@ class TotalFollowersUseCase @Inject constructor(
         return items
     }
 
-    private fun addActionCard() {
-        val followers = summaryStore.getSummary(statsSiteProvider.siteModel)?.followers
-        if (followers != 0) actionCardHandler.dismiss(GROW)
+    private fun addActionCard(domainModel: Int) {
+        if (domainModel == 0) actionCardHandler.display(InsightType.ACTION_GROW)
     }
 
     private fun buildTitle() = TitleWithMore(

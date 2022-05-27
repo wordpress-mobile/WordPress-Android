@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.store.StatsStore.ActionType
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SchedulePost
@@ -20,7 +20,7 @@ class ActionCardScheduleUseCase @Inject constructor(
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val actionCardHandler: ActionCardHandler,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-) : StatelessUseCase<Boolean>(ActionType.SCHEDULE, mainDispatcher, backgroundDispatcher, listOf()) {
+) : StatelessUseCase<Boolean>(InsightType.ACTION_SCHEDULE, mainDispatcher, backgroundDispatcher, listOf()) {
     override suspend fun loadCachedData() = true
 
     override suspend fun fetchRemoteData(forced: Boolean): State<Boolean> = State.Data(true)
@@ -28,8 +28,6 @@ class ActionCardScheduleUseCase @Inject constructor(
     override fun buildLoadingItem(): List<BlockListItem> = listOf()
 
     override fun buildUiModel(domainModel: Boolean): List<BlockListItem> {
-        // TODO: Need to figure out if there's a way to know when drafts exist to be able to show schedule action card
-
         return listOf(
                 ListItemActionCard(
                         titleResource = string.stats_action_card_schedule_post_title,
@@ -45,10 +43,11 @@ class ActionCardScheduleUseCase @Inject constructor(
     private fun onSchedule() {
         // analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_CLICKED)
         navigateTo(SchedulePost)
+        actionCardHandler.dismiss(InsightType.ACTION_SCHEDULE)
     }
 
     private fun onDismiss() {
         // analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED)
-        actionCardHandler.dismiss(ActionType.SCHEDULE)
+        actionCardHandler.dismiss(InsightType.ACTION_SCHEDULE)
     }
 }
