@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -97,7 +98,9 @@ class MostPopularInsightsUseCase
             )
         }
 
-        addActionCards(domainModel)
+        if (statsRevampV2FeatureConfig.isEnabled()) {
+            addActionCards(domainModel)
+        }
         return items
     }
 
@@ -105,8 +108,10 @@ class MostPopularInsightsUseCase
         val popular = domainModel.highestDayOfWeek > 0 || domainModel.highestHour > 0
         if (popular) actionCardHandler.display(InsightType.ACTION_REMINDER)
 
-        val draft = postStore.getPostsWithLocalChanges(statsSiteProvider.siteModel).size > 0
-        if (draft) actionCardHandler.display(InsightType.ACTION_SCHEDULE)
+        val drafts = postStore.getPostsForSite(statsSiteProvider.siteModel).firstOrNull {
+            PostStatus.fromPost(it) == PostStatus.DRAFT
+        }
+        if (drafts != null) actionCardHandler.display(InsightType.ACTION_SCHEDULE)
     }
 
     private fun buildTitle() = Title(
