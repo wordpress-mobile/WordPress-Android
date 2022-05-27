@@ -104,7 +104,10 @@ class QuickStartRepository
     val isQuickStartForExistingUsersV2FeatureEnabled = quickStartForExistingUsersV2FeatureConfig.isEnabled()
     var quickStartTaskOriginTab = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
     val quickStartType: QuickStartType
-        get() = appPrefsWrapper.getLastSelectedQuickStartType()
+        get() = selectedSiteRepository.getSelectedSite()?.let {
+            val siteLocalId = it.id.toLong()
+            appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
+        } ?: NewSiteQuickStartType
     private var pendingTask: QuickStartTask? = null
 
     fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
@@ -136,8 +139,11 @@ class QuickStartRepository
 
     fun checkAndSetQuickStartType(isNewSite: Boolean) {
         if (!isQuickStartForExistingUsersV2FeatureEnabled) return
-        val quickStartType = if (isNewSite) NewSiteQuickStartType else ExistingSiteQuickStartType
-        appPrefsWrapper.setLastSelectedQuickStartType(quickStartType)
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            val siteLocalId = selectedSite.id.toLong()
+            val quickStartType = if (isNewSite) NewSiteQuickStartType else ExistingSiteQuickStartType
+            appPrefsWrapper.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
+        }
     }
 
     suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
