@@ -1036,6 +1036,7 @@ class PagesViewModel
         setValue(value)
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     private fun <T> MutableLiveData<T>.postOnUi(value: T) {
         val liveData = this
         launch {
