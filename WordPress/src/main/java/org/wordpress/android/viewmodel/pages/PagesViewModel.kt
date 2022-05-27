@@ -134,8 +134,8 @@ class PagesViewModel
     private val _pages = MutableLiveData<List<PageModel>>()
     val pages: LiveData<List<PageModel>> = _pages
 
-    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>> = MutableLiveData()
-    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>> = _searchPages
+    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>?> = MutableLiveData()
+    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>?> = _searchPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
