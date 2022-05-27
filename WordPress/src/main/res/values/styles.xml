@@ -708,9 +708,7 @@
         <item name="tint">@android:color/white</item>
     </style>
 
-    <style name="NewQuickStartIcon">
-        <item name="android:layout_width">64dp</item>
-        <item name="android:layout_height">128dp</item>
+    <style name="NewQuickStartImage">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:gravity">center_vertical</item>
     </style>
@@ -763,7 +761,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:singleLine">false</item>
         <item name="android:maxLines">2</item>
-        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
     </style>
 

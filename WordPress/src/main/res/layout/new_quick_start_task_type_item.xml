@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/quick_start_item_img"
-        style="@style/NewQuickStartIcon"
+        style="@style/NewQuickStartImage"
         android:layout_width="@dimen/new_quick_start_card_illustration_image_width"
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/margin_medium"
@@ -19,8 +19,8 @@
 
     <ImageView
         android:id="@+id/quick_start_task_completed_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/margin_extra_large"
+        android:layout_height="@dimen/margin_extra_large"
         android:contentDescription="@null"
         android:src="@drawable/ic_baseline_check_24"
         android:visibility="gone"
@@ -53,7 +53,7 @@
         android:id="@+id/quick_start_item_progress"
         style="?android:progressBarStyleHorizontal"
         android:layout_width="0dp"
-        android:layout_height="@dimen/margin_small"
+        android:layout_height="@dimen/new_quick_start_card_progress_bar_height"
         android:layout_marginBottom="@dimen/margin_medium_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:indeterminate="false"
@@ -83,7 +83,7 @@
         android:id="@+id/quick_start_item_title"
         style="@style/NewQuickStartTypeTitle"
         android:layout_width="0dp"
-        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_large"
         android:text="@string/quick_start_sites_type_get_to_know_app"
