@@ -41,7 +41,7 @@ class QuickStartCardViewHolder(
     }
 
     private fun MySiteCardToolbarBinding.update(card: QuickStartCard) {
-        if(!card.toolbarVisible){
+        if (!card.toolbarVisible) {
             mySiteCardToolbar.visibility = View.GONE
             return
         }
@@ -100,16 +100,16 @@ class QuickStartCardViewHolder(
         quickStartItemProgress.update(item)
         showCompletedIconIfNeeded(item.progress)
         quickStartItemRoot.setOnClickListener { item.onClick.click() }
-        quickStartItemMore.setOnClickListener {
+        quickStartItemMoreIcon.setOnClickListener {
             showQuickStartCardMenu(
                     onRemoveMenuItemClick,
-                    quickStartItemMore
+                    quickStartItemMoreIcon
             )
         }
     }
 
     private fun NewQuickStartTaskTypeItemBinding.showCompletedIconIfNeeded(progress: Int) {
-        taskCompletedIcon.setVisible(progress == PERCENT_HUNDRED)
+        quickStartTaskCompletedIcon.setVisible(progress == PERCENT_HUNDRED)
     }
 
     private fun MaterialTextView.paintFlags(item: QuickStartTaskTypeItem) {
