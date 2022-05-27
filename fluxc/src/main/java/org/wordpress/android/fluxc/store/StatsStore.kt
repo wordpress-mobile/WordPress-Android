@@ -18,9 +18,9 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
-import org.wordpress.android.fluxc.store.StatsStore.ActionType.GROW
-import org.wordpress.android.fluxc.store.StatsStore.ActionType.REMINDER
-import org.wordpress.android.fluxc.store.StatsStore.ActionType.SCHEDULE
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_REMINDER
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_SCHEDULE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
@@ -50,9 +50,6 @@ val DEFAULT_INSIGHTS = listOf(
 )
 val STATS_UNAVAILABLE_WITH_JETPACK = listOf(FILE_DOWNLOADS)
 const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
-const val INSIGHTS_GROW_ACTION_CARD_SHOWN = "INSIGHTS_GROW_ACTION_CARD_SHOWN"
-const val INSIGHTS_REMINDER_ACTION_CARD_SHOWN = "INSIGHTS_REMINDER_ACTION_CARD_SHOWN"
-const val INSIGHTS_SCHEDULE_ACTION_CARD_SHOWN = "INSIGHTS_SCHEDULE_ACTION_CARD_SHOWN"
 
 @Singleton
 class StatsStore
@@ -82,72 +79,9 @@ class StatsStore
 //                    types.add(ManagementType.NEWS_CARD)
 //                }
                 types.addAll(getAddedInsights(site))
-
-                if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_REMINDER_ACTION_CARD_SHOWN, false)) {
-                    val popularCardIndex = types.indexOf(MOST_POPULAR_DAY_AND_HOUR)
-                    if (popularCardIndex != -1) types.add(popularCardIndex + 1, REMINDER)
-                }
-
-                if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_SCHEDULE_ACTION_CARD_SHOWN, false)) {
-                    val popularCardIndex = types.indexOf(MOST_POPULAR_DAY_AND_HOUR)
-                    val reminderCardIndex = types.indexOf(REMINDER)
-                    val index = if (reminderCardIndex != -1) 2 else 1
-                    if (popularCardIndex != -1) types.add(popularCardIndex + index, SCHEDULE)
-                }
-
-                if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_GROW_ACTION_CARD_SHOWN, false)) {
-                    val totalFollowersIndex = types.indexOf(TOTAL_FOLLOWERS)
-                    if (totalFollowersIndex != -1) types.add(totalFollowersIndex + 1, GROW)
-                }
-
                 types.add(ManagementType.CONTROL)
                 return@withDefaultContext types
             }
-
-    fun hideActionCard(type: ActionType) =
-            coroutineEngine.run(AppLog.T.STATS, this, "hideActionCard($type)") {
-                when (type) {
-                    GROW -> {
-                        preferenceUtils.getFluxCPreferences()
-                                .edit()
-                                .putBoolean(INSIGHTS_GROW_ACTION_CARD_SHOWN, true)
-                                .apply()
-                    }
-                    SCHEDULE -> {
-                        preferenceUtils.getFluxCPreferences()
-                                .edit()
-                                .putBoolean(INSIGHTS_SCHEDULE_ACTION_CARD_SHOWN, true)
-                                .apply()
-                    }
-                    REMINDER -> {
-                        preferenceUtils.getFluxCPreferences()
-                                .edit()
-                                .putBoolean(INSIGHTS_REMINDER_ACTION_CARD_SHOWN, true)
-                                .apply()
-                    }
-                }
-    }
-
-    fun isActionCardShowing(type: ActionType) =
-            coroutineEngine.run(AppLog.T.STATS, this, "isActionCardShowing($type)") {
-                when (type) {
-                    GROW -> {
-                        preferenceUtils
-                                .getFluxCPreferences()
-                                .getBoolean(INSIGHTS_GROW_ACTION_CARD_SHOWN, true)
-                    }
-                    SCHEDULE -> {
-                        preferenceUtils
-                                .getFluxCPreferences()
-                                .getBoolean(INSIGHTS_SCHEDULE_ACTION_CARD_SHOWN, true)
-                    }
-                    REMINDER -> {
-                        preferenceUtils
-                                .getFluxCPreferences()
-                                .getBoolean(INSIGHTS_REMINDER_ACTION_CARD_SHOWN, true)
-                    }
-                }
-    }
 
     fun hideInsightsManagementNewsCard() = coroutineEngine.run(AppLog.T.STATS, this, "hideInsightsManagementNewsCard") {
         preferenceUtils.getFluxCPreferences().edit().putBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true).apply()
@@ -214,6 +148,63 @@ class StatsStore
                 updateTypes(site, addedItems)
             }
 
+    suspend fun addActionType(site: SiteModel, type: InsightType) =
+        coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "addActionType") {
+            val types = mutableListOf<InsightType>()
+
+            when (type) {
+                ACTION_REMINDER -> {
+                    types.addAll(getAddedInsights(site))
+
+                    val popularCardIndex = types.indexOf(MOST_POPULAR_DAY_AND_HOUR)
+                    val popularCardExists = popularCardIndex != -1
+                    val reminderCardNotExists = types.indexOf(ACTION_REMINDER) == -1
+
+                    if (popularCardExists && reminderCardNotExists)
+                        types.add(popularCardIndex + 1, ACTION_REMINDER)
+
+                    if (reminderCardNotExists) updateTypes(site, types)
+                }
+                ACTION_GROW -> {
+                    types.addAll(getAddedInsights(site))
+
+                    val totalFollowersIndex = types.indexOf(TOTAL_FOLLOWERS)
+                    val totalFollowersCardExists = totalFollowersIndex != -1
+                    val growCardNotExists = types.indexOf(ACTION_GROW) == -1
+
+                    if (totalFollowersCardExists && growCardNotExists)
+                        types.add(totalFollowersIndex + 1, ACTION_GROW)
+
+                    if (growCardNotExists) updateTypes(site, types)
+                }
+                ACTION_SCHEDULE -> {
+                    types.addAll(getAddedInsights(site))
+
+                    val popularCardIndex = types.indexOf(MOST_POPULAR_DAY_AND_HOUR)
+                    val popularCardExists = popularCardIndex != -1
+                    val reminderCardExists = types.indexOf(ACTION_REMINDER) != -1
+                    val scheduleCardNotExists = types.indexOf(ACTION_SCHEDULE) == -1
+                    val scheduleCardIndex = if (reminderCardExists) 2 else 1
+
+                    if (popularCardExists && scheduleCardNotExists)
+                        types.add(popularCardIndex + scheduleCardIndex, ACTION_SCHEDULE)
+
+                    if (scheduleCardNotExists) updateTypes(site, types)
+                }
+                else -> {
+                    // just to make when exhaustive
+                }
+            }
+        }
+
+    suspend fun isActionTypeShown(site: SiteModel, type: InsightType) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "isActionTypeShown(${site.id} $type") {
+                val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
+                val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
+
+                return@withDefaultContext (addedInsights.contains(type) || removedInsights.contains(type))
+            }
+
     private fun insertOrReplaceItems(
         site: SiteModel,
         addedItems: List<InsightType>,
@@ -257,7 +248,10 @@ class StatsStore
         FOLLOWERS,
         TODAY_STATS,
         POSTING_ACTIVITY,
-        PUBLICIZE
+        PUBLICIZE,
+        ACTION_GROW,
+        ACTION_REMINDER,
+        ACTION_SCHEDULE
     }
 
     enum class ManagementType : StatsType {
