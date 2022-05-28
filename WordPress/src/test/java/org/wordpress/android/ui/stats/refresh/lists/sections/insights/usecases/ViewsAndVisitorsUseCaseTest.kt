@@ -94,7 +94,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
         whenever(viewsAndVisitorsMapper
                 .buildChart(any(), any(), any(), any(), any(), any()))
                 .thenReturn(listOf(lineChartItem))
-        whenever(viewsAndVisitorsMapper.buildInformation(any(), any())).thenReturn(Text(""))
+        whenever(viewsAndVisitorsMapper.buildInformation(any(), any(), any())).thenReturn(Text(text = ""))
         whenever(viewsAndVisitorsMapper.buildChips(any(), any())).thenReturn(chips)
         whenever(resourceProvider.getString(string.stats_loading_card)).thenReturn("Loading")
     }

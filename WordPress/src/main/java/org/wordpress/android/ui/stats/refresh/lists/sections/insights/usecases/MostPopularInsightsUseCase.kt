@@ -58,31 +58,37 @@ class MostPopularInsightsUseCase
 
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        val highestDayPercent = resourceProvider.getString(
-                R.string.stats_most_popular_percent_views,
-                domainModel.highestDayPercent.roundToInt()
-        )
-        val highestHourPercent = resourceProvider.getString(
-                R.string.stats_most_popular_percent_views,
-                domainModel.highestHourPercent.roundToInt()
-        )
         items.add(buildTitle())
-        items.add(
-                QuickScanItem(
-                        Column(
-                                R.string.stats_insights_best_day,
-                                dateUtils.getWeekDay(domainModel.highestDayOfWeek),
-                                if (statsRevampV2FeatureConfig.isEnabled()) highestDayPercent else null,
-                                highestDayPercent
-                        ),
-                        Column(
-                                R.string.stats_insights_best_hour,
-                                dateUtils.getHour(domainModel.highestHour),
-                                if (statsRevampV2FeatureConfig.isEnabled()) highestHourPercent else null,
-                                highestHourPercent
-                        )
-                )
-        )
+        if (statsRevampV2FeatureConfig.isEnabled() &&
+                domainModel.highestDayPercent == 0.0 &&
+                domainModel.highestHourPercent == 0.0) {
+            items.add(Empty(R.string.stats_most_popular_percent_views_empty))
+        } else {
+            val highestDayPercent = resourceProvider.getString(
+                    R.string.stats_most_popular_percent_views,
+                    domainModel.highestDayPercent.roundToInt()
+            )
+            val highestHourPercent = resourceProvider.getString(
+                    R.string.stats_most_popular_percent_views,
+                    domainModel.highestHourPercent.roundToInt()
+            )
+            items.add(
+                    QuickScanItem(
+                            Column(
+                                    R.string.stats_insights_best_day,
+                                    dateUtils.getWeekDay(domainModel.highestDayOfWeek),
+                                    if (statsRevampV2FeatureConfig.isEnabled()) highestDayPercent else null,
+                                    highestDayPercent
+                            ),
+                            Column(
+                                    R.string.stats_insights_best_hour,
+                                    dateUtils.getHour(domainModel.highestHour),
+                                    if (statsRevampV2FeatureConfig.isEnabled()) highestHourPercent else null,
+                                    highestHourPercent
+                            )
+                    )
+            )
+        }
         return items
     }
 

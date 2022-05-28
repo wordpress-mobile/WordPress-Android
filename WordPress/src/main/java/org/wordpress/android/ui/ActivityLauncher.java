@@ -375,16 +375,18 @@ public class ActivityLauncher {
     }
 
     public static Intent openEditorWithPromptAndDismissNotificationIntent(
-            @NonNull final Context context,
-            final int notificationId,
-            final BloggingPromptModel bloggingPrompt,
-            final PostUtils.Origin origin
+        @NonNull final Context context,
+        final int notificationId,
+        final BloggingPromptModel bloggingPrompt,
+        @Nullable final Stat stat,
+        final PostUtils.Origin origin
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
         intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, origin);
+        intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
         return intent;
     }
 

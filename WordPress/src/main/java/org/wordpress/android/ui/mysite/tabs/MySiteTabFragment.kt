@@ -354,7 +354,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
-                .setTitle(action.title)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
