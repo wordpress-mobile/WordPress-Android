@@ -336,7 +336,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 action.site,
                 false,
                 PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
-                -1
+                -1,
+                null
             )
         // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.

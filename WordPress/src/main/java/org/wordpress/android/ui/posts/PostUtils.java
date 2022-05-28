@@ -191,7 +191,9 @@ public class PostUtils {
         }
     }
 
-    public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site, @Nullable final Origin origin) {
+    public static void trackOpenEditorAnalytics(
+            PostImmutableModel post, SiteModel site, @Nullable final Origin origin
+    ) {
         Map<String, Object> properties = new HashMap<>();
         PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
@@ -202,7 +204,7 @@ public class PostUtils {
         properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                 PostUtils.contentContainsGutenbergBlocks(post.getContent()));
         if (origin != null) {
-            properties.put(AnalyticsUtils.ORIGIN_KEY, origin.trackingValue);
+            properties.put(AnalyticsUtils.ORIGIN_KEY, origin.getTrackingValue());
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,
                 properties);
@@ -597,14 +599,14 @@ public class PostUtils {
         MY_SITE_CARD_ANSWER_PROMPT("my_site_card_answer_prompt"),
         ADD_NEW_SHEET_ANSWER_PROMPT("add_new_sheet_answer_prompt");
 
-        private final String trackingValue;
+        private final String mTrackingValue;
 
-        private Origin(@NonNull final String trackingValue) {
-            this.trackingValue = trackingValue;
+        Origin(@NonNull final String trackingValue) {
+            this.mTrackingValue = trackingValue;
         }
 
         public String getTrackingValue() {
-            return trackingValue;
+            return mTrackingValue;
         }
     }
 }
