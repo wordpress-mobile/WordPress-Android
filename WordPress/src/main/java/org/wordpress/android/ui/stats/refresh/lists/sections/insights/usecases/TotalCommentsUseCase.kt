@@ -121,7 +121,7 @@ class TotalCommentsUseCase @Inject constructor(
         if (domainModel.dates.isNotEmpty()) {
             items.add(buildTitle())
             items.add(totalStatsMapper.buildTotalCommentsValue(domainModel.dates))
-            items.add(totalStatsMapper.buildTotalCommentsInformation(domainModel.dates))
+            totalStatsMapper.buildTotalCommentsInformation(domainModel.dates)?.let { items.add(it) }
             if (totalStatsMapper.shouldShowCommentsGuideCard(domainModel.dates)) {
                 items.add(ListItemGuideCard(resourceProvider.getString(string.stats_insights_comments_guide_card)))
             }
