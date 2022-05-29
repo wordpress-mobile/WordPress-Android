@@ -211,23 +211,40 @@ class ReferrersUseCase(
     }
 
     private fun buildPieChartItem(domainModel: ReferrersModel): PieChartItem {
+        var firstPie: Pie? = null
+        var secondPie: Pie? = null
         val wordPressGroup = domainModel.groups.find { it.groupId == GROUP_ID_WORDPRESS }
-        val wordPressPie = Pie(
-                resourceProvider.getString(R.string.stats_referrers_pie_chart_wordpress),
-                wordPressGroup?.total ?: 0
-        )
-
         val searchGroup = domainModel.groups.find { it.groupId == GROUP_ID_SEARCH }
-        val searchPie = Pie(
-                resourceProvider.getString(R.string.stats_referrers_pie_chart_search),
-                searchGroup?.total ?: 0
-        )
 
-        val othersPie = Pie(
-                resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
-                domainModel.totalViews - wordPressPie.value - searchPie.value
-        )
-        val pies = listOf(wordPressPie, searchPie, othersPie)
+        // If the wordpress group and search group can be found add them, otherwise add the first and second groups
+        if (wordPressGroup != null && searchGroup != null) {
+            firstPie = Pie(
+                    resourceProvider.getString(R.string.stats_referrers_pie_chart_wordpress),
+                    wordPressGroup.total ?: 0
+            )
+
+            secondPie = Pie(
+                    resourceProvider.getString(R.string.stats_referrers_pie_chart_search),
+                    searchGroup.total ?: 0
+            )
+        } else {
+            if (domainModel.groups.isNotEmpty()) {
+                firstPie = Pie(domainModel.groups.first().name.orEmpty(), domainModel.groups.first().total ?: 0)
+            }
+            if (domainModel.groups.size > 1) {
+                secondPie = Pie(domainModel.groups[1].name.orEmpty(), domainModel.groups[1].total ?: 0)
+            }
+        }
+
+        val othersPie = if (domainModel.groups.size > 2) {
+            Pie(
+                    resourceProvider.getString(R.string.stats_referrers_pie_chart_others),
+                    domainModel.totalViews - (firstPie?.value ?: 0) - (secondPie?.value ?: 0)
+            )
+        } else {
+            null
+        }
+        val pies = listOfNotNull(firstPie, secondPie, othersPie)
         val totalLabel = resourceProvider.getString(R.string.stats_referrers_pie_chart_total_label)
         val totalValue = pies.sumOf { it.value }
         return PieChartItem(
