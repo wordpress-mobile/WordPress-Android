@@ -43,11 +43,6 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 } else {
                     R.color.blue_50
                 }
-                val drawableRes = if (item.positive == true) {
-                    R.drawable.bg_rectangle_total_stats_line_chart_green_gradient
-                } else {
-                    R.drawable.bg_rectangle_total_stats_line_chart_blue_gradient
-                }
                 val dataSet = LineDataSet(entries, null).apply {
                     setDrawCircles(false)
                     setDrawValues(false)
@@ -55,14 +50,28 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     lineWidth = 2f
                     mode = CUBIC_BEZIER
                     cubicIntensity = CUBIC_INTENSITY
-                    setDrawFilled(true)
-                    val drawable = ContextCompat.getDrawable(context, drawableRes)
-                    drawable?.alpha = FILL_ALPHA
-                    fillDrawable = drawable
+                    fillBelowLine(this, item)
                 }
                 data = LineData(dataSet)
                 isVisible = true
             }
+        }
+    }
+
+    private fun fillBelowLine(dataSet: LineDataSet, item: ValueWithChartItem) {
+        if (item.values?.sum() == 0L) {
+            return
+        } else {
+            val drawableRes = if (item.positive == true) {
+                R.drawable.bg_rectangle_total_stats_line_chart_green_gradient
+            } else {
+                R.drawable.bg_rectangle_total_stats_line_chart_blue_gradient
+            }
+            val drawable = ContextCompat.getDrawable(chart.context, drawableRes)
+            drawable?.alpha = FILL_ALPHA
+
+            dataSet.setDrawFilled(true)
+            dataSet.fillDrawable = drawable
         }
     }
 
