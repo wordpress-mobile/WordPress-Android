@@ -24,12 +24,14 @@ import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemVi
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemViewHolder
 import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.image.ImageManager
 
 class MySiteAdapter(
     val imageManager: ImageManager,
     val uiHelpers: UiHelpers,
-    val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
+    val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
+    val htmlCompatWrapper: HtmlCompatWrapper
 ) : ListAdapter<MySiteCardAndItem, MySiteCardAndItemViewHolder<*>>(MySiteAdapterDiffCallback) {
     private val quickStartViewPool = RecycledViewPool()
     private var nestedScrollStates = Bundle()
@@ -50,7 +52,7 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.CATEGORY_HEADER_ITEM.ordinal -> MySiteCategoryItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.DASHBOARD_CARDS.ordinal -> CardsViewHolder(
-                    parent, imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker
+                    parent, imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker, htmlCompatWrapper
             )
             else -> throw IllegalArgumentException("Unexpected view type")
         }
