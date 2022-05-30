@@ -67,16 +67,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
             }
         }
         whenever(getSitesUseCase.get()).thenReturn(sites)
-        viewModel = AccountSettingsViewModel(
-                resourceProvider,
-                networkUtilsWrapper,
-                TEST_DISPATCHER,
-                fetchAccountSettingsUseCase,
-                pushAccountSettingsUseCase,
-                getAccountUseCase,
-                getSitesUseCase,
-                optimisticUpdateHandler
-        )
+        initialiseViewModel()
     }
 
     @Test
@@ -139,16 +130,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     fun `The user name should be allowed to change, only if the server return 'canUserNameBeChanged' as true`() =
             test {
                 whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(true)
-                viewModel = AccountSettingsViewModel(
-                        resourceProvider,
-                        networkUtilsWrapper,
-                        TEST_DISPATCHER,
-                        fetchAccountSettingsUseCase,
-                        pushAccountSettingsUseCase,
-                        getAccountUseCase,
-                        getSitesUseCase,
-                        optimisticUpdateHandler
-                )
+                initialiseViewModel()
                 val uiState = viewModel.accountSettingsUiState.value
                 Assertions.assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(true)
             }
@@ -157,16 +139,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     fun `The user name should not be allowed to change, if the server return 'canUserNameBeChanged' as false`() =
             test {
                 whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(false)
-                viewModel = AccountSettingsViewModel(
-                        resourceProvider,
-                        networkUtilsWrapper,
-                        TEST_DISPATCHER,
-                        fetchAccountSettingsUseCase,
-                        pushAccountSettingsUseCase,
-                        getAccountUseCase,
-                        getSitesUseCase,
-                        optimisticUpdateHandler
-                )
+                initialiseViewModel()
                 val uiState = viewModel.accountSettingsUiState.value
                 Assertions.assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(false)
             }
@@ -176,16 +149,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     fun `If the user has pending email address change, the user should be notified to verify the email address via verification link sent`() = test {
         whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
         whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
-        viewModel = AccountSettingsViewModel(
-                resourceProvider,
-                networkUtilsWrapper,
-                TEST_DISPATCHER,
-                fetchAccountSettingsUseCase,
-                pushAccountSettingsUseCase,
-                getAccountUseCase,
-                getSitesUseCase,
-                optimisticUpdateHandler
-        )
+        initialiseViewModel()
         val uiState = viewModel.accountSettingsUiState.value
         Assertions.assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
         Assertions.assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
@@ -202,16 +166,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     fun `If the user doesn't have any pending email address change, the user should not be asked to verify the email address`() =
             test {
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-                viewModel = AccountSettingsViewModel(
-                        resourceProvider,
-                        networkUtilsWrapper,
-                        TEST_DISPATCHER,
-                        fetchAccountSettingsUseCase,
-                        pushAccountSettingsUseCase,
-                        getAccountUseCase,
-                        getSitesUseCase,
-                        optimisticUpdateHandler
-                )
+                initialiseViewModel()
                 val uiState = viewModel.accountSettingsUiState.value
                 Assertions.assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
             }
