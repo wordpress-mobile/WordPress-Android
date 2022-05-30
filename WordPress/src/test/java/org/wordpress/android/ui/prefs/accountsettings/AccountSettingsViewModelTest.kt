@@ -5,7 +5,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -74,33 +75,32 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     fun `The initial Ui state should be updated with the cached account information`() = test {
         val uiState = viewModel.accountSettingsUiState.value
         uiState.primarySiteSettingsUiState?.primarySite?.siteId?.let {
-            Assertions.assertThat(it)
+            assertThat(it)
                     .withFailMessage("The initial primary site Id should be updated with the cached account information")
                     .isEqualTo(getAccountUseCase.account.primarySiteId)
-        } ?: Assertions.fail("The UiState should not be empty")
-        Assertions.assertThat(uiState.userNameSettingsUiState.userName)
+        } ?: fail("The UiState should not be empty")
+        assertThat(uiState.userNameSettingsUiState.userName)
                 .withFailMessage("The initial userName should be updated with the cached account information")
                 .isEqualTo(getAccountUseCase.account.userName)
-        Assertions.assertThat(uiState.userNameSettingsUiState.displayName)
+        assertThat(uiState.userNameSettingsUiState.displayName)
                 .withFailMessage("The initial displayName should be updated with the cached account information")
                 .isEqualTo(getAccountUseCase.account.displayName)
-        Assertions.assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged)
+        assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged)
                 .withFailMessage("The initial username should be allowed to changed based on the cached account information")
                 .isEqualTo(getAccountUseCase.account.usernameCanBeChanged)
-        Assertions.assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
+        assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
                 .withFailMessage("The snackbar with message username confirmed should not be shown by default.")
                 .isEqualTo(false)
-        Assertions.assertThat(uiState.emailSettingsUiState.email)
+        assertThat(uiState.emailSettingsUiState.email)
                 .withFailMessage("The initial Email should be shown from the cached account information")
                 .isEqualTo(getAccountUseCase.account.email)
-        Assertions
-                .assertThat (uiState.emailSettingsUiState.newEmail)
+        assertThat(uiState.emailSettingsUiState.newEmail)
                 .withFailMessage("The initial New Email should be shown from the cached account information")
                 .isEqualTo(getAccountUseCase.account.newEmail)
-        Assertions.assertThat(uiState.emailSettingsUiState.hasPendingEmailChange)
+        assertThat(uiState.emailSettingsUiState.hasPendingEmailChange)
                 .withFailMessage("The initial pending email change should be shown based on the cached account information")
                 .isEqualTo(getAccountUseCase.account.pendingEmailChange)
-        Assertions.assertThat(uiState.webAddressSettingsUiState.webAddress)
+        assertThat(uiState.webAddressSettingsUiState.webAddress)
                 .withFailMessage("The initial WebAddress should be updated with the cached account information")
                 .isEqualTo(getAccountUseCase.account.webAddress)
     }
@@ -110,13 +110,13 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
     fun `When the user has changed the username through a different screen and navigated back with new username, the new username should be updated and notified with the snackbar message`() = test {
         viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
         val uiState = viewModel.accountSettingsUiState.value
-        Assertions.assertThat(uiState.userNameSettingsUiState.userName)
+        assertThat(uiState.userNameSettingsUiState.userName)
                 .withFailMessage("The user name should be updated when the new user name is confirmed by the different screen")
                 .isEqualTo("new_wordpressuser_username")
-        Assertions.assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
+        assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
                 .withFailMessage("The user should be notified of the user name change with snackbar message")
                 .isEqualTo(true)
-        Assertions.assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
+        assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
                 .withFailMessage("The snackbar message should say 'Your new username is new_wordpressuser_username'")
                 .isEqualTo(
                         UiStringResWithParams(
@@ -132,7 +132,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(true)
                 initialiseViewModel()
                 val uiState = viewModel.accountSettingsUiState.value
-                Assertions.assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(true)
+                assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(true)
             }
 
     @Test
@@ -141,7 +141,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(false)
                 initialiseViewModel()
                 val uiState = viewModel.accountSettingsUiState.value
-                Assertions.assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(false)
+                assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(false)
             }
 
     // Email
@@ -151,8 +151,8 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
         whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
         initialiseViewModel()
         val uiState = viewModel.accountSettingsUiState.value
-        Assertions.assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-        Assertions.assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
+        assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+        assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
                 .withFailMessage("The snackbar message should say 'Click the verification link in the email sent to new_wordpressuser_username to confirm your new address'")
                 .isEqualTo(
                         UiStringResWithParams(
@@ -168,7 +168,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
                 initialiseViewModel()
                 val uiState = viewModel.accountSettingsUiState.value
-                Assertions.assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+                assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
             }
 
     // Email change
@@ -193,8 +193,8 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
         viewModel.onEmailChanged("new_wordpressuser@gmail.com")
 
         // Then
-        Assertions.assertThat(uiStateList[uiStateList.lastIndex-1].emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-        Assertions.assertThat(uiStateList[uiStateList.lastIndex-1].emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
+        assertThat(uiStateList[uiStateList.lastIndex-1].emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+        assertThat(uiStateList[uiStateList.lastIndex-1].emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
 
         // Cleanup
         job.cancel()
@@ -222,8 +222,8 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onEmailChanged("new_wordpressuser@gmail.com")
 
                 // Then
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("")
+                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("")
 
                 // Cleanup
                 job.cancel()
@@ -251,8 +251,8 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onEmailChanged("new_wordpressuser@gmail.com")
 
                 // Then
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
+                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
 
                 // Cleanup
                 job.cancel()
@@ -280,8 +280,8 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.accountSettingsUiState.value.emailSettingsUiState.onCancelEmailChange.invoke()
 
                 // Then
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
+                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
 
                 // Cleanup
                 job.cancel()
@@ -309,8 +309,8 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.accountSettingsUiState.value.emailSettingsUiState.onCancelEmailChange.invoke()
 
                 // Then
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
-                Assertions.assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("")
+                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("")
                 // Cleanup
                 job.cancel()
             }
@@ -337,7 +337,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
 
                 // Then
-                Assertions.assertThat(uiStateList[uiStateList.lastIndex -1].primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
+                assertThat(uiStateList[uiStateList.lastIndex -1].primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
 
                 // Cleanup
                 job.cancel()
@@ -364,7 +364,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
 
                 // Then
-                Assertions.assertThat(uiStateList.last().primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.last().siteId)
+                assertThat(uiStateList.last().primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.last().siteId)
 
                 // Cleanup
                 job.cancel()
@@ -391,7 +391,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
 
                 // Then
-                Assertions.assertThat(uiStateList.last().primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
+                assertThat(uiStateList.last().primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
 
                 // Cleanup
                 job.cancel()
@@ -419,7 +419,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onWebAddressChanged("new_webaddress")
 
                 // Then
-                Assertions.assertThat(uiStateList[uiStateList.lastIndex -1].webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
+                assertThat(uiStateList[uiStateList.lastIndex -1].webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
 
                 // Cleanup
                 job.cancel()
@@ -447,7 +447,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onWebAddressChanged("new_webaddress")
 
                 // Then
-                Assertions.assertThat(uiStateList.last().webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
+                assertThat(uiStateList.last().webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
 
                 // Cleanup
                 job.cancel()
@@ -470,7 +470,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onPasswordChanged("new_password")
 
                 // Then
-                Assertions.assertThat(uiStateList[uiStateList.lastIndex - 1].changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(true)
+                assertThat(uiStateList[uiStateList.lastIndex - 1].changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(true)
 
                 // Cleanup
                 job.cancel()
@@ -492,7 +492,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onPasswordChanged("new_password")
 
                 // Then
-                Assertions.assertThat(uiStateList.last().changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(false)
+                assertThat(uiStateList.last().changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(false)
 
                 // Cleanup
                 job.cancel()
