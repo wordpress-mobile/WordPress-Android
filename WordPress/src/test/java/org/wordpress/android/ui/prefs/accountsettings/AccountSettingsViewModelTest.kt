@@ -2,11 +2,11 @@ package org.wordpress.android.ui.prefs.accountsettings
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.fail
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -47,6 +47,9 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
         add(SiteViewModel("WonderLand", 2L, "http://wonderland.wordpress.com"))
         add(SiteViewModel("FantasyBooks", 3L, "http://fantasybooks.wordpress.com"))
     }
+    private val uiStateChanges = mutableListOf<AccountSettingsUiState>()
+    private val uiState
+        get() = viewModel.accountSettingsUiState.value
 
     @Before
     fun setUp() = test {
@@ -72,53 +75,71 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `The initial Ui state should be updated with the cached account information`() = test {
-        val uiState = viewModel.accountSettingsUiState.value
-        uiState.primarySiteSettingsUiState?.primarySite?.siteId?.let {
-            assertThat(it)
-                    .withFailMessage("The initial primary site Id should be updated with the cached account information")
-                    .isEqualTo(getAccountUseCase.account.primarySiteId)
-        } ?: fail("The UiState should not be empty")
+    fun `The initial primarysite is shown from cached account settings`() = test {
+        uiState.primarySiteSettingsUiState.primarySite?.siteId?.let {
+            assertThat(it).isEqualTo(getAccountUseCase.account.primarySiteId)
+        }
+    }
+
+    @Test
+    fun `The initial username is shown from cached account settings`() = test {
         assertThat(uiState.userNameSettingsUiState.userName)
-                .withFailMessage("The initial userName should be updated with the cached account information")
                 .isEqualTo(getAccountUseCase.account.userName)
-        assertThat(uiState.userNameSettingsUiState.displayName)
-                .withFailMessage("The initial displayName should be updated with the cached account information")
-                .isEqualTo(getAccountUseCase.account.displayName)
+    }
+
+    @Test
+    fun `The username is allowed to change based on the cached account settings`() = test {
         assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged)
-                .withFailMessage("The initial username should be allowed to changed based on the cached account information")
                 .isEqualTo(getAccountUseCase.account.usernameCanBeChanged)
+
+    }
+
+    @Test
+    fun `The username confirmed snackbar is not be shown by default`() = test {
         assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
-                .withFailMessage("The snackbar with message username confirmed should not be shown by default.")
                 .isEqualTo(false)
+    }
+
+    @Test
+    fun `The initial emailaddress is shown from cached account settings`() = test {
         assertThat(uiState.emailSettingsUiState.email)
-                .withFailMessage("The initial Email should be shown from the cached account information")
                 .isEqualTo(getAccountUseCase.account.email)
-        assertThat(uiState.emailSettingsUiState.newEmail)
-                .withFailMessage("The initial New Email should be shown from the cached account information")
-                .isEqualTo(getAccountUseCase.account.newEmail)
+    }
+
+    @Test
+    fun `The pending emailaddress change snackbar is shown based on cached account settings`() = test {
         assertThat(uiState.emailSettingsUiState.hasPendingEmailChange)
-                .withFailMessage("The initial pending email change should be shown based on the cached account information")
                 .isEqualTo(getAccountUseCase.account.pendingEmailChange)
+    }
+
+    @Test
+    fun `The initial webAddress is shown from cached account settings`() = test {
         assertThat(uiState.webAddressSettingsUiState.webAddress)
-                .withFailMessage("The initial WebAddress should be updated with the cached account information")
                 .isEqualTo(getAccountUseCase.account.webAddress)
     }
 
-    // Username
     @Test
-    fun `When the user has changed the username through a different screen and navigated back with new username, the new username should be updated and notified with the snackbar message`() =
+    fun `When the username change is confirmed from the server, then new username is updated`() =
             test {
                 viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
-                val uiState = viewModel.accountSettingsUiState.value
                 assertThat(uiState.userNameSettingsUiState.userName)
-                        .withFailMessage("The user name should be updated when the new user name is confirmed by the different screen")
                         .isEqualTo("new_wordpressuser_username")
+            }
+
+    @Test
+    fun `When the username change is confirmed from the server, then the snackbar is shown`() =
+            test {
+                viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
                 assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
-                        .withFailMessage("The user should be notified of the user name change with snackbar message")
+                        .withFailMessage("The username change should be notified in snackbar")
                         .isEqualTo(true)
+            }
+
+    @Test
+    fun `The username confirmed snackbar message is Your new username is new_wordpressuser_username'`() =
+            test {
+                viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
                 assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
-                        .withFailMessage("The snackbar message should say 'Your new username is new_wordpressuser_username'")
                         .isEqualTo(
                                 UiStringResWithParams(
                                         string.settings_username_changer_toast_content,
@@ -128,34 +149,35 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `The user name should be allowed to change, only if the server return 'canUserNameBeChanged' as true`() =
+    fun `When the server return 'canUserNameBeChanged' as true, then the username is allowed to change`() =
             test {
                 whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(true)
                 initialiseViewModel()
-                val uiState = viewModel.accountSettingsUiState.value
                 assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(true)
             }
 
     @Test
-    fun `The user name should not be allowed to change, if the server return 'canUserNameBeChanged' as false`() =
+    fun `When the server return 'canUserNameBeChanged' as false, then the username is not allowed to change`() =
             test {
                 whenever(getAccountUseCase.account.usernameCanBeChanged).thenReturn(false)
                 initialiseViewModel()
-                val uiState = viewModel.accountSettingsUiState.value
                 assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged).isEqualTo(false)
             }
 
-    // Email
     @Test
-    fun `If the user has pending email address change, the user should be notified to verify the email address via verification link sent`() =
+    fun `When there is a pending emailaddress change, then the snackbar is shown`() =
             test {
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
                 initialiseViewModel()
-                val uiState = viewModel.accountSettingsUiState.value
                 assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+
+            }
+
+    @Test
+    fun `The pending emailaddress snackbar message is Click the verification link in the email`() =
+            test {
                 assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
-                        .withFailMessage("The snackbar message should say 'Click the verification link in the email sent to new_wordpressuser_username to confirm your new address'")
                         .isEqualTo(
                                 UiStringResWithParams(
                                         string.pending_email_change_snackbar,
@@ -165,362 +187,210 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `If the user doesn't have any pending email address change, the user should not be asked to verify the email address`() =
+    fun `When there is no pending emailaddress change, then the snackbar is not shown`() =
             test {
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
                 initialiseViewModel()
-                val uiState = viewModel.accountSettingsUiState.value
                 assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
             }
 
-    // Email change
     @Test
-    fun `When the user tries to update a new email address, optimistically show the user as if the new email address change is requested even before updating in the server`() =
-            test {
+    fun `When a new emailaddress is entered, then the snackbar is shown optimistically`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(
-                        mockErrorResponse()
-                )
+                // When
+                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
+                        .thenReturn(mockErrorResponse())
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("")
-
-                // When
                 viewModel.onEmailChanged("new_wordpressuser@gmail.com")
-
                 // Then
-                assertThat(uiStateList[uiStateList.lastIndex - 1].emailSettingsUiState.hasPendingEmailChange).isEqualTo(
-                        true
-                )
-                assertThat(uiStateList[uiStateList.lastIndex - 1].emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].emailSettingsUiState.hasPendingEmailChange)
+                        .isEqualTo(true)
+                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].emailSettingsUiState.newEmail)
+                        .isEqualTo("new_wordpressuser@gmail.com")
             }
 
     @Test
-    fun `When the user tries to update a new email and on error response, the user should be show an error and revert back from displaying of pending new email address verification`() =
-            test {
+    fun `When a new emailaddress change fails in the server, then the snackbar is dismissed`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(
-                        mockErrorResponse()
-                )
+                // When
+                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
+                        .thenReturn(mockErrorResponse())
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("")
-
-                // When
                 viewModel.onEmailChanged("new_wordpressuser@gmail.com")
-
                 // Then
-                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
-                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("")
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("")
             }
 
     @Test
-    fun `When the user tries to update a new email and on success response, the user should be show of pending new email address verification`() =
-            test {
+    fun `When a new emailaddress change is updated in the server, then the snackbar continues to show`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(
-                        mockSuccessResponse()
-                )
+                // When
+                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com"))
+                        .thenReturn(mockSuccessResponse())
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser@gmail.com")
-
-                // When
                 viewModel.onEmailChanged("new_wordpressuser@gmail.com")
-
                 // Then
-                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
             }
 
-    // cancel pending email
     @Test
-    fun `When the user tries to cancels a pending email change and on error response, the user should still be shown of pending email change`() =
-            test {
+    fun `When cancelling of a pending emailaddress change fails, then the snackbar continues to show`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser@gmail.com")
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
+                // When
                 whenever(pushAccountSettingsUseCase.cancelPendingEmailChange()).thenReturn(mockErrorResponse())
-
-                // When
-                viewModel.accountSettingsUiState.value.emailSettingsUiState.onCancelEmailChange.invoke()
-
+                uiState.emailSettingsUiState.onCancelEmailChange.invoke()
                 // Then
-                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
             }
 
     @Test
-    fun `When the user tries to cancels a pending email change and on success response, don't show any pending new email address`() =
-            test {
+    fun `When a pending emailaddress change is cancelled, then the snackbar is dismissed`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
+                // When
                 whenever(pushAccountSettingsUseCase.cancelPendingEmailChange()).thenReturn(mockSuccessResponse())
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("")
-
-                // When
-                viewModel.accountSettingsUiState.value.emailSettingsUiState.onCancelEmailChange.invoke()
-
+                uiState.emailSettingsUiState.onCancelEmailChange.invoke()
                 // Then
-                assertThat(uiStateList.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
-                assertThat(uiStateList.last().emailSettingsUiState.newEmail).isEqualTo("")
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().emailSettingsUiState.hasPendingEmailChange).isEqualTo(false)
+                assertThat(uiStateChanges.last().emailSettingsUiState.newEmail).isEqualTo("")
             }
 
-    // Primary site
     @Test
-    fun `When the user tries to update a different site as Primary site, optimistically show the user as if the new primary site is changed even before updating in the server`() =
-            test {
+    fun `When a new primarysite is entered, then the primary site is shown optimistically`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(
-                        mockErrorResponse()
-                )
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-
                 // When
+                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
+                        .thenReturn(mockErrorResponse())
+                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
-
                 // Then
-                assertThat(uiStateList[uiStateList.lastIndex - 1].primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(
-                        siteViewModels.first().siteId
-                )
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].primarySiteSettingsUiState.primarySite?.siteId)
+                        .isEqualTo(siteViewModels.first().siteId)
             }
 
     @Test
-    fun `When user tries to update a different site as Primary site and on error reponse, revert back to the old primary site`() =
-            test {
+    fun `When a new primarysite change fails in the server, then the old primarysite is reverted back`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(
-                        mockErrorResponse()
-                )
-                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-
                 // When
+                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
+                        .thenReturn(mockErrorResponse())
+                whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
-
                 // Then
-                assertThat(uiStateList.last().primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.last().siteId)
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
+                        .isEqualTo(siteViewModels.last().siteId)
             }
 
     @Test
-    fun `When user tries to update a different site as Primary site and on successful reponse, new primary site should be shown to the user`() =
-            test {
+    fun `When a new primarysite change is updated in the server, then new primarysite continues to show`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(
-                        mockSuccessResponse()
-                )
+                // When
+                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString()))
+                        .thenReturn(mockSuccessResponse())
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.first().siteId)
-
-                // When
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
-
                 // Then
-                assertThat(uiStateList.last().primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().primarySiteSettingsUiState.primarySite?.siteId)
+                        .isEqualTo(siteViewModels.first().siteId)
             }
 
-    // Web Address
     @Test
-    fun `When the user tries to update a new webaddress, optimistically show the user as if the new web address is changed even before updating in the server`() =
-            test {
+    fun `When a new webaddress is entered, then new webaddress is shown optimistically`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress")).thenReturn(mockErrorResponse())
-                whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
-
                 // When
+                whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
+                        .thenReturn(mockErrorResponse())
+                whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
                 viewModel.onWebAddressChanged("new_webaddress")
-
                 // Then
-                assertThat(uiStateList[uiStateList.lastIndex - 1].webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges[uiStateChanges.lastIndex - 1].webAddressSettingsUiState.webAddress)
+                        .isEqualTo("new_webaddress")
             }
 
     @Test
-    fun `When user tries to update a new webaddress and on success response, new web address should be shown to user`() =
-            test {
+    fun `When a new webaddress is updated in the server, then new webaddress continues to show`() =
+            testUiStateChanges {
                 // Given
                 whenever(getAccountUseCase.account.webAddress).thenReturn("old_webaddress")
-
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress")).thenReturn(mockSuccessResponse())
+                // When
+                whenever(pushAccountSettingsUseCase.updateWebAddress("new_webaddress"))
+                        .thenReturn(mockSuccessResponse())
                 whenever(getAccountUseCase.account.webAddress).thenReturn("new_webaddress")
-
-                // When
                 viewModel.onWebAddressChanged("new_webaddress")
-
                 // Then
-                assertThat(uiStateList.last().webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
-
-                // Cleanup
-                job.cancel()
-            }
-
-    // Change password
-    @Test
-    fun `When the user tries to update the new password, show changing password progress dialog until it receives the server response`() =
-            test {
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updatePassword("new_password")).thenReturn(mockSuccessResponse())
-                // When
-                viewModel.onPasswordChanged("new_password")
-
-                // Then
-                assertThat(uiStateList[uiStateList.lastIndex - 1].changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(
-                        true
-                )
-
-                // Cleanup
-                job.cancel()
+                assertThat(uiStateChanges.last().webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
             }
 
     @Test
-    fun `When the user tries to update the new password and on receiving the server response, dismiss the changing password progress dialog`() =
-            test {
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER) {
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updatePassword("new_password")).thenReturn(mockSuccessResponse())
+    fun `When a new password is entered, then the changing password progress dialog is shown`() =
+            testUiStateChanges {
+                // Given
+                whenever(pushAccountSettingsUseCase.updatePassword("new_password"))
+                        .thenReturn(mockSuccessResponse())
                 // When
                 viewModel.onPasswordChanged("new_password")
-
                 // Then
-                assertThat(uiStateList.last().changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(
-                        false
+                assertThat(
+                        uiStateChanges[uiStateChanges.lastIndex - 1]
+                                .changePasswordSettingsUiState.showChangePasswordProgressDialog
                 )
+                        .isEqualTo(true)
+            }
 
-                // Cleanup
-                job.cancel()
+    @Test
+    fun `When a new password is updated in the server, then the changing password progress dialog is dismissed`() =
+            testUiStateChanges {
+                // Given
+                whenever(pushAccountSettingsUseCase.updatePassword("new_password"))
+                        .thenReturn(mockSuccessResponse())
+                //When
+                viewModel.onPasswordChanged("new_password")
+                //Then
+                assertThat(uiStateChanges.last().changePasswordSettingsUiState.showChangePasswordProgressDialog)
+                        .isEqualTo(false)
             }
 
     // Helper Methods
+    private fun <T> testUiStateChanges(
+        block: suspend CoroutineScope.() -> T
+    ) {
+        test {
+            uiStateChanges.clear()
+            initialiseViewModel()
+            val job = launch(TEST_DISPATCHER) {
+                viewModel.accountSettingsUiState.toList(uiStateChanges)
+            }
+            this.block()
+            job.cancel()
+        }
+    }
+
     private fun mockSuccessResponse(): OnAccountChanged {
         return mock()
     }
