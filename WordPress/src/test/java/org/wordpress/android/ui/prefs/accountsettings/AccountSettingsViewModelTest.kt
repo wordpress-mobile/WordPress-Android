@@ -31,11 +31,11 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
-class AccountSettingsViewModelTest : BaseUnitTest(){
+class AccountSettingsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: AccountSettingsViewModel
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var fetchAccountSettingsUseCase:FetchAccountSettingsUseCase
+    @Mock private lateinit var fetchAccountSettingsUseCase: FetchAccountSettingsUseCase
     @Mock private lateinit var pushAccountSettingsUseCase: PushAccountSettingsUseCase
     @Mock private lateinit var getSitesUseCase: GetSitesUseCase
     @Mock private lateinit var getAccountUseCase: GetAccountUseCase
@@ -107,24 +107,25 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
     // Username
     @Test
-    fun `When the user has changed the username through a different screen and navigated back with new username, the new username should be updated and notified with the snackbar message`() = test {
-        viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
-        val uiState = viewModel.accountSettingsUiState.value
-        assertThat(uiState.userNameSettingsUiState.userName)
-                .withFailMessage("The user name should be updated when the new user name is confirmed by the different screen")
-                .isEqualTo("new_wordpressuser_username")
-        assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
-                .withFailMessage("The user should be notified of the user name change with snackbar message")
-                .isEqualTo(true)
-        assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
-                .withFailMessage("The snackbar message should say 'Your new username is new_wordpressuser_username'")
-                .isEqualTo(
-                        UiStringResWithParams(
-                                string.settings_username_changer_toast_content,
-                                listOf(UiStringText("new_wordpressuser_username"))
+    fun `When the user has changed the username through a different screen and navigated back with new username, the new username should be updated and notified with the snackbar message`() =
+            test {
+                viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
+                val uiState = viewModel.accountSettingsUiState.value
+                assertThat(uiState.userNameSettingsUiState.userName)
+                        .withFailMessage("The user name should be updated when the new user name is confirmed by the different screen")
+                        .isEqualTo("new_wordpressuser_username")
+                assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
+                        .withFailMessage("The user should be notified of the user name change with snackbar message")
+                        .isEqualTo(true)
+                assertThat(uiState.userNameSettingsUiState.newUserChangeConfirmedSnackBarMessageHolder.message)
+                        .withFailMessage("The snackbar message should say 'Your new username is new_wordpressuser_username'")
+                        .isEqualTo(
+                                UiStringResWithParams(
+                                        string.settings_username_changer_toast_content,
+                                        listOf(UiStringText("new_wordpressuser_username"))
+                                )
                         )
-                )
-    }
+            }
 
     @Test
     fun `The user name should be allowed to change, only if the server return 'canUserNameBeChanged' as true`() =
@@ -146,21 +147,22 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
     // Email
     @Test
-    fun `If the user has pending email address change, the user should be notified to verify the email address via verification link sent`() = test {
-        whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
-        whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
-        initialiseViewModel()
-        val uiState = viewModel.accountSettingsUiState.value
-        assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-        assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
-                .withFailMessage("The snackbar message should say 'Click the verification link in the email sent to new_wordpressuser_username to confirm your new address'")
-                .isEqualTo(
-                        UiStringResWithParams(
-                                string.pending_email_change_snackbar,
-                                listOf(UiStringText(getAccountUseCase.account.newEmail))
+    fun `If the user has pending email address change, the user should be notified to verify the email address via verification link sent`() =
+            test {
+                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
+                whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
+                initialiseViewModel()
+                val uiState = viewModel.accountSettingsUiState.value
+                assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
+                assertThat(uiState.emailSettingsUiState.emailVerificationMsgSnackBarMessageHolder.message)
+                        .withFailMessage("The snackbar message should say 'Click the verification link in the email sent to new_wordpressuser_username to confirm your new address'")
+                        .isEqualTo(
+                                UiStringResWithParams(
+                                        string.pending_email_change_snackbar,
+                                        listOf(UiStringText(getAccountUseCase.account.newEmail))
+                                )
                         )
-                )
-    }
+            }
 
     @Test
     fun `If the user doesn't have any pending email address change, the user should not be asked to verify the email address`() =
@@ -173,32 +175,37 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
     // Email change
     @Test
-    fun `When the user tries to update a new email address, optimistically show the user as if the new email address change is requested even before updating in the server`() = test {
-        // Given
-        whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+    fun `When the user tries to update a new email address, optimistically show the user as if the new email address change is requested even before updating in the server`() =
+            test {
+                // Given
+                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
 
-        // Observe uiState change
-        initialiseViewModel()
-        val uiStateList  = mutableListOf<AccountSettingsUiState>()
-        val job = launch(TEST_DISPATCHER) {
-            viewModel.accountSettingsUiState.toList(uiStateList)
-        }
+                // Observe uiState change
+                initialiseViewModel()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
+                val job = launch(TEST_DISPATCHER) {
+                    viewModel.accountSettingsUiState.toList(uiStateList)
+                }
 
-        // mock server response
-        whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(mockErrorResponse())
-        whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
-        whenever(getAccountUseCase.account.newEmail).thenReturn("")
+                // mock server response
+                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(
+                        mockErrorResponse()
+                )
+                whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
+                whenever(getAccountUseCase.account.newEmail).thenReturn("")
 
-        // When
-        viewModel.onEmailChanged("new_wordpressuser@gmail.com")
+                // When
+                viewModel.onEmailChanged("new_wordpressuser@gmail.com")
 
-        // Then
-        assertThat(uiStateList[uiStateList.lastIndex-1].emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-        assertThat(uiStateList[uiStateList.lastIndex-1].emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
+                // Then
+                assertThat(uiStateList[uiStateList.lastIndex - 1].emailSettingsUiState.hasPendingEmailChange).isEqualTo(
+                        true
+                )
+                assertThat(uiStateList[uiStateList.lastIndex - 1].emailSettingsUiState.newEmail).isEqualTo("new_wordpressuser@gmail.com")
 
-        // Cleanup
-        job.cancel()
-    }
+                // Cleanup
+                job.cancel()
+            }
 
     @Test
     fun `When the user tries to update a new email and on error response, the user should be show an error and revert back from displaying of pending new email address verification`() =
@@ -208,13 +215,15 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
 
                 // mock server response
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(mockErrorResponse())
+                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(
+                        mockErrorResponse()
+                )
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(false)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("")
 
@@ -237,13 +246,15 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
 
                 // mock server response
-                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(mockSuccessResponse())
+                whenever(pushAccountSettingsUseCase.updateEmail("new_wordpressuser@gmail.com")).thenReturn(
+                        mockSuccessResponse()
+                )
                 whenever(getAccountUseCase.account.pendingEmailChange).thenReturn(true)
                 whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser@gmail.com")
 
@@ -268,7 +279,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
@@ -295,7 +306,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
@@ -324,20 +335,24 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
 
                 // mock server response
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(mockErrorResponse())
+                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(
+                        mockErrorResponse()
+                )
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
 
                 // When
                 viewModel.onPrimarySiteChanged(siteRemoteId = siteViewModels.first().siteId)
 
                 // Then
-                assertThat(uiStateList[uiStateList.lastIndex -1].primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(siteViewModels.first().siteId)
+                assertThat(uiStateList[uiStateList.lastIndex - 1].primarySiteSettingsUiState?.primarySite?.siteId).isEqualTo(
+                        siteViewModels.first().siteId
+                )
 
                 // Cleanup
                 job.cancel()
@@ -351,13 +366,15 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
 
                 // mock server response
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(mockErrorResponse())
+                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(
+                        mockErrorResponse()
+                )
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.last().siteId)
 
                 // When
@@ -378,13 +395,15 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER){
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
+                val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
 
                 // mock server response
-                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(mockSuccessResponse())
+                whenever(pushAccountSettingsUseCase.updatePrimaryBlog(siteViewModels.first().siteId.toString())).thenReturn(
+                        mockSuccessResponse()
+                )
                 whenever(getAccountUseCase.account.primarySiteId).thenReturn(siteViewModels.first().siteId)
 
                 // When
@@ -406,8 +425,8 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER){
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
+                val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
 
@@ -419,12 +438,11 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onWebAddressChanged("new_webaddress")
 
                 // Then
-                assertThat(uiStateList[uiStateList.lastIndex -1].webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
+                assertThat(uiStateList[uiStateList.lastIndex - 1].webAddressSettingsUiState.webAddress).isEqualTo("new_webaddress")
 
                 // Cleanup
                 job.cancel()
             }
-
 
     @Test
     fun `When user tries to update a new webaddress and on success response, new web address should be shown to user`() =
@@ -434,7 +452,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
 
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
@@ -459,29 +477,7 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
             test {
                 // Observe uiState change
                 initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
-                val job = launch(TEST_DISPATCHER){
-                    viewModel.accountSettingsUiState.toList(uiStateList)
-                }
-
-                // mock server response
-                whenever(pushAccountSettingsUseCase.updatePassword("new_password")).thenReturn(mockSuccessResponse())
-                // When
-                viewModel.onPasswordChanged("new_password")
-
-                // Then
-                assertThat(uiStateList[uiStateList.lastIndex - 1].changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(true)
-
-                // Cleanup
-                job.cancel()
-            }
-
-    @Test
-    fun `When the user tries to update the new password and on receiving the server response, dismiss the changing password progress dialog`() =
-            test {
-                // Observe uiState change
-                initialiseViewModel()
-                val uiStateList  = mutableListOf<AccountSettingsUiState>()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
                 val job = launch(TEST_DISPATCHER) {
                     viewModel.accountSettingsUiState.toList(uiStateList)
                 }
@@ -492,25 +488,50 @@ class AccountSettingsViewModelTest : BaseUnitTest(){
                 viewModel.onPasswordChanged("new_password")
 
                 // Then
-                assertThat(uiStateList.last().changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(false)
+                assertThat(uiStateList[uiStateList.lastIndex - 1].changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(
+                        true
+                )
 
                 // Cleanup
                 job.cancel()
             }
 
+    @Test
+    fun `When the user tries to update the new password and on receiving the server response, dismiss the changing password progress dialog`() =
+            test {
+                // Observe uiState change
+                initialiseViewModel()
+                val uiStateList = mutableListOf<AccountSettingsUiState>()
+                val job = launch(TEST_DISPATCHER) {
+                    viewModel.accountSettingsUiState.toList(uiStateList)
+                }
+
+                // mock server response
+                whenever(pushAccountSettingsUseCase.updatePassword("new_password")).thenReturn(mockSuccessResponse())
+                // When
+                viewModel.onPasswordChanged("new_password")
+
+                // Then
+                assertThat(uiStateList.last().changePasswordSettingsUiState.showChangePasswordProgressDialog).isEqualTo(
+                        false
+                )
+
+                // Cleanup
+                job.cancel()
+            }
 
     // Helper Methods
-    private fun mockSuccessResponse(): OnAccountChanged{
+    private fun mockSuccessResponse(): OnAccountChanged {
         return mock()
     }
 
-    private fun mockErrorResponse(): OnAccountChanged{
+    private fun mockErrorResponse(): OnAccountChanged {
         return OnAccountChanged().apply {
-            this.error = AccountError(GENERIC_ERROR,"")
+            this.error = AccountError(GENERIC_ERROR, "")
         }
     }
 
-    private fun initialiseViewModel(){
+    private fun initialiseViewModel() {
         viewModel = AccountSettingsViewModel(
                 resourceProvider,
                 networkUtilsWrapper,

@@ -33,6 +33,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val ONE_SITE = 1
+
 class AccountSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     networkUtilsWrapper: NetworkUtilsWrapper,
@@ -98,8 +99,8 @@ class AccountSettingsViewModel @Inject constructor(
         _accountSettingsUiState.update { state ->
             state.copy(
                     primarySiteSettingsUiState = PrimarySiteSettingsUiState(
-                         siteViewModels.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId },
-                         siteViewModels
+                            siteViewModels.firstOrNull { it.siteId == getAccountUseCase.account.primarySiteId },
+                            siteViewModels
                     )
             )
         }
@@ -111,10 +112,13 @@ class AccountSettingsViewModel @Inject constructor(
 
     fun onUsernameChangeConfirmedFromServer(userName: String) {
         _accountSettingsUiState.update {
-            it.copy(userNameSettingsUiState =
-            it.userNameSettingsUiState.copy(
-                    userName = userName,
-                    showUserNameConfirmedSnackBar = true))
+            it.copy(
+                    userNameSettingsUiState =
+                    it.userNameSettingsUiState.copy(
+                            userName = userName,
+                            showUserNameConfirmedSnackBar = true
+                    )
+            )
         }
     }
 
@@ -153,7 +157,7 @@ class AccountSettingsViewModel @Inject constructor(
             it.copy(
                     changePasswordSettingsUiState = it.changePasswordSettingsUiState.copy(
                             showChangePasswordProgressDialog = show
-                    ),
+                    )
             )
         }
     }
