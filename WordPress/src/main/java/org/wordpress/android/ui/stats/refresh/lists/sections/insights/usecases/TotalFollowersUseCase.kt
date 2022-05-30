@@ -66,7 +66,7 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     private fun addActionCard(domainModel: Int) {
-        if (domainModel == 0) actionCardHandler.display(InsightType.ACTION_GROW)
+        if (domainModel <= 1) actionCardHandler.display(InsightType.ACTION_GROW)
     }
 
     private fun buildTitle() = TitleWithMore(
