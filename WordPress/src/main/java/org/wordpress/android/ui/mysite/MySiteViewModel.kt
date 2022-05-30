@@ -28,8 +28,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_V
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt
-import org.wordpress.android.models.bloggingprompts.BloggingPromptRespondent
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -52,6 +50,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteInfoCa
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.SiteItemsBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
@@ -62,6 +61,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -150,6 +150,7 @@ class MySiteViewModel @Inject constructor(
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
@@ -163,7 +164,7 @@ class MySiteViewModel @Inject constructor(
     private val _onShare = MutableLiveData<Event<String>>()
     private val _onTrackWithTabSource = MutableLiveData<Event<MySiteTrackWithTabSource>>()
     private val _selectTab = MutableLiveData<Event<TabNavigation>>()
-    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<BloggingPrompt, SiteModel>>>()
+    private val _onAnswerBloggingPrompt = SingleLiveEvent<Event<Pair<SiteModel, PromptID>>>()
 
     private val tabsUiState: LiveData<TabsUiState> = quickStartRepository.onQuickStartTabStep
             .switchMap { quickStartSiteMenuStep ->
@@ -226,7 +227,7 @@ class MySiteViewModel @Inject constructor(
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onShare = _onShare
-    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<BloggingPrompt, SiteModel>>>
+    val onAnswerBloggingPrompt = _onAnswerBloggingPrompt as LiveData<Event<Pair<SiteModel, Int>>>
     val onTrackWithTabSource = _onTrackWithTabSource as LiveData<Event<MySiteTrackWithTabSource>>
     val selectTab: LiveData<Event<TabNavigation>> = _selectTab
     private var shouldMarkUpdateSiteTitleTaskComplete = false
@@ -263,7 +264,8 @@ class MySiteViewModel @Inject constructor(
                         visibleDynamicCards,
                         backupAvailable,
                         scanAvailable,
-                        cardsUpdate
+                        cardsUpdate,
+                        bloggingPromptsUpdate
                 )
                 selectDefaultTabIfNeeded()
                 trackCardsAndItemsShownIfNeeded(state)
@@ -294,7 +296,8 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?
     ): SiteSelected {
         val siteItems = buildSiteSelectedState(
                 site,
@@ -305,7 +308,8 @@ class MySiteViewModel @Inject constructor(
                 visibleDynamicCards,
                 backupAvailable,
                 scanAvailable,
-                cardsUpdate
+                cardsUpdate,
+                bloggingPromptUpdate
         )
 
         val siteInfoCardBuilderParams = SiteInfoCardBuilderParams(
@@ -392,7 +396,8 @@ class MySiteViewModel @Inject constructor(
         visibleDynamicCards: List<DynamicCardType>,
         backupAvailable: Boolean,
         scanAvailable: Boolean,
-        cardsUpdate: CardsUpdate?
+        cardsUpdate: CardsUpdate?,
+        bloggingPromptUpdate: BloggingPromptUpdate?
     ): Map<MySiteTabType, List<MySiteCardAndItem>> {
         val infoItem = siteItemsBuilder.build(
                 InfoItemBuilderParams(
@@ -432,27 +437,8 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                // TODO @klymyam fetch the actual blogging prompt
                                 bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
-                                    @Suppress("MagicNumber")
-                                    val dummyRespondent = BloggingPromptRespondent(
-                                            54279365,
-                                            "https://0.gravatar.com/avatar/cec64efa352617" +
-                                                    "c35743d8ed233ab410?s=96&d=identicon&r=G"
-                                    )
-                                    @Suppress("MagicNumber")
-                                    BloggingPrompt(
-                                        1234,
-                                        "Cast the movie of your life",
-                                        "",
-                                        listOf(
-                                            dummyRespondent,
-                                            dummyRespondent,
-                                            dummyRespondent,
-                                            dummyRespondent,
-                                            dummyRespondent
-                                        )
-                                    )
+                                    bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
                                 onAnswerClick = this::onBloggingPromptAnswerClick
@@ -1189,19 +1175,10 @@ class MySiteViewModel @Inject constructor(
         onShare.postValue(Event(message))
     }
 
-    @Suppress("MaxLineLength")
-    /* ktlint-disable max-line-length */
-    private fun onBloggingPromptAnswerClick() {
-        val bloggingPrompt = BloggingPrompt(
-                id = 1234,
-                text = "Cast the movie of your life.",
-                content = "<!-- wp:pullquote -->\n" +
-                        "<figure class=\"wp-block-pullquote\"><blockquote><p>You have 15 minutes to address the whole world live (on television or radio — choose your format). What would you say?</p><cite>(courtesy of plinky.com)</cite></blockquote></figure>\n" +
-                        "<!-- /wp:pullquote -->",
-                respondents = emptyList()
-        )
+    private fun onBloggingPromptAnswerClick(promptId: Int) {
+        bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        _onAnswerBloggingPrompt.postValue(Event(Pair(bloggingPrompt, selectedSite)))
+        _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()

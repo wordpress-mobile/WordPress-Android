@@ -1,6 +1,13 @@
 package org.wordpress.android.ui.quickstart
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_CUSTOMIZE_DISMISSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_CUSTOMIZE_VIEWED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GROW_DISMISSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TYPE_GROW_VIEWED
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -36,6 +43,24 @@ class QuickStartTracker @Inject constructor(
                 cardsShownTracked.add(cardsShownTrackedPair)
                 analyticsTrackerWrapper.track(Stat.QUICK_START_CARD_SHOWN, props)
             }
+        }
+    }
+
+    fun trackQuickStartListViewed(tasksType: QuickStartTaskType) {
+        when (tasksType) {
+            QuickStartTaskType.CUSTOMIZE -> track(QUICK_START_TYPE_CUSTOMIZE_VIEWED)
+            QuickStartTaskType.GROW -> track(QUICK_START_TYPE_GROW_VIEWED)
+            QuickStartTaskType.GET_TO_KNOW_APP -> track(QUICK_START_TYPE_GET_TO_KNOW_APP_VIEWED)
+            QuickStartTaskType.UNKNOWN -> Unit // Do Nothing
+        }
+    }
+
+    fun trackQuickStartListDismissed(tasksType: QuickStartTaskType) {
+        when (tasksType) {
+            QuickStartTaskType.CUSTOMIZE -> track(QUICK_START_TYPE_CUSTOMIZE_DISMISSED)
+            QuickStartTaskType.GROW -> track(QUICK_START_TYPE_GROW_DISMISSED)
+            QuickStartTaskType.GET_TO_KNOW_APP -> track(QUICK_START_TYPE_GET_TO_KNOW_APP_DISMISSED)
+            QuickStartTaskType.UNKNOWN -> Unit // Do Nothing
         }
     }
 

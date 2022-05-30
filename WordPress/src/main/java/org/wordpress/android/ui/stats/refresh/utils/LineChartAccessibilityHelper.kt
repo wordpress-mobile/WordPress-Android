@@ -1,11 +1,12 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Bundle
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat
 import androidx.customview.widget.ExploreByTouchHelper
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 
@@ -29,7 +30,7 @@ class LineChartAccessibilityHelper(
 
         return when {
             entry != null -> {
-                dataSet.getEntryIndex(entry as BarEntry?)
+                dataSet.getEntryIndex(entry as Entry?)
             }
             else -> {
                 INVALID_ID
@@ -74,10 +75,11 @@ class LineChartAccessibilityHelper(
         }
 
         node.addAction(AccessibilityActionCompat.ACTION_CLICK)
-//        val entryRectF = lineChart.getClipBounds(dataSet.getEntryForIndex(virtualViewId))
-//        val entryRect = Rect()
-//        entryRectF.round(entryRect)
-//
-//        node.setBoundsInParent(entryRect)
+        val entry = dataSet.getEntryForIndex(virtualViewId)
+        val entryRectF = RectF(entry.x, entry.y, entry.y, entry.x)
+        val entryRect = Rect()
+        entryRectF.round(entryRect)
+
+        node.setBoundsInParent(entryRect)
     }
 }

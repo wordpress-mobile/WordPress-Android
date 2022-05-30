@@ -80,6 +80,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     private static final String TRACK_PROPERTY_USERNAME = "username";
     private static final String TRACK_PROPERTY_PAGE = "page";
     private static final String TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS = "account_settings";
+    private static final String EMPTY_STRING = "";
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -238,6 +239,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         AccountModel account = mAccountStore.getAccount();
         mUsernamePreference.setSummary(account.getUserName());
         mEmailPreference.setSummary(account.getEmail());
+        mChangePasswordPreference.setSummary(EMPTY_STRING);
         mWebAddressPreference.setSummary(account.getWebAddress());
         changePrimaryBlogPreference(account.getPrimarySiteId());
         checkIfEmailChangeIsPending();

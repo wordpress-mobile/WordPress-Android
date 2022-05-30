@@ -41,6 +41,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -88,6 +89,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
@@ -161,7 +163,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 )
         )
 
-        val adapter = MySiteAdapter(imageManager, uiHelpers)
+        val adapter = MySiteAdapter(imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker)
 
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -243,10 +245,10 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
         viewModel.onUploadedItem.observeEvent(viewLifecycleOwner, { handleUploadedItem(it) })
         viewModel.onShare.observeEvent(viewLifecycleOwner) { shareMessage(it) }
         viewModel.onAnswerBloggingPrompt.observeEvent(viewLifecycleOwner) {
-            val bloggingPrompt = it.first
-            val site = it.second
+            val site = it.first
+            val bloggingPromptId = it.second
             ActivityLauncher.addNewPostForResult(
-                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.id
+                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPromptId
             )
         }
     }
@@ -345,7 +347,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
-                .setTitle(action.title)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)

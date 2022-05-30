@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import org.wordpress.android.R
+import org.wordpress.android.R.color
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Chips
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Views
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.SelectedType.Visitors
@@ -20,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -42,6 +45,14 @@ class ViewsAndVisitorsMapper
 
         companion object {
             fun valueOf(value: Int): SelectedType? = values().find { it.value == value }
+            fun getColor(selectedType: Int): Int = when (selectedType) {
+                0 -> color.blue_50
+                else -> color.purple_50
+            }
+            fun getFillDrawable(selectedType: Int): Int = when (selectedType) {
+                0 -> R.drawable.bg_rectangle_stats_line_chart_blue_gradient
+                else -> R.drawable.bg_rectangle_stats_line_chart_purple_gradient
+            }
         }
     }
 
@@ -146,9 +157,27 @@ class ViewsAndVisitorsMapper
 
     fun buildInformation(
         dates: List<PeriodData>,
-        selectedPosition: Int
+        selectedPosition: Int,
+        navigationAction: (() -> Unit?)? = null
     ): Text {
         val (thisWeekCount, prevWeekCount) = mapDatesToWeeks(dates, selectedPosition)
+
+        if (thisWeekCount <= 0 || prevWeekCount <= 0) {
+            return Text(
+                    text = resourceProvider.getString(
+                            string.stats_insights_views_and_visitors_visitors_empty_state,
+                            EXTERNAL_LINK_ICON_TOKEN
+                    ),
+                    links = listOf(
+                            Clickable(
+                                    icon = R.drawable.ic_external_white_24dp,
+                                    navigationAction = ListItemInteraction.create(
+                                            action = { navigationAction?.invoke() }
+                                    )
+                            )
+                    )
+            )
+        }
 
         val positive = thisWeekCount >= (prevWeekCount ?: 0)
         val change = statsUtils.buildChange(prevWeekCount, thisWeekCount, positive, isFormattedNumber = true)
@@ -221,5 +250,9 @@ class ViewsAndVisitorsMapper
         val thisWeekCount = thisWeekData.fold(0L) { acc, next -> acc + next }
 
         return Pair(thisWeekCount, prevWeekCount)
+    }
+
+    companion object {
+        const val EXTERNAL_LINK_ICON_TOKEN = "ICON"
     }
 }

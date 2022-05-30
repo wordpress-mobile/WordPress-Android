@@ -978,6 +978,7 @@
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="stats_fewer_posts">Fewer posts</string>
     <string name="stats_more_posts">More posts</string>
     <string name="stats_site_not_loaded_yet" tools:ignore="UnusedResources">Site not loaded yet</string>
@@ -1002,6 +1003,7 @@
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
@@ -1303,10 +1305,11 @@
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Your this week\'s views are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Your this week\'s views are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Your this week\'s visitors are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Your this week\'s visitors are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Your views this week are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">If you want to try to get more views and traffic, check out our top tips %1$s</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_popular">Most Popular Time</string>
@@ -1331,7 +1334,7 @@
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Check back later once you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_create_post">Create post</string>
@@ -1346,12 +1349,17 @@
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
+    <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
 
     <string name="stats_insights_management_general">General</string>
     <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
     <string name="stats_insights_management_activity">Activity</string>
+
+    <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
+    <string name="stats_insights_comments_guide_card">💡See your top contributors by tapping VIEW MORE.</string>
+    <string name="stats_insights_followers_guide_card">💡You can try leaving a comment as a gesture to encourage blog engagement in return to gain more followers.</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
@@ -2323,6 +2331,7 @@
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
+    <string name="me_btn_scan_login_code">Scan Login Code</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
@@ -3035,8 +3044,6 @@
     <string name="fab_create_desc">Create a post</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
     <string name="suggestions_updated_content_description">Suggestions updated</string>
     <string name="navigate_forward_desc">Go forward</string>
     <string name="navigate_back_desc">Go back</string>
@@ -3058,8 +3065,6 @@
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
@@ -3100,7 +3105,6 @@
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_upload_media_message">Select %1$s Media %2$s to see your current library.</string>
-    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
     <string name="quick_start_list_check_stats_title">Check your site stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
@@ -3126,11 +3130,13 @@
     <string name="quick_start_list_check_notification_title" translatable="false">@string/quick_start_dialog_check_notifications_title</string>
     <string name="quick_start_list_upload_media_title">Upload photos or videos</string>
     <string name="quick_start_list_upload_media_subtitle">Bring media straight from your device or camera to your site</string>
+    <string name="quick_start_list_task_complete">Task complete</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_sites_type_customize">Customize your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
+    <string name="quick_start_sites_type_all_tasks_completed">All tasks completed</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
@@ -4135,4 +4141,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
         <item>@string/initial_screen_entry_value_home</item>
         <item>@string/initial_screen_entry_value_menu</item>
     </string-array>
+
+    <!-- QRCode Auth Flow -->
+    <string name="qrcode_auth_flow" translatable="false">Scan Login Code</string>
+
 </resources>
