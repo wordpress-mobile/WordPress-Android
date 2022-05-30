@@ -708,6 +708,11 @@
         <item name="tint">@android:color/white</item>
     </style>
 
+    <style name="NewQuickStartImage">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
     <style name="QuickStartTitle">
         <item name="android:gravity">center_vertical</item>
         <item name="android:minHeight">24dp</item>
@@ -735,9 +740,27 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
+    <style name="NewQuickStartTypeRow">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?attr/listPreferredItemHeight</item>
+    </style>
+
     <style name="QuickStartTypeTitle" parent="MySiteCardItemTitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+    </style>
+
+    <style name="NewQuickStartTypeTitle" parent="MySiteCardItemTitle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
     </style>
 

@@ -3136,6 +3136,7 @@
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
+    <string name="quick_start_sites_type_all_tasks_completed">All tasks completed</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
