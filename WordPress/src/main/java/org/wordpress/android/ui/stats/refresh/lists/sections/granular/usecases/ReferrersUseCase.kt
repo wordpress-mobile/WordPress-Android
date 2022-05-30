@@ -198,7 +198,9 @@ class ReferrersUseCase(
                 }
             }
 
-            if (useCaseMode == BLOCK && domainModel.hasMore) {
+            val shouldShowViewMore = itemCount < domainModel.groups.size ||
+                    (useCaseMode == BLOCK && domainModel.hasMore)
+            if (shouldShowViewMore) {
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
