@@ -49,7 +49,7 @@ class AccountSettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getSites()
+            updatePrimarySiteSettingsUiState()
         }
         if (networkUtilsWrapper.isNetworkAvailable()) {
             fetchNewSettingsJob = viewModelScope.launch {
@@ -91,7 +91,7 @@ class AccountSettingsViewModel @Inject constructor(
         return optimisticUpdateHandler.applyOptimisticallyChangedPreferences(uistate)
     }
 
-    private suspend fun getSites() {
+    private suspend fun updatePrimarySiteSettingsUiState() {
         val siteViewModels = getSitesUseCase.get().map {
             SiteViewModel(SiteUtils.getSiteNameOrHomeURL(it), it.siteId, SiteUtils.getHomeURLOrHostName(it))
         }
