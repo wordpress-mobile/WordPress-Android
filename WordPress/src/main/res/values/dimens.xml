@@ -448,7 +448,7 @@
     <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
     <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
 
-    <dimen name="new_quick_start_card_illustration_image_width">54dp</dimen>
+    <dimen name="new_quick_start_card_illustration_image_width">48dp</dimen>
     <dimen name="new_quick_start_card_task_completed_icon_size">16dp</dimen>
     <dimen name="new_quick_start_card_progress_bar_height">5dp</dimen>
 
