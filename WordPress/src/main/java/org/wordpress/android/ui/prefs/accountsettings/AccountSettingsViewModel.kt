@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore.AccountError
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_GENERIC_ERROR
 import org.wordpress.android.fluxc.store.AccountStore.AccountErrorType.SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR
@@ -184,14 +184,14 @@ class AccountSettingsViewModel @Inject constructor(
 
     private fun handleError(accountError: AccountError) {
         val errorMessage = when (accountError.type) {
-            SETTINGS_FETCH_GENERIC_ERROR -> resourceProvider.getString(string.error_fetch_account_settings)
-            SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR -> resourceProvider.getString(string.error_disabled_apis)
+            SETTINGS_FETCH_GENERIC_ERROR -> resourceProvider.getString(R.string.error_fetch_account_settings)
+            SETTINGS_FETCH_REAUTHORIZATION_REQUIRED_ERROR -> resourceProvider.getString(R.string.error_disabled_apis)
             SETTINGS_POST_ERROR -> {
                 if (!TextUtils.isEmpty(accountError.message)) accountError.message else resourceProvider.getString(
-                        string.error_post_account_settings
+                        R.string.error_post_account_settings
                 )
             }
-            else -> resourceProvider.getString(string.error_post_account_settings)
+            else -> resourceProvider.getString(R.string.error_post_account_settings)
         }
         updateErrorUiState(errorMessage)
     }
@@ -217,7 +217,7 @@ class AccountSettingsViewModel @Inject constructor(
         val newUserChangeConfirmedSnackBarMessageHolder
             get() = SnackbarMessageHolder(
                     message = UiStringResWithParams(
-                            string.settings_username_changer_toast_content,
+                            R.string.settings_username_changer_toast_content,
                             listOf(UiStringText(userName))
                     ),
                     duration = Snackbar.LENGTH_LONG
@@ -233,10 +233,10 @@ class AccountSettingsViewModel @Inject constructor(
         val emailVerificationMsgSnackBarMessageHolder
             get() = SnackbarMessageHolder(
                     message = UiStringResWithParams(
-                            string.pending_email_change_snackbar,
+                            R.string.pending_email_change_snackbar,
                             listOf(UiStringText(newEmail ?: ""))
                     ),
-                    buttonTitle = UiStringRes(string.button_discard),
+                    buttonTitle = UiStringRes(R.string.button_discard),
                     buttonAction = { onCancelEmailChange() },
                     duration = Snackbar.LENGTH_INDEFINITE
             )
