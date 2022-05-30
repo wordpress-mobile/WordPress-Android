@@ -163,8 +163,8 @@ class AccountSettingsViewModel @Inject constructor(
     }
 
     private fun onAccountSettingsChange(
-        addOptimisticUpdate: (() -> Unit?)? = null,
-        removeOptimisticUpdate: (() -> Unit?)? = null,
+        addOptimisticUpdate: (() -> Unit)? = null,
+        removeOptimisticUpdate: (() -> Unit)? = null,
         updateAccountSettings: suspend () -> OnAccountChanged
     ) {
         addOptimisticUpdate?.let {

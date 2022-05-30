@@ -57,7 +57,7 @@ class AccountSettingsOptimisticUpdateHandler @Inject constructor() {
         return uiState
     }
 
-    fun update(preferenceKey: String, value: String): () -> Unit? = {
+    fun update(preferenceKey: String, value: String): () -> Unit = {
         optimisticallyChangedPreferenceMap[preferenceKey] = optimisticallyChangedPreferenceMap.getOrDefault(
                 preferenceKey,
                 listOf()
@@ -65,13 +65,16 @@ class AccountSettingsOptimisticUpdateHandler @Inject constructor() {
         null
     }
 
-    fun removeFirstChange(preferenceKey: String): () -> Unit? = {
-        val preferenceValue = optimisticallyChangedPreferenceMap.getOrDefault(preferenceKey, listOf())
+    fun removeFirstChange(preferenceKey: String): () -> Unit = removeFirstChange@{
+        val preferenceValue = optimisticallyChangedPreferenceMap
+                .getOrDefault(preferenceKey, listOf())
+        if (preferenceValue.isEmpty()) {
+            return@removeFirstChange
+        }
         if (preferenceValue.size == 1) {
             optimisticallyChangedPreferenceMap.remove(preferenceKey)
         } else {
             optimisticallyChangedPreferenceMap[preferenceKey] = preferenceValue.drop(1)
         }
-        null
     }
 }
