@@ -2,7 +2,7 @@
 
 20.1
 -----
-
+* [*] Site creation: enhances the design selection screen with recommended designs [https://github.com/wordpress-mobile/WordPress-Android/pull/16468]
 
 20.0
 -----
