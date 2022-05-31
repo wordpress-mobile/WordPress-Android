@@ -103,6 +103,7 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
 
         data class QuickStartCard(
             val title: UiString,
+            val toolbarVisible: Boolean = true,
             val moreMenuVisible: Boolean = true,
             val onRemoveMenuItemClick: ListItemInteraction,
             val taskTypeItems: List<QuickStartTaskTypeItem>
@@ -175,7 +176,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val title: UiString,
                         val excerpt: UiString,
                         @DrawableRes val imageRes: Int,
-                        override val footerLink: FooterLink
+                        override val footerLink: FooterLink,
+                        val onClick: ListItemInteraction
                     ) : PostCard(
                             dashboardCardType = DashboardCardType.POST_CARD_WITHOUT_POST_ITEMS,
                             footerLink = footerLink

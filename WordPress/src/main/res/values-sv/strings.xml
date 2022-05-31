@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 11:54:08+0000
+Translation-Revision-Date: 2022-05-27 14:32:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
@@ -1673,12 +1673,9 @@ Language: sv_SE
     <string name="quick_start_complete_tasks_header">Klart (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Välj en unik webbplats-ikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tryck på %1$spaket%2$s för att se ditt nuvarande paket och andra paket du kan välja</string>
     <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$s statistik %2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
     <string name="quick_start_dialog_publish_post_message">Gör ett utkast och publicera ett inlägg.</string>
-    <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
-    <string name="quick_start_dialog_explore_plans_message">Läs om verktygen för marknadsföring och sökoptimering i våra betalda paket.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivera delning av inlägg</string>
     <string name="quick_start_dialog_enable_sharing_message">Dela automatiskt dina nya inlägg i dina olika konton i sociala media.</string>
     <string name="quick_start_dialog_check_stats_title">Kontrollera statistiken för din webbplats</string>
@@ -1851,7 +1848,7 @@ Language: sv_SE
     <string name="quick_start_focus_point_description">tryck här</string>
     <string name="quick_start_list_create_site_title">Skapa din webbplats</string>
     <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats.</string>
-    <string name="quick_start_completed_tour_subtitle">Visst är det skönt att kunna bocka av i en lista!</string>
+    <string name="quick_start_completed_tour_subtitle">Visst är det skönt att kunna bocka av saker i en lista?</string>
     <string name="quick_start_dialog_view_site_title">Visa din webbplats</string>
     <string name="quick_start_dialog_view_site_message">Förhandsgranska din webbplats för att se vad dina besökare kommer att se.</string>
     <string name="quick_start_dialog_share_site_title">Dela din webbplats</string>

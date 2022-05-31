@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-19 15:54:07+0000
+Translation-Revision-Date: 2022-05-27 14:32:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
@@ -1670,15 +1670,12 @@ Language: he_IL
     <string name="quick_start_sites">לשלב הבא</string>
     <string name="quick_start_complete_tasks_header">הושלם (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">המבקרים באתר יראו את הסמל שלך בדפדפן שלהם. ניתן להוסיף סמל מותאם אישית למראה נקי ומקצועי.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">יש להקיש על %1$s התוכנית %2$s כדי להציג את התוכנית הנוכחית שלך ותוכניות אחרות שזמינות</string>
     <string name="quick_start_sites_type_grow">להגדיל את הקהל שלך</string>
     <string name="quick_start_sites_type_customize">להתאים אישית את האתר שלך</string>
     <string name="quick_start_dialog_upload_icon_title">בחירת סמל אתר ייחודי</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
     <string name="quick_start_dialog_publish_post_message">רישום טיוטה ופרסום פוסט.</string>
     <string name="quick_start_dialog_check_stats_message_short">יש לבחור ⁦%1$s⁩ נתונים סטטיסטיים ⁦%2$s⁩ כדי להציג את הביצועים של האתר שלך.</string>
-    <string name="quick_start_dialog_explore_plans_title">עיון בתוכניות</string>
-    <string name="quick_start_dialog_explore_plans_message">מידע נוסף על כלי שיווק ו-SEO בתוכניות שלנו בתשלום.</string>
     <string name="quick_start_dialog_enable_sharing_title">הפעלת השיתוף של הפוסטים</string>
     <string name="quick_start_dialog_enable_sharing_message">שיתוף אוטומטי של פוסטים חדשים בחשבונות שלך ברשתות החברתיות.</string>
     <string name="quick_start_dialog_check_stats_title">בדיקת הנתונים הסטטיסטיים של האתר שלך</string>
@@ -1850,6 +1847,7 @@ Language: he_IL
     <string name="set_parent">הגדרת הורה</string>
     <string name="quick_start_focus_point_description">יש להקיש כאן</string>
     <string name="quick_start_list_create_site_title">יצירת האתר שלך</string>
+    <string name="quick_start_completed_tour_subtitle">שמחים שהשלמת את המטרה שהצבת לעצמך!</string>
     <string name="quick_start_list_create_site_subtitle">הפעל את האתר שלך.</string>
     <string name="quick_start_dialog_view_site_title">הצגת האתר שלך</string>
     <string name="quick_start_dialog_share_site_title">שיתוף האתר שלך</string>

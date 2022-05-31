@@ -687,45 +687,45 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
+    <style name="QuickStartListTitle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="QuickStartLayout">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingStart">@dimen/margin_extra_large</item>
-        <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
     <style name="QuickStartIcon">
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_height">24dp</item>
-        <item name="android:layout_marginEnd">32dp</item>
-        <item name="android:layout_width">24dp</item>
-        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="tint">@android:color/white</item>
+    </style>
+
+    <style name="NewQuickStartImage">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="QuickStartTitle">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:minHeight">24dp</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="QuickStartSubtitle">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-    </style>
-
-    <style name="QuickStartDivider">
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:background">?android:attr/listDivider</item>
-        <item name="android:layout_height">@dimen/divider_size</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">@dimen/material_emphasis_disabled</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="QuickStartTypeRow">
@@ -740,9 +740,27 @@
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
+    <style name="NewQuickStartTypeRow">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?attr/listPreferredItemHeight</item>
+    </style>
+
     <style name="QuickStartTypeTitle" parent="MySiteCardItemTitle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+    </style>
+
+    <style name="NewQuickStartTypeTitle" parent="MySiteCardItemTitle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
     </style>
 

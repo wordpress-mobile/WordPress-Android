@@ -213,7 +213,6 @@ Language: vi_VN
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tên miền của bạn sẽ chỉ hướng tới %s</string>
     <string name="gutenberg_native_create_link">Chèn liên kết</string>
-    <string name="domain_registration_result_description">Đang đăng ký tên miền &lt;b&gt;%s&lt;/b&gt; mới. Quá trình này có thể mất đến 30 phút.</string>
     <string name="domain_registration_result_title">Bạn đã mua xong tên miền!</string>
     <string name="domains_suggestions_select_domain">Chọn tên miền</string>
     <string name="domains_title">Tên miền</string>
@@ -1617,11 +1616,8 @@ Language: vi_VN
     <string name="quick_start_complete_tasks_header">Hoàn thành (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Chọn biểu tượng blog</string>
     <string name="quick_start_dialog_upload_icon_message">Khách truy cập trang sẽ thấy biểu tượng của bạn trên trình duyệt. Thêm một biểu tượng xinh đẹp hoặc chuyên nghiệp.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Nhấn %1$s Gói dịch vụ %2$s để xem gói hiện tại của bạn và những gói khác.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
     <string name="quick_start_dialog_publish_post_message">Tạo nháp và đăng một bài viết.</string>
-    <string name="quick_start_dialog_explore_plans_title">Tìm hiểu các gói</string>
-    <string name="quick_start_dialog_explore_plans_message">Học về marketing và công cụ SEO trong các gói nâng cấp.</string>
     <string name="quick_start_dialog_enable_sharing_title">Bật chia sẻ bài viết</string>
     <string name="quick_start_dialog_enable_sharing_message">Tự động chia sẻ bài mới tới những mạng xã hội của bạn.</string>
     <string name="quick_start_dialog_check_stats_title">Kiểm tra thống kê blog</string>

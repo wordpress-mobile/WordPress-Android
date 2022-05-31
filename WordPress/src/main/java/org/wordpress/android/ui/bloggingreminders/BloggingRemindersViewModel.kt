@@ -215,6 +215,7 @@ class BloggingRemindersViewModel @Inject constructor(
             outState.putStringArrayList(SELECTED_DAYS, ArrayList(model.enabledDays.map { it.name }))
             outState.putInt(SELECTED_HOUR, model.hour)
             outState.putInt(SELECTED_MINUTE, model.minute)
+            outState.putBoolean(IS_BLOGGING_PROMPT_INCLUDED, model.isPromptIncluded)
         }
         _isFirstTimeFlow.value?.let {
             outState.putBoolean(IS_FIRST_TIME_FLOW, it)
@@ -230,7 +231,14 @@ class BloggingRemindersViewModel @Inject constructor(
             val enabledDays = state.getStringArrayList(SELECTED_DAYS)?.map { DayOfWeek.valueOf(it) }?.toSet() ?: setOf()
             val selectedHour = state.getInt(SELECTED_HOUR)
             val selectedMinute = state.getInt(SELECTED_MINUTE)
-            _bloggingRemindersModel.value = BloggingRemindersUiModel(siteId, enabledDays, selectedHour, selectedMinute)
+            val isPromptIncluded = state.getBoolean(IS_BLOGGING_PROMPT_INCLUDED)
+            _bloggingRemindersModel.value = BloggingRemindersUiModel(
+                    siteId,
+                    enabledDays,
+                    selectedHour,
+                    selectedMinute,
+                    isPromptIncluded
+            )
         }
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
@@ -295,6 +303,7 @@ class BloggingRemindersViewModel @Inject constructor(
         private const val SELECTED_DAYS = "key_selected_days"
         private const val SELECTED_HOUR = "key_selected_hour"
         private const val SELECTED_MINUTE = "key_selected_minute"
+        private const val IS_BLOGGING_PROMPT_INCLUDED = "key_is_blogging_prompt_included"
         private const val IS_FIRST_TIME_FLOW = "is_first_time_flow"
         private const val SITE_ID = "key_site_id"
     }

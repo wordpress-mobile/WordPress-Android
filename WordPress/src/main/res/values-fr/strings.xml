@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 13:54:08+0000
+Translation-Revision-Date: 2022-05-27 14:31:25+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
@@ -1673,12 +1673,9 @@ Language: fr
     <string name="quick_start_complete_tasks_header">Terminé (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Choisir une favicône unique </string>
     <string name="quick_start_dialog_upload_icon_message">Vos visiteurs verront votre icône dans leur navigateur. Ajoutez une icône personnalisée pour un aspect brillant et pro.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Appuyez sur %1$s Plan %2$s pour voir votre plan actuel et les autres plans disponibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Sélectionnez %1$s Statistiques %2$s pour voir comment votre site se comporte.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Appuyez sur %1$s Votre icône de site %2$s pour en téléverser une nouvelle</string>
     <string name="quick_start_dialog_publish_post_message">Rédiger un brouillon et publier un article de blog.</string>
-    <string name="quick_start_dialog_explore_plans_title">Explorer les plans</string>
-    <string name="quick_start_dialog_explore_plans_message">Apprenez-en plus sur le marketing et les outils SEO dans nos plans payants.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activer le partage d’article</string>
     <string name="quick_start_dialog_enable_sharing_message">Partager automatiquement les nouveaux articles sur vos comptes de réseaux sociaux.</string>
     <string name="quick_start_dialog_check_stats_title">Découvrez les statistiques de votre site</string>
