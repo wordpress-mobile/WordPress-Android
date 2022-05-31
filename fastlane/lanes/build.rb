@@ -211,15 +211,14 @@ platform :android do
   # Usage:
   # bundle exec fastlane build_and_upload_installable_build
   #####################################################################################
-  desc "Build an Installable Build and make it available for download"
-  lane :build_and_upload_wordpress_installable_build do | options |
-
+  desc 'Build an Installable Build and make it available for download'
+  lane :build_and_upload_wordpress_installable_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
     gradle(
-      task: "assemble",
-      flavor: "WordPressJalapeno",
-      build_type: "Debug"
+      task: 'assemble',
+      flavor: 'WordPressJalapeno',
+      build_type: 'Debug'
     )
 
     upload_installable_build(product: 'WordPress')
@@ -233,15 +232,14 @@ platform :android do
   # Usage:
   # bundle exec fastlane build_and_upload_installable_build
   #####################################################################################
-  desc "Build an Installable Build and make it available for download"
-  lane :build_and_upload_jetpack_installable_build do | options |
-
+  desc 'Build an Installable Build and make it available for download'
+  lane :build_and_upload_jetpack_installable_build do
     UI.user_error!("'BUILDKITE_ARTIFACTS_S3_BUCKET' must be defined as an environment variable.") unless ENV['BUILDKITE_ARTIFACTS_S3_BUCKET']
 
     gradle(
-      task: "assemble",
-      flavor: "JetpackJalapeno",
-      build_type: "Debug"
+      task: 'assemble',
+      flavor: 'JetpackJalapeno',
+      build_type: 'Debug'
     )
 
     upload_installable_build(product: 'Jetpack')
@@ -307,8 +305,11 @@ platform :android do
     "#{build_dir}#{name}"
   end
 
+  # Uploads the apk built by the `gradle` (i.e. `SharedValues::GRADLE_APK_OUTPUT_PATH`) to S3 then comment on the PR to provide the download link
+  #
+  # @param [String] product the display name of the app to upload to S3. 'WordPress' or 'Jetpack'
+  #
   def upload_installable_build(product:)
-
     filename = "#{product.downcase}-installable-build-#{generate_installable_build_number}.apk"
 
     upload_path = upload_to_s3(
@@ -317,8 +318,10 @@ platform :android do
       file: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
     )
 
+    return if ENV['BUILDKITE_PULL_REQUEST'].nil?
+
     install_url = "#{INSTALLABLE_BUILD_DOMAIN}/#{upload_path}"
-    qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{URI::encode( install_url )}&choe=UTF-8"
+    qr_code_url = "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=#{CGI.escape(install_url)}&choe=UTF-8"
     comment_body = "You can test the #{product} changes on this Pull Request by <a href='#{install_url}'>downloading an installable build (#{filename})</a>, or scanning this QR code:<br><a href='#{install_url}'><img src='#{qr_code_url}' width='250' height='250' /></a>"
 
     comment_on_pr(
@@ -326,24 +329,23 @@ platform :android do
       pr_number: Integer(ENV['BUILDKITE_PULL_REQUEST']),
       reuse_identifier: "#{product.downcase}-installable-build-link",
       body: comment_body
-    ) unless ENV['BUILDKITE_PULL_REQUEST'].nil?
+    )
   end
 
   # This function is Buildkite-specific
   def generate_installable_build_number
-
     if ENV['BUILDKITE']
-      commit = ENV['BUILDKITE_COMMIT'][0,7]
+      commit = ENV['BUILDKITE_COMMIT'][0, 7]
       branch = ENV['BUILDKITE_BRANCH'].parameterize
       pr_num = ENV['BUILDKITE_PULL_REQUEST']
 
-      return pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
+      pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
     else
       repo = Git.open(PROJECT_ROOT_FOLDER)
       commit = repo.current_branch.parameterize
       branch = repo.revparse('HEAD')[0, 7]
 
-      return "#{branch}-#{commit}"
+      "#{branch}-#{commit}"
     end
   end
 end
