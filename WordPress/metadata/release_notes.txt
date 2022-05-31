@@ -1,8 +1,4 @@
-- Drag-and-drop blocks in the editor
-- Better color contrast on Cover blocks
-- Buttons block formatting options stay visible
-- Separate Quick Start tasks for new vs existing sites
-- Copy Link for published pages
-- No + icon in self-hosted site block editor
-- Link To/Image Size settings in Gallery blocks
-- No tour banner in unsupported block editor
+* [*] Block Editor: A11y: Improve text read by screen readers for BottomSheetSelectControl [https://github.com/WordPress/gutenberg/pull/41036]
+* [*] Block Editor: Add 'Insert from URL' option to Image block [https://github.com/WordPress/gutenberg/pull/40334]
+* [*] Quick Start: The "Get to know the app" card and Quick start tour list has a fresh new look [https://github.com/wordpress-mobile/WordPress-Android/pull/16629,https://github.com/wordpress-mobile/WordPress-Android/pull/16639]
+
