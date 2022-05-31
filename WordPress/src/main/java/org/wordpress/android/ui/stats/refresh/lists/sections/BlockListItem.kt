@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
@@ -70,6 +71,7 @@ sealed class BlockListItem(val type: Type) {
         CHIPS,
         LINK,
         BAR_CHART,
+        PIE_CHART,
         LINE_CHART,
         CHART_LEGEND,
         CHART_LEGENDS_BLUE,
@@ -258,6 +260,19 @@ sealed class BlockListItem(val type: Type) {
         val entryContentDescriptions: List<String>
     ) : BlockListItem(BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
+
+    data class PieChartItem(
+        val entries: List<Pie>,
+        val totalLabel: String,
+        val total: String,
+        val colors: List<Int>,
+        val contentDescription: String
+    ) : BlockListItem(PIE_CHART) {
+        data class Pie(val label: String, val value: Int)
 
         override val itemId: Int
             get() = entries.hashCode()

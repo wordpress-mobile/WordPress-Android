@@ -1392,6 +1392,10 @@
     <string name="stats_referrers">Referrers</string>
     <string name="stats_referrer_label">Referrer</string>
     <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_referrers_pie_chart_total_label">Views</string>
+    <string name="stats_referrers_pie_chart_wordpress">Wordpress</string>
+    <string name="stats_referrers_pie_chart_search">Search</string>
+    <string name="stats_referrers_pie_chart_others">Others</string>
     <string name="stats_clicks">Clicks</string>
     <string name="stats_clicks_link_label">Link</string>
     <string name="stats_clicks_label">Clicks</string>
@@ -1412,6 +1416,7 @@
     <string name="stats_file_downloads">File downloads</string>
     <string name="stats_file_downloads_title_label">File</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_follower_types_pie_chart_total_label">Totals</string>
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
@@ -3148,6 +3153,7 @@
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
     <string name="quick_start_sites_type_tasks_completed">%1$s out of %2$s complete</string>
+    <string name="quick_start_sites_type_all_tasks_completed">All tasks completed</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
@@ -4155,5 +4161,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- QRCode Auth Flow -->
     <string name="qrcode_auth_flow" translatable="false">Scan Login Code</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. Currently selected: %2$s</string>
+    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Arrow buttons</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Drag &amp; drop</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Drag &amp; drop makes rearranging blocks a breeze. Press and hold on a block, then drag it to its new location and release.</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Image file not found.</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEW</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
 
 </resources>

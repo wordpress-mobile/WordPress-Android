@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-25 01:12:49+0000
+Translation-Revision-Date: 2022-05-27 14:54:57+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
@@ -38,6 +38,7 @@ Language: zh_CN
     <string name="stats_view_total_comments">评论总数</string>
     <string name="stats_view_total_likes">总赞数</string>
     <string name="blogging_prompts_notification_dismiss">忽略</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">回复</string>
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
     <string name="blogging_prompts_onboarding_got_it">知道了</string>
     <string name="quick_start_dialog_view_your_site_message_short">点击“&lt;b&gt;%1$s&lt;/b&gt;”查看您的站点</string>
@@ -56,6 +57,7 @@ Language: zh_CN
     <string name="stats_timeframe_this_week">本周</string>
     <string name="scan_vault_press_active_on_site_button_text">访问仪表盘</string>
     <string name="scan_vault_press_active_on_site_subtitle">您的站点已受 VaultPress 保护。 您可以在下面找到指向您的 VaultPress 仪表盘的链接。</string>
+    <string name="scan_vault_press_active_on_site_title">您的站点使用 VaultPress</string>
     <string name="locale_picker_current_language">当前语言：</string>
     <string name="hpp_choose_and_create_site">创建站点</string>
     <string name="gutenberg_native_add_blocks_11d0841f">添加区块</string>

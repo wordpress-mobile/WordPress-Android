@@ -1,8 +1,0 @@
-19.8 :
-- Réglages de l’image mise en avant dans le bloc des derniers articles
-- Notifications lors de la commutation entre les modes HTML/visuel
-- Aperçu complet du bloc de contenu embarqué
-- Visuels dans le sélecteur local
-- Chargements plus longs avec le module autonome VideoPress
-- Types de médias TalkBack dans le sélecteur de médias
-- URL du lien magique d’inscription

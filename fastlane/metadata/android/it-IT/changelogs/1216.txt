@@ -1,9 +1,0 @@
-19.8:
-- Anteprima delle modifiche non salvate per articoli in bozza
-- Impostazioni dell'immagine in evidenza nel blocco Ultimi articoli
-- Avvisi al passaggio della modalità HTML/Visuale
- - Anteprima blocco Incorporamenti completa
-- Elementi visuali del selettore locale
-- Caricamenti più lunghi con VideoPress autonomo
-- Anteprime del sito aggiornate
-- Caricamenti del nome del file non latino

@@ -1,0 +1,9 @@
+19.9:
+- Köp av webbplatsdomän inuti appen
+- Dra och släpp block i redigeraren
+- Bättre färgkontrast i omslagsblock
+- Knappblockets formateringsalternativ förblir synliga
+- Olika snabbstartsuppgifter för nya kontra befintliga webbplatser
+- Kopiera länk för publicerade sidor
+- Inställningar för Länka till/Bildstorlek i galleriblock
+- Ingen rundtursbanner i blockredigeraren som inte stöds
