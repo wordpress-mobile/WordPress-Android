@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.uploads;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -289,7 +288,6 @@ class PostUploadNotifier {
         }
     }
 
-    @SuppressLint("NotificationTrampoline")
     void updateNotificationSuccessForPost(@NonNull PostImmutableModel post, @NonNull SiteModel site,
                                           boolean isFirstTimePublish) {
         if (!WordPress.Companion.getAppIsInTheBackground()) {
