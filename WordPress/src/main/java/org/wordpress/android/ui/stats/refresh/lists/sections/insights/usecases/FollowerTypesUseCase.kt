@@ -14,6 +14,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem.Pie
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase.FollowerType
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase.FollowerType.EMAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase.FollowerType.SOCIAL
@@ -52,21 +54,9 @@ class FollowerTypesUseCase @Inject constructor(
 
     private fun buildDataModel(wpComTotals: Int?, emailTotals: Int?, socialTotals: Int?): Map<FollowerType, Int> {
         val map = mutableMapOf<FollowerType, Int>()
-        wpComTotals?.let {
-            if (it > 0) {
-                map[WP_COM] = it
-            }
-        }
-        emailTotals?.let {
-            if (it > 0) {
-                map[EMAIL] = it
-            }
-        }
-        socialTotals?.let {
-            if (it > 0) {
-                map[SOCIAL] = it
-            }
-        }
+        wpComTotals?.let { map[WP_COM] = it }
+        emailTotals?.let { map[EMAIL] = it }
+        socialTotals?.let { map[SOCIAL] = it }
         return map
     }
 
@@ -109,8 +99,22 @@ class FollowerTypesUseCase @Inject constructor(
     override fun buildUiModel(domainModel: Map<FollowerType, Int>): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.isNotEmpty()) {
-            val total = domainModel.entries.sumOf { it.value }
+            val pies = mapToPie(domainModel)
+            val totalLabel = resourceProvider.getString(R.string.stats_follower_types_pie_chart_total_label)
+            val totalValue = pies.sumOf { it.value }
+            val pieChartItem = PieChartItem(
+                    pies,
+                    totalLabel,
+                    statsUtils.toFormattedString(totalValue),
+                    COLOR_LIST,
+                    contentDescriptionHelper.buildContentDescription(
+                            R.string.stats_follower_types_pie_chart_total_label,
+                            totalValue
+                    )
+            )
+            items.add(pieChartItem)
 
+            val total = domainModel.entries.sumOf { it.value }
             domainModel.entries.forEach {
                 val title = getTitle(it.key)
                 val formattedPercentage = getFormattedPercentage(it.value, total)
@@ -157,9 +161,16 @@ class FollowerTypesUseCase @Inject constructor(
         }
     }
 
+    private fun mapToPie(domainModel: Map<FollowerType, Int>) = domainModel
+            .map {
+                val label = resourceProvider.getString(getTitle(it.key))
+                Pie(label, it.value)
+            }
+
     enum class FollowerType { WP_COM, EMAIL, SOCIAL }
 
     companion object {
         private const val PERCENT_HUNDRED = 100.0
+        private val COLOR_LIST = listOf(R.color.blue, R.color.blue_5, R.color.orange_30)
     }
 }

@@ -1380,6 +1380,10 @@
     <string name="stats_referrers">Referrers</string>
     <string name="stats_referrer_label">Referrer</string>
     <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_referrers_pie_chart_total_label">Views</string>
+    <string name="stats_referrers_pie_chart_wordpress">Wordpress</string>
+    <string name="stats_referrers_pie_chart_search">Search</string>
+    <string name="stats_referrers_pie_chart_others">Others</string>
     <string name="stats_clicks">Clicks</string>
     <string name="stats_clicks_link_label">Link</string>
     <string name="stats_clicks_label">Clicks</string>
@@ -1400,6 +1404,7 @@
     <string name="stats_file_downloads">File downloads</string>
     <string name="stats_file_downloads_title_label">File</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_follower_types_pie_chart_total_label">Totals</string>
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
