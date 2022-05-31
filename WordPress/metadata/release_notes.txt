@@ -1,7 +1,4 @@
-- Theme, default and custom color palettes
-- Helpful login error messages on self-hosted sites
-- Email app selection when verifying email at signup/login
-- No nested Reader comments if parent comment is deleted
-- Images display after changing orientation mid-capture
-- Fix for progress bar for My Site icon edits
-- Reorganized list of default Insights
+* [*] Block Editor: A11y: Improve text read by screen readers for BottomSheetSelectControl [https://github.com/WordPress/gutenberg/pull/41036]
+* [*] Block Editor: Add 'Insert from URL' option to Image block [https://github.com/WordPress/gutenberg/pull/40334]
+* [*] Quick Start: The "Get to know the app" card and Quick start tour list has a fresh new look [https://github.com/wordpress-mobile/WordPress-Android/pull/16629,https://github.com/wordpress-mobile/WordPress-Android/pull/16639]
+

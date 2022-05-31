@@ -1,16 +1,7 @@
 package org.wordpress.android.modules;
 
-import android.app.Application;
-
 import com.automattic.android.tracks.crashlogging.CrashLogging;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.module.DatabaseModule;
-import org.wordpress.android.fluxc.module.OkHttpClientModule;
-import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
-import org.wordpress.android.fluxc.module.ReleaseToolsModule;
-import org.wordpress.android.login.di.LoginFragmentModule;
-import org.wordpress.android.login.di.LoginServiceModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
@@ -37,6 +28,7 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -89,8 +81,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
-import org.wordpress.android.ui.mysite.tabs.MySiteDashboardTabFragment;
-import org.wordpress.android.ui.mysite.tabs.MySiteMenuTabFragment;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabFragment;
+import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -154,9 +146,10 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
-import org.wordpress.android.ui.prefs.categories.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailFragment;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListFragment;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
@@ -205,10 +198,11 @@ import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
+import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameFragment;
+import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
-import org.wordpress.android.ui.stats.refresh.StatsActivity;
-import org.wordpress.android.ui.stats.refresh.StatsModule;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
@@ -223,7 +217,6 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
-import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -236,40 +229,13 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
-import javax.inject.Singleton;
+import dagger.hilt.EntryPoint;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.android.AndroidInjector;
-import dagger.android.support.AndroidSupportInjectionModule;
-
-@Singleton
-@Component(modules = {
-        ApplicationModule.class,
-        AppConfigModule.class,
-        OkHttpClientModule.class,
-        ReleaseNetworkModule.class,
-        LegacyModule.class,
-        ReleaseToolsModule.class,
-        DatabaseModule.class,
-        AndroidSupportInjectionModule.class,
-        ViewModelModule.class,
-        StatsModule.class,
-        SupportModule.class,
-        ThreadModule.class,
-        TrackerModule.class,
-        SuggestionSourceModule.class,
-        ExperimentModule.class,
-        // Login flow library
-        LoginAnalyticsModule.class,
-        LoginFragmentModule.class,
-        LoginServiceModule.class,
-        CrashLoggingModule.class
-})
-public interface AppComponent extends AndroidInjector<WordPress> {
-    @Override
-    void inject(WordPress instance);
-
+@InstallIn(SingletonComponent.class)
+@EntryPoint
+public interface AppComponent {
     void inject(WPMainActivity object);
 
     void inject(SiteCreationService object);
@@ -562,8 +528,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(TodayWidgetBlockListProviderFactory object);
 
-    void inject(StatsActivity object);
-
     void inject(StatsListFragment object);
 
     void inject(DomainRegistrationActivity object);
@@ -583,6 +547,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ModalLayoutPickerFragment object);
 
     void inject(HomePagePickerFragment object);
+
+    void inject(SiteCreationIntentsFragment object);
+
+    void inject(SiteCreationSiteNameFragment object);
 
     void inject(SubfilterBottomSheetFragment object);
 
@@ -656,9 +624,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(MySiteFragment object);
 
-    void inject(MySiteDashboardTabFragment object);
-
-    void inject(MySiteMenuTabFragment object);
+    void inject(MySiteTabFragment object);
 
     void inject(BackupDownloadActivity object);
 
@@ -694,11 +660,15 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(BloggingReminderBottomSheetFragment object);
 
+    void inject(LocalePickerBottomSheet object);
+
     void inject(CategoriesListFragment object);
 
     void inject(CategoryDetailFragment object);
 
     void inject(LayoutPreviewFragment object);
+
+    void inject(DesignPreviewFragment object);
 
     void inject(QuickStartPromptDialogFragment object);
 
@@ -718,13 +688,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(CommentSnippetAdapter object);
 
-    // Allows us to inject the application without having to instantiate any modules, and provides the Application
-    // in the app graph
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        AppComponent.Builder application(Application application);
+    void inject(BloggingPromptsOnboardingDialogFragment object);
 
-        AppComponent build();
-    }
+    void inject(DismissNotificationReceiver object);
 }

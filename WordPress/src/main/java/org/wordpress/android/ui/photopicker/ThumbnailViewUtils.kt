@@ -14,14 +14,16 @@ import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import java.util.Locale
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
         "{@link org.wordpress.android.ui.mediapicker.ThumbnailViewUtils}")
 class ThumbnailViewUtils(val imageManager: ImageManager) {
+    @Suppress("LongParameterList")
     fun setupListeners(
         imgThumbnail: ImageView,
+        isVideo: Boolean,
         isSelected: Boolean,
         toggleAction: ToggleAction,
         clickAction: ClickAction,
@@ -30,9 +32,10 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedImageForAccessibility(
+            PhotoPickerUtils.announceSelectedMediaForAccessibility(
                     imgThumbnail,
-                    isSelected
+                    isVideo,
+                    !isSelected
             )
         }
         imgThumbnail.setOnLongClickListener {

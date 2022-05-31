@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:backgroundTint="?attr/colorSurface"
+        android:id="@+id/avatar"
+        style="@style/ReaderImageView.Avatar.Small"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/bg_oval_stroke_liker_2dp"
+        android:importantForAccessibility="no"
+        android:padding="@dimen/reader_like_faces_padding"
+        tools:ignore="RtlSymmetry"
+        tools:src="@drawable/img_illustration_add_media_150dp" />
+
+</FrameLayout>

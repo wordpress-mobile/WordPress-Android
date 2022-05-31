@@ -2,7 +2,6 @@ package org.wordpress.android.e2e;
 
 import android.Manifest.permission;
 
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.SiteSettingsPage;
 import org.wordpress.android.support.BaseTest;
-import org.wordpress.android.ui.WPLaunchActivity;
 
 import java.time.Instant;
 
@@ -27,10 +25,10 @@ import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;
 import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBeDisplayed;
 
-public class EditorTests extends BaseTest {
-    @Rule
-    public ActivityTestRule<WPLaunchActivity> mActivityTestRule = new ActivityTestRule<>(WPLaunchActivity.class);
+import dagger.hilt.android.testing.HiltAndroidTest;
 
+@HiltAndroidTest
+public class EditorTests extends BaseTest {
     @Rule
     public GrantPermissionRule mRuntimeImageAccessRule = GrantPermissionRule.grant(permission.WRITE_EXTERNAL_STORAGE);
 

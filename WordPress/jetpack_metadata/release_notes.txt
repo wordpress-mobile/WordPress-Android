@@ -1,8 +1,4 @@
-- Theme/default/custom color palettes
-- Email app choice when verifying email at signup/login
-- No nested comments if parent comment is deleted
-- Images adjust after new mid-capture orientation
-- Progress bar fix for My Site icon edits
-- Reorganized default Insights list
-- Keyboard won’t cover login error message
-- Logout button only has to be pressed once
+* [*] Block Editor: A11y: Improve text read by screen readers for BottomSheetSelectControl [https://github.com/WordPress/gutenberg/pull/41036]
+* [*] Block Editor: Add 'Insert from URL' option to Image block [https://github.com/WordPress/gutenberg/pull/40334]
+* [*] Quick Start: The "Get to know the app" card and Quick start tour list has a fresh new look [https://github.com/wordpress-mobile/WordPress-Android/pull/16629,https://github.com/wordpress-mobile/WordPress-Android/pull/16639]
+

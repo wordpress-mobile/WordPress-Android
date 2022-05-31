@@ -38,5 +38,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:text="@string/hpp_skip_button" />
+        android:text="@string/button_skip" />
 </LinearLayout>

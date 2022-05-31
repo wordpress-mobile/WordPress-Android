@@ -3,7 +3,6 @@ package org.wordpress.android.ui.domains
 import android.os.Bundle
 import android.view.View
 import androidx.core.text.parseAsHtml
-import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -86,8 +85,8 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             val isLoading = listState is ListState.Loading<*>
 
             domainSuggestionsContainer.isInvisible = isLoading
+            suggestionSearchIcon.isVisible = !isLoading
             suggestionProgressBar.isVisible = isLoading
-            suggestionSearchIcon.isGone = isLoading
 
             if (!isLoading) {
                 (domainSuggestionsList.adapter as DomainSuggestionsAdapter).submitList(listState.data)

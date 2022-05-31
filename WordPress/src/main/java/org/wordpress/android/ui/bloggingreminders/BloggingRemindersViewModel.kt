@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOGGING_PROMPTS_ONBOARDING
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.BLOG_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.NOTIFICATION_SETTINGS
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker.Source.PUBLISH_FLOW
@@ -29,7 +30,6 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.workers.reminder.ReminderConfig.WeeklyReminder
 import org.wordpress.android.workers.reminder.ReminderScheduler
 import java.time.DayOfWeek
-import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -53,6 +53,9 @@ class BloggingRemindersViewModel @Inject constructor(
     private val _isTimePickerShowing = MutableLiveData<Event<Boolean>>()
     val isTimePickerShowing = _isTimePickerShowing as LiveData<Event<Boolean>>
 
+    private val _showBloggingPromptHelpDialogVisible = MutableLiveData<Event<Boolean>>()
+    val showBloggingPromptHelpDialogVisible = _showBloggingPromptHelpDialogVisible as LiveData<Event<Boolean>>
+
     private val _selectedScreen = MutableLiveData<Screen>()
     private val selectedScreen = _selectedScreen.perform { onScreenChanged(it) }
 
@@ -69,7 +72,11 @@ class BloggingRemindersViewModel @Inject constructor(
                 PROLOGUE -> prologueBuilder.buildUiItems()
                 PROLOGUE_SETTINGS -> prologueBuilder.buildUiItemsForSettings()
                 SELECTION -> daySelectionBuilder.buildSelection(
-                        bloggingRemindersModel, this::selectDay, this::selectTime
+                        bloggingRemindersModel,
+                        this::selectDay,
+                        this::selectTime,
+                        this::togglePromptSwitch,
+                        this::showBloggingPromptDialog
                 )
                 EPILOGUE -> epilogueBuilder.buildUiItems(bloggingRemindersModel)
             }
@@ -149,6 +156,16 @@ class BloggingRemindersViewModel @Inject constructor(
         _isTimePickerShowing.value = Event(true)
     }
 
+    private fun togglePromptSwitch() {
+        _bloggingRemindersModel.value?.let { currentState ->
+            _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = !currentState.isPromptIncluded)
+        }
+    }
+
+    private fun showBloggingPromptDialog() {
+        _showBloggingPromptHelpDialogVisible.value = Event(true)
+    }
+
     fun onChangeTime(hour: Int, minute: Int) {
         _isTimePickerShowing.value = Event(false)
         val currentState = _bloggingRemindersModel.value!!
@@ -175,9 +192,11 @@ class BloggingRemindersViewModel @Inject constructor(
                             bloggingRemindersModel.siteId,
                             bloggingRemindersModel.hour,
                             bloggingRemindersModel.minute,
-                            bloggingRemindersModel.toReminderConfig())
+                            bloggingRemindersModel.toReminderConfig()
+                    )
                     analyticsTracker.trackRemindersScheduled(
-                            daysCount, bloggingRemindersModel.getNotificationTime24hour())
+                            daysCount, bloggingRemindersModel.getNotificationTime24hour()
+                    )
                 } else {
                     reminderScheduler.cancelBySiteId(bloggingRemindersModel.siteId)
                     analyticsTracker.trackRemindersCancelled()
@@ -196,6 +215,7 @@ class BloggingRemindersViewModel @Inject constructor(
             outState.putStringArrayList(SELECTED_DAYS, ArrayList(model.enabledDays.map { it.name }))
             outState.putInt(SELECTED_HOUR, model.hour)
             outState.putInt(SELECTED_MINUTE, model.minute)
+            outState.putBoolean(IS_BLOGGING_PROMPT_INCLUDED, model.isPromptIncluded)
         }
         _isFirstTimeFlow.value?.let {
             outState.putBoolean(IS_FIRST_TIME_FLOW, it)
@@ -211,7 +231,14 @@ class BloggingRemindersViewModel @Inject constructor(
             val enabledDays = state.getStringArrayList(SELECTED_DAYS)?.map { DayOfWeek.valueOf(it) }?.toSet() ?: setOf()
             val selectedHour = state.getInt(SELECTED_HOUR)
             val selectedMinute = state.getInt(SELECTED_MINUTE)
-            _bloggingRemindersModel.value = BloggingRemindersUiModel(siteId, enabledDays, selectedHour, selectedMinute)
+            val isPromptIncluded = state.getBoolean(IS_BLOGGING_PROMPT_INCLUDED)
+            _bloggingRemindersModel.value = BloggingRemindersUiModel(
+                    siteId,
+                    enabledDays,
+                    selectedHour,
+                    selectedMinute,
+                    isPromptIncluded
+            )
         }
         _isFirstTimeFlow.value = state.getBoolean(IS_FIRST_TIME_FLOW)
     }
@@ -228,6 +255,10 @@ class BloggingRemindersViewModel @Inject constructor(
 
     fun onNotificationSettingsItemClicked(remoteSiteId: Long) {
         onSettingsItemClicked(siteStore.getLocalIdForRemoteSiteId(remoteSiteId), NOTIFICATION_SETTINGS)
+    }
+
+    fun onBloggingPromptSchedulingRequested(siteId: Int) {
+        showBottomSheet(siteId, PROLOGUE, BLOGGING_PROMPTS_ONBOARDING)
     }
 
     private fun onSettingsItemClicked(siteId: Int, source: Source) {
@@ -254,9 +285,9 @@ class BloggingRemindersViewModel @Inject constructor(
             WeeklyReminder(this.enabledDays)
 
     enum class Screen(val trackingName: String) {
-        PROLOGUE("main"),
-        PROLOGUE_SETTINGS("main"),
-        SELECTION("day_picker"),
+        PROLOGUE("main"), // displayed after post is published
+        PROLOGUE_SETTINGS("main"), // displayed from Site Settings before showing cadence selector
+        SELECTION("day_picker"), // cadence selector
         EPILOGUE("all_set")
     }
 
@@ -272,6 +303,7 @@ class BloggingRemindersViewModel @Inject constructor(
         private const val SELECTED_DAYS = "key_selected_days"
         private const val SELECTED_HOUR = "key_selected_hour"
         private const val SELECTED_MINUTE = "key_selected_minute"
+        private const val IS_BLOGGING_PROMPT_INCLUDED = "key_is_blogging_prompt_included"
         private const val IS_FIRST_TIME_FLOW = "is_first_time_flow"
         private const val SITE_ID = "key_site_id"
     }

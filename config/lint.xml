@@ -7,11 +7,6 @@
     <issue id="RtlSymmetry" severity="warning" />
     <issue id="UseSparseArrays" severity="warning" />
 
-    <issue id="NewApi">
-        <warning path="src/main/res/values/reader_styles.xml" />
-        <warning path="src/main/res/values/styles.xml" />
-    </issue>
-
     <!-- ERROR -->
     <issue id="SimpleDateFormat" severity="error" />
     <issue id="RtlCompat" severity="error" />

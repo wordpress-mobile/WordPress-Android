@@ -6,6 +6,7 @@ import android.content.Context;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;

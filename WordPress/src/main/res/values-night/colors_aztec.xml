@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--Overloaded Aztec colors. Remove after Aztec is phased out.-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingDefaultResource">
+    <color name="format_bar_background" tools:ignore="UnusedResources">#282828</color>  <!-- 4dp elevated surface -->
+    <color name="format_bar_divider" tools:ignore="UnusedResources">?android:attr/listDivider</color>
+    <color name="text">@color/material_on_surface_emphasis_high_type</color>
+    <color name="title_color">@color/text</color>
+    <color name="hint_text">@color/material_on_surface_emphasis_medium</color>
+    <color name="bullet">@color/text</color>
+    <color name="quote_background">#222222</color> <!-- 2dp elevated surface -->
+    <color name="code_background">@color/quote_background</color>
+    <color name="quote">@color/text</color>
+    <color name="media_button_background_tint_selector">
+        @color/primary_on_surface_disabled_selector
+    </color>
+</resources>

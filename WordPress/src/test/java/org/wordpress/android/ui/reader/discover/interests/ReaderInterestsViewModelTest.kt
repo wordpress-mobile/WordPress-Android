@@ -329,6 +329,20 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
+    fun `when interest tag is toggled, then complete follow site quick start task if needed is invoked`() =
+            testWithEmptyUserTags {
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                val selectInterestAtIndex = 2
+
+                initViewModel()
+                viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
+
+                // Then
+                verify(parentViewModel).completeQuickStartFollowSiteTaskIfNeeded()
+            }
+
+    @Test
     fun `done button shown in enabled state if an interest is in selected state`() =
             testWithEmptyUserTags {
                 // Given

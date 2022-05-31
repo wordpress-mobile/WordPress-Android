@@ -15,6 +15,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
@@ -43,6 +44,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
@@ -54,6 +57,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock lateinit var getCommentUseCase: GetCommentUseCase
     @Mock lateinit var notificationActionsWrapper: NotificationsActionsWrapper
     @Mock lateinit var readerCommentTableWrapper: ReaderCommentTableWrapper
+    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
@@ -93,7 +97,8 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
                 getCommentUseCase = getCommentUseCase,
                 notificationActionsWrapper = notificationActionsWrapper,
-                readerCommentTableWrapper = readerCommentTableWrapper
+                readerCommentTableWrapper = readerCommentTableWrapper,
+                analyticsUtilsWrapper
         )
 
         setupObservers()
@@ -222,75 +227,63 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should ENABLE edit name for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditName).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit name for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditName).isTrue
-    }
-
-    @Test
-    fun `Should DISABLE edit name for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
+    fun `Should DISABLE edit name for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
         assertThat(uiState.first().inputSettings.enableEditName).isFalse
     }
 
     @Test
-    fun `Should ENABLE edit URL for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
+    fun `Should ENABLE edit name for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
+
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditName).isTrue
     }
 
     @Test
-    fun `Should ENABLE edit URL for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditUrl).isTrue
+    fun `Should DISABLE edit URL for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditUrl).isFalse
     }
 
     @Test
-    fun `Should DISABLE edit URL for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
-        assertThat(uiState.first().inputSettings.enableEditUrl).isFalse
+    fun `Should ENABLE edit URL for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
+
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditUrl).isTrue
     }
 
     @Test
-    fun `Should ENABLE edit email for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditEmail).isTrue
+    fun `Should DISABLE edit email for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditEmail).isFalse
     }
 
     @Test
-    fun `Should ENABLE edit email for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditEmail).isTrue
+    fun `Should ENABLE edit email for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
+
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditEmail).isTrue
     }
 
     @Test
-    fun `Should DISABLE edit email for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
-        assertThat(uiState.first().inputSettings.enableEditEmail).isFalse
+    fun `Should ENABLE edit comment content for a comment from registered user`() = test {
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditComment).isTrue
     }
 
     @Test
-    fun `Should ENABLE edit comment content for SiteCommentIdentifier`() {
-        viewModel.start(site, SiteCommentIdentifier(0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
-    }
+    fun `Should ENABLE edit comment content for a comment from unregistered user`() = test {
+        whenever(getCommentUseCase.execute(site, remoteCommentId))
+                .thenReturn(UNREGISTERED_COMMENT_ENTITY)
 
-    @Test
-    fun `Should ENABLE edit comment content for ReaderCommentIdentifier`() {
-        viewModel.start(site, ReaderCommentIdentifier(0, 0, 0L))
-        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit comment content for NotificationCommentIdentifier`() {
-        viewModel.start(site, NotificationCommentIdentifier("noteId", 0L))
-        assertThat(uiState.first().inputSettings.enableEditComment).isTrue
+        viewModel.start(site, siteCommentIdentifier)
+        assertThat(uiState.last().inputSettings.enableEditComment).isTrue
     }
 
     @Test
@@ -417,6 +410,53 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `should correct tracking method for NotificationCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        whenever(notificationActionsWrapper.downloadNoteAndUpdateDB(noteId))
+                .thenReturn(true)
+        viewModel.start(site, notificationCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+                Stat.COMMENT_EDITED,
+                AnalyticsCommentActionSource.NOTIFICATIONS,
+                site
+        )
+    }
+
+    @Test
+    fun `should correct tracking method for ReaderCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, readerCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+                Stat.COMMENT_EDITED,
+                AnalyticsCommentActionSource.READER,
+                site
+        )
+    }
+
+    @Test
+    fun `should correct tracking method for SiteCommentIdentifier`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+                .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(site), any()))
+                .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        viewModel.start(site, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+                Stat.COMMENT_EDITED,
+                AnalyticsCommentActionSource.SITE_COMMENTS,
+                site
+        )
+    }
+
     private fun setupObservers() {
         uiState.clear()
         uiActionEvent.clear()
@@ -447,7 +487,29 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 id = 1000,
                 remoteCommentId = 0,
                 remotePostId = 0,
-                remoteParentCommentId = 0,
+                authorId = 4,
+                localSiteId = LOCAL_SITE_ID,
+                remoteSiteId = REMOTE_SITE_ID,
+                authorUrl = "authorUrl",
+                authorName = "authorName",
+                authorEmail = "authorEmail",
+                authorProfileImageUrl = null,
+                postTitle = null,
+                status = null,
+                datePublished = null,
+                publishedTimestamp = 0,
+                content = "content",
+                url = null,
+                hasParent = false,
+                parentId = 0,
+                iLike = false
+        )
+
+        private val UNREGISTERED_COMMENT_ENTITY = CommentEntity(
+                id = 1000,
+                remoteCommentId = 0,
+                remotePostId = 0,
+                authorId = 0,
                 localSiteId = LOCAL_SITE_ID,
                 remoteSiteId = REMOTE_SITE_ID,
                 authorUrl = "authorUrl",

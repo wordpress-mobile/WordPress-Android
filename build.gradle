@@ -1,23 +1,23 @@
 ext {
-    coroutinesVersion = '1.5.2'
-    wordPressUtilsVersion = '2.4.0'
-    wordPressLoginVersion = '0.12.0'
-    gutenbergMobileVersion = 'v1.71.3'
-    storiesVersion = '1.2.1'
-    aboutAutomatticVersion = '0.0.4'
+    wordPressUtilsVersion = '2.5.0'
+    wordPressLoginVersion = '0.14.0'
+    gutenbergMobileVersion = 'v1.77.0'
+    storiesVersion = '1.3.0'
+    aboutAutomatticVersion = '0.0.5'
 
     minSdkVersion = 24
     compileSdkVersion = 31
     targetSdkVersion = 30
 
-    coroutinesVersion = '1.3.9'
-    androidxWorkVersion = "2.4.0"
+    coroutinesVersion = '1.5.2'
+    androidxWorkVersion = "2.7.0"
 
-    daggerVersion = '2.29.1'
-    fluxCVersion = '1.37.0'
+    fluxCVersion = '1.44.1'
 
     appCompatVersion = '1.0.2'
-    coreVersion = '1.3.2'
+    androidxCoreVersion = '1.3.2'
+    androidxArchCoreVersion = '2.0.0'
+    fragmentVersion = '1.2.4'
     lifecycleVersion = '2.2.0'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.2.1'
@@ -25,27 +25,28 @@ ext {
     swipeToRefresh = '1.1.0'
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
-    tracksVersion = '2.1.0'
+    tracksVersion = '2.2.0'
     roomVersion = '2.3.0'
 
     coreLibraryDesugaringVersion = '1.1.5'
 
-    exoPlayerVersion = '2.9.3'
+    exoPlayerVersion = '2.13.3'
 
     // testing
     jUnitVersion = '4.13'
-    androidxTestVersion = '1.1.0'
-    androidxArchCoreVersion = '2.0.0'
+    jUnitExtVersion = '1.1.3'
+    androidxTestCoreVersion = '1.4.0'
     assertJVersion = '3.11.1'
-    espressoVersion = '3.1.0'
+    espressoVersion = '3.4.0'
     mockitoCoreVersion = "3.3.3"
     nhaarmanMockitoVersion = "2.2.0"
 }
 
 buildscript {
-    ext.kotlinVersion = '1.5.32'
+    ext.kotlinVersion = '1.6.10'
     ext.navComponentVersion = '2.3.5'
     ext.detektVersion = '1.15.0'
+    ext.daggerVersion = '2.41'
 
     repositories {
         maven {
@@ -59,13 +60,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
     }
 }
 
@@ -78,19 +80,11 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
         maven {
             url "https://a8c-libs.s3.amazonaws.com/android/jcenter-mirror"
             content {
                 includeVersion "com.android.volley", "volley", "1.1.1"
                 includeVersion "com.automattic", "rest", "1.0.8"
-                includeVersion "com.google.android.exoplayer", "exoplayer-core", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-dash", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-hls", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-smoothstreaming", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer-ui", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "exoplayer", "2.9.3"
-                includeVersion "com.google.android.exoplayer", "extension-okhttp", "2.9.3"
                 includeVersion "com.google.android", "flexbox", "2.0.1"
                 includeVersion "org.wordpress", "emailchecker2", "1.1.0"
                 includeVersion "org.wordpress", "persistentedittext", "1.0.2"
@@ -104,7 +98,6 @@ allprojects {
                 includeVersion "com.andreapivetta.kolor", "kolor", "0.0.2"
             }
         }
-
         flatDir {
             dirs '../aars'
         }
@@ -169,18 +162,6 @@ subprojects {
         main = "com.github.shyiko.ktlint.Main"
         classpath = configurations.ktlint
         args "src/**/*.kt", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-    }
-}
-
-buildScan {
-    // Always run Gradle scan on CI builds
-    if (System.getenv('CI')) {
-        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-        termsOfServiceAgree = 'yes'
-        tag 'CI'
-        publishAlways()
-        // Otherwise CI might shut down before it's uploaded
-        uploadInBackground = false
     }
 }
 

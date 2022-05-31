@@ -1,6 +1,0 @@
-19.3:
-- Meld je aan via WordPress.com en maak in Jetpack een site aan
-- Gebruik de Reader in Jetpack
-- Zie meldingen in de nieuwe opmerkingseditor
-- Los het knipperen van de voorbeeldweergave van een pagina of site op
-- Stop het sluiten van verhaalblokken in de editor bij een laag geheugen

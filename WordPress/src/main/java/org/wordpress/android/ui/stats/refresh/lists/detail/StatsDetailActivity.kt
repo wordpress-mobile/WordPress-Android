@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
+import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.StatsDetailActivityBinding
@@ -18,11 +22,27 @@ const val POST_TYPE = "POST_TYPE"
 const val POST_TITLE = "POST_TITLE"
 const val POST_URL = "POST_URL"
 
+@AndroidEntryPoint
 class StatsDetailActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = StatsDetailActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val listType = intent.extras?.get(StatsListFragment.LIST_TYPE)
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                when (listType) {
+                    StatsSection.DETAIL -> add<StatsDetailFragment>(R.id.fragment_container)
+                    StatsSection.INSIGHT_DETAIL -> add<InsightsDetailFragment>(R.id.fragment_container)
+                    StatsSection.TOTAL_LIKES_DETAIL -> add<TotalLikesDetailFragment>(R.id.fragment_container)
+                    StatsSection.TOTAL_COMMENTS_DETAIL -> add<TotalCommentsDetailFragment>(R.id.fragment_container)
+                    StatsSection.TOTAL_FOLLOWERS_DETAIL -> add<TotalFollowersDetailFragment>(R.id.fragment_container)
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -56,6 +76,54 @@ class StatsDetailActivity : LocaleAwareActivity() {
                     site.siteId
             )
             context.startActivity(statsPostViewIntent)
+        }
+
+        @JvmStatic
+        fun startForInsightsDetail(
+            context: Context,
+            site: SiteModel
+        ) {
+            val intent = Intent(context, StatsDetailActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, site.id)
+                putExtra(StatsListFragment.LIST_TYPE, StatsSection.INSIGHT_DETAIL)
+            }
+            // TODO: Add tracking here
+            context.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun startForTotalLikesDetail(
+            context: Context,
+            site: SiteModel
+        ) {
+            val intent = Intent(context, StatsDetailActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, site.id)
+                putExtra(StatsListFragment.LIST_TYPE, StatsSection.TOTAL_LIKES_DETAIL)
+            }
+            // TODO: Add tracking here
+            context.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun startForTotalCommentsDetail(
+            context: Context,
+            site: SiteModel
+        ) {
+            val intent = Intent(context, StatsDetailActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, site.id)
+                putExtra(StatsListFragment.LIST_TYPE, StatsSection.TOTAL_COMMENTS_DETAIL)
+            }
+            context.startActivity(intent)
+        }
+
+        @JvmStatic
+        fun startForTotalFollowersDetail(context: Context, site: SiteModel) {
+            val intent = Intent(context, StatsDetailActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, site.id)
+                putExtra(StatsListFragment.LIST_TYPE, StatsSection.TOTAL_FOLLOWERS_DETAIL)
+            }
+            // TODO: Add tracking here
+            context.startActivity(intent)
         }
     }
 }
