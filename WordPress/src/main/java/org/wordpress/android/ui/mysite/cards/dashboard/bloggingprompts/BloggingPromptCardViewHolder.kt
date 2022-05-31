@@ -9,6 +9,8 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPrompCardBinding
+import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
@@ -94,6 +96,14 @@ class BloggingPromptCardViewHolder(
                 R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
                 R.id.skip -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
                 R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+                R.id.learn_more -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
+                    bloggingPromptCardMenu.context.startActivity(
+                        ActivityLauncher.createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
+                                bloggingPromptCardMenu.context, BLOGGING_PROMPTS_ONBOARDING, -1
+                        )
+                    )
+                }
             }
             return@setOnMenuItemClickListener true
         }

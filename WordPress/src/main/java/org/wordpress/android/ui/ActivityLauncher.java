@@ -1401,7 +1401,9 @@ public class ActivityLauncher {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(WPMainActivity.ARG_BLOGGING_PROMPTS_ONBOARDING, true);
-        intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        if (notificationId != -1) {
+            intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        }
         if (notificationType != null) {
             intent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
         }
