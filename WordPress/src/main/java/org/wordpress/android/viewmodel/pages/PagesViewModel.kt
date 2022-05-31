@@ -536,9 +536,9 @@ class PagesViewModel
 
     @Suppress("TooGenericExceptionCaught")
     private fun copyPageLink(page: Page, context: Context) {
-        // Get the link to the page
-        val pageLink = postStore.getPostByLocalPostId(page.localId).link
         try {
+            // Get the link to the page
+            val pageLink = postStore.getPostByLocalPostId(page.localId).link
             // Copy the link to the clipboard
             context.clipboardManager?.setPrimaryClip(
                     ClipData.newPlainText("${page.localId}", pageLink)
