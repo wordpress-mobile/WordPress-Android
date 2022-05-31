@@ -1849,6 +1849,10 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE EditorTheme ADD QUOTE_BLOCK_V2 BOOLEAN")
                 }
                 173 -> migrate(version) {
+                    db.execSQL("DELETE FROM QuickStartTaskModel WHERE TASK_NAME='explore_plans' " +
+                        "AND TASK_TYPE='grow';")
+                }
+                174 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_PROMPTS_OPTED_IN BOOLEAN")
                     db.execSQL("ALTER TABLE SiteModel ADD IS_BLOGGING_PROMPTS_CARD_OPTED_IN BOOLEAN")
                     db.execSQL("ALTER TABLE SiteModel ADD IS_POTENTIAL_BLOGGING_SITE BOOLEAN")
