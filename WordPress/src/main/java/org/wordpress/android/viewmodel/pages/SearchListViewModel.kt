@@ -58,7 +58,7 @@ class SearchListViewModel
         pagesViewModel.searchPages.removeObserver(searchObserver)
     }
 
-    private val searchObserver = Observer<SortedMap<PageListType, List<PageModel>>> { pages ->
+    private val searchObserver = Observer<SortedMap<PageListType, List<PageModel>>?> { pages ->
         if (pages != null) {
             loadFoundPages(pages)
 

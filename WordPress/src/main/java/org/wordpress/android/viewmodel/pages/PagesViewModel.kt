@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
@@ -133,8 +134,8 @@ class PagesViewModel
     private val _pages = MutableLiveData<List<PageModel>>()
     val pages: LiveData<List<PageModel>> = _pages
 
-    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>> = MutableLiveData()
-    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>> = _searchPages
+    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>?> = MutableLiveData()
+    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>?> = _searchPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
@@ -361,6 +362,7 @@ class PagesViewModel
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onSpecificPageRequested(remotePageId: Long) {
         if (isInitialized) {
             val page = pageMap[remotePageId]
@@ -934,6 +936,7 @@ class PagesViewModel
         site.isWPCom && site.hasCapabilityEditOthersPages
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     private fun updateViewStateTriggerPagerChange(
         isAuthorFilterVisible: Boolean? = null,
         authorFilterSelection: AuthorFilterSelection? = null,
@@ -1033,6 +1036,7 @@ class PagesViewModel
         setValue(value)
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     private fun <T> MutableLiveData<T>.postOnUi(value: T) {
         val liveData = this
         launch {

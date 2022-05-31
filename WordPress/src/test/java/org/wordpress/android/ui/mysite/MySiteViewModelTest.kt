@@ -2857,7 +2857,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         val viewModelStore = ViewModelStore()
         val viewModelProvider = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T = this@invokeOnCleared as T
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = this@invokeOnCleared as T
         })
         viewModelProvider.get(this@invokeOnCleared::class.java)
         viewModelStore.clear()

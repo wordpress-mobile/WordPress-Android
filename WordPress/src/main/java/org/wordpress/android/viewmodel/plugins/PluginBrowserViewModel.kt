@@ -34,7 +34,6 @@ import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginList
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.POPULAR
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.SEARCH
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel.PluginListType.SITE
-import java.util.ArrayList
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -397,7 +396,7 @@ class PluginBrowserViewModel @Inject constructor(
     }
 
     fun setTitle(title: String?) {
-        _title.postValue(title)
+        _title.postValue(title ?: "")
     }
 
     // ListState Helpers

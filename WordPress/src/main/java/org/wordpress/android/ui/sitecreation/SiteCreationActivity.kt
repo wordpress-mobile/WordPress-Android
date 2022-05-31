@@ -148,7 +148,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         })
     }
 
-    override fun onIntentSelected(intent: String) {
+    override fun onIntentSelected(intent: String?) {
         mainViewModel.onSiteIntentSelected(intent)
         if (!siteNameFeatureConfig.isEnabled()) {
             ActivityUtils.hideKeyboard(this)
