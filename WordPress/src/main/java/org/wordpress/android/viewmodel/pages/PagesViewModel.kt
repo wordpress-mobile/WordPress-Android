@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
@@ -439,7 +438,7 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, DRAFT)
+            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, PageStatus.DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.remoteId, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
