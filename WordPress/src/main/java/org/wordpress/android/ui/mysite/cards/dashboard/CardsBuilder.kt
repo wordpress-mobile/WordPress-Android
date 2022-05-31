@@ -22,11 +22,11 @@ class CardsBuilder @Inject constructor(
                 if (dashboardCardsBuilderParams.showErrorCard) {
                     add(createErrorCard(dashboardCardsBuilderParams.onErrorRetryClick))
                 } else {
+                    bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
+                            ?.let { add(it) }
                     todaysStatsCardBuilder.build(dashboardCardsBuilderParams.todaysStatsCardBuilderParams)
                             ?.let { add(it) }
                     addAll(postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams))
-                    bloggingPromptCardBuilder.build(dashboardCardsBuilderParams.bloggingPromptCardBuilderParams)
-                            ?.let { add(it) }
                 }
             }.toList()
     )
