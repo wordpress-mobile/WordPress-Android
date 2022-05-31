@@ -50,6 +50,7 @@ sealed class PostListAction {
     class DismissPendingNotification(val pushId: Int) : PostListAction()
 }
 
+@Suppress("TooGenericExceptionCaught")
 fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
