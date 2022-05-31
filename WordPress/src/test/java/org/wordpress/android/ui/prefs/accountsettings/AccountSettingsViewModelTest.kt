@@ -131,7 +131,6 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
             test {
                 viewModel.onUsernameChangeConfirmedFromServer("new_wordpressuser_username")
                 assertThat(uiState.userNameSettingsUiState.showUserNameConfirmedSnackBar)
-                        .withFailMessage("The username change should be notified in snackbar")
                         .isEqualTo(true)
             }
 
