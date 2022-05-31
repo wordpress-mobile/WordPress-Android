@@ -113,8 +113,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.File
-import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -440,7 +438,7 @@ class MySiteViewModel @Inject constructor(
                                 onFooterLinkClick = this::onPostCardFooterLinkClick
                         ),
                         bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
-                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled && !isPromptSkippedToday()) {
+                                bloggingPrompt = if (isBloggingPromptsFeatureConfigEnabled) {
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
@@ -1191,22 +1189,6 @@ class MySiteViewModel @Inject constructor(
         )
 
         _onSnackbarMessage.postValue(Event(snackbar))
-    }
-
-
-    fun isPromptSkippedToday(): Boolean {
-        val promptSkippedDate = appPrefsWrapper.getSkippedPromptDay()
-        return promptSkippedDate != null && isSameDay(promptSkippedDate, Date())
-    }
-
-    fun isSameDay(date1: Date, date2: Date): Boolean {
-        val localDate1: LocalDate = date1.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-        val localDate2: LocalDate = date2.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-        return localDate1.isEqual(localDate2)
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
