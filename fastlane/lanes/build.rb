@@ -159,7 +159,6 @@ platform :android do
   #####################################################################################
   desc 'Upload Build to Play Store'
   lane :upload_build_to_play_store do |options|
-
     app = get_app_name_option!(options)
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     metadata_dir = File.join('fastlane', APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
@@ -173,7 +172,7 @@ platform :android do
 
     aab_file_path = bundle_file_path(app, version)
 
-    if File.exist? aab_file_path then
+    if File.exist? aab_file_path
       retry_count = 2
       begin
         upload_to_play_store(
@@ -188,11 +187,11 @@ platform :android do
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
         )
-      rescue FastlaneCore::Interface::FastlaneError => ex
+      rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
         # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP alpha, WP beta, JP beta). Retrying usually fixes it
-        if ex.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
-          UI.error "Upload failed with Google API error. Retrying in 2mn..."
+        if e.message.start_with?('Google Api Error') && (retry_count -= 1) > 0
+          UI.error 'Upload failed with Google API error. Retrying in 2mn...'
           sleep(120)
           retry
         end
