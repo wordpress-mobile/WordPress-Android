@@ -1,8 +1,0 @@
-- Drag/drop editor blocks
-- Cover block color contrast
-- Buttons block formatting visibility fix
-- Separate new/existing site Quick Start tasks
-- Copy Link to published pages
-- No + icon in editor when self-hosted
-- Gallery block Link To/Image Size settings
-- No tour banner in unsupported editor
