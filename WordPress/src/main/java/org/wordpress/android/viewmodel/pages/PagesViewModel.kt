@@ -540,22 +540,18 @@ class PagesViewModel
         val pageLink = postStore.getPostByLocalPostId(page.localId).link
         try {
             // Copy the link to the clipboard
-            val clipboard = context.clipboardManager
-            val clip = ClipData.newPlainText("${page.localId}", pageLink)
-            if (clipboard != null) {
-                clipboard.setPrimaryClip(clip)
-                _showSnackbarMessage.postValue(SnackbarMessageHolder((UiStringRes(R.string.media_edit_copy_url_toast))))
-            } else {
-                throw NullPointerException("ClipboardManager is not supported on this device")
-            }
-        } catch (e: SecurityException) {
+            context.clipboardManager?.setPrimaryClip(
+                    ClipData.newPlainText("${page.localId}", pageLink)
+            ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
+
+            _showSnackbarMessage.postValue(
+                    SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
+            )
+        } catch (e: Throwable) {
             /**
              * Ignore any exceptions here as certain devices have bugs and will fail.
              * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
              */
-            AppLog.e(PAGES, e)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
-        } catch (e: NullPointerException) {
             AppLog.e(PAGES, e)
             _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
         }
