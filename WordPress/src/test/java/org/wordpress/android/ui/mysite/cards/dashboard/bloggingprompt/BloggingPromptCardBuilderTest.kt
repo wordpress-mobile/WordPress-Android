@@ -84,12 +84,12 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
     }
 
     private fun buildBloggingPromptCard(bloggingPrompt: BloggingPromptModel?) = builder.build(
-            BloggingPromptCardBuilderParams(bloggingPrompt, onShareClick, onAnswerClick)
+            BloggingPromptCardBuilderParams(bloggingPrompt, onShareClick, onAnswerClick, onSkipClick)
     )
 
     private val onShareClick: (message: String) -> Unit = { }
-
     private val onAnswerClick: (promptId: Int) -> Unit = { }
+    private val onSkipClick: () -> Unit = { }
 
     private val bloggingPromptCard = BloggingPromptCardWithData(
             prompt = UiStringText(PROMPT_TITLE),
@@ -98,6 +98,7 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
             false,
             promptId = 123,
             onShareClick = onShareClick,
-            onAnswerClick = onAnswerClick
+            onAnswerClick = onAnswerClick,
+            onSkipClick =  onSkipClick
     )
 }

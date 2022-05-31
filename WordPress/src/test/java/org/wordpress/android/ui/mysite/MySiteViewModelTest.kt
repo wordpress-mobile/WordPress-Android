@@ -240,6 +240,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
+    private var onBloggingPromptSkipClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -1636,6 +1637,24 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertTrue(answerRequests == 1)
     }
 
+    @Test
+    fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() = test {
+        initSelectedSite()
+
+        requireNotNull(onBloggingPromptSkipClicked).invoke()
+
+        verify(appPrefsWrapper).setSkippedPromptDay(any())
+        verify(mySiteSourceManager).refreshBloggingPrompt()
+
+
+        assertThat(snackbars.size).isEqualTo(1)
+
+        val expectedSnackbar = snackbars[0]
+        assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
+        assertThat(expectedSnackbar.message).isEqualTo(UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar))
+        assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+    }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test
@@ -2859,6 +2878,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
+        onBloggingPromptSkipClicked = params.bloggingPromptCardBuilderParams.onSkipClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
@@ -2866,7 +2886,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isAnswered = false,
                 promptId = bloggingPromptId,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
-                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
+                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
+                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
         )
     }
 

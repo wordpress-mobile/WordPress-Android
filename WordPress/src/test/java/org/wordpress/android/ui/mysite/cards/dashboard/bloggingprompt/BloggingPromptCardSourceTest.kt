@@ -24,6 +24,7 @@ import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardSource
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import java.util.Date
 
@@ -54,6 +55,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     @Mock private lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock private lateinit var siteModel: SiteModel
     @Mock private lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var bloggingPromptCardSource: BloggingPromptCardSource
 
     private val data = BloggingPromptsResult(
@@ -75,6 +77,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
                 selectedSiteRepository,
                 bloggingPromptsStore,
                 bloggingPromptsFeatureConfig,
+                appPrefsWrapper,
                 TEST_DISPATCHER
         )
     }
@@ -83,6 +86,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(isBloggingPromptFeatureEnabled)
         whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+        whenever(appPrefsWrapper.getSkippedPromptDay()).thenReturn(null)
     }
 
     /* GET DATA */
@@ -159,6 +163,21 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
     }
+
+    /* SKIPPED PROMPT */
+
+    @Test
+    fun `given build is invoked, when prompt is skipped, then empty state is loaded`() = test {
+        val result = mutableListOf<BloggingPromptUpdate>()
+        whenever(appPrefsWrapper.getSkippedPromptDay()).thenReturn(Date())
+        bloggingPromptCardSource.refresh.observeForever { }
+
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { it?.let { result.add(it) } }
+
+        assertThat(result.size).isEqualTo(1)
+        assertThat(result.first()).isEqualTo(BloggingPromptUpdate(null))
+    }
+
     /* IS REFRESHING */
 
     @Test
