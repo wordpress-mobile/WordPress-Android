@@ -388,23 +388,8 @@ public class GCMMessageHandler {
             AppPrefs.setLastPushNotificationWpcomNoteId(wpcomNoteID);
 
             // Update notification content for the same noteId if it is already showing
-            int pushId = 0;
-            for (Integer id : mGCMMessageHandler.mActiveNotificationsMap.keySet()) {
-                if (id == null) {
-                    continue;
-                }
-                Bundle noteBundle = mGCMMessageHandler.mActiveNotificationsMap.get(id);
-                if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(wpcomNoteID)) {
-                    pushId = id;
-                    mGCMMessageHandler.mActiveNotificationsMap.put(pushId, data);
-                    break;
-                }
-            }
-
-            if (pushId == 0) {
-                pushId = PUSH_NOTIFICATION_ID + mGCMMessageHandler.mActiveNotificationsMap.size();
-                mGCMMessageHandler.mActiveNotificationsMap.put(pushId, data);
-            }
+            int pushId = getPushIdForWpcomeNoteID(wpcomNoteID);
+            mGCMMessageHandler.mActiveNotificationsMap.put(pushId, data);
 
             // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
             if (NotificationsUtils.isNotificationsEnabled(context)) {
@@ -430,11 +415,39 @@ public class GCMMessageHandler {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
+            showNotificationForNoteData(context, data, builder);
+        }
+
+        private void showNotificationForNoteData(Context context, Bundle noteData, NotificationCompat.Builder builder) {
+            String noteType = StringUtils.notNullStr(noteData.getString(PUSH_ARG_TYPE));
+            String wpcomNoteID = noteData.getString(PUSH_ARG_NOTE_ID, "");
+            String message = StringEscapeUtils.unescapeHtml4(noteData.getString(PUSH_ARG_MSG));
+            int pushId = getPushIdForWpcomeNoteID(wpcomNoteID);
+
             showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, pushId, true);
 
             // Also add a group summary notification, which is required for non-wearable devices
             // Do not need to play the sound again. We've already played it in the individual builder.
             showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
+        }
+
+        private int getPushIdForWpcomeNoteID(String wpcomNoteID) {
+            int pushId = 0;
+            for (Integer id : mGCMMessageHandler.mActiveNotificationsMap.keySet()) {
+                if (id == null) {
+                    continue;
+                }
+                Bundle noteBundle = mGCMMessageHandler.mActiveNotificationsMap.get(id);
+                if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(wpcomNoteID)) {
+                    pushId = id;
+                    break;
+                }
+            }
+
+            if (pushId == 0) {
+                pushId = PUSH_NOTIFICATION_ID + mGCMMessageHandler.mActiveNotificationsMap.size();
+            }
+            return pushId;
         }
 
         private void showSimpleNotification(Context context, String title, String message, Intent resultIntent,
