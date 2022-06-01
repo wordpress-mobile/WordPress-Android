@@ -727,7 +727,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
      * loads and displays a remote or local image
      */
     private void loadImage() {
-        int width = DisplayUtils.getDisplayPixelWidth(this);
+        int width = DisplayUtils.getWindowPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
         int size = Math.max(width, height);
 
@@ -793,7 +793,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         new Thread() {
             @Override
             public void run() {
-                int width = DisplayUtils.getDisplayPixelWidth(MediaSettingsActivity.this);
+                int width = DisplayUtils.getWindowPixelWidth(MediaSettingsActivity.this);
                 final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
                         mMedia.getUrl(),
                         width,
