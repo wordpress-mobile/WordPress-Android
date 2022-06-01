@@ -5,8 +5,7 @@
     style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="?attr/colorOnSurface"
-    app:cardCornerRadius="@dimen/margin_medium_large">
+    android:backgroundTint="?attr/colorOnSurface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
