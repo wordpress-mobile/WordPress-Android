@@ -283,4 +283,20 @@ class MySiteSourceManagerTest : BaseUnitTest() {
 
         verify(quickStartCardSource).refresh()
     }
+
+    /* BLOGGING PROMPTS */
+
+    @Test
+    fun `refreshing blogging single blogging prompt calls refreshTodayPrompt() method of BP card source`() {
+        mySiteSourceManager.refreshBloggingPrompts(true)
+
+        verify(bloggingPromptCardSource).refreshTodayPrompt()
+    }
+
+    @Test
+    fun `refreshing all blogging prompts single blogging prompt calls refresh() method of BP card source`() {
+        mySiteSourceManager.refreshBloggingPrompts(false)
+
+        verify(bloggingPromptCardSource).refresh()
+    }
 }
