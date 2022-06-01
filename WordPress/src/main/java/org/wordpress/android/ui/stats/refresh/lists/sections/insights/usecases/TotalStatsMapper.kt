@@ -52,9 +52,12 @@ class TotalStatsMapper @Inject constructor(
 
     fun buildTotalCommentsInformation(dates: List<PeriodData>) = buildTotalInformation(dates, COMMENTS)
 
-    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text {
+    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text? {
         val value = getCurrentWeekDays(dates, type).sum()
         val previousValue = getPreviousWeekDays(dates, type).sum()
+        if (value == 0L && previousValue == 0L) {
+            return null
+        }
         val positive = value >= previousValue
         val change = statsUtils.buildChange(previousValue, value, positive, true).toString()
         val stringRes = if (positive) {

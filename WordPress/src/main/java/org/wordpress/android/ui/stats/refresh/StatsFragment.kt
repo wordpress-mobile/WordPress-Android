@@ -7,7 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.snackbar.Snackbar
@@ -47,7 +47,7 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 @AndroidEntryPoint
 class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var uiHelpers: UiHelpers
-    private val viewModel: StatsViewModel by viewModels()
+    private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var selectedTabListener: SelectedTabListener
 

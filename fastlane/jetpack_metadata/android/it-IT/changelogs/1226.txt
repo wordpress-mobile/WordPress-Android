@@ -1,0 +1,9 @@
+19.9:
+- Acquisti del dominio del sito in-app
+- Trascinamento/Rilascio dell'editor a blocchi
+- Contrasto del colore del blocco Copertina
+- Risoluzione della visibilità della formattazione del blocco Pulsanti
+- Separazione delle attività della sessione di orientamento del sito nuovo/esistente
+- Copia delle pagine pubblicate di Collega a
+- Impostazioni Collega a/Dimensione dell'immagine del blocco Galleria
+- Nessun banner del tour nell'editor non supportato

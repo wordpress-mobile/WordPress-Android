@@ -3,7 +3,6 @@ package org.wordpress.android.ui.plans
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -41,13 +40,10 @@ class PlansViewModel @Inject constructor(
     val listStatus: LiveData<PlansListStatus>
         get() = _listStatus
 
-    private val _plans = MutableLiveData<List<PlanOffersModel>>()
-    val plans: LiveData<List<PlanOffersModel>>
+    private val _plans = MutableLiveData<List<PlanOffersModel>?>()
+    private val _cachedPlans = MutableLiveData<List<PlanOffersModel>?>()
+    val plans: LiveData<List<PlanOffersModel>?>
         get() = _plans
-
-    private val _cachedPlans = MutableLiveData<List<PlanOffersModel>>()
-    val cachedPlans: LiveData<List<PlanOffersModel>>
-        get() = _cachedPlans
 
     private val _showDialog = SingleLiveEvent<PlanOffersModel>()
     val showDialog: LiveData<PlanOffersModel>
@@ -90,7 +86,7 @@ class PlansViewModel @Inject constructor(
 
     fun onShowCachedPlansButtonClicked() {
         _listStatus.value = DONE
-        _plans.value = cachedPlans.value
+        _plans.value = _cachedPlans.value
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -1,8 +1,0 @@
-19.8:
-- Einstellungen für Beitragsbilder im Block für die letzten Beiträge
-- Hinweise zum Wechsel zwischen HTML-/visuellem Modus
-- Vollständige Vorschau bei Embed-Blöcken
-- Bilder für Auswahl der Region
-- Längere Uploads mit dem Standalone-Modus von VideoPress
-- Medienauswahl: TalkBack-Medientypen
-- Magische Link-URL für die Registrierung

@@ -14,7 +14,7 @@ platform :android do
   #####################################################################################
   desc 'Creates a new release branch from the current trunk'
   lane :code_freeze do |options|
-    old_version = android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
+    android_codefreeze_prechecks(skip_confirm: options[:skip_confirm])
 
     android_bump_version_release()
     new_version = android_get_app_version()
