@@ -351,8 +351,6 @@ public class GCMMessageHandler {
             // Try to build the note object from the PN payload, and save it to the DB.
             NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
-            // Always do this, since a note can be updated on the server after a PN is sent
-            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID, null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -415,7 +413,12 @@ public class GCMMessageHandler {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showNotificationForNoteData(context, data, builder);
+            // Always do this, since a note can be updated on the server after a PN is sent
+            NotificationsActions.downloadNoteAndUpdateDB(
+                    wpcomNoteID,
+                    success -> showNotificationForNoteData(context, data, builder),
+                    error -> showNotificationForNoteData(context, data, builder)
+            );
         }
 
         private void showNotificationForNoteData(Context context, Bundle noteData, NotificationCompat.Builder builder) {
