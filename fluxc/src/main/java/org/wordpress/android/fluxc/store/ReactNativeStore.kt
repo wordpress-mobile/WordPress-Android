@@ -113,13 +113,18 @@ class ReactNativeStore
         params: Map<String, String>,
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
-        val usingSavedRestUrl = site.wpApiRestUrl != null
+        // Storing this in a variable to avoid a NPE that can occur if the site object is mutated
+        // from another thread: https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/1579
+        var wpApiRestUrl = site.wpApiRestUrl
+
+        val usingSavedRestUrl = wpApiRestUrl != null
         if (!usingSavedRestUrl) {
-            site.wpApiRestUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url) // discover rest api endpoint
+            wpApiRestUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url) // discover rest api endpoint
                     ?: slashJoin(site.url, "wp-json/") // fallback to ".../wp-json/" default if discovery fails
+            site.wpApiRestUrl = wpApiRestUrl
             persistSiteSafely(site)
         }
-        val fullRestUrl = slashJoin(site.wpApiRestUrl, path)
+        val fullRestUrl = slashJoin(wpApiRestUrl, path)
 
         var nonce = nonceRestClient.getNonce(site)
         val usingSavedNonce = nonce is Available
