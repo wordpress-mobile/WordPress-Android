@@ -294,7 +294,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         });
 
         // make image 40% of screen height
-        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        int displayHeight = DisplayUtils.getWindowPixelHeight(this);
         int imageHeight = (int) (displayHeight * 0.4);
         mImageView.getLayoutParams().height = imageHeight;
 
@@ -728,7 +728,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
      */
     private void loadImage() {
         int width = DisplayUtils.getWindowPixelWidth(this);
-        int height = DisplayUtils.getDisplayPixelHeight(this);
+        int height = DisplayUtils.getWindowPixelHeight(this);
         int size = Math.max(width, height);
 
         String mediaUri;

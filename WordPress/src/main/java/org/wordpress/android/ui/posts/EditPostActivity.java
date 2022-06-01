@@ -1909,7 +1909,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
         // device's max width to display a smaller image that can load faster and act as a placeholder.
         int displayWidth = Math.max(DisplayUtils.getWindowPixelWidth(getBaseContext()),
-                DisplayUtils.getDisplayPixelHeight(getBaseContext()));
+                DisplayUtils.getWindowPixelHeight(getBaseContext()));
 
         int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
         int maxWidth = displayWidth - (margin * 2);
