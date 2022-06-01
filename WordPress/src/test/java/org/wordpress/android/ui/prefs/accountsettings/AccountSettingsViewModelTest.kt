@@ -91,7 +91,6 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
     fun `The username is allowed to change based on the cached account settings`() = test {
         assertThat(uiState.userNameSettingsUiState.canUserNameBeChanged)
                 .isEqualTo(getAccountUseCase.account.usernameCanBeChanged)
-
     }
 
     @Test
@@ -170,7 +169,6 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 whenever(getAccountUseCase.account.newEmail).thenReturn("new_wordpressuser_username")
                 initialiseViewModel()
                 assertThat(uiState.emailSettingsUiState.hasPendingEmailChange).isEqualTo(true)
-
             }
 
     @Test
@@ -368,9 +366,9 @@ class AccountSettingsViewModelTest : BaseUnitTest() {
                 // Given
                 whenever(pushAccountSettingsUseCase.updatePassword("new_password"))
                         .thenReturn(mockSuccessResponse())
-                //When
+                // When
                 viewModel.onPasswordChanged("new_password")
-                //Then
+                // Then
                 assertThat(uiStateChanges.last().changePasswordSettingsUiState.showChangePasswordProgressDialog)
                         .isEqualTo(false)
             }
