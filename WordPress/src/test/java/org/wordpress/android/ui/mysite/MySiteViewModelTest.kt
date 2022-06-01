@@ -32,6 +32,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -41,6 +42,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
@@ -180,6 +182,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var quickStartTracker: QuickStartTracker
+    @Mock private lateinit var dispatcher: Dispatcher
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -375,7 +378,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 bloggingPromptsFeatureConfig,
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
-                quickStartTracker
+                quickStartTracker,
+                dispatcher
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1635,6 +1639,33 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertTrue(answerRequests == 1)
     }
+
+    @Test
+    fun `when blogging prompt answer is uploaded, refresh prompt card`() = test {
+        initSelectedSite()
+
+        val promptAnswerPost = PostModel().apply { answeredPromptId = 1 }
+
+        val postUploadedEvent = OnPostUploaded(promptAnswerPost, true)
+
+        viewModel.onPostUploaded(postUploadedEvent)
+
+        verify(mySiteSourceManager).refreshBloggingPrompts(true)
+    }
+
+    @Test
+    fun `when non blogging prompt answer is uploaded, prompt card is not refreshed`() = test {
+        initSelectedSite()
+
+        val promptAnswerPost = PostModel().apply { answeredPromptId = 0 }
+
+        val postUploadedEvent = OnPostUploaded(promptAnswerPost, true)
+
+        viewModel.onPostUploaded(postUploadedEvent)
+
+        verify(mySiteSourceManager, never()).refreshBloggingPrompts(true)
+    }
+
 
     /* DASHBOARD ERROR SNACKBAR */
 
