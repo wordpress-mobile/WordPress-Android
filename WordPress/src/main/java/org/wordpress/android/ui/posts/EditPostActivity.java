@@ -914,10 +914,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 })
         );
         mEditorBloggingPromptsViewModel.getOnBloggingPromptLoaded().observe(this, event -> {
-            event.applyIfNotHandled(promptContent -> {
+            event.applyIfNotHandled(loadedPrompt -> {
                     mEditPostRepository.updateAsync(postModel -> {
-                        postModel.setContent(promptContent);
-                        postModel.setAnsweredPromptId(getIntent().getIntExtra(EXTRA_PROMPT_ID, -1));
+                        postModel.setContent(loadedPrompt.getContent());
+                        postModel.setAnsweredPromptId(loadedPrompt.getPromptId());
                         return true;
                     }, (postModel, result) -> {
                         refreshEditorContent();
