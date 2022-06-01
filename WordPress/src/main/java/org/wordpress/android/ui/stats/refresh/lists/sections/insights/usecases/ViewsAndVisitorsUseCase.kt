@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITO
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewViewsAndVisitorsDetail
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
@@ -39,7 +40,9 @@ import javax.inject.Named
 import kotlin.math.ceil
 
 const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
+const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-traffic/"
 
+@Suppress("TooManyFunctions")
 class ViewsAndVisitorsUseCase
 @Inject constructor(
     private val statsGranularity: StatsGranularity,
@@ -184,8 +187,8 @@ class ViewsAndVisitorsUseCase
                     viewsAndVisitorsMapper.buildChart(
                             domainModel.dates,
                             statsGranularity,
-                            this::onBarSelected,
-                            this::onBarChartDrawn,
+                            this::onLineSelected,
+                            this::onLineChartDrawn,
                             uiState.selectedPosition,
                             selectedItem.period
                     )
@@ -193,7 +196,8 @@ class ViewsAndVisitorsUseCase
             items.add(
                     viewsAndVisitorsMapper.buildInformation(
                             domainModel.dates,
-                            uiState.selectedPosition
+                            uiState.selectedPosition,
+                            this::onTopTipsLinkClick
                     )
             )
             items.add(
@@ -224,7 +228,11 @@ class ViewsAndVisitorsUseCase
         )
     }
 
-    private fun onBarSelected(period: String?) {
+    private fun onTopTipsLinkClick() {
+        navigateTo(ViewUrl(TOP_TIPS_URL))
+    }
+
+    private fun onLineSelected(period: String?) {
         analyticsTracker.trackGranular(
                 AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED,
                 statsGranularity
@@ -246,11 +254,11 @@ class ViewsAndVisitorsUseCase
         updateUiState { it.copy(selectedPosition = position) }
     }
 
-    private fun onBarChartDrawn(visibleBarCount: Int) {
-        updateUiState { it.copy(visibleBarCount = visibleBarCount) }
+    private fun onLineChartDrawn(visibleLineCount: Int) {
+        updateUiState { it.copy(visibleLineCount = visibleLineCount) }
     }
 
-    data class UiState(val selectedPosition: Int = 0, val visibleBarCount: Int? = null)
+    data class UiState(val selectedPosition: Int = 0, val visibleLineCount: Int? = null)
 
     class ViewsAndVisitorsUseCaseFactory
     @Inject constructor(

@@ -347,7 +347,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
-                .setTitle(action.title)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
@@ -497,6 +496,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                             data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                             isNewSite = true
                     )
+                } else {
+                    viewModel.onSitePicked()
                 }
             }
             RequestCodes.EDIT_LANDING_PAGE -> {

@@ -341,6 +341,10 @@
     <style name="InsightsManagementItem" parent="TextAppearance.MaterialComponents.Body1" />
 
     <!-- Stats Revamp styles -->
+    <style name="StatsPieChartTotalText" parent="TextAppearance.MaterialComponents.Body2" />
+
+    <style name="StatsPieChartLegends" parent="TextAppearance.MaterialComponents.Body2" />
+
     <style name="StatsLegendsBlue" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:layout_marginTop">24dp</item>
         <item name="android:layout_marginBottom">4dp</item>
@@ -364,5 +368,10 @@
         <item name="android:drawablePadding">4dp</item>
         <item name="android:drawableStart">@drawable/bg_stats_legend_start</item>
         <item name="android:drawableTint">@color/stats_legend_previous_week</item>
+    </style>
+
+    <style name="StatsWidget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/bg_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
     </style>
 </resources>

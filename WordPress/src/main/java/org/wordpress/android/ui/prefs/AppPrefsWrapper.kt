@@ -213,10 +213,11 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
 
-    fun getLastSelectedQuickStartType(): QuickStartType = AppPrefs.getLastSelectedQuickStartType()
+    fun getLastSelectedQuickStartTypeForSite(siteLocalId: Long): QuickStartType =
+            AppPrefs.getLastSelectedQuickStartTypeForSite(siteLocalId)
 
-    fun setLastSelectedQuickStartType(quickStartType: QuickStartType) =
-            AppPrefs.setLastSelectedQuickStartType(quickStartType)
+    fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
+            AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
 
     fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
 

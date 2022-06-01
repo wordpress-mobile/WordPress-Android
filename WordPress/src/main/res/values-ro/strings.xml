@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-18 10:59:25+0000
+Translation-Revision-Date: 2022-05-25 20:11:34+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
@@ -1667,7 +1667,6 @@ Language: ro
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editează articolele și paginile noi cu editorul de blocuri</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Folosește editorul de blocuri</string>
     <string name="exit">ieșire</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Atinge %1$s Plan %2$s pentru a vedea planul actual și alte planuri disponibile</string>
     <string name="quick_start_dialog_upload_icon_message">Vizitatorii îți vor vedea iconul în navigatoarele lor. Adaugă un icon personalizat pentru un aspect rafinat și profesionist.</string>
     <string name="quick_start_sites">Pașii următori</string>
     <string name="quick_start_complete_tasks_header">Finalizate (%d)</string>
@@ -1677,8 +1676,6 @@ Language: ro
     <string name="quick_start_dialog_upload_site_icon_message_short">Atinge %1$s Icon site %2$s pentru a încărca unul nou</string>
     <string name="quick_start_dialog_publish_post_message">Redactează și publică un articol.</string>
     <string name="quick_start_dialog_check_stats_message_short">Selectează %1$s Statistici %2$s pentru a vedea rezultatele obținute de site.</string>
-    <string name="quick_start_dialog_explore_plans_title">Explorează planurile</string>
-    <string name="quick_start_dialog_explore_plans_message">Află despre instrumentele SEO și de marketing din planurile nostre plătite.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activează partajarea articolelor</string>
     <string name="quick_start_dialog_enable_sharing_message">Partajează automat articole noi în conturile tale din media socială.</string>
     <string name="quick_start_remove_next_steps_menu_title">Înlătură acest</string>

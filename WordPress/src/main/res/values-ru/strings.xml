@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 09:54:08+0000
+Translation-Revision-Date: 2022-05-25 20:02:06+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ru
@@ -1673,12 +1673,9 @@ Language: ru
     <string name="quick_start_complete_tasks_header">Готово (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Выберите уникальный значок сайта</string>
     <string name="quick_start_dialog_upload_icon_message">Ваши посетители увидят ваш значок в своем браузере. Добавьте пользовательский значок для стильного, профессионального вида.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Нажмите %1$s Тариф %2$s для просмотра вашего и других доступных тарифов</string>
     <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Нажмите %1$s Значок вашего сайта %2$s для загрузки нового</string>
     <string name="quick_start_dialog_publish_post_message">Создайте черновик и опубликуйте свою первую запись.</string>
-    <string name="quick_start_dialog_explore_plans_title">Посмотреть тарифы</string>
-    <string name="quick_start_dialog_explore_plans_message">Узнайте больше о маркетинге и SEO инструментах на наших платных тарифах.</string>
     <string name="quick_start_dialog_enable_sharing_title">Включить возможность делиться записями</string>
     <string name="quick_start_dialog_enable_sharing_message">Автоматически делитесь вашими новыми записями в социальных сетях.</string>
     <string name="quick_start_dialog_check_stats_title">Посмотреть статистику сайта</string>

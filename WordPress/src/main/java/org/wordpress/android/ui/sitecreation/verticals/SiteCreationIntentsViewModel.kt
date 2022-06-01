@@ -9,8 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.DefaultItems
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState.Content.FullItemsList
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -40,8 +40,8 @@ class SiteCreationIntentsViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
-    private val _onIntentSelected = SingleLiveEvent<String>()
-    val onIntentSelected: LiveData<String> = _onIntentSelected
+    private val _onIntentSelected = SingleLiveEvent<String?>()
+    val onIntentSelected: LiveData<String?> = _onIntentSelected
 
     fun start() {
         if (isInitialized) return

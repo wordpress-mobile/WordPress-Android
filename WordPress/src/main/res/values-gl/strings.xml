@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-22 10:12:06+0000
+Translation-Revision-Date: 2022-05-25 20:28:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: gl_ES
@@ -1673,12 +1673,9 @@ Language: gl_ES
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Elixe unha icona do sitio único</string>
     <string name="quick_start_dialog_upload_icon_message">Os teus visitantes verán a túa icona no seu navegador. Engade unha icona personalizada para conseguir un aspecto profesional e refinado.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver o teu plan actual e outros plans dispoñibles</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estatísticas %2$s para ver como está rendendo o teu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icona do teu sitio %2$s para subir un novo</string>
     <string name="quick_start_dialog_publish_post_message">Garda en borrador e publica unha entrada.</string>
-    <string name="quick_start_dialog_explore_plans_title">Explorar plans</string>
-    <string name="quick_start_dialog_explore_plans_message">Aprende sobre as ferramentas de marketing e SEO dos nosos plans de pagamento.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automaticamente as novas entradas nas túas contas de medios sociais.</string>
     <string name="quick_start_dialog_check_stats_title">Revisa as estatísticas do teu sitio</string>

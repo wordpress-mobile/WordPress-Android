@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-17 19:59:44+0000
+Translation-Revision-Date: 2022-05-25 21:35:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
@@ -743,8 +743,8 @@ Language: en_GB
     <string name="suggestion_none">No %s suggestions available.</string>
     <string name="suggestion_problem">There was a problem loading suggestions.</string>
     <string name="suggestion_no_matching">No matching %s.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.\n        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n\n        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.\n        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.\n    </string>
     <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.\n        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n\n        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.\n        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.\n    </string>
     <string name="threat_problem_header">What was the problem?</string>
     <string name="threat_technical_details_header">The technical details</string>
     <string name="threat_file_description">Threat found in file:</string>
@@ -1670,15 +1670,12 @@ Language: en_GB
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_sites_type_customize">Customise your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_dialog_upload_icon_title">Choose a unique site icon</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish a post.</string>
     <string name="quick_start_dialog_check_stats_message_short">Select %1$s Stats %2$s to see how your site is performing.</string>
-    <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
-    <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>

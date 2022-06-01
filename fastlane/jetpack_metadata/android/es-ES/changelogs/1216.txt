@@ -1,8 +1,0 @@
-19.8:
-- Ajustes de la imagen destacada en el bloque Últimas entradas
-- Avisos de cambio de modo HTML/Visual
-- Vista previa completa del bloque de incrustar
-- Elementos visuales del Selector local
-- Cargas más extensas con VideoPress independiente
-- Tipos de medios de discusión del Selector de medios
-- URL del enlace mágico de suscripción

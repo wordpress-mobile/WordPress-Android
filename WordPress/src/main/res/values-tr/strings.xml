@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 02:42:36+0000
+Translation-Revision-Date: 2022-05-27 14:32:13+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: tr
@@ -1673,12 +1673,9 @@ Language: tr
     <string name="quick_start_complete_tasks_header">Tamamlandı (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Benzersiz bir site simgesi seçin</string>
     <string name="quick_start_dialog_upload_icon_message">Ziyaretçileriniz tarayıcılarında sizin simgenizi görecektir. Gösterişli ve profesyonel bir görünüm için özel bir simge ekleyin.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Mevcut paketi ve kullanılabilecek diğer paketleri görmek için %1$s Paket %2$s seçeneğine dokunun</string>
     <string name="quick_start_dialog_check_stats_message_short">Sitenizin nasıl performans gösterdiğini görmek için %1$sİstatistik%2$s öğesini seçin.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site Simgeniz %2$s’e dokunun</string>
     <string name="quick_start_dialog_publish_post_message">Bir yazıyı taslak olarak yazın ve yayınlayın.</string>
-    <string name="quick_start_dialog_explore_plans_title">Paketleri keşfedin</string>
-    <string name="quick_start_dialog_explore_plans_message">Ücretli paketlerimizdeki pazarlama ve SEO araçları hakkında bilgi edinin.</string>
     <string name="quick_start_dialog_enable_sharing_title">Gönderi paylaşımına izin verin</string>
     <string name="quick_start_dialog_enable_sharing_message">Yeni gönderileri sosyal medya hesaplarınızda otomatik olarak paylaşın.</string>
     <string name="quick_start_dialog_check_stats_title">Sitenizin istatistiklerini gözden geçirin</string>
