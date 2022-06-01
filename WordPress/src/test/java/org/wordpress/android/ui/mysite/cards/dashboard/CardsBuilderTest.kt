@@ -129,7 +129,6 @@ class CardsBuilderTest : BaseUnitTest() {
         assertThat(cards.findNextPostCard()).isNull()
     }
 
-
     /* ERROR CARD */
 
     @Test
@@ -191,7 +190,8 @@ class CardsBuilderTest : BaseUnitTest() {
         showErrorCard: Boolean = false
     ): DashboardCards {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
-        doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder).build(any())
+        doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder)
+                .build(any())
         doAnswer { if (hasBlogginPrompt) blogingPromptCard else null }.whenever(bloggingPromptCardsBuilder).build(any())
         return cardsBuilder.build(
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
