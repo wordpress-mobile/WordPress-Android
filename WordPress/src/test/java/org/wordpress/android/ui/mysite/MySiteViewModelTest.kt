@@ -1666,7 +1666,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(mySiteSourceManager, never()).refreshBloggingPrompts(true)
     }
 
-
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test

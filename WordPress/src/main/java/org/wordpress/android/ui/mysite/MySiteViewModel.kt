@@ -1303,8 +1303,12 @@ class MySiteViewModel @Inject constructor(
     // FluxC events
     @Subscribe(threadMode = MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        if (!event.isError && event.post != null && event.post.answeredPromptId > 0 && event.isFirstTimePublish) {
-            mySiteSourceManager.refreshBloggingPrompts(true)
+        if (!event.isError) {
+            event.post?.let {
+                if (event.post.answeredPromptId > 0 && event.isFirstTimePublish) {
+                    mySiteSourceManager.refreshBloggingPrompts(true)
+                }
+            }
         }
     }
 
