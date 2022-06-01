@@ -7,9 +7,6 @@
     <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
     <!-- Normal permissions, access automatically granted to app -->
-    <uses-permission
-        android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
-        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
