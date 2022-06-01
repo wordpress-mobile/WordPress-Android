@@ -159,6 +159,7 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         assertThat(result.size).isEqualTo(1)
         assertThat(result.first()).isEqualTo(BloggingPromptUpdate(data.model))
     }
+
     /* IS REFRESHING */
 
     @Test
@@ -189,6 +190,39 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
         assertThat(result[2]).isFalse // build(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
         assertThat(result[3]).isTrue // refresh()
         assertThat(result[4]).isFalse // refreshData(...) -> bloggingPromptCardSource.fetchPrompts(...) -> success
+    }
+
+    @Test
+    fun `when refreshTodayPrompt is invoked, single prompt refresh is called`() = test {
+        val regularRefreshResult = mutableListOf<Boolean>()
+        val singlePromptRefreshResult = mutableListOf<Boolean>()
+        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
+        bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
+        bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+
+        bloggingPromptCardSource.refreshTodayPrompt()
+
+        assertThat(singlePromptRefreshResult.size).isEqualTo(2)
+        assertThat(singlePromptRefreshResult[0]).isFalse // init
+        assertThat(singlePromptRefreshResult[1]).isTrue // refreshTodayPrompt
+    }
+
+    @Test
+    fun `when refreshTodayPrompt is invoked, nothing happens if refresh is already in progress`() = test {
+        val regularRefreshResult = mutableListOf<Boolean>()
+        val singlePromptRefreshResult = mutableListOf<Boolean>()
+        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        // we do not return success from bloggingPromptsStore.fetchPrompts() which locks live data in refreshing state
+        bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
+        bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+
+        bloggingPromptCardSource.refreshTodayPrompt()
+
+        assertThat(singlePromptRefreshResult.size).isEqualTo(1)
+        assertThat(singlePromptRefreshResult[0]).isFalse // init
     }
 
     @Test
