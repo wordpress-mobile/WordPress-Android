@@ -23,7 +23,13 @@ class TotalStatsMapper @Inject constructor(
         val previousWeekLikes = getPreviousWeekDays(dates, LIKES)
         val positive = currentWeekLikes.sum() >= previousWeekLikes.sum()
 
-        return ValueWithChartItem(currentWeekSumFormatted, currentWeekLikes, positive)
+        return ValueWithChartItem(
+                value = currentWeekSumFormatted,
+                chartValues = currentWeekLikes,
+                positive = positive,
+                // Add extra bottom margin if there is no information text.
+                extraBottomMargin = !shouldShowTotalInformation(currentWeekLikes.sum(), previousWeekLikes.sum())
+        )
     }
 
     fun buildTotalCommentsValue(dates: List<PeriodData>): ValueWithChartItem {
@@ -33,8 +39,17 @@ class TotalStatsMapper @Inject constructor(
         val previousWeekComments = getPreviousWeekDays(dates, LIKES)
         val positive = currentWeekComments.sum() >= previousWeekComments.sum()
 
-        return ValueWithChartItem(currentWeekSumFormatted, currentWeekComments, positive)
+        return ValueWithChartItem(
+                value = currentWeekSumFormatted,
+                chartValues = currentWeekComments,
+                positive = positive,
+                // Add extra bottom margin if there is no information text.
+                extraBottomMargin = !shouldShowTotalInformation(currentWeekComments.sum(), previousWeekComments.sum())
+        )
     }
+
+    private fun shouldShowTotalInformation(currentWeekSum: Long, previousWeekSum: Long) =
+            currentWeekSum != 0L || previousWeekSum != 0L
 
     fun shouldShowCommentsGuideCard(dates: List<PeriodData>): Boolean {
         return getCurrentWeekDays(dates, COMMENTS).sum() > 0
@@ -55,7 +70,7 @@ class TotalStatsMapper @Inject constructor(
     private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text? {
         val value = getCurrentWeekDays(dates, type).sum()
         val previousValue = getPreviousWeekDays(dates, type).sum()
-        if (value == 0L && previousValue == 0L) {
+        if (!shouldShowTotalInformation(value, previousValue)) {
             return null
         }
         val positive = value >= previousValue
