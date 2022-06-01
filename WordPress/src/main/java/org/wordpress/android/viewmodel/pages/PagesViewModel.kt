@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
@@ -439,7 +438,7 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> previewPage(page)
             SET_PARENT -> setParent(page)
-            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, DRAFT)
+            MOVE_TO_DRAFT -> changePageStatus(page.remoteId, PageStatus.DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.remoteId, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
@@ -535,27 +534,24 @@ class PagesViewModel
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun copyPageLink(page: Page, context: Context) {
-        // Get the link to the page
-        val pageLink = postStore.getPostByLocalPostId(page.localId).link
         try {
+            // Get the link to the page
+            val pageLink = postStore.getPostByLocalPostId(page.localId).link
             // Copy the link to the clipboard
-            val clipboard = context.clipboardManager
-            val clip = ClipData.newPlainText("${page.localId}", pageLink)
-            if (clipboard != null) {
-                clipboard.setPrimaryClip(clip)
-                _showSnackbarMessage.postValue(SnackbarMessageHolder((UiStringRes(R.string.media_edit_copy_url_toast))))
-            } else {
-                throw NullPointerException("ClipboardManager is not supported on this device")
-            }
-        } catch (e: SecurityException) {
+            context.clipboardManager?.setPrimaryClip(
+                    ClipData.newPlainText("${page.localId}", pageLink)
+            ) ?: throw NullPointerException("ClipboardManager is not supported on this device")
+
+            _showSnackbarMessage.postValue(
+                    SnackbarMessageHolder(UiStringRes(R.string.media_edit_copy_url_toast))
+            )
+        } catch (e: Throwable) {
             /**
              * Ignore any exceptions here as certain devices have bugs and will fail.
              * See https://crrev.com/542cb9cfcc927295615809b0c99917b09a219d9f for more info.
              */
-            AppLog.e(PAGES, e)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
-        } catch (e: NullPointerException) {
             AppLog.e(PAGES, e)
             _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.error)))
         }
