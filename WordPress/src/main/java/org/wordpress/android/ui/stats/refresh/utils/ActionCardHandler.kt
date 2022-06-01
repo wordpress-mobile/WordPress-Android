@@ -35,7 +35,7 @@ class ActionCardHandler
     }
 
     fun dismiss(type: InsightType) = coroutineScope.launch {
-        statsStore.removeType(statsSiteProvider.siteModel, type)
+        statsStore.removeActionType(statsSiteProvider.siteModel, type)
         mutableActionCard.value = Event(type)
     }
 }
