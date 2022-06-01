@@ -8,14 +8,15 @@ import javax.inject.Inject
 class DisplayUtilsWrapper @Inject constructor(private val contextProvider: ContextProvider) {
     fun getDisplayPixelWidth() = DisplayUtils.getDisplayPixelWidth()
 
-    fun isLandscapeBySize() = getDisplayPixelWidth() > DisplayUtils.getDisplayPixelHeight(contextProvider.getContext())
+    fun isLandscapeBySize() =
+            getDisplayPixelWidth() > DisplayUtils.getWindowPixelHeight(contextProvider.getContext())
 
     fun isLandscape() = DisplayUtils.isLandscape(contextProvider.getContext())
 
     fun isTablet() = DisplayUtils.isTablet(contextProvider.getContext()) ||
             DisplayUtils.isXLargeTablet(contextProvider.getContext())
 
-    fun getDisplayPixelHeight() = DisplayUtils.getDisplayPixelHeight(contextProvider.getContext())
+    fun getDisplayPixelHeight() = DisplayUtils.getWindowPixelHeight(contextProvider.getContext())
 
     fun isPhoneLandscape() = isLandscapeBySize() && !isTablet()
 }
