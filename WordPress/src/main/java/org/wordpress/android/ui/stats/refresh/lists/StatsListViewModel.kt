@@ -83,7 +83,7 @@ abstract class StatsListViewModel(
 
     val listSelected = statsUseCase.listSelected
 
-    val uiModel: LiveData<UiModel> by lazy {
+    val uiModel: LiveData<UiModel?> by lazy {
         statsUseCase.data.throttle(viewModelScope, distinct = true)
     }
 
