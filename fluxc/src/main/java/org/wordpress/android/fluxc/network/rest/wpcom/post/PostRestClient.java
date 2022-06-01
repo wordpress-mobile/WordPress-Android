@@ -538,8 +538,8 @@ public class PostRestClient extends BaseWPComRestClient {
 
                     if (key.equals("_jetpack_blogging_prompt_key")) {
                         Object metaDataValue = metaData.getValue();
-                        if (metaDataValue instanceof Integer) {
-                            post.setAnsweredPromptId((int) metaDataValue);
+                        if (metaDataValue instanceof String) {
+                            post.setAnsweredPromptId(Integer.parseInt(metaDataValue.toString()));
                         }
                     }
                 }
