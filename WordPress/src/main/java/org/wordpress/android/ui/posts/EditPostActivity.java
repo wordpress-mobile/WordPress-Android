@@ -917,6 +917,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             event.applyIfNotHandled(promptContent -> {
                     mEditPostRepository.updateAsync(postModel -> {
                         postModel.setContent(promptContent);
+                        postModel.setAnsweredPromptId(getIntent().getIntExtra(EXTRA_PROMPT_ID, -1));
                         return true;
                     }, (postModel, result) -> {
                         refreshEditorContent();
