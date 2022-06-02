@@ -15,6 +15,7 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
@@ -23,13 +24,16 @@ class BloggingPromptCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
-    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
+    private val htmlCompatWrapper: HtmlCompatWrapper
 ) : CardViewHolder<MySiteBloggingPrompCardBinding>(
         parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
 ) {
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
-        uiHelpers.setTextOrHide(promptContent, card.prompt)
-
+        val cardPrompt = htmlCompatWrapper.fromHtml(
+                uiHelpers.getTextOfUiString(promptContent.context, card.prompt).toString()
+        )
+        uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
         bloggingPromptCardMenu.setOnClickListener {
