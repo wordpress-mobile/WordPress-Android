@@ -145,7 +145,6 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
-import org.wordpress.android.workers.notification.bloggingprompts.BloggingPromptsOnboardingNotificationScheduler;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
