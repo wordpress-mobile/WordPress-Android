@@ -13,6 +13,7 @@
         android:id="@+id/subtitle"
         style="@style/ModalLayoutPickerLayoutsSubtitle"
         android:layout_marginStart="@dimen/mlp_layout_card_margin_start"
+        android:layout_marginBottom="@dimen/hpp_recommended_subtitle_margin"
         android:text="@string/hpp_recommended_subtitle" />
     <TextView
         android:id="@+id/title"
