@@ -1,4 +1,5 @@
 @file:Suppress("MaximumLineLength")
+
 package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
@@ -147,7 +148,11 @@ class WPMainActivityViewModel @Inject constructor(
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsFeatureConfig.isEnabled()) {
             val prompt = site?.let {
-                bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+                if (it.isUsingWpComRestApi) {
+                    bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+                } else {
+                    null
+                }
             }
 
             prompt?.let {
