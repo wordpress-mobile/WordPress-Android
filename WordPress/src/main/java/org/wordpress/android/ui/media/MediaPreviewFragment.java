@@ -254,8 +254,8 @@ public class MediaPreviewFragment extends Fragment {
 
         imageView.setVisibility(View.VISIBLE);
         if ((mSite == null || SiteUtils.isPhotonCapable(mSite)) && !UrlUtils.isContentUri(mediaUri)) {
-            int maxWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getActivity()),
-                    DisplayUtils.getDisplayPixelHeight(getActivity()));
+            int maxWidth = Math.max(DisplayUtils.getWindowPixelWidth(requireActivity()),
+                    DisplayUtils.getWindowPixelHeight(requireActivity()));
 
             boolean isPrivateAtomicSite = mSite != null && mSite.isPrivateWPComAtomic();
             mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0, isPrivateAtomicSite);
