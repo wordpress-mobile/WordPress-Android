@@ -88,6 +88,8 @@ class BloggingPromptCardSource @Inject constructor(
                 } else {
                     fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite)
                 }
+            } else {
+                onRefreshedMainThread()
             }
         } else {
             postErrorState()

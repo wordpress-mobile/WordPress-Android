@@ -192,7 +192,7 @@ class ActivityLogListFragment : Fragment(R.layout.activity_log_list_fragment) {
             }
         })
 
-        viewModel.moveToTop.observe(this@ActivityLogListFragment, {
+        viewModel.moveToTop.observe(viewLifecycleOwner, {
             logListView.scrollToPosition(0)
         })
 

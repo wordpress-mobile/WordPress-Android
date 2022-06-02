@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
+import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
 import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
@@ -647,4 +648,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(TotalFollowersDetailListViewModel.class)
     abstract ViewModel totalFollowersDetailListViewModel(TotalFollowersDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AccountSettingsViewModel.class)
+    abstract ViewModel accountSettingsViewModel(AccountSettingsViewModel viewModel);
 }

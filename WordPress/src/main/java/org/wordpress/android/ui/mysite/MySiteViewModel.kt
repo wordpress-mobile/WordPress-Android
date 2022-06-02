@@ -86,6 +86,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -558,7 +559,7 @@ class MySiteViewModel @Inject constructor(
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
-                displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+                displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
                 siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
@@ -1052,6 +1053,15 @@ class MySiteViewModel @Inject constructor(
         selectDefaultTabIfNeeded()
     }
 
+    fun onSitePicked() {
+        selectedSiteRepository.getSelectedSite()?.let {
+            val siteLocalId = it.id.toLong()
+            val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
+            quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
+        }
+        mySiteSourceManager.refreshQuickStart()
+    }
+
     fun performFirstStepAfterSiteCreation(
         siteLocalId: Int,
         isSiteTitleTaskCompleted: Boolean,
@@ -1082,7 +1092,7 @@ class MySiteViewModel @Inject constructor(
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
-        quickStartRepository.checkAndSetQuickStartType(isNewSite)
+        quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         } else {
