@@ -8,7 +8,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/selectedDateTextView"
-        style="@style/StatsBlockTitle"
+        style="@style/StatsDateSelectorTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
