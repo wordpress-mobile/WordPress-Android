@@ -133,7 +133,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
             fm.beginTransaction().add(mRetainedFragment, TAG_RETAINED_FRAGMENT).commit();
         }
 
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
+        int displayWidth = DisplayUtils.getWindowPixelWidth(this);
         mThumbWidth = displayWidth / getColumnCount();
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 

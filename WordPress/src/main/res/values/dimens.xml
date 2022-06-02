@@ -178,6 +178,7 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_extra_extra_large">32sp</dimen>
+    <dimen name="text_sz_extra_extra_extra_large">34sp</dimen>
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
@@ -441,13 +442,19 @@
     <dimen name="quick_start_focus_point_small_size">30dp</dimen>
     <dimen name="quick_start_focus_point_small_offset_negative">-15dp</dimen>
     <dimen name="quick_start_focus_point_elevation">100dp</dimen>
-    <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
     <dimen name="quick_start_task_card_width">168dp</dimen>
     <dimen name="quick_start_task_card_elevation">0dp</dimen>
     <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
     <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
+
+    <dimen name="new_quick_start_card_illustration_image_width">54dp</dimen>
+    <dimen name="new_quick_start_card_task_completed_icon_size">16dp</dimen>
+    <dimen name="new_quick_start_card_progress_bar_height">5dp</dimen>
+
+    <dimen name="quick_start_task_list_header_image_width">80dp</dimen>
+    <dimen name="quick_start_task_card_view_corner_radius">10dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
@@ -538,6 +545,7 @@
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
+    <dimen name="stats_pie_chart_slice_width">16dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
     <dimen name="stats_list_card_horizontal_spacing">4dp</dimen>
     <dimen name="stats_list_card_top_spacing">4dp</dimen>
@@ -704,5 +712,7 @@
     <dimen name="quick_link_ribbon_icon_size">24dp</dimen>
     <dimen name="quick_link_ribbon_corner_radius">4dp</dimen>
     <dimen name="quick_link_ribbon_icon_padding">16dp</dimen>
+
+
 
 </resources>

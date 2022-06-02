@@ -97,6 +97,8 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -175,6 +177,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var quickStartTracker: QuickStartTracker
     private lateinit var viewModel: MySiteViewModel
@@ -371,6 +374,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mySiteDashboardTabsFeatureConfig,
                 bloggingPromptsFeatureConfig,
                 appPrefsWrapper,
+                bloggingPromptsCardAnalyticsTracker,
                 quickStartTracker
         )
         uiModels = mutableListOf()
@@ -638,7 +642,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given wp app, when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
+        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(600)
 
         onSiteSelected.value = null
 
@@ -649,7 +653,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given wp app, when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(500)
 
         onSiteSelected.value = null
 
@@ -1499,7 +1503,27 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(cardsTracker, atLeastOnce()).trackShown(any())
     }
 
-    /* DASHBOARD POST CARD - POST ITEM */
+    /* DASHBOARD POST CARD */
+
+    @Test
+    fun `when create first post card is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+            }
+
+    @Test
+    fun `when create next post card is clicked, then editor is opened to create new post`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_NEXT, NOT_SET))
+
+                assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+            }
 
     @Test
     fun `given draft post card, when post item is clicked, then post is opened for edit draft`() =
@@ -1522,12 +1546,39 @@ class MySiteViewModelTest : BaseUnitTest() {
             }
 
     @Test
-    fun `given post card, when item is clicked, then event is tracked`() = test {
+    fun `given scheduled post card, when item is clicked, then event is tracked`() = test {
         initSelectedSite()
 
         requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.SCHEDULED, postId))
 
         verify(cardsTracker).trackPostItemClicked(PostCardType.SCHEDULED)
+    }
+
+    @Test
+    fun `given draft post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.DRAFT, postId))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.DRAFT)
+    }
+
+    @Test
+    fun `given create first post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_FIRST, NOT_SET))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.CREATE_FIRST)
+    }
+
+    @Test
+    fun `given create next post card, when item is clicked, then event is tracked`() = test {
+        initSelectedSite()
+
+        requireNotNull(onPostItemClick).invoke(PostItemClickParams(PostCardType.CREATE_NEXT, NOT_SET))
+
+        verify(cardsTracker).trackPostItemClicked(PostCardType.CREATE_NEXT)
     }
 
     /* DASHBOARD BLOGGING PROMPT CARD */
@@ -1663,10 +1714,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
+    fun `plan item click emits OpenPlan navigation event`() {
         invokeItemClickAction(ListItemAction.PLAN)
 
-        verify(quickStartRepository).completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
         assertThat(navigationActions).containsExactly(SiteNavigationAction.OpenPlan(site))
     }
 
@@ -2855,7 +2905,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         val viewModelStore = ViewModelStore()
         val viewModelProvider = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T = this@invokeOnCleared as T
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = this@invokeOnCleared as T
         })
         viewModelProvider.get(this@invokeOnCleared::class.java)
         viewModelStore.clear()

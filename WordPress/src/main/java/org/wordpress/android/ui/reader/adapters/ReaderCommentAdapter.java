@@ -190,7 +190,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mPostsSite = mSiteStore.getSiteBySiteId(post.blogId);
 
         // calculate the max width of comment content
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        int displayWidth = DisplayUtils.getWindowPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int contentPadding = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding);
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);

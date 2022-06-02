@@ -29,7 +29,8 @@ class BloggingRemindersModelMapper
                     }
                 }.toSet(),
                 uiModel.hour,
-                uiModel.minute
+                uiModel.minute,
+                uiModel.isPromptIncluded
         )
     }
 
@@ -38,7 +39,8 @@ class BloggingRemindersModelMapper
                 domainModel.siteId,
                 domainModel.enabledDays.map { DayOfWeek.valueOf(it.name) }.toSet(),
                 domainModel.hour,
-                domainModel.minute
+                domainModel.minute,
+                domainModel.isPromptIncluded
         )
     }
 }

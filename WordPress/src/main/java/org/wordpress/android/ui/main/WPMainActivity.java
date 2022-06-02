@@ -198,6 +198,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
     public static final String ARG_EDITOR_PROMPT_ID = "editor_prompt_id";
     public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
+    public static final String ARG_OPEN_BLOGGING_REMINDERS = "show_blogging_reminders_flow";
+    public static final String ARG_SELECTED_SITE = "SELECTED_SITE_ID";
+    public static final String ARG_STAT_TO_TRACK = "stat_to_track";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -371,6 +374,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
             }
             checkDismissNotification();
+            checkTrackAnalyticsEvent();
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
@@ -430,6 +434,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+
+        if (getIntent().getBooleanExtra(ARG_OPEN_BLOGGING_REMINDERS, false)) {
+            onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
+        }
     }
 
     private void checkDismissNotification() {
@@ -438,6 +446,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
             final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             final int notificationId = intent.getIntExtra(ARG_DISMISS_NOTIFICATION, -1);
             notificationManager.cancel(notificationId);
+        }
+    }
+
+    private void checkTrackAnalyticsEvent() {
+        final Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(ARG_STAT_TO_TRACK)) {
+            final Stat stat = (Stat) intent.getSerializableExtra(ARG_STAT_TO_TRACK);
+            if (stat != null) {
+                mAnalyticsTrackerWrapper.track(stat);
+            }
         }
     }
 
@@ -631,8 +649,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mViewModel.getCreatePostWithBloggingPrompt().observe(this, bloggingPrompt -> {
-            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPrompt.getId());
+        mViewModel.getCreatePostWithBloggingPrompt().observe(this, promptId -> {
+            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId);
         });
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
@@ -906,13 +924,18 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void checkQuickStartNotificationStatus() {
         SiteModel selectedSite = getSelectedSite();
+        long selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
         if (selectedSite != null && NetworkUtils.isNetworkAvailable(this)
             && mQuickStartRepository.getQuickStartType()
                     .isEveryQuickStartTaskDone(
                             mQuickStartStore,
-                            (long) mSelectedSiteRepository.getSelectedSiteLocalId()
+                            selectedSiteLocalId
                     )
             && !mQuickStartStore.getQuickStartNotificationReceived(selectedSite.getId())) {
+            boolean isQuickStartCompleted = mQuickStartStore.getQuickStartCompleted(selectedSiteLocalId);
+            if (!isQuickStartCompleted) {
+                mQuickStartStore.setQuickStartCompleted(selectedSiteLocalId, true);
+            }
             CompleteQuickStartPayload payload = new CompleteQuickStartPayload(selectedSite, NEXT_STEPS.toString());
             mDispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload));
         }

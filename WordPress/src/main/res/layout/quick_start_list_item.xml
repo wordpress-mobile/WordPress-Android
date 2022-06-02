@@ -1,41 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/QuickStartLayout">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_medium">
 
-    <View
-        android:id="@+id/popup_anchor"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/margin_extra_large" />
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/quick_start_task_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/quick_start_task_card_view_corner_radius"
+        app:cardElevation="@dimen/unelevated_card_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/icon"
-        style="@style/QuickStartIcon"
-        android:importantForAccessibility="no"
-        tools:src="@drawable/ic_gridicons_site_white_24dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout style="@style/QuickStartLayout">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/QuickStartTitle"
-        android:layout_toEndOf="@+id/icon"
-        tools:text="@string/quick_start_list_create_site_title" />
+            <ImageView
+                android:id="@+id/icon"
+                style="@style/QuickStartIcon"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:background="@drawable/bg_rectangle_gray_10_radius_5dp"
+                android:importantForAccessibility="no"
+                android:padding="@dimen/margin_medium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_gridicons_site_white_24dp" />
 
-    <org.wordpress.android.widgets.WPTextView
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/title"
+                style="@style/QuickStartTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/completed_checkmark"
+                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/quick_start_list_create_site_title" />
+
+            <ImageView
+                android:id="@+id/completed_checkmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_large"
+                android:contentDescription="@string/quick_start_list_task_complete"
+                android:src="@drawable/ic_checkmark"
+                android:tint="@color/quick_start_task_card_completed_checkmark"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <View
+                android:id="@+id/popup_anchor"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/subtitle"
         style="@style/QuickStartSubtitle"
-        android:layout_below="@+id/title"
-        android:layout_toEndOf="@+id/icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_task_card_view"
         tools:text="@string/quick_start_list_create_site_subtitle" />
 
-    <View
-        android:id="@+id/divider"
-        style="@style/QuickStartDivider"
-        android:layout_below="@+id/subtitle"
-        android:layout_alignStart="@+id/title" />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

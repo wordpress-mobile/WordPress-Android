@@ -26,31 +26,42 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/name_suggestion"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/url_suggestion_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingBottom="@dimen/margin_medium"
-        android:textAlignment="viewStart"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/domain_suggestion_radio_button"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="johndoe" />
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/domain_suggestion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingBottom="@dimen/margin_medium"
-        android:textAlignment="viewStart"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="?attr/wpColorOnSurfaceMedium"
-        app:layout_constraintStart_toEndOf="@+id/name_suggestion"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text=".wordpress.com" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name_suggestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layoutDirection="ltr"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingBottom="@dimen/margin_medium"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="johndoe" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/domain_suggestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layoutDirection="ltr"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingBottom="@dimen/margin_medium"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            app:layout_constraintStart_toEndOf="@+id/name_suggestion"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text=".wordpress.com" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_unavailability"
@@ -62,7 +73,7 @@
         android:textColor="?attr/wpColorOnSurfaceMedium"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/name_suggestion"
-        app:layout_constraintTop_toBottomOf="@+id/name_suggestion"
+        app:layout_constraintStart_toStartOf="@+id/url_suggestion_container"
+        app:layout_constraintTop_toBottomOf="@+id/url_suggestion_container"
         tools:text="This domain is unavailable" />
 </androidx.constraintlayout.widget.ConstraintLayout>

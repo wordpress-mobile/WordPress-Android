@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -57,8 +56,8 @@ class PageParentViewModel
     private val _saveParent = SingleLiveEvent<Unit>()
     val saveParent: LiveData<Unit> = _saveParent
 
-    private val _searchPages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val searchPages: LiveData<List<PageItem>> = _searchPages
+    private val _searchPages: MutableLiveData<List<PageItem>?> = MutableLiveData()
+    val searchPages: LiveData<List<PageItem>?> = _searchPages
 
     private var _lastSearchQuery = ""
     val lastSearchQuery: String

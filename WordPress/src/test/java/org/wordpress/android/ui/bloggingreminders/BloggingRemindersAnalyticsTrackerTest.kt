@@ -137,7 +137,7 @@ class BloggingRemindersAnalyticsTrackerTest {
     @Test
     fun `trackRemindersScheduled tracks correct event and properties`() {
         bloggingRemindersUiModel = BloggingRemindersUiModel(
-                1, setOf(MONDAY, THURSDAY, FRIDAY), 14, 30)
+                1, setOf(MONDAY, THURSDAY, FRIDAY), 14, 30, true)
         bloggingRemindersAnalyticsTracker.trackRemindersScheduled(
                 bloggingRemindersUiModel.enabledDays.size, bloggingRemindersUiModel.getNotificationTime24hour())
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_SCHEDULED), checkMap {
@@ -157,7 +157,7 @@ class BloggingRemindersAnalyticsTrackerTest {
 
     @Test
     fun `trackNotificationReceived tracks correct event and properties`() {
-        bloggingRemindersAnalyticsTracker.trackNotificationReceived()
+        bloggingRemindersAnalyticsTracker.trackNotificationReceived(promptIncluded = false)
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED), checkMap {
             assertThat(it).containsKey("blog_type")
         })

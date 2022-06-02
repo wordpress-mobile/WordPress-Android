@@ -28,13 +28,13 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.bloggingprompts.BloggingPrompt;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -373,12 +373,16 @@ public class ActivityLauncher {
     }
 
     public static Intent openEditorWithPromptAndDismissNotificationIntent(
-            @NonNull final Context context, final int notificationId, final BloggingPrompt bloggingPrompt
+        @NonNull final Context context,
+        final int notificationId,
+        final BloggingPromptModel bloggingPrompt,
+        @Nullable final Stat stat
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
         return intent;
     }
 
@@ -1515,6 +1519,24 @@ public class ActivityLauncher {
             return;
         }
         StatsDetailActivity.startForInsightsDetail(context, site);
+    }
+
+    public static void showSetBloggingReminders(Context context, SiteModel site) {
+        final Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_BLOGGING_REMINDERS, true);
+        intent.putExtra(WPMainActivity.ARG_SELECTED_SITE, site.getId());
+        context.startActivity(intent);
+    }
+
+    public static void showSchedulingPost(Context context, SiteModel site) {
+        Intent intent = PostsListActivity.buildIntent(
+                context,
+                site,
+                PostListType.DRAFTS,
+                false,
+                null
+        );
+        context.startActivity(intent);
     }
 
     public static void viewMediaPickerForResult(Activity activity,

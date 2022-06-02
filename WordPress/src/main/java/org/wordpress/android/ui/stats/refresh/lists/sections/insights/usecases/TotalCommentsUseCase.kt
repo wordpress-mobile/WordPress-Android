@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
@@ -27,6 +28,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Named
@@ -37,6 +39,7 @@ class TotalCommentsUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val statsSiteProvider: StatsSiteProvider,
+    private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val totalStatsMapper: TotalStatsMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -118,7 +121,10 @@ class TotalCommentsUseCase @Inject constructor(
         if (domainModel.dates.isNotEmpty()) {
             items.add(buildTitle())
             items.add(totalStatsMapper.buildTotalCommentsValue(domainModel.dates))
-            items.add(totalStatsMapper.buildTotalCommentsInformation(domainModel.dates))
+            totalStatsMapper.buildTotalCommentsInformation(domainModel.dates)?.let { items.add(it) }
+            if (totalStatsMapper.shouldShowCommentsGuideCard(domainModel.dates)) {
+                items.add(ListItemGuideCard(resourceProvider.getString(string.stats_insights_comments_guide_card)))
+            }
         } else {
             AppLog.e(T.STATS, "There is no data to be shown in the total comments block")
         }
@@ -148,6 +154,7 @@ class TotalCommentsUseCase @Inject constructor(
         @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val statsSiteProvider: StatsSiteProvider,
+        private val resourceProvider: ResourceProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val totalStatsMapper: TotalStatsMapper,
         private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -160,6 +167,7 @@ class TotalCommentsUseCase @Inject constructor(
                         backgroundDispatcher,
                         visitsAndViewsStore,
                         statsSiteProvider,
+                        resourceProvider,
                         statsDateFormatter,
                         totalStatsMapper,
                         analyticsTracker,

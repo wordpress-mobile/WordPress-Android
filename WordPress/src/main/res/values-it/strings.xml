@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-12 11:19:08+0000
+Translation-Revision-Date: 2022-05-27 14:33:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: it
 -->
 <resources>
+    <string name="pages_copy_link">Copia link</string>
+    <string name="quick_start_completed_tour_title">Congratulazioni! Conosci la strada&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Conosci l\'app</string>
+    <string name="quick_start_list_upload_media_subtitle">Porta gli elementi multimediali dal tuo dispositivo o dalla fotocamera direttamente sul tuo sito.</string>
+    <string name="quick_start_list_upload_media_title">Carica foto o video</string>
+    <string name="quick_start_list_check_notification_subtitle">Ottieni aggiornamenti in tempo reale dalla tua tasca</string>
+    <string name="quick_start_dialog_upload_media_message">Seleziona %1$s Media %2$s per vedere la tua libreria attuale.</string>
+    <string name="quick_start_dialog_check_notifications_message">Ottieni aggiornamenti in tempo reale dalla tua tasca.</string>
+    <string name="quick_start_dialog_check_notifications_title">Verifica le notifiche</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Seleziona la %1$s scheda Notifiche %2$s per ottenere gli aggiornamenti mentre sei in movimento.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Seleziona %1$s il più %2$s per caricare elementi multimediali. Puoi aggiungerlo agli articoli/alle pagine da qualsiasi dispositivo.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Usa &lt;b&gt; Scopri &lt;/b&gt; per trovare siti e tag. </string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Usa &lt;b&gt; Scopri &lt;/b&gt; per trovare siti e tag.  Prova selezionando %1$s Impostazioni %2$s per aggiungere gli argomenti che ti piacciono.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatura del video</string>
+    <string name="stats_details_top_commentators">Migliori commentatori</string>
+    <string name="stats_insights_total_stats_negative">%1$s più basso rispetto alla settimana precedente</string>
+    <string name="stats_insights_total_stats_positive">%1$s più alto rispetto alla settimana precedente</string>
+    <string name="stats_published_years_ago">Pubblicato %1$d anni fa</string>
+    <string name="stats_published_a_year_ago">Pubblicato un anno fa</string>
+    <string name="stats_published_months_ago">Pubblicato %1$d mesi fa</string>
+    <string name="stats_published_a_month_ago">Pubblicato un mese fa</string>
+    <string name="stats_published_days_ago">Pubblicato %1$d giorni fa</string>
+    <string name="stats_published_a_day_ago">Pubblicato un giorno fa</string>
+    <string name="stats_published_hours_ago">Pubblicato %1$d ore fa</string>
+    <string name="stats_published_an_hour_ago">Pubblicato un\'ora fa</string>
+    <string name="stats_published_minutes_ago">Pubblicato %1$d minuti fa</string>
+    <string name="stats_published_a_minute_ago">Pubblicato un minuto fa</string>
+    <string name="stats_published_seconds_ago">Pubblicato secondi fa</string>
+    <string name="stats_view_total_followers">Follower totali</string>
+    <string name="stats_view_total_comments">Commenti totali</string>
+    <string name="stats_view_total_likes">Mi piace totali</string>
     <string name="blogging_prompts_notification_dismiss">Ignora</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Risposta</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Richiesta giornaliera</string>
     <string name="blogging_prompts_onboarding_got_it">OK</string>
     <string name="quick_start_dialog_view_your_site_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per visualizzare il tuo sito</string>
@@ -140,6 +172,7 @@ Language: it
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Le chiamate XML-RPC sembrano bloccate su questo sito (codice di errore 401). Se il tentativo di accesso fallisce, tocca l\'icona della guida per visualizzare le FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Impossibile leggere il sito WordPress associato a questo URL. Tocca l\'icona della guida per visualizzare le domande frequenti.</string>
     <string name="login_error_xml_rpc_services_disabled">Il servizio XML-RPC è disattivato su questo sito.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">La tua ricerca include caratteri non supportati nei domini WordPress.com. Sono consentiti i seguenti caratteri: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controlla la tua connessione a Internet e ricarica la pagina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Vai alle statistiche</string>
@@ -454,6 +487,7 @@ Language: it
     <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
     <string name="gutenberg_native_column_d">Colonna %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
+    <string name="gutenberg_native_add_blocks">Aggiungi blocchi</string>
     <string name="login_no_jetpack_sites">Nessun sito Jetpack trovato</string>
     <string name="gutenberg_native_what_is_alt_text">Cos\'è il testo alternativo?</string>
     <string name="gutenberg_native_transform_s_to">Trasforma %s in</string>
@@ -1639,12 +1673,9 @@ Language: it
     <string name="quick_start_complete_tasks_header">Completato (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Scegli un\'icona del sito univoca</string>
     <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tocca %1$s Piano %2$s per visualizzare il tuo piano attuale e altri piani disponibili</string>
     <string name="quick_start_dialog_check_stats_message_short">Seleziona %1$s Statistiche %2$s per vedere come sta andando il tuo sito.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
     <string name="quick_start_dialog_publish_post_message">Elabora una bozza e pubblica un articolo.</string>
-    <string name="quick_start_dialog_explore_plans_title">Scopri i piani</string>
-    <string name="quick_start_dialog_explore_plans_message">Scopri gli strumenti SEO e di marketing nei nostri piani a pagamento.</string>
     <string name="quick_start_dialog_enable_sharing_title">Abilita la condivisione dell\'articolo</string>
     <string name="quick_start_dialog_enable_sharing_message">Condividi automaticamente nuovi articoli sui tuoi social media.</string>
     <string name="quick_start_dialog_check_stats_title">Controlla le statistiche del tuo sito</string>
@@ -1817,6 +1848,7 @@ Language: it
     <string name="quick_start_focus_point_description">tocca qui</string>
     <string name="quick_start_list_create_site_title">Crea il tuo sito</string>
     <string name="quick_start_list_create_site_subtitle">Configura il sito ed eseguilo.</string>
+    <string name="quick_start_completed_tour_subtitle">Non è bello spuntare le cose su una lista?</string>
     <string name="quick_start_dialog_view_site_title">Visualizza il tuo sito</string>
     <string name="quick_start_dialog_view_site_message">Visualizza in anteprima il tuo sito per scoprire cosa vedranno i tuoi visitatori.</string>
     <string name="quick_start_dialog_share_site_title">Condividi il tuo sito</string>

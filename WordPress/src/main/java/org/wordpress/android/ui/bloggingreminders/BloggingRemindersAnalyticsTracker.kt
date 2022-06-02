@@ -62,7 +62,9 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
 
     fun trackRemindersCancelled() = track(BLOGGING_REMINDERS_CANCELLED)
 
-    fun trackNotificationReceived() = track(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED)
+    fun trackNotificationReceived(promptIncluded: Boolean) = track(
+            BLOGGING_REMINDERS_NOTIFICATION_RECEIVED, mapOf(PROMPT_INCLUDED to "$promptIncluded")
+    )
 
     fun trackRemindersIncludePromptPressed(promptEnabled: Boolean) =
             track(Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED, mapOf(PROMPT_ENABLED_KEY to "$promptEnabled"))
@@ -99,5 +101,6 @@ class BloggingRemindersAnalyticsTracker @Inject constructor(
         private const val PROMPT_ENABLED_KEY = "enabled"
         private const val DAYS_OF_WEEK_COUNT_KEY = "days_of_week_count"
         private const val SELECTED_TIME_KEY = "selected_time"
+        private const val PROMPT_INCLUDED = "prompt_included"
     }
 }

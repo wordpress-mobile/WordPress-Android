@@ -203,7 +203,6 @@ Language: sq_AL
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Falas për vitin e parë &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /vit&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Përkatësia juaj do të ridrejtojë për te sajti juaj te %s</string>
     <string name="gutenberg_native_create_link">Krijo lidhje</string>
-    <string name="domain_registration_result_description">Përkatësia juaj e re &lt;b&gt;%s&lt;/b&gt; po ujdiset. Mund të duhen deri në 30 minuta që përkatësia juaj të fillojë të funksionojë.</string>
     <string name="domain_registration_result_title">Përgëzime për blerjen tuaj!</string>
     <string name="domains_suggestions_select_domain">Përzgjidhni përkatësi</string>
     <string name="domains_title">Përkatësi</string>
@@ -1603,15 +1602,12 @@ Language: sq_AL
     <string name="quick_start_sites">Hapat Pasues</string>
     <string name="quick_start_complete_tasks_header">Të plotësuar (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Vizitorët tuaj do ta shohin në shfletuesin e tyre ikonën tuaj. Shtoni një ikonë vetjake, për një pamje të rafinuar, profesionale.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Prekni %1$s Plan %2$s që të shihni planin tuaj të tanishëm dhe të tjerë plane të mundshëm</string>
     <string name="quick_start_sites_type_grow">Shtoni publikun tuaj</string>
     <string name="quick_start_sites_type_customize">Përshtatni sajtin tuaj</string>
     <string name="quick_start_dialog_upload_icon_title">Zgjidhni një ikonë sajti unike</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Prekni %1$s Ikona e Sajtit Tuaj %2$s që të ngarkoni një të re</string>
     <string name="quick_start_dialog_publish_post_message">Hartoni dhe botoni një postim.</string>
     <string name="quick_start_dialog_check_stats_message_short">Përzgjidhni %1$s Statistika %2$s që të shihni se si po ecën sajti juaj.</string>
-    <string name="quick_start_dialog_explore_plans_title">Eksploroni plane</string>
-    <string name="quick_start_dialog_explore_plans_message">Mësoni rreth mjetesh marketingu dhe SEO në planet tona me pagesë.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivizo ndarje postimesh me të tjerët</string>
     <string name="quick_start_dialog_enable_sharing_message">Kryeni ndarje të vetvetishme me të tjerët në rrjetet tuaja shoqërore të postimeve të reja.</string>
     <string name="quick_start_dialog_check_stats_title">Ndiqni statistikat e sajtit tuaj</string>

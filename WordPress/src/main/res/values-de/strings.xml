@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-16 18:55:49+0000
+Translation-Revision-Date: 2022-05-27 14:31:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
@@ -1670,7 +1670,6 @@ Language: de
     <string name="quick_start_sites">Nächste Schritte</string>
     <string name="quick_start_complete_tasks_header">(%d) komplett</string>
     <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tippe auf %1$s Plan %2$s, um deinen aktuellen Plan und andere verfügbare Pläne anzuzeigen</string>
     <string name="quick_start_sites_type_grow">Vergrößere deine Reichweite</string>
     <string name="quick_start_sites_type_customize">Passe deine Website an</string>
     <string name="quick_start_dialog_upload_icon_title">Wähle ein einzigartiges Website-Icon aus</string>
@@ -1678,8 +1677,6 @@ Language: de
     <string name="quick_start_dialog_publish_post_message">Entwirf und veröffentliche einen Beitrag.</string>
     <string name="quick_start_dialog_check_stats_message_short">Wähle %1$s Statistiken %2$s aus, um zu sehen, wie deine Website funktioniert.</string>
     <string name="quick_start_dialog_enable_sharing_title">Teilen der Beiträge aktivieren</string>
-    <string name="quick_start_dialog_explore_plans_title">Tarife erkunden</string>
-    <string name="quick_start_dialog_explore_plans_message">Erfahre mehr über die Marketing- und SEO-Tools in unseren kostenpflichtigen Tarifen.</string>
     <string name="quick_start_dialog_enable_sharing_message">Neue Beiträge automatisch für deine Social-Media-Konten freigeben.</string>
     <string name="quick_start_dialog_check_stats_title">Die Statistiken deiner Website überprüfen</string>
     <string name="quick_start_dialog_remove_next_steps_message">Das Entfernen der nächsten Schritte blendet alle Touren auf dieser Seite aus. Diese Aktion kann nicht rückgängig gemacht werden.</string>

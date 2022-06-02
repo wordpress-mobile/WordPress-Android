@@ -1253,14 +1253,19 @@ public class AppPrefs {
         setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
     }
 
-    public static void setLastSelectedQuickStartType(QuickStartType quickStartType) {
-        setString(DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE, quickStartType.getLabel());
+    public static void setLastSelectedQuickStartTypeForSite(QuickStartType quickStartType, long siteLocalId) {
+        Editor editor = prefs().edit();
+        editor.putString(
+                DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE + String.valueOf(siteLocalId),
+                quickStartType.getLabel()
+        );
+        editor.apply();
     }
 
-    public static QuickStartType getLastSelectedQuickStartType() {
+    public static QuickStartType getLastSelectedQuickStartTypeForSite(long siteLocalId) {
         return QuickStartType.Companion.fromLabel(
-                getString(
-                        DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE,
+                prefs().getString(
+                        DeletablePrefKey.LAST_SELECTED_QUICK_START_TYPE + String.valueOf(siteLocalId),
                         NewSiteQuickStartType.INSTANCE.getLabel()
                 )
         );

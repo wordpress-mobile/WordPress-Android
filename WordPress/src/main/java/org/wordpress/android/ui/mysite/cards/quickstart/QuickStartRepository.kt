@@ -104,7 +104,10 @@ class QuickStartRepository
     val isQuickStartForExistingUsersV2FeatureEnabled = quickStartForExistingUsersV2FeatureConfig.isEnabled()
     var quickStartTaskOriginTab = if (isMySiteTabsEnabled) MySiteTabType.DASHBOARD else MySiteTabType.ALL
     val quickStartType: QuickStartType
-        get() = appPrefsWrapper.getLastSelectedQuickStartType()
+        get() = selectedSiteRepository.getSelectedSite()?.let {
+            val siteLocalId = it.id.toLong()
+            appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
+        } ?: NewSiteQuickStartType
     private var pendingTask: QuickStartTask? = null
 
     fun buildQuickStartCategory(siteLocalId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
@@ -136,8 +139,11 @@ class QuickStartRepository
 
     fun checkAndSetQuickStartType(isNewSite: Boolean) {
         if (!isQuickStartForExistingUsersV2FeatureEnabled) return
-        val quickStartType = if (isNewSite) NewSiteQuickStartType else ExistingSiteQuickStartType
-        appPrefsWrapper.setLastSelectedQuickStartType(quickStartType)
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            val siteLocalId = selectedSite.id.toLong()
+            val quickStartType = if (isNewSite) NewSiteQuickStartType else ExistingSiteQuickStartType
+            appPrefsWrapper.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
+        }
     }
 
     suspend fun getQuickStartTaskTypes(siteLocalId: Int): List<QuickStartTaskType> {
@@ -359,8 +365,7 @@ class QuickStartRepository
             when (quickStartTaskOriginTab) {
                 MySiteTabType.DASHBOARD ->
                     when (this) {
-                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
-                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
                         else -> false
                     }
                 MySiteTabType.SITE_MENU ->
@@ -369,8 +374,7 @@ class QuickStartRepository
                         quickStartType.getTaskFromString(QuickStartStore.QUICK_START_UPLOAD_MEDIA_LABEL),
                         QuickStartNewSiteTask.REVIEW_PAGES,
                         QuickStartNewSiteTask.EDIT_HOMEPAGE,
-                        QuickStartNewSiteTask.ENABLE_POST_SHARING,
-                        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+                        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
                         else -> false
                     }
                 else -> false

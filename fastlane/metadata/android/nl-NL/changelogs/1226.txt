@@ -1,0 +1,9 @@
+19.9:
+- Blokken verslepen naar de editor
+- Beter kleurcontrast op omslagafbeeldingblok
+- Opties voor opmaak knopblok blijft zichtbaar
+- Snelstarttaken scheiden voor nieuwe vs bestaande sites
+- Link kopiëren voor gepubliceerde pagina's
+- Geen + pictogram in zelf-gehost siteblokeditor
+- Link naar/instellingen voor afbeeldingsgroottes in galerijblokken
+Geen tourbanner in niet-ondersteunde blokeditor

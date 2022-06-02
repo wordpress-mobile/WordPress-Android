@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.Das
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.PostSubtype
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker.Type
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -28,6 +29,13 @@ class CardsShownTrackerTest {
     @Before
     fun setUp() {
         cardsShownTracker = CardsShownTracker(analyticsTracker)
+    }
+
+    @Test
+    fun `when quick start card is shown on dashboard tab, then quick start card shown event is tracked`() {
+        cardsShownTracker.trackQuickStartCardShown(NewSiteQuickStartType)
+
+        verifyQuickStartCardShownTracked(Type.QUICK_START.label, "quick_start_${NewSiteQuickStartType.trackingLabel}")
     }
 
     @Test
@@ -75,6 +83,13 @@ class CardsShownTrackerTest {
         )
     }
 
+    private fun verifyQuickStartCardShownTracked(type: String, subtype: String) {
+        verify(analyticsTracker).track(
+                Stat.MY_SITE_DASHBOARD_CARD_SHOWN,
+                mapOf(CardsTracker.TYPE to type, CardsTracker.SUBTYPE to subtype)
+        )
+    }
+
     private fun buildDashboardCards(postCardType: PostCardType) = DashboardCards(
             cards = mutableListOf<DashboardCard>().apply {
                 when (postCardType) {
@@ -95,8 +110,9 @@ class CardsShownTrackerTest {
                     title = UiStringText(""),
                     footerLink = FooterLink(UiStringText(""), onClick = mock()),
                     excerpt = UiStringText(""),
-                    imageRes = 0
-            )
+                    imageRes = 0,
+                    onClick = mock()
+                )
             )
 
     private fun buildPostCardsWithItems(postCardType: PostCardType) = listOf(

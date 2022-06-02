@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class TotalStatsMapper @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils
@@ -35,13 +36,28 @@ class TotalStatsMapper @Inject constructor(
         return ValueWithChartItem(currentWeekSumFormatted, currentWeekComments, positive)
     }
 
+    fun shouldShowCommentsGuideCard(dates: List<PeriodData>): Boolean {
+        return getCurrentWeekDays(dates, COMMENTS).sum() > 0
+    }
+
+    fun shouldShowFollowersGuideCard(domainModel: Int): Boolean {
+        return domainModel <= 0
+    }
+
+    fun shouldShowLikesGuideCard(dates: List<PeriodData>): Boolean {
+        return getCurrentWeekDays(dates, LIKES).sum() > 0
+    }
+
     fun buildTotalLikesInformation(dates: List<PeriodData>) = buildTotalInformation(dates, LIKES)
 
     fun buildTotalCommentsInformation(dates: List<PeriodData>) = buildTotalInformation(dates, COMMENTS)
 
-    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text {
+    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text? {
         val value = getCurrentWeekDays(dates, type).sum()
         val previousValue = getPreviousWeekDays(dates, type).sum()
+        if (value == 0L && previousValue == 0L) {
+            return null
+        }
         val positive = value >= previousValue
         val change = statsUtils.buildChange(previousValue, value, positive, true).toString()
         val stringRes = if (positive) {
@@ -50,7 +66,13 @@ class TotalStatsMapper @Inject constructor(
             R.string.stats_insights_total_stats_negative
         }
 
-        return Text(text = resourceProvider.getString(stringRes, change), color = listOf(change))
+        return Text(
+                text = resourceProvider.getString(stringRes, change),
+                color = when {
+                    positive -> mapOf(R.color.stats_color_positive to change)
+                    else -> mapOf(R.color.stats_color_negative to change)
+                }
+        )
     }
 
     private fun sum(list: List<Long>): String {

@@ -70,6 +70,7 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 store,
                 statsSiteProvider,
+                resourceProvider,
                 statsDateFormatter,
                 totalStatsMapper,
                 analyticsTrackerWrapper,

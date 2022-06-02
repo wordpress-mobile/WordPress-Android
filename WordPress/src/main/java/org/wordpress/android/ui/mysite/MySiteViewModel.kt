@@ -33,6 +33,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type
@@ -60,6 +61,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder.Companion.URL_GET_MORE_VIEWS_AND_TRAFFIC
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
@@ -83,6 +85,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -147,6 +150,7 @@ class MySiteViewModel @Inject constructor(
     mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig,
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val quickStartTracker: QuickStartTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
@@ -378,8 +382,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun QuickStartTask.showInSiteMenu() = when (this) {
-        QuickStartNewSiteTask.ENABLE_POST_SHARING,
-        QuickStartNewSiteTask.EXPLORE_PLANS -> true
+        QuickStartNewSiteTask.ENABLE_POST_SHARING -> true
         else -> false
     }
 
@@ -553,7 +556,7 @@ class MySiteViewModel @Inject constructor(
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
-                displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+                displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
                 siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
@@ -638,7 +641,6 @@ class MySiteViewModel @Inject constructor(
                 ListItemAction.BACKUP -> SiteNavigationAction.OpenBackup(selectedSite)
                 ListItemAction.SCAN -> SiteNavigationAction.OpenScan(selectedSite)
                 ListItemAction.PLAN -> {
-                    quickStartRepository.completeTask(QuickStartNewSiteTask.EXPLORE_PLANS)
                     SiteNavigationAction.OpenPlan(selectedSite)
                 }
                 ListItemAction.POSTS -> SiteNavigationAction.OpenPosts(selectedSite)
@@ -1048,6 +1050,15 @@ class MySiteViewModel @Inject constructor(
         selectDefaultTabIfNeeded()
     }
 
+    fun onSitePicked() {
+        selectedSiteRepository.getSelectedSite()?.let {
+            val siteLocalId = it.id.toLong()
+            val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
+            quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
+        }
+        mySiteSourceManager.refreshQuickStart()
+    }
+
     fun performFirstStepAfterSiteCreation(
         siteLocalId: Int,
         isSiteTitleTaskCompleted: Boolean,
@@ -1078,7 +1089,7 @@ class MySiteViewModel @Inject constructor(
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
-        quickStartRepository.checkAndSetQuickStartType(isNewSite)
+        quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         } else {
@@ -1134,11 +1145,12 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
+                PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
+                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
                 PostCardType.DRAFT -> _onNavigation.value =
                         Event(SiteNavigationAction.EditDraftPost(site, params.postId))
                 PostCardType.SCHEDULED -> _onNavigation.value =
                         Event(SiteNavigationAction.EditScheduledPost(site, params.postId))
-                else -> Unit // Do nothing
             }
         }
     }
@@ -1164,6 +1176,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     private fun onBloggingPromptAnswerClick(promptId: Int) {
+        bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
     }
@@ -1223,11 +1236,16 @@ class MySiteViewModel @Inject constructor(
         siteSelected.cardAndItems.filterIsInstance<DomainRegistrationCard>()
                 .forEach { domainRegistrationCardShownTracker.trackShown(it.type) }
         siteSelected.cardAndItems.filterIsInstance<DashboardCards>().forEach { cardsTracker.trackShown(it) }
+        siteSelected.cardAndItems.filterIsInstance<QuickStartCard>()
+                .firstOrNull()?.let { quickStartTracker.trackShown(it.type, defaultABExperimentTab) }
+        siteSelected.dashboardCardsAndItems.filterIsInstance<QuickStartCard>()
+                .firstOrNull()?.let { cardsTracker.trackQuickStartCardShown(quickStartRepository.quickStartType) }
     }
 
     private fun resetShownTrackers() {
         domainRegistrationCardShownTracker.resetShown()
         cardsTracker.resetShown()
+        quickStartTracker.resetShown()
     }
 
     private fun trackTabChanged(isSiteMenu: Boolean) {
