@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -22,12 +24,17 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     fun bind(item: ValueWithChartItem) {
         value.text = item.value
+        if (item.extraBottomMargin) {
+            itemView.updateLayoutParams<MarginLayoutParams> {
+                bottomMargin = itemView.resources.getDimension(R.dimen.margin_medium).toInt()
+            }
+        }
         drawChart(item)
     }
 
     private fun drawChart(item: ValueWithChartItem) {
         chart.apply {
-            if (item.values == null) {
+            if (item.chartValues == null) {
                 isVisible = false
             } else {
                 description.isEnabled = false
@@ -37,7 +44,7 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 legend.isEnabled = false
                 setTouchEnabled(false)
                 setViewPortOffsets(0f, 0f, 0f, 0f)
-                val entries = item.values.mapIndexed { index, value -> Entry(index.toFloat(), value.toFloat()) }
+                val entries = item.chartValues.mapIndexed { index, value -> Entry(index.toFloat(), value.toFloat()) }
                 val lineChartColor = if (item.positive == true) {
                     R.color.green_40
                 } else {
@@ -59,7 +66,7 @@ class ValueWithChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun fillBelowLine(dataSet: LineDataSet, item: ValueWithChartItem) {
-        if (item.values?.sum() == 0L) {
+        if (item.chartValues?.sum() == 0L) {
             return
         } else {
             val drawableRes = if (item.positive == true) {
