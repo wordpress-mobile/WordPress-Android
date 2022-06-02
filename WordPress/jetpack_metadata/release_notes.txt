@@ -1,4 +1,3 @@
-* [*] Block Editor: A11y: Improve text read by screen readers for BottomSheetSelectControl [https://github.com/WordPress/gutenberg/pull/41036]
-* [*] Block Editor: Add 'Insert from URL' option to Image block [https://github.com/WordPress/gutenberg/pull/40334]
-* [*] Quick Start: The "Get to know the app" card and Quick start tour list has a fresh new look [https://github.com/wordpress-mobile/WordPress-Android/pull/16629,https://github.com/wordpress-mobile/WordPress-Android/pull/16639]
-
+- The Quick Start card and Next Steps tours match the new designs for existing sites.
+- Insert images from other sites using the “Insert from URL” option in the app.
+- Get more context through your screen reader with block editor accessibility improvements.

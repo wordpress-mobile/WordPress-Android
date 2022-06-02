@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.modules.BG_THREAD
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -31,7 +33,8 @@ class TotalFollowersUseCase @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val totalStatsMapper: TotalStatsMapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val useCaseMode: UseCaseMode
+    private val useCaseMode: UseCaseMode,
+    private val actionCardHandler: ActionCardHandler
 ) : StatelessUseCase<Int>(TOTAL_FOLLOWERS, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_followers))
 
@@ -52,6 +55,7 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     override fun buildUiModel(domainModel: Int): List<BlockListItem> {
+        addActionCard(domainModel)
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         items.add(ValueWithChartItem(domainModel.toString()))
@@ -59,6 +63,10 @@ class TotalFollowersUseCase @Inject constructor(
             items.add(ListItemGuideCard(resourceProvider.getString(string.stats_insights_followers_guide_card)))
         }
         return items
+    }
+
+    private fun addActionCard(domainModel: Int) {
+        if (domainModel <= 1) actionCardHandler.display(InsightType.ACTION_GROW)
     }
 
     private fun buildTitle() = TitleWithMore(
@@ -81,7 +89,8 @@ class TotalFollowersUseCase @Inject constructor(
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
         private val totalStatsMapper: TotalStatsMapper,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val actionCardHandler: ActionCardHandler
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) = TotalFollowersUseCase(
                 mainDispatcher,
@@ -91,7 +100,8 @@ class TotalFollowersUseCase @Inject constructor(
                 resourceProvider,
                 totalStatsMapper,
                 analyticsTracker,
-                useCaseMode
+                useCaseMode,
+                actionCardHandler
         )
     }
 }

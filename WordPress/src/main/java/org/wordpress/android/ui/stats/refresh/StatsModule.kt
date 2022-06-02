@@ -41,6 +41,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardGrowUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardReminderUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ActionCardScheduleUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AuthorsCommentsUseCase
@@ -121,7 +124,10 @@ class StatsModule {
         totalFollowersUseCaseFactory: TotalFollowersUseCaseFactory,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
         managementControlUseCase: ManagementControlUseCase,
-        managementNewsCardUseCase: ManagementNewsCardUseCase
+        managementNewsCardUseCase: ManagementNewsCardUseCase,
+        actionCardGrowUseCase: ActionCardGrowUseCase,
+        actionCardReminderUseCase: ActionCardReminderUseCase,
+        actionCardScheduleUseCase: ActionCardScheduleUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (statsRevampV2FeatureConfig.isEnabled()) {
@@ -129,6 +135,9 @@ class StatsModule {
             useCases.add(totalLikesUseCaseFactory.build(BLOCK))
             useCases.add(totalCommentsUseCaseFactory.build(BLOCK))
             useCases.add(totalFollowersUseCaseFactory.build(BLOCK))
+            useCases.add(actionCardGrowUseCase)
+            useCases.add(actionCardReminderUseCase)
+            useCases.add(actionCardScheduleUseCase)
         } else {
             useCases.add(followerTotalsUseCase)
         }

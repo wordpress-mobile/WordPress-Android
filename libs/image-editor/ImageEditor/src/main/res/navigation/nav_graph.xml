@@ -17,6 +17,7 @@
                 android:defaultValue='""'/>
             <argument
                 android:name="outputFileExtension"
+                android:defaultValue="@null"
                 app:argType="string"
                 app:nullable="true"/>
             <argument
@@ -34,6 +35,7 @@
             android:defaultValue='""'/>
         <argument
             android:name="outputFileExtension"
+            android:defaultValue="@null"
             app:argType="string"
             app:nullable="true"/>
         <argument
