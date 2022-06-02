@@ -104,6 +104,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsViewAllActivity;
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection;
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
@@ -1499,26 +1500,22 @@ public class ActivityLauncher {
                         post.getLink());
     }
 
-    public static void viewTotalLikesDetail(Context context, SiteModel site) {
-        if (site == null) return;
-        StatsDetailActivity.startForTotalLikesDetail(context, site);
-    }
-
-    public static void viewTotalCommentsDetail(Context context, SiteModel site) {
-        if (site == null) return;
-        StatsDetailActivity.startForTotalCommentsDetail(context, site);
-    }
-
-    public static void viewTotalFollowersDetail(Context context, SiteModel site) {
-        if (site == null) return;
-        StatsDetailActivity.startForTotalFollowersDetail(context, site);
-    }
-
-    public static void viewInsightsDetail(Context context, SiteModel site) {
-        if (site == null) {
-            return;
-        }
-        StatsDetailActivity.startForInsightsDetail(context, site);
+    public static void viewInsightsDetail(
+            Context context,
+            StatsSection statsSection,
+            StatsViewType statsViewType,
+            StatsGranularity granularity,
+            SelectedDate selectedDate,
+            int localSiteId
+    ) {
+        StatsDetailActivity.startForInsightsDetail(
+                context,
+                statsSection,
+                statsViewType,
+                granularity,
+                selectedDate,
+                localSiteId
+        );
     }
 
     public static void showSetBloggingReminders(Context context, SiteModel site) {
