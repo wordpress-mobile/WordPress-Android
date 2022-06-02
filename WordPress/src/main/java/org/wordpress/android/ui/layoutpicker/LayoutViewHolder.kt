@@ -41,7 +41,7 @@ class LayoutViewHolder(
         }
         binding.preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
         binding.preview.context?.let { ctx ->
-            binding.layoutContainer.strokeWidth = if (uiState.selected) {
+            binding.layoutContainer.strokeWidth = if (uiState.selectedOverlayVisible) {
                 ctx.resources.getDimensionPixelSize(R.dimen.picker_header_selection_overlay_width)
             } else {
                 0
