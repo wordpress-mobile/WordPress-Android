@@ -158,8 +158,9 @@ class BloggingRemindersViewModel @Inject constructor(
 
     private fun togglePromptSwitch() {
         _bloggingRemindersModel.value?.let { currentState ->
-            analyticsTracker.trackRemindersIncludePromptPressed(currentState.isPromptIncluded)
-            _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = !currentState.isPromptIncluded)
+            val newState = !currentState.isPromptIncluded
+            analyticsTracker.trackRemindersIncludePromptPressed(newState)
+            _bloggingRemindersModel.value = currentState.copy(isPromptIncluded = newState)
         }
     }
 
