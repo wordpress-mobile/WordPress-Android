@@ -662,6 +662,7 @@
     <dimen name="hpp_recommended_card_height">420dp</dimen>
     <dimen name="hpp_recommended_card_width">320dp</dimen>
     <dimen name="hpp_recommended_row_height">500dp</dimen>
+    <dimen name="hpp_recommended_subtitle_margin">5dp</dimen>
 
     <!-- Site Intent Question -->
     <dimen name="siq_header_scroll_snap_threshold">-96dp</dimen>
