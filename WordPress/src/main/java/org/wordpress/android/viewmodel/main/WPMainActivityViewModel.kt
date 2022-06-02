@@ -128,7 +128,9 @@ class WPMainActivityViewModel @Inject constructor(
         get() = siteStore.sitesCount > ONE_SITE
 
     val firstSite: SiteModel?
-        get() = if (siteStore.hasSite()) { siteStore.sites[0] } else null
+        get() = if (siteStore.hasSite()) {
+            siteStore.sites[0]
+        } else null
 
     val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
@@ -144,6 +146,7 @@ class WPMainActivityViewModel @Inject constructor(
         updateFeatureAnnouncements()
     }
 
+    @Suppress("LongMethod")
     private fun loadMainActions(site: SiteModel?) = launch {
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsFeatureConfig.isEnabled()) {
