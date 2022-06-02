@@ -331,7 +331,7 @@ class ReaderPostDetailUiStateBuilderTest {
         }
 
         whenever(featuredImageUtils.shouldAddFeaturedImage(any())).thenReturn(shouldShowFeaturedImage)
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(dummyDisplayPixelHeight)
+        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(dummyDisplayPixelHeight)
         whenever(readerUtilsWrapper.getResizedImageUrl(any(), any(), any(), any(), any()))
                 .thenReturn(dummyFeaturedImageUrl)
 

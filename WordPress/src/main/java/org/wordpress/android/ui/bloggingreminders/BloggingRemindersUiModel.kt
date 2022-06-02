@@ -10,7 +10,8 @@ data class BloggingRemindersUiModel(
     val siteId: Int,
     val enabledDays: Set<DayOfWeek> = setOf(),
     val hour: Int,
-    val minute: Int
+    val minute: Int,
+    val isPromptIncluded: Boolean
 ) {
     fun getNotificationTime(): CharSequence =
             LocalTime.of(hour, minute).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))

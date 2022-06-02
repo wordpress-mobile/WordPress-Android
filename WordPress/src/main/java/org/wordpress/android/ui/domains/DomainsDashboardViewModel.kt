@@ -55,6 +55,9 @@ class DomainsDashboardViewModel @Inject constructor(
     lateinit var site: SiteModel
     private var isStarted: Boolean = false
 
+    private val _showProgressSpinner = MutableLiveData<Boolean>()
+    val progressBar: LiveData<Boolean> = _showProgressSpinner
+
     private val _onNavigation = MutableLiveData<Event<DomainsDashboardNavigationAction>>()
     val onNavigation: LiveData<Event<DomainsDashboardNavigationAction>> = _onNavigation
 
@@ -77,7 +80,7 @@ class DomainsDashboardViewModel @Inject constructor(
     }
 
     private fun refresh(site: SiteModel) = launch {
-        // TODO: Probably needs a loading spinner here
+        _showProgressSpinner.postValue(true)
 
         val deferredPlansResult = async { fetchPlansUseCase.execute(site) }
         val deferredDomainsResult = async { siteStore.fetchSiteDomains(site) }
@@ -119,6 +122,7 @@ class DomainsDashboardViewModel @Inject constructor(
 //            listItems += ManageDomains(ListItemInteraction.create(this::onManageDomainClick))
 //        }
 
+        _showProgressSpinner.postValue(false)
         _uiModel.postValue(listItems)
     }
 

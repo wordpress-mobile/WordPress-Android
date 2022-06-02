@@ -1,3 +1,4 @@
+@file:Suppress("MaximumLineLength")
 package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
@@ -5,39 +6,53 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
+import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val SWITCH_TO_MY_SITE_DELAY = 500L
+private const val ONE_SITE = 1
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
@@ -45,6 +60,12 @@ class WPMainActivityViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val quickStartRepository: QuickStartRepository,
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val accountStore: AccountStore,
+    private val siteStore: SiteStore,
+    private val mySiteDefaultTabExperiment: MySiteDefaultTabExperiment,
+    private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
+    private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -94,10 +115,22 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
+    private val _createPostWithBloggingPrompt = SingleLiveEvent<Int>()
+    val createPostWithBloggingPrompt: LiveData<Int> = _createPostWithBloggingPrompt
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
             .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
+
+    val hasMultipleSites: Boolean
+        get() = siteStore.sitesCount > ONE_SITE
+
+    val firstSite: SiteModel?
+        get() = if (siteStore.hasSite()) { siteStore.sites[0] } else null
+
+    val isSignedInWPComOrHasWPOrgSite: Boolean
+        get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
 
     fun start(site: SiteModel?) {
         if (isStarted) return
@@ -110,8 +143,25 @@ class WPMainActivityViewModel @Inject constructor(
         updateFeatureAnnouncements()
     }
 
-    private fun loadMainActions(site: SiteModel?) {
+    private fun loadMainActions(site: SiteModel?) = launch {
         val actionsList = ArrayList<MainActionListItem>()
+        if (bloggingPromptsFeatureConfig.isEnabled()) {
+            val prompt = site?.let {
+                bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+            }
+
+            prompt?.let {
+                actionsList.add(
+                        AnswerBloggingPromptAction(
+                                actionType = ANSWER_BLOGGING_PROMPT,
+                                promptTitle = UiStringText(it.text),
+                                isAnswered = prompt.isAnswered,
+                                promptId = prompt.id,
+                                onClickAction = ::onAnswerPromptActionClicked
+                        )
+                )
+            }
+        }
 
         actionsList.add(
                 CreateAction(
@@ -167,6 +217,12 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
+    private fun onAnswerPromptActionClicked(promptId: Int) {
+        // TODO @klymyam add analytics
+        _isBottomSheetShowing.postValue(Event(false))
+        _createPostWithBloggingPrompt.postValue(promptId)
+    }
+
     private fun disableTooltip(site: SiteModel?) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
 
@@ -204,7 +260,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onPageChanged(isOnMySitePageWithValidSite: Boolean, site: SiteModel?) {
-        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
+        val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
         setMainFabUiState(showFab, site)
     }
 
@@ -223,16 +279,19 @@ class WPMainActivityViewModel @Inject constructor(
         _switchToMySite.value = Event(Unit)
     }
 
-    fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
-        val showFab = if (buildConfigWrapper.isJetpackApp) false else isOnMySitePageWithValidSite
-        setMainFabUiState(showFab, site)
-
-        checkAndShowFeatureAnnouncementForWordPressApp()
+    fun checkAndSetVariantForMySiteDefaultTabExperiment() {
+        mySiteDefaultTabExperiment.checkAndSetVariantIfNeeded()
     }
 
-    private fun checkAndShowFeatureAnnouncementForWordPressApp() {
-        // Do not proceed with feature announcement check for Jetpack
-        if (!buildConfigWrapper.isJetpackApp) {
+    fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
+        val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
+        setMainFabUiState(showFab, site)
+
+        checkAndShowFeatureAnnouncement()
+    }
+
+    private fun checkAndShowFeatureAnnouncement() {
+        if (buildConfigWrapper.isWhatsNewFeatureEnabled) {
             launch {
                 val currentVersionCode = buildConfigWrapper.getAppVersionCode()
                 val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
@@ -300,9 +359,18 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {
-        // For now, we only do this for the FOLLOW_SITE task.
-        val followSitesTaskFocusPointInfo = FocusPointInfo(FOLLOW_SITE, task == FOLLOW_SITE)
-        return listOf(followSitesTaskFocusPointInfo)
+        val followSiteTask = quickStartRepository.quickStartType
+                .getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL)
+        val followSitesTaskFocusPointInfo = FocusPointInfo(followSiteTask, task == followSiteTask)
+        val checkNotifsTaskFocusPointInfo = FocusPointInfo(
+                QuickStartExistingSiteTask.CHECK_NOTIFICATIONS,
+                task == QuickStartExistingSiteTask.CHECK_NOTIFICATIONS
+        )
+        return listOf(followSitesTaskFocusPointInfo, checkNotifsTaskFocusPointInfo)
+    }
+
+    fun handleSiteRemoved() {
+        selectedSiteRepository.removeSite()
     }
 
     data class FocusPointInfo(

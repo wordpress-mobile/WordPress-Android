@@ -101,7 +101,7 @@ class MediaPickerViewModel @Inject constructor(
     private val loadActions = Channel<LoadAction>()
     private var searchJob: Job? = null
     private val _domainModel = MutableLiveData<DomainModel>()
-    private val _selectedIds = MutableLiveData<List<Identifier>>()
+    private val _selectedIds = MutableLiveData<List<Identifier>?>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
     private val _searchExpanded = MutableLiveData<Boolean>()
@@ -193,7 +193,7 @@ class MediaPickerViewModel @Inject constructor(
                 }
 
                 val fileExtension = it.mimeType?.let { mimeType ->
-                    mediaUtilsWrapper.getExtensionForMimeType(mimeType).toUpperCase(localeManagerWrapper.getLocale())
+                    mediaUtilsWrapper.getExtensionForMimeType(mimeType).uppercase(localeManagerWrapper.getLocale())
                 }
                 when (it.type) {
                     IMAGE -> PhotoItem(
@@ -263,8 +263,16 @@ class MediaPickerViewModel @Inject constructor(
         } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
         } else {
+            val onlyMediaType = if (domainModel?.mediaTypes?.size == 1) domainModel.mediaTypes.first() else null
+            val stringId = when (onlyMediaType) {
+                IMAGE -> R.string.media_empty_image_list
+                AUDIO -> R.string.media_empty_audio_list
+                VIDEO -> R.string.media_empty_videos_list
+                DOCUMENT -> R.string.media_empty_documents_list
+                else -> R.string.media_empty_list
+            }
             PhotoListUiModel.Empty(
-                    UiStringRes(R.string.media_empty_list),
+                    UiStringRes(stringId),
                     image = R.drawable.img_illustration_media_105dp,
                     isSearching = isSearching == true
             )

@@ -1,6 +1,0 @@
-19.0:
-- Je dashboard beheren met een kaartgebaseerde feed, waaronder posts.
-- Upload video's van maximaal 5 minuten met gratis abonnementen.
-- Zie meer gebruikersinterface in je taal, waaronder Jetpack/indelingsrasterblokken.
-- Behoud tekstopmaak na het gebruik van backspace.
-- Bloktitels zijn nu in het midden uitgelijnd in het invoegermenu.

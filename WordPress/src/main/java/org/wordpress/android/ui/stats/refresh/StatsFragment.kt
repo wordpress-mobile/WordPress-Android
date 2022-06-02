@@ -1,20 +1,20 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
-import dagger.android.support.DaggerFragment
+import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
@@ -27,7 +27,11 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
@@ -40,13 +44,12 @@ import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var uiHelpers: UiHelpers
-    private lateinit var viewModel: StatsViewModel
+    private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-    private val selectedTabListener: SelectedTabListener
-        get() = SelectedTabListener(viewModel)
+    private lateinit var selectedTabListener: SelectedTabListener
 
     private var restorePreviousSearch = false
 
@@ -79,9 +82,15 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 
     private fun StatsFragmentBinding.initializeViews(activity: FragmentActivity) {
-        statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
-        tabLayout.setupWithViewPager(statsPager)
-        statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+        val adapter = StatsPagerAdapter(activity)
+        statsPager.adapter = adapter
+        statsPager.setPageTransformer(
+                MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+        )
+        selectedTabListener = SelectedTabListener(viewModel)
+        TabLayoutMediator(tabLayout, statsPager) { tab, position ->
+            tab.text = adapter.getTabTitle(position)
+        }.attach()
         tabLayout.addOnTabSelectedListener(selectedTabListener)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
@@ -98,8 +107,6 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         isFirstStart: Boolean,
         savedInstanceState: Bundle?
     ) {
-        viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewModel::class.java)
-
         viewModel.onRestoreInstanceState(savedInstanceState)
 
         setupObservers(activity)
@@ -185,7 +192,11 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
             WEEKS -> 2
             MONTHS -> 3
             YEARS -> 4
-            DETAIL -> null
+            DETAIL,
+            INSIGHT_DETAIL,
+            TOTAL_LIKES_DETAIL,
+            TOTAL_COMMENTS_DETAIL,
+            TOTAL_FOLLOWERS_DETAIL,
             ANNUAL_STATS -> null
         }
         position?.let {
@@ -228,18 +239,15 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 }
 
-class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
-        fm,
-        BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-) {
-    override fun getCount(): Int = statsSections.size
+class StatsPagerAdapter(val activity: FragmentActivity) : FragmentStateAdapter(activity) {
+    override fun getItemCount(): Int = statsSections.size
 
-    override fun getItem(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {
         return StatsListFragment.newInstance(statsSections[position])
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        return context.getString(statsSections[position].titleRes)
+    fun getTabTitle(position: Int): CharSequence {
+        return activity.getString(statsSections[position].titleRes)
     }
 }
 

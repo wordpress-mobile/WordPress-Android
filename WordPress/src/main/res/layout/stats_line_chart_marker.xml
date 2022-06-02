@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/line_chart_marker_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/bg_chart_marker_view">
+
+    <TextView
+        android:id="@+id/marker_text1"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@color/stats_tool_tip_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="+4 (400%)" />
+
+    <TextView
+        android:id="@+id/marker_text2"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/stats_tool_tip_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/marker_text1"
+        tools:text="5 views" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

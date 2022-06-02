@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Editor</string>
-    <string name="post_settings">Settings</string>
     <string name="post_content">Content</string>
     <string name="post_title">Title</string>
 
@@ -119,7 +117,7 @@
 
     <string name="long_post_dlg_saving">Saving</string>
 
-    <string name="menu_toolbar_title">Edit %s block"</string>
+    <string name="menu_toolbar_title">Edit %s block</string>
 
     <!-- Aztec Try Block Editor Dialog -->
     <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false">wp_pref_seen_classic_editor_deprecation_notice</string>
@@ -128,10 +126,10 @@
     <string name="dialog_dismiss_try_block_editor" translatable="true">Dismiss</string>
 
     <!-- Featured image replacement -->
-    <string name="featured_image_replace_dialog_title">Featured Image Already Set</string>
-    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it?</string>
-    <string name="featured_image_replace_dialog_confirm">Replace</string>
-    <string name="featured_image_replace_dialog_cancel">Cancel</string>
+    <string name="featured_image_replace_dialog_title">Replace current featured image?</string>
+    <string name="featured_image_replace_dialog_description">You already have a featured image set. Do you want to replace it with the new image?</string>
+    <string name="featured_image_replace_dialog_confirm">Replace featured image</string>
+    <string name="featured_image_replace_dialog_cancel">Keep current</string>
 
     <string name="featured_image_confirmation_notice">Set as featured image</string>
     <string name="featured_image_removed_notice">Removed as featured image</string>

@@ -7,7 +7,7 @@ import android.graphics.Color;
 import androidx.core.content.res.ResourcesCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ContextExtensionsKt;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 
@@ -35,7 +35,7 @@ class ReaderResourceVars {
     ReaderResourceVars(Context context) {
         Resources resources = context.getResources();
 
-        int displayWidthPx = DisplayUtils.getDisplayPixelWidth(context);
+        int displayWidthPx = DisplayUtils.getWindowPixelWidth(context);
 
         mIsWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) > 640;
 

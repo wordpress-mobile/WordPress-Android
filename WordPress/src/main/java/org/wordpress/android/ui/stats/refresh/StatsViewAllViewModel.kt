@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,8 +34,6 @@ class StatsViewAllViewModel(
     private val dateSelector: StatsDateSelector,
     @StringRes val title: Int
 ) : ScopedViewModel(mainDispatcher) {
-    private val mutableSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
-
     val selectedDate = dateSelector.selectedDate
 
     val dateSelectorData: LiveData<DateSelectorUiModel> = dateSelector.dateSelectorData.mapNullable {
@@ -55,7 +54,8 @@ class StatsViewAllViewModel(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    val showSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = mutableSnackbarMessage
+    private val _showSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
+    val showSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _showSnackbarMessage
 
     val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
 
@@ -70,8 +70,9 @@ class StatsViewAllViewModel(
         dateSelector.updateDateSelector()
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onPullToRefresh() {
-        mutableSnackbarMessage.value = null
+        _showSnackbarMessage.value = null
         refreshData()
     }
 
@@ -88,15 +89,16 @@ class StatsViewAllViewModel(
             if (statsSiteProvider.hasLoadedSite()) {
                 useCase.fetch(refresh, forced)
             } else {
-                mutableSnackbarMessage.postValue(
+                _showSnackbarMessage.postValue(
                         Event(SnackbarMessageHolder(UiStringRes(R.string.stats_site_not_loaded_yet)))
                 )
             }
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     override fun onCleared() {
-        mutableSnackbarMessage.value = null
+        _showSnackbarMessage.value = null
         useCase.clear()
         statsSiteProvider.reset()
     }

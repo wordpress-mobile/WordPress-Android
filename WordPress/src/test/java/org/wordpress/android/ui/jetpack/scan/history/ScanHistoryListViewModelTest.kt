@@ -35,7 +35,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHi
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ScanTracker
-import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.util.extensions.toFormattedDateString
 import java.util.Calendar
 
 private const val ON_ITEM_CLICKED_PARAM_POSITION = 1

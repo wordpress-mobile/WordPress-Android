@@ -12,11 +12,12 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
-import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Type.INSIGHT
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackWithType
+import org.wordpress.android.ui.stats.refresh.utils.trackWithTypes
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -73,7 +74,7 @@ class InsightsManagementViewModel @Inject constructor(
     }
 
     fun onSaveInsights() {
-        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_SAVED)
+        analyticsTrackerWrapper.trackWithTypes(Stat.STATS_INSIGHTS_MANAGEMENT_SAVED, addedInsightTypes)
         insightsUseCase.launch(defaultDispatcher) {
             statsStore.updateTypes(siteProvider.siteModel, addedInsightTypes.toList())
 
@@ -100,6 +101,11 @@ class InsightsManagementViewModel @Inject constructor(
         _isMenuVisible.value = true
     }
 
+    fun onBackPressed() {
+        analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_DISMISSED)
+        _closeInsightsManagement.call()
+    }
+
     sealed class InsightListItem(val type: Type) {
         enum class Type {
             HEADER, INSIGHT
@@ -109,7 +115,7 @@ class InsightsManagementViewModel @Inject constructor(
 
         data class InsightModel(
             val insightType: InsightType,
-            val name: Int,
+            val name: Int?,
             val status: Status,
             val onClick: ListItemInteraction
         ) : InsightListItem(INSIGHT) {

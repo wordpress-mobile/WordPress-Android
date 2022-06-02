@@ -39,8 +39,13 @@ class PhotoThumbnailViewHolder(
                 item.url,
                 FIT_CENTER
         )
+        imgThumbnail.apply {
+            contentDescription = resources.getString(R.string.photo_picker_image_thumbnail_content_description)
+        }
         mediaThumbnailViewUtils.setupListeners(
-                imgThumbnail, item.isSelected,
+                imgThumbnail,
+                false,
+                item.isSelected,
                 item.toggleAction,
                 item.clickAction,
                 animateSelection

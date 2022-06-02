@@ -15,7 +15,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.util.RtlUtils
-import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.extensions.getColorFromAttribute
 
 class AppBarFadingEdgeView @JvmOverloads constructor(
     context: Context,

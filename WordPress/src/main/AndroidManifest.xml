@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="org.wordpress.android"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="auto">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="auto">
 
     <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
     <!-- Normal permissions, access automatically granted to app -->
-    <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -53,7 +52,6 @@
     <meta-data android:name="fontProviderRequests" android:value="Noto Color Emoji Compat"/>
 
     <application
-        android:name=".WordPress"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_scheme"
         android:hardwareAccelerated="true"
@@ -75,7 +73,8 @@
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
-            android:theme="@style/NoDisplay">
+            android:theme="@style/NoDisplay"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -105,7 +104,8 @@
 
         <activity
             android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
-            android:theme="@style/NoDisplay">
+            android:theme="@style/NoDisplay"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -201,7 +201,8 @@
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/notif_settings_screen_title">
+            android:label="@string/notif_settings_screen_title"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
@@ -240,7 +241,8 @@
         <activity
             android:name=".ui.posts.EditPostActivity"
             android:theme="@style/WordPress.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:exported="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsListActivity" />
@@ -262,7 +264,8 @@
         <activity-alias
             android:name=".ui.posts.PostsActivity"
             android:enabled="true"
-            android:targetActivity=".ui.WPLaunchActivity">
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -333,7 +336,8 @@
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/WordPress.NoActionBar" />
-        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/WordPress.NoActionBar">
+        <activity android:name=".ui.JetpackConnectionResultActivity" android:theme="@style/WordPress.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -384,7 +388,8 @@
         <activity
             android:name=".ui.deeplinks.DeepLinkingIntentReceiverActivity"
             android:theme="@style/WordPress.NoActionBar"
-            android:excludeFromRecents="true">
+            android:excludeFromRecents="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -486,7 +491,8 @@
             />
         <activity-alias
             android:name=".WPComPostReaderActivity"
-            android:targetActivity=".ui.reader.ReaderPostPagerActivity">
+            android:targetActivity=".ui.reader.ReaderPostPagerActivity"
+            android:exported="true">
             <intent-filter>
                 <data
                     android:host="wordpress.com"
@@ -593,7 +599,8 @@
             android:name=".ui.ShareIntentReceiverActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
-            android:theme="@style/NoDisplay">
+            android:theme="@style/NoDisplay"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -610,7 +617,8 @@
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="@string/quickpress_shortcut_activity_label"
             android:theme="@style/WordPress.NoActionBar"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -703,6 +711,7 @@
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
             android:label="@string/register_domain"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <activity
@@ -739,8 +748,19 @@
 
         <!-- Site Settings Categories -->
         <activity
-            android:name=".ui.prefs.categories.CategoriesListActivity"
+            android:name=".ui.prefs.categories.list.CategoriesListActivity"
             android:label="@string/categories"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity
+            android:name=".ui.prefs.categories.detail.CategoryDetailActivity"
+            android:label="@string/add_new_category"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- QR Code Auth Flow -->
+        <activity
+            android:name=".ui.qrcodeauth.QRCodeAuthActivity"
+            android:label="@string/qrcode_auth_flow"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->
@@ -854,17 +874,18 @@
             android:value="true" />
 
         <receiver android:name=".ui.notifications.receivers.NotificationsPendingDraftsReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -876,7 +897,8 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget"
             android:label="@string/stats_widget_all_time_insights_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -888,7 +910,8 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidget"
             android:label="@string/stats_widget_today_insights_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -900,7 +923,8 @@
         <receiver
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidget"
             android:label="@string/stats_widget_minified_name"
-            android:enabled="@string/widgets_enabled">
+            android:enabled="@string/widgets_enabled"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -909,7 +933,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_minified_widget_info"/>
         </receiver>
-
+        <receiver android:name=".ui.notifications.DismissNotificationReceiver" />
         <service
             android:name=".ui.stats.refresh.lists.widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
@@ -917,7 +941,8 @@
         <activity
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidgetConfigureActivity"
             android:label="@string/stats_widget_views_title"
-            android:theme="@style/WordPress.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -926,7 +951,8 @@
         <activity
             android:name=".ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidgetConfigureActivity"
             android:label="@string/stats_widget_all_time_title"
-            android:theme="@style/WordPress.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -935,7 +961,8 @@
         <activity
             android:name=".ui.stats.refresh.lists.widget.today.StatsTodayWidgetConfigureActivity"
             android:label="@string/stats_insights_today_stats"
-            android:theme="@style/WordPress.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -944,7 +971,8 @@
         <activity
             android:name=".ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureActivity"
             android:label="@string/stats_widget_minified_name"
-            android:theme="@style/WordPress.NoActionBar">
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -973,13 +1001,16 @@
 
         <service
             android:name=".push.GCMMessageService"
-            tools:ignore="ExportedService">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <!-- FirebaseInstanceIdService performs security checks at runtime,
+        no need for explicit permissions despite exported="true" -->
         <service
             android:name=".push.InstanceIDService"
+            android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -1000,11 +1031,18 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <!-- Remove the default WorkManagerInitializer so we can use our own -->
+        <!-- Remove the default WorkManagerInitializer so we can use our own
+        Since WorkManager 2.6, App Startup is used internally within WorkManager.
+        To provide a custom initializer we need to remove the androidx.startup node.-->
         <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
     </application>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
 </manifest>

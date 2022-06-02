@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-02-27 18:15:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha.2
+Generator: GlotPress/4.0.0-alpha.1
 Language: sk
 -->
 <resources>
@@ -162,13 +162,10 @@ Language: sk
     <string name="quick_start_focus_point_description">Ťuknite sem</string>
     <string name="quick_start_list_create_site_title">Vytvorte si webovú stránku</string>
     <string name="quick_start_dialog_view_site_title">Zobraziť webovú stránku</string>
-    <string name="quick_start_dialog_view_site_message_short">Ťuknite na %1$s View Site %2$s keď chcete nahliadnuť na webovú stránku.</string>
     <string name="quick_start_dialog_share_site_title">Zdielajte webovú stránku</string>
     <string name="quick_start_dialog_share_site_message">Pripojte sa na účty sociálnych médii - vaša webová stránka automaticky zdieľa nové články.</string>
     <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
     <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
-    <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
     <string name="quick_start_button_positive">Ísť</string>
     <string name="quick_start_button_negative_short">Zrušiť</string>
     <string name="quick_start_button_negative">Teraz nie</string>
@@ -312,7 +309,6 @@ Language: sk
     <string name="dialog_confirm_delete_permanently_post">Ste si istý, že chcete natrvalo zmazať tento článok?</string>
     <string name="content_description_person_reading_device_notification">Človek čítajúci na zariadení s notifikáciami</string>
     <string name="content_description_people_looking_charts">Ľudia pozerajúci sa na grafy a tabuľky</string>
-    <string name="comment_title">%s na %s</string>
     <string name="notification_channel_important_title">Dôležité</string>
     <string name="notification_channel_general_title">Všeobecné</string>
     <string name="photo_picker_use_photo">Použiť túto fotografiu</string>
@@ -919,12 +915,19 @@ Language: sk
     <string name="error_fetch_email_followers_list">Nemožno získať e-mailové adresy odoberateľov webovej stránky.</string>
     <string name="error_fetch_followers_list">Nemožno získať e-mailové adresy odoberateľov webovej stránky.</string>
     <string name="editor_failed_uploads_switch_html">Nahrávanie niektorých médií zlyhalo. Nemôžete prepnúť do HTML módu v tomto štádiu. Odstrániť všetky zlyhané nahrávania a pokračovať?</string>
+    <string name="visual_editor">Vizuálny editor</string>
+    <string name="image_thumbnail">Obrázok miniatúry</string>
     <string name="image_settings_save_toast">Zmeny uložené</string>
     <string name="image_width">Šírka</string>
     <string name="image_link_to">Odkaz na</string>
     <string name="image_caption">Titulok</string>
+    <string name="image_alt_text">Alt text</string>
     <string name="image_settings_dismiss_dialog_title">Zahodiť neuložené zmeny?</string>
     <string name="stop_upload_dialog_title">Zastaviť nahrávanie?</string>
+    <string name="alert_error_adding_media">Nastala chyba pri vkladaní súboru</string>
+    <string name="alert_action_while_uploading">Práve nahrávate súbory. Počkajte na dokončenie.</string>
+    <string name="alert_insert_image_html_mode">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
+    <string name="uploading_gallery_placeholder">Nahrávanie galérie…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Pozvánka úspešne odoslaná</string>
     <string name="tap_to_try_again">Ťuknite a skúste ešte raz!</string>
@@ -994,6 +997,7 @@ Language: sk
     <string name="comments_empty_list_filtered_trashed">Žiadne komentáre v koši</string>
     <string name="comments_empty_list_filtered_pending">Žiadne čakajúce komentáre</string>
     <string name="comments_empty_list_filtered_approved">Žiadne schválené komentáre</string>
+    <string name="button_skip">Preskočiť</string>
     <string name="xmlrpc_missing_method_error">Nepodarilo sa pripojiť. Vyžadované metódy XML-RPC chýbajú na tomto serveri. </string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Na stred</string>
@@ -1359,7 +1363,9 @@ Language: sk
     <string name="cancel_edit">Zrušiť úpravu</string>
     <string name="learn_more">Zistiť viac</string>
     <string name="select_categories">Vyberte si kategórie</string>
+    <string name="create_a_link">Vytvoriť odkaz</string>
     <string name="page_settings">Nastavenia stránky</string>
+    <string name="horizontal_alignment">Horizontálne zarovnanie</string>
     <string name="post_settings">Nastavenia príspevku</string>
     <string name="comment_status_approved">Schválené</string>
     <string name="comment_status_spam">Spam</string>
@@ -1470,11 +1476,16 @@ Language: sk
     <string name="log_in">Prihlásiť sa</string>
     <string name="reader">Čitateľ</string>
     <string name="posts">Príspevky</string>
+    <string name="width">Šírka</string>
     <string name="anonymous">Anonymný</string>
     <string name="no_network_title">Sieť nedostupná</string>
+    <string name="caption">Titulok (voliteľný)</string>
+    <string name="featured_in_post">Vložiť obrázok do príspevku</string>
     <string name="pages">Podstránky</string>
+    <string name="featured">Použiť ilustračný obrázok</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL adresa</string>
+    <string name="uploading">Nahrávanie…</string>
     <string name="version">Verzia</string>
     <string name="app_title">WordPress pre Android</string>
     <string name="tos">Zmluvné podmienky</string>

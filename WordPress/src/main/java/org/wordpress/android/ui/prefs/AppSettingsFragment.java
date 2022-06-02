@@ -13,7 +13,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -42,8 +42,12 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
+import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
 import org.wordpress.android.ui.about.UnifiedAboutActivity;
 import org.wordpress.android.ui.debug.DebugSettingsActivity;
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment;
+import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -57,9 +61,11 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig;
 import org.wordpress.android.util.config.UnifiedAboutFeatureConfig;
 import org.wordpress.android.viewmodel.ContextProvider;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
@@ -68,11 +74,12 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class AppSettingsFragment extends PreferenceFragment
-        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener, LocalePickerCallback {
     public static final int LANGUAGE_CHANGED = 1000;
 
-    private DetailListPreference mLanguagePreference;
+    private WPPreference mLanguagePreference;
     private ListPreference mAppThemePreference;
+    private ListPreference mInitialScreenPreference;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -83,6 +90,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
+    private WPSwitchPreference mReportCrashPref;
 
     private Preference mWhatsNew;
 
@@ -93,6 +101,11 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject UnifiedAboutFeatureConfig mUnifiedAboutFeatureConfig;
+    @Inject MySiteDashboardTabsFeatureConfig mMySiteDashboardTabsFeatureConfig;
+    @Inject MySiteDefaultTabExperiment mMySiteDefaultTabExperiment;
+
+    private static final String TRACK_STYLE = "style";
+    private static final String TRACK_ENABLED = "enabled";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +124,7 @@ public class AppSettingsFragment extends PreferenceFragment
                         if (newValue == null) {
                             return false;
                         }
+
                         boolean hasUserOptedOut = !(boolean) newValue;
                         AnalyticsUtils.updateAnalyticsPreference(
                                 getActivity(),
@@ -124,11 +138,15 @@ public class AppSettingsFragment extends PreferenceFragment
         );
         updateAnalyticsSyncUI();
 
-        mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
+        mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
+        mLanguagePreference.setOnPreferenceClickListener(this);
 
         mAppThemePreference = (ListPreference) findPreference(getString(R.string.pref_key_app_theme));
         mAppThemePreference.setOnPreferenceChangeListener(this);
+
+        mInitialScreenPreference = (ListPreference) findPreference(getString(R.string.pref_key_initial_screen));
+        mInitialScreenPreference.setOnPreferenceChangeListener(this);
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -165,6 +183,8 @@ public class AppSettingsFragment extends PreferenceFragment
         mStripImageLocation =
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_strip_image_location, this);
+        mReportCrashPref = (WPSwitchPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_send_crash, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
@@ -200,6 +220,10 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (!BuildConfig.ENABLE_DEBUG_SETTINGS) {
             removeDebugSettingsCategory();
+        }
+
+        if (!mMySiteDashboardTabsFeatureConfig.isEnabled()) {
+            removeInitialScreen();
         }
     }
 
@@ -251,6 +275,14 @@ public class AppSettingsFragment extends PreferenceFragment
         preferenceScreen.addPreference(mWhatsNew);
     }
 
+    private void removeInitialScreen() {
+        Preference initialScreenPreference =
+                findPreference(getString(R.string.pref_key_initial_screen));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(initialScreenPreference);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -273,8 +305,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        updateLanguagePreference(getResources().getConfiguration().locale.toString());
+        reattachLocalePickerCallback();
         // flush gathered events (if any)
         AnalyticsTracker.flush();
     }
@@ -296,7 +327,7 @@ public class AppSettingsFragment extends PreferenceFragment
         WhatsNewAnnouncementModel latestAnnouncement = event.getWhatsNewItems().get(0);
         mWhatsNew.setSummary(getString(R.string.version_with_name_param, latestAnnouncement.getAppVersionName()));
         mWhatsNew.setOnPreferenceClickListener(this);
-        if (!BuildConfig.IS_JETPACK_APP) {
+        if (mBuildConfigWrapper.isWhatsNewFeatureEnabled()) {
             addWhatsNewPreference();
         }
     }
@@ -356,6 +387,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return handlePrivacyClick();
         } else if (preference == mWhatsNew) {
             return handleFeatureAnnouncementClick();
+        } else if (preference == mLanguagePreference) {
+            return handleAppLocalePickerClick();
         }
 
         return false;
@@ -382,31 +415,52 @@ public class AppSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mImageMaxSizePref,
                     newValue.toString(),
                     getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_MAX_IMAGE_SIZE_CHANGED);
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
                     newValue.toString(),
                     getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_IMAGE_QUALITY_CHANGED);
         } else if (preference == mOptimizedVideo) {
             AppPrefs.setVideoOptimize((Boolean) newValue);
             mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_VIDEO_OPTIMIZATION_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mVideoWidthPref) {
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setVideoOptimizeWidth(newWidth);
             setDetailListPreferenceValue(mVideoWidthPref,
                     newValue.toString(),
                     getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_MAX_VIDEO_SIZE_CHANGED);
         } else if (preference == mVideoEncorderBitratePref) {
             AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
                     newValue.toString(),
                     getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_VIDEO_QUALITY_CHANGED);
         } else if (preference == mStripImageLocation) {
             AppPrefs.setStripImageLocation((Boolean) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_REMOVE_LOCATION_FROM_MEDIA_CHANGED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         } else if (preference == mAppThemePreference) {
             AppThemeUtils.Companion.setAppTheme(getActivity(), (String) newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_SETTINGS_APPEARANCE_CHANGED, Collections
+                    .singletonMap(TRACK_STYLE, (String) newValue));
             // restart activity to make sure changes are applied to PreferenceScreen
             getActivity().recreate();
+        } else if (preference == mInitialScreenPreference) {
+            String trackValue = newValue.equals(MySiteTabType.SITE_MENU.getLabel())
+                    ? MySiteTabType.SITE_MENU.getTrackingLabel()
+                    : MySiteTabType.DASHBOARD.getTrackingLabel();
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("selected", trackValue);
+            AnalyticsTracker.track(Stat.APP_SETTINGS_INITIAL_SCREEN_CHANGED, properties);
+            mMySiteDefaultTabExperiment.changeExperimentVariantAssignmentIfNeeded(trackValue);
+        } else if (preference == mReportCrashPref) {
+            AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_REPORT_CRASHES_TOGGLED, Collections
+                    .singletonMap(TRACK_ENABLED, newValue));
         }
         return true;
     }
@@ -430,7 +484,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         WordPress.updateContextLocale();
-        updateLanguagePreference(languageCode);
         mContextProvider.refreshContext();
 
         // Track language change on Analytics because we have both the device language and app selected language
@@ -451,33 +504,6 @@ public class AppSettingsFragment extends PreferenceFragment
 
         // update Reader tags as they need be localized
         ReaderUpdateServiceStarter.startService(WordPress.getContext(), EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
-    }
-
-    private void updateLanguagePreference(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
-            return;
-        }
-
-        Locale languageLocale = LocaleManager.languageLocale(languageCode);
-        String[] availableLocales = getResources().getStringArray(R.array.available_languages);
-
-        Pair<String[], String[]> pair =
-                LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
-        // check for a possible NPE
-        if (pair == null) {
-            return;
-        }
-
-        String[] sortedEntries = pair.first;
-        String[] sortedValues = pair.second;
-
-        mLanguagePreference.setEntries(sortedEntries);
-        mLanguagePreference.setEntryValues(sortedValues);
-        mLanguagePreference.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
-
-        mLanguagePreference.setValue(languageCode);
-        mLanguagePreference.setSummary(LocaleManager.getLanguageString(languageCode, languageLocale));
-        mLanguagePreference.refreshAdapter();
     }
 
     private boolean handleAboutPreferenceClick() {
@@ -508,6 +534,7 @@ public class AppSettingsFragment extends PreferenceFragment
             startActivity(intent);
         }
 
+        AnalyticsTracker.track(Stat.APP_SETTINGS_OPEN_DEVICE_SETTINGS_TAPPED);
         return true;
     }
 
@@ -571,14 +598,19 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private boolean handlePrivacyClick() {
+        AnalyticsTracker.track(Stat.APP_SETTINGS_PRIVACY_SETTINGS_TAPPED);
+
         if (mPrivacySettings == null || !isAdded()) {
             return false;
         }
+
         String title = getString(R.string.preference_privacy_settings);
         Dialog dialog = mPrivacySettings.getDialog();
         if (dialog != null) {
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
+
+        AnalyticsTracker.track(Stat.PRIVACY_SETTINGS_OPENED);
         return true;
     }
 
@@ -594,5 +626,34 @@ public class AppSettingsFragment extends PreferenceFragment
                     "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
                     + "using support fragment manager from AppCompatActivity.");
         }
+    }
+
+    private boolean handleAppLocalePickerClick() {
+        if (getActivity() instanceof AppCompatActivity) {
+            LocalePickerBottomSheet bottomSheet = LocalePickerBottomSheet.newInstance();
+            bottomSheet.setLocalePickerCallback(this);
+            bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                    LocalePickerBottomSheet.TAG);
+            return true;
+        } else {
+            throw new IllegalArgumentException(
+                    "Parent activity is not AppCompatActivity. LocalePickerBottomSheet must be called "
+                    + "using support fragment manager from AppCompatActivity.");
+        }
+    }
+
+    private void reattachLocalePickerCallback() {
+        if (getActivity() instanceof AppCompatActivity) {
+            LocalePickerBottomSheet bottomSheet = (LocalePickerBottomSheet) (((AppCompatActivity) getActivity()))
+                    .getSupportFragmentManager().findFragmentByTag(LocalePickerBottomSheet.TAG);
+            if (bottomSheet != null) {
+                bottomSheet.setLocalePickerCallback(this);
+            }
+        }
+    }
+
+    @Override
+    public void onLocaleSelected(@NotNull String languageCode) {
+        onPreferenceChange(mLanguagePreference, languageCode);
     }
 }

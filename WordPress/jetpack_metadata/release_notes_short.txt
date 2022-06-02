@@ -1,4 +1,0 @@
-- Card-based dashboard feed, including Posts.
-- Maximum of 5-minute video uploads on free plans.
-- More user interface translation, including Jetpack/Layout Grid blocks.
-- Consistent text formatting after hitting backspace.

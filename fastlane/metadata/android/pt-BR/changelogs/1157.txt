@@ -1,6 +1,0 @@
-19.0:
-- Gerencie o seu painel com um feed baseado em cartões, incluindo os posts.
-- Faça upload de vídeos de até 5 minutos nos planos gratuitos.
-- Veja mais textos da interface do usuário no seu idioma, incluindo os blocos Jetpack/Grade de layout.
-- Mantenha a formatação do texto mesmo após usar a tecla Backspace.
-- Aproveite que os títulos dos blocos agora são centralizados no menu de inserção.

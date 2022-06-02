@@ -47,7 +47,7 @@ class ReminderNotifierTest {
     fun `notify correctly tracks notification received event`() {
         reminderNotifier.notify(SITE_ID)
         verify(analyticsTracker).setSite(SITE_ID)
-        verify(analyticsTracker).trackNotificationReceived()
+        verify(analyticsTracker).trackNotificationReceived(false)
     }
 
     private companion object {

@@ -127,7 +127,7 @@ class EditorPhotoPicker(
             updatePickerContainerHeight(ViewGroup.LayoutParams.MATCH_PARENT)
         } else {
             photoPickerOrientation = Configuration.ORIENTATION_PORTRAIT
-            val displayHeight = DisplayUtils.getDisplayPixelHeight(activity)
+            val displayHeight = DisplayUtils.getWindowPixelHeight(activity)
             updatePickerContainerHeight((displayHeight * 0.5f).toInt())
         }
     }

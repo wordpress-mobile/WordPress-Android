@@ -4,7 +4,7 @@ import android.text.format.DateFormat
 import android.text.format.DateUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
+import org.wordpress.android.util.extensions.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -15,7 +15,6 @@ class DateUtils @Inject constructor(
     private val contextProvider: ContextProvider,
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
-    @ExperimentalStdlibApi
     fun getWeekDay(dayOfTheWeek: Int): String {
         val c = Calendar.getInstance()
         c.firstDayOfWeek = Calendar.MONDAY

@@ -10,6 +10,19 @@
     android:paddingTop="@dimen/my_site_card_row_top_padding"
     tools:showIn="@layout/quick_start_card">
 
+    <ImageView
+        android:id="@+id/my_site_card_toolbar_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        android:src="@drawable/ic_baseline_format_list_numbered_24"
+        tools:visibility="visible"/>
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/my_site_card_toolbar_title"
         android:layout_width="0dp"
@@ -20,8 +33,10 @@
         android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/my_site_card_toolbar_more"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/my_site_card_toolbar_icon"
         app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium"
         tools:text="@string/quick_start_sites" />
 
     <ImageView

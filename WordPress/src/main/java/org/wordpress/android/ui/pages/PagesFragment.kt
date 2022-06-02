@@ -53,8 +53,8 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.observeEvent
@@ -468,7 +468,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             }
         })
 
-        viewModel.publishAction.observe(this@PagesFragment, {
+        viewModel.publishAction.observe(viewLifecycleOwner, {
             it?.let {
                 uploadUtilsWrapper.publishPost(activity, it.post, it.site)
             }

@@ -8,9 +8,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -18,13 +18,22 @@ import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
+import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.TOTAL_LIKES_DETAIL_USE_CASE
+import org.wordpress.android.ui.stats.refresh.VIEWS_AND_VISITORS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
@@ -40,13 +49,15 @@ import javax.inject.Named
 
 const val SCROLL_EVENT_DELAY = 2000L
 
+@Suppress("TooManyFunctions", "LongParameterList")
 abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     private val statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     protected val dateSelector: StatsDateSelector,
     popupMenuHandler: ItemPopupMenuHandler? = null,
-    private val newsCardHandler: NewsCardHandler? = null
+    private val newsCardHandler: NewsCardHandler? = null,
+    private val actionCardHandler: ActionCardHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -58,6 +69,10 @@ abstract class StatsListViewModel(
         MONTHS(R.string.stats_timeframe_months),
         YEARS(R.string.stats_timeframe_years),
         DETAIL(R.string.stats),
+        INSIGHT_DETAIL(R.string.stats),
+        TOTAL_LIKES_DETAIL(R.string.stats_view_total_likes),
+        TOTAL_COMMENTS_DETAIL(R.string.stats_view_total_comments),
+        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_followers),
         ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
@@ -70,7 +85,7 @@ abstract class StatsListViewModel(
 
     val listSelected = statsUseCase.listSelected
 
-    val uiModel: LiveData<UiModel> by lazy {
+    val uiModel: LiveData<UiModel?> by lazy {
         statsUseCase.data.throttle(viewModelScope, distinct = true)
     }
 
@@ -78,9 +93,15 @@ abstract class StatsListViewModel(
         it ?: DateSelectorUiModel(false)
     }
 
-    val typesChanged = merge(popupMenuHandler?.typeMoved, newsCardHandler?.cardDismissed)
+    val typesChanged = merge(
+            popupMenuHandler?.typeMoved,
+            newsCardHandler?.cardDismissed,
+            actionCardHandler?.actionCard
+    )
 
     val scrollTo = newsCardHandler?.scrollTo
+
+    val scrollToNewCard = statsUseCase.scrollTo
 
     override fun onCleared() {
         statsUseCase.onCleared()
@@ -128,6 +149,12 @@ abstract class StatsListViewModel(
         mutableNavigationTarget.value = Event(ViewInsightsManagement)
     }
 
+    fun onAddNewStatsButtonClicked() {
+        newsCardHandler?.dismiss()
+        analyticsTracker.track(Stat.STATS_INSIGHTS_MANAGEMENT_ACCESSED, mapOf("source" to "button"))
+        mutableNavigationTarget.value = Event(ViewInsightsManagement)
+    }
+
     fun start() {
         if (!isInitialized) {
             isInitialized = true
@@ -164,14 +191,16 @@ class InsightsListViewModel
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory,
     popupMenuHandler: ItemPopupMenuHandler,
-    newsCardHandler: NewsCardHandler
+    newsCardHandler: NewsCardHandler,
+    actionCardHandler: ActionCardHandler
 ) : StatsListViewModel(
         mainDispatcher,
         insightsUseCase,
         analyticsTracker,
         dateSelectorFactory.build(INSIGHTS),
         popupMenuHandler,
-        newsCardHandler
+        newsCardHandler,
+        actionCardHandler
 )
 
 class YearsListViewModel @Inject constructor(
@@ -201,3 +230,36 @@ class DaysListViewModel @Inject constructor(
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(DAYS))
+
+class InsightsDetailListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(VIEWS_AND_VISITORS_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(INSIGHT_DETAIL))
+
+class TotalLikesDetailListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TOTAL_LIKES_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(TOTAL_LIKES_DETAIL))
+
+class TotalCommentsDetailListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TOTAL_COMMENTS_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(TOTAL_COMMENTS_DETAIL))
+
+class TotalFollowersDetailListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(TOTAL_FOLLOWERS_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(
+        mainDispatcher,
+        statsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(TOTAL_FOLLOWERS_DETAIL)
+)

@@ -287,7 +287,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return
         }
         if (tabPosition == NotificationsListFragment.TAB_POSITION_UNREAD) {
-            ActivityLauncher.addNewPostForResult(activity, selectedSite, false, POST_FROM_NOTIFS_EMPTY_VIEW)
+            ActivityLauncher.addNewPostForResult(activity, selectedSite, false, POST_FROM_NOTIFS_EMPTY_VIEW, -1)
         } else if (activity is WPMainActivity) {
             (requireActivity() as WPMainActivity).setReaderPageActive()
         }
@@ -358,10 +358,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             else -> titleResId = R.string.notifications_empty_list
         }
-        if (BuildConfig.IS_JETPACK_APP) {
-            showEmptyView(titleResId)
-        } else {
+        if (BuildConfig.ENABLE_READER) {
             showEmptyView(titleResId, descriptionResId, buttonResId)
+        } else {
+            showEmptyView(titleResId)
         }
         actionableEmptyView.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }

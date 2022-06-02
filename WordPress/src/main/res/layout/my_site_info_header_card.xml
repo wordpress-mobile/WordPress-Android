@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--- The layout does not include the default my site card margins on the root layout as the quick start dot,
+ (to be shown on the site icon layout) extends beyond the card margins and was found to cut off outside it.
+ The margins are applied to the icon container rather than on the card. -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/margin_medium_large"
+    android:maxWidth="@dimen/my_site_content_area"
+    android:id="@+id/site_info_card"
+    tools:ignore="RtlSymmetry">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/blavatar_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/on_surface_emphasis_lowest"
+        app:strokeWidth="@dimen/my_site_blavatar_container_border_width">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="@dimen/my_site_blavatar_sz"
+            android:layout_height="@dimen/my_site_blavatar_sz"
+            app:cardCornerRadius="@dimen/my_site_blavatar_corner_radius"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/my_site_blavatar"
+                style="@style/MySiteBlavatarImageView"
+                android:layout_width="@dimen/my_site_blavatar_sz"
+                android:layout_height="@dimen/my_site_blavatar_sz"
+                android:contentDescription="@string/my_site_icon_content_description"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical"
+                tools:ignore="UnusedAttribute"
+                tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
+
+            <ProgressBar
+                android:id="@+id/my_site_icon_progress"
+                android:layout_width="@dimen/my_site_blavatar_sz"
+                android:layout_height="@dimen/my_site_blavatar_sz"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:gravity="center_vertical"
+                android:indeterminate="true"
+                android:visibility="gone" />
+        </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
+
+    <org.wordpress.android.widgets.QuickStartFocusPoint
+        android:id="@+id/quick_start_icon_focus_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:contentDescription="@string/quick_start_focus_point_description"
+        android:elevation="@dimen/quick_start_focus_point_elevation"
+        android:translationX="@dimen/quick_start_focus_point_small_offset_negative"
+        android:translationY="@dimen/quick_start_focus_point_small_offset_negative"
+        app:layout_constraintStart_toStartOf="@id/blavatar_container"
+        app:layout_constraintTop_toTopOf="@id/blavatar_container"
+        app:size="small"
+        tools:ignore="RtlSymmetry" />
+
+    <org.wordpress.android.widgets.MySiteTitleAndSubtitleLabelView
+        android:id="@+id/site_info_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:minHeight="@dimen/my_site_blavatar_sz"
+        app:layout_constraintBottom_toBottomOf="@+id/blavatar_container"
+        app:layout_constraintEnd_toStartOf="@id/switch_site"
+        app:layout_constraintStart_toEndOf="@id/blavatar_container"
+        app:layout_constraintTop_toTopOf="@+id/blavatar_container" />
+
+    <org.wordpress.android.widgets.QuickStartFocusPoint
+        android:id="@+id/quick_start_title_focus_point"
+        android:layout_width="@dimen/quick_start_focus_point_size"
+        android:layout_height="@dimen/quick_start_focus_point_size"
+        android:layout_gravity="center_vertical|center"
+        android:contentDescription="@string/quick_start_focus_point_description"
+        android:elevation="@dimen/quick_start_focus_point_elevation"
+        app:layout_constraintEnd_toEndOf="@id/site_info_container"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/site_info_container"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+
+    <org.wordpress.android.widgets.QuickStartFocusPoint
+        android:id="@+id/quick_start_sub_title_focus_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:contentDescription="@string/quick_start_focus_point_description"
+        android:elevation="@dimen/quick_start_focus_point_elevation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/site_info_container"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/site_info_container"
+        app:size="small"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageButton
+        android:id="@+id/switch_site"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/ripple_oval"
+        android:contentDescription="@string/my_site_btn_switch_site"
+        android:padding="@dimen/margin_large"
+        android:src="@drawable/ic_chevron_down_white_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/site_info_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/site_info_container"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

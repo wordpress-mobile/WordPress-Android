@@ -2,18 +2,27 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Empty
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
@@ -22,17 +31,19 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
     @Inject lateinit var navigator: StatsNavigator
     private lateinit var viewModel: StatsListViewModel
+    private lateinit var statsSection: StatsSection
 
     private var layoutManager: LayoutManager? = null
     private var binding: StatsListFragmentBinding? = null
@@ -53,6 +64,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
+                ?: activity?.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
+                ?: StatsSection.INSIGHTS
+
+        setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
         (requireActivity().application as WordPress).component().inject(this)
     }
 
@@ -64,6 +81,21 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             outState.putSerializable(LIST_TYPE, sectionFromIntent)
         }
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.stats_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_new_stats_card -> {
+                viewModel.onAddNewStatsButtonClicked()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun StatsListFragmentBinding.initializeViews(savedInstanceState: Bundle?) {
@@ -125,6 +157,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val nonNullActivity = requireActivity()
         with(StatsListFragmentBinding.bind(view)) {
             binding = this
+            pageContainer.layoutTransition.setAnimateParentHierarchy(false)
             initializeViews(savedInstanceState)
             initializeViewModels(nonNullActivity)
         }
@@ -136,12 +169,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.initializeViewModels(activity: FragmentActivity) {
-        val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
-                ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
-                ?: StatsSection.INSIGHTS
-
         val viewModelClass = when (statsSection) {
             StatsSection.DETAIL -> DetailListViewModel::class.java
+            StatsSection.INSIGHT_DETAIL -> InsightsDetailListViewModel::class.java
+            StatsSection.TOTAL_LIKES_DETAIL -> TotalLikesDetailListViewModel::class.java
+            StatsSection.TOTAL_COMMENTS_DETAIL -> TotalCommentsDetailListViewModel::class.java
+            StatsSection.TOTAL_FOLLOWERS_DETAIL -> TotalFollowersDetailListViewModel::class.java
             StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
@@ -163,7 +196,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         })
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
-            drawDateSelector(dateSelectorUiModel)
+            when (statsSection) {
+                INSIGHT_DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, TOTAL_FOLLOWERS_DETAIL -> {
+                    drawDateSelector(DateSelectorUiModel(false))
+                }
+                else -> drawDateSelector(dateSelectorUiModel)
+            }
         })
 
         viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
@@ -187,6 +225,16 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         viewModel.scrollTo?.observeEvent(viewLifecycleOwner, { statsType ->
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
+            }
+        })
+
+        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner, {
+            (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
+                adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                        layoutManager?.smoothScrollToPosition(recyclerView, null, adapter.itemCount)
+                    }
+                })
             }
         })
     }

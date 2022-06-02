@@ -46,6 +46,8 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             ), HtmlCompat.FROM_HTML_MODE_LEGACY
     )
 
+    override fun getTrackEventSource() = SOURCE
+
     override fun setController(controller: FullScreenDialogController) {
         super.setController(controller)
         dialogController = controller
@@ -185,5 +187,9 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                 Snackbar.LENGTH_LONG
         )
                 .show()
+    }
+
+    companion object {
+        const val SOURCE = "account_settings"
     }
 }

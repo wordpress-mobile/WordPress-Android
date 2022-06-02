@@ -4,6 +4,8 @@ import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
@@ -11,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.R
@@ -19,7 +22,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartD
 import org.wordpress.android.ui.mysite.MySiteCardAndItemViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
-import org.wordpress.android.util.viewBinding
+import org.wordpress.android.util.extensions.viewBinding
+
+private const val Y_BUFFER = 10
 
 class QuickStartDynamicCardViewHolder(
     parent: ViewGroup,
@@ -57,6 +62,7 @@ class QuickStartDynamicCardViewHolder(
     }
 
     fun bind(item: QuickStartDynamicCard) = with(binding) {
+        setOnTouchItemListener()
         currentItem = item
 
         ObjectAnimator.ofInt(quickStartCardProgress, PROGRESS_PROPERTY_NAME, item.progress)
@@ -93,8 +99,53 @@ class QuickStartDynamicCardViewHolder(
         }
     }
 
+    private fun setOnTouchItemListener() = with(binding) {
+        val gestureDetector = GestureDetector(quickStartCardRecyclerView.context, GestureListener())
+        quickStartCardRecyclerView.addOnItemTouchListener(object : OnItemTouchListener {
+            override fun onInterceptTouchEvent(recyclerView: RecyclerView, e: MotionEvent): Boolean {
+                return gestureDetector.onTouchEvent(e)
+            }
+
+            override fun onTouchEvent(recyclerView: RecyclerView, e: MotionEvent) {
+                // NO OP
+            }
+
+            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+                // NO OP
+            }
+        })
+    }
+
     companion object {
         private const val PROGRESS_PROPERTY_NAME = "progress"
         private const val PROGRESS_DURATION = 600L
+    }
+
+    private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
+        /**
+         * Capture the DOWN as soon as it's detected to prevent the viewPager from intercepting touch events
+         * We need to do this immediately, because if we don't, then the next move event could potentially
+         * trigger the viewPager to switch tabs
+         */
+        override fun onDown(e: MotionEvent?): Boolean = with(binding) {
+            quickStartCardRecyclerView.parent.requestDisallowInterceptTouchEvent(true)
+            return super.onDown(e)
+        }
+
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean = with(binding) {
+            if (kotlin.math.abs(distanceX) > kotlin.math.abs(distanceY)) {
+                // Detected a horizontal scroll, prevent the viewpager from switching tabs
+                quickStartCardRecyclerView.parent.requestDisallowInterceptTouchEvent(true)
+            } else if (kotlin.math.abs(distanceY) > Y_BUFFER) {
+                // Detected a vertical scroll allow the viewpager to switch tabs
+                quickStartCardRecyclerView.parent.requestDisallowInterceptTouchEvent(false)
+            }
+            return super.onScroll(e1, e2, distanceX, distanceY)
+        }
     }
 }

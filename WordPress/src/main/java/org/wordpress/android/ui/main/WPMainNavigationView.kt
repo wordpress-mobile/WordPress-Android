@@ -32,7 +32,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
-import org.wordpress.android.util.getColorStateListFromAttribute
+import org.wordpress.android.util.extensions.getColorStateListFromAttribute
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -67,7 +67,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked()
+        fun onNewPostButtonClicked(promptId: Int)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {
@@ -80,7 +80,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         // overlay each item with our custom view
         val menuView = getChildAt(0) as BottomNavigationMenuView
-        if (BuildConfig.IS_JETPACK_APP) hideReaderTab()
+        if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
         val inflater = LayoutInflater.from(context)
         for (i in 0 until menu.size()) {
@@ -94,6 +94,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             imgIcon.setImageResource(getDrawableResForPosition(i))
             if (i == getPosition(READER)) {
                 customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+            }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
             itemView.addView(customView)
@@ -315,7 +318,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = if (BuildConfig.IS_JETPACK_APP) listOf(MY_SITE, NOTIFS) else listOf(MY_SITE, READER, NOTIFS)
+        private val pages = if (BuildConfig.ENABLE_READER) listOf(MY_SITE, READER, NOTIFS) else listOf(MY_SITE, NOTIFS)
 
         private const val TAG_MY_SITE = "tag-mysite"
         private const val TAG_READER = "tag-reader"

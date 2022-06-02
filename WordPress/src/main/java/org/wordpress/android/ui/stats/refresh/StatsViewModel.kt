@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -47,6 +49,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -55,6 +58,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("TooManyFunctions", "LongParameterList")
+@HiltViewModel
 class StatsViewModel
 @Inject constructor(
     @Named(LIST_STATS_USE_CASES) private val listUseCases: Map<StatsSection, BaseListUseCase>,
@@ -66,7 +70,8 @@ class StatsViewModel
     private val statsSiteProvider: StatsSiteProvider,
     newsCardHandler: NewsCardHandler,
     private val statsModuleActivateUseCase: StatsModuleActivateUseCase,
-    private val notificationsTracker: SystemNotificationsTracker
+    private val notificationsTracker: SystemNotificationsTracker,
+    private val todaysStatsCardFeatureConfig: MySiteDashboardTodaysStatsCardFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -141,14 +146,20 @@ class StatsViewModel
         if (!isInitialized || restart) {
             isInitialized = true
 
+            // Added today's stats feature config to check whether that card is enabled when stats screen is accessed
+            analyticsTracker.track(
+                    stat = AnalyticsTracker.Stat.STATS_ACCESSED,
+                    site = statsSiteProvider.siteModel,
+                    feature = todaysStatsCardFeatureConfig
+            )
+
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
+            trackSectionSelected(initialSection ?: INSIGHTS)
 
             val initialGranularity = initialSection?.toStatsGranularity()
             if (initialGranularity != null && initialSelectedPeriod != null) {
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
-
-            analyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED, statsSiteProvider.siteModel)
 
             if (launchedFromWidget) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
@@ -187,6 +198,7 @@ class StatsViewModel
         _isRefreshing.value = false
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onPullToRefresh() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()
@@ -220,6 +232,10 @@ class StatsViewModel
 
         listUseCases[statsSection]?.onListSelected()
 
+        trackSectionSelected(statsSection)
+    }
+
+    private fun trackSectionSelected(statsSection: StatsSection) {
         when (statsSection) {
             INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
             DAYS -> analyticsTracker.trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
@@ -231,6 +247,7 @@ class StatsViewModel
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null

@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
@@ -211,6 +212,21 @@ class AppPrefsWrapper @Inject constructor() {
     fun setQuickStartNoticeRequired(shown: Boolean) = AppPrefs.setQuickStartNoticeRequired(shown)
 
     fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
+
+    fun getLastSelectedQuickStartTypeForSite(siteLocalId: Long): QuickStartType =
+            AppPrefs.getLastSelectedQuickStartTypeForSite(siteLocalId)
+
+    fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
+            AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
+
+    fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.setMySiteDefaultTabExperimentVariantAssigned()
+
+    fun setInitialScreenFromMySiteDefaultTabExperimentVariant(variant: String) =
+            AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
+
+    fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
 
     companion object {
         private const val LIGHT_MODE_ID = 0

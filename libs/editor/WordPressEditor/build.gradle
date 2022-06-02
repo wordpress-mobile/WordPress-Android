@@ -1,5 +1,5 @@
 buildscript {
-    ext.aztecVersion = 'v1.5.3'
+    ext.aztecVersion = 'v1.5.8'
 }
 
 repositories {
@@ -8,6 +8,7 @@ repositories {
         content {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
+            includeGroup "org.wordpress-mobile"
             includeGroup "org.wordpress-mobile.gutenberg-mobile"
         }
     }
@@ -71,11 +72,29 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api ("$gradle.ext.aztecAndroidAztecPath:$aztecVersion") {
+    api ("$gradle.ext.aztecAndroidAztecPath") {
         exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
+        version {
+            strictly aztecVersion
+        }
     }
-    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion")
-    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion")
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
@@ -43,6 +44,9 @@ class MeViewModel
     private val _showUnifiedAbout = MutableLiveData<Event<Boolean>>()
     val showUnifiedAbout: LiveData<Event<Boolean>> = _showUnifiedAbout
 
+    private val _showScanLoginCode = MutableLiveData<Event<Boolean>>()
+    val showScanLoginCode: LiveData<Event<Boolean>> = _showScanLoginCode
+
     data class RecommendAppUiState(
         val showLoading: Boolean = false,
         val error: String? = null,
@@ -82,6 +86,11 @@ class MeViewModel
         _showUnifiedAbout.value = Event(true)
     }
 
+    fun showScanLoginCode() {
+        _showScanLoginCode.value = Event(true)
+    }
+
+    @SuppressLint("NullSafeMutableLiveData")
     fun onRecommendTheApp() {
         when (val state = _recommendUiState.value) {
             is ApiFetchedResult -> {

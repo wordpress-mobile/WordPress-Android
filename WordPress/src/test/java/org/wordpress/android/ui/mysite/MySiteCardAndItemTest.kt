@@ -7,11 +7,11 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickActionsCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoCard.IconState.Visible
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DynamicCard.QuickStartDynamicCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.SiteInfoHeaderCard.IconState.Visible
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -33,6 +33,13 @@ class MySiteCardAndItemTest {
     }
 
     @Test
+    fun `when focus point on subtitle, then site info block is active`() {
+        val siteInfoCard = initSiteInfoCard(showSubtitleFocusPoint = true)
+
+        assertThat(siteInfoCard.activeQuickStartItem).isTrue()
+    }
+
+    @Test
     fun `site info block is not active when focus point not added`() {
         val siteInfoCard = initSiteInfoCard()
 
@@ -41,13 +48,15 @@ class MySiteCardAndItemTest {
 
     private fun initSiteInfoCard(
         showTitleFocusPoint: Boolean = false,
+        showSubtitleFocusPoint: Boolean = false,
         showIconFocusPoint: Boolean = false
-    ): SiteInfoCard {
-        return SiteInfoCard(
+    ): SiteInfoHeaderCard {
+        return SiteInfoHeaderCard(
                 title = "test",
                 url = "url",
                 iconState = Visible(null),
                 showTitleFocusPoint = showTitleFocusPoint,
+                showSubtitleFocusPoint = showSubtitleFocusPoint,
                 showIconFocusPoint = showIconFocusPoint,
                 onTitleClick = null,
                 onIconClick = interaction,

@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,7 +45,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
+import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.UserSuggestion;
@@ -56,12 +60,15 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListen
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderCommentMenuActionAdapter.ReaderCommentMenuActionType;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.services.comment.ReaderCommentService;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -79,8 +86,9 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -137,6 +145,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
     @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderTracker mReaderTracker;
+    @Inject SiteStore mSiteStore;
 
     private ReaderCommentListViewModel mViewModel;
     private ConversationNotificationsViewModel mConversationViewModel;
@@ -215,7 +224,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
         if (!loadPost()) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
@@ -276,7 +285,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
             return true;
         });
-        ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
+        ViewExtensionsKt.redirectContextClickToLongPressListener(buttonExpand);
 
         // reattach listeners to collapsible reply dialog
         CollapseFullScreenDialogFragment fragment =
@@ -295,6 +304,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                 ConversationNotificationsViewModel.class
         );
     }
+
     private void initObservers(Bundle savedInstanceState) {
         AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
 
@@ -359,6 +369,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
                     return Unit.INSTANCE;
                 })
         );
+
 
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -525,6 +536,84 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
         EventBus.getDefault().unregister(this);
     }
 
+    private void performCommentAction(ReaderComment comment, ReaderCommentMenuActionType action) {
+        switch (action) {
+            case APPROVE:
+                break;
+            case EDIT:
+                openCommentEditor(comment);
+                break;
+            case UNAPPROVE:
+                moderateComment(comment, CommentStatus.UNAPPROVED, R.string.comment_unapproved,
+                        Stat.COMMENT_UNAPPROVED);
+                break;
+            case SPAM:
+                moderateComment(comment, CommentStatus.SPAM, R.string.comment_spammed, Stat.COMMENT_SPAMMED);
+                break;
+            case TRASH:
+                moderateComment(comment, CommentStatus.TRASH, R.string.comment_trashed, Stat.COMMENT_TRASHED);
+                break;
+            case SHARE:
+                shareComment(comment.getShortUrl());
+                break;
+            case DIVIDER_NO_ACTION:
+                break;
+        }
+    }
+
+    private void openCommentEditor(ReaderComment comment) {
+        SiteModel postSite = mSiteStore.getSiteBySiteId(comment.blogId);
+        final Intent intent = UnifiedCommentsEditActivity.createIntent(this,
+                new ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId), postSite);
+        startActivity(intent);
+    }
+
+    private void moderateComment(ReaderComment comment, CommentStatus newStatus, int undoMessage, Stat tracker) {
+        getCommentAdapter().removeComment(comment.commentId);
+        checkEmptyView();
+
+        Snackbar snackbar = WPSnackbar.make(findViewById(R.id.coordinator_layout), undoMessage, Snackbar.LENGTH_LONG)
+                                      .setAction(R.string.undo, view -> {
+                                          getCommentAdapter().refreshComments();
+                                      });
+
+        snackbar.addCallback(new BaseCallback<Snackbar>() {
+            @Override public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+
+                if (event == DISMISS_EVENT_ACTION) {
+                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_MODERATION_UNDO,
+                            AnalyticsCommentActionSource.READER, mPost);
+                    return;
+                }
+
+                AnalyticsUtils.trackCommentActionWithReaderPostDetails(tracker,
+                        AnalyticsCommentActionSource.READER, mPost);
+                ReaderCommentActions.moderateComment(comment, newStatus);
+            }
+        });
+
+        snackbar.show();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(ReaderEvents.CommentModerated event) {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (!event.isSuccess()) {
+            ToastUtils.showToast(ReaderCommentListActivity.this, R.string.comment_moderation_error);
+            getCommentAdapter().refreshComments();
+        } else {
+            // we do try to remove the comment in case you did PTR and it appeared in the list again
+            getCommentAdapter().removeComment(event.getCommentId());
+        }
+        checkEmptyView();
+    }
+
+
     private void shareComment(String commentUrl) {
         mReaderTracker.trackPost(
                 Stat.READER_ARTICLE_COMMENT_SHARED,
@@ -656,7 +745,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity implements On
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(commentId -> setReplyToCommentId(commentId, true));
             // adapter calls this when user taps share icon
-            mCommentAdapter.setCommentShareListener(this::shareComment);
+            mCommentAdapter.setCommentMenuActionListener(this::performCommentAction);
 
             // Enable post title click if we came here directly from notifications or deep linking
             if (mDirectOperation != null) {

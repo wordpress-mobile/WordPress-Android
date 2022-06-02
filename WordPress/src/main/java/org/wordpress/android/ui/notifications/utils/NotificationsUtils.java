@@ -330,7 +330,8 @@ public class NotificationsUtils {
         // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
         // otherwise it would load blank white
         WPCustomImageGetter imageGetter = new WPCustomImageGetter(textView,
-                context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size));
+                context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
+                textView.getLineHeight());
 
         int indexAdjustment = 0;
         String imagePlaceholder;

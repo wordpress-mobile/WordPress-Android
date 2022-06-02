@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quick_start_item_root"
+    style="@style/NewQuickStartTypeRow">
+
+    <ImageView
+        android:id="@+id/quick_start_item_img"
+        style="@style/NewQuickStartImage"
+        android:layout_width="@dimen/new_quick_start_card_illustration_image_width"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:contentDescription="@null"
+        android:src="@drawable/img_quick_start_tour_illustration"
+        app:layout_constraintBottom_toBottomOf="@+id/quick_start_item_progress"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_item_more_icon"
+        app:layout_constraintTop_toTopOf="@+id/quick_start_item_title" />
+
+    <ImageView
+        android:id="@+id/quick_start_task_completed_icon"
+        android:layout_width="@dimen/new_quick_start_card_task_completed_icon_size"
+        android:layout_height="@dimen/new_quick_start_card_task_completed_icon_size"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_baseline_check_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/quick_start_item_subtitle"
+        app:layout_constraintEnd_toEndOf="@+id/quick_start_item_title"
+        app:layout_constraintTop_toTopOf="@+id/quick_start_item_subtitle"
+        app:tint="@color/green_40"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/quick_start_item_more_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/content_description_more"
+        android:focusable="true"
+        android:src="@drawable/ic_more_vert_white_24dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/quick_start_item_progress"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/new_quick_start_card_progress_bar_height"
+        android:layout_marginBottom="@dimen/margin_medium_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/quick_start_card_horizontal_progress_drawable"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/quick_start_task_completed_icon"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/quick_start_item_subtitle"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_item_subtitle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:progress="70"
+        tools:progressBackgroundTint="@color/primary_0"
+        tools:progressTint="@color/colorPrimary" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/quick_start_item_subtitle"
+        style="@style/QuickStartTypeSubtitle"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_task_completed_icon"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/quick_start_item_title"
+        app:layout_constraintTop_toBottomOf="@+id/quick_start_item_title"
+        tools:text="1 of 6 complete" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/quick_start_item_title"
+        style="@style/NewQuickStartTypeTitle"
+        android:layout_width="0dp"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:text="@string/quick_start_sites_type_get_to_know_app"
+        app:layout_constraintEnd_toStartOf="@+id/quick_start_item_img"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

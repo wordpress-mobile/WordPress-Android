@@ -24,12 +24,15 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.usecases.CreateSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
 
+private const val SITE_TITLE = "site title"
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
         "slug",
-        "domain"
+        "domain",
+        SITE_TITLE
 )
 private const val LANGUAGE_ID = "lang_id"
+private const val TIMEZONE_ID = "timezone_id"
 
 @RunWith(MockitoJUnitRunner::class)
 class CreateSiteUseCaseTest {
@@ -51,7 +54,7 @@ class CreateSiteUseCaseTest {
     @Test
     fun coroutineResumedWhenResultEventDispatched() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
-        val resultEvent = useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID)
+        val resultEvent = useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         assertThat(resultEvent).isEqualTo(event)
     }
@@ -59,7 +62,7 @@ class CreateSiteUseCaseTest {
     @Test
     fun verifySiteDataPropagated() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
-        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID)
+        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(captor.capture())
@@ -69,12 +72,13 @@ class CreateSiteUseCaseTest {
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
+        assertThat(payload.siteTitle).isEqualTo(SITE_TITLE)
     }
 
     @Test
     fun verifyDryRunIsFalse() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
-        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID)
+        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(captor.capture())
@@ -86,7 +90,7 @@ class CreateSiteUseCaseTest {
     @Test
     fun verifyCreatesPublicSite() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
-        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID)
+        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(captor.capture())
@@ -98,12 +102,24 @@ class CreateSiteUseCaseTest {
     @Test
     fun verifyPropagatesLanguageId() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
-        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID)
+        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
 
         val captor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(captor.capture())
 
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.language).isEqualTo(LANGUAGE_ID)
+    }
+
+    @Test
+    fun verifyPropagatesTimeZoneId() = test {
+        whenever(dispatcher.dispatch(any())).then { useCase.onNewSiteCreated(event) }
+        useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID, TIMEZONE_ID)
+
+        val captor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(captor.capture())
+
+        val payload = captor.value.payload as NewSitePayload
+        assertThat(payload.timeZoneId).isEqualTo(TIMEZONE_ID)
     }
 }
