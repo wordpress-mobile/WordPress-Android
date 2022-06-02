@@ -58,6 +58,7 @@ import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.NotificationsUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
@@ -79,6 +80,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private var isUpdatingGravatar = false
     private var binding: MeFragmentBinding? = null
 
+    @Inject lateinit var notificationsUtils: NotificationsUtilsWrapper
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
@@ -393,7 +395,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                 .setMessage(message)
                 .setPositiveButton(
                         R.string.signout
-                ) { _, _ -> signOutWordPressCom() }
+                ) { _, _ ->
+                    clearNotifications()
+                    signOutWordPressCom()
+                }
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
                 .create().show()
@@ -401,6 +406,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     private fun signOutWordPressCom() {
         viewModel.signOutWordPress(requireActivity().application as WordPress)
+    }
+
+    private fun clearNotifications() {
+        notificationsUtils.cancelAll(requireActivity())
     }
 
     private fun showDisconnectDialog() {
