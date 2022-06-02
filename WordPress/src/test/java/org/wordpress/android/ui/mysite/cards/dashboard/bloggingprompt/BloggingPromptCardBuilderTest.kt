@@ -99,6 +99,6 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
             promptId = 123,
             onShareClick = onShareClick,
             onAnswerClick = onAnswerClick,
-            onSkipClick =  onSkipClick
+            onSkipClick = onSkipClick
     )
 }

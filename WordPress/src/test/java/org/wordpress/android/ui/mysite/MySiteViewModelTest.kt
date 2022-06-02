@@ -1638,22 +1638,24 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() = test {
-        initSelectedSite()
+    fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() =
+            test {
+                initSelectedSite()
 
-        requireNotNull(onBloggingPromptSkipClicked).invoke()
+                requireNotNull(onBloggingPromptSkipClicked).invoke()
 
-        verify(appPrefsWrapper).setSkippedPromptDay(any())
-        verify(mySiteSourceManager).refreshBloggingPrompt()
+                verify(appPrefsWrapper).setSkippedPromptDay(any())
+                verify(mySiteSourceManager).refreshBloggingPrompt()
 
+                assertThat(snackbars.size).isEqualTo(1)
 
-        assertThat(snackbars.size).isEqualTo(1)
-
-        val expectedSnackbar = snackbars[0]
-        assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
-        assertThat(expectedSnackbar.message).isEqualTo(UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar))
-        assertThat(expectedSnackbar.isImportant).isEqualTo(true)
-    }
+                val expectedSnackbar = snackbars[0]
+                assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
+                assertThat(expectedSnackbar.message).isEqualTo(
+                        UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar)
+                )
+                assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+            }
 
     /* DASHBOARD ERROR SNACKBAR */
 
