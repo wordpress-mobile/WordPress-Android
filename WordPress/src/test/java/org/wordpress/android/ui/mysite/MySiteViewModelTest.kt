@@ -642,7 +642,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given wp app, when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
+        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(600)
 
         onSiteSelected.value = null
 
@@ -653,7 +653,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given wp app, when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(500)
 
         onSiteSelected.value = null
 
