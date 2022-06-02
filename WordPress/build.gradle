@@ -255,6 +255,7 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            pseudoLocalesEnabled true
         }
     }
 
