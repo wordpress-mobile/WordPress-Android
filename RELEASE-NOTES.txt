@@ -2,7 +2,7 @@
 
 20.1
 -----
-
+* [*] DeepLinks: fix auto-verification of App Links in Android 12
 
 20.0
 -----
