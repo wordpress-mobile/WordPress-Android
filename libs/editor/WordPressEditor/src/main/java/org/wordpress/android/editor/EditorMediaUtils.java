@@ -45,8 +45,8 @@ public class EditorMediaUtils {
 
     public static int getMaximumThumbnailSizeForEditor(Context context) {
         Rect size = DisplayUtils.getWindowSize(context);
-        int screenWidth = size.height();
-        int screenHeight = size.width();
+        int screenWidth = size.width();
+        int screenHeight = size.height();
         int maximumThumbnailWidthForEditor = Math.min(screenWidth, screenHeight);
         int padding = DisplayUtils.dpToPx(context, 48) * 2;
         maximumThumbnailWidthForEditor -= padding;
