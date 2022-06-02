@@ -70,6 +70,10 @@
     <color name="context_line_highlighted_row_background">@color/red_5</color>
 
     <!-- Quick Start Task Cards -->
+    <color name="quick_start_task_card_background">@color/gray_0</color>
+    <color name="quick_start_task_card_completed_checkmark">@color/gray_5</color>
+
+    <!-- Quick Start Task Dynamic Cards -->
     <color name="quick_start_task_card_illustration_background">@color/gray_0</color>
     <color name="quick_start_task_card_illustration_surface">@color/white</color>
     <color name="quick_start_task_card_illustration_details">@color/gray_30</color>

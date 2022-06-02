@@ -52,9 +52,12 @@ class TotalStatsMapper @Inject constructor(
 
     fun buildTotalCommentsInformation(dates: List<PeriodData>) = buildTotalInformation(dates, COMMENTS)
 
-    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text {
+    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text? {
         val value = getCurrentWeekDays(dates, type).sum()
         val previousValue = getPreviousWeekDays(dates, type).sum()
+        if (value == 0L && previousValue == 0L) {
+            return null
+        }
         val positive = value >= previousValue
         val change = statsUtils.buildChange(previousValue, value, positive, true).toString()
         val stringRes = if (positive) {
@@ -63,7 +66,13 @@ class TotalStatsMapper @Inject constructor(
             R.string.stats_insights_total_stats_negative
         }
 
-        return Text(text = resourceProvider.getString(stringRes, change), color = listOf(change))
+        return Text(
+                text = resourceProvider.getString(stringRes, change),
+                color = when {
+                    positive -> mapOf(R.color.stats_color_positive to change)
+                    else -> mapOf(R.color.stats_color_negative to change)
+                }
+        )
     }
 
     private fun sum(list: List<Long>): String {

@@ -8,6 +8,7 @@ import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 data class ReminderNotification(
     val channel: String,
     val contentIntentBuilder: () -> PendingIntent,
+    val deleteIntentBuilder: (() -> PendingIntent)? = null,
     val contentTitle: String,
     val contentText: String,
     val priority: Int = PRIORITY_DEFAULT,
@@ -22,6 +23,7 @@ data class ReminderNotification(
     fun asNotificationCompatBuilder(context: Context): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, channel)
                 .setContentIntent(contentIntentBuilder.invoke())
+                .setDeleteIntent(deleteIntentBuilder?.invoke())
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
                 .setPriority(priority)

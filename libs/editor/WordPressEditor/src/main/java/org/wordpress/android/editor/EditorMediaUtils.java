@@ -3,7 +3,7 @@ package org.wordpress.android.editor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
@@ -44,10 +44,10 @@ public class EditorMediaUtils {
     }
 
     public static int getMaximumThumbnailSizeForEditor(Context context) {
-        Point size = DisplayUtils.getDisplayPixelSize(context);
-        int screenWidth = size.x;
-        int screenHeight = size.y;
-        int maximumThumbnailWidthForEditor = screenWidth > screenHeight ? screenHeight : screenWidth;
+        Rect size = DisplayUtils.getWindowSize(context);
+        int screenWidth = size.width();
+        int screenHeight = size.height();
+        int maximumThumbnailWidthForEditor = Math.min(screenWidth, screenHeight);
         int padding = DisplayUtils.dpToPx(context, 48) * 2;
         maximumThumbnailWidthForEditor -= padding;
         return maximumThumbnailWidthForEditor;

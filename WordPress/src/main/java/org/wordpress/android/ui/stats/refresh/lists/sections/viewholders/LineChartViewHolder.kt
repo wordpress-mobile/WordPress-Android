@@ -278,17 +278,15 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun buildEmptyDataSet(context: Context, count: Int): LineDataSet {
-        val emptyValues = (0 until count).map { index -> Entry(index.toFloat(), 1f, "empty") }
+        val emptyValues = (0 until count).map { index -> Entry(index.toFloat(), 0f, "empty") }
         val dataSet = LineDataSet(emptyValues, "Empty")
-        dataSet.setGradientColor(
-                ContextCompat.getColor(context, R.color.primary_5),
-                ContextCompat.getColor(context, android.R.color.transparent)
-        )
-        dataSet.formLineWidth = 0f
+
+        dataSet.setDrawCircles(false)
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = false
         dataSet.fillAlpha = 80
         dataSet.setDrawHighlightIndicators(false)
+
         return dataSet
     }
 

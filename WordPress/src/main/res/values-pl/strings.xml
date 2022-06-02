@@ -112,7 +112,6 @@ Language: pl
     <string name="domains_redirected_domains_blurb">Twoje domeny przekierują na twoją witrynę pod adresem %s</string>
     <string name="gutenberg_native_create_link">Stwórz odnośnik</string>
     <string name="domain_registration_result_title">Gratulacje z okazji twojego zakupu!</string>
-    <string name="domain_registration_result_description">Twoja nowa domena &lt;b&gt;%s&lt;/b&gt; jest w tym momencie ustawiana. Może zająć do 30 minut zanim zacznie działać.</string>
     <string name="domains_suggestions_select_domain">Wybierz domenę</string>
     <string name="domains_title">Domeny</string>
     <string name="post_settings_post_sticky">Przypnij wpis na stronie głównej</string>
