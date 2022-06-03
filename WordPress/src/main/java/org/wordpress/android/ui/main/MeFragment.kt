@@ -171,8 +171,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (qrCodeAuthFlowFeatureConfig.isEnabled() && BuildConfig.ENABLE_QRCODE_AUTH_FLOW
-                && accountStore.hasAccessToken()) {
+        if (qrCodeAuthFlowFeatureConfig.isEnabled() &&
+                BuildConfig.ENABLE_QRCODE_AUTH_FLOW &&
+                accountStore.hasAccessToken()) {
             rowScanLoginCode.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
