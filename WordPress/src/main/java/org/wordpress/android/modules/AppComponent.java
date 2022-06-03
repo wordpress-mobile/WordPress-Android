@@ -197,6 +197,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
+import org.wordpress.android.ui.stats.intro.StatsNewFeaturesIntroDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
@@ -673,4 +674,6 @@ public interface AppComponent {
     void inject(BloggingPromptsOnboardingDialogFragment object);
 
     void inject(DismissNotificationReceiver object);
+
+    void inject(StatsNewFeaturesIntroDialogFragment object);
 }
