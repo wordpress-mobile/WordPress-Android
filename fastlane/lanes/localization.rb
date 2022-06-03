@@ -1,5 +1,12 @@
-# NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
-# of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
+# NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
+# used in the `raw-screenshots` job (see `.circleci/config.yml`) by Firebase Test Lab
+#
+# NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
+# When set to `false`, the locale will just not be included during the screenshot generation (see `lanes/screenshots.rb`).
+# This setup is likely to disappear soon (we currently don't provide any custom text size and font for any local anyway) when we will:
+#  1. Get rid of the local `fastlane/helpers/*` from this repo, to ultimately switch to use the `release-toolkit`'s action instead
+#  2. Switch to use the [future `LocaleHelper` once it lands](https://github.com/wordpress-mobile/release-toolkit/pull/296)
+#
 ALL_LOCALES = [
   # First are the locales which are used for *both* downloading the `strings.xml` files from GlotPress *and* for generating the release notes XML files.
   { glotpress: 'ar', android: 'ar',    google_play: 'ar',     promo_config: {} },
