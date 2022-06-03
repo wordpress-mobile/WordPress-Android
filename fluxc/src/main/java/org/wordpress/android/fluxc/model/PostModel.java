@@ -96,6 +96,8 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     @Column private boolean mHasCapabilityEditPost;
     @Column private boolean mHasCapabilityDeletePost;
 
+    @Column private int mAnsweredPromptId;
+
     public PostModel() {}
 
     @Override
@@ -518,6 +520,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setDateLocallyChanged(String dateLocallyChanged) {
         mDateLocallyChanged = dateLocallyChanged;
+    }
+
+    public int getAnsweredPromptId() {
+        return mAnsweredPromptId;
+    }
+
+    public void setAnsweredPromptId(int answeredPromptId) {
+        mAnsweredPromptId = answeredPromptId;
     }
 
     @Override
