@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.qrcodeauth
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,6 +14,14 @@ class QRCodeAuthActivity : AppCompatActivity() {
 
         with(QrcodeauthActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun start(context: Context) {
+            val intent = Intent(context, QRCodeAuthActivity::class.java)
+            context.startActivity(intent)
         }
     }
 }

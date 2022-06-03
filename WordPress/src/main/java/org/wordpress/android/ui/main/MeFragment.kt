@@ -199,7 +199,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         })
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
-            ActivityLauncher.viewQRCodeAuthFlow(requireContext())
+            ActivityLauncher.startQRCodeAuthFlow(requireContext())
         }
     }
 
