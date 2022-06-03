@@ -18,16 +18,12 @@ class BloggingPromptsOnboardingUiStateMapper @Inject constructor() {
         onPrimaryButtonClick: () -> Unit,
         onSecondaryButtonClick: () -> Unit
     ): Ready {
-        val dummyRespondent =
-                "https://0.gravatar.com/avatar/cec64efa352617" +
-                        "c35743d8ed233ab410?s=96&d=identicon&r=G"
+        val dummyRespondent = ""
 
         val dummyRespondents = listOf(
                 dummyRespondent,
                 dummyRespondent,
                 dummyRespondent,
-                dummyRespondent,
-                dummyRespondent
         )
 
         val trailingLabel = UiStringPluralRes(
