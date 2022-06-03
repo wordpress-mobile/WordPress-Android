@@ -32,6 +32,7 @@ class BloggingPromptCardSource @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MySiteRefreshSource<BloggingPromptUpdate> {
     override val refresh = MutableLiveData(false)
+    val singleRefresh = MutableLiveData(false)
 
     companion object {
         private const val NUM_PROMPTS_TO_REQUEST = 20
@@ -41,8 +42,15 @@ class BloggingPromptCardSource @Inject constructor(
         val result = MediatorLiveData<BloggingPromptUpdate>()
         result.getData(coroutineScope, siteLocalId)
         result.addSource(refresh) { result.refreshData(coroutineScope, siteLocalId, refresh.value) }
+        result.addSource(singleRefresh) { result.refreshData(coroutineScope, siteLocalId, singleRefresh.value, true) }
         refresh()
         return result
+    }
+
+    fun refreshTodayPrompt() {
+        if (isRefreshing() == false) {
+            singleRefresh.postValue(true)
+        }
     }
 
     private fun MediatorLiveData<BloggingPromptUpdate>.getData(
@@ -68,17 +76,19 @@ class BloggingPromptCardSource @Inject constructor(
     private fun MediatorLiveData<BloggingPromptUpdate>.refreshData(
         coroutineScope: CoroutineScope,
         siteLocalId: Int,
-        isRefresh: Boolean? = null
+        isRefresh: Boolean? = null,
+        isSinglePromptRefresh: Boolean = false
     ) {
         when (isRefresh) {
-            null, true -> refreshData(coroutineScope, siteLocalId)
+            null, true -> refreshData(coroutineScope, siteLocalId, isSinglePromptRefresh)
             else -> Unit // Do nothing
         }
     }
 
     private fun MediatorLiveData<BloggingPromptUpdate>.refreshData(
         coroutineScope: CoroutineScope,
-        siteLocalId: Int
+        siteLocalId: Int,
+        isSinglePromptRefresh: Boolean = false
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
@@ -86,7 +96,7 @@ class BloggingPromptCardSource @Inject constructor(
                 if (isPromptSkippedToday()) {
                     postEmptyState()
                 } else {
-                    fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite)
+                    fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite, isSinglePromptRefresh)
                 }
             } else {
                 onRefreshedMainThread()
@@ -98,11 +108,13 @@ class BloggingPromptCardSource @Inject constructor(
 
     private fun MediatorLiveData<BloggingPromptUpdate>.fetchPromptsAndPostErrorIfAvailable(
         coroutineScope: CoroutineScope,
-        selectedSite: SiteModel
+        selectedSite: SiteModel,
+        isSinglePromptRefresh: Boolean = false
     ) {
         coroutineScope.launch(bgDispatcher) {
             delay(REFRESH_DELAY)
-            val result = promptsStore.fetchPrompts(selectedSite, NUM_PROMPTS_TO_REQUEST, Date())
+            val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
+            val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
             val error = result.error
             when {
                 error != null -> {

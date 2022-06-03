@@ -211,6 +211,39 @@ class BloggingPromptCardSourceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when refreshTodayPrompt is invoked, single prompt refresh is called`() = test {
+        val regularRefreshResult = mutableListOf<Boolean>()
+        val singlePromptRefreshResult = mutableListOf<Boolean>()
+        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any())).thenReturn(success).thenReturn(success)
+        bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
+        bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+
+        bloggingPromptCardSource.refreshTodayPrompt()
+
+        assertThat(singlePromptRefreshResult.size).isEqualTo(2)
+        assertThat(singlePromptRefreshResult[0]).isFalse // init
+        assertThat(singlePromptRefreshResult[1]).isTrue // refreshTodayPrompt
+    }
+
+    @Test
+    fun `when refreshTodayPrompt is invoked, nothing happens if refresh is already in progress`() = test {
+        val regularRefreshResult = mutableListOf<Boolean>()
+        val singlePromptRefreshResult = mutableListOf<Boolean>()
+        whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))
+        // we do not return success from bloggingPromptsStore.fetchPrompts() which locks live data in refreshing state
+        bloggingPromptCardSource.singleRefresh.observeForever { singlePromptRefreshResult.add(it) }
+        bloggingPromptCardSource.refresh.observeForever { regularRefreshResult.add(it) }
+        bloggingPromptCardSource.build(testScope(), SITE_LOCAL_ID).observeForever { }
+
+        bloggingPromptCardSource.refreshTodayPrompt()
+
+        assertThat(singlePromptRefreshResult.size).isEqualTo(1)
+        assertThat(singlePromptRefreshResult[0]).isFalse // init
+    }
+
+    @Test
     fun `given no error, when data has been refreshed, then refresh is set to true`() = test {
         val result = mutableListOf<Boolean>()
         whenever(bloggingPromptsStore.getPromptForDate(eq(siteModel), any())).thenReturn(flowOf(data))

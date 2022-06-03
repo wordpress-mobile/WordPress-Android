@@ -15,14 +15,18 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
@@ -153,7 +157,8 @@ class MySiteViewModel @Inject constructor(
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val quickStartTracker: QuickStartTracker
+    private val quickStartTracker: QuickStartTracker,
+    private val dispatcher: Dispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -284,6 +289,10 @@ class MySiteViewModel @Inject constructor(
             _onSnackbarMessage
                     .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
         }
+    }
+
+    init {
+        dispatcher.register(this)
     }
 
     @Suppress("LongParameterList")
@@ -1039,6 +1048,7 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.clear()
         quickStartRepository.clear()
         mySiteSourceManager.clear()
+        dispatcher.unregister(this)
         super.onCleared()
     }
 
@@ -1307,6 +1317,18 @@ class MySiteViewModel @Inject constructor(
         return !((uiModel.value?.state as? SiteSelected)?.siteInfoHeaderState?.siteInfoHeader?.equals(
                 nextSiteInfoHeaderCard
         ) ?: false)
+    }
+
+    // FluxC events
+    @Subscribe(threadMode = MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (!event.isError) {
+            event.post?.let {
+                if (event.post.answeredPromptId > 0 && event.isFirstTimePublish) {
+                    mySiteSourceManager.refreshBloggingPrompts(true)
+                }
+            }
+        }
     }
 
     data class UiModel(

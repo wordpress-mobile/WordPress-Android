@@ -17,8 +17,8 @@ class EditorBloggingPromptsViewModel
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
-    private val _onBloggingPromptLoaded = MutableLiveData<Event<String>>()
-    val onBloggingPromptLoaded: LiveData<Event<String>> = _onBloggingPromptLoaded
+    private val _onBloggingPromptLoaded = MutableLiveData<Event<EditorLoadedPrompt>>()
+    val onBloggingPromptLoaded: LiveData<Event<EditorLoadedPrompt>> = _onBloggingPromptLoaded
 
     private var isStarted = false
 
@@ -32,6 +32,8 @@ class EditorBloggingPromptsViewModel
 
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
-        prompt?.let { _onBloggingPromptLoaded.postValue(Event(it.content)) }
+        prompt?.let { _onBloggingPromptLoaded.postValue(Event(EditorLoadedPrompt(promptId, it.content))) }
     }
+
+    data class EditorLoadedPrompt(val promptId: Int, val content: String)
 }
