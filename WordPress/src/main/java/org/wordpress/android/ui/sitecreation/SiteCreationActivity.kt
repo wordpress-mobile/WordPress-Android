@@ -78,7 +78,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mainViewModel.writeToBundle(outState)
-        hppViewModel.writeToBundle(outState)
     }
 
     private fun observeVMState() {
