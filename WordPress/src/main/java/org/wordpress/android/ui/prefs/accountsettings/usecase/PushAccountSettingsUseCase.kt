@@ -61,8 +61,9 @@ class PushAccountSettingsUseCase @Inject constructor(
     @Subscribe(threadMode = BACKGROUND)
     fun onAccountChanged(event: OnAccountChanged) {
         continuationWrapper.continueWith(event)
-        if (!continuationWrapper.isWaiting) {
-            dispatcher.unregister(this)
-        }
+    }
+
+    fun onCleared() {
+        dispatcher.unregister(this)
     }
 }

@@ -354,7 +354,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                                                + ViewCompat.getPaddingEnd(tabView));
                         }
 
-                        int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);
+                        int displayWidth = DisplayUtils.getWindowPixelWidth(MediaBrowserActivity.this);
                         if (tabLayoutWidth < displayWidth) {
                             mTabLayout.setTabMode(TabLayout.MODE_FIXED);
                             mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
