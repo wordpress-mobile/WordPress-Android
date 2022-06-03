@@ -12,4 +12,8 @@ class QRCodeAuthViewModel @Inject constructor() : ViewModel() {
         if (isStarted) return
         isStarted = true
     }
+
+    companion object {
+        const val TAG_DISMISS_DIALOG = "TAG_DISMISS_DIALOG"
+    }
 }
