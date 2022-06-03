@@ -1,3 +1,12 @@
+plugins {
+    id "com.automattic.android.fetchstyle"
+    id "io.gitlab.arturbosch.detekt"
+    id "androidx.navigation.safeargs.kotlin" apply false
+    id "com.android.library" apply false
+    id 'com.google.gms.google-services' apply false
+    id "org.jetbrains.kotlin.plugin.parcelize" apply false
+}
+
 ext {
     wordPressUtilsVersion = '2.5.0'
     wordPressLoginVersion = '0.14.0'
@@ -41,40 +50,8 @@ ext {
     nhaarmanMockitoVersion = "2.2.0"
 }
 
-buildscript {
-    ext.kotlinVersion = '1.6.10'
-    ext.navComponentVersion = '2.4.2'
-    ext.detektVersion = '1.15.0'
-    ext.daggerVersion = '2.41'
-
-    repositories {
-        maven {
-            url 'https://a8c-libs.s3.amazonaws.com/android'
-            content {
-                includeGroup "com.automattic.android"
-            }
-        }
-        maven { url "https://plugins.gradle.org/m2/" }
-        google()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.1'
-        classpath 'com.automattic.android:fetchstyle:1.1'
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
-    }
-}
-
-apply plugin: 'com.automattic.android.fetchstyle'
-
 allprojects {
     apply plugin: 'checkstyle'
-    apply plugin: 'io.gitlab.arturbosch.detekt'
 
     repositories {
         google()
@@ -114,6 +91,7 @@ allprojects {
     }
 
     detekt {
+        toolVersion = gradle.ext.detektVersion
         config = files("${project.rootDir}/config/detekt/detekt.yml")
         autoCorrect = false
         buildUponDefaultConfig = false
