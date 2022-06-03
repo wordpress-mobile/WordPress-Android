@@ -346,8 +346,6 @@
     <ID>TooGenericExceptionCaught:ColorUnderlineSpan.kt$ColorUnderlineSpan$e: Exception</ID>
     <ID>TooGenericExceptionCaught:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:MediaPickerActivity.kt$MediaPickerActivity$e: RuntimeException</ID>
-    <ID>TooGenericExceptionCaught:PagesViewModel.kt$PagesViewModel$e: NullPointerException</ID>
-    <ID>TooGenericExceptionCaught:PostListAction.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:UploadStarter.kt$UploadStarter$e: Exception</ID>
     <ID>TooGenericExceptionThrown:ActionableEmptyView.kt$ActionableEmptyView$throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")</ID>
     <ID>TooGenericExceptionThrown:ActivityLogDetailFragment.kt$ActivityLogDetailFragment$throw Throwable("Couldn't initialize Activity Log view model")</ID>
@@ -484,6 +482,7 @@
     <ID>TooManyFunctions:WPWebViewViewModel.kt$WPWebViewViewModel : ViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:ZendeskHelper.kt$ZendeskHelper</ID>
     <ID>TooManyFunctions:AccountSettingsRepository.kt$AccountSettingsRepository</ID>
+    <ID>TooManyFunctions:AccountSettingsViewModel.kt$AccountSettingsViewModel : ScopedViewModel</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val activityViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:ActivityLogTypeFilterAdapter.kt$private const val headerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:HomePagePickerViewModel.kt$const val defaultTemplateSlug = "default"</ID>

@@ -127,7 +127,7 @@ class TotalLikesUseCase @Inject constructor(
         if (domainModel.dates.isNotEmpty()) {
             items.add(buildTitle())
             items.add(totalStatsMapper.buildTotalLikesValue(domainModel.dates))
-            items.add(totalStatsMapper.buildTotalLikesInformation(domainModel.dates))
+            totalStatsMapper.buildTotalLikesInformation(domainModel.dates)?.let { items.add(it) }
             if (totalStatsMapper.shouldShowLikesGuideCard(domainModel.dates)) {
                 buildLatestPostGuideCard(items, this::onLinkClicked)
             }

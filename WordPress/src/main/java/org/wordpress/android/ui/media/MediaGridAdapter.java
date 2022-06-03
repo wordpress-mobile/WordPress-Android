@@ -115,7 +115,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
 
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
+        int displayWidth = DisplayUtils.getWindowPixelWidth(mContext);
         mThumbWidth = displayWidth / getColumnCount(mContext);
         mThumbHeight = (int) (mThumbWidth * 0.75f);
     }

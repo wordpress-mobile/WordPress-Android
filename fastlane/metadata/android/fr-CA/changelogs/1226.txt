@@ -1,0 +1,9 @@
+19.9:
+- Glisser-déposer les blocs de l’éditeur
+- Contraste de couleur du bloc de bannière
+- Correction de la visibilité du formatage du bloc de boutons
+- Séparer les tâches de démarrage rapide pour les nouveaux sites/sites existants
+- Copier le lien vers les pages publiées
+- Pas d’icône + dans l’éditeur en cas d’auto-hébergement
+- Réglages de la taille des images/du lien vers le bloc Galerie
+- Pas de bannière de visite dans un éditeur non pris en charge

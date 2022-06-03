@@ -17,6 +17,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_COMPLETED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_FLOW_START
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_NOTIFICATION_RECEIVED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCHEDULED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.BLOGGING_REMINDERS_SCREEN_SHOWN
@@ -157,6 +159,23 @@ class BloggingRemindersAnalyticsTrackerTest {
     fun `trackNotificationReceived tracks correct event and properties`() {
         bloggingRemindersAnalyticsTracker.trackNotificationReceived(promptIncluded = false)
         verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_NOTIFICATION_RECEIVED), checkMap {
+            assertThat(it).containsKey("blog_type")
+        })
+    }
+
+    @Test
+    fun `trackRemindersIncludePromptPressed tracks correct event and properties`() {
+        bloggingRemindersAnalyticsTracker.trackRemindersIncludePromptPressed(true)
+        verify(analyticsTracker).track(
+                BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED,
+                mapOf("enabled" to "true", "blog_type" to null)
+        )
+    }
+
+    @Test
+    fun `trackRemindersIncludePromptHelpPressed tracks correct event`() {
+        bloggingRemindersAnalyticsTracker.trackRemindersIncludePromptHelpPressed()
+        verify(analyticsTracker).track(eq(BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED), checkMap {
             assertThat(it).containsKey("blog_type")
         })
     }

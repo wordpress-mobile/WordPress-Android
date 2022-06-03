@@ -10,7 +10,7 @@
         android:layout_width="@dimen/quick_start_task_list_header_image_width"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
-        android:src="@drawable/img_quick_start_tasks_list_header"
+        android:src="@drawable/img_quick_start_tour_illustration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -23,7 +23,13 @@ class TotalStatsMapper @Inject constructor(
         val previousWeekLikes = getPreviousWeekDays(dates, LIKES)
         val positive = currentWeekLikes.sum() >= previousWeekLikes.sum()
 
-        return ValueWithChartItem(currentWeekSumFormatted, currentWeekLikes, positive)
+        return ValueWithChartItem(
+                value = currentWeekSumFormatted,
+                chartValues = currentWeekLikes,
+                positive = positive,
+                // Add extra bottom margin if there is no information text.
+                extraBottomMargin = !shouldShowTotalInformation(currentWeekLikes.sum(), previousWeekLikes.sum())
+        )
     }
 
     fun buildTotalCommentsValue(dates: List<PeriodData>): ValueWithChartItem {
@@ -33,8 +39,17 @@ class TotalStatsMapper @Inject constructor(
         val previousWeekComments = getPreviousWeekDays(dates, LIKES)
         val positive = currentWeekComments.sum() >= previousWeekComments.sum()
 
-        return ValueWithChartItem(currentWeekSumFormatted, currentWeekComments, positive)
+        return ValueWithChartItem(
+                value = currentWeekSumFormatted,
+                chartValues = currentWeekComments,
+                positive = positive,
+                // Add extra bottom margin if there is no information text.
+                extraBottomMargin = !shouldShowTotalInformation(currentWeekComments.sum(), previousWeekComments.sum())
+        )
     }
+
+    private fun shouldShowTotalInformation(currentWeekSum: Long, previousWeekSum: Long) =
+            currentWeekSum != 0L || previousWeekSum != 0L
 
     fun shouldShowCommentsGuideCard(dates: List<PeriodData>): Boolean {
         return getCurrentWeekDays(dates, COMMENTS).sum() > 0
@@ -52,9 +67,12 @@ class TotalStatsMapper @Inject constructor(
 
     fun buildTotalCommentsInformation(dates: List<PeriodData>) = buildTotalInformation(dates, COMMENTS)
 
-    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text {
+    private fun buildTotalInformation(dates: List<PeriodData>, type: TotalStatsType): Text? {
         val value = getCurrentWeekDays(dates, type).sum()
         val previousValue = getPreviousWeekDays(dates, type).sum()
+        if (!shouldShowTotalInformation(value, previousValue)) {
+            return null
+        }
         val positive = value >= previousValue
         val change = statsUtils.buildChange(previousValue, value, positive, true).toString()
         val stringRes = if (positive) {
@@ -63,7 +81,13 @@ class TotalStatsMapper @Inject constructor(
             R.string.stats_insights_total_stats_negative
         }
 
-        return Text(text = resourceProvider.getString(stringRes, change), color = listOf(change))
+        return Text(
+                text = resourceProvider.getString(stringRes, change),
+                color = when {
+                    positive -> mapOf(R.color.stats_color_positive to change)
+                    else -> mapOf(R.color.stats_color_negative to change)
+                }
+        )
     }
 
     private fun sum(list: List<Long>): String {

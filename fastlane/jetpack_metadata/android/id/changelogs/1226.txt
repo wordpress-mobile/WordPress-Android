@@ -1,0 +1,9 @@
+19.9:
+- Pembelian domain situs dalam aplikasi
+- Blok Seret-dan-lepas di editor
+- Kontras warna di blok Sampul yang lebih baik
+- Pilihan pemformatan blok Tombol tetap terlihat
+- Tugas Mulai Cepat terpisah untuk situs baru dan yang sudah ada
+- Tautan Salin untuk halaman yang telah dipublikasikan
+- Pengaturan Tautan Ke/Ukuran Gambar di blok Galeri
+- Tidak ada banner tur di editor blok yang tidak didukung

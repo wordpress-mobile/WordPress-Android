@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -23,7 +22,7 @@ class FeatureAnnouncementViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private val _currentFeatureAnnouncement = MutableLiveData<FeatureAnnouncement>()
+    private val _currentFeatureAnnouncement = MutableLiveData<FeatureAnnouncement?>()
 
     private val timeOnScreenParameter = "time_on_screen_sec"
 
@@ -47,13 +46,14 @@ class FeatureAnnouncementViewModel @Inject constructor(
     init {
         _uiModel.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
             _uiModel.value = _uiModel.value?.copy(
-                    appVersion = featureAnnouncement.appVersionName, isProgressVisible = false,
-                    isFindOutMoreVisible = !TextUtils.isEmpty(featureAnnouncement.detailsUrl)
+                    appVersion = featureAnnouncement?.appVersionName ?: "",
+                    isProgressVisible = false,
+                    isFindOutMoreVisible = !TextUtils.isEmpty(featureAnnouncement?.detailsUrl)
             )
         }
 
         _featureItems.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
-            _featureItems.value = featureAnnouncement.features
+            featureAnnouncement?.features?.let { _featureItems.value = it }
         }
     }
 
@@ -84,7 +84,7 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     fun onFindMoreButtonPressed() {
         analyticsTrackerWrapper.track(Stat.FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED)
-        _onAnnouncementDetailsRequested.value = _currentFeatureAnnouncement.value?.detailsUrl
+        _currentFeatureAnnouncement.value?.detailsUrl?.let { _onAnnouncementDetailsRequested.value = it }
     }
 
     data class FeatureAnnouncementUiModel(

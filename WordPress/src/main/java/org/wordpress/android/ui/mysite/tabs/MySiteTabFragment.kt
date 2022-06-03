@@ -65,6 +65,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -96,6 +97,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Inject lateinit var quickStartTracker: QuickStartTracker
+    @Inject lateinit var htmlCompatWrapper: HtmlCompatWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -164,7 +166,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 )
         )
 
-        val adapter = MySiteAdapter(imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker)
+        val adapter = MySiteAdapter(imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker, htmlCompatWrapper)
 
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -503,6 +505,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                             data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                             isNewSite = true
                     )
+                } else {
+                    viewModel.onSitePicked()
                 }
             }
             RequestCodes.EDIT_LANDING_PAGE -> {

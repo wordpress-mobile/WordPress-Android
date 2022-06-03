@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_extra_large"
+    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_marginHorizontal="@dimen/margin_extra_large"
     android:backgroundTint="?attr/wpColorSurfaceSecondary"
     app:cardCornerRadius="@dimen/margin_medium_large">
 

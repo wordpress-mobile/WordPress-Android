@@ -146,7 +146,6 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
-import org.wordpress.android.workers.notification.bloggingprompts.BloggingPromptsOnboardingNotificationScheduler;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
@@ -199,6 +198,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_BLOGGING_PROMPTS_ONBOARDING = "show_blogging_prompts_onboarding";
     public static final String ARG_EDITOR_PROMPT_ID = "editor_prompt_id";
     public static final String ARG_DISMISS_NOTIFICATION = "dismiss_notification";
+    public static final String ARG_OPEN_BLOGGING_REMINDERS = "show_blogging_reminders_flow";
+    public static final String ARG_SELECTED_SITE = "SELECTED_SITE_ID";
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
     public static final String ARG_EDITOR_ORIGIN = "editor_origin";
 
@@ -242,7 +243,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
-    @Inject BloggingPromptsOnboardingNotificationScheduler mBloggingPromptsOnboardingNotificationScheduler;
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
@@ -434,6 +434,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+
+        if (getIntent().getBooleanExtra(ARG_OPEN_BLOGGING_REMINDERS, false)) {
+            onSetPromptReminderClick(getIntent().getIntExtra(ARG_OPEN_BLOGGING_REMINDERS, 0));
+        }
     }
 
     private void checkDismissNotification() {
@@ -490,7 +494,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void scheduleLocalNotifications() {
         mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
         mWeeklyRoundupScheduler.schedule();
-        mBloggingPromptsOnboardingNotificationScheduler.scheduleBloggingPromptsOnboardingNotificationIfNeeded();
     }
 
     private void initViewModel() {

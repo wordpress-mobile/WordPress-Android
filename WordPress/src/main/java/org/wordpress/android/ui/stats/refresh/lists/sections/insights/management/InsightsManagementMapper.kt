@@ -5,6 +5,9 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_REMINDER
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_SCHEDULE
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ANNUAL_SITE_STATS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.AUTHORS_COMMENTS
@@ -118,5 +121,6 @@ class InsightsManagementMapper
         POSTS_COMMENTS -> string.stats_comments_posts_and_pages
         FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
         FOLLOWER_TYPES -> null
+        ACTION_REMINDER, ACTION_SCHEDULE, ACTION_GROW -> null
     }
 }

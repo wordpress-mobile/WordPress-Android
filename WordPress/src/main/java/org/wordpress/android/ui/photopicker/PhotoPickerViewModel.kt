@@ -58,7 +58,6 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
-import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -81,7 +80,7 @@ class PhotoPickerViewModel @Inject constructor(
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
     private val _photoPickerItems = MutableLiveData<List<PhotoPickerItem>>()
-    private val _selectedIds = MutableLiveData<List<Long>>()
+    private val _selectedIds = MutableLiveData<List<Long>?>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
@@ -94,7 +93,7 @@ class PhotoPickerViewModel @Inject constructor(
     val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
-    val selectedIds: LiveData<List<Long>> = _selectedIds
+    val selectedIds: LiveData<List<Long>?> = _selectedIds
 
     val uiState: LiveData<PhotoPickerUiState> = merge(
             _photoPickerItems.distinct(),
@@ -254,9 +253,7 @@ class PhotoPickerViewModel @Inject constructor(
         lastTappedIcon: PhotoPickerIcon?,
         site: SiteModel?
     ) {
-        selectedIds?.let {
-            _selectedIds.value = selectedIds
-        }
+        _selectedIds.value = selectedIds
         this.browserType = browserType
         this.lastTappedIcon = lastTappedIcon
         this.site = site

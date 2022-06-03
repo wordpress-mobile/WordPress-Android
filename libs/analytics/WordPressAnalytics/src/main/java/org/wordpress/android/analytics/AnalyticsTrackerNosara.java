@@ -1406,8 +1406,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_background_service_updated";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED:
                 return "enhanced_site_creation_site_design_viewed";
-            case ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED:
-                return "enhanced_site_creation_site_design_thumbnail_mode_button_tapped";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED:
                 return "enhanced_site_creation_site_design_selected";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED:
@@ -2183,6 +2181,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "blogging_reminders_cancelled";
             case BLOGGING_REMINDERS_NOTIFICATION_RECEIVED:
                 return "blogging_reminders_notification_received";
+            case BLOGGING_REMINDERS_INCLUDE_PROMPT_TAPPED:
+                return "blogging_reminders_include_prompt_tapped";
+            case BLOGGING_REMINDERS_INCLUDE_PROMPT_HELP_TAPPED:
+                return "blogging_reminders_include_prompt_help_tapped";
             case LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED:
                 return "login_epilogue_choose_site_tapped";
             case LOGIN_EPILOGUE_CREATE_NEW_SITE_TAPPED:
