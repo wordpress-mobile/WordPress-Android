@@ -139,6 +139,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -244,6 +245,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
+    @Inject BloggingPromptsFeatureConfig bloggingPromptsFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -425,8 +427,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     new Intent(this, GCMRegistrationIntentService.class));
         }
 
-        if (canShowAppRatingPrompt) {
-            AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
+        if (bloggingPromptsFeatureConfig.isEnabled() && AppPrefs.shouldDisplayBloggingPromptOnboarding()) {
+            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
+                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
+            );
+            AppPrefs.setShouldDisplayBloggingPromptOnboarding(false);
+        } else {
+            if (canShowAppRatingPrompt) {
+                AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getFragmentManager());
+            }
         }
 
         scheduleLocalNotifications();
