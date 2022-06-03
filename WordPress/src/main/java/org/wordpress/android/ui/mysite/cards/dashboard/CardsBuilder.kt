@@ -33,7 +33,7 @@ class CardsBuilder @Inject constructor(
                             ?.let { add(it) }
 
                     // if blogging prompt card is visible and the post card is "Write first/next post" we only show
-                    // blogging prompt, since they are ver similar
+                    // blogging prompt, since they are very similar
                     val postCards = postCardBuilder.build(dashboardCardsBuilderParams.postCardBuilderParams)
                     val hasNextPostPrompt = postCards.find {
                         it.dashboardCardType == POST_CARD_WITHOUT_POST_ITEMS
