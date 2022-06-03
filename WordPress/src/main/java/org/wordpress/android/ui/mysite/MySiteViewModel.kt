@@ -1196,14 +1196,14 @@ class MySiteViewModel @Inject constructor(
 
     private fun onBloggingPromptSkipClicked() {
         appPrefsWrapper.setSkippedPromptDay(Date())
-        mySiteSourceManager.refreshBloggingPrompt()
+        mySiteSourceManager.refreshBloggingPrompts(true)
 
         val snackbar = SnackbarMessageHolder(
                 message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
                 buttonTitle = UiStringRes(R.string.undo),
                 buttonAction = {
                     appPrefsWrapper.setSkippedPromptDay(null)
-                    mySiteSourceManager.refreshBloggingPrompt()
+                    mySiteSourceManager.refreshBloggingPrompts(true)
                 },
                 isImportant = true
         )
