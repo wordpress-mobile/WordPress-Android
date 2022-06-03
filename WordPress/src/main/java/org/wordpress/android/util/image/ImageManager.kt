@@ -297,6 +297,21 @@ class ImageManager @Inject constructor(
     }
 
     /**
+     * Preloads an [MShot].
+     *
+     * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
+     * The loading is handled by [org.wordpress.android.networking.GlideMShotsLoader]
+     */
+    fun preload(context: Context, design: MShot) {
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .downloadOnly()
+                .load(design)
+                .submit()
+                .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+    }
+
+    /**
      * Loads an [MShot] into an [ImageView] and attaches a [RequestListener].
      *
      * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
