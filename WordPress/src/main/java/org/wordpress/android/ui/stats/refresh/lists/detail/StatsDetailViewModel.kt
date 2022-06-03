@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.detail
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -57,6 +58,7 @@ class StatsDetailViewModel
         statsPostProvider.clear()
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onPullToRefresh() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()

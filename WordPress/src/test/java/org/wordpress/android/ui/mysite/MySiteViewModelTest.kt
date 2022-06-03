@@ -646,7 +646,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given wp app, when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
+        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(600)
 
         onSiteSelected.value = null
 
@@ -657,7 +657,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Test
     fun `given wp app, when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(500)
 
         onSiteSelected.value = null
 
@@ -2935,7 +2935,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         val viewModelStore = ViewModelStore()
         val viewModelProvider = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T = this@invokeOnCleared as T
+            override fun <T : ViewModel> create(modelClass: Class<T>): T = this@invokeOnCleared as T
         })
         viewModelProvider.get(this@invokeOnCleared::class.java)
         viewModelStore.clear()

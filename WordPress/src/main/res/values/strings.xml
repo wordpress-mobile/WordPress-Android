@@ -1033,6 +1033,18 @@
     <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_new">New</string>
 
+    <string name="stats_action_card_grow_audience_title">Grow your audience</string>
+    <string name="stats_action_card_grow_audience_message">💡We have easily digestible lessons taught by the best bloggers to grow your blog.</string>
+    <string name="stats_action_card_grow_audience_button_label">Check the course</string>
+
+    <string name="stats_action_card_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Set the reminder to post regularly to keep your readers engaged and attract new visitors.</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Set reminders</string>
+
+    <string name="stats_action_card_schedule_post_title">Schedule your post</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schedule to post your content at its best time from your drafts.</string>
+    <string name="stats_action_card_schedule_post_button_label">Schedule</string>
+
     <!-- Stats refreshed widgets -->
 
     <string name="stats_widget_add">Add widget</string>
@@ -3391,14 +3403,18 @@
     <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
 
     <!-- Home Page Picker -->
-    <string name="hpp_title">Choose a design</string>
-    <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
+    <string name="hpp_title">Choose a theme</string>
     <string name="hpp_choose_button">Choose</string>
     <string name="hpp_choose_and_create_site">Create site</string>
+    <string name="hpp_preview_tapped_theme">Preview theme %s</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
-    <string name="hpp_choose_error">There was an error while selecting the design.</string>
+    <string name="hpp_choose_error">There was an error while selecting the theme.</string>
+    <string name="hpp_recommended_title">Best for %s</string>
+    <string name="hpp_recommended_subtitle">Picked for you</string>
+    <string name="hpp_recommended_default_vertical">Blogging</string>
+    <string name="hpp_bottom_helper_text">Can\'t decide? You can change the theme at any time.</string>
 
     <!-- Stories -->
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
