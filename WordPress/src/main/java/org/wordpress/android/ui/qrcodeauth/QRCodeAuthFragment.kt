@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -48,7 +49,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
         when (actionEvent) {
             is LaunchDismissDialog -> launchDismissDialog(actionEvent.dialogModel)
-            is LaunchScanner -> { } // TODO
+            is LaunchScanner -> launchScanner()
             is FinishActivity -> requireActivity().finish()
         }
     }
@@ -62,6 +63,15 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
                         model.negativeButtonLabel?.let { label -> getString(label) },
                         model.cancelButtonLabel?.let { label -> getString(label) }
                 ))
+    }
+
+    private fun launchScanner() {
+        val scanner = GmsBarcodeScanning.getClient(requireContext())
+        scanner.startScan()
+                .addOnSuccessListener { barcode -> viewModel.onScanSuccess(barcode.rawValue) }
+                .addOnFailureListener {
+                    viewModel.onScanFailure()
+                }
     }
 
     private fun initBackPressHandler() {
