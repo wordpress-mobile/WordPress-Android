@@ -9,10 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QrcodeauthFragmentBinding
 import org.wordpress.android.ui.posts.BasicDialogViewModel
@@ -32,7 +30,6 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         with(QrcodeauthFragmentBinding.bind(view)) {
             initBackPressHandler()
             observeViewModel()
-            initView()
             startViewModel()
         }
     }
@@ -87,22 +84,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     }
 
     @Suppress("MagicNumber")
-    private fun QrcodeauthFragmentBinding.initView() {
-        viewModel.start()
-        // Temporarily show each view
-        lifecycleScope.launch {
-            loadingLayout.loadingContainer.visibility = View.VISIBLE
-            contentLayout.contentContainer.visibility = View.GONE
-            errorLayout.errorContainer.visibility = View.GONE
-            delay(2000L)
-            loadingLayout.loadingContainer.visibility = View.GONE
-            contentLayout.contentContainer.visibility = View.VISIBLE
-            errorLayout.errorContainer.visibility = View.GONE
-            delay(2000L)
-            loadingLayout.loadingContainer.visibility = View.GONE
-            contentLayout.contentContainer.visibility = View.GONE
-            errorLayout.errorContainer.visibility = View.VISIBLE
-        }
+    private fun temp() {
         // Temporarily reference all strings from file so CI wont complain.
         // This will be removed in an upcoming PR
         var temp = R.string.qrcode_auth_flow_validated_default_title
