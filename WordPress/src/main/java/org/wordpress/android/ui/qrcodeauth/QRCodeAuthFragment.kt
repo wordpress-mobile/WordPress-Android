@@ -27,17 +27,17 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         viewModel.start()
         // Temporarily show each view
         lifecycleScope.launch {
-            loadingLayout.container.visibility = View.VISIBLE
-            contentLayout.container.visibility = View.GONE
-            errorLayout.container.visibility = View.GONE
+            loadingLayout.loadingContainer.visibility = View.VISIBLE
+            contentLayout.contentContainer.visibility = View.GONE
+            errorLayout.errorContainer.visibility = View.GONE
             delay(2000L)
-            loadingLayout.container.visibility = View.GONE
-            contentLayout.container.visibility = View.VISIBLE
-            errorLayout.container.visibility = View.GONE
+            loadingLayout.loadingContainer.visibility = View.GONE
+            contentLayout.contentContainer.visibility = View.VISIBLE
+            errorLayout.errorContainer.visibility = View.GONE
             delay(2000L)
-            loadingLayout.container.visibility = View.GONE
-            contentLayout.container.visibility = View.GONE
-            errorLayout.container.visibility = View.VISIBLE
+            loadingLayout.loadingContainer.visibility = View.GONE
+            contentLayout.contentContainer.visibility = View.GONE
+            errorLayout.errorContainer.visibility = View.VISIBLE
         }
     }
 }
