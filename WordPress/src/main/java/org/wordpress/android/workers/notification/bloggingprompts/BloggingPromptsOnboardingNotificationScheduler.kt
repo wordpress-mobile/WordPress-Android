@@ -13,9 +13,7 @@ class BloggingPromptsOnboardingNotificationScheduler @Inject constructor(
     private val bloggingPromptsOnboardingNotificationHandler: BloggingPromptsOnboardingNotificationHandler,
     private val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
 ) {
-    // TODO @RenanLukas: if we have a local notification for the blogging prompts onboarding, we should track it
     fun scheduleBloggingPromptsOnboardingNotificationIfNeeded() {
-        // TODO @RenanLukas: verify if we should also check AppPrefs
         if (bloggingPromptsOnboardingNotificationHandler.shouldShowNotification()) {
             val firstNotification = LocalNotification(
                     type = BLOGGING_PROMPTS_ONBOARDING,

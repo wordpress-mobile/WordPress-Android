@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -17,6 +18,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+@HiltViewModel
 class SiteCreationIntentsViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     private val searchResultsProvider: VerticalsSearchResultsProvider,
