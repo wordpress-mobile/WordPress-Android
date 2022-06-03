@@ -9,8 +9,6 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import org.wordpress.android.R
 import org.wordpress.android.databinding.MySiteBloggingPrompCardBinding
-import org.wordpress.android.push.NotificationType.BLOGGING_PROMPTS_ONBOARDING
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
@@ -27,7 +25,8 @@ class BloggingPromptCardViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val htmlCompatWrapper: HtmlCompatWrapper
+    private val htmlCompatWrapper: HtmlCompatWrapper,
+    private val learnMoreClicked: () -> Unit
 ) : CardViewHolder<MySiteBloggingPrompCardBinding>(
         parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
 ) {
@@ -98,11 +97,7 @@ class BloggingPromptCardViewHolder(
                 R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
                 R.id.learn_more -> {
                     bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
-                    bloggingPromptCardMenu.context.startActivity(
-                        ActivityLauncher.createMainActivityAndShowBloggingPromptsOnboardingActivityIntent(
-                                bloggingPromptCardMenu.context, BLOGGING_PROMPTS_ONBOARDING, -1
-                        )
-                    )
+                    learnMoreClicked()
                 }
             }
             return@setOnMenuItemClickListener true

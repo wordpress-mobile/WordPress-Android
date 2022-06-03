@@ -165,7 +165,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 )
         )
 
-        val adapter = MySiteAdapter(imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker, htmlCompatWrapper)
+        val adapter = MySiteAdapter(
+                imageManager,
+                uiHelpers,
+                bloggingPromptsCardAnalyticsTracker,
+                htmlCompatWrapper
+        ) { viewModel.onBloggingPromptsLearnMoreClicked() }
 
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -252,6 +257,9 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             ActivityLauncher.addNewPostForResult(
                     activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPromptId
             )
+        }
+        viewModel.onBloggingPromptsLearnMore.observeEvent(viewLifecycleOwner) {
+            (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
         }
     }
 
@@ -632,4 +640,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
         viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
+}
+
+interface BloggingPromptsOnboardingListener {
+    fun onShowBloggingPromptsOnboarding()
 }

@@ -92,6 +92,7 @@ import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
+import org.wordpress.android.ui.mysite.tabs.BloggingPromptsOnboardingListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -171,7 +172,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         QuickStartPromptClickInterface,
-        BloggingPromptsReminderSchedulerListener {
+        BloggingPromptsReminderSchedulerListener,
+        BloggingPromptsOnboardingListener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -414,9 +416,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         } else if (getIntent().getBooleanExtra(ARG_BLOGGING_PROMPTS_ONBOARDING, false)
                    && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
-            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
-                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
-            );
+            showBloggingPromptsOnboarding();
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -432,6 +432,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
         scheduleLocalNotifications();
 
         initViewModel();
+    }
+
+    private void showBloggingPromptsOnboarding() {
+        BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
+                getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
+        );
     }
 
     private void checkDismissNotification() {
@@ -719,9 +725,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     ActivityLauncher.showSignInForResultWpComOnly(this);
                     break;
                 case ARG_BLOGGING_PROMPTS_ONBOARDING:
-                    BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
-                            getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
-                    );
+                    showBloggingPromptsOnboarding();
                     break;
             }
         } else {
@@ -1640,6 +1644,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onSetPromptReminderClick(final int siteId) {
         mBloggingRemindersViewModel.onBloggingPromptSchedulingRequested(siteId);
+    }
+
+    @Override public void onShowBloggingPromptsOnboarding() {
+        showBloggingPromptsOnboarding();
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because
