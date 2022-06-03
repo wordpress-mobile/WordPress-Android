@@ -81,6 +81,11 @@ class HomePagePickerFragment : Fragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.writeToBundle(outState)
+    }
+
     private fun HomePagePickerFragmentBinding.setupUi() {
         siteCreationThemeHeader.title?.setText(R.string.hpp_title)
         siteCreationThemeHeader.subtitle?.isGone = true
