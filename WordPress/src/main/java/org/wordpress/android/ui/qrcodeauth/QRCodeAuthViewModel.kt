@@ -62,6 +62,10 @@ class QRCodeAuthViewModel @Inject constructor(
         postActionEvent(FinishActivity)
     }
 
+    private fun scanAgainClicked() {
+        postActionEvent(LaunchScanner)
+    }
+
     private fun authenticateClicked() {
         // todo: implement
     }
@@ -70,7 +74,7 @@ class QRCodeAuthViewModel @Inject constructor(
         extractQueryParamsIfValid(scannedValue)
 
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
-            // todo: handle error
+            postUiState(uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked))
         } else {
             postUiState(uiStateMapper.mapLoading())
             validateScan(data = data.toString(), token = token.toString())
@@ -79,7 +83,7 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun validateScan(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            // todo: handle error
+            postUiState(uiStateMapper.mapNoInternet(this::scanAgainClicked, this::cancelClicked))
             return
         }
 
