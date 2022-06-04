@@ -10,6 +10,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.API_ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.AUTHORIZATION_REQUIRED
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.DATA_INVALID
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.NOT_AUTHORIZED
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.REST_INVALID_PARAM
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.TIMEOUT
+import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore
+import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthResult
+import org.wordpress.android.fluxc.store.qrcodeauth.QRCodeAuthStore.QRCodeAuthValidateResult
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
@@ -35,6 +47,7 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 @HiltViewModel
 class QRCodeAuthViewModel @Inject constructor(
+    private val authStore: QRCodeAuthStore,
     private val uiStateMapper: QRCodeAuthUiStateMapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val validator: QRCodeAuthValidator
@@ -146,15 +159,35 @@ class QRCodeAuthViewModel @Inject constructor(
             return
         }
 
-        // todo: add authStore.validate and remove below
-        postUiState(
-                uiStateMapper.mapValidated(
-                        "location",
-                        "browser",
-                        this::authenticateClicked,
-                        this::cancelClicked
-                )
-        )
+        viewModelScope.launch {
+            val result = authStore.validate(data = data, token = token)
+            if (result.isError) {
+                postUiState(mapScanErrorToErrorState(result.error))
+            } else {
+                browser = result.model?.browser
+                location = result.model?.location
+                postUiState(mapScanSuccessToValidatedState(result))
+            }
+        }
+    }
+
+    private fun mapScanSuccessToValidatedState(result: QRCodeAuthResult<QRCodeAuthValidateResult>) =
+            uiStateMapper.mapValidated(
+                    browser = result.model?.browser,
+                    location = result.model?.location,
+                    onAuthenticateClick = this::authenticateClicked,
+                    onCancelClick = this::cancelClicked
+            )
+
+    private fun mapScanErrorToErrorState(error: QRCodeAuthError) = when (error.type) {
+        DATA_INVALID -> uiStateMapper.mapExpired(this::scanAgainClicked, this::cancelClicked)
+        NOT_AUTHORIZED -> uiStateMapper.mapAuthFailed(this::scanAgainClicked, this::cancelClicked)
+        GENERIC_ERROR,
+        INVALID_RESPONSE,
+        REST_INVALID_PARAM,
+        API_ERROR,
+        AUTHORIZATION_REQUIRED,
+        TIMEOUT -> uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked)
     }
 
     private fun extractQueryParamsIfValid(scannedValue: String?) {
