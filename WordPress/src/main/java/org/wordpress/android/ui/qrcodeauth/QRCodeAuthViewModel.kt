@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -207,13 +206,22 @@ class QRCodeAuthViewModel @Inject constructor(
             return
         }
 
-        clearProperties()
-        // todo: authStore.authenticate call and remove below
         viewModelScope.launch {
-            delay(2000L)
-            postUiState(uiStateMapper.mapDone(::dismissClicked))
+            val result = authStore.authenticate(data = data, token = token)
+            if (result.isError) {
+                postUiState(mapScanErrorToErrorState(result.error))
+            } else {
+                clearProperties()
+                if (result.model?.authenticated == true) {
+                    postUiState(mapAuthenticateSuccessToDoneState())
+                } else {
+                    postUiState(uiStateMapper.mapAuthFailed(::scanAgainClicked, ::cancelClicked))
+                }
+            }
         }
     }
+
+    private fun mapAuthenticateSuccessToDoneState() = uiStateMapper.mapDone(this::dismissClicked)
 
     private fun updateUiStateAndLaunchScanner() {
         postUiState(uiStateMapper.mapScanning())
