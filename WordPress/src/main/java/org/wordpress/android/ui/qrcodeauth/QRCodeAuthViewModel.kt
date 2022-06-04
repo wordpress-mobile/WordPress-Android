@@ -16,6 +16,7 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthDialogModel.ShowDismissDialog
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Validated
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
@@ -67,7 +68,12 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun authenticateClicked() {
-        // todo: implement
+        postUiState(uiStateMapper.mapAuthenticating(_uiState.value as Validated))
+        if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
+            postUiState(uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked))
+        } else {
+            authenticate(data = data.toString(), token = token.toString())
+        }
     }
 
     private fun handleScan(scannedValue: String?) {
@@ -106,6 +112,15 @@ class QRCodeAuthViewModel @Inject constructor(
             this.data = queryParams[DATA_KEY].toString()
             this.token = queryParams[TOKEN_KEY].toString()
         }
+    }
+
+    private fun authenticate(data: String, token: String) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            postUiState(uiStateMapper.mapNoInternet(this::scanAgainClicked, this::cancelClicked))
+            return
+        }
+
+        // todo: authStore.authenticate call
     }
 
     private fun updateUiStateAndLaunchScanner() {
