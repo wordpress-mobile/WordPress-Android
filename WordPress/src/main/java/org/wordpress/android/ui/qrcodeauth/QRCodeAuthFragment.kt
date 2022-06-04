@@ -18,10 +18,17 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Scanning
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
+    @Inject lateinit var uiHelpers: UiHelpers
+
     private val viewModel: QRCodeAuthViewModel by viewModels()
     private val dialogViewModel: BasicDialogViewModel by activityViewModels()
 
@@ -37,6 +44,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     private fun QrcodeauthFragmentBinding.observeViewModel() {
         viewModel.actionEvents.onEach { handleActionEvents(it) }.launchIn(viewLifecycleOwner.lifecycleScope)
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner) { viewModel.onDialogInteraction(it) }
+        viewModel.uiState.onEach { renderUi(it) }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun startViewModel() {
@@ -48,6 +56,19 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
             is LaunchDismissDialog -> launchDismissDialog(actionEvent.dialogModel)
             is LaunchScanner -> launchScanner()
             is FinishActivity -> requireActivity().finish()
+        }
+    }
+
+    private fun QrcodeauthFragmentBinding.renderUi(uiState: QRCodeAuthUiState) {
+        uiHelpers.updateVisibility(contentLayout.contentContainer, uiState.contentVisibility)
+        uiHelpers.updateVisibility(errorLayout.errorContainer, uiState.errorVisibility)
+        uiHelpers.updateVisibility(loadingLayout.loadingContainer, uiState.loadingVisibility)
+        when (uiState) {
+            is Content -> { } // TODO
+            is Error -> { } // TODO
+            is Loading -> { } // NO OP
+            is Scanning -> { } // NO OP
+            else -> { } // NO OP
         }
     }
 
