@@ -64,7 +64,7 @@ class QRCodeAuthViewModel @Inject constructor(
     private var lastState: QRCodeAuthUiStateType? = null
     private var isStarted = false
 
-    fun start(savedInstanceState: Bundle?) {
+    fun start(savedInstanceState: Bundle? = null) {
         if (isStarted) return
         isStarted = true
 
