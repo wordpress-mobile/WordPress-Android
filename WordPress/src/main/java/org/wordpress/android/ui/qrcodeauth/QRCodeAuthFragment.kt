@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.QrcodeauthFragmentBinding
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
@@ -122,6 +123,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     }
 
     private fun launchScanner() {
+        viewModel.track(Stat.QRLOGIN_SCANNER_DISPLAYED)
         val scanner = GmsBarcodeScanning.getClient(requireContext())
         scanner.startScan()
                 .addOnSuccessListener { barcode -> viewModel.onScanSuccess(barcode.rawValue) }
