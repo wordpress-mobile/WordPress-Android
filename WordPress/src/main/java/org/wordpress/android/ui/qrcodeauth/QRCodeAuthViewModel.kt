@@ -70,7 +70,7 @@ class QRCodeAuthViewModel @Inject constructor(
         extractQueryParamsIfValid(scannedValue)
 
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
-           // todo: handle error
+            // todo: handle error
         } else {
             postUiState(uiStateMapper.mapLoading())
             validateScan(data = data.toString(), token = token.toString())
@@ -79,16 +79,19 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun validateScan(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-           // todo: handle error
+            // todo: handle error
             return
         }
 
         // todo: add authStore.validate and remove below
-        postUiState(uiStateMapper.mapValidated(
-                "location",
-                "browser",
-                this::authenticateClicked,
-                this::cancelClicked))
+        postUiState(
+                uiStateMapper.mapValidated(
+                        "location",
+                        "browser",
+                        this::authenticateClicked,
+                        this::cancelClicked
+                )
+        )
     }
 
     private fun extractQueryParamsIfValid(scannedValue: String?) {
