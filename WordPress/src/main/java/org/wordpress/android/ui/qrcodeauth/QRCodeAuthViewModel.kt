@@ -17,11 +17,13 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDi
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthDialogModel.ShowDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 @HiltViewModel
 class QRCodeAuthViewModel @Inject constructor(
     private val uiStateMapper: QRCodeAuthUiStateMapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val validator: QRCodeAuthValidator
 ) : ViewModel() {
     private val _actionEvents = Channel<QRCodeAuthActionEvent>(Channel.BUFFERED)
@@ -66,12 +68,21 @@ class QRCodeAuthViewModel @Inject constructor(
     private fun handleScan(scannedValue: String?) {
         extractQueryParamsIfValid(scannedValue)
 
-        // todo: implement the remainder of handle scan to account for error
-        validateScan()
+        if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
+           // todo: handle error
+        } else {
+            postUiState(uiStateMapper.mapLoading())
+            validateScan(data = data.toString(), token = token.toString())
+        }
     }
 
-    private fun validateScan() {
-        // todo: implement validate scan call instead of this fake call
+    private fun validateScan(data: String, token: String) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+           // todo: handle error
+            return
+        }
+
+        // todo: add authStore.validate and remove below
         postUiState(uiStateMapper.mapValidated(
                 "location",
                 "browser",
