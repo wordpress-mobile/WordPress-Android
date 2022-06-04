@@ -3,7 +3,10 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.fluxc.store.stats.insights.MostPopularInsightsStore
 import org.wordpress.android.modules.BG_THREAD
@@ -14,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -28,11 +32,13 @@ class MostPopularInsightsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val mostPopularStore: MostPopularInsightsStore,
+    private val postStore: PostStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider,
     private val statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig,
-    private val popupMenuHandler: ItemPopupMenuHandler
+    private val popupMenuHandler: ItemPopupMenuHandler,
+    private val actionCardHandler: ActionCardHandler
 ) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsMostPopularModel? {
         return mostPopularStore.getMostPopularInsights(statsSiteProvider.siteModel)
@@ -58,7 +64,9 @@ class MostPopularInsightsUseCase
 
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
+
         items.add(buildTitle())
+
         if (statsRevampV2FeatureConfig.isEnabled() &&
                 domainModel.highestDayPercent == 0.0 &&
                 domainModel.highestHourPercent == 0.0) {
@@ -89,7 +97,21 @@ class MostPopularInsightsUseCase
                     )
             )
         }
+
+        if (statsRevampV2FeatureConfig.isEnabled()) {
+            addActionCards(domainModel)
+        }
         return items
+    }
+
+    private fun addActionCards(domainModel: InsightsMostPopularModel) {
+        val popular = domainModel.highestDayOfWeek > 0 || domainModel.highestHour > 0
+        if (popular) actionCardHandler.display(InsightType.ACTION_REMINDER)
+
+        val drafts = postStore.getPostsForSite(statsSiteProvider.siteModel).firstOrNull {
+            PostStatus.fromPost(it) == PostStatus.DRAFT
+        }
+        if (drafts != null) actionCardHandler.display(InsightType.ACTION_SCHEDULE)
     }
 
     private fun buildTitle() = Title(

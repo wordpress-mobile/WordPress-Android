@@ -506,6 +506,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                             data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                             isNewSite = true
                     )
+                } else {
+                    viewModel.onSitePicked()
                 }
             }
             RequestCodes.EDIT_LANDING_PAGE -> {

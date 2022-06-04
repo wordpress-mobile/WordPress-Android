@@ -914,9 +914,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 })
         );
         mEditorBloggingPromptsViewModel.getOnBloggingPromptLoaded().observe(this, event -> {
-            event.applyIfNotHandled(promptContent -> {
+            event.applyIfNotHandled(loadedPrompt -> {
                     mEditPostRepository.updateAsync(postModel -> {
-                        postModel.setContent(promptContent);
+                        postModel.setContent(loadedPrompt.getContent());
+                        postModel.setAnsweredPromptId(loadedPrompt.getPromptId());
                         return true;
                     }, (postModel, result) -> {
                         refreshEditorContent();
@@ -1908,8 +1909,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // We're using a separate cache in WPAndroid and RN's Gutenberg editor so we need to reload the image
         // in the preview screen using WPAndroid's image loader. We create a resized url using Photon service and
         // device's max width to display a smaller image that can load faster and act as a placeholder.
-        int displayWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getBaseContext()),
-                DisplayUtils.getDisplayPixelHeight(getBaseContext()));
+        int displayWidth = Math.max(DisplayUtils.getWindowPixelWidth(getBaseContext()),
+                DisplayUtils.getWindowPixelHeight(getBaseContext()));
 
         int margin = getResources().getDimensionPixelSize(R.dimen.preview_image_view_margin);
         int maxWidth = displayWidth - (margin * 2);

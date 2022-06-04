@@ -88,7 +88,7 @@ class QuickStartCardSourceTest : BaseUnitTest() {
         site = SiteModel()
         site.id = siteLocalId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(appPrefsWrapper.getLastSelectedQuickStartType()).thenReturn(NewSiteQuickStartType)
+        whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(NewSiteQuickStartType)
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         whenever(quickStartUtilsWrapper.isQuickStartAvailableForTheSite(site)).thenReturn(true)
         quickStartRepository = QuickStartRepository(

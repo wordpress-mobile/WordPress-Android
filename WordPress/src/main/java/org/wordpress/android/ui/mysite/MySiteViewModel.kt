@@ -1,4 +1,5 @@
 @file:Suppress("MaximumLineLength")
+
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
@@ -14,14 +15,18 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
@@ -85,6 +90,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTracker
+import org.wordpress.android.ui.quickstart.QuickStartType.NewSiteQuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -150,7 +156,8 @@ class MySiteViewModel @Inject constructor(
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val quickStartTracker: QuickStartTracker
+    private val quickStartTracker: QuickStartTracker,
+    private val dispatcher: Dispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -283,6 +290,10 @@ class MySiteViewModel @Inject constructor(
             _onSnackbarMessage
                     .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
         }
+    }
+
+    init {
+        dispatcher.register(this)
     }
 
     @Suppress("LongParameterList")
@@ -557,7 +568,7 @@ class MySiteViewModel @Inject constructor(
     private fun buildNoSiteState(): NoSites {
         // Hide actionable empty view image when screen height is under specified min height.
         val shouldShowImage = !buildConfigWrapper.isJetpackApp &&
-                displayUtilsWrapper.getDisplayPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
+                displayUtilsWrapper.getWindowPixelHeight() >= MIN_DISPLAY_PX_HEIGHT_NO_SITE_IMAGE
         return NoSites(
                 tabsUiState = TabsUiState(showTabs = false, tabUiStates = emptyList()),
                 siteInfoToolbarViewParams = SiteInfoToolbarViewParams(
@@ -1037,6 +1048,7 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.clear()
         quickStartRepository.clear()
         mySiteSourceManager.clear()
+        dispatcher.unregister(this)
         super.onCleared()
     }
 
@@ -1049,6 +1061,15 @@ class MySiteViewModel @Inject constructor(
     fun onCreateSiteResult() {
         isDefaultABExperimentTabSet = false
         selectDefaultTabIfNeeded()
+    }
+
+    fun onSitePicked() {
+        selectedSiteRepository.getSelectedSite()?.let {
+            val siteLocalId = it.id.toLong()
+            val lastSelectedQuickStartType = appPrefsWrapper.getLastSelectedQuickStartTypeForSite(siteLocalId)
+            quickStartRepository.checkAndSetQuickStartType(lastSelectedQuickStartType == NewSiteQuickStartType)
+        }
+        mySiteSourceManager.refreshQuickStart()
     }
 
     fun performFirstStepAfterSiteCreation(
@@ -1081,7 +1102,7 @@ class MySiteViewModel @Inject constructor(
         isSiteTitleTaskCompleted: Boolean,
         isNewSite: Boolean
     ) {
-        quickStartRepository.checkAndSetQuickStartType(isNewSite)
+        quickStartRepository.checkAndSetQuickStartType(isNewSite = isNewSite)
         if (quickStartDynamicCardsFeatureConfig.isEnabled()) {
             startQuickStart(siteLocalId, isSiteTitleTaskCompleted)
         } else {
@@ -1138,7 +1159,7 @@ class MySiteViewModel @Inject constructor(
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+                        Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
                 PostCardType.DRAFT -> _onNavigation.value =
                         Event(SiteNavigationAction.EditDraftPost(site, params.postId))
                 PostCardType.SCHEDULED -> _onNavigation.value =
@@ -1285,6 +1306,18 @@ class MySiteViewModel @Inject constructor(
         ) ?: false)
     }
 
+    // FluxC events
+    @Subscribe(threadMode = MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (!event.isError) {
+            event.post?.let {
+                if (event.post.answeredPromptId > 0 && event.isFirstTimePublish) {
+                    mySiteSourceManager.refreshBloggingPrompts(true)
+                }
+            }
+        }
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
@@ -1330,7 +1363,7 @@ class MySiteViewModel @Inject constructor(
         fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
             tabUiState.copy(
                     showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
-                                quickStartTabStep.isStarted,
+                            quickStartTabStep.isStarted,
                     pendingTask = quickStartTabStep?.task
             )
         }

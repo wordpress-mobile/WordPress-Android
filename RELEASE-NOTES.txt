@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+20.1
+-----
+* [*] Site creation: enhances the design selection screen with recommended designs [https://github.com/wordpress-mobile/WordPress-Android/pull/16468]
+
 20.0
 -----
 * [*] Block Editor: A11y: Improve text read by screen readers for BottomSheetSelectControl [https://github.com/WordPress/gutenberg/pull/41036]

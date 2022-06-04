@@ -1,0 +1,9 @@
+19.9:
+- Uygulama içi site alan adı satın alma işlemleri
+- Düzenleyicide blokları sürükleyip bırakma olanağı
+- Manşet bloklarında daha iyi renk kontrastı
+- Düğmeler bloku biçimlendirme seçenekleri artık görünür durumda
+- Yeni ve mevcut siteler için ayrı Hızlı Başlangıç görevleri
+- Yayınlanan sayfalar için Bağlantıyı Kopyala işlevi
+- Galeri bloklarında Bağlantı Yeri/Görüntü Boyutu ayarları
+- Desteklenmeyen blok düzenleyicide tur başlığı yok

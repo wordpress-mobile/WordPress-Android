@@ -85,7 +85,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() = test {
-        whenever(appPrefsWrapper.getLastSelectedQuickStartType()).thenReturn(quickStartType)
+        whenever(appPrefsWrapper.getLastSelectedQuickStartTypeForSite(any())).thenReturn(quickStartType)
         whenever(quickStartExistingUsersV2FeatureConfig.isEnabled()).thenReturn(false)
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,

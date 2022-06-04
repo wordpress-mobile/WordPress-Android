@@ -1133,7 +1133,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         // force the search view to take up as much horizontal space as possible (without this
         // it looks truncated on landscape)
-        int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+        int maxWidth = DisplayUtils.getWindowPixelWidth(requireActivity());
         mSearchView.setMaxWidth(maxWidth);
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions

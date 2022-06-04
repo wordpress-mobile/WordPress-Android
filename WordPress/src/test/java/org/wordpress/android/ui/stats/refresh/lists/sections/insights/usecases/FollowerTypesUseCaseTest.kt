@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
@@ -49,6 +50,7 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
     private val wpComTitle = "WordPress"
     private val emailTitle = "Email"
     private val socialTitle = "Social"
+    private val totalLabel = "Totals"
     private val contentDescriptionValue = "value, percentage of total followers"
     private val contentDescription = "title: $contentDescriptionValue"
 
@@ -84,6 +86,7 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.stats_insights_social)).then { socialTitle }
         whenever(resourceProvider.getString(eq(R.string.stats_value_percent), any<String>(), any<String>()))
                 .then { "${it.arguments[1]} (${it.arguments[2]}%)" }
+        whenever(resourceProvider.getString(R.string.stats_follower_types_pie_chart_total_label)).then { totalLabel }
     }
 
     @Test
@@ -99,9 +102,10 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
 
         assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(3)
+            assertThat(this).hasSize(4)
+            assertThat(this[0].type).isEqualTo(PIE_CHART)
 
-            for (i in 0..2) {
+            for (i in 1..3) {
                 assertThat(this[i].type).isEqualTo(LIST_ITEM)
                 assertItem(this[i] as ListItem)
             }

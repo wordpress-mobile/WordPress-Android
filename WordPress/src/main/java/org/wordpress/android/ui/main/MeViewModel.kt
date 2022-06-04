@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
@@ -89,6 +90,7 @@ class MeViewModel
         _showScanLoginCode.value = Event(true)
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onRecommendTheApp() {
         when (val state = _recommendUiState.value) {
             is ApiFetchedResult -> {

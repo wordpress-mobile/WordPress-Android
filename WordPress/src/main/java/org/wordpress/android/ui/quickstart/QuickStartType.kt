@@ -37,6 +37,7 @@ sealed class QuickStartType(
         siteLocalId: Long,
         isSiteTitleTaskCompleted: Boolean
     ) {
+        quickStartStore.setQuickStartCompleted(siteLocalId, false)
         when (this) {
             is NewSiteQuickStartType -> {
                 quickStartStore.setDoneTask(siteLocalId, QuickStartNewSiteTask.CREATE_SITE, true)
@@ -53,8 +54,8 @@ sealed class QuickStartType(
         return when (this) {
             is NewSiteQuickStartType -> !isQuickStartCompleted &&
                     quickStartStore.hasDoneTask(siteLocalId, QuickStartNewSiteTask.CREATE_SITE)
-            // TODO: ashiagr update isQuickStartInProgress condition for ExistingSiteQuickStartType
-            is ExistingSiteQuickStartType -> !isQuickStartCompleted
+            is ExistingSiteQuickStartType -> quickStartStore.isQuickStartStatusSet(siteLocalId) &&
+                    !isQuickStartCompleted
         }
     }
 

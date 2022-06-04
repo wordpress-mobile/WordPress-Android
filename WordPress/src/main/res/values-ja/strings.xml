@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 09:54:08+0000
+Translation-Revision-Date: 2022-05-27 14:35:23+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
@@ -172,6 +172,7 @@ Language: ja_JP
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">このサイトでは XML-RPC コールがブロックされているようです (エラーコード401)。 ログインに失敗する場合は、ヘルプアイコンをタップして FAQ をご確認ください。</string>
     <string name="login_error_xml_rpc_cannot_read_site">ご指定の URL の WordPress サイトを読み込めません。 ヘルプアイコンをタップして FAQ を表示してください。</string>
     <string name="login_error_xml_rpc_services_disabled">このサイトでは XML-RPC サービスが無効になっています。</string>
+    <string name="my_site_menu_tab_title">メニュー</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">検索内容に WordPress.com のドメインではサポートされていない文字が含まれています。 サポートされている文字は A–Z、a–z、0–9です。</string>
     <string name="my_site_error_within_card_subtitle">インターネット接続を確認してページを更新してください。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">統計情報を表示</string>
@@ -486,6 +487,7 @@ Language: ja_JP
     <string name="gutenberg_native_custom_url">カスタム URL</string>
     <string name="gutenberg_native_column_d">カラム %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">スクリーンリーダーのユーザーを支援するため、リンクについて簡単に説明してください</string>
+    <string name="gutenberg_native_add_blocks">ブロックを追加</string>
     <string name="login_no_jetpack_sites">Jetpack サイトが見つかりませんでした</string>
     <string name="gutenberg_native_what_is_alt_text">代替テキストとは ?</string>
     <string name="gutenberg_native_transform_block">ブロックを変換…</string>
@@ -566,6 +568,7 @@ Language: ja_JP
     <string name="scan_fixing_threats_title_singular">脅威の修正</string>
     <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
     <string name="quick_start_card_menu_unpin">これを固定解除</string>
+    <string name="quick_start_list_view_site_title">サイトを表示</string>
     <string name="quick_start_list_follow_site_subtitle">参考になるサイトを探してフォローしましょう。</string>
     <string name="quick_start_list_enable_sharing_subtitle">新しい投稿を自分のソーシャルメディアと自動的に共有しましょう。</string>
     <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。</string>
@@ -1677,6 +1680,7 @@ Language: ja_JP
     <string name="quick_start_dialog_enable_sharing_message">新しい投稿を自分のソーシャルメディアアカウントと自動的に共有しましょう。</string>
     <string name="quick_start_remove_next_steps_menu_title">これを削除</string>
     <string name="quick_start_dialog_check_stats_title">サイト統計情報を確認</string>
+    <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
     <string name="quick_start_dialog_remove_next_steps_message">「次のステップ」を削除すると、このサイトのすべてのツアーが非表示になります。この操作を元に戻すことはできません。</string>
     <string name="quick_start_dialog_remove_next_steps_title">次のステップを削除</string>
     <string name="quick_start_complete_view_subtitle">リストが完了しました。おめでとうございます。</string>
@@ -1843,6 +1847,7 @@ Language: ja_JP
     <string name="page_permanently_deleted">ページは完全に削除されました</string>
     <string name="quick_start_focus_point_description">ここをタップ</string>
     <string name="quick_start_list_create_site_title">サイトの作成</string>
+    <string name="quick_start_completed_tour_subtitle">リストから消したいものがありますか ?</string>
     <string name="quick_start_list_create_site_subtitle">サイトを立ち上げましょう。</string>
     <string name="quick_start_dialog_view_site_title">サイトを表示</string>
     <string name="quick_start_dialog_share_site_title">サイトを共有</string>

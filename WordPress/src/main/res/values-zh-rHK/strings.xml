@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 11:54:08+0000
+Translation-Revision-Date: 2022-05-27 14:42:45+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_TW
@@ -48,6 +48,7 @@ Language: zh_TW
     <string name="photo_picker_video_thumbnail_selected">已選取影片</string>
     <string name="photo_picker_media_thumbnail_content_description">媒體縮圖</string>
     <string name="stats_insights_popular_title">🔥 最熱門的時間</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
     <string name="stats_insights_views_and_visitors_visitors_negative">你本週的訪客比上週減少了 %1$s。</string>
     <string name="stats_insights_views_and_visitors_visitors_positive">你本週的訪客比上週增加了 %1$s。</string>
     <string name="stats_insights_views_and_visitors_views_negative">你本週的瀏覽次數比上週減少了 %1$s。</string>
@@ -146,6 +147,7 @@ Language: zh_TW
     <string name="site_creation_intent_beauty">美妝</string>
     <string name="site_creation_intent_automotive">汽車</string>
     <string name="site_creation_intent_art">藝術</string>
+    <string name="new_site_creation_intents_input_hint">例如： 時尚、詩歌、政治</string>
     <string name="new_site_creation_intents_title">網站主題</string>
     <string name="quick_start_site_menu_tab_message_short">點選「&lt;b&gt;%1$s&lt;/b&gt;」以繼續。</string>
     <string name="my_site_blogging_prompt_card_menu_remove">從儀表板移除</string>
@@ -170,6 +172,7 @@ Language: zh_TW
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">這個網站似乎封鎖了 XML-RPC 呼叫 (錯誤代碼 401)。 如果嘗試登入失敗，請點選說明圖示，查看常見問題集。</string>
     <string name="login_error_xml_rpc_cannot_read_site">無法透過該 URL 讀取 WordPress 網站。 請點選說明圖示，查看常見問題集。</string>
     <string name="login_error_xml_rpc_services_disabled">這個網站尚未開啟 XML-RPC 服務</string>
+    <string name="my_site_menu_tab_title">選單</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">你的搜尋包含 WordPress.com 網域不支援的字元。 允許使用以下字元：A–Z、a–z、0–9。</string>
     <string name="my_site_error_within_card_subtitle">請檢查你的網際網路連線並重新整理頁面。</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">前往統計資料</string>
@@ -484,6 +487,7 @@ Language: zh_TW
     <string name="gutenberg_native_custom_url">自訂 URL</string>
     <string name="gutenberg_native_column_d">欄 %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">簡述連結以協助螢幕閱讀器使用者</string>
+    <string name="gutenberg_native_add_blocks">新增區塊</string>
     <string name="login_no_jetpack_sites">找不到任何 Jetpack 網站</string>
     <string name="gutenberg_native_what_is_alt_text">替代文字是什麼？</string>
     <string name="gutenberg_native_transform_s_to">將 %s 轉換為</string>
@@ -1675,6 +1679,7 @@ Language: zh_TW
     <string name="quick_start_dialog_enable_sharing_title">啟用文章分享功能</string>
     <string name="quick_start_dialog_enable_sharing_message">自動將新文章分享到社交媒體帳號。</string>
     <string name="quick_start_dialog_check_stats_title">檢視網站統計資料</string>
+    <string name="quick_start_dialog_check_stats_message">隨時掌握你的網站成效。</string>
     <string name="quick_start_dialog_remove_next_steps_message">移除後續步驟會隱藏此網站上的所有導覽。此動作無法復原。</string>
     <string name="quick_start_dialog_remove_next_steps_title">移除後續步驟</string>
     <string name="quick_start_remove_next_steps_menu_title">移除此項</string>
@@ -1842,6 +1847,7 @@ Language: zh_TW
     <string name="set_parent">設定上層項目</string>
     <string name="quick_start_focus_point_description">點選這裡</string>
     <string name="quick_start_list_create_site_title">建立網站</string>
+    <string name="quick_start_completed_tour_subtitle">清單中又少了一件事情，感覺不錯吧！</string>
     <string name="quick_start_list_create_site_subtitle">讓你的網站上線運作。</string>
     <string name="quick_start_dialog_view_site_title">檢視你的網站</string>
     <string name="quick_start_dialog_share_site_title">分享你的網站</string>
