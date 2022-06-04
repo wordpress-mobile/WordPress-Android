@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
@@ -12,15 +14,21 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthDialogModel.ShowDismissDialog
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
 import javax.inject.Inject
 
 @HiltViewModel
 class QRCodeAuthViewModel @Inject constructor(
+    private val uiStateMapper: QRCodeAuthUiStateMapper,
     private val validator: QRCodeAuthValidator
 ) : ViewModel() {
     private val _actionEvents = Channel<QRCodeAuthActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
+
+    private val _uiState = MutableStateFlow<QRCodeAuthUiState>(Loading)
+    val uiState: StateFlow<QRCodeAuthUiState> = _uiState
 
     private var data: String? = null
     private var token: String? = null
@@ -29,6 +37,8 @@ class QRCodeAuthViewModel @Inject constructor(
     fun start() {
         if (isStarted) return
         isStarted = true
+
+        updateUiStateAndLaunchScanner()
     }
 
     //  https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=asdfadsfa&data=asdfasdf
@@ -45,8 +55,28 @@ class QRCodeAuthViewModel @Inject constructor(
         postActionEvent(LaunchDismissDialog(ShowDismissDialog))
     }
 
+    private fun cancelClicked() {
+        postActionEvent(FinishActivity)
+    }
+
+    private fun authenticateClicked() {
+        // todo: implement
+    }
+
     private fun handleScan(scannedValue: String?) {
         extractQueryParamsIfValid(scannedValue)
+
+        // todo: implement the remainder of handle scan to account for error
+        validateScan()
+    }
+
+    private fun validateScan() {
+        // todo: implement validate scan call instead of this fake call
+        postUiState(uiStateMapper.mapValidated(
+                "location",
+                "browser",
+                this::authenticateClicked,
+                this::cancelClicked))
     }
 
     private fun extractQueryParamsIfValid(scannedValue: String?) {
@@ -59,6 +89,16 @@ class QRCodeAuthViewModel @Inject constructor(
         }
     }
 
+    private fun updateUiStateAndLaunchScanner() {
+        postUiState(uiStateMapper.mapScanning())
+        postActionEvent(LaunchScanner)
+    }
+
+    private fun postUiState(state: QRCodeAuthUiState) {
+        viewModelScope.launch {
+            _uiState.value = state
+        }
+    }
     private fun postActionEvent(actionEvent: QRCodeAuthActionEvent) {
         viewModelScope.launch {
             _actionEvents.send(actionEvent)
