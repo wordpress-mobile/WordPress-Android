@@ -37,7 +37,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         with(QrcodeauthFragmentBinding.bind(view)) {
             initBackPressHandler()
             observeViewModel()
-            startViewModel()
+            startViewModel(savedInstanceState)
         }
     }
 
@@ -47,8 +47,8 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         viewModel.uiState.onEach { renderUi(it) }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun startViewModel() {
-        viewModel.start()
+    private fun startViewModel(savedInstanceState: Bundle?) {
+        viewModel.start(savedInstanceState)
     }
 
     private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
@@ -102,6 +102,11 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
                         viewModel.onBackPressed()
                     }
                 })
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        viewModel.writeToBundle(outState)
+        super.onSaveInstanceState(outState)
     }
 
     @Suppress("MagicNumber")

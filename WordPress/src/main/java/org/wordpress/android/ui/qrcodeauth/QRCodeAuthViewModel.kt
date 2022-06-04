@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.qrcodeauth
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,15 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthDialogModel.ShowDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Validated
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATING
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTH_FAILED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.DONE
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.EXPIRED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.INVALID_DATA
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.LOADING
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.NO_INTERNET
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.SCANNING
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.VALIDATED
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
@@ -36,13 +46,51 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private var data: String? = null
     private var token: String? = null
+    private var location: String? = null
+    private var browser: String? = null
+    private var lastState: QRCodeAuthUiStateType? = null
     private var isStarted = false
 
-    fun start() {
+    fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
 
-        updateUiStateAndLaunchScanner()
+        extractSavedInstanceStateIfNeeded(savedInstanceState)
+        startOrRestoreUiState()
+    }
+
+    private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            data = savedInstanceState.getString(DATA_KEY, null)
+            token = savedInstanceState.getString(TOKEN_KEY, null)
+            browser = savedInstanceState.getString(BROWSER_KEY, null)
+            location = savedInstanceState.getString(LOCATION_KEY, null)
+            lastState = QRCodeAuthUiStateType.fromString(savedInstanceState.getString(LAST_STATE_KEY, null))
+        }
+    }
+
+    private fun startOrRestoreUiState() {
+        when (lastState) {
+            LOADING, SCANNING -> updateUiStateAndLaunchScanner()
+            VALIDATED -> postUiState(
+                    uiStateMapper.mapValidated(
+                            location,
+                            browser,
+                            this::authenticateClicked,
+                            this::cancelClicked
+                    )
+            )
+            AUTHENTICATING -> postUiState(uiStateMapper.mapAuthenticating(location = location, browser = browser))
+            DONE -> postUiState(uiStateMapper.mapDone(this::dismissClicked))
+            // errors
+            INVALID_DATA -> postUiState(uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked))
+            AUTH_FAILED -> postUiState(uiStateMapper.mapAuthFailed(this::scanAgainClicked, this::cancelClicked))
+            EXPIRED -> postUiState(uiStateMapper.mapExpired(this::scanAgainClicked, this::cancelClicked))
+            NO_INTERNET -> {
+                postUiState(uiStateMapper.mapNoInternet(this::scanAgainClicked, this::cancelClicked))
+            }
+            else -> updateUiStateAndLaunchScanner()
+        }
     }
 
     //  https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=asdfadsfa&data=asdfasdf
@@ -65,6 +113,10 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun scanAgainClicked() {
         postActionEvent(LaunchScanner)
+    }
+
+    private fun dismissClicked() {
+        postActionEvent(FinishActivity)
     }
 
     private fun authenticateClicked() {
@@ -147,9 +199,20 @@ class QRCodeAuthViewModel @Inject constructor(
         }
     }
 
+    fun writeToBundle(outState: Bundle) {
+        outState.putString(DATA_KEY, data)
+        outState.putString(TOKEN_KEY, data)
+        outState.putString(BROWSER_KEY, browser)
+        outState.putString(LOCATION_KEY, location)
+        outState.putString(LAST_STATE_KEY, uiState.value.type?.label)
+    }
+
     companion object {
         const val TAG_DISMISS_DIALOG = "TAG_DISMISS_DIALOG"
         const val TOKEN_KEY = "token"
         const val DATA_KEY = "data"
+        const val BROWSER_KEY = "browser"
+        const val LOCATION_KEY = "location"
+        const val LAST_STATE_KEY = "last_state"
     }
 }
