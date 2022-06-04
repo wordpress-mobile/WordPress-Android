@@ -75,14 +75,14 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         DEFAULT_MODE,
         REBLOG_SELECT_MODE,
         REBLOG_CONTINUE_MODE,
-        HIDE_SELF_HOSTED_MODE;
+        BLOGGING_PROMPTS_MODE;
 
         public boolean isReblogMode() {
             return this == REBLOG_SELECT_MODE || this == REBLOG_CONTINUE_MODE;
         }
 
-        public boolean isHideSelfHostedMode() {
-            return this == HIDE_SELF_HOSTED_MODE;
+        public boolean isBloggingPromptsMode() {
+            return this == BLOGGING_PROMPTS_MODE;
         }
     }
 
@@ -684,7 +684,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public List<SiteModel> getBlogsForCurrentView() {
-        if (mSitePickerMode.isReblogMode() || mSitePickerMode.isHideSelfHostedMode()) {
+        if (mSitePickerMode.isReblogMode() || mSitePickerMode.isBloggingPromptsMode()) {
             // If we are reblogging we only want to select or search into the WPCom visible sites.
             return mSiteStore.getVisibleSitesAccessedViaWPCom();
         } else if (mIsInSearchMode) {
