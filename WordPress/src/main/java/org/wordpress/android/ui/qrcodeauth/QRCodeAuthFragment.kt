@@ -19,6 +19,7 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Error
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Scanning
 import org.wordpress.android.ui.utils.UiHelpers
@@ -26,6 +27,7 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Suppress("TooManyFunctions")
 class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
 
@@ -65,7 +67,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         uiHelpers.updateVisibility(loadingLayout.loadingContainer, uiState.loadingVisibility)
         when (uiState) {
             is Content -> { applyContentState(uiState) }
-            is Error -> { } // TODO
+            is Error -> { applyErrorState(uiState) }
             is Loading -> { } // NO OP
             is Scanning -> { } // NO OP
             else -> { } // NO OP
@@ -90,6 +92,21 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
             uiHelpers.updateVisibility(contentLayout.contentSecondaryAction, action.isVisible)
             contentLayout.contentSecondaryAction.setOnClickListener { action.clickAction?.invoke() }
             contentLayout.contentSecondaryAction.isEnabled = action.isEnabled
+        }
+    }
+
+    private fun QrcodeauthFragmentBinding.applyErrorState(uiState: Error) {
+        uiHelpers.updateVisibility(errorLayout.errorContainer, uiState.errorVisibility)
+        uiHelpers.setImageOrHide(errorLayout.errorImage, uiState.image)
+        uiHelpers.setTextOrHide(errorLayout.errorTitle, uiState.title)
+        uiHelpers.setTextOrHide(errorLayout.errorSubtitle, uiState.subtitle)
+        uiState.primaryAction?.let { action ->
+            uiHelpers.setTextOrHide(errorLayout.errorPrimaryAction, action.label)
+            errorLayout.errorPrimaryAction.setOnClickListener { action.clickAction.invoke() }
+        }
+        uiState.secondaryAction?.let { action ->
+            uiHelpers.setTextOrHide(errorLayout.errorSecondaryAction, action.label)
+            errorLayout.errorSecondaryAction.setOnClickListener { action.clickAction.invoke() }
         }
     }
 
