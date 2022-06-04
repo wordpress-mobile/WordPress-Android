@@ -64,11 +64,32 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         uiHelpers.updateVisibility(errorLayout.errorContainer, uiState.errorVisibility)
         uiHelpers.updateVisibility(loadingLayout.loadingContainer, uiState.loadingVisibility)
         when (uiState) {
-            is Content -> { } // TODO
+            is Content -> { applyContentState(uiState) }
             is Error -> { } // TODO
             is Loading -> { } // NO OP
             is Scanning -> { } // NO OP
             else -> { } // NO OP
+        }
+    }
+
+    private fun QrcodeauthFragmentBinding.applyContentState(uiState: Content) {
+        uiHelpers.updateVisibility(contentLayout.contentContainer, uiState.contentVisibility)
+        uiHelpers.updateVisibility(contentLayout.progress, uiState.isProgressShowing)
+        uiHelpers.setTextOrHide(contentLayout.contentTitle, uiState.title)
+        uiHelpers.setTextOrHide(contentLayout.contentSubtitle, uiState.subtitle)
+        uiHelpers.setImageOrHide(contentLayout.contentImage, uiState.image)
+        contentLayout.contentContainer.alpha = uiState.alpha
+        uiState.primaryAction?.let { action ->
+            uiHelpers.setTextOrHide(contentLayout.contentPrimaryAction, action.label)
+            uiHelpers.updateVisibility(contentLayout.contentPrimaryAction, action.isVisible)
+            contentLayout.contentPrimaryAction.setOnClickListener { action.clickAction?.invoke() }
+            contentLayout.contentPrimaryAction.isEnabled = action.isEnabled
+        }
+        uiState.secondaryAction?.let { action ->
+            uiHelpers.setTextOrHide(contentLayout.contentSecondaryAction, action.label)
+            uiHelpers.updateVisibility(contentLayout.contentSecondaryAction, action.isVisible)
+            contentLayout.contentSecondaryAction.setOnClickListener { action.clickAction?.invoke() }
+            contentLayout.contentSecondaryAction.isEnabled = action.isEnabled
         }
     }
 
