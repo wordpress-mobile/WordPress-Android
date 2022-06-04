@@ -2,10 +2,10 @@ package org.wordpress.android.ui.qrcodeauth
 
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DonePrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DoneSecondaryAction
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingPrimaryAction
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingSecondaryAction
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DonePrimaryAction
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DoneSecondaryAction
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorPrimaryAction
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorSecondaryAction
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ValidatedPrimaryAction
@@ -118,7 +118,10 @@ sealed class QRCodeAuthUiState {
         ) : Content() {
             override val type = VALIDATED
             override val title: UiString = if (browser == null) {
-                UiStringResWithParams(R.string.qrcode_auth_flow_validated_default_title, listOf(UiStringText(location ?: " ")))
+                UiStringResWithParams(
+                        R.string.qrcode_auth_flow_validated_default_title,
+                        listOf(UiStringText(location ?: " "))
+                )
             } else {
                 UiStringResWithParams(
                         R.string.qrcode_auth_flow_validated_title,
