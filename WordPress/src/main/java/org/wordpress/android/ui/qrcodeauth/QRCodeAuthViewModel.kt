@@ -20,6 +20,7 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
 class QRCodeAuthViewModel @Inject constructor(
     private val uiStateMapper: QRCodeAuthUiStateMapper,
