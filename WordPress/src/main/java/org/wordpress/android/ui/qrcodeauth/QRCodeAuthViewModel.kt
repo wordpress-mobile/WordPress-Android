@@ -167,6 +167,7 @@ class QRCodeAuthViewModel @Inject constructor(
         }
     }
 
+    @Suppress("MagicNumber")
     private fun authenticate(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             postUiState(uiStateMapper.mapNoInternet(this::scanAgainClicked, this::cancelClicked))
