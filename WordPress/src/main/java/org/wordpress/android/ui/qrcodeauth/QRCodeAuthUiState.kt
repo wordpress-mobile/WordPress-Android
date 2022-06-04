@@ -118,7 +118,7 @@ sealed class QRCodeAuthUiState {
         ) : Content() {
             override val type = VALIDATED
             override val title: UiString = if (browser == null) {
-                UiStringResWithParams(R.string.qrcode_auth_flow_validated_title, listOf(UiStringText(location ?: " ")))
+                UiStringResWithParams(R.string.qrcode_auth_flow_validated_default_title, listOf(UiStringText(location ?: " ")))
             } else {
                 UiStringResWithParams(
                         R.string.qrcode_auth_flow_validated_title,
