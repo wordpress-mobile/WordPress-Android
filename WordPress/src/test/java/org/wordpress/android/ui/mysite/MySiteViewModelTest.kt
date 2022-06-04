@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -1649,7 +1650,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 requireNotNull(onBloggingPromptSkipClicked).invoke()
 
                 verify(appPrefsWrapper).setSkippedPromptDay(any())
-                verify(mySiteSourceManager).refreshBloggingPrompt()
+                verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
 
                 assertThat(snackbars.size).isEqualTo(1)
 
