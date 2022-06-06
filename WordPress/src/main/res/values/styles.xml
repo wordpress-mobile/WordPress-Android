@@ -1512,6 +1512,34 @@
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
     </style>
 
+    <!-- Site Creation Header Styles -->
+
+    <style name="SiteCreationHeaderV2Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="SiteCreationHeaderV2Title" parent="SiteCreationHeaderV2Text">
+        <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">3</item>
+        <item name="fontFamily">serif</item>
+    </style>
+
+    <style name="SiteCreationHeaderV2Subtitle" parent="SiteCreationHeaderV2Text">
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/mlp_titles_bottom_margin</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:alpha">0.6</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
     <!-- Modal Layout Picker Styles -->
 
     <style name="ModalLayoutPickerText">
@@ -1539,6 +1567,8 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
         <item name="android:maxLines">3</item>
         <item name="fontFamily">serif</item>
     </style>
@@ -1573,6 +1603,14 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="fontFamily">serif</item>
+    </style>
+    <style name="ModalLayoutPickerLayoutsSubtitle" parent="ModalLayoutPickerText">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="fontFamily">serif</item>
     </style>
 

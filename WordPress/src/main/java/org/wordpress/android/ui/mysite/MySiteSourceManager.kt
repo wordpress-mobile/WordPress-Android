@@ -103,8 +103,12 @@ class MySiteSourceManager @Inject constructor(
         if (selectedSiteRepository.hasSelectedSite()) quickStartCardSource.refresh()
     }
 
-    fun refreshBloggingPrompt() {
-        bloggingPromptCardSource.refresh()
+    fun refreshBloggingPrompts(onlyCurrentPrompt: Boolean) {
+        if (onlyCurrentPrompt) {
+            bloggingPromptCardSource.refreshTodayPrompt()
+        } else {
+            bloggingPromptCardSource.refresh()
+        }
     }
 
     /* QUICK START */

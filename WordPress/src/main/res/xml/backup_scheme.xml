@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<full-backup-content>
-  <include domain="database" path="wordpress"/>
-  <include domain="database" path="persistentedittext.db"/>
-  <include domain="sharedpref" path="self_signed_certs_truststore.bks"/>
-  <include domain="sharedpref" path="org.wordpress.android_preferences.xml"/>
-</full-backup-content>
+<data-extraction-rules>
+    <cloud-backup>
+        <include
+            domain="database"
+            path="wordpress" />
+        <include
+            domain="database"
+            path="persistentedittext.db" />
+        <include
+            domain="sharedpref"
+            path="self_signed_certs_truststore.bks" />
+        <include
+            domain="sharedpref"
+            path="org.wordpress.android_preferences.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <include
+            domain="database"
+            path="wordpress" />
+        <include
+            domain="database"
+            path="persistentedittext.db" />
+        <include
+            domain="sharedpref"
+            path="self_signed_certs_truststore.bks" />
+        <include
+            domain="sharedpref"
+            path="org.wordpress.android_preferences.xml" />
+    </device-transfer>
+</data-extraction-rules>

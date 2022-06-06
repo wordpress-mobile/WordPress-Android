@@ -21,6 +21,7 @@ import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -38,7 +39,8 @@ class PromptReminderNotifier @Inject constructor(
     val reminderNotificationManager: ReminderNotificationManager,
     val bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     val bloggingPromptsStore: BloggingPromptsStore,
-    val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker
+    val bloggingRemindersAnalyticsTracker: BloggingRemindersAnalyticsTracker,
+    val htmlCompatWrapper: HtmlCompatWrapper
 ) {
     // TODO @RenanLukas replace with remote field in SiteModel after endpoint integration
     var hasOptedInBloggingPromptsReminders = true
@@ -75,7 +77,7 @@ class PromptReminderNotifier @Inject constructor(
             contentTitle = resourceProvider.getString(
                     string.blogging_prompts_answer_prompt_notification_title, SiteUtils.getSiteNameOrHomeURL(site)
             ),
-            contentText = prompt?.text.orEmpty(),
+            contentText = htmlCompatWrapper.fromHtml(prompt?.text.orEmpty()).toString(),
             priority = PRIORITY_DEFAULT,
             category = CATEGORY_REMINDER,
             autoCancel = true,
