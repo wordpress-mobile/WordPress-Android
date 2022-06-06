@@ -118,6 +118,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.File
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -451,7 +452,8 @@ class MySiteViewModel @Inject constructor(
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
-                                onAnswerClick = this::onBloggingPromptAnswerClick
+                                onAnswerClick = this::onBloggingPromptAnswerClick,
+                                onSkipClick = this::onBloggingPromptSkipClicked
                         )
                 ),
                 QuickLinkRibbonBuilderParams(
@@ -1190,6 +1192,23 @@ class MySiteViewModel @Inject constructor(
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
+    }
+
+    private fun onBloggingPromptSkipClicked() {
+        appPrefsWrapper.setSkippedPromptDay(Date())
+        mySiteSourceManager.refreshBloggingPrompts(true)
+
+        val snackbar = SnackbarMessageHolder(
+                message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
+                buttonTitle = UiStringRes(R.string.undo),
+                buttonAction = {
+                    appPrefsWrapper.setSkippedPromptDay(null)
+                    mySiteSourceManager.refreshBloggingPrompts(true)
+                },
+                isImportant = true
+        )
+
+        _onSnackbarMessage.postValue(Event(snackbar))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
