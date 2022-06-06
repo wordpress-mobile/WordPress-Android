@@ -2006,7 +2006,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void saveResult(boolean saved, boolean uploadNotStarted) {
-        Intent i = getIntent();
+        Intent i = new Intent();
         i.putExtra(EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);

@@ -16,6 +16,8 @@ import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.text.TextUtils
@@ -311,6 +313,16 @@ class AppInitializer @Inject constructor(
         initAnalyticsExperimentPropertiesIfNeeded()
 
         initialized = true
+
+        StrictMode.setVmPolicy(
+                VmPolicy.Builder()
+                // Other StrictMode checks that you've previously added.
+                // ...
+                .detectUnsafeIntentLaunch()
+                .penaltyLog()
+                .penaltyDeath()
+                // Consider also adding penaltyDeath()
+                .build())
     }
 
     private fun initWorkManager() {
