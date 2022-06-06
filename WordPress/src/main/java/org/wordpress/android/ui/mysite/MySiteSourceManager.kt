@@ -28,7 +28,7 @@ class MySiteSourceManager @Inject constructor(
     private val selectedSiteSource: SelectedSiteSource,
     cardsSource: CardsSource,
     siteIconProgressSource: SiteIconProgressSource,
-    val bloggingPromptCardSource: BloggingPromptCardSource,
+    private val bloggingPromptCardSource: BloggingPromptCardSource,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val mySiteSources: List<MySiteSource<*>> = listOf(
