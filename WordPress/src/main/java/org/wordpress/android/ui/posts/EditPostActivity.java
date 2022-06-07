@@ -176,6 +176,7 @@ import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.uploads.PostEvents;
+import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.ProgressEvent;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -975,6 +976,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EventBus.getDefault().register(this);
 
         reattachUploadingMediaForAztec();
+
+        final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
+        PostUploadHandler.setPublishedPostPromptId(promptId);
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
         PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
