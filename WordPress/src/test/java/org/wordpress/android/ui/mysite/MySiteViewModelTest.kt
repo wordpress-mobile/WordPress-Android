@@ -193,6 +193,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private lateinit var bloggingPromptsLearnMore: MutableList<Unit>
     private var answerRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
@@ -393,6 +394,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         shareRequests = mutableListOf()
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
+        bloggingPromptsLearnMore = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -442,6 +444,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             event?.getContentIfNotHandled()?.let {
                 tabNavigation.add(it)
             }
+        }
+        viewModel.onBloggingPromptsLearnMore.observeForever {
+            bloggingPromptsLearnMore.add(Unit)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -2606,6 +2611,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         requireNotNull(quickActionsMediaClickAction).invoke()
 
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
+    }
+
+    @Test
+    fun `when onBloggingPromptsLearnMoreClicked should post value on onBloggingPromptsLearnMore`() {
+        viewModel.onBloggingPromptsLearnMoreClicked()
+        assertThat(bloggingPromptsLearnMore).containsOnly(Unit)
     }
 
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?

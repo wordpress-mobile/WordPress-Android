@@ -25,7 +25,8 @@ class BloggingPromptCardViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val htmlCompatWrapper: HtmlCompatWrapper
+    private val htmlCompatWrapper: HtmlCompatWrapper,
+    private val learnMoreClicked: () -> Unit
 ) : CardViewHolder<MySiteBloggingPrompCardBinding>(
         parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
 ) {
@@ -97,6 +98,10 @@ class BloggingPromptCardViewHolder(
                     card.onSkipClick.invoke()
                 }
                 R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+                R.id.learn_more -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
+                    learnMoreClicked()
+                }
             }
             return@setOnMenuItemClickListener true
         }

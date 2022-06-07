@@ -65,6 +65,15 @@ class BloggingPromptsCardAnalyticsTrackerTest {
     }
 
     @Test
+    fun `Should track my site card menu learn more clicked`() {
+        classToTest.trackMySiteCardMenuLearnMoreClicked()
+        verify(analyticsTracker).track(
+                Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_LEARN_MORE_CLICKED,
+                emptyMap()
+        )
+    }
+
+    @Test
     fun `Should track my site card skip this prompt undo clicked`() {
         classToTest.trackMySiteCardSkipThisPromptUndoClicked()
         verify(analyticsTracker).track(
