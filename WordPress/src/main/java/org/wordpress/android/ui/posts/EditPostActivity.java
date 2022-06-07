@@ -918,6 +918,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mEditPostRepository.updateAsync(postModel -> {
                         postModel.setContent(loadedPrompt.getContent());
                         postModel.setAnsweredPromptId(loadedPrompt.getPromptId());
+                        postModel.setTagNames(loadedPrompt.getTag());
                         return true;
                     }, (postModel, result) -> {
                         refreshEditorContent();
