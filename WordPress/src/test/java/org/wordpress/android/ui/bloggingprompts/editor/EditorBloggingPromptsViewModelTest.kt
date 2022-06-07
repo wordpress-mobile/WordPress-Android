@@ -24,7 +24,6 @@ import java.util.Date
 
 @InternalCoroutinesApi
 class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
-    //    @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock lateinit var siteModel: SiteModel
 
     private lateinit var viewModel: EditorBloggingPromptsViewModel
@@ -70,5 +69,11 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
         assertThat(loadedPrompt?.promptId).isEqualTo(bloggingPrompt.model?.id)
 
         verify(bloggingPromptsStore, times(1)).getPromptById(any(), any())
+    }
+
+    @Test
+    fun `should NOT execute start method if prompt ID is less than 0`() = test {
+        viewModel.start(siteModel, -1)
+        verify(bloggingPromptsStore, times(0)).getPromptById(any(), any())
     }
 }

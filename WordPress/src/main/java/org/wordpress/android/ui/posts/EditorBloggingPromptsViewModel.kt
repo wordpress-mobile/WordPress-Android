@@ -23,6 +23,9 @@ class EditorBloggingPromptsViewModel
     private var isStarted = false
 
     fun start(site: SiteModel, bloggingPromptId: Int) {
+        if (bloggingPromptId < 0) {
+            return
+        }
         if (isStarted) {
             return
         }
@@ -32,7 +35,9 @@ class EditorBloggingPromptsViewModel
 
     private fun loadPrompt(site: SiteModel, promptId: Int) = launch {
         val prompt = bloggingPromptsStore.getPromptById(site, promptId).first().model
-        prompt?.let { _onBloggingPromptLoaded.postValue(Event(EditorLoadedPrompt(promptId, it.content))) }
+        prompt?.let {
+            _onBloggingPromptLoaded.postValue(Event(EditorLoadedPrompt(promptId, it.content)))
+        }
     }
 
     data class EditorLoadedPrompt(val promptId: Int, val content: String)
