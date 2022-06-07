@@ -71,7 +71,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     private static Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
     private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
-    private static Origin sOrigin = null;
 
     private PostUploadNotifier mPostUploadNotifier;
     private UploadPostTask mCurrentTask = null;
@@ -170,10 +169,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         return sCurrentUploadingPost != null || !sQueuedPostsList.isEmpty();
     }
 
-    public static void setPostOrigin(final Origin origin) {
-        sOrigin = origin;
-    }
-
     private void uploadNextPost() {
         synchronized (sQueuedPostsList) {
             if (mCurrentTask == null) { // make sure nothing is running
@@ -195,7 +190,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             mCurrentTask = null;
             sCurrentUploadingPost = null;
             sCurrentUploadingPostAnalyticsProperties = null;
-            sOrigin = null;
         }
         uploadNextPost();
     }
@@ -698,9 +692,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                         PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
                 sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_WP_STORIES_BLOCKS_KEY,
                         PostUtils.contentContainsWPStoryGutenbergBlocks(event.post.getContent()));
-                if (sOrigin != null) {
-                    sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.ORIGIN_KEY, sOrigin.getTrackingValue());
-                }
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
                         mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
                         sCurrentUploadingPostAnalyticsProperties);

@@ -290,7 +290,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
     public static final String EXTRA_PROMPT_ID = "extraPromptId";
-    public static final String EXTRA_ORIGIN = "origin";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -977,8 +976,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         reattachUploadingMediaForAztec();
 
-        final Origin origin = (Origin) getIntent().getSerializableExtra(EXTRA_ORIGIN);
-        PostUploadHandler.setPostOrigin(origin);
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
         PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
         mIsConfigChange = false;
