@@ -1,4 +1,5 @@
 @file:Suppress("MaximumLineLength")
+
 package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
@@ -127,7 +128,9 @@ class WPMainActivityViewModel @Inject constructor(
         get() = siteStore.sitesCount > ONE_SITE
 
     val firstSite: SiteModel?
-        get() = if (siteStore.hasSite()) { siteStore.sites[0] } else null
+        get() = if (siteStore.hasSite()) {
+            siteStore.sites[0]
+        } else null
 
     val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
@@ -143,11 +146,16 @@ class WPMainActivityViewModel @Inject constructor(
         updateFeatureAnnouncements()
     }
 
+    @Suppress("LongMethod")
     private fun loadMainActions(site: SiteModel?) = launch {
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsFeatureConfig.isEnabled()) {
             val prompt = site?.let {
-                bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+                if (it.isUsingWpComRestApi) {
+                    bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+                } else {
+                    null
+                }
             }
 
             prompt?.let {

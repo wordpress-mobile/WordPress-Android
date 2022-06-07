@@ -415,6 +415,14 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `bottom sheet does not show prompt card when site is self-hosted`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        startViewModelWithDefaultParameters(isWpcomOrJpSite = false)
+        val hasBloggingPromptAction = viewModel.mainActions.value?.any { it.actionType == ANSWER_BLOGGING_PROMPT }
+        assertThat(hasBloggingPromptAction).isFalse()
+    }
+
+    @Test
     fun `bottom sheet action is ANSWER_BLOGGING_PROMPT when the BP answer button is clicked`() = runBlockingTest {
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
         startViewModelWithDefaultParameters()
@@ -494,7 +502,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `new post action is triggered from FAB when no full access to content if stories unavailable`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false, supportsStories = false))
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false, isWpcomOrJpSite = false))
         assertThat(viewModel.isBottomSheetShowing.value).isNull()
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
     }
@@ -800,11 +808,12 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     private fun startViewModelWithDefaultParameters(
         isWhatsNewFeatureEnabled: Boolean = true,
-        isCreateFabEnabled: Boolean = true
+        isCreateFabEnabled: Boolean = true,
+        isWpcomOrJpSite: Boolean = true
     ) {
         whenever(buildConfigWrapper.isWhatsNewFeatureEnabled).thenReturn(isWhatsNewFeatureEnabled)
         whenever(buildConfigWrapper.isCreateFabEnabled).thenReturn(isCreateFabEnabled)
-        viewModel.start(site = initSite(hasFullAccessToContent = true, supportsStories = true))
+        viewModel.start(site = initSite(hasFullAccessToContent = true, isWpcomOrJpSite = isWpcomOrJpSite))
     }
 
     private fun setupObservers() {
@@ -825,10 +834,14 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onResume(site = initSite(hasFullAccessToContent = true), isOnMySitePageWithValidSite = true)
     }
 
-    private fun initSite(hasFullAccessToContent: Boolean = true, supportsStories: Boolean = true): SiteModel {
+    private fun initSite(
+        hasFullAccessToContent: Boolean = true,
+        isWpcomOrJpSite: Boolean = true
+    ): SiteModel {
         return SiteModel().apply {
             hasCapabilityEditPages = hasFullAccessToContent
-            setIsWPCom(supportsStories)
+            setIsWPCom(isWpcomOrJpSite)
+            setIsJetpackConnected(isWpcomOrJpSite)
         }
     }
 
