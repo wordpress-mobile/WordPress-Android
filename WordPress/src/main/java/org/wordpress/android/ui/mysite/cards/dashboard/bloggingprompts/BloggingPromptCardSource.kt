@@ -95,16 +95,16 @@ class BloggingPromptCardSource @Inject constructor(
     ) {
         val selectedSite = selectedSiteRepository.getSelectedSite()
         if (selectedSite != null && selectedSite.id == siteLocalId) {
-            coroutineScope.launch(bgDispatcher) {
-                if (bloggingPromptsFeatureConfig.isEnabled()) {
+            if (bloggingPromptsFeatureConfig.isEnabled()) {
+                coroutineScope.launch(bgDispatcher) {
                     if (isPrompAvailable()) {
                         fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite, isSinglePromptRefresh)
                     } else {
                         postEmptyState()
                     }
-                } else {
-                    onRefreshedMainThread()
                 }
+            } else {
+                onRefreshedMainThread()
             }
         } else {
             postErrorState()
