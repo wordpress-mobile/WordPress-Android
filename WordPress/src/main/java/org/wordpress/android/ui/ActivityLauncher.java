@@ -83,6 +83,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
@@ -365,12 +366,12 @@ public class ActivityLauncher {
     public static Intent openEditorWithBloggingPrompt(
             @NonNull final Context context,
             final int promptId,
-            final PostUtils.Origin origin
+            final EntryPoint entryPoint
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
-        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, origin);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
         return intent;
     }
 
@@ -379,13 +380,13 @@ public class ActivityLauncher {
         final int notificationId,
         final BloggingPromptModel bloggingPrompt,
         @Nullable final Stat stat,
-        final PostUtils.Origin origin
+        final EntryPoint entryPoint
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
-        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, origin);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
         intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
         return intent;
     }
@@ -905,10 +906,10 @@ public class ActivityLauncher {
             boolean isPromo,
             PagePostCreationSourcesDetail source,
             final int promptId,
-            final PostUtils.Origin origin
+            final EntryPoint entryPoint
     ) {
         addNewPostForResult(
-            new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId, origin
+            new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId, entryPoint
         );
     }
 
@@ -919,7 +920,7 @@ public class ActivityLauncher {
             boolean isPromo,
             PagePostCreationSourcesDetail source,
             final int promptId,
-            final PostUtils.Origin origin
+            final EntryPoint entryPoint
     ) {
         if (site == null) {
             return;

@@ -31,7 +31,7 @@ import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFra
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.posts.PostUtils.Origin.BLOGGING_PROMPTS_INTRODUCTION
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint.BLOGGING_PROMPTS_INTRODUCTION
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.image.ImageManager

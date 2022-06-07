@@ -83,6 +83,7 @@ public class AnalyticsUtils {
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
     public static final String EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY = "editor_has_hw_disabled";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
+    public static final String ENTRY_POINT_KEY = "entry_point";
 
     public enum BlockEditorEnabledSource {
         VIA_SITE_SETTINGS,

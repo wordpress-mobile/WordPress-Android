@@ -588,7 +588,7 @@ public class PostUtils {
         return (postContent != null && postContent.contains(WP_STORIES_GUTENBERG_BLOCK_START));
     }
 
-    public enum Origin {
+    public enum EntryPoint {
         BLOGGING_PROMPTS_INTRODUCTION("blogging_prompts_introduction"),
         BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT("blogging_reminders_notification_answer_prompt"),
         MY_SITE_CARD_ANSWER_PROMPT("my_site_card_answer_prompt"),
@@ -596,7 +596,7 @@ public class PostUtils {
 
         private final String mTrackingValue;
 
-        Origin(@NonNull final String trackingValue) {
+        EntryPoint(@NonNull final String trackingValue) {
             this.mTrackingValue = trackingValue;
         }
 
