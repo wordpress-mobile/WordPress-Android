@@ -25,10 +25,11 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 prompt = UiStringText(it.text),
                 respondents = avatarsTrain,
                 numberOfAnswers = params.bloggingPrompt.respondentsCount,
-                isAnswered = false,
+                isAnswered = params.bloggingPrompt.isAnswered,
                 promptId = params.bloggingPrompt.id,
                 onShareClick = params.onShareClick,
-                onAnswerClick = params.onAnswerClick
+                onAnswerClick = params.onAnswerClick,
+                onSkipClick = params.onSkipClick
         )
     }
 }

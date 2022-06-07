@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -32,6 +33,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -41,6 +43,7 @@ import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.Post
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
@@ -180,6 +183,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
     @Mock lateinit var quickStartType: QuickStartType
     @Mock lateinit var quickStartTracker: QuickStartTracker
+    @Mock private lateinit var dispatcher: Dispatcher
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -240,6 +244,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
+    private var onBloggingPromptSkipClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -375,7 +380,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 bloggingPromptsFeatureConfig,
                 appPrefsWrapper,
                 bloggingPromptsCardAnalyticsTracker,
-                quickStartTracker
+                quickStartTracker,
+                dispatcher
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -1636,6 +1642,52 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertTrue(answerRequests == 1)
     }
 
+    @Test
+    fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onBloggingPromptSkipClicked).invoke()
+
+                verify(appPrefsWrapper).setSkippedPromptDay(any())
+                verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
+
+                assertThat(snackbars.size).isEqualTo(1)
+
+                val expectedSnackbar = snackbars[0]
+                assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
+                assertThat(expectedSnackbar.message).isEqualTo(
+                        UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar)
+                )
+                assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+            }
+
+    @Test
+    fun `when blogging prompt answer is uploaded, refresh prompt card`() = test {
+        initSelectedSite()
+
+        val promptAnswerPost = PostModel().apply { answeredPromptId = 1 }
+
+        val postUploadedEvent = OnPostUploaded(promptAnswerPost, true)
+
+        viewModel.onPostUploaded(postUploadedEvent)
+
+        verify(mySiteSourceManager).refreshBloggingPrompts(true)
+    }
+
+    @Test
+    fun `when non blogging prompt answer is uploaded, prompt card is not refreshed`() = test {
+        initSelectedSite()
+
+        val promptAnswerPost = PostModel().apply { answeredPromptId = 0 }
+
+        val postUploadedEvent = OnPostUploaded(promptAnswerPost, true)
+
+        viewModel.onPostUploaded(postUploadedEvent)
+
+        verify(mySiteSourceManager, never()).refreshBloggingPrompts(true)
+    }
+
     /* DASHBOARD ERROR SNACKBAR */
 
     @Test
@@ -2859,6 +2911,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
+        onBloggingPromptSkipClicked = params.bloggingPromptCardBuilderParams.onSkipClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
@@ -2866,7 +2919,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isAnswered = false,
                 promptId = bloggingPromptId,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
-                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
+                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
+                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
         )
     }
 

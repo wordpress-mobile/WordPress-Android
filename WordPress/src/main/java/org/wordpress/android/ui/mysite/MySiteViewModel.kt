@@ -1,4 +1,5 @@
 @file:Suppress("MaximumLineLength")
+
 package org.wordpress.android.ui.mysite
 
 import android.content.Intent
@@ -14,14 +15,18 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_CHECK_STATS_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_UPLOAD_MEDIA_LABEL
 import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
@@ -113,6 +118,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.File
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -151,7 +157,8 @@ class MySiteViewModel @Inject constructor(
     bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val quickStartTracker: QuickStartTracker
+    private val quickStartTracker: QuickStartTracker,
+    private val dispatcher: Dispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isDefaultABExperimentTabSet: Boolean = false
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -282,6 +289,10 @@ class MySiteViewModel @Inject constructor(
             _onSnackbarMessage
                     .postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))))
         }
+    }
+
+    init {
+        dispatcher.register(this)
     }
 
     @Suppress("LongParameterList")
@@ -441,7 +452,8 @@ class MySiteViewModel @Inject constructor(
                                     bloggingPromptUpdate?.promptModel
                                 } else null,
                                 onShareClick = this::onBloggingPromptShareClick,
-                                onAnswerClick = this::onBloggingPromptAnswerClick
+                                onAnswerClick = this::onBloggingPromptAnswerClick,
+                                onSkipClick = this::onBloggingPromptSkipClicked
                         )
                 ),
                 QuickLinkRibbonBuilderParams(
@@ -1036,6 +1048,7 @@ class MySiteViewModel @Inject constructor(
         siteStoriesHandler.clear()
         quickStartRepository.clear()
         mySiteSourceManager.clear()
+        dispatcher.unregister(this)
         super.onCleared()
     }
 
@@ -1146,7 +1159,7 @@ class MySiteViewModel @Inject constructor(
             cardsTracker.trackPostItemClicked(params.postCardType)
             when (params.postCardType) {
                 PostCardType.CREATE_FIRST, PostCardType.CREATE_NEXT -> _onNavigation.value =
-                    Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
+                        Event(SiteNavigationAction.OpenEditorToCreateNewPost(site))
                 PostCardType.DRAFT -> _onNavigation.value =
                         Event(SiteNavigationAction.EditDraftPost(site, params.postId))
                 PostCardType.SCHEDULED -> _onNavigation.value =
@@ -1179,6 +1192,23 @@ class MySiteViewModel @Inject constructor(
         bloggingPromptsCardAnalyticsTracker.trackMySiteCardAnswerPromptClicked()
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onAnswerBloggingPrompt.postValue(Event(Pair(selectedSite, promptId)))
+    }
+
+    private fun onBloggingPromptSkipClicked() {
+        appPrefsWrapper.setSkippedPromptDay(Date())
+        mySiteSourceManager.refreshBloggingPrompts(true)
+
+        val snackbar = SnackbarMessageHolder(
+                message = UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar),
+                buttonTitle = UiStringRes(R.string.undo),
+                buttonAction = {
+                    appPrefsWrapper.setSkippedPromptDay(null)
+                    mySiteSourceManager.refreshBloggingPrompts(true)
+                },
+                isImportant = true
+        )
+
+        _onSnackbarMessage.postValue(Event(snackbar))
     }
 
     fun isRefreshing() = mySiteSourceManager.isRefreshing()
@@ -1289,6 +1319,18 @@ class MySiteViewModel @Inject constructor(
         ) ?: false)
     }
 
+    // FluxC events
+    @Subscribe(threadMode = MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (!event.isError) {
+            event.post?.let {
+                if (event.post.answeredPromptId > 0 && event.isFirstTimePublish) {
+                    mySiteSourceManager.refreshBloggingPrompts(true)
+                }
+            }
+        }
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val state: State
@@ -1334,7 +1376,7 @@ class MySiteViewModel @Inject constructor(
         fun update(quickStartTabStep: QuickStartTabStep?) = tabUiStates.map { tabUiState ->
             tabUiState.copy(
                     showQuickStartFocusPoint = quickStartTabStep?.mySiteTabType == tabUiState.tabType &&
-                                quickStartTabStep.isStarted,
+                            quickStartTabStep.isStarted,
                     pendingTask = quickStartTabStep?.task
             )
         }

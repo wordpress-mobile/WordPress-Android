@@ -24,12 +24,9 @@ class CompactBloggingPromptCardViewHolder(
 
         answerButton.setOnClickListener {
             action.onClickAction?.invoke(action.promptId)
-            uiHelpers.updateVisibility(answerButton, false)
-            uiHelpers.updateVisibility(answeredButton, true)
         }
         answeredButton.setOnClickListener {
-            uiHelpers.updateVisibility(answerButton, true)
-            uiHelpers.updateVisibility(answeredButton, false)
+            action.onClickAction?.invoke(action.promptId)
         }
 
         uiHelpers.updateVisibility(answeredButton, action.isAnswered)
