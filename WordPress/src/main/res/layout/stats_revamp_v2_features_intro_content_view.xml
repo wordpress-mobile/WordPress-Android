@@ -7,8 +7,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/cover_image"
-        android:background="@color/gray_10"
         android:src="@drawable/stats_feature_intro"
+        android:scaleType="center"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
