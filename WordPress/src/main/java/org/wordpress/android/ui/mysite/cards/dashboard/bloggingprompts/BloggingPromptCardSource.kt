@@ -98,7 +98,7 @@ class BloggingPromptCardSource @Inject constructor(
             coroutineScope.launch(bgDispatcher) {
                 if (bloggingPromptsFeatureConfig.isEnabled()) {
                     if (isPrompAvailable()) {
-                        fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite)
+                        fetchPromptsAndPostErrorIfAvailable(coroutineScope, selectedSite, isSinglePromptRefresh)
                     } else {
                         postEmptyState()
                     }
