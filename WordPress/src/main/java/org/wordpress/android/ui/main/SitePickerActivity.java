@@ -254,7 +254,9 @@ public class SitePickerActivity extends LocaleAwareActivity
             return;
         }
 
-        if (getAdapter().getIsInSearchMode() || mSitePickerMode.isReblogMode()) {
+        if (getAdapter().getIsInSearchMode()
+            || mSitePickerMode.isReblogMode()
+            || mSitePickerMode.isBloggingPromptsMode()) {
             mMenuEdit.setVisible(false);
             mMenuAdd.setVisible(false);
         } else {
