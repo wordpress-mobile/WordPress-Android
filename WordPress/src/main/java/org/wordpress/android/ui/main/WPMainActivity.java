@@ -1027,7 +1027,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void handleNewPostAction(PagePostCreationSourcesDetail source, final int promptId, final EntryPoint entryPoint) {
+    private void handleNewPostAction(PagePostCreationSourcesDetail source,
+                                     final int promptId,
+                                     final EntryPoint entryPoint) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
