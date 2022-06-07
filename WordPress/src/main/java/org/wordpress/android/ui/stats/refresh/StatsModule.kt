@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -29,7 +28,6 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.PostMonthsAndYearsUse
 import org.wordpress.android.ui.stats.refresh.lists.detail.PostRecentWeeksUseCase.PostRecentWeeksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
@@ -60,9 +58,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase.PublicizeUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase.TotalCommentsGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalCommentsUseCase.TotalCommentsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsGranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsRevampV2FeatureConfig
@@ -421,14 +422,14 @@ class StatsModule {
     @Singleton
     @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES)
     fun provideViewsAndVisitorsDetailUseCases(
-        viewsAndVisitorsUseCaseFactory: ViewsAndVisitorsUseCaseFactory,
+        viewsAndVisitorsGranularUseCaseFactory: ViewsAndVisitorsGranularUseCaseFactory,
         referrersUseCaseFactory: ReferrersUseCaseFactory,
         countryViewsUseCaseFactory: CountryViewsUseCaseFactory
-    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
-                viewsAndVisitorsUseCaseFactory.build(VIEW_ALL),
-                referrersUseCaseFactory.build(DAYS, BLOCK_DETAIL),
-                countryViewsUseCaseFactory.build(DAYS, BLOCK)
+                viewsAndVisitorsGranularUseCaseFactory,
+                referrersUseCaseFactory,
+                countryViewsUseCaseFactory
         )
     }
 
@@ -443,19 +444,19 @@ class StatsModule {
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
-        @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        @Named(BLOCK_VIEWS_AND_VISITORS_USE_CASES)
+        useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
                 statsSiteProvider,
-                useCases,
-
+                useCasesFactories.map { it.build(WEEKS, BLOCK) },
                 {
-                    listOf(VIEWS_AND_VISITORS, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
+                    listOf(TimeStatsType.OVERVIEW, TimeStatsType.REFERRERS, TimeStatsType.COUNTRIES)
                 },
-                uiModelMapper::mapViewsVisitorsDetailStats
+                uiModelMapper::mapTimeStats
         )
     }
 
@@ -467,12 +468,12 @@ class StatsModule {
     @Singleton
     @Named(TOTAL_LIKES_DETAIL_USE_CASES)
     fun provideLikesDetailUseCases(
-        totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
+        totalLikesUseCaseFactory: TotalLikesGranularUseCaseFactory,
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory
-    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
-                totalLikesUseCaseFactory.build(VIEW_ALL),
-                postsAndPagesUseCaseFactory.build(DAYS, BLOCK)
+                totalLikesUseCaseFactory,
+                postsAndPagesUseCaseFactory
         )
     }
 
@@ -487,14 +488,14 @@ class StatsModule {
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
-        @Named(TOTAL_LIKES_DETAIL_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        @Named(TOTAL_LIKES_DETAIL_USE_CASES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
                 bgDispatcher,
                 mainDispatcher,
                 statsSiteProvider,
-                useCases,
+                useCasesFactories.map { it.build(WEEKS, BLOCK) },
                 { listOf(InsightType.TOTAL_LIKES, TimeStatsType.POSTS_AND_PAGES) },
                 uiModelMapper::mapTimeStats
         )
@@ -508,12 +509,12 @@ class StatsModule {
     @Singleton
     @Named(TOTAL_COMMENTS_DETAIL_USE_CASES)
     fun provideCommentsDetailUseCases(
-        totalCommentsUseCaseFactory: TotalCommentsUseCaseFactory,
+        totalCommentsGranularUseCaseFactory: TotalCommentsGranularUseCaseFactory,
         authorsCommentsUseCase: AuthorsCommentsUseCase,
         postsCommentsUseCase: PostsCommentsUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-                totalCommentsUseCaseFactory.build(VIEW_ALL),
+                totalCommentsGranularUseCaseFactory.build(WEEKS, BLOCK),
                 authorsCommentsUseCase,
                 postsCommentsUseCase
         )

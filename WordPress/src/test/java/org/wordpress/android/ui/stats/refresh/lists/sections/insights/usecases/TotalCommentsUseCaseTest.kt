@@ -21,7 +21,9 @@ import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -35,6 +37,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -56,6 +59,7 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var valueWithChart: ValueWithChartItem
     @Mock lateinit var information: Text
     @Mock lateinit var useCaseMode: UseCaseMode
+    @Mock lateinit var selectedDateProvider: SelectedDateProvider
     private lateinit var useCase: TotalCommentsUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
@@ -68,6 +72,9 @@ class TotalCommentsUseCaseTest : BaseUnitTest() {
         useCase = TotalCommentsUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
+                TOTAL_COMMENTS,
+                WEEKS,
+                selectedDateProvider,
                 store,
                 statsSiteProvider,
                 resourceProvider,
