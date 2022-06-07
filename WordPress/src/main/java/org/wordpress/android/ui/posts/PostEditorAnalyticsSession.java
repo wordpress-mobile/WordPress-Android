@@ -5,6 +5,7 @@ import android.os.Bundle;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -33,6 +34,8 @@ public class PostEditorAnalyticsSession implements Serializable {
     private static final String KEY_TEMPLATE = "template";
     private static final String KEY_FULL_SITE_EDITING = "full_site_editing";
     private static final String KEY_ENDPOINT = "endpoint";
+    private static final String KEY_ENTRY_POINT = "entry_point";
+
 
     private transient AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
 
@@ -111,7 +114,9 @@ public class PostEditorAnalyticsSession implements Serializable {
         return getNewPostEditorAnalyticsSession(editor, post, site, isNewPost, new AnalyticsTrackerWrapper());
     }
 
-    public void start(ArrayList<Object> unsupportedBlocksList, Boolean galleryWithImageBlocks) {
+    public void start(ArrayList<Object> unsupportedBlocksList,
+                      Boolean galleryWithImageBlocks,
+                      final EntryPoint entryPoint) {
         if (!mStarted) {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
             Map<String, Object> properties = getCommonProperties();
@@ -128,6 +133,9 @@ public class PostEditorAnalyticsSession implements Serializable {
             // difference to be significant enough, and doing that would add more complexity to how we are initializing
             // the session.
             properties.put(KEY_STARTUP_TIME, System.currentTimeMillis() - mStartTime);
+            if (entryPoint != null) {
+                properties.put(KEY_ENTRY_POINT, entryPoint.getTrackingValue());
+            }
             AnalyticsUtils.trackWithSiteDetails(mAnalyticsTrackerWrapper, Stat.EDITOR_SESSION_START, mSiteModel,
                     properties);
             mStarted = true;

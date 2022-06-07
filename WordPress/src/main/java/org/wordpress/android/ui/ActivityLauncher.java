@@ -931,6 +931,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
+        intent.putExtra(EditPostActivity.EXTRA_ENTRY_POINT, entryPoint);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
