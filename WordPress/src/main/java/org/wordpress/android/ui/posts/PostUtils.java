@@ -191,9 +191,7 @@ public class PostUtils {
         }
     }
 
-    public static void trackOpenEditorAnalytics(
-            PostImmutableModel post, SiteModel site, @Nullable final Origin origin
-    ) {
+    public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
         PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
@@ -203,9 +201,6 @@ public class PostUtils {
                 site.getId(), post.getId()) ? "1" : "0");
         properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                 PostUtils.contentContainsGutenbergBlocks(post.getContent()));
-        if (origin != null) {
-            properties.put(AnalyticsUtils.ORIGIN_KEY, origin.getTrackingValue());
-        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_OPENED, site,
                 properties);
     }

@@ -980,7 +980,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         final Origin origin = (Origin) getIntent().getSerializableExtra(EXTRA_ORIGIN);
         PostUploadHandler.setPostOrigin(origin);
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
-        PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite, origin);
+        PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
         mIsConfigChange = false;
     }
 
