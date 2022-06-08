@@ -9,6 +9,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -16,6 +17,7 @@ class AddContentAdapter(context: Context) : Adapter<AddContentViewHolder<*>>() {
     private var items: List<MainActionListItem> = listOf()
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var htmlCompatWrapper: HtmlCompatWrapper
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -44,7 +46,9 @@ class AddContentAdapter(context: Context) : Adapter<AddContentViewHolder<*>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddContentViewHolder<*> {
         return when (viewType) {
-            ActionType.ANSWER_BLOGGING_PROMPT.ordinal -> CompactBloggingPromptCardViewHolder(parent, uiHelpers)
+            ActionType.ANSWER_BLOGGING_PROMPT.ordinal -> CompactBloggingPromptCardViewHolder(
+                    parent, uiHelpers, htmlCompatWrapper
+            )
             else -> ActionListItemViewHolder(parent, imageManager)
         }
     }

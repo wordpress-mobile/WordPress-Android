@@ -15,6 +15,7 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
@@ -23,18 +24,22 @@ class BloggingPromptCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
-    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
+    private val htmlCompatWrapper: HtmlCompatWrapper,
+    private val learnMoreClicked: () -> Unit
 ) : CardViewHolder<MySiteBloggingPrompCardBinding>(
         parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
 ) {
     fun bind(card: BloggingPromptCardWithData) = with(binding) {
-        uiHelpers.setTextOrHide(promptContent, card.prompt)
-
+        val cardPrompt = htmlCompatWrapper.fromHtml(
+                uiHelpers.getTextOfUiString(promptContent.context, card.prompt).toString()
+        )
+        uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
-            showCardMenu()
+            showCardMenu(card)
         }
 
         answerButton.setOnClickListener {
@@ -83,13 +88,20 @@ class BloggingPromptCardViewHolder(
         }
     }
 
-    private fun MySiteBloggingPrompCardBinding.showCardMenu() {
+    private fun MySiteBloggingPrompCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
         val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
         quickStartPopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
-                R.id.skip -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                R.id.skip -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                    card.onSkipClick.invoke()
+                }
                 R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+                R.id.learn_more -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
+                    learnMoreClicked()
+                }
             }
             return@setOnMenuItemClickListener true
         }

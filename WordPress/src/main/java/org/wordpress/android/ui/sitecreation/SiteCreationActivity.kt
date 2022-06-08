@@ -4,11 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.cancel
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin
@@ -48,6 +49,7 @@ import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
+@AndroidEntryPoint
 class SiteCreationActivity : LocaleAwareActivity(),
         IntentsScreenListener,
         SiteNameScreenListener,
@@ -56,27 +58,19 @@ class SiteCreationActivity : LocaleAwareActivity(),
         OnHelpClickedListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface {
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var siteNameFeatureConfig: SiteNameFeatureConfig
-    private lateinit var mainViewModel: SiteCreationMainVM
-    private lateinit var hppViewModel: HomePagePickerViewModel
-    private lateinit var siteCreationIntentsViewModel: SiteCreationIntentsViewModel
-    private lateinit var siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel
+    private val mainViewModel: SiteCreationMainVM by viewModels()
+    private val hppViewModel: HomePagePickerViewModel by viewModels()
+    private val siteCreationIntentsViewModel: SiteCreationIntentsViewModel by viewModels()
+    private val siteCreationSiteNameViewModel: SiteCreationSiteNameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
         setContentView(R.layout.site_creation_activity)
-        mainViewModel = ViewModelProvider(this, viewModelFactory).get(SiteCreationMainVM::class.java)
-        hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
-        siteCreationIntentsViewModel = ViewModelProvider(this, viewModelFactory)
-                .get(SiteCreationIntentsViewModel::class.java)
-        siteCreationSiteNameViewModel = ViewModelProvider(this, viewModelFactory)
-                .get(SiteCreationSiteNameViewModel::class.java)
         val siteCreationSource = intent.extras?.getString(ARG_CREATE_SITE_SOURCE)
         mainViewModel.start(savedInstanceState, SiteCreationSource.fromString(siteCreationSource))
-        hppViewModel.loadSavedState(savedInstanceState)
+        mainViewModel.preloadThumbnails(this)
 
         observeVMState()
     }
@@ -84,7 +78,6 @@ class SiteCreationActivity : LocaleAwareActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mainViewModel.writeToBundle(outState)
-        hppViewModel.writeToBundle(outState)
     }
 
     private fun observeVMState() {
@@ -124,6 +117,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             finish()
         })
         mainViewModel.onBackPressedObservable.observe(this, Observer {
+            ActivityUtils.hideKeyboard(this)
             super.onBackPressed()
         })
         siteCreationIntentsViewModel.onBackButtonPressed.observe(this, Observer {
@@ -181,7 +175,11 @@ class SiteCreationActivity : LocaleAwareActivity(),
         val fragment = when (target.wizardStep) {
             INTENTS -> SiteCreationIntentsFragment()
             SITE_NAME -> SiteCreationSiteNameFragment.newInstance(target.wizardState.siteIntent)
-            SITE_DESIGNS -> HomePagePickerFragment()
+            SITE_DESIGNS -> {
+                // Cancel preload job before displaying the theme picker.
+                mainViewModel.preloadingJob?.cancel("Preload did not complete before theme picker was shown.")
+                HomePagePickerFragment.newInstance(target.wizardState.siteIntent)
+            }
             DOMAINS -> SiteCreationDomainsFragment.newInstance(
                     screenTitle
             )
