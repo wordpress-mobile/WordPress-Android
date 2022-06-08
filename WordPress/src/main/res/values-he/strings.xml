@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:32:59+0000
+Translation-Revision-Date: 2022-05-31 07:17:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_drag_drop">לגרור ולשחרר</string>
+    <string name="gutenberg_native_image_file_not_found">לא נמצא קובץ תמונה.</string>
+    <string name="quick_start_list_task_complete">המשימה הושלמה</string>
+    <string name="gutenberg_native_arrow_buttons">כפתורי חצים</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. הבחירה הנוכחית: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">כל המשימות הושלמו</string>
+    <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">כדי לשנות את סדר הבלוקים, יש להקיש על הבלוק ולאחר מכן להקיש על החצים למעלה ולמטה שמופיעים בפינה השמאלית התחתונה כדי להזיז את הבלוק מעל הבלוקים האחרים או מתחתיהם.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">סידור מחדש של בלוקים נעשה קל יותר עם האפשרות לגרור ולשחרר. לחצו על בלוק, גררו אותו למקום החדש שלו, ושחררו.</string>
+    <string name="stats_insights_followers_guide_card">💡ניתן לנסות להשאיר תגובה כמחווה כדי לעודד מעורבות בבלוג ולצבור עוקבים נוספים.</string>
+    <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
+    <string name="stats_insights_comments_guide_card">💡צפו במגיבים הפעילים ביותר בלחיצה על ״הצגת פריטים נוספים״.</string>
+    <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1s, %2s מסך העוקבים</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">אם ברצונך להגדיל את הצפיות והתעבורה, כדאי לעיין בעצות המובילות שלנו %1$s</string>
+    <string name="stats_insights_latest_post_empty">עדיין לא פרסמת אף פוסט. כדאי לחזור לכאן מאוחר יותר לאר שפרסמת את הפוסט הראשון!</string>
     <string name="pages_copy_link">להעתיק את הקישור</string>
     <string name="quick_start_completed_tour_title">ברכותינו! כבר יש לך ניסיון בעבודה עם האפליקציה&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">היכרות עם האפליקציה</string>
@@ -49,14 +66,14 @@ Language: he_IL
     <string name="photo_picker_media_thumbnail_content_description">תצוגה ממוזערת של המדיה</string>
     <string name="stats_insights_popular_title">🔥 המועד הפופולרי ביותר</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">השבוע היו ⁦%1$s⁩ מבקרים פחות באתר לעומת השבוע הקודם.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">השבוע היו ⁦%1$s⁩ מבקרים יותר באתר לעומת השבוע הקודם.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">השבוע היו ⁦%1$s⁩ צפיות פחות באתר לעומת השבוע הקודם.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">השבוע היו ⁦%1$s⁩ צפיות יותר באתר לעומת השבוע הקודם.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">השבוע היו ⁦%1$s⁩ פחות מבקרים  באתר לעומת השבוע הקודם.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">השבוע היו ⁦%1$s⁩ יותר מבקרים באתר לעומת השבוע הקודם.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">השבוע היו ⁦%1$s⁩ פחות צפיות באתר לעומת השבוע הקודם.</string>
     <string name="stats_timeframe_previous_week">השבוע הקודם</string>
     <string name="stats_timeframe_this_week">השבוע</string>
     <string name="scan_vault_press_active_on_site_button_text">מעבר ללוח בקרה</string>
     <string name="scan_vault_press_active_on_site_subtitle">האתר שלך כבר מוגן באמצעות VaultPress. אפשר למצוא את הקישור ללוח הבקרה של VaultPress למטה.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">השבוע היו ⁦ %1$s⁩יותר צפיות באתר לעומת השבוע הקודם.</string>
     <string name="scan_vault_press_active_on_site_title">השירות של VaultPress מותקן באתר שלך</string>
     <string name="locale_picker_current_language">השפה הנוכחית:</string>
     <string name="hpp_choose_and_create_site">יצירת אתר</string>
@@ -474,6 +491,7 @@ Language: he_IL
     <string name="gutenberg_native_three">שלושה</string>
     <string name="gutenberg_native_s_social_icon">סמל של הרשת החברתית %s</string>
     <string name="gutenberg_native_mention">אזכור</string>
+    <string name="gutenberg_native_new">חדש</string>
     <string name="gutenberg_native_preview_page">תצוגה מקדימה של העמוד</string>
     <string name="gutenberg_native_preview_post">תצוגה מקדימה של הפוסט</string>
     <string name="gutenberg_native_retry">לנסות שוב</string>
@@ -1668,7 +1686,6 @@ Language: he_IL
     <string name="site_settings_gutenberg_default_for_new_posts">שימוש בעורך הבלוקים</string>
     <string name="exit">יציאה</string>
     <string name="quick_start_sites">לשלב הבא</string>
-    <string name="quick_start_complete_tasks_header">הושלם (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">המבקרים באתר יראו את הסמל שלך בדפדפן שלהם. ניתן להוסיף סמל מותאם אישית למראה נקי ומקצועי.</string>
     <string name="quick_start_sites_type_grow">להגדיל את הקהל שלך</string>
     <string name="quick_start_sites_type_customize">להתאים אישית את האתר שלך</string>
@@ -1682,12 +1699,8 @@ Language: he_IL
     <string name="quick_start_dialog_remove_next_steps_message">ההסרה של השלבים הבאים תסתיר את כל הסיורים באתר זה. לא ניתן לבטל פעולה זו.</string>
     <string name="quick_start_dialog_remove_next_steps_title">הסרת השלבים הבאים</string>
     <string name="quick_start_remove_next_steps_menu_title">להסיר את הפריט</string>
-    <string name="quick_start_complete_view_subtitle">ברכותינו על השלמת הרשימה. עבודה מצוינת.</string>
     <string name="quick_start_dialog_check_stats_message">לקבל עדכונים על הביצועים של האתר שלך.</string>
-    <string name="quick_start_complete_view_title">כל המשימות הושלמו!</string>
     <string name="quick_start_task_skip_menu_title">דילוג על המשימה</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">מזעור</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">הרחבה</string>
     <string name="notification_channel_reminder_title">תזכורת</string>
     <string name="stats_select_next_period_description">בחירת התקופה הבאה</string>
     <string name="stats_select_previous_period_description">בחירת התקופה הקודמת</string>
@@ -1761,7 +1774,6 @@ Language: he_IL
     <string name="gif_picker_initial_empty_text">לחפש קובצי GIF שניתן להוסיף לספריית המדיה שלך!</string>
     <string name="stats_insights_tags_and_categories">תגיות וקטגוריות</string>
     <string name="stats_insights_all_time_stats">כל הזמנים</string>
-    <string name="stats_insights_latest_post_empty">עדיין לא פרסמת אף פוסט. לאחר פרסום של תוכן, סיכום הפוסטים האחרונים יופיע כאן:</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s התפרסם לפני %1$s. אפשר לקבל חשיפה רבה יותר לפוסט על ידי שיתוף:</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">עוקבים</string>
