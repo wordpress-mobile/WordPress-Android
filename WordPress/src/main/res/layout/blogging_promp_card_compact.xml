@@ -64,14 +64,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="@dimen/margin_small"
                 android:text="@string/my_site_blogging_prompt_card_attribution_from"
                 android:textAppearance="?attr/textAppearanceCaption" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="@dimen/margin_small"
                 android:text="@string/my_site_blogging_prompt_card_attribution_dayone"
                 android:textAppearance="?attr/textAppearanceCaption"
                 android:textColor="?attr/colorOnSurface" />
