@@ -494,7 +494,7 @@
             android:name=".WPComPostReaderActivity"
             android:targetActivity=".ui.reader.ReaderPostPagerActivity"
             android:exported="true">
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/feeds/.*/posts/.*"
