@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:31:25+0000
+Translation-Revision-Date: 2022-06-03 11:54:20+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Vous pouvez également réorganiser les blocs en appuyant sur un bloc, puis sur les flèches Haut et Bas qui apparaissent dans le coin inférieur gauche du bloc afin de le déplacer vers le haut ou vers le bas.</string>
+    <string name="gutenberg_native_image_file_not_found">Fichier image introuvable.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">La fonction Glisser-déposer permet de réorganiser les blocs en un temps record. Appuyez longuement sur un bloc, faites-le glisser vers son nouvel emplacement et relâchez-le.</string>
+    <string name="gutenberg_native_drag_drop">Glisser-déposer</string>
+    <string name="gutenberg_native_arrow_buttons">Boutons fléchés</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Sélection actuelle : %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Toutes les tâches terminées</string>
+    <string name="quick_start_list_task_complete">Tâche terminée</string>
+    <string name="me_btn_scan_login_code">Scanner le code de connexion</string>
+    <string name="stats_insights_followers_guide_card">💡Vous pouvez essayer de laisser un commentaire en guise de geste pour encourager l’engagement sur le blog en retour afin de gagner des abonnés.</string>
+    <string name="stats_insights_comments_guide_card">💡Appuyez sur VOIR PLUS pour voir vos meilleurs contributeurs.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Votre dernier article %1$s a recueilli%2$s mentions « J’aime ».</string>
+    <string name="stats_most_popular_percent_views_empty">Pas assez d’activité. Revenez lorsque votre site aura plus de visiteurs !</string>
+    <string name="stats_insights_latest_post_empty">Vous n’avez pas encore publié d’articles. Revenez lorsque vous aurez publié votre premier article !</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Consultez nos meilleurs conseils pour générer plus de vues et de trafic %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s du nombre total d’abonnés</string>
+    <string name="stats_value_percent"> %1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copier le lien</string>
     <string name="quick_start_completed_tour_title">Félicitations ! Vous connaissez le chemin&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Découvrir l’application</string>
@@ -49,10 +66,6 @@ Language: fr
     <string name="photo_picker_media_thumbnail_content_description">Miniature média</string>
     <string name="stats_insights_popular_title">🔥 Heure la plus populaire</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Votre nombre de visiteurs de cette semaine est inférieur de %1$s par rapport à la semaine précédente.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Votre nombre de visiteurs de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Votre nombre de vues de cette semaine est inférieur de %1$s par rapport la semaine précédente.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Votre nombre de vues de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
     <string name="stats_timeframe_previous_week">La semaine précédente</string>
     <string name="stats_timeframe_this_week">Cette semaine</string>
     <string name="scan_vault_press_active_on_site_button_text">Se rendre sur le Tableau de bord</string>
@@ -474,6 +487,7 @@ Language: fr
     <string name="gutenberg_native_three">Trois</string>
     <string name="gutenberg_native_s_social_icon">Icône de réseau social %s</string>
     <string name="gutenberg_native_mention">Mention</string>
+    <string name="gutenberg_native_new">NOUVEAU</string>
     <string name="gutenberg_native_preview_post">Prévisualiser l&amp;rsquo;article</string>
     <string name="gutenberg_native_preview_page">Prévisualiser la page</string>
     <string name="gutenberg_native_retry">Recommencez</string>
@@ -1670,7 +1684,6 @@ Language: fr
     <string name="quick_start_sites_type_grow">Élargir votre public</string>
     <string name="quick_start_sites_type_customize">Personnaliser votre site</string>
     <string name="quick_start_sites">Prochaines étapes</string>
-    <string name="quick_start_complete_tasks_header">Terminé (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Choisir une favicône unique </string>
     <string name="quick_start_dialog_upload_icon_message">Vos visiteurs verront votre icône dans leur navigateur. Ajoutez une icône personnalisée pour un aspect brillant et pro.</string>
     <string name="quick_start_dialog_check_stats_message_short">Sélectionnez %1$s Statistiques %2$s pour voir comment votre site se comporte.</string>
@@ -1683,11 +1696,7 @@ Language: fr
     <string name="quick_start_dialog_remove_next_steps_message">« Retirer les étapes suivantes » cachera tous les accompagnements sur ce site. Cette action ne peut pas être annulée.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Retirer les étapes suivantes</string>
     <string name="quick_start_remove_next_steps_menu_title">Retirer ceci</string>
-    <string name="quick_start_complete_view_subtitle">Vous avez terminé votre liste, félicitations ! Du beau travail !</string>
-    <string name="quick_start_complete_view_title">Toutes les tâches ont été accomplies !</string>
     <string name="quick_start_task_skip_menu_title">Sauter la tâche</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">réduire</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">développer</string>
     <string name="notification_channel_reminder_title">Rappel</string>
     <string name="stats_select_next_period_description">Sélectionner la période suivante</string>
     <string name="stats_select_previous_period_description">Sélectionner la période précédante</string>
@@ -1760,7 +1769,6 @@ Language: fr
     <string name="stats_insights_create_post">Créer une publication</string>
     <string name="stats_insights_latest_post_message">%2$s est publié depuis %1$s. Voilà les performances de l’article :</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s est publié depuis %1$s. Lancez-vous et augmentez le nombre de vues de votre article en le partageant :</string>
-    <string name="stats_insights_latest_post_empty">Vous n’avez pas encore publié d’articles. Lorsque vous commencez à publier, le résumé de votre dernier article apparaît ici :</string>
     <string name="stats_insights_tags_and_categories">Étiquettes et catégories</string>
     <string name="stats_insights_all_time_stats">Depuis le début</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
