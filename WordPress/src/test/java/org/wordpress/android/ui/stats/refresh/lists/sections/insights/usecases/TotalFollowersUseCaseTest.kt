@@ -12,6 +12,8 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.SummaryModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -25,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -39,6 +42,7 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var useCaseMode: UseCaseMode
     @Mock lateinit var actionCardHandler: ActionCardHandler
+    @Mock lateinit var selectedDateProvider: SelectedDateProvider
     private lateinit var useCase: TotalFollowersUseCase
     private val followers = 100
 
@@ -48,13 +52,16 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
         useCase = TotalFollowersUseCase(
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
+                TOTAL_FOLLOWERS,
+                WEEKS,
+                selectedDateProvider,
                 insightsStore,
                 statsSiteProvider,
                 resourceProvider,
                 totalStatsMapper,
                 analyticsTrackerWrapper,
-                useCaseMode,
-                actionCardHandler
+                actionCardHandler,
+                useCaseMode
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
     }

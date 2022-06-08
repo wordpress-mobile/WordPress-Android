@@ -29,7 +29,8 @@ class BloggingPromptCardBuilder @Inject constructor() {
                 promptId = params.bloggingPrompt.id,
                 attribution = BloggingPromptAttribution.fromString(params.bloggingPrompt.attribution),
                 onShareClick = params.onShareClick,
-                onAnswerClick = params.onAnswerClick
+                onAnswerClick = params.onAnswerClick,
+                onSkipClick = params.onSkipClick
         )
     }
 }

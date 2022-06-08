@@ -219,7 +219,8 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val promptId: Int,
                         val attribution: BloggingPromptAttribution,
                         val onShareClick: (String) -> Unit,
-                        val onAnswerClick: (PromptID) -> Unit
+                        val onAnswerClick: (PromptID) -> Unit,
+                        val onSkipClick: () -> Unit
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }

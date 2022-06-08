@@ -163,7 +163,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                 is OpenSitePicker -> {
                     val intent = Intent(context, SitePickerActivity::class.java).apply {
                         putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)
-                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.DEFAULT_MODE)
+                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.BLOGGING_PROMPTS_MODE)
                     }
                     sitePickerLauncher.launch(intent)
                 }

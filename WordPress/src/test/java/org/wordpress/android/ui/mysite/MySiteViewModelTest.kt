@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -192,6 +193,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
     private lateinit var shareRequests: MutableList<String>
+    private lateinit var bloggingPromptsLearnMore: MutableList<Unit>
     private var answerRequests: Int = 0
     private lateinit var trackWithTabSource: MutableList<MySiteTrackWithTabSource>
     private lateinit var tabNavigation: MutableList<TabNavigation>
@@ -243,6 +245,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private var onBloggingPromptShareClicked: ((message: String) -> Unit)? = null
     private var onBloggingPromptAnswerClicked: ((promptId: Int) -> Unit)? = null
+    private var onBloggingPromptSkipClicked: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
                 taskType = QuickStartTaskType.CUSTOMIZE,
@@ -391,6 +394,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         shareRequests = mutableListOf()
         trackWithTabSource = mutableListOf()
         tabNavigation = mutableListOf()
+        bloggingPromptsLearnMore = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -440,6 +444,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             event?.getContentIfNotHandled()?.let {
                 tabNavigation.add(it)
             }
+        }
+        viewModel.onBloggingPromptsLearnMore.observeForever {
+            bloggingPromptsLearnMore.add(Unit)
         }
         site = SiteModel()
         site.id = siteLocalId
@@ -1641,6 +1648,26 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given blogging prompt card, when skip button is clicked, prompt is skipped and undo snackbar displayed`() =
+            test {
+                initSelectedSite()
+
+                requireNotNull(onBloggingPromptSkipClicked).invoke()
+
+                verify(appPrefsWrapper).setSkippedPromptDay(any())
+                verify(mySiteSourceManager).refreshBloggingPrompts(eq(true))
+
+                assertThat(snackbars.size).isEqualTo(1)
+
+                val expectedSnackbar = snackbars[0]
+                assertThat(expectedSnackbar.buttonTitle).isEqualTo(UiStringRes(R.string.undo))
+                assertThat(expectedSnackbar.message).isEqualTo(
+                        UiStringRes(R.string.my_site_blogging_prompt_card_skipped_snackbar)
+                )
+                assertThat(expectedSnackbar.isImportant).isEqualTo(true)
+            }
+
+    @Test
     fun `when blogging prompt answer is uploaded, refresh prompt card`() = test {
         initSelectedSite()
 
@@ -2586,6 +2613,12 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenMedia(site))
     }
 
+    @Test
+    fun `when onBloggingPromptsLearnMoreClicked should post value on onBloggingPromptsLearnMore`() {
+        viewModel.onBloggingPromptsLearnMoreClicked()
+        assertThat(bloggingPromptsLearnMore).containsOnly(Unit)
+    }
+
     private fun findQuickActionsCard() = getLastItems().find { it is QuickActionsCard } as QuickActionsCard?
 
     private fun findQuickStartDynamicCard() = getLastItems().find { it is DynamicCard } as DynamicCard?
@@ -2889,6 +2922,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
         onBloggingPromptShareClicked = params.bloggingPromptCardBuilderParams.onShareClick
         onBloggingPromptAnswerClicked = params.bloggingPromptCardBuilderParams.onAnswerClick
+        onBloggingPromptSkipClicked = params.bloggingPromptCardBuilderParams.onSkipClick
         return BloggingPromptCardWithData(
                 prompt = UiStringText("Test prompt"),
                 respondents = emptyList(),
@@ -2896,7 +2930,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isAnswered = false,
                 promptId = bloggingPromptId,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
-                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit)
+                onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
+                onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
         )
     }
 
