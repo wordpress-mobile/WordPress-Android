@@ -232,7 +232,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onAnswerPromptActionClicked(promptId: Int) {
-        // TODO @klymyam add analytics
+        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED)
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
     }

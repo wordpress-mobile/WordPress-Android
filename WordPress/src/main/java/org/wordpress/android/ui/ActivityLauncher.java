@@ -83,6 +83,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
@@ -365,11 +366,13 @@ public class ActivityLauncher {
 
     public static Intent openEditorWithBloggingPrompt(
             @NonNull final Context context,
-            final int promptId
+            final int promptId,
+            final EntryPoint entryPoint
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, promptId);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
         return intent;
     }
 
@@ -377,12 +380,14 @@ public class ActivityLauncher {
         @NonNull final Context context,
         final int notificationId,
         final BloggingPromptModel bloggingPrompt,
-        @Nullable final Stat stat
+        @Nullable final Stat stat,
+        final EntryPoint entryPoint
     ) {
         final Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
         intent.putExtra(WPMainActivity.ARG_EDITOR_PROMPT_ID, bloggingPrompt.getId());
         intent.putExtra(WPMainActivity.ARG_DISMISS_NOTIFICATION, notificationId);
+        intent.putExtra(WPMainActivity.ARG_EDITOR_ORIGIN, entryPoint);
         intent.putExtra(WPMainActivity.ARG_STAT_TO_TRACK, stat);
         return intent;
     }
@@ -454,7 +459,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
@@ -901,9 +906,12 @@ public class ActivityLauncher {
             SiteModel site,
             boolean isPromo,
             PagePostCreationSourcesDetail source,
-            final int promptId
+            final int promptId,
+            final EntryPoint entryPoint
     ) {
-        addNewPostForResult(new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId);
+        addNewPostForResult(
+            new Intent(activity, EditPostActivity.class), activity, site, isPromo, source, promptId, entryPoint
+        );
     }
 
     public static void addNewPostForResult(
@@ -912,7 +920,8 @@ public class ActivityLauncher {
             SiteModel site,
             boolean isPromo,
             PagePostCreationSourcesDetail source,
-            final int promptId
+            final int promptId,
+            final EntryPoint entryPoint
     ) {
         if (site == null) {
             return;
@@ -923,6 +932,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
+        intent.putExtra(EditPostActivity.EXTRA_ENTRY_POINT, entryPoint);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
