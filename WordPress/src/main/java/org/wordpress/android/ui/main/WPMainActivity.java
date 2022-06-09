@@ -140,6 +140,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.util.config.BloggingPromptsFeatureConfig;
 import org.wordpress.android.util.config.MySiteDashboardTodaysStatsCardFeatureConfig;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -246,6 +247,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
     @Inject MySiteDashboardTodaysStatsCardFeatureConfig mTodaysStatsCardFeatureConfig;
     @Inject QuickStartTracker mQuickStartTracker;
+    @Inject BloggingPromptsFeatureConfig mBloggingPromptsFeatureConfig;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -417,6 +419,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
                    && savedInstanceState == null) {
             canShowAppRatingPrompt = false;
             showBloggingPromptsOnboarding();
+        } else if (mBloggingPromptsFeatureConfig.isEnabled() && AppPrefs.shouldDisplayBloggingPromptOnboarding()
+                   && savedInstanceState == null) {
+            // TODO temporary promo - remove after version 20.1
+            BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
+                    getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
+            );
+            AppPrefs.setShouldDisplayBloggingPromptOnboarding(false);
+            canShowAppRatingPrompt = false;
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -553,6 +563,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case CREATE_NEW_STORY:
                     handleNewStoryAction();
                     break;
+                case ANSWER_BLOGGING_PROMPT:
+                case NO_ACTION:
+                    break; // noop - we handle ANSWER_BLOGGING_PROMPT through live data event
             }
         });
 
@@ -932,10 +945,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         long selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
         if (selectedSite != null && NetworkUtils.isNetworkAvailable(this)
             && mQuickStartRepository.getQuickStartType()
-                    .isEveryQuickStartTaskDone(
-                            mQuickStartStore,
-                            selectedSiteLocalId
-                    )
+                                    .isEveryQuickStartTaskDone(
+                                            mQuickStartStore,
+                                            selectedSiteLocalId
+                                    )
             && !mQuickStartStore.getQuickStartNotificationReceived(selectedSite.getId())) {
             boolean isQuickStartCompleted = mQuickStartStore.getQuickStartCompleted(selectedSiteLocalId);
             if (!isQuickStartCompleted) {
