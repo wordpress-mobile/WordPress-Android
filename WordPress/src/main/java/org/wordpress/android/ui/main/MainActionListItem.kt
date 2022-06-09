@@ -28,6 +28,7 @@ sealed class MainActionListItem {
         val promptTitle: UiString,
         val isAnswered: Boolean,
         val promptId: Int,
-        val onClickAction: ((promptId: Int) -> Unit)?
+        val onClickAction: ((promptId: Int) -> Unit)?,
+        val onHelpAction: (() -> Unit)?
     ) : MainActionListItem()
 }
