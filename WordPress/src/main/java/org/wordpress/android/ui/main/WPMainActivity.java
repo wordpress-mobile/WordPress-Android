@@ -656,6 +656,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
             handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId);
         });
 
+        mViewModel.getOpenBloggingPromptsOnboarding().observe(this, action -> {
+            showBloggingPromptsOnboarding();
+        });
+
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
         // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
         // initialized with the most restrictive rights case. This is OK and will be frequently checked
