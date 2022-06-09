@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DoNothing
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
@@ -16,6 +17,9 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.INFORMATION
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
 import javax.inject.Inject
@@ -35,9 +39,11 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     private val _action = MutableLiveData<BloggingPromptsOnboardingAction>()
     val action: LiveData<BloggingPromptsOnboardingAction> = _action
 
+    private val _snackBarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
+    val snackBarMessage = _snackBarMessage as LiveData<Event<SnackbarMessageHolder>>
+
     private lateinit var dialogType: DialogType
     private var hasTrackedScreenShown = false
-    private var site: SiteModel? = null
 
     fun start(type: DialogType) {
         if (!hasTrackedScreenShown) {
@@ -46,8 +52,6 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
         }
         dialogType = type
 
-        site = selectedSiteRepository.getSelectedSite()
-
         _uiState.value = uiStateMapper.mapReady(dialogType, ::onPrimaryButtonClick, ::onSecondaryButtonClick)
     }
 
@@ -55,8 +59,20 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
         val action = when (dialogType) {
             ONBOARDING -> {
                 analyticsTracker.trackTryItNowClicked()
-                val bloggingPrompt = bloggingPromptsStore.getPromptForDate(site!!, Date()).firstOrNull()?.model
-                OpenEditor(bloggingPrompt?.id ?: -1)
+                val site = selectedSiteRepository.getSelectedSite()
+                var bloggingPrompt = bloggingPromptsStore.getPromptForDate(site!!, Date()).firstOrNull()?.model
+                if (bloggingPrompt == null) {
+                    _snackBarMessage.postValue(
+                            Event(
+                                    SnackbarMessageHolder(
+                                            UiStringRes(R.string.blogging_prompts_onboarding_prompts_loading)
+                                    )
+                            )
+                    )
+                    DoNothing
+                } else {
+                    OpenEditor(bloggingPrompt.id ?: -1)
+                }
             }
             INFORMATION -> {
                 analyticsTracker.trackGotItClicked()
