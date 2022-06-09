@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-26 05:07:45+0000
+Translation-Revision-Date: 2022-06-01 15:36:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_image_file_not_found">Archivo de imagen no encontrado.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arrastrar y soltar hace que reordenar bloques sea algo trivial. Presiona y sujeta un bloque, luego arrástralo a su nueva ubicación y suéltalo.</string>
+    <string name="gutenberg_native_drag_drop">Arrastrar y soltar</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">También puedes reorganizar los bloques tocando un bloque y luego tocando las flechas arriba y abajo que aparecen en la parte inferior izquierda del bloque para moverlo encima o debajo de otros bloques.</string>
+    <string name="gutenberg_native_arrow_buttons">Botones de flechas</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Seleccionado actualmente: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Todas las tareas están completas</string>
+    <string name="quick_start_list_task_complete">Tarea completada</string>
+    <string name="me_btn_scan_login_code">Explorar código de acceso</string>
+    <string name="stats_insights_followers_guide_card">💡 Puedes probar a dejar un comentario como un gesto para animar a la participación en el blog y luego ganar más seguidores.</string>
+    <string name="stats_insights_comments_guide_card">💡 Ve tus principales contribuidores tocando en VER MÁS.</string>
+    <string name="stats_insights_likes_guide_card">⭐️  Tu última entrada %1$s ha recibido %2$s me gusta.</string>
+    <string name="stats_most_popular_percent_views_empty">No hay suficiente actividad. ¡Vuelve a comprobarlo más tarde, cuando tu sitio haya tenido más visitas!</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1s, %2s del total de seguidores</string>
+    <string name="stats_insights_latest_post_empty">Todavía no has publicado ninguna entrada. ¡Vuelve más tarde cuando hayas publicado tu primera entrada!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Si quieres probar a conseguir más visualizaciones y tráfico echa un vistazo a nuestros consejos destacados %1$s</string>
     <string name="pages_copy_link">Copiar enlace</string>
     <string name="quick_start_list_upload_media_title">Sube fotos o vídeos</string>
     <string name="quick_start_sites_type_get_to_know_app">Conoce la aplicación</string>
@@ -69,7 +86,7 @@ Language: es
     <string name="new_site_creation_site_name_header_subtitle">Un buen nombre es corto y fácil de recordar.\nPuedes cambiarlo más adelante.</string>
     <string name="my_site_todays_stats_get_more_views_message">¿Te interesa crear tu audiencia? Echa un vistazo a nuestros &lt;a href=\"%1$s\"&gt;mejores consejos&lt;/a&gt;.</string>
     <string name="new_site_creation_site_name_header_title">Dale un nombre a tu web %s</string>
-    <string name="stats_insights_views_and_visitors">Visitas y visitantes</string>
+    <string name="stats_insights_views_and_visitors">Vistas y visitantes</string>
     <string name="featured_image_removed_notice">Eliminada como imagen destacada</string>
     <string name="featured_image_confirmation_notice">Establecer como imagen destacada</string>
     <string name="featured_image_replace_dialog_cancel">Mantener actual</string>
@@ -474,6 +491,7 @@ Language: es
     <string name="gutenberg_native_three">Tres</string>
     <string name="gutenberg_native_s_social_icon">Icono social %s</string>
     <string name="gutenberg_native_mention">Mención</string>
+    <string name="gutenberg_native_new">NUEVO</string>
     <string name="gutenberg_native_preview_page">Previsualizar la página</string>
     <string name="gutenberg_native_preview_post">Previsualizar la entrada</string>
     <string name="gutenberg_native_retry">Reintentar</string>
@@ -1668,7 +1686,6 @@ Language: es
     <string name="menu_switch_to_gutenberg_editor">Cambiar al editor de bloques</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites">Siguientes pasos</string>
-    <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Añade un icono personalizado para conseguir un aspecto profesional y refinado.</string>
     <string name="quick_start_sites_type_grow">Haz crecer tu audiencia</string>
     <string name="quick_start_sites_type_customize">Personaliza tu sitio</string>
@@ -1681,14 +1698,10 @@ Language: es
     <string name="quick_start_dialog_check_stats_title">Revisa las estadísticas de tu sitio</string>
     <string name="quick_start_dialog_remove_next_steps_title">Quitar los siguientes pasos</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
-    <string name="quick_start_complete_view_subtitle">Enhorabuena por completar tu lista. Un trabajo bien hecho.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Eliminar los siguientes pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
     <string name="quick_start_dialog_check_stats_message">Mantente al día sobre el rendimiento de tu sitio.</string>
-    <string name="quick_start_complete_view_title">¡Todas las tareas están completas!</string>
     <string name="quick_start_task_skip_menu_title">Saltar tarea</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">contraer</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">ampliar</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
     <string name="stats_select_previous_period_description">Elige el periodo anterior</string>
     <string name="stats_most_popular_percent_views">%1$d%% de visitas</string>
@@ -1761,7 +1774,6 @@ Language: es
     <string name="stats_videos">Vídeos</string>
     <string name="stats_insights_tags_and_categories">Etiquetas y categorías</string>
     <string name="stats_insights_latest_post_with_no_engagement">Han pasado %1$s desde que se publicó %2$s. Pon la bola a rodar y aumenta las vistas de las entradas compartiendo tu entrada:</string>
-    <string name="stats_insights_latest_post_empty">Aún no has publicado ninguna entrada. Una vez que empieces a publicar, el resumen de tu última entrada aparecerá aquí:</string>
     <string name="stats_insights_all_time_stats">Histórico</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>

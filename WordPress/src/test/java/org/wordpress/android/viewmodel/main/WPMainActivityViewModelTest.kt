@@ -22,6 +22,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -81,6 +82,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var bloggingPromptsFeatureConfig: BloggingPromptsFeatureConfig
     @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock lateinit var quickStartType: QuickStartType
+    @Mock private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit>
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -155,6 +157,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         // mainActions is MediatorLiveData and needs observer in order for us to access it's value
         viewModel.mainActions.observeForever { }
         viewModel.fabUiState.observeForever { fabUiState = it }
+        viewModel.openBloggingPromptsOnboarding.observeForever(openBloggingPromptsOnboardingObserver)
 
         loginFlowTriggered = false
         switchTabTriggered = false
@@ -804,6 +807,28 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.checkAndSetVariantForMySiteDefaultTabExperiment()
 
         verify(mySiteDefaultTabExperiment, atLeastOnce()).checkAndSetVariantIfNeeded()
+    }
+
+    @Test
+    fun `Should track analytics event when onHelpPrompActionClicked is called`() {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        startViewModelWithDefaultParameters()
+        val action = viewModel.mainActions.value?.first {
+            it.actionType == ANSWER_BLOGGING_PROMPT
+        } as AnswerBloggingPromptAction
+        action.onHelpAction?.invoke()
+        verify(analyticsTrackerWrapper).track(Stat.MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED)
+    }
+
+    @Test
+    fun `Should trigger openBloggingPromptsOnboarding when onHelpPrompActionClicked is called`() = test {
+        whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
+        startViewModelWithDefaultParameters()
+        val action = viewModel.mainActions.value?.first {
+            it.actionType == ANSWER_BLOGGING_PROMPT
+        } as AnswerBloggingPromptAction
+        action.onHelpAction?.invoke()
+        verify(openBloggingPromptsOnboardingObserver).onChanged(anyOrNull())
     }
 
     private fun startViewModelWithDefaultParameters(

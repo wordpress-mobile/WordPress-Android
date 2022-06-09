@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.main
 
 import android.view.ViewGroup
-import org.wordpress.android.databinding.BloggingPrompCardCompactBinding
+import org.wordpress.android.databinding.BloggingPromptCardCompactBinding
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
 import org.wordpress.android.ui.utils.UiHelpers
@@ -12,8 +12,8 @@ class CompactBloggingPromptCardViewHolder(
     parent: ViewGroup,
     private val uiHelpers: UiHelpers,
     private val htmlCompatWrapper: HtmlCompatWrapper
-) : AddContentViewHolder<BloggingPrompCardCompactBinding>(
-        parent.viewBinding(BloggingPrompCardCompactBinding::inflate)
+) : AddContentViewHolder<BloggingPromptCardCompactBinding>(
+        parent.viewBinding(BloggingPromptCardCompactBinding::inflate)
 ) {
     fun bind(action: AnswerBloggingPromptAction) = with(binding) {
         val cardPrompt = htmlCompatWrapper.fromHtml(
@@ -28,7 +28,9 @@ class CompactBloggingPromptCardViewHolder(
         answeredButton.setOnClickListener {
             action.onClickAction?.invoke(action.promptId)
         }
-
+        promptHelpButton.setOnClickListener {
+            action.onHelpAction?.invoke()
+        }
         uiHelpers.updateVisibility(answeredButton, action.isAnswered)
     }
 }

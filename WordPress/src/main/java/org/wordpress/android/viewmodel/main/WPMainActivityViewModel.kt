@@ -120,6 +120,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val _createPostWithBloggingPrompt = SingleLiveEvent<Int>()
     val createPostWithBloggingPrompt: LiveData<Int> = _createPostWithBloggingPrompt
 
+    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit>()
+    val openBloggingPromptsOnboarding: LiveData<Unit> = _openBloggingPromptsOnboarding
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
@@ -167,7 +170,8 @@ class WPMainActivityViewModel @Inject constructor(
                                 isAnswered = prompt.isAnswered,
                                 promptId = prompt.id,
                                 attribution = BloggingPromptAttribution.fromString(prompt.attribution),
-                                onClickAction = ::onAnswerPromptActionClicked
+                                onClickAction = ::onAnswerPromptActionClicked,
+                                onHelpAction = ::onHelpPrompActionClicked
                         )
                 )
             }
@@ -231,6 +235,11 @@ class WPMainActivityViewModel @Inject constructor(
         // TODO @klymyam add analytics
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
+    }
+
+    private fun onHelpPrompActionClicked() {
+        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED)
+        _openBloggingPromptsOnboarding.call()
     }
 
     private fun disableTooltip(site: SiteModel?) {

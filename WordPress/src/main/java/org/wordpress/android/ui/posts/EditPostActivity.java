@@ -918,6 +918,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mEditPostRepository.updateAsync(postModel -> {
                         postModel.setContent(loadedPrompt.getContent());
                         postModel.setAnsweredPromptId(loadedPrompt.getPromptId());
+                        postModel.setTagNames(loadedPrompt.getTag());
                         return true;
                     }, (postModel, result) -> {
                         refreshEditorContent();
@@ -3300,9 +3301,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
-        if (promptId >= 0) {
-            mEditorBloggingPromptsViewModel.start(mSite, promptId);
-        }
+        mEditorBloggingPromptsViewModel.start(mSite, promptId);
     }
 
     @Override

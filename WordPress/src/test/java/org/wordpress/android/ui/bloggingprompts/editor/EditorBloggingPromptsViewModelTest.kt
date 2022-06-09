@@ -18,13 +18,13 @@ import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.test
+import org.wordpress.android.ui.posts.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel.EditorLoadedPrompt
 import java.util.Date
 
 @InternalCoroutinesApi
 class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
-    //    @Mock lateinit var bloggingPromptsStore: BloggingPromptsStore
     @Mock lateinit var siteModel: SiteModel
 
     private lateinit var viewModel: EditorBloggingPromptsViewModel
@@ -68,7 +68,14 @@ class EditorBloggingPromptsViewModelTest : BaseUnitTest() {
 
         assertThat(loadedPrompt?.content).isEqualTo(bloggingPrompt.model?.content)
         assertThat(loadedPrompt?.promptId).isEqualTo(bloggingPrompt.model?.id)
+        assertThat(loadedPrompt?.tag).isEqualTo(BLOGGING_PROMPT_TAG)
 
         verify(bloggingPromptsStore, times(1)).getPromptById(any(), any())
+    }
+
+    @Test
+    fun `should NOT execute start method if prompt ID is less than 0`() = test {
+        viewModel.start(siteModel, -1)
+        verify(bloggingPromptsStore, times(0)).getPromptById(any(), any())
     }
 }

@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:35:23+0000
+Translation-Revision-Date: 2022-06-03 09:54:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">ブロックをタップし、ブロックの左下に表示される上下矢印をタップして上下に移動させることで、ブロックの配置を変更することもできます。</string>
+    <string name="gutenberg_native_image_file_not_found">画像ファイルが見つかりませんでした。</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">ドラッグ &amp; ドロップで簡単にブロックの位置を編集できます。 長押ししながら新しい場所にブロックをドラッグします。</string>
+    <string name="gutenberg_native_drag_drop">ドラッグ &amp; ドロップ</string>
+    <string name="gutenberg_native_arrow_buttons">矢印ボタン</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s 選択中: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">すべてのタスクが完了しました</string>
+    <string name="quick_start_list_task_complete">タスクが完了しました</string>
+    <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
+    <string name="stats_insights_followers_guide_card">💡コメントを投稿して積極的にブログに取り組む姿勢を見せることで、より多くのフォロワーを獲得できます。</string>
+    <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると、人気の寄稿者を表示できます。</string>
+    <string name="stats_insights_likes_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
+    <string name="stats_most_popular_percent_views_empty">アクティビティが足りません。 サイトの訪問者数が増えたら後でもう一度確認してください。</string>
+    <string name="stats_insights_latest_post_empty">まだ公開した投稿がありません。 最初の投稿を公開したら後でもう一度確認してください。</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">閲覧数とトラフィックを増やしたい場合は、トップのヒントをご覧ください %1$s</string>
+    <string name="stats_total_followers_content_description">%1s人、フォロワー総数の%2s</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">リンクをコピー</string>
     <string name="quick_start_completed_tour_title">おめでとうございます ! 詳しくなりました&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">アプリについて知る</string>
@@ -49,14 +66,12 @@ Language: ja_JP
     <string name="photo_picker_media_thumbnail_content_description">メディアサムネイル</string>
     <string name="stats_insights_popular_title">🔥 最も人気のある時間</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">今週の訪問者数は先週と比べて%1$s人減りました。</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">今週の訪問者数は先週と比べて%1$s人増えました。</string>
-    <string name="stats_insights_views_and_visitors_views_negative">今週の訪問者数は先週と比べて%1$s人減りました。</string>
-    <string name="stats_insights_views_and_visitors_views_positive">今週の訪問者数は先週と比べて%1$s人増えました。</string>
+    <string name="stats_insights_views_and_visitors_views_negative">今週の表示数は先週と比べて%1$s回減りました。</string>
     <string name="stats_timeframe_previous_week">先週</string>
     <string name="stats_timeframe_this_week">今週</string>
     <string name="scan_vault_press_active_on_site_button_text">ダッシュボードを表示</string>
     <string name="scan_vault_press_active_on_site_subtitle">サイトはすでに VaultPress で保護されています。 VaultPress ダッシュボードへのリンクは以下にあります。</string>
+    <string name="stats_insights_views_and_visitors_views_positive">今週の表示数は先週と比べて%1$s回増えました。</string>
     <string name="scan_vault_press_active_on_site_title">サイトに VaultPress を搭載済み</string>
     <string name="locale_picker_current_language">現在の言語: </string>
     <string name="hpp_choose_and_create_site">サイトを作成</string>
@@ -474,6 +489,7 @@ Language: ja_JP
     <string name="gutenberg_native_three">3</string>
     <string name="gutenberg_native_s_social_icon">%sソーシャルアイコン</string>
     <string name="gutenberg_native_mention">\@ 返信</string>
+    <string name="gutenberg_native_new">新規</string>
     <string name="gutenberg_native_preview_post">投稿をプレビュー</string>
     <string name="gutenberg_native_preview_page">ページをプレビュー</string>
     <string name="gutenberg_native_retry">リトライ</string>
@@ -1669,7 +1685,6 @@ Language: ja_JP
     <string name="exit">終了</string>
     <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
     <string name="quick_start_sites">次のステップ</string>
-    <string name="quick_start_complete_tasks_header">完了 (%d)</string>
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
     <string name="quick_start_dialog_upload_icon_title">独自のサイトアイコンを選択</string>
@@ -1683,11 +1698,7 @@ Language: ja_JP
     <string name="quick_start_dialog_check_stats_message">サイトのパフォーマンスを把握しましょう。</string>
     <string name="quick_start_dialog_remove_next_steps_message">「次のステップ」を削除すると、このサイトのすべてのツアーが非表示になります。この操作を元に戻すことはできません。</string>
     <string name="quick_start_dialog_remove_next_steps_title">次のステップを削除</string>
-    <string name="quick_start_complete_view_subtitle">リストが完了しました。おめでとうございます。</string>
     <string name="quick_start_task_skip_menu_title">タスクをスキップ</string>
-    <string name="quick_start_complete_view_title">すべてのタスクが完了しました。</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">折りたたむ</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">展開</string>
     <string name="notification_channel_reminder_title">リマインダー</string>
     <string name="stats_insights_popular">最も人気の時間</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
@@ -1762,7 +1773,6 @@ Language: ja_JP
     <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
     <string name="stats_insights_latest_post_with_no_engagement">「%2$s」を公開してから%1$sが経過しました。投稿をシェアして閲覧数を増やしましょう。</string>
     <string name="stats_insights_all_time_stats">全期間</string>
-    <string name="stats_insights_latest_post_empty">公開済み投稿はまだありません。公開すると、最新の投稿の概要がここに表示されます:</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">フォロワー</string>
     <string name="stats_publicize_service_label">サービス</string>
