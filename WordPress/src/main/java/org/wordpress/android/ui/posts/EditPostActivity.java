@@ -977,9 +977,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         reattachUploadingMediaForAztec();
 
-        final int promptId = getIntent().getIntExtra(EXTRA_PROMPT_ID, -1);
-        PostUploadHandler.setPublishedPostPromptId(promptId);
-
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
         PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
         mIsConfigChange = false;
