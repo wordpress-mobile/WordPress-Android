@@ -12,6 +12,10 @@ class BloggingPromptsFeatureConfig
         BuildConfig.BLOGGING_PROMPTS,
         BLOGGING_PROMPTS_REMOTE_FIELD
 ) {
+    override fun isEnabled(): Boolean {
+        return super.isEnabled() && BuildConfig.IS_JETPACK_APP
+    }
+
     companion object {
         const val BLOGGING_PROMPTS_REMOTE_FIELD = "blogging_prompts_remote_field"
     }
