@@ -32,5 +32,6 @@ class CompactBloggingPromptCardViewHolder(
             action.onHelpAction?.invoke()
         }
         uiHelpers.updateVisibility(answeredButton, action.isAnswered)
+        uiHelpers.updateVisibility(answerButton, !action.isAnswered)
     }
 }
