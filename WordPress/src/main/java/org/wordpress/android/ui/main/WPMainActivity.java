@@ -1309,7 +1309,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             int verticalOffset;
             QuickStartTask followSiteTask = mQuickStartRepository
                     .getQuickStartType().getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL);
-            if (followSiteTask.equals(activeTask)) {
+            if (followSiteTask.equals(activeTask)
+                || QuickStartExistingSiteTask.CHECK_NOTIFICATIONS.equals(activeTask)) {
                 horizontalOffset = targetView != null ? ((targetView.getWidth() / 2 - size + getResources()
                         .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset))) : 0;
                 verticalOffset = 0;
