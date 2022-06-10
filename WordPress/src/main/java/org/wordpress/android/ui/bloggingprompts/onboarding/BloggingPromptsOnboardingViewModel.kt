@@ -60,7 +60,7 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
             ONBOARDING -> {
                 analyticsTracker.trackTryItNowClicked()
                 val site = selectedSiteRepository.getSelectedSite()
-                var bloggingPrompt = bloggingPromptsStore.getPromptForDate(site!!, Date()).firstOrNull()?.model
+                val bloggingPrompt = bloggingPromptsStore.getPromptForDate(site!!, Date()).firstOrNull()?.model
                 if (bloggingPrompt == null) {
                     _snackBarMessage.postValue(
                             Event(
