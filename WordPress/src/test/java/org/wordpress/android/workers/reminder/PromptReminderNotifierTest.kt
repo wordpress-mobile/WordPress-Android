@@ -14,8 +14,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.BloggingRemindersStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
+import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
@@ -44,7 +44,8 @@ class PromptReminderNotifierTest {
             bloggingPromptsFeatureConfig = bloggingPromptsFeatureConfig,
             bloggingPromptsStore = bloggingPromptsStore,
             bloggingRemindersAnalyticsTracker = bloggingRemindersAnalyticsTracker,
-            htmlCompatWrapper = htmlCompatWrapper
+            htmlCompatWrapper = htmlCompatWrapper,
+            bloggingRemindersStore = bloggingRemindersStore
     )
 
     @Before
@@ -72,24 +73,35 @@ class PromptReminderNotifierTest {
     }
 
     @Test
-    fun `Should NOT notify if SiteModel hasOptedInBloggingPromptsReminders returns FALSE`() = runBlocking {
+    fun `Should NOT notify if user did NOT opt in to include prompts in the reminders`() = runBlocking {
         val siteId = 123
         val siteModel: SiteModel = mock()
-
+        val disabledPromptBloggingReminderModel = BloggingRemindersModel(
+                siteId = siteId,
+                isPromptIncluded = false
+        )
+        whenever(bloggingRemindersStore.bloggingRemindersModel(any())).thenReturn(
+                flowOf(disabledPromptBloggingReminderModel)
+        )
         whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(false)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
         assertFalse(classToTest.shouldNotify(123))
     }
 
     @Test
-    fun `Should notify if has access token, flag is enabled and has opted in for blogging prompts reminders`() =
+    fun `Should notify if has access token, flag is enabled and user opted in to include prompts in the reminders`() =
             runBlocking {
                 val siteId = 123
                 val siteModel: SiteModel = mock()
-
+                val enabledPromptBloggingReminderModel = BloggingRemindersModel(
+                        siteId = siteId,
+                        isPromptIncluded = true
+                )
+                whenever(bloggingRemindersStore.bloggingRemindersModel(siteId)).thenReturn(
+                        flowOf(enabledPromptBloggingReminderModel)
+                )
                 whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
                 whenever(accountStore.hasAccessToken()).thenReturn(true)
-                whenever(bloggingPromptsFeatureConfig.isEnabled()).thenReturn(true)
                 whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(siteModel)
                 assertTrue(classToTest.shouldNotify(siteId))
             }
