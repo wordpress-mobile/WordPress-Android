@@ -21,6 +21,7 @@ import org.wordpress.android.push.NotificationPushIds.REMINDER_NOTIFICATION_ID
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersAnalyticsTracker
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig
@@ -130,7 +131,11 @@ class PromptReminderNotifier @Inject constructor(
         context,
         openEditorRequestCode,
         ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(
-                context, notificationId, bloggingPrompt, BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED
+            context,
+            notificationId,
+            bloggingPrompt,
+            BLOGGING_REMINDERS_NOTIFICATION_PROMPT_ANSWER_TAPPED,
+            EntryPoint.BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT
         ),
         PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
@@ -144,7 +149,11 @@ class PromptReminderNotifier @Inject constructor(
         context,
         openEditorRequestCode,
         ActivityLauncher.openEditorWithPromptAndDismissNotificationIntent(
-                context, notificationId, bloggingPrompt, BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED
+            context,
+            notificationId,
+            bloggingPrompt,
+            BLOGGING_REMINDERS_NOTIFICATION_PROMPT_TAPPED,
+            EntryPoint.BLOGGING_REMINDERS_NOTIFICATION_ANSWER_PROMPT
         ),
         PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )

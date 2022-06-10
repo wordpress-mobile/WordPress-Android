@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.utils.UiString
 
 sealed class MainActionListItem {
@@ -28,6 +29,7 @@ sealed class MainActionListItem {
         val promptTitle: UiString,
         val isAnswered: Boolean,
         val promptId: Int,
+        val attribution: BloggingPromptAttribution,
         val onClickAction: ((promptId: Int) -> Unit)?,
         val onHelpAction: (() -> Unit)?
     ) : MainActionListItem()

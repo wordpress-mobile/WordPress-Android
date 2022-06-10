@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="0dp">
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -55,6 +55,32 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/attribution_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_medium"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/prompt_content"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_dayone_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:text="@string/my_site_blogging_prompt_card_attribution_dayone"
+                android:textAppearance="?attr/textAppearanceCaption" />
+
+        </LinearLayout>
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/prompt_content"
             style="@style/MySiteCardBloggingPromptTitle"
@@ -76,7 +102,7 @@
             android:text="@string/my_site_blogging_prompt_card_answer_prompt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prompt_content" />
+            app:layout_constraintTop_toBottomOf="@+id/attribution_container" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/answered_button"
@@ -88,10 +114,17 @@
             android:text="@string/my_site_blogging_prompt_card_answered_prompt"
             android:textColor="@color/success_emphasis_medium_selector"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prompt_content" />
+            app:layout_constraintTop_toBottomOf="@+id/attribution_container" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:alpha="@dimen/disabled_alpha"
+        android:background="?attr/colorOnSurface" />
+
+</LinearLayout>

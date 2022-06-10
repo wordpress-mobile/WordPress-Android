@@ -14,6 +14,7 @@ import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.RtlUtils
@@ -36,6 +37,8 @@ class BloggingPromptCardViewHolder(
         )
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
+
+        uiHelpers.updateVisibility(attributionContainer, card.attribution == DAY_ONE)
 
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()

@@ -4,6 +4,7 @@
 -----
 * [*] Site creation: enhances the design selection screen with recommended designs [https://github.com/wordpress-mobile/WordPress-Android/pull/16468]
 * [*] DeepLinks: fix auto-verification of App Links in Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/16696]
+* [*] Quick Start: Fix Quick Start focus points in RTL mode [https://github.com/wordpress-mobile/WordPress-Android/pull/16720]
 
 20.0
 -----

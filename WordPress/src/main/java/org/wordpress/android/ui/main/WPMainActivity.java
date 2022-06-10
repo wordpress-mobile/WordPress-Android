@@ -105,6 +105,7 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -202,6 +203,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_OPEN_BLOGGING_REMINDERS = "show_blogging_reminders_flow";
     public static final String ARG_SELECTED_SITE = "SELECTED_SITE_ID";
     public static final String ARG_STAT_TO_TRACK = "stat_to_track";
+    public static final String ARG_EDITOR_ORIGIN = "editor_origin";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -540,7 +542,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
-                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1);
+                    handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1, null);
                     break;
                 case CREATE_NEW_PAGE:
                     if (mMLPViewModel.canShowModalLayoutPicker()) {
@@ -653,7 +655,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mViewModel.getCreatePostWithBloggingPrompt().observe(this, promptId -> {
-            handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId);
+            handleNewPostAction(
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE, promptId, EntryPoint.ADD_NEW_SHEET_ANSWER_PROMPT
+            );
         });
 
         mViewModel.getOpenBloggingPromptsOnboarding().observe(this, action -> {
@@ -709,7 +713,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         initSelectedSite();
                     }
                     final int promptId = intent.getIntExtra(ARG_EDITOR_PROMPT_ID, -1);
-                    onNewPostButtonClicked(promptId);
+                    final EntryPoint entryPoint = (EntryPoint) intent.getSerializableExtra(ARG_EDITOR_ORIGIN);
+                    onNewPostButtonClicked(promptId, entryPoint);
                     break;
                 case ARG_STATS:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -1011,8 +1016,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     // user tapped the new post button in the bottom navbar
     @Override
-    public void onNewPostButtonClicked(final int promptId) {
-        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR, promptId);
+    public void onNewPostButtonClicked(final int promptId, @NonNull final EntryPoint entryPoint) {
+        handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR, promptId, entryPoint);
     }
 
     private void handleNewPageAction(String title, String content, String template,
@@ -1030,14 +1035,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void handleNewPostAction(PagePostCreationSourcesDetail source, final int promptId) {
+    private void handleNewPostAction(PagePostCreationSourcesDetail source,
+                                     final int promptId,
+                                     final EntryPoint entryPoint) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
             return;
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId, entryPoint);
     }
 
     private void handleNewStoryAction() {
@@ -1302,7 +1309,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             int verticalOffset;
             QuickStartTask followSiteTask = mQuickStartRepository
                     .getQuickStartType().getTaskFromString(QuickStartStore.QUICK_START_FOLLOW_SITE_LABEL);
-            if (followSiteTask.equals(activeTask)) {
+            if (followSiteTask.equals(activeTask)
+                || QuickStartExistingSiteTask.CHECK_NOTIFICATIONS.equals(activeTask)) {
                 horizontalOffset = targetView != null ? ((targetView.getWidth() / 2 - size + getResources()
                         .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset))) : 0;
                 verticalOffset = 0;
