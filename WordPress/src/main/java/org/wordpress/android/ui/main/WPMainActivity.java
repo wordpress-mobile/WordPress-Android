@@ -173,7 +173,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         BasicDialogNegativeClickInterface,
         QuickStartPromptClickInterface,
         BloggingPromptsReminderSchedulerListener,
-        BloggingPromptsOnboardingListener {
+        BloggingPromptsOnboardingListener,
+        UpdateSelectedSiteListener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
@@ -1663,6 +1664,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Override public void onShowBloggingPromptsOnboarding() {
         showBloggingPromptsOnboarding();
+    }
+
+    @Override public void onUpdateSelectedSiteResult(int resultCode, @Nullable Intent data) {
+        onActivityResult(RequestCodes.SITE_PICKER, resultCode, data);
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

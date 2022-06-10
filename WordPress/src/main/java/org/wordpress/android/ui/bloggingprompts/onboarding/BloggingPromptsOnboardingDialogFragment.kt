@@ -30,6 +30,7 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
+import org.wordpress.android.ui.main.UpdateSelectedSiteListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint.BLOGGING_PROMPTS_INTRODUCTION
 import org.wordpress.android.util.RtlUtils
@@ -48,6 +49,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     SelectedSiteRepository.UNAVAILABLE
             ) ?: SelectedSiteRepository.UNAVAILABLE
             viewModel.onSiteSelected(selectedSiteLocalId)
+            (activity as? UpdateSelectedSiteListener)?.onUpdateSelectedSiteResult(result.resultCode, result.data)
         }
     }
 
