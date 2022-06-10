@@ -8,7 +8,6 @@ import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
@@ -164,15 +163,14 @@ class PromptReminderNotifier @Inject constructor(
         PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
     )
 
-    fun shouldNotify(siteId: Int): Boolean =
-        runBlocking {
-            val hasAccessToken = accountStore.hasAccessToken()
-            val isBloggingPromptsEnabled = bloggingPromptsFeatureConfig.isEnabled()
-            val siteModel = siteStore.getSiteByLocalId(siteId)
-            val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
-            val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded
-            hasAccessToken && isBloggingPromptsEnabled && hasOptedInBloggingPromptsReminders
-        }
+    suspend fun shouldNotify(siteId: Int): Boolean {
+        val hasAccessToken = accountStore.hasAccessToken()
+        val isBloggingPromptsEnabled = bloggingPromptsFeatureConfig.isEnabled()
+        val siteModel = siteStore.getSiteByLocalId(siteId)
+        val bloggingRemindersModel = bloggingRemindersStore.bloggingRemindersModel(siteId).first()
+        val hasOptedInBloggingPromptsReminders = siteModel != null && bloggingRemindersModel.isPromptIncluded
+        return hasAccessToken && isBloggingPromptsEnabled && hasOptedInBloggingPromptsReminders
+    }
 
     companion object {
         const val NO_SITE_ID = -1
