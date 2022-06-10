@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-23 13:28:50+0000
+Translation-Revision-Date: 2022-05-31 14:13:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Du kan även ändra blockens ordning genom att trycka på ett block och sedan trycka på pilarna upp/ned som visas till vänster i blocket för att flytta blocket uppåt eller nedåt.</string>
+    <string name="gutenberg_native_image_file_not_found">Bildfilen hittades inte.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Dra och släpp gör det enkelt att sortera om blocken. Tryck länge på ett block, dra det sedan till dess nya plats och släpp det sedan.</string>
+    <string name="gutenberg_native_drag_drop">Dra och släpp</string>
+    <string name="gutenberg_native_arrow_buttons">Piltangenter</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Aktuell markering: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Alla uppgifter är slutförda</string>
+    <string name="quick_start_list_task_complete">Uppgiften slutförd</string>
+    <string name="me_btn_scan_login_code">Skanna inloggningskoden</string>
+    <string name="stats_insights_followers_guide_card">💡 Du kan prova att kommentera på besökarens webbplats som en vänlig gest. Detta kan leda till fler följare.</string>
+    <string name="stats_insights_comments_guide_card">💡 Se dina flitigaste bidragsgivare genom att trycka på VISA MER.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Ditt senaste inlägg %1$s har fått %2$s gillamarkeringar.</string>
+    <string name="stats_most_popular_percent_views_empty">Inte tillräckligt med aktivitet. Kom tillbaka när din webbplats har haft fler besökare.</string>
+    <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. Kom tillbaka när du har publicerat ditt första inlägg.</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Om du vill få fler visningar och besökare kan du kolla in våra tips %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s av alla följare</string>
+    <string name="stats_value_percent">%1$s (%2$s %%)</string>
     <string name="pages_copy_link">Kopiera länk</string>
     <string name="quick_start_completed_tour_title">Grattis! Du kan det här&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Lär känna appen</string>
@@ -474,6 +491,7 @@ Language: sv_SE
     <string name="gutenberg_native_three">Tre</string>
     <string name="gutenberg_native_s_social_icon">Social ikon för %s</string>
     <string name="gutenberg_native_mention">Omnämnande</string>
+    <string name="gutenberg_native_new">NYTT</string>
     <string name="gutenberg_native_preview_post">Förhandsgranska inlägg</string>
     <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
     <string name="gutenberg_native_retry">Försök igen</string>
@@ -1670,7 +1688,6 @@ Language: sv_SE
     <string name="quick_start_sites_type_grow">Vidga din läsekrets</string>
     <string name="quick_start_sites_type_customize">Anpassa din webbplats</string>
     <string name="quick_start_sites">Gå vidare</string>
-    <string name="quick_start_complete_tasks_header">Klart (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Välj en unik webbplats-ikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
     <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$s statistik %2$s för att kolla hur det går för din webbplats.</string>
@@ -1683,11 +1700,7 @@ Language: sv_SE
     <string name="quick_start_dialog_remove_next_steps_message">Om du tar bort resten av stegen kommer detta att dölja alla informativa rundvandringar på denna webbplats. Denna åtgärd går inte att ångra.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Ta bort resten av stegen</string>
     <string name="quick_start_remove_next_steps_menu_title">Ta bort detta</string>
-    <string name="quick_start_complete_view_subtitle">Grattis! Du har klarat av hela listan. Bra jobbat.</string>
-    <string name="quick_start_complete_view_title">Alla åtgärder har genomförts!</string>
     <string name="quick_start_task_skip_menu_title">Hoppa över åtgärden</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">minimera</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandera</string>
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Välj nästa period</string>
     <string name="stats_select_previous_period_description">Välj föregående period</string>
@@ -1760,7 +1773,6 @@ Language: sv_SE
     <string name="stats_insights_create_post">Skapa inlägg</string>
     <string name="stats_insights_latest_post_message">Nu har det gått %1$s sedan ”%2$s” publicerades. Så här har det gått hittills för inlägget:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Nu har det gått %1$s sedan ”%2$s” publicerades. Sätt bollen i rullning och skaffa fler visningar genom att dela ditt inlägg:</string>
-    <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. När du börjar publicera kommer en sammanfattning för ditt senaste inlägg att visas här:</string>
     <string name="stats_insights_tags_and_categories">Etiketter och kategorier</string>
     <string name="stats_insights_all_time_stats">Sedan starten</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

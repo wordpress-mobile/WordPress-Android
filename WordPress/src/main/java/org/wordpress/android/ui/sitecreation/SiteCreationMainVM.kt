@@ -1,14 +1,22 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
@@ -18,8 +26,11 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.experiments.SiteNameABExperiment
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -45,15 +56,31 @@ data class SiteCreationState(
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
+@HiltViewModel
 class SiteCreationMainVM @Inject constructor(
     private val tracker: SiteCreationTracker,
     private val wizardManager: WizardManager<SiteCreationStep>,
-    private val siteNameABExperiment: SiteNameABExperiment
+    private val siteNameABExperiment: SiteNameABExperiment,
+    private val networkUtils: NetworkUtilsWrapper,
+    private val dispatcher: Dispatcher,
+    private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
+    private val imageManager: ImageManager
 ) : ViewModel() {
+    init {
+        dispatcher.register(fetchHomePageLayoutsUseCase)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(fetchHomePageLayoutsUseCase)
+    }
+
     private var isStarted = false
     private var siteCreationCompleted = false
 
     private lateinit var siteCreationState: SiteCreationState
+
+    internal var preloadingJob: Job? = null
 
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
@@ -95,13 +122,27 @@ class SiteCreationMainVM @Inject constructor(
         }
     }
 
+    fun preloadThumbnails(context: Context) {
+        if (preloadingJob == null) {
+            preloadingJob = viewModelScope.launch(Dispatchers.IO) {
+                if (networkUtils.isNetworkAvailable()) {
+                    val response = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
+                    for (design in response.designs) {
+                        imageManager.preload(context, MShot(design.previewMobile))
+                    }
+                }
+                preloadingJob = null
+            }
+        }
+    }
+
     fun writeToBundle(outState: Bundle) {
         outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
         outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
-    fun onSiteIntentSelected(intent: String) {
+    fun onSiteIntentSelected(intent: String?) {
         siteCreationState = siteCreationState.copy(siteIntent = intent)
         wizardManager.showNextStep()
     }

@@ -25,8 +25,10 @@ class GuideCardViewHolder(
     ) = with(binding) {
         val spannableString = SpannableString(item.text)
         item.links?.forEach { link ->
-            spannableString.withClickableSpan(root.context, link.link) {
-                link.navigationAction.click()
+            link.link?.let {
+                spannableString.withClickableSpan(root.context, it) {
+                    link.navigationAction.click()
+                }
             }
         }
         item.bolds?.forEach { bold ->

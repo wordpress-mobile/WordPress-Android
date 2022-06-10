@@ -31,6 +31,7 @@ import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFra
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint.BLOGGING_PROMPTS_INTRODUCTION
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.image.ImageManager
@@ -157,13 +158,17 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             when (action) {
                 is OpenEditor -> {
                     activity?.let {
-                        startActivity(ActivityLauncher.openEditorWithBloggingPrompt(it, action.promptId))
+                        startActivity(
+                                ActivityLauncher.openEditorWithBloggingPrompt(
+                                        it, action.promptId, BLOGGING_PROMPTS_INTRODUCTION
+                                )
+                        )
                     }
                 }
                 is OpenSitePicker -> {
                     val intent = Intent(context, SitePickerActivity::class.java).apply {
                         putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)
-                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.DEFAULT_MODE)
+                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.BLOGGING_PROMPTS_MODE)
                     }
                     sitePickerLauncher.launch(intent)
                 }

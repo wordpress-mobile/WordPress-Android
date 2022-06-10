@@ -185,7 +185,7 @@ class CardsBuilderTest {
             this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
     private fun List<MySiteCardAndItem>.findQuickLinkRibbon() =
-        this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
+            this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
     private fun buildCards(
         isQuickActionEnabled: Boolean = true,
@@ -222,7 +222,9 @@ class CardsBuilderTest {
                         onErrorRetryClick = mock(),
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
-                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock(), mock())
+                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
+                                mock(), mock(), mock(), mock()
+                        )
                 ),
                 quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                         siteModel = mock(),
@@ -302,7 +304,7 @@ class CardsBuilderTest {
 
     private fun initQuickLinkRibbon(): QuickLinkRibbon {
         return QuickLinkRibbon(
-            quickLinkRibbonItems = mock()
+                quickLinkRibbonItems = mock()
         )
     }
 }

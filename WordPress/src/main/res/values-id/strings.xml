@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-19 12:54:07+0000
+Translation-Revision-Date: 2022-06-05 15:25:02+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Anda juga dapat mengatur ulang blok dengan mengetuk blok lalu mengetuk anak panah atas dan bawah yang muncul di sisi kiri bawah blok untuk memindahkannya ke atas atau ke bawah.</string>
+    <string name="gutenberg_native_image_file_not_found">Berkas gambar tidak ditemukan.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Seret &amp; lepaskan memudahkan pengaturan ulang blok. Klik dan tahan blok, kemudian seret blok tersebut ke lokasi baru lalu lepaskan.</string>
+    <string name="gutenberg_native_drag_drop">Seret &amp; lepas</string>
+    <string name="gutenberg_native_arrow_buttons">Tombol panah</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Pilihan saat ini: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Semua tugas selesai</string>
+    <string name="quick_start_list_task_complete">Tugas selesai</string>
+    <string name="me_btn_scan_login_code">Pindai Kode Login</string>
+    <string name="stats_insights_followers_guide_card">💡Anda bisa coba meninggalkan komentar sebagai pemicu keterlibatan di blog untuk mendapatkan lebih banyak pengikut.</string>
+    <string name="stats_insights_comments_guide_card">💡Lihat kontributor teratas Anda dengan mengetuk LIHAT SELENGKAPNYA.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
+    <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
+    <string name="stats_insights_latest_post_empty">Anda belum menerbitkan satu pos pun. Periksa lagi nanti setelah Anda memposkan pos pertama!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Jika ingin mendapatkan lebih banyak tayangan dan lalu lintas, simak tips jitu %1$s kami</string>
+    <string name="stats_total_followers_content_description">%1s, %2s total pengikut</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
     <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Kenali aplikasinya</string>
@@ -474,6 +491,7 @@ Language: id
     <string name="gutenberg_native_three">Tiga.</string>
     <string name="gutenberg_native_s_social_icon">Ikon media sosial %s</string>
     <string name="gutenberg_native_mention">Sebutan</string>
+    <string name="gutenberg_native_new">Baru</string>
     <string name="gutenberg_native_preview_post">Pratinjau pos</string>
     <string name="gutenberg_native_preview_page">Pratinjau halaman</string>
     <string name="gutenberg_native_retry">Coba lagi</string>
@@ -1670,7 +1688,6 @@ Language: id
     <string name="quick_start_sites_type_grow">Perbanyak audiens Anda</string>
     <string name="quick_start_sites_type_customize">Sesuaikan situs Anda</string>
     <string name="quick_start_sites">Langkah Berikutnya</string>
-    <string name="quick_start_complete_tasks_header">Selesai (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Pilih ikon situs yang unik</string>
     <string name="quick_start_dialog_upload_icon_message">Pengunjung Anda akan melihat ikon Anda di browser. Tambahkan ikon khusus untuk tampilan yang lebih profesional dan elegan.</string>
     <string name="quick_start_dialog_check_stats_message_short">Pilih %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
@@ -1679,14 +1696,11 @@ Language: id
     <string name="quick_start_dialog_enable_sharing_title">Aktifkan berbagi pos</string>
     <string name="quick_start_dialog_enable_sharing_message">Bagikan pos baru secara otomatis ke akun media sosial Anda.</string>
     <string name="quick_start_dialog_check_stats_title">Periksa statistik situs Anda</string>
+    <string name="quick_start_dialog_check_stats_message">Ketahui info terbaru mengenai performa situs Anda.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Menghapus Langkah Berikutnya akan menyembunyikan semua tur di situs ini. Tindakan ini tidak dapat diurungkan.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Hapus Langkah Berikutnya</string>
     <string name="quick_start_remove_next_steps_menu_title">Hapus langkah ini</string>
-    <string name="quick_start_complete_view_subtitle">Selamat, Anda telah melengkapi daftar. Kerja bagus.</string>
-    <string name="quick_start_complete_view_title">Semua tugas selesai!</string>
     <string name="quick_start_task_skip_menu_title">Abaikan tugas</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">ciutkan</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">luaskan</string>
     <string name="notification_channel_reminder_title">Pengingat</string>
     <string name="stats_select_next_period_description">Pilih periode selanjutnya</string>
     <string name="stats_select_previous_period_description">Pilih periode sebelumnya</string>
@@ -1759,7 +1773,6 @@ Language: id
     <string name="stats_insights_create_post">Buat pos</string>
     <string name="stats_insights_latest_post_message">Sudah %1$s sejak %2$s dipublikasikan. Berikut performa pos tersebut sejauh ini:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Sudah %1$s sejak %2$s dipublikasikan. Bersiaplah dan tingkatkan penayangan pos dengan membagikan pos Anda:</string>
-    <string name="stats_insights_latest_post_empty">Anda belum memublikasikan pos apa pun. Setelah Anda mulai memublikasikan pos, ringkasan pos terbaru akan muncul di sini:</string>
     <string name="stats_insights_tags_and_categories">Tag dan Kategori</string>
     <string name="stats_insights_all_time_stats">Sepanjang waktu</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

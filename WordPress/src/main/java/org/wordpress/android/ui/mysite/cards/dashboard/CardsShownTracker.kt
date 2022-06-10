@@ -69,9 +69,12 @@ class CardsShownTracker @Inject constructor(
                         card.postCardType.toSubtypeValue().label
                 )
         )
-        is BloggingPromptCardWithData -> {
-            // TODO @klymyam add tracking for blogging prompt card
-        }
+        is BloggingPromptCardWithData -> trackCardShown(
+                Pair(
+                        card.dashboardCardType.toTypeValue().label,
+                        Type.BLOGGING_PROMPT.label
+                )
+        )
     }
 
     fun trackQuickStartCardShown(quickStartType: QuickStartType) {

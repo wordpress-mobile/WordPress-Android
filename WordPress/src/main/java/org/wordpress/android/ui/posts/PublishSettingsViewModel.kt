@@ -57,8 +57,8 @@ constructor(
     val onToast: LiveData<Event<String>> = _onToast
     private val _onShowNotificationDialog = MutableLiveData<Event<Period?>>()
     val onShowNotificationDialog: LiveData<Event<Period?>> = _onShowNotificationDialog
-    private val _onNotificationTime = MutableLiveData<Period>()
-    val onNotificationTime: LiveData<Period> = _onNotificationTime
+    private val _onNotificationTime = MutableLiveData<Period?>()
+    val onNotificationTime: LiveData<Period?> = _onNotificationTime
     private val _onNotificationAdded = MutableLiveData<Event<Notification>>()
     val onNotificationAdded: LiveData<Event<Notification>> = _onNotificationAdded
     private val _onAddToCalendar = MutableLiveData<Event<CalendarEvent>>()

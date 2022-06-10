@@ -28,6 +28,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
@@ -67,7 +68,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked(promptId: Int)
+        fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {

@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.FetchStarterDesignsPayload
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.test
-import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase.GROUP
 import org.wordpress.android.util.config.BetaSiteDesignsFeatureConfig
@@ -33,7 +32,7 @@ class FetchHomePageLayoutsUseCaseTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var store: ThemeStore
-    @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
+    @Mock lateinit var thumbDimensionProvider: SiteDesignPickerDimensionProvider
     @Mock lateinit var betaSiteDesigns: BetaSiteDesignsFeatureConfig
 
     private lateinit var useCase: FetchHomePageLayoutsUseCase

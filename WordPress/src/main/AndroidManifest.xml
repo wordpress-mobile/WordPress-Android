@@ -7,9 +7,6 @@
     <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
     <!-- Normal permissions, access automatically granted to app -->
-    <uses-permission
-        android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"
-        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -56,7 +53,8 @@
 
     <application
         android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_scheme"
+        android:fullBackupContent="@xml/legacy_backup_scheme"
+        android:dataExtractionRules="@xml/backup_scheme"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
@@ -416,7 +414,7 @@
                     android:scheme="wordpress" />
             </intent-filter>
 
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -496,7 +494,7 @@
             android:name=".WPComPostReaderActivity"
             android:targetActivity=".ui.reader.ReaderPostPagerActivity"
             android:exported="true">
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <data
                     android:host="wordpress.com"
                     android:pathPattern="/read/feeds/.*/posts/.*"
@@ -884,7 +882,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
         <receiver
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidget"
             android:label="@string/stats_widget_weekly_views_name"

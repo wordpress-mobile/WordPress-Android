@@ -17,12 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.ViewPagerFragment
-import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Empty
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
@@ -195,14 +190,9 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             showUiModel(it)
         })
 
-        viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
-            when (statsSection) {
-                INSIGHT_DETAIL, TOTAL_LIKES_DETAIL, TOTAL_COMMENTS_DETAIL, TOTAL_FOLLOWERS_DETAIL -> {
-                    drawDateSelector(DateSelectorUiModel(false))
-                }
-                else -> drawDateSelector(dateSelectorUiModel)
-            }
-        })
+        viewModel.dateSelectorData.observe(viewLifecycleOwner) { dateSelectorUiModel ->
+            drawDateSelector(dateSelectorUiModel)
+        }
 
         viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
             navigator.navigate(activity, target)

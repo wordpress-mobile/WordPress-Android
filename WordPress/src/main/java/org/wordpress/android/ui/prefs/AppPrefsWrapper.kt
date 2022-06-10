@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.LIKES
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VISITORS
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -213,10 +214,11 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setLastSkippedQuickStartTask(task: QuickStartTask) = AppPrefs.setLastSkippedQuickStartTask(task)
 
-    fun getLastSelectedQuickStartType(): QuickStartType = AppPrefs.getLastSelectedQuickStartType()
+    fun getLastSelectedQuickStartTypeForSite(siteLocalId: Long): QuickStartType =
+            AppPrefs.getLastSelectedQuickStartTypeForSite(siteLocalId)
 
-    fun setLastSelectedQuickStartType(quickStartType: QuickStartType) =
-            AppPrefs.setLastSelectedQuickStartType(quickStartType)
+    fun setLastSelectedQuickStartTypeForSite(quickStartType: QuickStartType, siteLocalId: Long) =
+            AppPrefs.setLastSelectedQuickStartTypeForSite(quickStartType, siteLocalId)
 
     fun isMySiteDefaultTabExperimentVariantAssigned() = AppPrefs.isMySiteDefaultTabExperimentVariantAssigned()
 
@@ -226,6 +228,10 @@ class AppPrefsWrapper @Inject constructor() {
             AppPrefs.setInitialScreenFromMySiteDefaultTabExperimentVariant(variant)
 
     fun getMySiteInitialScreen(): String = AppPrefs.getMySiteInitialScreen()
+
+    fun setSkippedPromptDay(date: Date?) = AppPrefs.setSkippedPromptDay(date)
+
+    fun getSkippedPromptDay(): Date? = AppPrefs.getSkippedPromptDay()
 
     companion object {
         private const val LIGHT_MODE_ID = 0

@@ -1,8 +1,16 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+20.1
+-----
+* [*] Site creation: enhances the design selection screen with recommended designs [https://github.com/wordpress-mobile/WordPress-Android/pull/16468]
+* [*] DeepLinks: fix auto-verification of App Links in Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/16696]
+* [*] Quick Start: Fix Quick Start focus points in RTL mode [https://github.com/wordpress-mobile/WordPress-Android/pull/16720]
+
 20.0
 -----
-
+* [*] Block Editor: A11y: Improve text read by screen readers for BottomSheetSelectControl [https://github.com/WordPress/gutenberg/pull/41036]
+* [*] Block Editor: Add 'Insert from URL' option to Image block [https://github.com/WordPress/gutenberg/pull/40334]
+* [*] Quick Start: The "Get to know the app" card and Quick start tour list has a fresh new look [https://github.com/wordpress-mobile/WordPress-Android/pull/16629,https://github.com/wordpress-mobile/WordPress-Android/pull/16639]
 
 19.9
 -----

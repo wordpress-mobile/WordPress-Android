@@ -213,7 +213,6 @@ Language: vi_VN
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Miễn phí năm đầu tiên &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /năm&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domains_redirected_domains_blurb">Tên miền của bạn sẽ chỉ hướng tới %s</string>
     <string name="gutenberg_native_create_link">Chèn liên kết</string>
-    <string name="domain_registration_result_description">Đang đăng ký tên miền &lt;b&gt;%s&lt;/b&gt; mới. Quá trình này có thể mất đến 30 phút.</string>
     <string name="domain_registration_result_title">Bạn đã mua xong tên miền!</string>
     <string name="domains_suggestions_select_domain">Chọn tên miền</string>
     <string name="domains_title">Tên miền</string>
@@ -1614,7 +1613,6 @@ Language: vi_VN
     <string name="quick_start_sites_type_grow">Thu hút độc giả</string>
     <string name="quick_start_sites_type_customize">Tùy biến blog</string>
     <string name="quick_start_sites">Kế tiếp</string>
-    <string name="quick_start_complete_tasks_header">Hoàn thành (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Chọn biểu tượng blog</string>
     <string name="quick_start_dialog_upload_icon_message">Khách truy cập trang sẽ thấy biểu tượng của bạn trên trình duyệt. Thêm một biểu tượng xinh đẹp hoặc chuyên nghiệp.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Nhấn %1$s Biểu Tượng Blog %2$s để tải lên ngay.</string>
@@ -1625,11 +1623,7 @@ Language: vi_VN
     <string name="quick_start_dialog_remove_next_steps_message">Bỏ bước Kế Tiếp sẽ ẩn hướng dẫn nhanh trên blog này. Nó sẽ không xuất hiện lại.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Bỏ bước Kế Tiếp</string>
     <string name="quick_start_remove_next_steps_menu_title">Bỏ qua</string>
-    <string name="quick_start_complete_view_subtitle">Chúc mừng bạn đã hoàn thành xong. Làm tốt lắm.</string>
-    <string name="quick_start_complete_view_title">Đã hoàn thành xong!</string>
     <string name="quick_start_task_skip_menu_title">Bỏ qua</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">thu gọn</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">mở rộng</string>
     <string name="notification_channel_reminder_title">Lượt nhắc</string>
     <string name="stats_select_next_period_description">Chọn chu kỳ kế</string>
     <string name="stats_select_previous_period_description">Chọn chu kỳ trước</string>
@@ -1702,7 +1696,6 @@ Language: vi_VN
     <string name="stats_insights_create_post">Tạo bài viết</string>
     <string name="stats_insights_latest_post_message">%2$s đăng cách đây %1$s. Đây là hiệu suất bài viết:</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s đăng cách đây %1$s. Tăng lượt xem bằng cách chia sẻ bài viết:</string>
-    <string name="stats_insights_latest_post_empty">Bạn chưa đăng bài viết nào. Nếu có, mô tả về chúng sẽ xuất hiện ở đây:</string>
     <string name="stats_insights_tags_and_categories">Thẻ và Chuyên mục</string>
     <string name="stats_insights_all_time_stats">Mọi lúc</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

@@ -654,7 +654,6 @@ Language: sr_RS
     <string name="quick_start_sites_type_grow">Увећајте свој аудиторијум</string>
     <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
     <string name="quick_start_sites">Наредни кораци</string>
-    <string name="quick_start_complete_tasks_header">Завршено (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Одаберите јединствену иконицу сајта</string>
     <string name="quick_start_dialog_publish_post_message">Направи нацрт и објави чланак</string>
     <string name="quick_start_dialog_enable_sharing_title">Омогући дељење чланака</string>
@@ -662,9 +661,6 @@ Language: sr_RS
     <string name="quick_start_remove_next_steps_menu_title">Уклони ово</string>
     <string name="quick_start_dialog_check_stats_title">Провери статистику свог сајта</string>
     <string name="quick_start_task_skip_menu_title">Прескочи задатак</string>
-    <string name="quick_start_complete_view_title">Сви задаци су завршени!</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">скупи</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">прошири</string>
     <string name="notification_channel_reminder_title">Подсетник</string>
     <string name="stats_insights_popular">Најпопуларније време</string>
     <string name="stats_select_next_period_description">Одабери наредни период</string>
@@ -727,7 +723,6 @@ Language: sr_RS
     <string name="stats_insights_all_time_stats">Све време</string>
     <string name="stats_insights_latest_post_with_no_engagement">Прошло је %1$s од када је %2$s објављен. Покрени причу и увећај прегледе свог чланка дељећи га:</string>
     <string name="stats_insights_tags_and_categories">Ознаке и категорије</string>
-    <string name="stats_insights_latest_post_empty">Нисте до сада објавили ни један чланак. Кад почнете да објављујете, резиме Вашег најновијег чланка ће се појавити овде: </string>
     <string name="stats_comments_label">Коментари</string>
     <string name="stats_comments_title_label">Наслов</string>
     <string name="stats_comments_author_label">Аутор</string>

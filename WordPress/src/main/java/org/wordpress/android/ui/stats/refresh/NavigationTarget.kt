@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats.refresh
 
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.StatsViewType
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import java.util.Date
 
 sealed class NavigationTarget {
@@ -18,9 +20,6 @@ sealed class NavigationTarget {
     ) : NavigationTarget()
 
     data class ViewFollowersStats(val selectedTab: Int) : NavigationTarget()
-    object ViewTotalFollowersStats : NavigationTarget()
-    object ViewTotalLikesStats : NavigationTarget()
-    object ViewTotalCommentsStats : NavigationTarget()
     data class ViewCommentsStats(val selectedTab: Int) : NavigationTarget()
     object ViewTagsAndCategoriesStats : NavigationTarget()
     object ViewPublicizeStats : NavigationTarget()
@@ -45,8 +44,14 @@ sealed class NavigationTarget {
         val postType: String = StatsConstants.ITEM_TYPE_ATTACHMENT
     ) : NavigationTarget()
 
-    data class ViewViewsAndVisitorsDetail(
+    data class ViewInsightDetails(
+        val statsSection: StatsSection,
+        val statsViewType: StatsViewType,
         val statsGranularity: StatsGranularity,
         val selectedDate: Date?
     ) : NavigationTarget()
+
+    object SetBloggingReminders : NavigationTarget()
+    object CheckCourse : NavigationTarget()
+    object SchedulePost : NavigationTarget()
 }

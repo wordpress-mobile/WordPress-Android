@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 09:54:08+0000
+Translation-Revision-Date: 2022-06-01 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Puoi anche riorganizzare i blocchi toccando un blocco, quindi le frecce su e giù che compaiono nella parte inferiore sinistra del blocco per spostarlo verso l\'alto o verso il basso.</string>
+    <string name="gutenberg_native_image_file_not_found">File immagine non trovato.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Grazie alla funzione Trascina e rilascia, riorganizzare i blocchi è un gioco da ragazzi. Premi e tieni premuto un blocco, quindi trascinalo nella nuova posizione e rilascialo.</string>
+    <string name="gutenberg_native_drag_drop">Trascina e rilascia</string>
+    <string name="gutenberg_native_arrow_buttons">Pulsanti freccia</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Selezionati attualmente: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Tutte le attività completate</string>
+    <string name="quick_start_list_task_complete">Attività completata</string>
+    <string name="me_btn_scan_login_code">Scansiona codice di accesso</string>
+    <string name="stats_insights_followers_guide_card">💡Puoi provare a lasciare un commento per promuovere il coinvolgimento del blog e ottenere più follower.</string>
+    <string name="stats_insights_comments_guide_card">💡Vedi i tuoi principali collaboratori toccando VEDI DI PIÙ.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Il tuo ultimo articolo %1$s ha ricevuto %2$s Mi piace.</string>
+    <string name="stats_most_popular_percent_views_empty">Attività insufficiente. Controlla nuovamente più tardi quando più utenti hanno visitato il tuo sito.</string>
+    <string name="stats_insights_latest_post_empty">Non hai ancora pubblicato alcun articolo. Controlla nuovamente più tardi dopo aver pubblicato il tuo primo articolo.</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Se vuoi provare a ottenere più visualizzazioni e traffico, dai un\'occhiata ai nostri suggerimenti principali %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s dei follower totali</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copia link</string>
     <string name="quick_start_completed_tour_title">Congratulazioni! Conosci la strada&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Conosci l\'app</string>
@@ -38,6 +55,7 @@ Language: it
     <string name="stats_view_total_comments">Commenti totali</string>
     <string name="stats_view_total_likes">Mi piace totali</string>
     <string name="blogging_prompts_notification_dismiss">Ignora</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Risposta</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Richiesta giornaliera</string>
     <string name="blogging_prompts_onboarding_got_it">OK</string>
     <string name="quick_start_dialog_view_your_site_message_short">Tocca &lt;b&gt;%1$s&lt;/b&gt; per visualizzare il tuo sito</string>
@@ -48,10 +66,6 @@ Language: it
     <string name="photo_picker_media_thumbnail_content_description">Miniatura degli elementi multimediali</string>
     <string name="stats_insights_popular_title">🔥 Ora più popolare</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">I tuoi visitatori di questa settimana sono il %1$s in meno rispetto alla settimana precedente.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">I tuoi visitatori di questa settimana sono il %1$s in più rispetto alla settimana precedente.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Le tue visualizzazioni di questa settimana sono il %1$s in meno rispetto alla settimana precedente.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Le tue visualizzazioni di questa settimana sono il %1$s in più rispetto alla settimana precedente.</string>
     <string name="stats_timeframe_previous_week">Settimana precedente</string>
     <string name="stats_timeframe_this_week">Questa settimana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visita la bacheca</string>
@@ -171,6 +185,7 @@ Language: it
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Le chiamate XML-RPC sembrano bloccate su questo sito (codice di errore 401). Se il tentativo di accesso fallisce, tocca l\'icona della guida per visualizzare le FAQ.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Impossibile leggere il sito WordPress associato a questo URL. Tocca l\'icona della guida per visualizzare le domande frequenti.</string>
     <string name="login_error_xml_rpc_services_disabled">Il servizio XML-RPC è disattivato su questo sito.</string>
+    <string name="my_site_menu_tab_title">Menu</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">La tua ricerca include caratteri non supportati nei domini WordPress.com. Sono consentiti i seguenti caratteri: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Controlla la tua connessione a Internet e ricarica la pagina.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Vai alle statistiche</string>
@@ -472,6 +487,7 @@ Language: it
     <string name="gutenberg_native_three">Tre</string>
     <string name="gutenberg_native_s_social_icon">Icona social %s</string>
     <string name="gutenberg_native_mention">Riferimento</string>
+    <string name="gutenberg_native_new">NOVITÀ</string>
     <string name="gutenberg_native_preview_post">Anteprima articolo</string>
     <string name="gutenberg_native_preview_page">Pagina di anteprima</string>
     <string name="gutenberg_native_retry">Riprova</string>
@@ -485,6 +501,7 @@ Language: it
     <string name="gutenberg_native_create_embed">Crea l\'incorporamento</string>
     <string name="gutenberg_native_column_d">Colonna %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">Descrivi brevemente il link per aiutare l\'utente del lettore di schermo</string>
+    <string name="gutenberg_native_add_blocks">Aggiungi blocchi</string>
     <string name="login_no_jetpack_sites">Nessun sito Jetpack trovato</string>
     <string name="gutenberg_native_what_is_alt_text">Cos\'è il testo alternativo?</string>
     <string name="gutenberg_native_transform_s_to">Trasforma %s in</string>
@@ -1667,7 +1684,6 @@ Language: it
     <string name="quick_start_sites_type_grow">Aumenta il tuo pubblico</string>
     <string name="quick_start_sites_type_customize">Personalizza il tuo sito</string>
     <string name="quick_start_sites">Passi successivi</string>
-    <string name="quick_start_complete_tasks_header">Completato (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Scegli un\'icona del sito univoca</string>
     <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>
     <string name="quick_start_dialog_check_stats_message_short">Seleziona %1$s Statistiche %2$s per vedere come sta andando il tuo sito.</string>
@@ -1680,11 +1696,7 @@ Language: it
     <string name="quick_start_dialog_remove_next_steps_message">Rimuovendo Passi successivi, tutti i tour saranno nascosti su questo sito. Questa azione non può essere annullata.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Rimuovi Passi successivi</string>
     <string name="quick_start_remove_next_steps_menu_title">Rimuovilo</string>
-    <string name="quick_start_complete_view_subtitle">Congratulazioni per aver completato il tuo elenco. Un lavoro ben fatto.</string>
-    <string name="quick_start_complete_view_title">Tutte le attività completate.</string>
     <string name="quick_start_task_skip_menu_title">Salta attività</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">riduci</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">espandi</string>
     <string name="notification_channel_reminder_title">Promemoria</string>
     <string name="stats_select_next_period_description">Seleziona periodo successivo</string>
     <string name="stats_select_previous_period_description">Seleziona periodo precedente</string>
@@ -1757,7 +1769,6 @@ Language: it
     <string name="stats_insights_create_post">Crea articolo</string>
     <string name="stats_insights_latest_post_message">Sono passati %1$s dalla pubblicazione di %2$s. Ecco come il tuo articolo è andato finora</string>
     <string name="stats_insights_latest_post_with_no_engagement">Sono passati %1$s dalla pubblicazione di %2$s. Sblocca la situazione e incrementa le visualizzazioni condividendo il tuo articolo.</string>
-    <string name="stats_insights_latest_post_empty">Non hai ancora pubblicato alcun articolo. Una volta avviata la pubblicazione, il riepilogo del tuo ultimo articolo verrà visualizzato qui.</string>
     <string name="stats_insights_tags_and_categories">Tag e Categorie</string>
     <string name="stats_insights_all_time_stats">Tutte</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

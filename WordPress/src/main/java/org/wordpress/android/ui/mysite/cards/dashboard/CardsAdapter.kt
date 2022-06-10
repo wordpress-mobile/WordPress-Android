@@ -21,12 +21,15 @@ import org.wordpress.android.ui.mysite.cards.dashboard.error.ErrorWithinCardView
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.image.ImageManager
 
 class CardsAdapter(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers,
-    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker
+    private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
+    private val htmlCompatWrapper: HtmlCompatWrapper,
+    private val learnMoreClicked: () -> Unit
 ) : Adapter<CardViewHolder<*>>() {
     private val items = mutableListOf<DashboardCard>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<*> {
@@ -43,7 +46,9 @@ class CardsAdapter(
                     parent,
                     uiHelpers,
                     imageManager,
-                    bloggingPromptsCardAnalyticsTracker
+                    bloggingPromptsCardAnalyticsTracker,
+                    htmlCompatWrapper,
+                    learnMoreClicked
             )
             else -> throw IllegalArgumentException("Unexpected view type")
         }

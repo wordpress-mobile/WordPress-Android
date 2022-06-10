@@ -6,6 +6,7 @@ import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -67,6 +68,7 @@ private val loadingTexts = listOf(
         UiStringRes(R.string.new_site_creation_creating_site_loading_4)
 )
 
+@HiltViewModel
 class SitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,

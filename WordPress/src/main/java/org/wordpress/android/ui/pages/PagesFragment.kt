@@ -468,7 +468,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             }
         })
 
-        viewModel.publishAction.observe(this@PagesFragment, {
+        viewModel.publishAction.observe(viewLifecycleOwner, {
             it?.let {
                 uploadUtilsWrapper.publishPost(activity, it.post, it.site)
             }
