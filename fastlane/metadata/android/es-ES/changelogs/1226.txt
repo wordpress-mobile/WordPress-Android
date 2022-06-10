@@ -1,9 +1,0 @@
-19.9:
-- Arrastrar y soltar bloques en el editor
-- Mejor contraste del color en los bloques de portada
-- Las opciones del formato del bloque de botones permanecen visibles
-- Separar las tareas de inicio rápido de sitios nuevos frente a los existentes
-- Enlace para copiar para las páginas publicadas
-- No hay icono «+» en el editor de bloques autoalojado
-- Ajustes de «Enlace a/Tamaño de la imagen» en los bloques de galería
-- No hay banner de recorrido en el editor no compatible
