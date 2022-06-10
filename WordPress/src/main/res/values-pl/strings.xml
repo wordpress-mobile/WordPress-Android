@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-08 06:45:22+0000
+Translation-Revision-Date: 2022-06-09 05:37:54+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: pl
@@ -2396,9 +2396,9 @@ Language: pl
     <string name="comment_q_action_liking">Dodawanie polubienia…</string>
     <string name="comment_q_action_processing">Przetwarzanie…</string>
     <string name="comment_q_action_done_generic">Akcja wykonana!</string>
-    <string name="comment_liked">Komentarz polubiony</string>
     <string name="sign_in_wpcom">Zaloguj się do WordPress.com</string>
     <string name="signout">Wyloguj się</string>
+    <string name="comment_liked">Polubiono komentarz</string>
     <string name="reader_label_global_related_posts">Więcej na WordPress.com</string>
     <string name="reader_label_local_related_posts">Więcej od %s</string>
     <string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
@@ -2438,9 +2438,9 @@ Language: pl
     <string name="visual_editor">Edytor wizualny</string>
     <string name="image_width">Szerokość</string>
     <string name="image_link_to">Odnośnik do</string>
-    <string name="image_alt_text">Alternatywny tekst</string>
     <string name="image_settings_save_toast">Zmiany zostały zapisane</string>
     <string name="image_caption">Podpis</string>
+    <string name="image_alt_text">Tekst alternatywny</string>
     <string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
     <string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
     <string name="alert_error_adding_media">Błąd podczas wstawiania mediów</string>

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-03 16:54:10+0000
+Translation-Revision-Date: 2022-06-10 13:34:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
     <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Je kunt ook blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het naar boven of onder te bewegen.</string>
+    <string name="gutenberg_native_image_file_not_found">Afbeeldingsbestand niet gevonden.</string>
     <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Met verslepen wordt blokken herschikken een fluitje van een cent. Houd een blok ingedrukt en sleep deze vervolgens naar de nieuwe locatie. Laat dan los.</string>
+    <string name="gutenberg_native_drag_drop">Slepen en neerzetten</string>
+    <string name="gutenberg_native_arrow_buttons">Pijlknoppen</string>
     <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Geselecteerde valuta: %2$s</string>
     <string name="quick_start_sites_type_all_tasks_completed">Alle taken afgerond</string>
     <string name="quick_start_list_task_complete">Taak voltooid</string>
@@ -15,6 +18,8 @@ Language: nl
     <string name="stats_insights_followers_guide_card">💡Je kunt een opmerking achterlaten als gebaar, om activiteit van de blog te stimuleren en meer volgers te krijgen.</string>
     <string name="stats_insights_comments_guide_card">💡Zie wie je grootste bijdragers zijn door te tikken op MEER INFO.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
+    <string name="stats_most_popular_percent_views_empty">Niet genoeg activiteit. Keer nog eens terug wanneer je site meer bezoekers heeft gehad!</string>
+    <string name="stats_insights_latest_post_empty">Je hebt nog geen berichten gepubliceerd. Keer nog eens terug wanneer je je eerste bericht hebt gepubliceerd!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Bekijk onze top tips %1$s voor meer weergaven en bezoekers</string>
     <string name="stats_total_followers_content_description">%1s, %2s van het totale aantal volgers</string>
     <string name="stats_value_percent">%1$s %2$s%%()</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-03 09:54:25+0000
+Translation-Revision-Date: 2022-06-10 14:25:57+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ja_JP
@@ -66,6 +66,8 @@ Language: ja_JP
     <string name="photo_picker_media_thumbnail_content_description">メディアサムネイル</string>
     <string name="stats_insights_popular_title">🔥 最も人気のある時間</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">今週の訪問者数は先週と比べて%1$s人減りました。</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">今週の訪問者数は先週と比べて%1$s人増えました。</string>
     <string name="stats_insights_views_and_visitors_views_negative">今週の表示数は先週と比べて%1$s回減りました。</string>
     <string name="stats_timeframe_previous_week">先週</string>
     <string name="stats_timeframe_this_week">今週</string>

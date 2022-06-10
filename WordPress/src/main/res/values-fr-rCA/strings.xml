@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-03 11:54:20+0000
+Translation-Revision-Date: 2022-06-10 14:25:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: fr
@@ -66,6 +66,10 @@ Language: fr
     <string name="photo_picker_media_thumbnail_content_description">Miniature média</string>
     <string name="stats_insights_popular_title">🔥 Heure la plus populaire</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Votre nombre de visiteurs de cette semaine est inférieur de %1$s par rapport à la semaine précédente.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Votre nombre de visiteurs de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Votre nombre de vues de cette semaine est inférieur de %1$s par rapport la semaine précédente.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Votre nombre de vues de cette semaine est supérieur de %1$s par rapport à la semaine précédente.</string>
     <string name="stats_timeframe_previous_week">La semaine précédente</string>
     <string name="stats_timeframe_this_week">Cette semaine</string>
     <string name="scan_vault_press_active_on_site_button_text">Se rendre sur le Tableau de bord</string>
