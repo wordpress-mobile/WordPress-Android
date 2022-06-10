@@ -1329,7 +1329,8 @@ public class AppPrefs {
     }
 
     public static void setShouldDisplayBloggingPromptOnboarding(boolean isDisplayed) {
-        prefs().edit().putBoolean(UndeletablePrefKey.BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED.name(), isDisplayed).apply();
+        prefs().edit().putBoolean(UndeletablePrefKey.BLOGGING_PROMPT_ONBOARDING_WAS_DISPLAYED.name(), isDisplayed)
+               .apply();
     }
 
     /*
