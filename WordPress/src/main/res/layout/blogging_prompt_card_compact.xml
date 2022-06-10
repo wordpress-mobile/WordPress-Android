@@ -114,9 +114,10 @@
             android:text="@string/my_site_blogging_prompt_card_answered_prompt"
             android:textColor="@color/success_emphasis_medium_selector"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prompt_content" />
+            app:layout_constraintTop_toBottomOf="@+id/attribution_container" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
