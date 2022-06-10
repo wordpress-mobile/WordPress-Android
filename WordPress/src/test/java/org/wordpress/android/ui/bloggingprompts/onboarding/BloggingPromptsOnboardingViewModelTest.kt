@@ -127,7 +127,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         classToTest.onSiteSelected(selectedSiteLocalId)
         verify(actionObserver).onChanged(OpenRemindersIntro(selectedSiteLocalId))
     }
-    
+
     // INFORMATION dialog type actions
 
     @Test

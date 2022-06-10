@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.BloggingPromptsOnboardingDialogContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
