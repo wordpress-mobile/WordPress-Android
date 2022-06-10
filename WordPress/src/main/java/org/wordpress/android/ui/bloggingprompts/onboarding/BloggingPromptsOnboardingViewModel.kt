@@ -75,7 +75,7 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
                     )
                     DoNothing
                 } else {
-                    OpenEditor(bloggingPrompt.id ?: -1)
+                    OpenEditor(bloggingPrompt.id)
                 }
             }
             INFORMATION -> {
