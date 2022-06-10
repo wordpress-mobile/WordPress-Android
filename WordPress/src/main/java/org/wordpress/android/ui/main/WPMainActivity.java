@@ -428,7 +428,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
                     getSupportFragmentManager(), BloggingPromptsOnboardingDialogFragment.TAG
             );
-            AppPrefs.setShouldDisplayBloggingPromptOnboarding(false);
             canShowAppRatingPrompt = false;
         }
 
