@@ -48,6 +48,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -58,7 +59,6 @@ import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
-import org.wordpress.android.util.NotificationsUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
@@ -80,7 +80,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private var isUpdatingGravatar = false
     private var binding: MeFragmentBinding? = null
 
-    @Inject lateinit var notificationsUtils: NotificationsUtilsWrapper
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
@@ -409,7 +408,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     }
 
     private fun clearNotifications() {
-        notificationsUtils.cancelAll(requireActivity())
+        NotificationsUtils.cancelAllNotifications(requireActivity())
     }
 
     private fun showDisconnectDialog() {

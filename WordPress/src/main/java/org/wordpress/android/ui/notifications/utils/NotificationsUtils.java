@@ -172,6 +172,10 @@ public class NotificationsUtils {
         return mapper.mapToFormattableContent(blockObject.toString());
     }
 
+    public static void cancelAllNotifications(Context context) {
+        NotificationManagerCompat.from(context).cancelAll();
+    }
+
     static SpannableStringBuilder getSpannableContentForRanges(
             FormattableContentMapper formattableContentMapper,
             JSONObject blockObject, TextView textView,
