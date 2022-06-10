@@ -422,7 +422,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             canShowAppRatingPrompt = false;
             showBloggingPromptsOnboarding();
         } else if (mBloggingPromptsFeatureConfig.isEnabled() && AppPrefs.shouldDisplayBloggingPromptOnboarding()
-                   && FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)
+                   && mAccountStore.hasAccessToken()
                    && savedInstanceState == null) {
             // TODO temporary promo - remove after version 20.1
             BloggingPromptsOnboardingDialogFragment.newInstance(DialogType.ONBOARDING).show(
