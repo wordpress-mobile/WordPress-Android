@@ -78,6 +78,9 @@ class BloggingPromptsOnboardingViewModel @Inject constructor(
     }
 
     fun onSiteSelected(selectedSiteLocalId: Int) {
+        siteStore.getSiteByLocalId(selectedSiteLocalId)?.let { selectedSiteModel ->
+            selectedSiteRepository.updateSite(selectedSiteModel)
+        }
         _action.value = OpenRemindersIntro(selectedSiteLocalId)
     }
 }
