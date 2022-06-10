@@ -13,6 +13,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DismissDialog
+import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.DoNothing
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenEditor
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenRemindersIntro
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingAction.OpenSitePicker
@@ -29,16 +31,23 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
 import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.BLOGGING_PROMPTS_MODE
+import org.wordpress.android.ui.main.UpdateSelectedSiteListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint.BLOGGING_PROMPTS_INTRODUCTION
 import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarItem.Action
+import org.wordpress.android.util.SnackbarItem.Info
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragment() {
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: BloggingPromptsOnboardingViewModel
     private lateinit var dialogType: DialogType
     private val sitePickerLauncher = registerForActivityResult(StartActivityForResult()) { result ->
@@ -48,6 +57,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                     SelectedSiteRepository.UNAVAILABLE
             ) ?: SelectedSiteRepository.UNAVAILABLE
             viewModel.onSiteSelected(selectedSiteLocalId)
+            (activity as? UpdateSelectedSiteListener)?.onUpdateSelectedSiteResult(result.resultCode, result.data)
         }
     }
 
@@ -76,6 +86,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
         setupHeaderIcon()
         setupUiStateObserver()
         setupActionObserver()
+        setupSnackbarObserver()
         viewModel.start(dialogType)
     }
 
@@ -168,7 +179,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                 is OpenSitePicker -> {
                     val intent = Intent(context, SitePickerActivity::class.java).apply {
                         putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)
-                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerMode.BLOGGING_PROMPTS_MODE)
+                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, BLOGGING_PROMPTS_MODE)
                     }
                     sitePickerLauncher.launch(intent)
                 }
@@ -182,7 +193,29 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                 is DismissDialog -> {
                     dismiss()
                 }
+                DoNothing -> {} // noop
             }.exhaustive
+        }
+    }
+
+    private fun setupSnackbarObserver() {
+        viewModel.snackBarMessage.observeEvent(viewLifecycleOwner) { holder ->
+            snackbarSequencer.enqueue(
+                    SnackbarItem(
+                            Info(
+                                    view = getSuperBinding().coordinatorLayout,
+                                    textRes = holder.message,
+                                    duration = Snackbar.LENGTH_LONG
+                            ),
+                            holder.buttonTitle?.let {
+                                Action(
+                                        textRes = holder.buttonTitle,
+                                        clickListener = { holder.buttonAction() }
+                                )
+                            },
+                            dismissCallback = { _, event -> holder.onDismissAction(event) }
+                    )
+            )
         }
     }
 }
