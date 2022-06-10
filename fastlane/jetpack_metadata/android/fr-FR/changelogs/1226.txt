@@ -1,9 +1,0 @@
-19.9 :
-- Achats de domaines de sites intégrés à l’application
-- Glisser-déposer les blocs de l’éditeur
-- Contraste de couleur du bloc de bannière
-- Correction de la visibilité du formatage du bloc de boutons
-- Séparer les tâches de démarrage rapide pour les nouveaux sites/sites existants
-- Copier le lien vers les pages publiées
-- Réglages de la taille des images/du Lien vers le bloc Galerie
-- Pas de bannière de visite dans un éditeur non pris en charge

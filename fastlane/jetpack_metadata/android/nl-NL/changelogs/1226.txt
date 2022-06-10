@@ -1,9 +1,0 @@
-19.9:
-- Sitedomeinaankopen in de app
-- Blokken verslepen naar de editor
-- Beter kleurcontrast op omslagafbeeldingblok
-- Opties voor opmaak knopblok blijft zichtbaar
-- Snelstarttaken scheiden voor nieuwe vs bestaande sites
-- Link kopiëren voor gepubliceerde pagina's
-- Link naar/instellingen voor afbeeldingsgroottes in galerijblokken
-Geen tourbanner in niet-ondersteunde blokeditor
