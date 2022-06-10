@@ -127,17 +127,7 @@ class BloggingPromptsOnboardingViewModelTest : BaseUnitTest() {
         classToTest.onSiteSelected(selectedSiteLocalId)
         verify(actionObserver).onChanged(OpenRemindersIntro(selectedSiteLocalId))
     }
-
-    @Test
-    fun `Should update selected site after site is selected on site picker and onSiteSelected is called`() {
-        val selectedSiteLocalId = 123
-        val siteModel = SiteModel()
-        whenever(siteStore.getSiteByLocalId(selectedSiteLocalId)).thenReturn(siteModel)
-        classToTest.onSiteSelected(selectedSiteLocalId)
-        verify(siteStore).getSiteByLocalId(selectedSiteLocalId)
-        verify(selectedSiteRepository).updateSite(siteModel)
-    }
-
+    
     // INFORMATION dialog type actions
 
     @Test
