@@ -31,47 +31,6 @@ commands:
 
 version: 2.1
 jobs:
-  Installable Build:
-    executor:
-      name: android/default
-      api-version: "29"
-    steps:
-      - git/shallow-checkout
-      - bundle-install/bundle-install:
-          cache_key_prefix: installable-build-v4
-      - run:
-          name: Copy Secrets
-          command: FASTLANE_SKIP_UPDATE_CHECK=1 bundle exec fastlane run configure_apply
-      - update-gradle-memory
-      - android/restore-gradle-cache
-      - run:
-          name: Set version environment variable
-          command: |
-            if [ -n "$CIRCLE_PULL_REQUEST" ]; then
-              PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
-              PREFIX="pr-${PR_NUMBER}"
-            else
-              PREFIX="$CIRCLE_BRANCH"
-            fi
-
-            VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
-            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
-      - run:
-          name: Build WordPress APK
-          command: ./gradlew --stacktrace assembleWordpressJalapenoDebug -PinstallableBuildVersionName="$VERSION_NAME"
-      - run:
-          name: Build Jetpack APK
-          command: ./gradlew --stacktrace assembleJetpackJalapenoDebug -PinstallableBuildVersionName="$VERSION_NAME"
-      - android/save-gradle-cache
-      - run:
-          name: Prepare APK
-          command: |
-            mkdir -p Artifacts
-            mv WordPress/build/outputs/apk/wordpressJalapeno/debug/org.wordpress.android-wordpress-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
-            mv WordPress/build/outputs/apk/jetpackJalapeno/debug/org.wordpress.android-jetpack-jalapeno-debug.apk "Artifacts/Jetpack-${VERSION_NAME}.apk"
-      - store_artifacts:
-          path: Artifacts
-          destination: Artifacts
   Release Build:
     parameters:
       alpha:
@@ -361,10 +320,6 @@ workflows:
         - << pipeline.parameters.release_build >>
     jobs:
       - Dependency Tree Diff
-      - Installable Build:
-          filters:
-            branches:
-              ignore: /pull\/[0-9]+/
       - Connected Tests:
           post-to-slack: true
           # Always run connected tests on trunk and release branches
