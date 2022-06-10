@@ -102,4 +102,8 @@ abstract class FeatureIntroductionDialogFragment : DialogFragment() {
             viewModel.onCloseButtonClick()
         }
     }
+
+    fun getSuperBinding(): FeatureIntroductionDialogFragmentBinding {
+        return binding
+    }
 }
