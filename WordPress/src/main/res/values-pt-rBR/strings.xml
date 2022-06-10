@@ -49,10 +49,6 @@ Language: pt_BR
     <string name="photo_picker_media_thumbnail_content_description">Miniatura de mídia</string>
     <string name="stats_insights_popular_title">🔥 Horário mais popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Seus visitantes desta semana são %1$s menos do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">O número de visitantes desta semana é %1$s maior do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Suas visualizações desta semana são %1$s menores do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Suas visualizações desta semana são %1$s maiores do que na semana anterior.</string>
     <string name="stats_timeframe_previous_week">Semana anterior</string>
     <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar painel</string>
@@ -1670,7 +1666,6 @@ Language: pt_BR
     <string name="quick_start_sites_type_grow">Aumente seu número de visitantes</string>
     <string name="quick_start_sites_type_customize">Personalize seu site</string>
     <string name="quick_start_sites">Próximos passos</string>
-    <string name="quick_start_complete_tasks_header">Concluídas (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Escolher um ícone do site</string>
     <string name="quick_start_dialog_upload_icon_message">Seus visitantes verão o ícone no navegador. Adicione um ícone personalizado para uma exibição profissional.</string>
     <string name="quick_start_dialog_check_stats_message_short">Selecione %1$s estatísticas %2$s para ver o desempenho do seu site.</string>
@@ -1683,11 +1678,7 @@ Language: pt_BR
     <string name="quick_start_dialog_remove_next_steps_message">Remover os próximos passos esconderá todas dicas em seu site. Essa ação não pode ser desfeita.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remover os próximos passos</string>
     <string name="quick_start_remove_next_steps_menu_title">Remover este</string>
-    <string name="quick_start_complete_view_subtitle">Parabéns por completar sua lista. Ótimo trabalho!</string>
-    <string name="quick_start_complete_view_title">Todas as tarefas concluídas!</string>
     <string name="quick_start_task_skip_menu_title">Pular tarefa</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">recolher</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandir</string>
     <string name="notification_channel_reminder_title">Lembrete</string>
     <string name="stats_select_next_period_description">Selecionar próximo período</string>
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
@@ -1760,7 +1751,6 @@ Language: pt_BR
     <string name="stats_insights_create_post">Criar post</string>
     <string name="stats_insights_latest_post_message">Há %1$s desde que %2$s foi publicado. Aqui está o desempenho do post até o momento:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Há %1$s desde que %2$s foi publicado. Aumente as visualizações do post compartilhando-o:</string>
-    <string name="stats_insights_latest_post_empty">Você não publicou nenhum post ainda. Assim que você começar a publicar, um resumo do post mais recente aparecerá aqui:</string>
     <string name="stats_insights_tags_and_categories">Tags e categorias</string>
     <string name="stats_insights_all_time_stats">Estatísticas até o momento</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

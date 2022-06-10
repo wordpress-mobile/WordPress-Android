@@ -1,5 +1,12 @@
-# NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
-# of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
+# NOTE: When updating this list, ensure the locales having `promo_config: {…}` matches the list of locales
+# used in the `raw-screenshots` job (see `.circleci/config.yml`) by Firebase Test Lab
+#
+# NOTE: The `promo_config` hash is used by `fastlane/helpers/android_promo_screenshot_helper.rb` and accepts keys `:text_size` and `:font`.
+# When set to `false`, the locale will just not be included during the screenshot generation (see `lanes/screenshots.rb`).
+# This setup is likely to disappear soon (we currently don't provide any custom text size and font for any local anyway) when we will:
+#  1. Get rid of the local `fastlane/helpers/*` from this repo, to ultimately switch to use the `release-toolkit`'s action instead
+#  2. Switch to use the [future `LocaleHelper` once it lands](https://github.com/wordpress-mobile/release-toolkit/pull/296)
+#
 ALL_LOCALES = [
   # First are the locales which are used for *both* downloading the `strings.xml` files from GlotPress *and* for generating the release notes XML files.
   { glotpress: 'ar', android: 'ar',    google_play: 'ar',     promo_config: {} },
@@ -26,37 +33,33 @@ ALL_LOCALES = [
   { glotpress: 'zh-tw', android: 'zh-rTW', google_play: 'zh-TW',  promo_config: {} },
   # From this point are locales that are still used for downloading `strings.xml`… but not for release notes – and thus don't need a `google_play` key. See `RELEASE_NOTES_LOCALES` below.
   { glotpress: 'az', android: 'az', promo_config: false },
-  { glotpress: 'el', android: 'el', promo_config: false },
-  { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },
-  { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
-  { glotpress: 'gd', android: 'gd', promo_config: false },
-  { glotpress: 'hi', android: 'hi', promo_config: false },
-  { glotpress: 'hu', android: 'hu', promo_config: false },
-  { glotpress: 'nb', android: 'nb', promo_config: false },
-  { glotpress: 'pl', android: 'pl', promo_config: false },
-  { glotpress: 'th', android: 'th', promo_config: false },
-  { glotpress: 'uz', android: 'uz', promo_config: false },
-  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
-  { glotpress: 'eu', android: 'eu', promo_config: false },
-  { glotpress: 'ro', android: 'ro', promo_config: false },
-  { glotpress: 'mk', android: 'mk', promo_config: false },
-  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
-  { glotpress: 'sr', android: 'sr', promo_config: false },
-  { glotpress: 'sk', android: 'sk', promo_config: false },
+  { glotpress: 'bg', android: 'bg', promo_config: false },
+  { glotpress: 'cs', android: 'cs', promo_config: false },
   { glotpress: 'cy', android: 'cy', promo_config: false },
   { glotpress: 'da', android: 'da', promo_config: false },
-  { glotpress: 'bg', android: 'bg', promo_config: false },
-  { glotpress: 'sq', android: 'sq', promo_config: false },
-  { glotpress: 'hr', android: 'hr', promo_config: false },
-  { glotpress: 'cs', android: 'cs', promo_config: false },
-  { glotpress: 'pt-br', android: 'pt-rBR', promo_config: false },
+  { glotpress: 'el', android: 'el', promo_config: false },
+  { glotpress: 'en-au', android: 'en-rAU', promo_config: false },
   { glotpress: 'en-ca', android: 'en-rCA', promo_config: false },
-  { glotpress: 'ms', android: 'ms', promo_config: false },
-  { glotpress: 'es-ve', android: 'es-rVE', promo_config: false },
-  { glotpress: 'gl', android: 'gl', promo_config: false },
-  { glotpress: 'is', android: 'is' },
+  { glotpress: 'es-cl', android: 'es-rCL', promo_config: false },
   { glotpress: 'es-co', android: 'es-rCO', promo_config: false },
+  { glotpress: 'es-mx', android: 'es-rMX', promo_config: false },
+  { glotpress: 'es-ve', android: 'es-rVE', promo_config: false },
+  { glotpress: 'eu', android: 'eu', promo_config: false },
+  { glotpress: 'gd', android: 'gd', promo_config: false },
+  { glotpress: 'gl', android: 'gl', promo_config: false },
+  { glotpress: 'hi', android: 'hi', promo_config: false },
+  { glotpress: 'hr', android: 'hr', promo_config: false },
+  { glotpress: 'hu', android: 'hu', promo_config: false },
+  { glotpress: 'is', android: 'is' },
   { glotpress: 'kmr', android: 'kmr', promo_config: false },
+  { glotpress: 'mk', android: 'mk', promo_config: false },
+  { glotpress: 'ms', android: 'ms', promo_config: false },
+  { glotpress: 'nb', android: 'nb', promo_config: false },
+  { glotpress: 'ro', android: 'ro', promo_config: false },
+  { glotpress: 'sk', android: 'sk', promo_config: false },
+  { glotpress: 'sq', android: 'sq', promo_config: false },
+  { glotpress: 'uz', android: 'uz', promo_config: false },
+  { glotpress: 'zh-tw', android: 'zh-rHK', promo_config: false },
 ].freeze
 
 RELEASE_NOTES_LOCALES = ALL_LOCALES

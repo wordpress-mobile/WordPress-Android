@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:31:42+0000
+Translation-Revision-Date: 2022-06-03 09:54:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_image_file_not_found">Bilddatei nicht gefunden.</string>
+    <string name="me_btn_scan_login_code">Anmeldecode scannen</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Aktuell ausgewählt: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Alle Aufgaben erledigt</string>
+    <string name="quick_start_list_task_complete">Aufgabe abgeschlossen</string>
+    <string name="stats_insights_followers_guide_card">💡Du kannst einen Kommentar hinterlassen, um mit Besuchern deines Blogs zu interagieren und mehr Follower zu gewinnen.</string>
+    <string name="gutenberg_native_arrow_buttons">Pfeil-Buttons</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Mit Drag-and-drop ist das Neuanordnen von Blöcken ganz einfach. Halte einfach einen Block gedrückt, zieh ihn an seine neue Position und lass ihn dann los.</string>
+    <string name="gutenberg_native_drag_drop">Drag-and-drop</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Du kannst Blöcke auch neu anordnen, indem du auf einen Block tippst und ihn dann mit den Aufwärts- und Abwärtspfeilen, die unten links auf dem Block erscheinen, nach oben oder unten verschiebst.</string>
+    <string name="stats_insights_likes_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Likes.</string>
+    <string name="stats_insights_comments_guide_card">💡Tippe auf MEHR ANZEIGEN, um deine Top-Mitwirkenden anzuzeigen.</string>
+    <string name="stats_most_popular_percent_views_empty">Nicht genug Aktivität. Schau später nochmal vorbei, wenn mehr Besucher auf deiner Website waren!</string>
+    <string name="stats_insights_latest_post_empty">Du hast noch keine Beiträge veröffentlicht. Schau später nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>
+    <string name="stats_total_followers_content_description">%1s, %2s aller Follower</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Wenn du mehr Aufrufe und Traffic erhalten möchtest, sieh dir unsere Top-Tipps an: %1$s</string>
     <string name="quick_start_sites_type_get_to_know_app">Die App kennenlernen</string>
     <string name="quick_start_list_upload_media_title">Lade Fotos oder Videos hoch</string>
     <string name="quick_start_completed_tour_title">Gratulation! Du kennst dich aus&lt;br/&gt;</string>
@@ -49,14 +66,14 @@ Language: de
     <string name="photo_picker_video_thumbnail_unselected">Video nicht ausgewählt</string>
     <string name="blogging_reminders_prompt_help_button_desc">Weitere Informationen zu den Aufforderungen</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Deine Aufrufe in dieser Woche sind %1$s niedriger als in der Vorwoche.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Die Besucherzahlen in dieser Woche sind %1$s höher als in der Vorwoche.</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Die Besucherzahlen in dieser Woche sind %1$s niedriger als in der Vorwoche.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Deine Aufrufe in dieser Woche sind um %1$s niedriger als letzte Woche.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Deine Besucher in dieser Woche sind um %1$s höher als letzte Woche.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Deine Besucher in dieser Woche sind um %1$s niedriger als letzte Woche.</string>
     <string name="scan_vault_press_active_on_site_subtitle">Deine Website ist bereits durch VaultPress geschützt. Klicke auf den nachfolgenden Button, um zu deinem VaultPress-Dashboard zu gelangen.</string>
     <string name="scan_vault_press_active_on_site_button_text">Dashboard besuchen</string>
     <string name="stats_timeframe_this_week">Diese Woche</string>
     <string name="stats_timeframe_previous_week">Vorherige Woche</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Deine Aufrufe in dieser Woche sind %1$s höher als in der Vorwoche.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Deine Aufrufe in dieser Woche sind um %1$s höher als letzte Woche.</string>
     <string name="locale_picker_current_language">Aktuelle Sprache:</string>
     <string name="scan_vault_press_active_on_site_title">Deine Website hat VaultPress</string>
     <string name="hpp_choose_and_create_site">Website erstellen</string>
@@ -474,6 +491,7 @@ Language: de
     <string name="gutenberg_native_three">Drei</string>
     <string name="gutenberg_native_s_social_icon">Social-Media-Symbol für %s</string>
     <string name="gutenberg_native_mention">Erwähnung</string>
+    <string name="gutenberg_native_new">NEU</string>
     <string name="gutenberg_native_preview_page">Seitenvorschau</string>
     <string name="gutenberg_native_preview_post">Beitragsvorschau</string>
     <string name="gutenberg_native_retry">Erneut versuchen</string>
@@ -1668,7 +1686,6 @@ Language: de
     <string name="plans_loading_error_no_plans_title">Tarife können nicht geladen werden</string>
     <string name="exit">beenden</string>
     <string name="quick_start_sites">Nächste Schritte</string>
-    <string name="quick_start_complete_tasks_header">(%d) komplett</string>
     <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
     <string name="quick_start_sites_type_grow">Vergrößere deine Reichweite</string>
     <string name="quick_start_sites_type_customize">Passe deine Website an</string>
@@ -1682,13 +1699,9 @@ Language: de
     <string name="quick_start_dialog_remove_next_steps_message">Das Entfernen der nächsten Schritte blendet alle Touren auf dieser Seite aus. Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Nächste Schritte entfernen</string>
     <string name="quick_start_remove_next_steps_menu_title">Das entfernen</string>
-    <string name="quick_start_complete_view_subtitle">Herzlichen Glückwunsch zum Vervollständigen deiner Liste. Eine gute Arbeit.</string>
     <string name="quick_start_dialog_check_stats_message">Bleib auf dem Laufenden über die Leistung deiner Website.</string>
     <string name="notification_channel_reminder_title">Erinnerung</string>
-    <string name="quick_start_complete_view_title">Alle Aufgaben erledigt!</string>
     <string name="quick_start_task_skip_menu_title">Aufgabe überspringen</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">einklappen</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">aufklappen</string>
     <string name="stats_select_next_period_description">Nächsten Zeitraum auswählen</string>
     <string name="stats_select_previous_period_description">Vorherigen Zeitraum auswählen</string>
     <string name="stats_most_popular_percent_views">%1$d%% der Aufrufe</string>
@@ -1761,7 +1774,6 @@ Language: de
     <string name="gif_picker_initial_empty_text">Suche, um GIFs zu finden und sie zu deiner Mediathek hinzuzufügen!</string>
     <string name="stats_insights_tags_and_categories">Schlagwörter und Kategorien</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s wurde vor %1$s veröffentlicht. Erhalte mehr Aufrufe deines Beitrags, indem du ihn teilst:</string>
-    <string name="stats_insights_latest_post_empty">Du hast noch keine Beiträge veröffentlicht. Sobald du Beiträge veröffentlichst, wird hier eine Übersicht zum aktuellsten Beitrag angezeigt:</string>
     <string name="stats_insights_all_time_stats">Gesamte Zeit</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Follower</string>

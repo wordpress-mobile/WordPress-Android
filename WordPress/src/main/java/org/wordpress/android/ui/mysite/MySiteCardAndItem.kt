@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_START_DYNAMIC_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.SITE_INFO_CARD
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
@@ -216,8 +217,10 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                         val numberOfAnswers: Int,
                         val isAnswered: Boolean,
                         val promptId: Int,
+                        val attribution: BloggingPromptAttribution,
                         val onShareClick: (String) -> Unit,
-                        val onAnswerClick: (PromptID) -> Unit
+                        val onAnswerClick: (PromptID) -> Unit,
+                        val onSkipClick: () -> Unit
                     ) : BloggingPromptCard(dashboardCardType = DashboardCardType.BLOGGING_PROMPT_CARD)
                 }
             }

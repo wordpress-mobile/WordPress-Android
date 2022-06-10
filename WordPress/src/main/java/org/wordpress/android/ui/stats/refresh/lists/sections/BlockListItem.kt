@@ -280,8 +280,9 @@ sealed class BlockListItem(val type: Type) {
 
     data class ValueWithChartItem(
         val value: String,
-        val values: List<Long>? = null,
-        val positive: Boolean? = null
+        val chartValues: List<Long>? = null,
+        val positive: Boolean? = null,
+        val extraBottomMargin: Boolean = false
     ) : BlockListItem(VALUE_WITH_CHART_ITEM)
 
     data class LineChartItem(
