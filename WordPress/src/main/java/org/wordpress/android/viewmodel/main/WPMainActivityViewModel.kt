@@ -30,6 +30,7 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -168,6 +169,7 @@ class WPMainActivityViewModel @Inject constructor(
                                 promptTitle = UiStringText(it.text),
                                 isAnswered = prompt.isAnswered,
                                 promptId = prompt.id,
+                                attribution = BloggingPromptAttribution.fromString(prompt.attribution),
                                 onClickAction = ::onAnswerPromptActionClicked,
                                 onHelpAction = ::onHelpPrompActionClicked
                         )
@@ -230,7 +232,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onAnswerPromptActionClicked(promptId: Int) {
-        // TODO @klymyam add analytics
+        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED)
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
     }

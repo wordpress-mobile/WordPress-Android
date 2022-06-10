@@ -13,6 +13,7 @@ import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.TrailingLabelTextItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringPluralRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -52,7 +53,7 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
                     "<!-- /wp:pullquote -->",
             date = Date(),
             isAnswered = false,
-            attribution = "",
+            attribution = "dayone",
             respondentsCount = 5,
             respondentsAvatarUrls = RESPONDENTS
     )
@@ -99,6 +100,7 @@ class BloggingPromptCardBuilderTest : BaseUnitTest() {
             promptId = 123,
             onShareClick = onShareClick,
             onAnswerClick = onAnswerClick,
+            attribution = BloggingPromptAttribution.DAY_ONE,
             onSkipClick = onSkipClick
     )
 }

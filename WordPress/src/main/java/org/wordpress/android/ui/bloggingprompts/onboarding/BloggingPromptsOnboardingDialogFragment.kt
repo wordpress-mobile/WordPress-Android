@@ -33,6 +33,7 @@ import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFra
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.BLOGGING_PROMPTS_MODE
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint.BLOGGING_PROMPTS_INTRODUCTION
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
@@ -166,7 +167,11 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
             when (action) {
                 is OpenEditor -> {
                     activity?.let {
-                        startActivity(ActivityLauncher.openEditorWithBloggingPrompt(it, action.promptId))
+                        startActivity(
+                                ActivityLauncher.openEditorWithBloggingPrompt(
+                                        it, action.promptId, BLOGGING_PROMPTS_INTRODUCTION
+                                )
+                        )
                     }
                 }
                 is OpenSitePicker -> {

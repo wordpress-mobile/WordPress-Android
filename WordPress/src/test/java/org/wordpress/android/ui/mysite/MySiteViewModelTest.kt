@@ -100,6 +100,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ShowRemoveNextStepsDialog
 import org.wordpress.android.ui.mysite.cards.CardsBuilder
 import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType
@@ -290,7 +291,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                             content = "content",
                             date = Date(),
                             isAnswered = false,
-                            attribution = "",
+                            attribution = "dayone",
                             respondentsCount = 5,
                             respondentsAvatarUrls = listOf()
                     )
@@ -2929,6 +2930,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 numberOfAnswers = 5,
                 isAnswered = false,
                 promptId = bloggingPromptId,
+                attribution = BloggingPromptAttribution.DAY_ONE,
                 onShareClick = onBloggingPromptShareClicked as ((message: String) -> Unit),
                 onAnswerClick = onBloggingPromptAnswerClicked as ((promptId: Int) -> Unit),
                 onSkipClick = onBloggingPromptSkipClicked as (() -> Unit)
