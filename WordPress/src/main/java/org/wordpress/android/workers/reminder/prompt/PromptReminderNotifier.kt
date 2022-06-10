@@ -6,8 +6,11 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat.Action.Builder
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import org.wordpress.android.R.color
+import kotlinx.coroutines.runBlocking
+import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -83,7 +86,11 @@ class PromptReminderNotifier @Inject constructor(
             category = CATEGORY_REMINDER,
             autoCancel = true,
             colorized = true,
-            color = resourceProvider.getColor(color.blue_50),
+            color = if (BuildConfig.IS_JETPACK_APP) {
+                resourceProvider.getColor(R.color.jetpack_green)
+            } else {
+                resourceProvider.getColor(R.color.blue_50)
+            },
             smallIcon = drawable.ic_app_white_24dp,
             firstAction = Builder(
                 0,
