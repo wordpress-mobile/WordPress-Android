@@ -5,7 +5,7 @@ import org.wordpress.android.annotation.Feature
 import org.wordpress.android.util.config.BloggingPromptsFeatureConfig.Companion.BLOGGING_PROMPTS_REMOTE_FIELD
 import javax.inject.Inject
 
-@Feature(BLOGGING_PROMPTS_REMOTE_FIELD, false)
+@Feature(BLOGGING_PROMPTS_REMOTE_FIELD, true)
 class BloggingPromptsFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
