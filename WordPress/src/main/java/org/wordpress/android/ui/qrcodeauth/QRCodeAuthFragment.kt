@@ -7,11 +7,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QrcodeauthFragmentBinding
 import org.wordpress.android.ui.posts.BasicDialogViewModel
@@ -19,10 +18,17 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Scanning
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.observeEvent
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
+    @Inject lateinit var uiHelpers: UiHelpers
+
     private val viewModel: QRCodeAuthViewModel by viewModels()
     private val dialogViewModel: BasicDialogViewModel by activityViewModels()
 
@@ -31,7 +37,6 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         with(QrcodeauthFragmentBinding.bind(view)) {
             initBackPressHandler()
             observeViewModel()
-            initView()
             startViewModel()
         }
     }
@@ -39,6 +44,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     private fun QrcodeauthFragmentBinding.observeViewModel() {
         viewModel.actionEvents.onEach { handleActionEvents(it) }.launchIn(viewLifecycleOwner.lifecycleScope)
         dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner) { viewModel.onDialogInteraction(it) }
+        viewModel.uiState.onEach { renderUi(it) }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun startViewModel() {
@@ -48,8 +54,21 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
         when (actionEvent) {
             is LaunchDismissDialog -> launchDismissDialog(actionEvent.dialogModel)
-            is LaunchScanner -> { } // TODO
+            is LaunchScanner -> launchScanner()
             is FinishActivity -> requireActivity().finish()
+        }
+    }
+
+    private fun QrcodeauthFragmentBinding.renderUi(uiState: QRCodeAuthUiState) {
+        uiHelpers.updateVisibility(contentLayout.contentContainer, uiState.contentVisibility)
+        uiHelpers.updateVisibility(errorLayout.errorContainer, uiState.errorVisibility)
+        uiHelpers.updateVisibility(loadingLayout.loadingContainer, uiState.loadingVisibility)
+        when (uiState) {
+            is Content -> { } // TODO
+            is Error -> { } // TODO
+            is Loading -> { } // NO OP
+            is Scanning -> { } // NO OP
+            else -> { } // NO OP
         }
     }
 
@@ -62,6 +81,13 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
                         model.negativeButtonLabel?.let { label -> getString(label) },
                         model.cancelButtonLabel?.let { label -> getString(label) }
                 ))
+    }
+
+    private fun launchScanner() {
+        val scanner = GmsBarcodeScanning.getClient(requireContext())
+        scanner.startScan()
+                .addOnSuccessListener { barcode -> viewModel.onScanSuccess(barcode.rawValue) }
+                .addOnFailureListener { viewModel.onScanFailure() }
     }
 
     private fun initBackPressHandler() {
@@ -77,22 +103,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     }
 
     @Suppress("MagicNumber")
-    private fun QrcodeauthFragmentBinding.initView() {
-        viewModel.start()
-        // Temporarily show each view
-        lifecycleScope.launch {
-            loadingLayout.loadingContainer.visibility = View.VISIBLE
-            contentLayout.contentContainer.visibility = View.GONE
-            errorLayout.errorContainer.visibility = View.GONE
-            delay(2000L)
-            loadingLayout.loadingContainer.visibility = View.GONE
-            contentLayout.contentContainer.visibility = View.VISIBLE
-            errorLayout.errorContainer.visibility = View.GONE
-            delay(2000L)
-            loadingLayout.loadingContainer.visibility = View.GONE
-            contentLayout.contentContainer.visibility = View.GONE
-            errorLayout.errorContainer.visibility = View.VISIBLE
-        }
+    private fun temp() {
         // Temporarily reference all strings from file so CI wont complain.
         // This will be removed in an upcoming PR
         var temp = R.string.qrcode_auth_flow_validated_default_title
