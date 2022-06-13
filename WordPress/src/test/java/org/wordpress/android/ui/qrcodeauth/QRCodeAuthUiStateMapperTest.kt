@@ -2,14 +2,14 @@ package org.wordpress.android.ui.qrcodeauth
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DonePrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DoneSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ValidatedPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ValidatedSecondaryAction
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.DonePrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.DoneSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedSecondaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Authenticating
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Done
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Validated
@@ -91,35 +91,35 @@ class QRCodeAuthUiStateMapperTest {
     private val browser = "browser"
     private val location = "location"
     private val authFailedExpected = AuthFailed(
-            primaryAction = ErrorPrimaryAction(primaryClickAction),
-            secondaryAction = ErrorSecondaryAction(secondaryClickAction))
+            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
 
     private val expiredExpected = Expired(
-            primaryAction = ErrorPrimaryAction(primaryClickAction),
-            secondaryAction = ErrorSecondaryAction(secondaryClickAction))
+            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
 
     private val invalidDataExpected = InvalidData(
-            primaryAction = ErrorPrimaryAction(primaryClickAction),
-            secondaryAction = ErrorSecondaryAction(secondaryClickAction))
+            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
 
     private val noInternetExpected = NoInternet(
-            primaryAction = ErrorPrimaryAction(primaryClickAction),
-            secondaryAction = ErrorSecondaryAction(secondaryClickAction))
+            primaryActionButton = ErrorPrimaryActionButton(primaryClickAction),
+            secondaryActionButton = ErrorSecondaryActionButton(secondaryClickAction))
 
     private val validatedExpected = Validated(
-            primaryAction = ValidatedPrimaryAction(primaryClickAction),
-            secondaryAction = ValidatedSecondaryAction(secondaryClickAction),
+            primaryActionButton = ValidatedPrimaryActionButton(primaryClickAction),
+            secondaryActionButton = ValidatedSecondaryActionButton(secondaryClickAction),
             location = location,
             browser = browser)
 
     private val authenticatingExpected = Authenticating(
-            primaryAction = AuthenticatingPrimaryAction,
-            secondaryAction = AuthenticatingSecondaryAction,
+            primaryActionButton = AuthenticatingPrimaryActionButton,
+            secondaryActionButton = AuthenticatingSecondaryActionButton,
             location = location,
             browser = browser)
 
     private val doneExpected = Done(
-            primaryAction = DonePrimaryAction(primaryClickAction),
-            secondaryAction = DoneSecondaryAction
+            primaryActionButton = DonePrimaryActionButton(primaryClickAction),
+            secondaryActionButton = DoneSecondaryActionButton
     )
 }

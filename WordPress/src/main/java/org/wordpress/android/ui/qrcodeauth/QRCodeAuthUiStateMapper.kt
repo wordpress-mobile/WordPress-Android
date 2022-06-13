@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.qrcodeauth
 
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DonePrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DoneSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ValidatedPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ValidatedSecondaryAction
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.DonePrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.DoneSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedSecondaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Error
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
@@ -19,26 +19,26 @@ class QRCodeAuthUiStateMapper @Inject constructor() {
     fun mapToScanning() = Scanning
     fun mapToAuthFailed(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
         Error.AuthFailed(
-                primaryAction = ErrorPrimaryAction(onScanAgainClicked),
-                secondaryAction = ErrorSecondaryAction(onCancelClicked)
+                primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+                secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
         )
 
     fun mapToExpired(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
             Error.Expired(
-                    primaryAction = ErrorPrimaryAction(onScanAgainClicked),
-                    secondaryAction = ErrorSecondaryAction(onCancelClicked)
+                    primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+                    secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
             )
 
     fun mapToInvalidData(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
             Error.InvalidData(
-                    primaryAction = ErrorPrimaryAction(onScanAgainClicked),
-                    secondaryAction = ErrorSecondaryAction(onCancelClicked)
+                    primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+                    secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
             )
 
     fun mapToNoInternet(onScanAgainClicked: () -> Unit, onCancelClicked: () -> Unit) =
             Error.NoInternet(
-                    primaryAction = ErrorPrimaryAction(onScanAgainClicked),
-                    secondaryAction = ErrorSecondaryAction(onCancelClicked)
+                    primaryActionButton = ErrorPrimaryActionButton(onScanAgainClicked),
+                    secondaryActionButton = ErrorSecondaryActionButton(onCancelClicked)
             )
 
     fun mapToValidated(
@@ -48,31 +48,31 @@ class QRCodeAuthUiStateMapper @Inject constructor() {
         onCancelClick: () -> Unit
     ) =
             Content.Validated(
-                    primaryAction = ValidatedPrimaryAction(onAuthenticateClick),
-                    secondaryAction = ValidatedSecondaryAction(onCancelClick),
+                    primaryActionButton = ValidatedPrimaryActionButton(onAuthenticateClick),
+                    secondaryActionButton = ValidatedSecondaryActionButton(onCancelClick),
                     location = location,
                     browser = browser
             )
 
     fun mapToAuthenticating(fromValidated: Content.Validated) =
         Content.Authenticating(
-                primaryAction = AuthenticatingPrimaryAction,
-                secondaryAction = AuthenticatingSecondaryAction,
+                primaryActionButton = AuthenticatingPrimaryActionButton,
+                secondaryActionButton = AuthenticatingSecondaryActionButton,
                 location = fromValidated.location,
                 browser = fromValidated.browser
         )
 
     fun mapToAuthenticating(location: String?, browser: String?) =
             Content.Authenticating(
-                    primaryAction = AuthenticatingPrimaryAction,
-                    secondaryAction = AuthenticatingSecondaryAction,
+                    primaryActionButton = AuthenticatingPrimaryActionButton,
+                    secondaryActionButton = AuthenticatingSecondaryActionButton,
                     location = location,
                     browser = browser
             )
 
     fun mapToDone(onDismissClicked: () -> Unit) =
             Content.Done(
-                    primaryAction = DonePrimaryAction(onDismissClicked),
-                    secondaryAction = DoneSecondaryAction
+                    primaryActionButton = DonePrimaryActionButton(onDismissClicked),
+                    secondaryActionButton = DoneSecondaryActionButton
             )
 }
