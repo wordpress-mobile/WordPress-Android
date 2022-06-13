@@ -70,7 +70,6 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
             is Error -> { applyErrorState(uiState) }
             is Loading -> { } // NO OP
             is Scanning -> { } // NO OP
-            else -> { } // NO OP
         }
     }
 
