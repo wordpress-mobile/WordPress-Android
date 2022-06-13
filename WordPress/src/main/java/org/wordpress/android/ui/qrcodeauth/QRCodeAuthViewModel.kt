@@ -181,12 +181,12 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun mapScanErrorToErrorState(error: QRCodeAuthError) = when (error.type) {
         DATA_INVALID -> uiStateMapper.mapToExpired(this::onScanAgainClicked, this::onCancelClicked)
-        NOT_AUTHORIZED -> uiStateMapper.mapToAuthFailed(this::onScanAgainClicked, this::onCancelClicked)
+        NOT_AUTHORIZED,
+        AUTHORIZATION_REQUIRED -> uiStateMapper.mapToAuthFailed(this::onScanAgainClicked, this::onCancelClicked)
         GENERIC_ERROR,
         INVALID_RESPONSE,
         REST_INVALID_PARAM,
         API_ERROR,
-        AUTHORIZATION_REQUIRED,
         TIMEOUT -> uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked)
     }
 
