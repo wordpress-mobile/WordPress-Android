@@ -1,9 +1,0 @@
-19.9:
-- Compras de domínio de site no aplicativo
-- Opção de arrastar e soltar blocos no editor
-- Contraste de cores aprimorado em blocos de cobertura
-- Opções de formatação do bloco de botões ficam visíveis
-- Tarefas de início rápido separadas em sites existentes e novos
-- Opção de copiar link para páginas publicadas
-- Configurações de tamanho da imagem/"Link para" em blocos de galeria
-- Remoção do banner de tour no editor de blocos incompatível

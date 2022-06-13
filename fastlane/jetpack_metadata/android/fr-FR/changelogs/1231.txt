@@ -1,0 +1,4 @@
+Version 20.0 :
+- La carte de démarrage rapide et les guides « Étapes suivantes » correspondent aux nouveaux designs des sites existants.
+- Insérez des images à partir d’autres sites grâce à l’option « Insérer à partir d’une URL » dans l’application.
+- Bénéficiez de contexte plus détaillé via le lecteur d’écran grâce aux améliorations de l’accessibilité de l’éditeur de blocs.
