@@ -58,11 +58,11 @@ class QRCodeAuthViewModel @Inject constructor(
         postActionEvent(LaunchDismissDialog(ShowDismissDialog))
     }
 
-    private fun cancelClicked() {
+    private fun onCancelClicked() {
         postActionEvent(FinishActivity)
     }
 
-    private fun authenticateClicked() {
+    private fun onAuthenticateClicked() {
         // todo: implement
     }
 
@@ -72,7 +72,7 @@ class QRCodeAuthViewModel @Inject constructor(
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
             // todo: handle error
         } else {
-            postUiState(uiStateMapper.mapLoading())
+            postUiState(uiStateMapper.mapToLoading())
             validateScan(data = data.toString(), token = token.toString())
         }
     }
@@ -85,11 +85,11 @@ class QRCodeAuthViewModel @Inject constructor(
 
         // todo: add authStore.validate and remove below
         postUiState(
-                uiStateMapper.mapValidated(
+                uiStateMapper.mapToValidated(
                         "location",
                         "browser",
-                        this::authenticateClicked,
-                        this::cancelClicked
+                        this::onAuthenticateClicked,
+                        this::onCancelClicked
                 )
         )
     }
@@ -105,7 +105,7 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun updateUiStateAndLaunchScanner() {
-        postUiState(uiStateMapper.mapScanning())
+        postUiState(uiStateMapper.mapToScanning())
         postActionEvent(LaunchScanner)
     }
 
