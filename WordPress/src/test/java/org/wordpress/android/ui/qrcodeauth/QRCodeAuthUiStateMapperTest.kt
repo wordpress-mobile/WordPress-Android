@@ -25,63 +25,63 @@ class QRCodeAuthUiStateMapperTest {
 
     @Test
     fun `when loading requested, then loading should be returned`() {
-        val actual = mapper.mapLoading()
+        val actual = mapper.mapToLoading()
         val expected = Loading
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when scanning requested, then scanning should be returned`() {
-        val actual = mapper.mapScanning()
+        val actual = mapper.mapToScanning()
         val expected = Scanning
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when auth failed requested, then auth failed should be returned`() {
-        val actual = mapper.mapAuthFailed(primaryClickAction, secondaryClickAction)
+        val actual = mapper.mapToAuthFailed(primaryClickAction, secondaryClickAction)
         val expected = authFailedExpected
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when expired requested, then expired should be returned`() {
-        val actual = mapper.mapExpired(primaryClickAction, secondaryClickAction)
+        val actual = mapper.mapToExpired(primaryClickAction, secondaryClickAction)
         val expected = expiredExpected
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when invalid data requested, then invalid data should be returned`() {
-        val actual = mapper.mapInvalidData(primaryClickAction, secondaryClickAction)
+        val actual = mapper.mapToInvalidData(primaryClickAction, secondaryClickAction)
         val expected = invalidDataExpected
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when no internet requested, then no internet should be returned`() {
-        val actual = mapper.mapNoInternet(primaryClickAction, secondaryClickAction)
+        val actual = mapper.mapToNoInternet(primaryClickAction, secondaryClickAction)
         val expected = noInternetExpected
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when validated requested, then validated should be returned`() {
-        val actual = mapper.mapValidated(location, browser, primaryClickAction, secondaryClickAction)
+        val actual = mapper.mapToValidated(location, browser, primaryClickAction, secondaryClickAction)
         val expected = validatedExpected
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when no authenticating requested, then authenticating should be returned`() {
-        val actual = mapper.mapAuthenticating(location = location, browser = browser)
+        val actual = mapper.mapToAuthenticating(location = location, browser = browser)
         val expected = authenticatingExpected
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when done requested, then done should be returned`() {
-        val actual = mapper.mapDone(primaryClickAction)
+        val actual = mapper.mapToDone(primaryClickAction)
         val expected = doneExpected
         assertThat(actual).isEqualTo(expected)
     }
