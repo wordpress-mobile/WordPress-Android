@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.qrcodeauth
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.QrcodeauthActivityBinding
@@ -13,19 +14,14 @@ class QRCodeAuthActivity : AppCompatActivity() {
 
         with(QrcodeauthActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-            setSupportActionBar(toolbarMain)
-        }
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
+    companion object {
+        @JvmStatic
+        fun start(context: Context) {
+            val intent = Intent(context, QRCodeAuthActivity::class.java)
+            context.startActivity(intent)
         }
-        return super.onOptionsItemSelected(item)
     }
 }

@@ -171,7 +171,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         }
 
-        if (qrCodeAuthFlowFeatureConfig.isEnabled() && BuildConfig.ENABLE_QRCODE_AUTH_FLOW) {
+        if (qrCodeAuthFlowFeatureConfig.isEnabled() &&
+                BuildConfig.ENABLE_QRCODE_AUTH_FLOW &&
+                accountStore.hasAccessToken()) {
             rowScanLoginCode.isVisible = true
 
             rowScanLoginCode.setOnClickListener {
@@ -199,7 +201,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         })
 
         viewModel.showScanLoginCode.observeEvent(viewLifecycleOwner) {
-            ActivityLauncher.viewQRCodeAuthFlow(requireContext())
+            ActivityLauncher.startQRCodeAuthFlow(requireContext())
         }
     }
 
