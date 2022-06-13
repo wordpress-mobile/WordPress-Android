@@ -180,13 +180,19 @@ class QRCodeAuthViewModel @Inject constructor(
             )
 
     private fun mapScanErrorToErrorState(error: QRCodeAuthError) = when (error.type) {
-        DATA_INVALID -> uiStateMapper.mapToExpired(this::onScanAgainClicked, this::onCancelClicked)
-        NOT_AUTHORIZED,
-        AUTHORIZATION_REQUIRED -> uiStateMapper.mapToAuthFailed(this::onScanAgainClicked, this::onCancelClicked)
+        NOT_AUTHORIZED -> uiStateMapper.mapToAuthFailed(this::onScanAgainClicked, this::onCancelClicked)
+        AUTHORIZATION_REQUIRED -> {
+            if (error.message?.lowercase().equals(EXPIRED_MESSAGE)) {
+                uiStateMapper.mapToExpired(this::onScanAgainClicked, this::onCancelClicked)
+            } else {
+                uiStateMapper.mapToAuthFailed(this::onScanAgainClicked, this::onCancelClicked)
+            }
+        }
         GENERIC_ERROR,
         INVALID_RESPONSE,
         REST_INVALID_PARAM,
         API_ERROR,
+        DATA_INVALID,
         TIMEOUT -> uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked)
     }
 
@@ -271,5 +277,6 @@ class QRCodeAuthViewModel @Inject constructor(
         const val BROWSER_KEY = "browser"
         const val LOCATION_KEY = "location"
         const val LAST_STATE_KEY = "last_state"
+        const val EXPIRED_MESSAGE = "qr code data expired"
     }
 }
