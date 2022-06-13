@@ -1,6 +1,10 @@
-buildscript {
-    ext.aztecVersion = 'trunk-f3fc2a67ba38feb4adb4a93703587627aa29c762'
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.plugin.parcelize"
 }
+
+ext.aztecVersion = 'v1.5.8'
 
 repositories {
     maven {
@@ -29,10 +33,6 @@ repositories {
     maven { url "https://www.jitpack.io" }
     maven { url "https://a8c-libs.s3.amazonaws.com/android/hermes-mirror" }
 }
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
 
 android {
     compileSdkVersion 29
@@ -71,19 +71,37 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    api ("$gradle.ext.aztecAndroidAztecPath:$aztecVersion") {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
+    api ("$gradle.ext.aztecAndroidAztecPath") {
         exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
+        version {
+            strictly aztecVersion
+        }
     }
-    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion")
-    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion")
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$aztecVersion") {
+        version {
+            strictly aztecVersion
+        }
+    }
+
+    implementation ("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly wordPressUtilsVersion
+        }
+    }
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
     implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$gradle.ext.kotlinVersion"
     implementation "org.jsoup:jsoup:1.10.3"
 
     implementation 'com.google.code.gson:gson:2.6.2'

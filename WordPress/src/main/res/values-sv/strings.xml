@@ -1,11 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-05 06:16:10+0000
+Translation-Revision-Date: 2022-05-31 14:13:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.1
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Du kan även ändra blockens ordning genom att trycka på ett block och sedan trycka på pilarna upp/ned som visas till vänster i blocket för att flytta blocket uppåt eller nedåt.</string>
+    <string name="gutenberg_native_image_file_not_found">Bildfilen hittades inte.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Dra och släpp gör det enkelt att sortera om blocken. Tryck länge på ett block, dra det sedan till dess nya plats och släpp det sedan.</string>
+    <string name="gutenberg_native_drag_drop">Dra och släpp</string>
+    <string name="gutenberg_native_arrow_buttons">Piltangenter</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Aktuell markering: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Alla uppgifter är slutförda</string>
+    <string name="quick_start_list_task_complete">Uppgiften slutförd</string>
+    <string name="me_btn_scan_login_code">Skanna inloggningskoden</string>
+    <string name="stats_insights_followers_guide_card">💡 Du kan prova att kommentera på besökarens webbplats som en vänlig gest. Detta kan leda till fler följare.</string>
+    <string name="stats_insights_comments_guide_card">💡 Se dina flitigaste bidragsgivare genom att trycka på VISA MER.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Ditt senaste inlägg %1$s har fått %2$s gillamarkeringar.</string>
+    <string name="stats_most_popular_percent_views_empty">Inte tillräckligt med aktivitet. Kom tillbaka när din webbplats har haft fler besökare.</string>
+    <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. Kom tillbaka när du har publicerat ditt första inlägg.</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Om du vill få fler visningar och besökare kan du kolla in våra tips %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s av alla följare</string>
+    <string name="stats_value_percent">%1$s (%2$s %%)</string>
+    <string name="pages_copy_link">Kopiera länk</string>
+    <string name="quick_start_completed_tour_title">Grattis! Du kan det här&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Lär känna appen</string>
+    <string name="quick_start_list_upload_media_subtitle">Överför media till din webbplats direkt från din enhet eller kamera</string>
+    <string name="quick_start_list_upload_media_title">Ladda upp foton eller videoklipp</string>
+    <string name="quick_start_list_check_notification_subtitle">Få uppdateringar i realtid direkt i fickan</string>
+    <string name="quick_start_dialog_upload_media_message">Välj %1$sMedia%2$s för att se ditt nuvarande bibliotek.</string>
+    <string name="quick_start_dialog_check_notifications_message">Få uppdateringar i realtid direkt i fickan.</string>
+    <string name="quick_start_dialog_check_notifications_title">Kolla dina notiser</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Välj fliken %1$sNotiser%2$s för att få uppdateringar i farten.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Välj %1$splustecknet%2$s för att ladda upp media Du kan lägga till det i dina inlägg/på dina sidor från valfri enhet.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Använd &lt;b&gt;Upptäck&lt;/b&gt; för att hitta webbplatser och etiketter.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Använd &lt;b&gt;Upptäck&lt;/b&gt; för att hitta webbplatser och etiketter. Prova att välja %1$sInställningar%2$s för att lägga till ämnen som du gillar.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatyrbild för videoklipp</string>
+    <string name="stats_details_top_commentators">Toppkommenterare</string>
+    <string name="stats_insights_total_stats_negative">%1$s lägre än föregående vecka</string>
+    <string name="stats_insights_total_stats_positive">%1$s högre än föregående vecka</string>
+    <string name="stats_published_years_ago">Publicerades för %1$d år sedan</string>
+    <string name="stats_published_a_year_ago">Publicerades för ett år sedan</string>
+    <string name="stats_published_months_ago">Publicerades för %1$d månader sedan</string>
+    <string name="stats_published_a_month_ago">Publicerades för en månad sedan</string>
+    <string name="stats_published_days_ago">Publicerades för %1$d dagar sedan</string>
+    <string name="stats_published_a_day_ago">Publicerades för en dag sedan</string>
+    <string name="stats_published_hours_ago">Publicerades för %1$d timmar sedan</string>
+    <string name="stats_published_an_hour_ago">Publicerades för en timme sedan</string>
+    <string name="stats_published_minutes_ago">Publicerades för %1$d minuter sedan</string>
+    <string name="stats_published_a_minute_ago">Publicerades för en minut sedan</string>
+    <string name="stats_published_seconds_ago">Publicerades för några sekunder sedan</string>
+    <string name="stats_view_total_followers">Totalt antal följare</string>
+    <string name="stats_view_total_comments">Kommentarer totalt</string>
+    <string name="stats_view_total_likes">Gillamarkeringar totalt</string>
+    <string name="blogging_prompts_notification_dismiss">Avfärda</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Svar</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Dagligt förslag</string>
+    <string name="blogging_prompts_onboarding_got_it">Jag förstår</string>
+    <string name="quick_start_dialog_view_your_site_message_short">Tryck &lt;b&gt;%1$s&lt;/b&gt; för att visa din webbplats</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Välj %1$sLäsare%2$s för att hitta andra webbplatser.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Lär dig mer om förslag</string>
+    <string name="photo_picker_video_thumbnail_unselected">Video avmarkerad</string>
+    <string name="photo_picker_video_thumbnail_selected">Video markerad</string>
+    <string name="photo_picker_media_thumbnail_content_description">Miniatyr av mediafil</string>
+    <string name="stats_insights_popular_title">🔥 Populäraste tidpunkten</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Antalet besökare den här veckan är %1$s lägre än föregående vecka.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Antalet besökare den här veckan är %1$s högre än föregående vecka.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Antalet visningar den här veckan är %1$s lägre än föregående vecka.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Antalet visningar den här veckan är %1$s högre än föregående vecka.</string>
+    <string name="stats_timeframe_previous_week">Föregående vecka</string>
+    <string name="stats_timeframe_this_week">Denna vecka</string>
+    <string name="scan_vault_press_active_on_site_button_text">Besök adminpanelen</string>
+    <string name="scan_vault_press_active_on_site_subtitle">Din webbplats är redan skyddad av VaultPress. Du kan hitta en länk till din adminpanel för VaultPress nedan.</string>
+    <string name="scan_vault_press_active_on_site_title">Din webbplats har VaultPress</string>
+    <string name="locale_picker_current_language">Nuvarande språk:</string>
+    <string name="hpp_choose_and_create_site">Skapa webbplats</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">Lägg till block</string>
+    <string name="initial_screen">Initial skärm</string>
+    <string name="blogging_prompts_onboarding_notification_action">Lär dig mer</string>
+    <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
+    <string name="blogging_prompts_onboarding_notification_title">Nytt i WordPress mobilapp: Förslag</string>
+    <string name="new_site_creation_site_name_header_subtitle">Ett bra namn är kort och lätt att komma ihåg.\nDu kan ändra det senare.</string>
+    <string name="new_site_creation_site_name_header_title">Ge din %s-webbplats ett namn</string>
+    <string name="new_site_creation_site_name_title">Webbplatsnamn</string>
+    <string name="my_site_todays_stats_get_more_views_message">Interested in building your audience? Check out our &lt;a href=\"%1$s\"&gt;top tips&lt;/a&gt;.</string>
+    <string name="stats_insights_views_and_visitors">Visningar och besökare</string>
     <string name="featured_image_removed_notice">Borttagen som utvald bild </string>
     <string name="featured_image_confirmation_notice">Ställ in som utvald bild</string>
     <string name="featured_image_replace_dialog_cancel">Behåll den nuvarande</string>
@@ -89,7 +170,6 @@ Language: sv_SE
     <string name="my_site_blogging_prompt_card_menu_remove">Ta bort från adminpanelen</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Hoppa över detta förslag</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">Visa fler förslag</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d svar</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Dela bloggningsförslag</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Besvarat</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Svara på förslaget</string>
@@ -99,7 +179,7 @@ Language: sv_SE
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">Denna färgkombination kan vara svår för människor att läsa. Försök använda en ljusare bakgrundsfärg och/eller en mörkare textfärg.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">Denna färgkombination kan vara svår för människor att läsa. Försök använda en mörkare bakgrundsfärg och/eller en ljusare textfärg.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">Misslyckades att infoga media.\nTryck för mer information.</string>
-    <string name="new_site_creation_intents_header_subtitle">Välj ett ämne från listan nedan eller skriv ditt eget</string>
+    <string name="new_site_creation_intents_header_subtitle">Välj ett ämne från listan nedan eller skriv ditt eget.</string>
     <string name="new_site_creation_intents_header_title">Vad handlar din webbplats om?</string>
     <string name="notification_channel_weekly_roundup_title">Veckosammanfattning</string>
     <string name="my_site_dashboard_tab_title">Hem</string>
@@ -109,7 +189,7 @@ Language: sv_SE
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">Anrop med XML-RPC verkar blockerade på denna webbplats (felkod 401). Om försöket att logga in misslyckas tryck på hjälpikonen för att se vanliga frågor.</string>
     <string name="login_error_xml_rpc_cannot_read_site">Kunde inte läsa WordPress-webbplatsen på denna URL. Tryck på hjälpikonen för att se vanliga frågor.</string>
     <string name="login_error_xml_rpc_services_disabled">Tjänsten XML-RPC är inaktiverad på denna webbplats.</string>
-    <string name="my_site_menu_tab_title">Webbplatsens meny</string>
+    <string name="my_site_menu_tab_title">Meny</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">Din sökning innehåller tecken som inte stöds i WordPress.com-domäner. Följande tecken är tillåtna: A–Z, a–z, 0–9.</string>
     <string name="my_site_error_within_card_subtitle">Kontrollera din internetanslutning och ladda om sidan.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">Gå till statistiken</string>
@@ -411,6 +491,7 @@ Language: sv_SE
     <string name="gutenberg_native_three">Tre</string>
     <string name="gutenberg_native_s_social_icon">Social ikon för %s</string>
     <string name="gutenberg_native_mention">Omnämnande</string>
+    <string name="gutenberg_native_new">NYTT</string>
     <string name="gutenberg_native_preview_post">Förhandsgranska inlägg</string>
     <string name="gutenberg_native_preview_page">Förhandsgranska sidan</string>
     <string name="gutenberg_native_retry">Försök igen</string>
@@ -1607,16 +1688,11 @@ Language: sv_SE
     <string name="quick_start_sites_type_grow">Vidga din läsekrets</string>
     <string name="quick_start_sites_type_customize">Anpassa din webbplats</string>
     <string name="quick_start_sites">Gå vidare</string>
-    <string name="quick_start_complete_tasks_header">Klart (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Njut av din färdiga produkt!</string>
     <string name="quick_start_dialog_upload_icon_title">Välj en unik webbplats-ikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tryck på %1$spaket%2$s för att se ditt nuvarande paket och andra paket du kan välja</string>
-    <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$s statistik %2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
     <string name="quick_start_dialog_publish_post_message">Gör ett utkast och publicera ett inlägg.</string>
-    <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
-    <string name="quick_start_dialog_explore_plans_message">Läs om verktygen för marknadsföring och sökoptimering i våra betalda paket.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivera delning av inlägg</string>
     <string name="quick_start_dialog_enable_sharing_message">Dela automatiskt dina nya inlägg i dina olika konton i sociala media.</string>
     <string name="quick_start_dialog_check_stats_title">Kontrollera statistiken för din webbplats</string>
@@ -1624,11 +1700,7 @@ Language: sv_SE
     <string name="quick_start_dialog_remove_next_steps_message">Om du tar bort resten av stegen kommer detta att dölja alla informativa rundvandringar på denna webbplats. Denna åtgärd går inte att ångra.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Ta bort resten av stegen</string>
     <string name="quick_start_remove_next_steps_menu_title">Ta bort detta</string>
-    <string name="quick_start_complete_view_subtitle">Grattis! Du har klarat av hela listan. Bra jobbat.</string>
-    <string name="quick_start_complete_view_title">Alla åtgärder har genomförts!</string>
     <string name="quick_start_task_skip_menu_title">Hoppa över åtgärden</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">minimera</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandera</string>
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Välj nästa period</string>
     <string name="stats_select_previous_period_description">Välj föregående period</string>
@@ -1701,7 +1773,6 @@ Language: sv_SE
     <string name="stats_insights_create_post">Skapa inlägg</string>
     <string name="stats_insights_latest_post_message">Nu har det gått %1$s sedan ”%2$s” publicerades. Så här har det gått hittills för inlägget:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Nu har det gått %1$s sedan ”%2$s” publicerades. Sätt bollen i rullning och skaffa fler visningar genom att dela ditt inlägg:</string>
-    <string name="stats_insights_latest_post_empty">Du har inte publicerat några inlägg än. När du börjar publicera kommer en sammanfattning för ditt senaste inlägg att visas här:</string>
     <string name="stats_insights_tags_and_categories">Etiketter och kategorier</string>
     <string name="stats_insights_all_time_stats">Sedan starten</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -1789,8 +1860,9 @@ Language: sv_SE
     <string name="quick_start_focus_point_description">tryck här</string>
     <string name="quick_start_list_create_site_title">Skapa din webbplats</string>
     <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats.</string>
+    <string name="quick_start_completed_tour_subtitle">Visst är det skönt att kunna bocka av saker i en lista?</string>
     <string name="quick_start_dialog_view_site_title">Visa din webbplats</string>
-    <string name="quick_start_dialog_view_site_message_short">Tryck på %1$s Visa webbplats %2$s för att förhandsvisa din webbplats</string>
+    <string name="quick_start_dialog_view_site_message">Förhandsgranska din webbplats för att se vad dina besökare kommer att se.</string>
     <string name="quick_start_dialog_share_site_title">Dela din webbplats</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tryck på %1$sdelning%2$s för att fortsätta</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tryck på %1$skopplingar%2$s för att lägga till dina konton i sociala media</string>
@@ -1798,10 +1870,7 @@ Language: sv_SE
     <string name="quick_start_dialog_publish_post_title">Publicera ett inlägg</string>
     <string name="quick_start_dialog_publish_post_message_short">Tryck på %1$s Skapa ett inlägg %2$s för att skapa ett nytt inlägg</string>
     <string name="quick_start_dialog_need_help_button_negative">Nej tack</string>
-    <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser kring liknande ämnen</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Tryck på %1$s Läsaren %2$s för att fortsätta</string>
-    <string name="quick_start_dialog_follow_sites_message">Hitta webbplatser som inspirerar dig och följ dem för att få uppdateringar när de publicerar.</string>
+    <string name="quick_start_dialog_follow_sites_title">Anslut med andra webbplatser</string>
     <string name="quick_start_button_positive">Kör</string>
     <string name="quick_start_button_negative_short">Avbryt</string>
     <string name="quick_start_button_negative">Inte nu</string>

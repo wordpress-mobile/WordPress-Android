@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.chip.ChipGroup xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/margin_medium">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/choice_chip_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip1"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:id="@+id/choice_chip1"
+            style="@style/StatsWidget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:layout_marginEnd="@dimen/margin_small_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/chip2"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/stats_views" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip2"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:id="@+id/choice_chip2"
+            style="@style/StatsWidget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/chip1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/stats_visitors" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</com.google.android.material.chip.ChipGroup>
+    </com.google.android.material.chip.ChipGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
 

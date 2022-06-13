@@ -24,6 +24,7 @@ import org.wordpress.android.ui.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.ui.domains.DomainsDashboardViewModel;
 import org.wordpress.android.ui.engagement.EngagedPeopleListViewModel;
 import org.wordpress.android.ui.engagement.UserProfileViewModel;
+import org.wordpress.android.ui.featureintroduction.FeatureIntroductionViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
+import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
 import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
@@ -48,9 +50,10 @@ import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.accountsettings.AccountSettingsViewModel;
-import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.categories.detail.CategoryDetailViewModel;
+import org.wordpress.android.ui.prefs.categories.list.CategoriesListViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
+import org.wordpress.android.ui.prefs.language.LocalePickerViewModel;
 import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
@@ -61,16 +64,13 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
-import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
-import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
-import org.wordpress.android.ui.sitecreation.sitename.SiteCreationSiteNameViewModel;
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel;
-import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalCommentsDetailListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalFollowersDetailListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
@@ -108,8 +108,11 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import dagger.multibindings.IntoMap;
 
+@InstallIn(SingletonComponent.class)
 @Module
 abstract class ViewModelModule {
     @Binds
@@ -209,13 +212,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(DetailListViewModel.class)
-    abstract ViewModel detailListViewModel(DetailListViewModel viewModel);
+    @ViewModelKey(InsightsDetailListViewModel.class)
+    abstract ViewModel insightsDetailListViewModel(InsightsDetailListViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(StatsViewModel.class)
-    abstract ViewModel statsViewModel(StatsViewModel viewModel);
+    @ViewModelKey(DetailListViewModel.class)
+    abstract ViewModel detailListViewModel(DetailListViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -251,31 +254,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationIntentsViewModel.class)
-    abstract ViewModel siteCreationIntentsViewModel(SiteCreationIntentsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationSiteNameViewModel.class)
-    abstract ViewModel siteCreationSiteNameViewModel(SiteCreationSiteNameViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationDomainsViewModel.class)
-    abstract ViewModel siteCreationDomainsViewModel(SiteCreationDomainsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationMainVM.class)
-    abstract ViewModel siteCreationMainVM(SiteCreationMainVM viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SitePreviewViewModel.class)
-    abstract ViewModel newSitePreviewViewModel(SitePreviewViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -341,11 +319,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ModalLayoutPickerViewModel.class)
     abstract ViewModel mlpViewModel(ModalLayoutPickerViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(HomePagePickerViewModel.class)
-    abstract ViewModel hppViewModel(HomePagePickerViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -582,6 +555,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(LocalePickerViewModel.class)
+    abstract ViewModel localePickerViewModel(LocalePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(CategoryDetailViewModel.class)
     abstract ViewModel categoryDetailViewModel(CategoryDetailViewModel viewModel);
 
@@ -602,18 +580,41 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
-    abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(ConversationNotificationsViewModel.class)
     abstract ViewModel conversationNotificationsViewModel(ConversationNotificationsViewModel viewModel);
 
     @Binds
     @IntoMap
+    @ViewModelKey(BloggingPromptsOnboardingViewModel.class)
+    abstract ViewModel bloggingPromptsOnboardingViewModel(BloggingPromptsOnboardingViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditorBloggingPromptsViewModel.class)
+    abstract ViewModel editorBloggingPromptsViewModel(EditorBloggingPromptsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalLikesDetailListViewModel.class)
+    abstract ViewModel totalLikesDetailListViewModel(TotalLikesDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FeatureIntroductionViewModel.class)
+    abstract ViewModel featureIntroductionViewModel(FeatureIntroductionViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalCommentsDetailListViewModel.class)
+    abstract ViewModel totalCommentsDetailListViewModel(TotalCommentsDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TotalFollowersDetailListViewModel.class)
+    abstract ViewModel totalFollowersDetailListViewModel(TotalFollowersDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(AccountSettingsViewModel.class)
     abstract ViewModel accountSettingsViewModel(AccountSettingsViewModel viewModel);
-
-
 }

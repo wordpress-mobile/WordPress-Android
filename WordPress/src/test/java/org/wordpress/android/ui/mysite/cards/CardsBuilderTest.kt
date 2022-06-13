@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -30,14 +29,13 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickLinkR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.quickactions.QuickActionsCardBuilder
-import org.wordpress.android.ui.mysite.cards.quicklinkribbons.QuickLinkRibbonBuilder
+import org.wordpress.android.ui.mysite.cards.quicklinksribbon.QuickLinkRibbonBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardBuilder
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.config.MySiteDashboardPhase2FeatureConfig
-import org.wordpress.android.util.config.MySiteDashboardTabsFeatureConfig
 import org.wordpress.android.util.config.QuickStartDynamicCardsFeatureConfig
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsBuilder as DashboardCardsBuilder
 
@@ -50,8 +48,7 @@ class CardsBuilderTest {
     @Mock lateinit var dashboardCardsBuilder: DashboardCardsBuilder
     @Mock lateinit var quickLinkRibbonBuilder: QuickLinkRibbonBuilder
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var mySiteDashboardPhase2FeatureConfig: MySiteDashboardPhase2FeatureConfig
-    @Mock lateinit var mySiteDashboardTabsFeatureConfig: MySiteDashboardTabsFeatureConfig
+    @Mock lateinit var mySiteDefaultTabExperiment: MySiteDefaultTabExperiment
 
     private lateinit var cardsBuilder: CardsBuilder
     private val quickStartCategory: QuickStartCategory
@@ -88,17 +85,44 @@ class CardsBuilderTest {
     /* QUICK ACTIONS CARD */
 
     @Test
-    fun `when quick action enabled, then quick action card is built`() {
-        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(true)
-        val cards = buildCards()
+    fun `given quick action enabled + tabs disabled, when cards built, then quick actions card is built`() {
+        val cards = buildCards(isQuickActionEnabled = true, isMySiteTabsEnabled = false)
 
         assertThat(cards.findQuickActionsCard()).isNotNull
     }
 
     @Test
-    fun `when quick action disabled, then quick action card is not built`() {
-        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(false)
-        val cards = buildCards()
+    fun `given quick action disabled, when cards built, then quick actions card is not built`() {
+        val cards = buildCards(isQuickActionEnabled = false)
+
+        assertThat(cards.findQuickActionsCard()).isNull()
+    }
+
+    @Test
+    fun `given tabs enabled + experiment not running, when cards built, then quick actions card is built`() {
+        val cards = buildCards(isMySiteTabsEnabled = true, isDefaultTabExperimentRunning = false)
+
+        assertThat(cards.findQuickActionsCard()).isNotNull
+    }
+
+    @Test
+    fun `given tabs enabled + experiment running + variant not assigned, when cards built, then quick actions built`() {
+        val cards = buildCards(
+                isMySiteTabsEnabled = true,
+                isDefaultTabExperimentRunning = true,
+                isDefaultTabVariantAssigned = false
+        )
+
+        assertThat(cards.findQuickActionsCard()).isNotNull
+    }
+
+    @Test
+    fun `given tabs enabled + experiment running + variant assigned, when cards built, then quick actions not built`() {
+        val cards = buildCards(
+                isMySiteTabsEnabled = true,
+                isDefaultTabExperimentRunning = true,
+                isDefaultTabVariantAssigned = true
+        )
 
         assertThat(cards.findQuickActionsCard()).isNull()
     }
@@ -129,32 +153,25 @@ class CardsBuilderTest {
     /* DASHBOARD CARDS */
 
     @Test
-    fun `given mySiteDashboardPhase2 disabled, when cards are built, then dashboard cards not built`() {
-        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
-
-        assertThat(cards.findDashboardCards()).isNull()
-    }
-
-    @Test
-    fun `given mySiteDashboardPhase2 enabled, when cards are built, then dashboard cards built`() {
-        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = true)
+    fun `when cards are built, then dashboard cards built`() {
+        val cards = buildCards()
 
         assertThat(cards.findDashboardCards()).isNotNull
     }
 
-    /*  QUICK LINK RIBBONS */
+    /*  QUICK LINK RIBBON */
     @Test
-    fun `given mySiteDashboardTabsFeatureConfig disabled, when cards are built, then quick link ribbon not built`() {
-        val cards = buildCards(isMySiteDashboardPhase2FeatureConfigEnabled = false)
+    fun `given tabs disabled, when cards are built, then quick link ribbon not built`() {
+        val cards = buildCards(isMySiteTabsEnabled = false)
 
-        assertThat(cards.findQuickLinkRibbons()).isNull()
+        assertThat(cards.findQuickLinkRibbon()).isNull()
     }
 
     @Test
-    fun `given mySiteDashboardTabsFeatureConfig enabled, when cards are built, then quick link ribbons built`() {
-        val cards = buildCards(isMySiteTabsBuildConfigEnabled = true)
+    fun `given tabs enabled, when cards are built, then quick link ribbon built`() {
+        val cards = buildCards(isMySiteTabsEnabled = true)
 
-        assertThat(cards.findQuickLinkRibbons()).isNotNull
+        assertThat(cards.findQuickLinkRibbon()).isNotNull
     }
 
     private fun List<MySiteCardAndItem>.findQuickActionsCard() =
@@ -167,24 +184,26 @@ class CardsBuilderTest {
     private fun List<MySiteCardAndItem>.findDomainRegistrationCard() =
             this.find { it is DomainRegistrationCard } as DomainRegistrationCard?
 
-    private fun List<MySiteCardAndItem>.findQuickLinkRibbons() =
-        this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
+    private fun List<MySiteCardAndItem>.findQuickLinkRibbon() =
+            this.find { it is QuickLinkRibbon } as QuickLinkRibbon?
 
     private fun buildCards(
+        isQuickActionEnabled: Boolean = true,
         activeTask: QuickStartTask? = null,
         isDomainCreditAvailable: Boolean = false,
         isQuickStartInProgress: Boolean = false,
         isQuickStartDynamicCardEnabled: Boolean = false,
-        isMySiteDashboardPhase2FeatureConfigEnabled: Boolean = false,
-        isMySiteTabsBuildConfigEnabled: Boolean = false
+        isMySiteTabsEnabled: Boolean = false,
+        isDefaultTabExperimentRunning: Boolean = false,
+        isDefaultTabVariantAssigned: Boolean = false
     ): List<MySiteCardAndItem> {
+        whenever(buildConfigWrapper.isQuickActionEnabled).thenReturn(isQuickActionEnabled)
         whenever(quickStartDynamicCardsFeatureConfig.isEnabled()).thenReturn(isQuickStartDynamicCardEnabled)
-        whenever(mySiteDashboardPhase2FeatureConfig.isEnabled()).thenReturn(isMySiteDashboardPhase2FeatureConfigEnabled)
-        whenever(mySiteDashboardTabsFeatureConfig.isEnabled()).thenReturn(isMySiteTabsBuildConfigEnabled)
+        whenever(mySiteDefaultTabExperiment.isExperimentRunning()).thenReturn(isDefaultTabExperimentRunning)
+        whenever(mySiteDefaultTabExperiment.isVariantAssigned()).thenReturn(isDefaultTabVariantAssigned)
         return cardsBuilder.build(
                 quickActionsCardBuilderParams = QuickActionsCardBuilderParams(
                         siteModel = site,
-                        activeTask = activeTask,
                         onQuickActionMediaClick = mock(),
                         onQuickActionPagesClick = mock(),
                         onQuickActionPostsClick = mock(),
@@ -203,22 +222,25 @@ class CardsBuilderTest {
                         onErrorRetryClick = mock(),
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
-                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock())
+                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
+                                mock(), mock(), mock(), mock()
+                        )
                 ),
-                quickLinkRibbonsBuilderParams = QuickLinkRibbonBuilderParams(
+                quickLinkRibbonBuilderParams = QuickLinkRibbonBuilderParams(
                         siteModel = mock(),
                         onPagesClick = mock(),
                         onPostsClick = mock(),
                         onMediaClick = mock(),
                         onStatsClick = mock(),
                         activeTask = activeTask
-                )
+                ),
+                isMySiteTabsEnabled
         )
     }
 
     private fun setUpQuickActionsBuilder() {
         doAnswer {
-            initQuickActionsCard(it)
+            initQuickActionsCard()
         }.whenever(quickActionsCardBuilder).build(any())
     }
 
@@ -248,25 +270,18 @@ class CardsBuilderTest {
                 quickStartCardBuilder,
                 quickLinkRibbonBuilder,
                 dashboardCardsBuilder,
-                mySiteDashboardPhase2FeatureConfig,
-                mySiteDashboardTabsFeatureConfig
+                mySiteDefaultTabExperiment
         )
     }
 
-    private fun initQuickActionsCard(mockInvocation: InvocationOnMock): QuickActionsCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickActionsCardBuilderParams>()).first()
-        return QuickActionsCard(
-                title = UiStringText(""),
-                onStatsClick = mock(),
-                onPagesClick = mock(),
-                onPostsClick = mock(),
-                onMediaClick = mock(),
-                showPages = false,
-                showStatsFocusPoint = params.activeTask == QuickStartTask.CHECK_STATS,
-                showPagesFocusPoint = params.activeTask == QuickStartTask.EDIT_HOMEPAGE ||
-                        params.activeTask == QuickStartTask.REVIEW_PAGES
-        )
-    }
+    private fun initQuickActionsCard() = QuickActionsCard(
+            title = UiStringText(""),
+            onStatsClick = mock(),
+            onPagesClick = mock(),
+            onPostsClick = mock(),
+            onMediaClick = mock(),
+            showPages = false
+    )
 
     private fun initQuickStartCard() = QuickStartCard(
             title = UiStringText(""),
@@ -289,7 +304,7 @@ class CardsBuilderTest {
 
     private fun initQuickLinkRibbon(): QuickLinkRibbon {
         return QuickLinkRibbon(
-            quickLinkRibbonItems = mock()
+                quickLinkRibbonItems = mock()
         )
     }
 }

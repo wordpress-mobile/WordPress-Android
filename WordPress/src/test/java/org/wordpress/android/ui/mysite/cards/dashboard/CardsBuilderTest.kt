@@ -15,9 +15,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.ErrorCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.FooterLink
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithPostItems
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.PostCard.PostCardWithoutPostItems
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.TodaysStatsCard.TodaysStatsCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloggingPromptCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBu
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardBuilder
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.DRAFT
 import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCardBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -63,16 +64,16 @@ class CardsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `given no posts, when cards are built, then post card is not built`() {
-        val cards = buildDashboardCards(hasPosts = false)
+        val cards = buildDashboardCards(hasPostsForPostCard = false)
 
-        assertThat(cards.findPostCard()).isNull()
+        assertThat(cards.findPostCardWithPosts()).isNull()
     }
 
     @Test
     fun `given posts, when cards are built, then post card is built`() {
-        val cards = buildDashboardCards(hasPosts = true)
+        val cards = buildDashboardCards(hasPostsForPostCard = true)
 
-        assertThat(cards.findPostCard()).isNotNull
+        assertThat(cards.findPostCardWithPosts()).isNotNull
     }
 
     /* BLOGGING PROMPT CARD */
@@ -89,6 +90,43 @@ class CardsBuilderTest : BaseUnitTest() {
         val cards = buildDashboardCards(hasBlogginPrompt = true)
 
         assertThat(cards.findBloggingPromptCard()).isNotNull
+    }
+
+    /* BLOGGING PROMPT AND POST CARD */
+
+    @Test
+    fun `given blogging prompt and posts, both prompt and post cards are visible`() {
+        val cards = buildDashboardCards(hasBlogginPrompt = true, hasPostsForPostCard = true)
+
+        assertThat(cards.findBloggingPromptCard()).isNotNull
+        assertThat(cards.findPostCardWithPosts()).isNotNull
+    }
+
+    @Test
+    fun `given blogging prompt and no posts, prompt card is visible while post and next post cards are not`() {
+        val cards = buildDashboardCards(hasBlogginPrompt = true, hasPostsForPostCard = false)
+
+        assertThat(cards.findBloggingPromptCard()).isNotNull
+        assertThat(cards.findPostCardWithPosts()).isNull()
+        assertThat(cards.findNextPostCard()).isNull()
+    }
+
+    @Test
+    fun `given no blogging prompt and no posts, next post card is visible and prompt card is not`() {
+        val cards = buildDashboardCards(hasBlogginPrompt = false, hasPostsForPostCard = false)
+
+        assertThat(cards.findBloggingPromptCard()).isNull()
+        assertThat(cards.findPostCardWithPosts()).isNull()
+        assertThat(cards.findNextPostCard()).isNotNull
+    }
+
+    @Test
+    fun `given no blogging prompt and posts, next post card is not visible and prompt card is visible`() {
+        val cards = buildDashboardCards(hasBlogginPrompt = false, hasPostsForPostCard = true)
+
+        assertThat(cards.findBloggingPromptCard()).isNull()
+        assertThat(cards.findPostCardWithPosts()).isNotNull
+        assertThat(cards.findNextPostCard()).isNull()
     }
 
     /* ERROR CARD */
@@ -110,7 +148,11 @@ class CardsBuilderTest : BaseUnitTest() {
     private fun DashboardCards.findTodaysStatsCard() =
             this.cards.find { it is TodaysStatsCardWithData } as? TodaysStatsCardWithData
 
-    private fun DashboardCards.findPostCard() = this.cards.find { it is PostCard } as? PostCard
+    private fun DashboardCards.findPostCardWithPosts() =
+            this.cards.find { it is PostCardWithPostItems } as? PostCardWithPostItems
+
+    private fun DashboardCards.findNextPostCard() =
+            this.cards.find { it is PostCardWithoutPostItems } as? PostCardWithoutPostItems
 
     private fun DashboardCards.findBloggingPromptCard() =
             this.cards.find { it is BloggingPromptCard } as? BloggingPromptCard
@@ -130,14 +172,26 @@ class CardsBuilderTest : BaseUnitTest() {
             )
     )
 
+    private fun createPostPromptCards() = listOf(
+            PostCardWithoutPostItems(
+                    postCardType = CREATE_FIRST,
+                    title = UiStringText(""),
+                    excerpt = UiStringText(""),
+                    imageRes = 0,
+                    footerLink = FooterLink(UiStringText(""), onClick = mock()),
+                    onClick = mock()
+            )
+    )
+
     private fun buildDashboardCards(
         hasTodaysStats: Boolean = false,
-        hasPosts: Boolean = false,
+        hasPostsForPostCard: Boolean = false,
         hasBlogginPrompt: Boolean = false,
         showErrorCard: Boolean = false
     ): DashboardCards {
         doAnswer { if (hasTodaysStats) todaysStatsCard else null }.whenever(todaysStatsCardBuilder).build(any())
-        doAnswer { if (hasPosts) createPostCards() else emptyList() }.whenever(postCardBuilder).build(any())
+        doAnswer { if (hasPostsForPostCard) createPostCards() else createPostPromptCards() }.whenever(postCardBuilder)
+                .build(any())
         doAnswer { if (hasBlogginPrompt) blogingPromptCard else null }.whenever(bloggingPromptCardsBuilder).build(any())
         return cardsBuilder.build(
                 dashboardCardsBuilderParams = DashboardCardsBuilderParams(
@@ -145,7 +199,9 @@ class CardsBuilderTest : BaseUnitTest() {
                         onErrorRetryClick = { },
                         todaysStatsCardBuilderParams = TodaysStatsCardBuilderParams(mock(), mock(), mock(), mock()),
                         postCardBuilderParams = PostCardBuilderParams(mock(), mock(), mock()),
-                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(mock(), mock())
+                        bloggingPromptCardBuilderParams = BloggingPromptCardBuilderParams(
+                                mock(), mock(), mock(), mock()
+                        )
                 )
         )
     }

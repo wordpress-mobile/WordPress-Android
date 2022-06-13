@@ -18,6 +18,9 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
+@HiltAndroidTest
 public class StatsTests extends BaseTest {
     @Before
     public void setUp() {

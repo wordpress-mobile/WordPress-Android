@@ -24,6 +24,7 @@ import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     public static final String EXTRA_DO_LOGIN_UPDATE = "EXTRA_DO_LOGIN_UPDATE";
     public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
+    public static final String KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE = "SITE_CREATED_FROM_LOGIN_EPILOGUE";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -123,7 +125,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     }
 
     private void createNewSite() {
-        ActivityLauncher.newBlogForResult(this);
+        ActivityLauncher.newBlogForResult(this, SiteCreationSource.LOGIN_EPILOGUE);
     }
 
     private void closeWithResultOk() {
@@ -158,7 +160,15 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
                     SitePickerActivity.KEY_SITE_LOCAL_ID,
                     SelectedSiteRepository.UNAVAILABLE
             );
-            setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSiteLocalID));
+            boolean isTitleTaskCompleted = data.getBooleanExtra(
+                    SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED,
+                    false
+            );
+            setResult(RESULT_OK, new Intent()
+                    .putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSiteLocalID)
+                    .putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskCompleted)
+                    .putExtra(KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, true)
+            );
             finish();
         }
     }

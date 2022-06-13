@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stats_color_positive">@color/red_50</color>
+    <color name="stats_color_negative">@color/green_50</color>
+</resources>

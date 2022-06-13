@@ -28,6 +28,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
@@ -67,7 +68,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onNewPostButtonClicked()
+        fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {
@@ -94,6 +95,9 @@ class WPMainNavigationView @JvmOverloads constructor(
             imgIcon.setImageResource(getDrawableResForPosition(i))
             if (i == getPosition(READER)) {
                 customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+            }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
             }
 
             itemView.addView(customView)

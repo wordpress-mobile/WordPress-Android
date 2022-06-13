@@ -54,3 +54,5 @@ Once installed, you can configure the plugin here:
 `Android Studio > Preferences... > Tools > Detekt`
 
 From there, add and enable the custom configuration file, located at [config/detekt/detekt.yml](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/config/detekt/detekt.yml).
+
+Please don’t add a new suppression line to the [baseline.xml](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/config/detekt/baseline.xml). Consider fixing the issue or suppressing locally if it’s necessary.

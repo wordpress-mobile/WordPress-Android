@@ -30,6 +30,8 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -169,6 +171,7 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public void onFilterSelected(int position, FilterCriteria criteria) {
+                AnalyticsTracker.track(Stat.PEOPLE_MANAGEMENT_FILTER_CHANGED);
                 mPeopleListFilter = (PeopleListFilter) criteria;
                 AppPrefs.setPeopleListFilter(mPeopleListFilter);
             }

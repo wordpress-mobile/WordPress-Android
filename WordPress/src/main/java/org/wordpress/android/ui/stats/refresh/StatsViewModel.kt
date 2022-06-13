@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -56,6 +58,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Suppress("TooManyFunctions", "LongParameterList")
+@HiltViewModel
 class StatsViewModel
 @Inject constructor(
     @Named(LIST_STATS_USE_CASES) private val listUseCases: Map<StatsSection, BaseListUseCase>,
@@ -195,6 +198,7 @@ class StatsViewModel
         _isRefreshing.value = false
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun onPullToRefresh() {
         _showSnackbarMessage.value = null
         statsSiteProvider.clear()
@@ -243,6 +247,7 @@ class StatsViewModel
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     override fun onCleared() {
         super.onCleared()
         _showSnackbarMessage.value = null

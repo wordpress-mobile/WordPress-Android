@@ -332,7 +332,7 @@
     <ID>ReturnCount:UploadActionUseCase.kt$UploadActionUseCase$fun getAutoUploadAction(post: PostImmutableModel, site: SiteModel): UploadAction</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun endsWithDelimiter(string: String): Boolean</ID>
     <ID>ReturnCount:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$private fun removeDelimiterFromItemIfPresent(item: String?): String?</ID>
-    <ID>ReturnCount:AccountSettingsRepository.kt$AccountSettingsRepository$ private fun getContinuationFromQueue(): Continuation&lt;OnAccountChanged>?</ID>
+    <ID>ReturnCount:AccountSettingsRepository.kt$AccountSettingsRepository$ private fun getFirstAvailableContinuation(): Continuation&lt;OnAccountChanged>?</ID>
     <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*event.mediaList.map { LocalId(it.localPostId) }.toTypedArray())</ID>
     <ID>SpreadOperator:PageListEventListener.kt$PageListEventListener$(*postsToRefresh.map { LocalId(it.id) }.toTypedArray())</ID>
     <ID>SpreadOperator:PageListViewModel.kt$PageListViewModel$(*event.mediaList.map { it.mediaId }.toLongArray())</ID>
@@ -346,7 +346,6 @@
     <ID>TooGenericExceptionCaught:ColorUnderlineSpan.kt$ColorUnderlineSpan$e: Exception</ID>
     <ID>TooGenericExceptionCaught:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:MediaPickerActivity.kt$MediaPickerActivity$e: RuntimeException</ID>
-    <ID>TooGenericExceptionCaught:PostListAction.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:UploadStarter.kt$UploadStarter$e: Exception</ID>
     <ID>TooGenericExceptionThrown:ActionableEmptyView.kt$ActionableEmptyView$throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")</ID>
     <ID>TooGenericExceptionThrown:ActivityLogDetailFragment.kt$ActivityLogDetailFragment$throw Throwable("Couldn't initialize Activity Log view model")</ID>

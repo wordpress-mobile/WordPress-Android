@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-11-20 03:34:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.1
 Language: en_AU
 -->
 <resources>
@@ -270,26 +270,15 @@ Language: en_AU
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
-    <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
-    <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
-    <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="notification_channel_reminder_title">Reminder</string>
     <string name="stats_select_next_period_description">Select next period</string>
     <string name="stats_select_previous_period_description">Select previous period</string>
@@ -360,7 +349,6 @@ Language: en_AU
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Followers</string>
@@ -448,16 +436,12 @@ Language: en_AU
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
-    <string name="quick_start_dialog_view_site_message_short">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tap %1$s Sharing %2$s to continue</string>
     <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
-    <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="quick_start_button_negative">Not now</string>
     <string name="quick_start_button_positive">Go</string>

@@ -1,8 +1,10 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs.kotlin'
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.kapt"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+    id "androidx.navigation.safeargs.kotlin"
+}
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -44,10 +46,14 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://www.jitpack.io" }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
 
     // UI
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
@@ -58,8 +64,8 @@ dependencies {
     implementation "com.google.android.material:material:$materialVersion"
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navComponentVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navComponentVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$gradle.ext.navComponentVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$gradle.ext.navComponentVersion"
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"

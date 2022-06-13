@@ -1,0 +1,9 @@
+19.9:
+- Dra och släpp block i redigeraren
+- Bättre färgkontrast i omslagsblock
+- Knappblockets formateringsalternativ förblir synliga
+- Olika snabbstartsuppgifter för nya kontra befintliga webbplatser
+- Kopiera länk för publicerade sidor
+- Ingen plusikon i blockredigeraren för webbplatser som drivs på egen server
+- Inställningar för Länka till/Bildstorlek i galleriblock
+- Ingen rundtursbanner i blockredigeraren som inte stöds

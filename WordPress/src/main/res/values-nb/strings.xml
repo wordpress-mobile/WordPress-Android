@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 20:19:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.1
 Language: nb_NO
 -->
 <resources>
@@ -57,7 +57,6 @@ Language: nb_NO
     <string name="threats_found_plural">Trusler funnet</string>
     <string name="scan_fixing_threats_title_singular">Fjerner trusel</string>
     <string name="disable">Slå av</string>
-    <string name="quick_start_list_view_site_title">Besøk nettstedet ditt</string>
     <string name="quick_start_list_enable_sharing_title">Sosial deling</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Klokke-ikon</string>
     <string name="restore_warning_action_button">Bekreft</string>
@@ -853,27 +852,16 @@ Language: nb_NO
     <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
     <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
     <string name="quick_start_sites">Neste trinn</string>
-    <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
-    <string name="quick_start_dialog_view_site_message">Ha glede av ditt ferdige produkt!</string>
     <string name="quick_start_dialog_upload_icon_title">Velg et unikt nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Trykk %1$s pakke %2$s for å se din nåværende pakke og andre tilgjengelige pakker</string>
-    <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
     <string name="quick_start_dialog_publish_post_message">Kladd og publiser et innlegg.</string>
-    <string name="quick_start_dialog_explore_plans_title">Utforsk pakker</string>
-    <string name="quick_start_dialog_explore_plans_message">Lær om våre markedsførings- og SEO-verktøy i våre betalte pakker.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
     <string name="quick_start_dialog_enable_sharing_message">Del dine innlegg automatisk på sosiale media.</string>
     <string name="quick_start_dialog_check_stats_title">Sjekk din besøksstatistikk</string>
-    <string name="quick_start_dialog_check_stats_message">Hold deg oppdatert om ytelsen til ditt nettsted.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Fjern de neste trinn</string>
     <string name="quick_start_remove_next_steps_menu_title">Fjern dette</string>
-    <string name="quick_start_complete_view_subtitle">Gratulerer med fullført liste. Godt jobbet.</string>
-    <string name="quick_start_complete_view_title">Alle oppgaver ferdige!</string>
     <string name="quick_start_task_skip_menu_title">Hopp over oppgave</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">trekk sammen</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">utvid</string>
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Velg neste periode</string>
     <string name="stats_select_previous_period_description">Velg forrige periode</string>
@@ -945,7 +933,6 @@ Language: nb_NO
     <string name="stats_insights_create_post">Lag innlegg</string>
     <string name="stats_insights_latest_post_message">Det har gått %1$s siden %2$s ble publisert. Her er hvordan det har gått med innlegget så langt:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s siden %2$s ble publisert. Få ballen til å rulle og øk ditt antall visninger ved å dele ditt innlegg:</string>
-    <string name="stats_insights_latest_post_empty">Du har ikke publisert noe innlegg ennå. Straks du starter publisere vil sammendraget av dine siste innlegg dukke opp her:</string>
     <string name="stats_insights_tags_and_categories">Stikkord og kategorier</string>
     <string name="stats_insights_all_time_stats">Til all tid</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -1034,7 +1021,6 @@ Language: nb_NO
     <string name="quick_start_list_create_site_title">Opprett ditt nettsted</string>
     <string name="quick_start_list_create_site_subtitle">Få ditt nettsted opp og kjøre.</string>
     <string name="quick_start_dialog_view_site_title">Vis ditt nettsted</string>
-    <string name="quick_start_dialog_view_site_message_short">Trykk %1$s Vis nettsted %2$s for å forhændsvise ditt nettsted</string>
     <string name="quick_start_dialog_share_site_title">Del ditt netsted</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">Trykk %1$s Deling %2$s for å fortsette</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Trykk %1$stilkoblinger%2$s for å legge til konti i sosiale medier</string>
@@ -1042,10 +1028,6 @@ Language: nb_NO
     <string name="quick_start_dialog_publish_post_title">Publiser et innlegg</string>
     <string name="quick_start_dialog_publish_post_message_short">Trykk %1$s Lag nytt innlegg %2$s for å lage et nytt innlegg</string>
     <string name="quick_start_dialog_need_help_button_negative">Nei, takk</string>
-    <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende emner</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
-    <string name="quick_start_dialog_follow_sites_message">Finn nettsteder som inspirerer deg og følg dem for å få oppdateringer når de publiserer.</string>
     <string name="quick_start_button_positive">Gå</string>
     <string name="quick_start_button_negative_short">Avbryt</string>
     <string name="quick_start_button_negative">Ikke nå</string>

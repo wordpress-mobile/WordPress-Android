@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,8 +22,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -35,16 +38,24 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartExistingSiteTask;
 import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.utils.UiString.UiStringText;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
+import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -58,6 +69,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static org.greenrobot.eventbus.ThreadMode.MAIN;
 import static org.wordpress.android.fluxc.utils.MimeType.Type.APPLICATION;
 import static org.wordpress.android.fluxc.utils.MimeType.Type.AUDIO;
 import static org.wordpress.android.fluxc.utils.MimeType.Type.IMAGE;
@@ -137,6 +149,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject QuickStartRepository mQuickStartRepository;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
+    @Inject SnackbarSequencer mSnackbarSequencer;
+    @Inject SelectedSiteRepository mSelectedSiteRepository;
 
     private MediaBrowserType mBrowserType;
 
@@ -157,6 +173,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
     private SiteModel mSite;
+    private QuickStartEvent mQuickStartEvent;
 
     public interface MediaGridListener {
         void onMediaItemSelected(int localMediaId, boolean isLongClick);
@@ -188,7 +205,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mSite = (SiteModel) args.getSerializable(WordPress.SITE);
         mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
         mFilter = (MediaFilter) args.getSerializable(MediaBrowserActivity.ARG_FILTER);
-
+        if (savedInstanceState != null) {
+            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
+        }
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
@@ -199,19 +218,59 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
         mGridAdapter.refreshCurrentItems(mRecycler);
     }
 
     @Override
     public void onStop() {
         mDispatcher.unregister(this);
+        EventBus.getDefault().unregister(this);
         mGridAdapter.cancelPendingRequestsForVisibleItems(mRecycler);
         super.onStop();
+    }
+
+    @Subscribe(sticky = true, threadMode = MAIN)
+    public void onEvent(QuickStartEvent event) {
+        if (!isAdded() || getView() == null) {
+            return;
+        }
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
+        if (mQuickStartEvent.getTask() == QuickStartExistingSiteTask.UPLOAD_MEDIA && isAdded()) {
+            showQuickStartSnackbar();
+            if (getActivity() instanceof MediaBrowserActivity) {
+                MediaBrowserActivity activity = (MediaBrowserActivity) getActivity();
+                getView().post(() -> activity.updateMenuNewMediaQuickStartFocusPoint(true));
+            }
+        }
+    }
+
+    private void showQuickStartSnackbar() {
+        Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
+                requireContext(),
+                R.string.quick_start_dialog_upload_media_message_short_plus,
+                R.drawable.ic_plus_white_12dp
+        );
+        mSnackbarSequencer.enqueue(
+                new SnackbarItem(
+                        new SnackbarItem.Info(getSnackbarParent(), new UiStringText(title), Snackbar.LENGTH_LONG)
+                )
+        );
+    }
+
+    private View getSnackbarParent() {
+        View coordinator = getActivity().findViewById(R.id.coordinator_layout);
+        if (coordinator != null) {
+            return coordinator;
+        }
+        return getView();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
         saveState(outState);
     }
 
@@ -495,7 +554,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
         if (event.isError()) {
             handleFetchAllMediaError(event);

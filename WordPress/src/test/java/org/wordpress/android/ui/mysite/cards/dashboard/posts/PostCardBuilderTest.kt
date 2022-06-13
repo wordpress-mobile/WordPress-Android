@@ -21,6 +21,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.DashboardCardType.POST_CARD_ERROR
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams.PostItemClickParams
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardBuilder.Companion.NOT_SET
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostCardType.CREATE_FIRST
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -134,6 +137,10 @@ class PostCardBuilderTest : BaseUnitTest() {
                         footerLink = FooterLink(
                                 label = UiStringRes(R.string.my_site_post_card_link_create_post),
                                 onClick = onPostCardFooterLinkClick
+                        ),
+                        onClick = ListItemInteraction.create(
+                                PostItemClickParams(postCardType = CREATE_FIRST, postId = NOT_SET),
+                                onPostItemClick
                         )
                 )
         )
@@ -192,6 +199,10 @@ class PostCardBuilderTest : BaseUnitTest() {
                         footerLink = FooterLink(
                                 label = UiStringRes(R.string.my_site_post_card_link_create_post),
                                 onClick = onPostCardFooterLinkClick
+                        ),
+                        ListItemInteraction.create(
+                                PostItemClickParams(postCardType = PostCardType.CREATE_NEXT, postId = NOT_SET),
+                                onPostItemClick
                         )
                 )
         )

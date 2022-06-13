@@ -83,6 +83,7 @@ public class AnalyticsUtils {
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
     public static final String EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY = "editor_has_hw_disabled";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
+    public static final String PROMPT_ID = "prompt_id";
 
     public enum BlockEditorEnabledSource {
         VIA_SITE_SETTINGS,
@@ -829,6 +830,10 @@ public class AnalyticsUtils {
     public static void trackBlockEditorEvent(String event, SiteModel site, Map<String, Object> properties) {
         if (event.equals("editor_block_inserted")) {
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_INSERTED, site, properties);
+        }
+
+        if (event.equals("editor_block_moved")) {
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_BLOCK_MOVED, site, properties);
         }
     }
 }

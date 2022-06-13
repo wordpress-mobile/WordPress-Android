@@ -25,15 +25,19 @@ import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.CheckCourse
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.SchedulePost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.SetBloggingReminders
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAnnualStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightDetails
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
@@ -62,7 +66,7 @@ class StatsNavigator @Inject constructor(
     fun navigate(activity: FragmentActivity, target: NavigationTarget) {
         when (target) {
             is AddNewPost -> {
-                ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS)
+                ActivityLauncher.addNewPostForResult(activity, siteProvider.siteModel, false, POST_FROM_STATS, -1, null)
             }
             is ViewPost -> {
                 StatsNavigatorHelper.openPostInReaderOrInAppWebView(
@@ -222,6 +226,29 @@ class StatsNavigator @Inject constructor(
                         target.postUrl,
                         readerTracker
                 )
+            }
+            is ViewInsightDetails -> {
+                ActivityLauncher.viewInsightsDetail(
+                        activity,
+                        target.statsSection,
+                        target.statsViewType,
+                        target.statsGranularity,
+                        selectedDateProvider.getSelectedDateState(target.statsGranularity),
+                        siteProvider.siteModel.id
+                )
+            }
+
+            is SetBloggingReminders -> {
+                ActivityLauncher.showSetBloggingReminders(activity, siteProvider.siteModel)
+            }
+            is CheckCourse -> {
+                ActivityLauncher.openStatsUrl(
+                        activity,
+                        "https://wordpress.com/support/followers/"
+                )
+            }
+            is SchedulePost -> {
+                ActivityLauncher.showSchedulingPost(activity, siteProvider.siteModel)
             }
         }
     }

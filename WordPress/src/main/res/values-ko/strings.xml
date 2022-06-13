@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-04-08 13:54:10+0000
+Translation-Revision-Date: 2022-06-02 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-rc.4
+Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">블록을 누른 다음에 블록의 왼쪽 하단에 표시되는 위쪽 및 아래쪽 화살표를 눌러 위쪽 또는 아래쪽으로 이동하면서 블록을 다시 정렬할 수도 있습니다.</string>
+    <string name="gutenberg_native_image_file_not_found">이미지 파일을 찾을 수 없습니다.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">끌어서 놓기를 사용하면 블록 재정렬이 쉬워집니다. 블록을 길게 누른 다음 새로운 위치로 끌어서 놓으세요.</string>
+    <string name="gutenberg_native_drag_drop">끌어서 놓기</string>
+    <string name="gutenberg_native_arrow_buttons">화살표 버튼</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. 현재 선택됨: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">모든 작업이 완료됨</string>
+    <string name="quick_start_list_task_complete">작업 완료</string>
+    <string name="me_btn_scan_login_code">로그인 코드 검사</string>
+    <string name="stats_insights_followers_guide_card">💡블로그 참여를 권장하기 위해 댓글을 달 수도 있습니다. 팔로워가 더 늘어날 수 있습니다.</string>
+    <string name="stats_insights_comments_guide_card">💡상위 공동 작업자를 보려면 더 보기를 탭하세요.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ 최신 글 %1$s에 %2$s 좋아요가 있습니다.</string>
+    <string name="stats_most_popular_percent_views_empty">활동이 충분하지 않습니다. 나중에 사이트의 방문자가 증가하면 다시 확인하세요!</string>
+    <string name="stats_insights_latest_post_empty">아직 글을 발행하지 않았습니다. 나중에 첫 번째 글을 발행하면 다시 확인하세요!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">더 많은 조회수와 트래픽을 얻으려면 최고의 팁 %1$s을(를) 확인하세요.</string>
+    <string name="stats_total_followers_content_description">전체 팔로워의 %1s, %2s</string>
+    <string name="stats_value_percent">%1$s(%2$s%%)</string>
+    <string name="pages_copy_link">링크 복사</string>
+    <string name="quick_start_completed_tour_title">축하합니다! 척척박사&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">앱 알아보기</string>
+    <string name="quick_start_list_upload_media_subtitle">미디어를 기기 또는 카메라에서 사이트로 바로 가져오기</string>
+    <string name="quick_start_list_upload_media_title">사진 또는 비디오 업로드</string>
+    <string name="quick_start_list_check_notification_subtitle">간편하게 실시간 업데이트 받기</string>
+    <string name="quick_start_dialog_upload_media_message">현재 라이브러리를 참조하려면 %1$s 미디어 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_dialog_check_notifications_message">간편하게 실시간 업데이트를 받으세요.</string>
+    <string name="quick_start_dialog_check_notifications_title">알림 확인</string>
+    <string name="quick_start_dialog_check_notifications_message_short">상시 업데이트를 받으려면 %1$s 알림 탭 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">미디어를 업로드하려면 %1$s 및 %2$s을(를) 선택하세요. 어떤 기기에서나 글/페이지에 추가할 수 있습니다.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">사이트와 태그를 찾으려면 &lt;b&gt; 검색 &lt;/b&gt;을(를) 사용하세요.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">사이트와 태그를 찾으려면 &lt;b&gt; 검색 &lt;/b&gt;을(를) 사용하세요. 원하는 주제를 추가하려면 %1$s 설정 %2$s을(를) 선택해 보세요.</string>
+    <string name="photo_picker_video_thumbnail_content_description">비디오 썸네일</string>
+    <string name="stats_details_top_commentators">최상위 댓글 작성자</string>
+    <string name="stats_insights_total_stats_negative">이전 주보다 %1$s 낮음</string>
+    <string name="stats_insights_total_stats_positive">이전 주보다 %1$s 높음</string>
+    <string name="stats_published_years_ago">%1$d년 전에 발행됨</string>
+    <string name="stats_published_a_year_ago">1년 전에 발행됨</string>
+    <string name="stats_published_months_ago">%1$d개월 전에 발행됨</string>
+    <string name="stats_published_a_month_ago">1개월 전에 발행됨</string>
+    <string name="stats_published_days_ago">%1$d일 전에 발행됨</string>
+    <string name="stats_published_a_day_ago">하루 전에 발행됨</string>
+    <string name="stats_published_hours_ago">%1$d시간 전에 발행됨</string>
+    <string name="stats_published_an_hour_ago">1시간 전에 발행됨</string>
+    <string name="stats_published_minutes_ago">%1$d분 전에 발행됨</string>
+    <string name="stats_published_a_minute_ago">1분 전에 발행됨</string>
+    <string name="stats_published_seconds_ago">몇 초 전에 발행됨</string>
+    <string name="stats_view_total_followers">총 팔로워 수</string>
+    <string name="stats_view_total_comments">총 댓글 수</string>
+    <string name="stats_view_total_likes">총 좋아요 횟수</string>
+    <string name="blogging_prompts_notification_dismiss">해제</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">답변</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">일일 프롬프트</string>
+    <string name="blogging_prompts_onboarding_got_it">알겠습니다</string>
+    <string name="quick_start_dialog_view_your_site_message_short">&lt;b&gt;%1$s&lt;/b&gt;을(를) 눌러서 사이트 보기</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">다른 사이트를 찾으려면 %1$s 리더 %2$s을(를) 선택하세요.</string>
+    <string name="blogging_reminders_prompt_help_button_desc">프롬프트 더 알아보기</string>
+    <string name="photo_picker_video_thumbnail_unselected">비디오 선택 안 됨</string>
+    <string name="photo_picker_video_thumbnail_selected">비디오 선택됨</string>
+    <string name="photo_picker_media_thumbnail_content_description">미디어 썸네일</string>
+    <string name="stats_insights_popular_title">🔥 가장 인기 있는 시간</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_timeframe_previous_week">이전 주</string>
+    <string name="stats_timeframe_this_week">이번 주</string>
+    <string name="scan_vault_press_active_on_site_button_text">알림판 방문</string>
+    <string name="scan_vault_press_active_on_site_subtitle">사이트가 이미 VaultPress로 보호되고 있습니다. 아래에서 VaultPress 알림판 링크를 찾을 수 있습니다.</string>
+    <string name="scan_vault_press_active_on_site_title">사이트에 VaultPress가 있음</string>
+    <string name="locale_picker_current_language">현재 언어:</string>
+    <string name="hpp_choose_and_create_site">사이트 만들기</string>
+    <string name="gutenberg_native_add_blocks_11d0841f">블록 추가</string>
+    <string name="initial_screen">초기 화면</string>
+    <string name="blogging_prompts_onboarding_notification_action">더 알아보기</string>
+    <string name="blogging_prompts_onboarding_notification_text">글쓰기를 습관화하여 더 좋은 작가 되기 눌러서 자세히 알아보세요.</string>
+    <string name="blogging_prompts_onboarding_notification_title">워드프레스 모바일 앱 신규 기능: 프롬프트</string>
+    <string name="new_site_creation_site_name_header_subtitle">좋은 이름은 짧고 인상적입니다.\n나중에 변경할 수 있습니다.</string>
+    <string name="new_site_creation_site_name_header_title">%s 웹사이트 이름 지정</string>
+    <string name="new_site_creation_site_name_title">사이트 이름</string>
+    <string name="my_site_todays_stats_get_more_views_message">잠재 고객 유치에 관심이 있으신가요? &lt;a href=\"%1$s\"&gt;최고의 팁&lt;/a&gt; 확인</string>
+    <string name="stats_insights_views_and_visitors">조회수와 방문자 수</string>
     <string name="featured_image_removed_notice">특성 이미지로서 제거됨</string>
     <string name="featured_image_confirmation_notice">특성 이미지로 설정</string>
     <string name="featured_image_replace_dialog_cancel">현재 상태 유지</string>
@@ -89,7 +166,6 @@ Language: ko_KR
     <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
     <string name="my_site_blogging_prompt_card_menu_skip">이 프롬프트 건너뛰기</string>
     <string name="my_site_blogging_prompt_card_menu_view_more">더 많은 프롬프트 보기</string>
-    <string name="my_site_blogging_prompt_card_number_of_answers">%d개 답변</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">블로깅 프롬프트 공유</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ 답변됨</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">답변 프롬프트</string>
@@ -99,7 +175,7 @@ Language: ko_KR
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 밝은 배경 색상 및/또는 더 어두운 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a">이 색상 조합은 사람들이 읽기 힘들 수 있습니다. 더 어두운 배경 색상 및/또는 더 밝은 텍스트 색상을 사용해 보세요.</string>
     <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info">미디어를 삽입하지 못했습니다.\n자세히 알아보려면 누르세요.</string>
-    <string name="new_site_creation_intents_header_subtitle">아래 목록에 있는 주제 선택 또는 원하는 주제 입력</string>
+    <string name="new_site_creation_intents_header_subtitle">아래 목록에서 테마를 선택하거나 원하는 테마를 입력하세요.</string>
     <string name="new_site_creation_intents_header_title">웹사이트의 주제가 무엇인가요?</string>
     <string name="notification_channel_weekly_roundup_title">주간 총정리</string>
     <string name="my_site_dashboard_tab_title">홈</string>
@@ -109,7 +185,7 @@ Language: ko_KR
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_cannot_read_site">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_services_disabled">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
-    <string name="my_site_menu_tab_title">사이트 메뉴</string>
+    <string name="my_site_menu_tab_title">메뉴</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">통계로 이동</string>
@@ -411,6 +487,7 @@ Language: ko_KR
     <string name="gutenberg_native_three">3</string>
     <string name="gutenberg_native_s_social_icon">%s 소셜 아이콘</string>
     <string name="gutenberg_native_mention">멘션</string>
+    <string name="gutenberg_native_new">신규</string>
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
     <string name="gutenberg_native_preview_page">페이지 미리 보기</string>
     <string name="gutenberg_native_retry">재시도</string>
@@ -505,12 +582,12 @@ Language: ko_KR
     <string name="disable">비활성화</string>
     <string name="quick_start_card_menu_unpin">이 항목 고정 취소</string>
     <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
-    <string name="quick_start_list_view_site_title">사이트 방문</string>
+    <string name="quick_start_list_view_site_title">사이트 보기</string>
     <string name="quick_start_list_follow_site_subtitle">회원님께 영감을 주는 사이트를 발견하고 팔로우하세요.</string>
     <string name="quick_start_list_enable_sharing_title">소셜 공유</string>
     <string name="quick_start_list_enable_sharing_subtitle">새 글을 소셜 미디어에 자동으로 공유합니다.</string>
     <string name="quick_start_list_update_site_title_subtitle">개성과 게시글을 반영하는 이름을 사이트에 지정하세요.</string>
-    <string name="quick_start_list_check_stats_title">통계 확인</string>
+    <string name="quick_start_list_check_stats_title">사이트 통계 확인</string>
     <string name="backup_download_status_failure_bullet2">그래도 다운로드 가능한 백업 파일 만들기는 시도됩니다.</string>
     <string name="backup_download_status_failure_bullet1">다운로드 가능한 백업에 걸리는 시간을 알려주는 상태를 찾을 수 없습니다.</string>
     <string name="backup_download_status_failure_heading">다운로드 가능한 백업 상태를 찾을 수 없습니다.</string>
@@ -1607,28 +1684,19 @@ Language: ko_KR
     <string name="quick_start_sites_type_grow">방문자 늘리기</string>
     <string name="quick_start_sites_type_customize">사이트를 사용자 정의 하기</string>
     <string name="quick_start_sites">다음 단계</string>
-    <string name="quick_start_complete_tasks_header">완료(%d)</string>
-    <string name="quick_start_dialog_view_site_message">완성된 제품을 즐기세요!</string>
     <string name="quick_start_dialog_upload_icon_title">고유한 사이트 아이콘 선택</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">현재 요금제 및 사용 가능한 다른 요금제를 보려면 %1$s요금제%2$s를 탭합니다.</string>
-    <string name="quick_start_dialog_check_stats_message_short">사이트 성능을 확인하려면 %1$s통계%2$s를 탭합니다.</string>
+    <string name="quick_start_dialog_check_stats_message_short">사이트의 성과를 참조하려면 %1$s 통계 %2$s을(를) 선택합니다.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
     <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 글을 게시하세요.</string>
-    <string name="quick_start_dialog_explore_plans_title">요금제 둘러보기</string>
-    <string name="quick_start_dialog_explore_plans_message">유료 요금제의 마케팅 및 SEO 도구에 대해 알아보세요.</string>
     <string name="quick_start_dialog_enable_sharing_title">글 공유 설정</string>
     <string name="quick_start_dialog_enable_sharing_message">새 글을 소셜 미디어 계정에 자동으로 공유합니다.</string>
     <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>
-    <string name="quick_start_dialog_check_stats_message">사이트 성능을 최신 상태로 유지합니다.</string>
+    <string name="quick_start_dialog_check_stats_message">사이트의 성과를 최신 상태로 유지하세요.</string>
     <string name="quick_start_dialog_remove_next_steps_message">다음 단계를 제거하면 이 사이트의 모든 둘러보기가 숨겨집니다. 이 작업은 되돌릴 수 없습니다.</string>
     <string name="quick_start_dialog_remove_next_steps_title">다음 단계 제거</string>
     <string name="quick_start_remove_next_steps_menu_title">제거</string>
-    <string name="quick_start_complete_view_subtitle">목록이 완성되었습니다. 잘하셨습니다.</string>
-    <string name="quick_start_complete_view_title">모든 작업 완료!</string>
     <string name="quick_start_task_skip_menu_title">작업 건너뛰기</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">축소</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">확장</string>
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
@@ -1701,7 +1769,6 @@ Language: ko_KR
     <string name="stats_insights_create_post">게시글 작성</string>
     <string name="stats_insights_latest_post_message">%2$s 발행 후 %1$s이(가) 지났습니다. 지금까지 게시글의 성과입니다</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 발행한 후에는 글을 공유하여 조회수를 높이세요</string>
-    <string name="stats_insights_latest_post_empty">아직 글을 발행하지 않았습니다. 발행을 시작하면 최근 글의 요약이 여기에 표시됩니다</string>
     <string name="stats_insights_tags_and_categories">태그 및 카테고리</string>
     <string name="stats_insights_all_time_stats">모든-기간</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -1789,8 +1856,9 @@ Language: ko_KR
     <string name="quick_start_focus_point_description">여기를 탭하세요.</string>
     <string name="quick_start_list_create_site_title">사이트 만들기</string>
     <string name="quick_start_list_create_site_subtitle">사이트 가동 및 작동</string>
+    <string name="quick_start_completed_tour_subtitle">목록에서 항목을 지우는 것이 좋지 않나요?</string>
     <string name="quick_start_dialog_view_site_title">사이트 보기</string>
-    <string name="quick_start_dialog_view_site_message_short">%1$s 사이트 보기 %2$s를 탭하여 사이트 미리보기</string>
+    <string name="quick_start_dialog_view_site_message">새 사이트를 미리 보며 방문자에게 표시되는 내용을 참조하세요.</string>
     <string name="quick_start_dialog_share_site_title">사이트 공유</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing">%1$s 공유 %2$s를 탭하여 계속하기</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">%1$s 연결 %2$s을 탭하여 소셜 미디어 계정 추가</string>
@@ -1798,10 +1866,7 @@ Language: ko_KR
     <string name="quick_start_dialog_publish_post_title">글 게시</string>
     <string name="quick_start_dialog_publish_post_message_short">%1$s 게시물 작성 %2$s을 탭하여 새 게시물 작성하기</string>
     <string name="quick_start_dialog_need_help_button_negative">안 함</string>
-    <string name="quick_start_dialog_follow_sites_title">다른 사이트 팔로우</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">%1$s 검색 %2$s을(를) 탭하여 주제가 비슷한 사이트 찾기</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">%1$s 리더 %2$s를 탭하여 계속하기</string>
-    <string name="quick_start_dialog_follow_sites_message">도움을 받은 사이트를 찾은 다음 업데이트가 게시될 때 받을 수 있도록 팔로우하세요.</string>
+    <string name="quick_start_dialog_follow_sites_title">다른 사이트와 연결</string>
     <string name="quick_start_button_positive">이동</string>
     <string name="quick_start_button_negative_short">취소</string>
     <string name="quick_start_button_negative">지금 안 함</string>
@@ -2339,6 +2404,7 @@ Language: ko_KR
     <string name="post_title">제목</string>
     <string name="menu_redo">다시하기</string>
     <string name="menu_undo">실행 취소</string>
+    <string name="media_insert_unimplemented">죄송합니다! 기능이 아직 구현되지 않았습니다.</string>
     <string name="error_media_small">미디어가 너무 작아서 표시할 수 없습니다</string>
     <string name="editor_dropped_unsupported_files">경고: 삭제된 항목이 모두 지원되는 것은 아닙니다!</string>
     <string name="editor_dropped_title_images_not_allowed">제목에서 이미지를 삭제할 수 없습니다</string>
