@@ -127,7 +127,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         initAndStartVMForState(VALIDATED)
 
-        (result.last() as Validated).primaryAction.clickAction()
+        (result.last() as Validated).primaryActionButton.clickAction()
 
         assertThat(result.last().type).isEqualTo(AUTHENTICATING)
 
@@ -149,7 +149,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         initAndStartVMForState(VALIDATED)
 
-        (result.last() as Validated).secondaryAction.clickAction()
+        (result.last() as Validated).secondaryActionButton.clickAction()
 
         assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
 
@@ -272,7 +272,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         val initialState = result.last()
         result.clear()
-        (initialState as Validated).primaryAction.clickAction()
+        (initialState as Validated).primaryActionButton.clickAction()
 
         assertThat(result.first().type).isEqualTo(AUTHENTICATING)
         assertThat(result.last().type).isEqualTo(DONE)
@@ -290,7 +290,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         initAuthenticate(false, NOT_AUTHORIZED)
         initAndStartVMForState(VALIDATED)
 
-        (result.last() as Validated).primaryAction.clickAction()
+        (result.last() as Validated).primaryActionButton.clickAction()
 
         assertThat(result.last().type).isEqualTo(AUTH_FAILED)
 
@@ -307,7 +307,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         initAuthenticate(false, GENERIC_ERROR)
         initAndStartVMForState(VALIDATED)
 
-        (result.last() as Validated).primaryAction.clickAction()
+        (result.last() as Validated).primaryActionButton.clickAction()
 
         assertThat(result.last().type).isEqualTo(INVALID_DATA)
 
@@ -324,7 +324,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         initAuthenticate(false, DATA_INVALID)
         initAndStartVMForState(VALIDATED)
 
-        (result.last() as Validated).primaryAction.clickAction()
+        (result.last() as Validated).primaryActionButton.clickAction()
 
         assertThat(result.last().type).isEqualTo(EXPIRED)
 
@@ -346,7 +346,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         initAndStartVMForState(DONE)
 
-        (result.last() as Done).primaryAction.clickAction()
+        (result.last() as Done).primaryActionButton.clickAction()
 
         assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
 
@@ -369,7 +369,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         initAndStartVMForState(INVALID_DATA)
 
-        (result.last() as InvalidData).primaryAction.clickAction()
+        (result.last() as InvalidData).primaryActionButton.clickAction()
 
         assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.LaunchScanner::class.java)
 
@@ -392,7 +392,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         initAndStartVMForState(INVALID_DATA)
 
-        (result.last() as InvalidData).secondaryAction.clickAction()
+        (result.last() as InvalidData).secondaryActionButton.clickAction()
 
         assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
 
@@ -458,7 +458,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         initAndStartVMForState(VALIDATED)
 
-        (result.last() as Validated).primaryAction.clickAction()
+        (result.last() as Validated).primaryActionButton.clickAction()
 
         assertThat(result.last().type).isEqualTo(NO_INTERNET)
 

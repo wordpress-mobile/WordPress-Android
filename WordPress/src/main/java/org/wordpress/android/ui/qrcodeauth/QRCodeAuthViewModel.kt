@@ -86,21 +86,21 @@ class QRCodeAuthViewModel @Inject constructor(
         when (lastState) {
             LOADING, SCANNING -> updateUiStateAndLaunchScanner()
             VALIDATED -> postUiState(
-                    uiStateMapper.mapValidated(
+                    uiStateMapper.mapToValidated(
                             location,
                             browser,
-                            this::authenticateClicked,
-                            this::cancelClicked
+                            this::onAuthenticateClicked,
+                            this::onCancelClicked
                     )
             )
-            AUTHENTICATING -> postUiState(uiStateMapper.mapAuthenticating(location = location, browser = browser))
-            DONE -> postUiState(uiStateMapper.mapDone(this::dismissClicked))
+            AUTHENTICATING -> postUiState(uiStateMapper.mapToAuthenticating(location = location, browser = browser))
+            DONE -> postUiState(uiStateMapper.mapToDone(this::dismissClicked))
             // errors
-            INVALID_DATA -> postUiState(uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked))
-            AUTH_FAILED -> postUiState(uiStateMapper.mapAuthFailed(this::scanAgainClicked, this::cancelClicked))
-            EXPIRED -> postUiState(uiStateMapper.mapExpired(this::scanAgainClicked, this::cancelClicked))
+            INVALID_DATA -> postUiState(uiStateMapper.mapToInvalidData(this::scanAgainClicked, this::onCancelClicked))
+            AUTH_FAILED -> postUiState(uiStateMapper.mapToAuthFailed(this::scanAgainClicked, this::onCancelClicked))
+            EXPIRED -> postUiState(uiStateMapper.mapToExpired(this::scanAgainClicked, this::onCancelClicked))
             NO_INTERNET -> {
-                postUiState(uiStateMapper.mapNoInternet(this::scanAgainClicked, this::cancelClicked))
+                postUiState(uiStateMapper.mapToNoInternet(this::scanAgainClicked, this::onCancelClicked))
             }
             else -> updateUiStateAndLaunchScanner()
         }
@@ -120,7 +120,7 @@ class QRCodeAuthViewModel @Inject constructor(
         postActionEvent(LaunchDismissDialog(ShowDismissDialog))
     }
 
-    private fun cancelClicked() {
+    private fun onCancelClicked() {
         postActionEvent(FinishActivity)
     }
 
@@ -132,10 +132,10 @@ class QRCodeAuthViewModel @Inject constructor(
         postActionEvent(FinishActivity)
     }
 
-    private fun authenticateClicked() {
-        postUiState(uiStateMapper.mapAuthenticating(_uiState.value as Validated))
+    private fun onAuthenticateClicked() {
+        postUiState(uiStateMapper.mapToAuthenticating(_uiState.value as Validated))
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
-            postUiState(uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked))
+            postUiState(uiStateMapper.mapToInvalidData(this::scanAgainClicked, this::onCancelClicked))
         } else {
             authenticate(data = data.toString(), token = token.toString())
         }
@@ -145,16 +145,16 @@ class QRCodeAuthViewModel @Inject constructor(
         extractQueryParamsIfValid(scannedValue)
 
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
-            postUiState(uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked))
+            postUiState(uiStateMapper.mapToInvalidData(this::scanAgainClicked, this::onCancelClicked))
         } else {
-            postUiState(uiStateMapper.mapLoading())
+            postUiState(uiStateMapper.mapToLoading())
             validateScan(data = data.toString(), token = token.toString())
         }
     }
 
     private fun validateScan(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            postUiState(uiStateMapper.mapNoInternet(this::scanAgainClicked, this::cancelClicked))
+            postUiState(uiStateMapper.mapToNoInternet(this::scanAgainClicked, this::onCancelClicked))
             return
         }
 
@@ -171,22 +171,22 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun mapScanSuccessToValidatedState(result: QRCodeAuthResult<QRCodeAuthValidateResult>) =
-            uiStateMapper.mapValidated(
+            uiStateMapper.mapToValidated(
                     browser = result.model?.browser,
                     location = result.model?.location,
-                    onAuthenticateClick = this::authenticateClicked,
-                    onCancelClick = this::cancelClicked
+                    onAuthenticateClick = this::onAuthenticateClicked,
+                    onCancelClick = this::onCancelClicked
             )
 
     private fun mapScanErrorToErrorState(error: QRCodeAuthError) = when (error.type) {
-        DATA_INVALID -> uiStateMapper.mapExpired(this::scanAgainClicked, this::cancelClicked)
-        NOT_AUTHORIZED -> uiStateMapper.mapAuthFailed(this::scanAgainClicked, this::cancelClicked)
+        DATA_INVALID -> uiStateMapper.mapToExpired(this::scanAgainClicked, this::onCancelClicked)
+        NOT_AUTHORIZED -> uiStateMapper.mapToAuthFailed(this::scanAgainClicked, this::onCancelClicked)
         GENERIC_ERROR,
         INVALID_RESPONSE,
         REST_INVALID_PARAM,
         API_ERROR,
         AUTHORIZATION_REQUIRED,
-        TIMEOUT -> uiStateMapper.mapInvalidData(this::scanAgainClicked, this::cancelClicked)
+        TIMEOUT -> uiStateMapper.mapToInvalidData(this::scanAgainClicked, this::onCancelClicked)
     }
 
     private fun extractQueryParamsIfValid(scannedValue: String?) {
@@ -202,7 +202,7 @@ class QRCodeAuthViewModel @Inject constructor(
     @Suppress("MagicNumber")
     private fun authenticate(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            postUiState(uiStateMapper.mapNoInternet(this::scanAgainClicked, this::cancelClicked))
+            postUiState(uiStateMapper.mapToNoInternet(this::scanAgainClicked, this::onCancelClicked))
             return
         }
 
@@ -215,16 +215,16 @@ class QRCodeAuthViewModel @Inject constructor(
                 if (result.model?.authenticated == true) {
                     postUiState(mapAuthenticateSuccessToDoneState())
                 } else {
-                    postUiState(uiStateMapper.mapAuthFailed(::scanAgainClicked, ::cancelClicked))
+                    postUiState(uiStateMapper.mapToAuthFailed(::scanAgainClicked, ::onCancelClicked))
                 }
             }
         }
     }
 
-    private fun mapAuthenticateSuccessToDoneState() = uiStateMapper.mapDone(this::dismissClicked)
+    private fun mapAuthenticateSuccessToDoneState() = uiStateMapper.mapToDone(this::dismissClicked)
 
     private fun updateUiStateAndLaunchScanner() {
-        postUiState(uiStateMapper.mapScanning())
+        postUiState(uiStateMapper.mapToScanning())
         postActionEvent(LaunchScanner)
     }
 

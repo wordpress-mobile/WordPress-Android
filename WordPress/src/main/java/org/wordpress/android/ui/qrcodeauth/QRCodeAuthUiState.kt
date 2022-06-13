@@ -2,14 +2,14 @@ package org.wordpress.android.ui.qrcodeauth
 
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.AuthenticatingSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DonePrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.DoneSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ErrorSecondaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ValidatedPrimaryAction
-import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Action.ValidatedSecondaryAction
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.AuthenticatingSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.DonePrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.DoneSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ErrorSecondaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedPrimaryActionButton
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.ActionButton.ValidatedSecondaryActionButton
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATING
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTH_FAILED
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.CONTENT
@@ -53,12 +53,12 @@ sealed class QRCodeAuthUiState {
         abstract val title: UiString
         abstract val subtitle: UiString
         abstract val image: Int
-        open val primaryAction: ErrorPrimaryAction? = null
-        open val secondaryAction: ErrorSecondaryAction? = null
+        open val primaryActionButton: ErrorPrimaryActionButton? = null
+        open val secondaryActionButton: ErrorSecondaryActionButton? = null
 
         data class AuthFailed(
-            override val primaryAction: ErrorPrimaryAction,
-            override val secondaryAction: ErrorSecondaryAction
+            override val primaryActionButton: ErrorPrimaryActionButton,
+            override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {
             override val type = AUTH_FAILED
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_auth_failed_title)
@@ -67,8 +67,8 @@ sealed class QRCodeAuthUiState {
         }
 
         data class Expired(
-            override val primaryAction: ErrorPrimaryAction,
-            override val secondaryAction: ErrorSecondaryAction
+            override val primaryActionButton: ErrorPrimaryActionButton,
+            override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {
             override val type = EXPIRED
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_expired_title)
@@ -77,8 +77,8 @@ sealed class QRCodeAuthUiState {
         }
 
         data class InvalidData(
-            override val primaryAction: ErrorPrimaryAction,
-            override val secondaryAction: ErrorSecondaryAction
+            override val primaryActionButton: ErrorPrimaryActionButton,
+            override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {
             override val type = INVALID_DATA
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_invalid_data_title)
@@ -87,8 +87,8 @@ sealed class QRCodeAuthUiState {
         }
 
         data class NoInternet(
-            override val primaryAction: ErrorPrimaryAction,
-            override val secondaryAction: ErrorSecondaryAction
+            override val primaryActionButton: ErrorPrimaryActionButton,
+            override val secondaryActionButton: ErrorSecondaryActionButton
         ) : Error() {
             override val type = NO_INTERNET
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_error_no_connection_title)
@@ -105,16 +105,16 @@ sealed class QRCodeAuthUiState {
         @DrawableRes open val image: Int? = null
         open val isProgressShowing: Boolean = false
         open val alpha: Float = BASE_ALPHA
-        open val primaryAction: Action? = null
-        open val secondaryAction: Action? = null
+        open val primaryActionButton: ActionButton? = null
+        open val secondaryActionButton: ActionButton? = null
         open val browser: String? = null
         open val location: String? = null
 
         data class Validated(
             override val browser: String? = null,
             override val location: String? = null,
-            override val primaryAction: ValidatedPrimaryAction,
-            override val secondaryAction: ValidatedSecondaryAction
+            override val primaryActionButton: ValidatedPrimaryActionButton,
+            override val secondaryActionButton: ValidatedSecondaryActionButton
         ) : Content() {
             override val type = VALIDATED
             override val title: UiString = if (browser == null) {
@@ -135,12 +135,14 @@ sealed class QRCodeAuthUiState {
         data class Authenticating(
             override val browser: String? = null,
             override val location: String? = null,
-            override val primaryAction: AuthenticatingPrimaryAction,
-            override val secondaryAction: AuthenticatingSecondaryAction
+            override val primaryActionButton: AuthenticatingPrimaryActionButton,
+            override val secondaryActionButton: AuthenticatingSecondaryActionButton
         ) : Content() {
             override val type = AUTHENTICATING
             override val title: UiString = if (browser == null) {
-                UiStringResWithParams(R.string.qrcode_auth_flow_validated_title, listOf(UiStringText(location ?: " ")))
+                UiStringResWithParams(
+                        R.string.qrcode_auth_flow_validated_title,
+                        listOf(UiStringText(location ?: " ")))
             } else {
                 UiStringResWithParams(
                         R.string.qrcode_auth_flow_validated_title,
@@ -154,8 +156,8 @@ sealed class QRCodeAuthUiState {
         }
 
         data class Done(
-            override val primaryAction: DonePrimaryAction,
-            override val secondaryAction: DoneSecondaryAction
+            override val primaryActionButton: DonePrimaryActionButton,
+            override val secondaryActionButton: DoneSecondaryActionButton
         ) : Content() {
             override val type = DONE
             override val title: UiString = UiStringRes(R.string.qrcode_auth_flow_done_title)
@@ -164,43 +166,43 @@ sealed class QRCodeAuthUiState {
         }
     }
 
-    sealed class Action {
+    sealed class ActionButton {
         open val label: UiString? = null
         open val isEnabled: Boolean = true
         open val isVisible: Boolean = true
         open val clickAction: (() -> Unit)? = null
 
-        data class ValidatedPrimaryAction(override val clickAction: (() -> Unit)) : Action() {
+        data class ValidatedPrimaryActionButton(override val clickAction: (() -> Unit)) : ActionButton() {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_primary_action)
         }
 
-        data class ValidatedSecondaryAction(override val clickAction: (() -> Unit)) : Action() {
+        data class ValidatedSecondaryActionButton(override val clickAction: (() -> Unit)) : ActionButton() {
             override val label: UiString = UiStringRes(R.string.cancel)
         }
 
-        object AuthenticatingPrimaryAction : Action() {
+        object AuthenticatingPrimaryActionButton : ActionButton() {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_validated_primary_action)
             override val isEnabled = false
         }
 
-        object AuthenticatingSecondaryAction : Action() {
+        object AuthenticatingSecondaryActionButton : ActionButton() {
             override val label: UiString = UiStringRes(R.string.cancel)
             override val isEnabled = false
         }
 
-        data class DonePrimaryAction(override val clickAction: (() -> Unit)) : Action() {
+        data class DonePrimaryActionButton(override val clickAction: (() -> Unit)) : ActionButton() {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_dismiss)
         }
 
-        object DoneSecondaryAction : Action() {
+        object DoneSecondaryActionButton : ActionButton() {
             override val isVisible = false
         }
 
-        data class ErrorPrimaryAction(override val clickAction: (() -> Unit)) : Action() {
+        data class ErrorPrimaryActionButton(override val clickAction: (() -> Unit)) : ActionButton() {
             override val label: UiString = UiStringRes(R.string.qrcode_auth_flow_scan_again)
         }
 
-        data class ErrorSecondaryAction(override val clickAction: (() -> Unit)) : Action() {
+        data class ErrorSecondaryActionButton(override val clickAction: (() -> Unit)) : ActionButton() {
             override val label: UiString = UiStringRes(R.string.cancel)
         }
     }
