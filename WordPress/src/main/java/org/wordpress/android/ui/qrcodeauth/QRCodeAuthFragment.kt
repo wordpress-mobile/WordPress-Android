@@ -81,13 +81,13 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         uiHelpers.setTextOrHide(contentLayout.contentSubtitle, uiState.subtitle)
         uiHelpers.setImageOrHide(contentLayout.contentImage, uiState.image)
         contentLayout.contentContainer.alpha = uiState.alpha
-        uiState.primaryAction?.let { action ->
+        uiState.primaryActionButton?.let { action ->
             uiHelpers.setTextOrHide(contentLayout.contentPrimaryAction, action.label)
             uiHelpers.updateVisibility(contentLayout.contentPrimaryAction, action.isVisible)
             contentLayout.contentPrimaryAction.setOnClickListener { action.clickAction?.invoke() }
             contentLayout.contentPrimaryAction.isEnabled = action.isEnabled
         }
-        uiState.secondaryAction?.let { action ->
+        uiState.secondaryActionButton?.let { action ->
             uiHelpers.setTextOrHide(contentLayout.contentSecondaryAction, action.label)
             uiHelpers.updateVisibility(contentLayout.contentSecondaryAction, action.isVisible)
             contentLayout.contentSecondaryAction.setOnClickListener { action.clickAction?.invoke() }
@@ -100,11 +100,11 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         uiHelpers.setImageOrHide(errorLayout.errorImage, uiState.image)
         uiHelpers.setTextOrHide(errorLayout.errorTitle, uiState.title)
         uiHelpers.setTextOrHide(errorLayout.errorSubtitle, uiState.subtitle)
-        uiState.primaryAction?.let { action ->
+        uiState.primaryActionButton?.let { action ->
             uiHelpers.setTextOrHide(errorLayout.errorPrimaryAction, action.label)
             errorLayout.errorPrimaryAction.setOnClickListener { action.clickAction.invoke() }
         }
-        uiState.secondaryAction?.let { action ->
+        uiState.secondaryActionButton?.let { action ->
             uiHelpers.setTextOrHide(errorLayout.errorSecondaryAction, action.label)
             errorLayout.errorSecondaryAction.setOnClickListener { action.clickAction.invoke() }
         }
@@ -125,9 +125,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         val scanner = GmsBarcodeScanning.getClient(requireContext())
         scanner.startScan()
                 .addOnSuccessListener { barcode -> viewModel.onScanSuccess(barcode.rawValue) }
-                .addOnFailureListener {
-                    viewModel.onScanFailure()
-                }
+                .addOnFailureListener { viewModel.onScanFailure() }
     }
 
     private fun initBackPressHandler() {
