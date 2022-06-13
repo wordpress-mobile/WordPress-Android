@@ -45,6 +45,13 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.LOCATIO
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.TOKEN_KEY
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+const val DATA = "data"
+const val LOCATION = "location"
+const val BROWSER = "browser"
+const val TOKEN = "token"
+const val SCANNED_VALUE =
+        "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
+
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -56,15 +63,8 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     @Mock lateinit var validator: QRCodeAuthValidator
     private val uiStateMapper = QRCodeAuthUiStateMapper()
 
-    private val data = "data"
-    private val location = "location"
-    private val browser = "browser"
-    private val token = "token"
-    private val scannedValue =
-            "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
-
-    private val validQueryParams = mapOf(DATA_KEY to data, TOKEN_KEY to token)
-    private val invalidQueryParams = mapOf("invalid_key" to data, TOKEN_KEY to token)
+    private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)
+    private val invalidQueryParams = mapOf("invalid_key" to DATA, TOKEN_KEY to TOKEN)
     @Before
     fun setUp() {
         viewModel = QRCodeAuthViewModel(
@@ -75,8 +75,8 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(validator.isValidUri(scannedValue)).thenReturn(true)
-        whenever(validator.extractQueryParams(scannedValue)).thenReturn(validQueryParams)
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(true)
+        whenever(validator.extractQueryParams(SCANNED_VALUE)).thenReturn(validQueryParams)
     }
 
     @Test
@@ -167,7 +167,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
+        viewModel.onScanSuccess(SCANNED_VALUE)
 
         assertThat(result.last().type).isEqualTo(VALIDATED)
 
@@ -176,7 +176,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given invalid host, when scanned qrcode, then error is shown`() = runBlockingTest {
-        whenever(validator.isValidUri(scannedValue)).thenReturn(false)
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(false)
 
         val result = mutableListOf<QRCodeAuthUiState>()
         val job = launch {
@@ -184,7 +184,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
+        viewModel.onScanSuccess(SCANNED_VALUE)
 
         assertThat(result.last().type).isEqualTo(INVALID_DATA)
 
@@ -193,8 +193,8 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given invalid query params, when scanned qrcode, then error is shown`() = runBlockingTest {
-        whenever(validator.isValidUri(scannedValue)).thenReturn(true)
-        whenever(validator.extractQueryParams(scannedValue)).thenReturn(invalidQueryParams)
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(true)
+        whenever(validator.extractQueryParams(SCANNED_VALUE)).thenReturn(invalidQueryParams)
 
         val result = mutableListOf<QRCodeAuthUiState>()
         val job = launch {
@@ -202,7 +202,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
+        viewModel.onScanSuccess(SCANNED_VALUE)
 
         assertThat(result.last().type).isEqualTo(INVALID_DATA)
 
@@ -219,7 +219,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
+        viewModel.onScanSuccess(SCANNED_VALUE)
 
         assertThat(result.last().type).isEqualTo(AUTH_FAILED)
 
@@ -236,7 +236,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
+        viewModel.onScanSuccess(SCANNED_VALUE)
 
         assertThat(result.last().type).isEqualTo(INVALID_DATA)
 
@@ -253,7 +253,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         }
 
         viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
+        viewModel.onScanSuccess(SCANNED_VALUE)
 
         assertThat(result.last().type).isEqualTo(EXPIRED)
 
@@ -441,7 +441,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         startViewModel()
-        viewModel.onScanSuccess(scannedValue)
+        viewModel.onScanSuccess(SCANNED_VALUE)
 
         assertThat(result.last()).isInstanceOf(NoInternet::class.java)
 
@@ -501,7 +501,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
             QRCodeAuthResult<QRCodeAuthValidateResult>(QRCodeAuthError(errorType))
 
     private fun buildValidateSuccess() =
-            QRCodeAuthResult(model = QRCodeAuthValidateResult(browser = this.browser, location = this.location))
+            QRCodeAuthResult(model = QRCodeAuthValidateResult(browser = BROWSER, location = LOCATION))
 
     private fun buildAuthenticateError(errorType: QRCodeAuthErrorType) =
             QRCodeAuthResult<QRCodeAuthAuthenticateResult>(QRCodeAuthError(errorType))
@@ -518,10 +518,10 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     private fun initSavedInstanceState(stateType: QRCodeAuthUiStateType) {
-        whenever(savedInstanceState.getString(DATA_KEY, null)).thenReturn(data)
-        whenever(savedInstanceState.getString(TOKEN_KEY, null)).thenReturn(token)
-        whenever(savedInstanceState.getString(LOCATION_KEY, null)).thenReturn(location)
-        whenever(savedInstanceState.getString(BROWSER_KEY, null)).thenReturn(browser)
+        whenever(savedInstanceState.getString(DATA_KEY, null)).thenReturn(DATA)
+        whenever(savedInstanceState.getString(TOKEN_KEY, null)).thenReturn(TOKEN)
+        whenever(savedInstanceState.getString(LOCATION_KEY, null)).thenReturn(LOCATION)
+        whenever(savedInstanceState.getString(BROWSER_KEY, null)).thenReturn(BROWSER)
         whenever(savedInstanceState.getString(LAST_STATE_KEY, null)).thenReturn(stateType.label)
     }
 
