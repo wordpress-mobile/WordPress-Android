@@ -3,6 +3,7 @@ package org.wordpress.android.workers.reminder
 import android.app.PendingIntent
 import androidx.core.app.NotificationCompat.CATEGORY_REMINDER
 import androidx.core.app.NotificationCompat.PRIORITY_DEFAULT
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
@@ -51,7 +52,11 @@ class ReminderNotifier @Inject constructor(
                 category = CATEGORY_REMINDER,
                 autoCancel = true,
                 colorized = true,
-                color = resourceProvider.getColor(R.color.blue_50),
+                color = if (BuildConfig.IS_JETPACK_APP) {
+                    resourceProvider.getColor(R.color.jetpack_green)
+                } else {
+                    resourceProvider.getColor(R.color.blue_50)
+                },
                 smallIcon = R.drawable.ic_app_white_24dp
         )
 

@@ -48,9 +48,6 @@ class BloggingPromptCardViewHolder(
         answerButton.setOnClickListener {
             card.onAnswerClick.invoke(card.promptId)
         }
-        answeredButton.setOnClickListener {
-            card.onAnswerClick.invoke(card.promptId)
-        }
         shareButton.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardShareClicked()
             card.onShareClick.invoke(
