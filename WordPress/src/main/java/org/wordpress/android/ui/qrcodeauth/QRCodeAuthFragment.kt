@@ -3,23 +3,77 @@ package org.wordpress.android.ui.qrcodeauth
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.databinding.QrcodeauthFragmentBinding
+import org.wordpress.android.ui.posts.BasicDialogViewModel
+import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
+import org.wordpress.android.viewmodel.observeEvent
 
 @AndroidEntryPoint
 class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
     private val viewModel: QRCodeAuthViewModel by viewModels()
+    private val dialogViewModel: BasicDialogViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(QrcodeauthFragmentBinding.bind(view)) {
+            initBackPressHandler()
+            observeViewModel()
             initView()
+            startViewModel()
         }
+    }
+
+    private fun QrcodeauthFragmentBinding.observeViewModel() {
+        viewModel.actionEvents.onEach { handleActionEvents(it) }.launchIn(viewLifecycleOwner.lifecycleScope)
+        dialogViewModel.onInteraction.observeEvent(viewLifecycleOwner) { viewModel.onDialogInteraction(it) }
+    }
+
+    private fun startViewModel() {
+        viewModel.start()
+    }
+
+    private fun handleActionEvents(actionEvent: QRCodeAuthActionEvent) {
+        when (actionEvent) {
+            is LaunchDismissDialog -> launchDismissDialog(actionEvent.dialogModel)
+            is LaunchScanner -> { } // TODO
+            is FinishActivity -> requireActivity().finish()
+        }
+    }
+
+    private fun launchDismissDialog(model: QRCodeAuthDialogModel) {
+        dialogViewModel.showDialog(requireActivity().supportFragmentManager,
+                BasicDialogModel(model.tag,
+                        getString(model.title),
+                        getString(model.message),
+                        getString(model.positiveButtonLabel),
+                        model.negativeButtonLabel?.let { label -> getString(label) },
+                        model.cancelButtonLabel?.let { label -> getString(label) }
+                ))
+    }
+
+    private fun initBackPressHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(
+                        true
+                ) {
+                    override fun handleOnBackPressed() {
+                        viewModel.onBackPressed()
+                    }
+                })
     }
 
     @Suppress("MagicNumber")
