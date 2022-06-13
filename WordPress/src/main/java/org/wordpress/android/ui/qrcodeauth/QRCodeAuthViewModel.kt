@@ -142,6 +142,7 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun handleScan(scannedValue: String?) {
+        clearProperties()
         extractQueryParamsIfValid(scannedValue)
 
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
