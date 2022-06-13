@@ -87,9 +87,7 @@ class QRCodeAuthFragment : Fragment(R.layout.qrcodeauth_fragment) {
         val scanner = GmsBarcodeScanning.getClient(requireContext())
         scanner.startScan()
                 .addOnSuccessListener { barcode -> viewModel.onScanSuccess(barcode.rawValue) }
-                .addOnFailureListener {
-                    viewModel.onScanFailure()
-                }
+                .addOnFailureListener { viewModel.onScanFailure() }
     }
 
     private fun initBackPressHandler() {
