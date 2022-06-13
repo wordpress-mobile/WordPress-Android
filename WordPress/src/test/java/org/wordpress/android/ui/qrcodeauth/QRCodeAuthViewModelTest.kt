@@ -18,6 +18,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.DATA_INVALID
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.INVALID_RESPONSE
@@ -51,7 +52,8 @@ const val BROWSER = "browser"
 const val TOKEN = "token"
 const val SCANNED_VALUE =
         "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
-
+const val VALID_EXPIRED_MESSAGE = "qr code data expired"
+const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -202,15 +204,28 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given data invalid, when validate failure, then expired is shown`() {
+    fun `given authorization required with valid error message, when validate failure, then expired is shown`() {
         val uiStates = mutableListOf<QRCodeAuthUiState>()
         runBlockingTestWithData(uiStates) {
-            initValidate(false, DATA_INVALID)
+            initValidate(false, AUTHORIZATION_REQUIRED, VALID_EXPIRED_MESSAGE)
 
             viewModel.start()
             viewModel.onScanSuccess(SCANNED_VALUE)
 
             assertThat(uiStates.last().type).isEqualTo(EXPIRED)
+        }
+    }
+
+    @Test
+    fun `given authorization required with invalid error message, when validate failure, then auth failed is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, AUTHORIZATION_REQUIRED, INVALID_EXPIRED_MESSAGE)
+
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
         }
     }
 
@@ -257,15 +272,28 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given data invalid, when authenticate failure, then expired is shown`() {
+    fun `given authorization required with valid message, when authenticate failure, then expired is shown`() {
         val uiStates = mutableListOf<QRCodeAuthUiState>()
         runBlockingTestWithData(uiStates) {
-            initAuthenticate(false, DATA_INVALID)
+            initAuthenticate(false, AUTHORIZATION_REQUIRED, VALID_EXPIRED_MESSAGE)
             initAndStartVMForState(VALIDATED)
 
             (uiStates.last() as Validated).primaryActionButton.clickAction()
 
             assertThat(uiStates.last().type).isEqualTo(EXPIRED)
+        }
+    }
+
+    @Test
+    fun `given authorization required with invalid message, when authenticate failure, then auth failed is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, AUTHORIZATION_REQUIRED, INVALID_EXPIRED_MESSAGE)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
         }
     }
 
@@ -373,14 +401,14 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun buildValidateError(errorType: QRCodeAuthErrorType) =
-            QRCodeAuthResult<QRCodeAuthValidateResult>(QRCodeAuthError(errorType))
+    private fun buildValidateError(errorType: QRCodeAuthErrorType, errorMessage: String? = null) =
+            QRCodeAuthResult<QRCodeAuthValidateResult>(QRCodeAuthError(errorType, errorMessage))
 
     private fun buildValidateSuccess() =
             QRCodeAuthResult(model = QRCodeAuthValidateResult(browser = BROWSER, location = LOCATION))
 
-    private fun buildAuthenticateError(errorType: QRCodeAuthErrorType) =
-            QRCodeAuthResult<QRCodeAuthAuthenticateResult>(QRCodeAuthError(errorType))
+    private fun buildAuthenticateError(errorType: QRCodeAuthErrorType, errorMessage: String? = null) =
+            QRCodeAuthResult<QRCodeAuthAuthenticateResult>(QRCodeAuthError(errorType, errorMessage))
 
     private val authenticateSuccess = QRCodeAuthResult(model = QRCodeAuthAuthenticateResult(authenticated = true))
 
@@ -403,26 +431,28 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
 
     private suspend fun initValidate(
         successResponse: Boolean = true,
-        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE
+        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE,
+        errorMessage: String? = null
     ) {
         whenever(store.validate(any(), any())).thenReturn(
                 if (successResponse) {
                     buildValidateSuccess()
                 } else {
-                    buildValidateError(errorType as QRCodeAuthErrorType)
+                    buildValidateError(errorType as QRCodeAuthErrorType, errorMessage)
                 }
         )
     }
 
     private suspend fun initAuthenticate(
         successResponse: Boolean = true,
-        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE
+        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE,
+        errorMessage: String? = null
     ) {
         whenever(store.authenticate(any(), any())).thenReturn(
                 if (successResponse) {
                     authenticateSuccess
                 } else {
-                    buildAuthenticateError(errorType as QRCodeAuthErrorType)
+                    buildAuthenticateError(errorType as QRCodeAuthErrorType, errorMessage)
                 }
         )
     }
