@@ -46,4 +46,9 @@ class BloggingPromptsCardAnalyticsTracker @Inject constructor(
             Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_REMOVE_FROM_DASHBOARD_UNDO_CLICKED,
             emptyMap()
     )
+
+    fun trackMySiteCardMenuLearnMoreClicked() = analyticsTracker.track(
+            Stat.BLOGGING_PROMPTS_MY_SITE_CARD_MENU_LEARN_MORE_CLICKED,
+            emptyMap()
+    )
 }

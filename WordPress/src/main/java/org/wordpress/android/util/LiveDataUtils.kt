@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
@@ -313,6 +314,7 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): MediatorLiveData<U> {
  * A wrapper of the map utility method that is null safe and runs the mapping on a background thread
  * @param scope defines the scope to run mapping in
  */
+@SuppressLint("NullSafeMutableLiveData")
 fun <T, U> LiveData<T>.mapAsync(scope: CoroutineScope, mapper: suspend (T) -> U?): MediatorLiveData<U> {
     val result = MediatorLiveData<U>()
     result.addSource(this) { x ->

@@ -52,6 +52,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -64,6 +65,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -95,6 +97,7 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Inject lateinit var quickStartTracker: QuickStartTracker
+    @Inject lateinit var htmlCompatWrapper: HtmlCompatWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
@@ -163,7 +166,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 )
         )
 
-        val adapter = MySiteAdapter(imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker)
+        val adapter = MySiteAdapter(
+                imageManager,
+                uiHelpers,
+                bloggingPromptsCardAnalyticsTracker,
+                htmlCompatWrapper
+        ) { viewModel.onBloggingPromptsLearnMoreClicked() }
 
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -248,8 +256,16 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             val site = it.first
             val bloggingPromptId = it.second
             ActivityLauncher.addNewPostForResult(
-                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPromptId
+                    activity,
+                    site,
+                    false,
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                    bloggingPromptId,
+                    EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
             )
+        }
+        viewModel.onBloggingPromptsLearnMore.observeEvent(viewLifecycleOwner) {
+            (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
         }
     }
 
@@ -330,7 +346,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 action.site,
                 false,
                 PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
-                -1
+                -1,
+                null
             )
         // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
@@ -347,7 +364,6 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     private fun openQuickStartFullScreenDialog(action: SiteNavigationAction.OpenQuickStartFullScreenDialog) {
         val bundle = QuickStartFullScreenDialogFragment.newBundle(action.type)
         Builder(requireContext())
-                .setTitle(action.title)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
@@ -497,6 +513,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                             data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                             isNewSite = true
                     )
+                } else {
+                    viewModel.onSitePicked()
                 }
             }
             RequestCodes.EDIT_LANDING_PAGE -> {
@@ -631,4 +649,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
         viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
+}
+
+interface BloggingPromptsOnboardingListener {
+    fun onShowBloggingPromptsOnboarding()
 }

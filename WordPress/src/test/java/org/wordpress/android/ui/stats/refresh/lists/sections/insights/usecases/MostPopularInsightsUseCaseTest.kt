@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Quick
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -33,11 +35,13 @@ import kotlin.math.roundToInt
 
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: MostPopularInsightsStore
+    @Mock lateinit var postStore: PostStore
     @Mock lateinit var statsSiteProvider: StatsSiteProvider
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var popupMenuHandler: ItemPopupMenuHandler
+    @Mock lateinit var actionCardHandler: ActionCardHandler
     @Mock lateinit var statsRevampV2FeatureConfig: StatsRevampV2FeatureConfig
     private lateinit var useCase: MostPopularInsightsUseCase
     private val day = 2
@@ -53,11 +57,13 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 TEST_DISPATCHER,
                 insightsStore,
+                postStore,
                 statsSiteProvider,
                 dateUtils,
                 resourceProvider,
                 statsRevampV2FeatureConfig,
-                popupMenuHandler
+                popupMenuHandler,
+                actionCardHandler
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)

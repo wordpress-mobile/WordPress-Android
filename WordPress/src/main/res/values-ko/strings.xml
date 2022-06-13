@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-20 16:54:11+0000
+Translation-Revision-Date: 2022-06-02 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">블록을 누른 다음에 블록의 왼쪽 하단에 표시되는 위쪽 및 아래쪽 화살표를 눌러 위쪽 또는 아래쪽으로 이동하면서 블록을 다시 정렬할 수도 있습니다.</string>
+    <string name="gutenberg_native_image_file_not_found">이미지 파일을 찾을 수 없습니다.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">끌어서 놓기를 사용하면 블록 재정렬이 쉬워집니다. 블록을 길게 누른 다음 새로운 위치로 끌어서 놓으세요.</string>
+    <string name="gutenberg_native_drag_drop">끌어서 놓기</string>
+    <string name="gutenberg_native_arrow_buttons">화살표 버튼</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. 현재 선택됨: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">모든 작업이 완료됨</string>
+    <string name="quick_start_list_task_complete">작업 완료</string>
+    <string name="me_btn_scan_login_code">로그인 코드 검사</string>
+    <string name="stats_insights_followers_guide_card">💡블로그 참여를 권장하기 위해 댓글을 달 수도 있습니다. 팔로워가 더 늘어날 수 있습니다.</string>
+    <string name="stats_insights_comments_guide_card">💡상위 공동 작업자를 보려면 더 보기를 탭하세요.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ 최신 글 %1$s에 %2$s 좋아요가 있습니다.</string>
+    <string name="stats_most_popular_percent_views_empty">활동이 충분하지 않습니다. 나중에 사이트의 방문자가 증가하면 다시 확인하세요!</string>
+    <string name="stats_insights_latest_post_empty">아직 글을 발행하지 않았습니다. 나중에 첫 번째 글을 발행하면 다시 확인하세요!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">더 많은 조회수와 트래픽을 얻으려면 최고의 팁 %1$s을(를) 확인하세요.</string>
+    <string name="stats_total_followers_content_description">전체 팔로워의 %1s, %2s</string>
+    <string name="stats_value_percent">%1$s(%2$s%%)</string>
     <string name="pages_copy_link">링크 복사</string>
     <string name="quick_start_completed_tour_title">축하합니다! 척척박사&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">앱 알아보기</string>
@@ -49,10 +66,6 @@ Language: ko_KR
     <string name="photo_picker_media_thumbnail_content_description">미디어 썸네일</string>
     <string name="stats_insights_popular_title">🔥 가장 인기 있는 시간</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">이번 주 방문자는 이전 주보다 %1$s 적습니다.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">이번 주 방문자는 이전 주보다 %1$s 많습니다.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">이번 주 조회수는 이전 주보다 %1$s 적습니다.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">이번 주 조회수는 이전 주보다 %1$s 많습니다.</string>
     <string name="stats_timeframe_previous_week">이전 주</string>
     <string name="stats_timeframe_this_week">이번 주</string>
     <string name="scan_vault_press_active_on_site_button_text">알림판 방문</string>
@@ -147,6 +160,7 @@ Language: ko_KR
     <string name="site_creation_intent_beauty">미용</string>
     <string name="site_creation_intent_automotive">자동차</string>
     <string name="site_creation_intent_art">예술</string>
+    <string name="new_site_creation_intents_input_hint">예: 패션, 시, 정치</string>
     <string name="new_site_creation_intents_title">사이트 주제</string>
     <string name="quick_start_site_menu_tab_message_short">계속하려면 &lt;b&gt;%1$s&lt;/b&gt;을(를) 누르세요.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">알림판에서 제거</string>
@@ -171,6 +185,7 @@ Language: ko_KR
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">XML-RPC 호출이 이 사이트에서 차단된 것 같습니다(오류 코드 401). 로그인 시도가 실패하면 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_cannot_read_site">해당 URL에서 워드프레스 사이트를 읽을 수 없습니다. 도움말 아이콘을 눌러 FAQ를 확인하세요.</string>
     <string name="login_error_xml_rpc_services_disabled">XML-RPC 서비스가 이 사이트에서 비활성화되었습니다.</string>
+    <string name="my_site_menu_tab_title">메뉴</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">검색어에 워드프레스닷컴 도메인에 지원되지 않는 문자가 있습니다. 허용되는 문자는 A–Z, a–z, 0–9입니다.</string>
     <string name="my_site_error_within_card_subtitle">인터넷 연결을 확인하고 페이지를 새로 고치세요.</string>
     <string name="my_site_todays_stats_card_footer_link_go_to_stats">통계로 이동</string>
@@ -472,6 +487,7 @@ Language: ko_KR
     <string name="gutenberg_native_three">3</string>
     <string name="gutenberg_native_s_social_icon">%s 소셜 아이콘</string>
     <string name="gutenberg_native_mention">멘션</string>
+    <string name="gutenberg_native_new">신규</string>
     <string name="gutenberg_native_preview_post">글 미리 보기</string>
     <string name="gutenberg_native_preview_page">페이지 미리 보기</string>
     <string name="gutenberg_native_retry">재시도</string>
@@ -485,6 +501,7 @@ Language: ko_KR
     <string name="gutenberg_native_create_embed">임베드 생성</string>
     <string name="gutenberg_native_column_d">열 %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">화면 리더 사용자에게 도움이 되도록 간략하게 링크 설명</string>
+    <string name="gutenberg_native_add_blocks">블록 추가</string>
     <string name="login_no_jetpack_sites">젯팩 사이트를 찾을 수 없음</string>
     <string name="gutenberg_native_what_is_alt_text">대체 텍스트란 무엇인가요?</string>
     <string name="gutenberg_native_transform_s_to">다음으로 %s 변형</string>
@@ -1667,7 +1684,6 @@ Language: ko_KR
     <string name="quick_start_sites_type_grow">방문자 늘리기</string>
     <string name="quick_start_sites_type_customize">사이트를 사용자 정의 하기</string>
     <string name="quick_start_sites">다음 단계</string>
-    <string name="quick_start_complete_tasks_header">완료(%d)</string>
     <string name="quick_start_dialog_upload_icon_title">고유한 사이트 아이콘 선택</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
     <string name="quick_start_dialog_check_stats_message_short">사이트의 성과를 참조하려면 %1$s 통계 %2$s을(를) 선택합니다.</string>
@@ -1680,11 +1696,7 @@ Language: ko_KR
     <string name="quick_start_dialog_remove_next_steps_message">다음 단계를 제거하면 이 사이트의 모든 둘러보기가 숨겨집니다. 이 작업은 되돌릴 수 없습니다.</string>
     <string name="quick_start_dialog_remove_next_steps_title">다음 단계 제거</string>
     <string name="quick_start_remove_next_steps_menu_title">제거</string>
-    <string name="quick_start_complete_view_subtitle">목록이 완성되었습니다. 잘하셨습니다.</string>
-    <string name="quick_start_complete_view_title">모든 작업 완료!</string>
     <string name="quick_start_task_skip_menu_title">작업 건너뛰기</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">축소</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">확장</string>
     <string name="notification_channel_reminder_title">알림</string>
     <string name="stats_select_next_period_description">다음 기간 선택</string>
     <string name="stats_select_previous_period_description">이전 기간 선택</string>
@@ -1757,7 +1769,6 @@ Language: ko_KR
     <string name="stats_insights_create_post">게시글 작성</string>
     <string name="stats_insights_latest_post_message">%2$s 발행 후 %1$s이(가) 지났습니다. 지금까지 게시글의 성과입니다</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s이(가) 발행된 후 %1$s일이 지났습니다. 발행한 후에는 글을 공유하여 조회수를 높이세요</string>
-    <string name="stats_insights_latest_post_empty">아직 글을 발행하지 않았습니다. 발행을 시작하면 최근 글의 요약이 여기에 표시됩니다</string>
     <string name="stats_insights_tags_and_categories">태그 및 카테고리</string>
     <string name="stats_insights_all_time_stats">모든-기간</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

@@ -5,6 +5,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTION_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
@@ -69,6 +71,7 @@ sealed class BlockListItem(val type: Type) {
         CHIPS,
         LINK,
         BAR_CHART,
+        PIE_CHART,
         LINE_CHART,
         CHART_LEGEND,
         CHART_LEGENDS_BLUE,
@@ -84,6 +87,7 @@ sealed class BlockListItem(val type: Type) {
         REFERRED_ITEM,
         QUICK_SCAN_ITEM,
         DIALOG_BUTTONS,
+        ACTION_CARD,
         GUIDE_CARD
     }
 
@@ -202,11 +206,12 @@ sealed class BlockListItem(val type: Type) {
         val textResource: Int? = null,
         val links: List<Clickable>? = null,
         val bolds: List<String>? = null,
-        val color: List<String>? = null,
+        val color: Map<Int, String>? = null,
         val isLast: Boolean = false
     ) : BlockListItem(TEXT) {
         data class Clickable(
-            val link: String,
+            val link: String? = null,
+            @DrawableRes val icon: Int? = null,
             val navigationAction: ListItemInteraction
         )
     }
@@ -260,10 +265,24 @@ sealed class BlockListItem(val type: Type) {
             get() = entries.hashCode()
     }
 
+    data class PieChartItem(
+        val entries: List<Pie>,
+        val totalLabel: String,
+        val total: String,
+        val colors: List<Int>,
+        val contentDescription: String
+    ) : BlockListItem(PIE_CHART) {
+        data class Pie(val label: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
+
     data class ValueWithChartItem(
         val value: String,
-        val values: List<Long>? = null,
-        val positive: Boolean? = null
+        val chartValues: List<Long>? = null,
+        val positive: Boolean? = null,
+        val extraBottomMargin: Boolean = false
     ) : BlockListItem(VALUE_WITH_CHART_ITEM)
 
     data class LineChartItem(
@@ -340,6 +359,15 @@ sealed class BlockListItem(val type: Type) {
         override val itemId: Int
             get() = blocks.fold(0) { acc, block -> acc + block.label.hashCode() }
     }
+
+    data class ListItemActionCard(
+        @StringRes val titleResource: Int,
+        @StringRes val text: Int,
+        @StringRes val positiveButtonText: Int,
+        val positiveAction: ListItemInteraction,
+        @StringRes val negativeButtonText: Int,
+        val negativeAction: ListItemInteraction
+    ) : BlockListItem(ACTION_CARD)
 
     data class ListItemGuideCard(
         val text: String,

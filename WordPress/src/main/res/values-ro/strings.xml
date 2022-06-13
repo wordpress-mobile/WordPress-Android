@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-18 10:59:25+0000
+Translation-Revision-Date: 2022-06-02 13:40:49+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_image_file_not_found">Nu am găsit fișierul imagine.</string>
+    <string name="gutenberg_native_drag_drop">Trage și plasează</string>
+    <string name="gutenberg_native_arrow_buttons">Butoane săgeți</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Ai finalizat toate sarcinile</string>
+    <string name="quick_start_list_task_complete">Ai finalizat sarcina</string>
+    <string name="me_btn_scan_login_code">Scanează codul de autentificare</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Ai selectat: %2$s</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Prin Trage și plasează, rearanjezi blocurile unde vrei. Apasă pe un bloc, apoi du-l în noua locație și lasă-l acolo.</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Poți să rearanjezi blocurile și prin atingerea unui bloc și apoi a săgeților sus și jos care apar în partea de jos (stânga) a blocului pentru a-l muta mai sus sau mai jos.</string>
+    <string name="stats_insights_followers_guide_card">💡 Poți să lași un comentariu ca un gest pentru a încuraja implicarea pe blog și pentru a câștiga mai mulți urmăritori.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
+    <string name="stats_insights_comments_guide_card">💡 Dacă apeși pe Vezi mai multe, vezi cine a contribuit cel mai mult.</string>
+    <string name="stats_most_popular_percent_views_empty">Activitate insuficientă. Revino mai târziu când site-ul va avea mai mulți vizitatori!</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="stats_total_followers_content_description">%1s, %2s din numărul total de urmăritori</string>
+    <string name="stats_insights_latest_post_empty">Nu ai publicat încă niciun articol. Revino mai târziu după ce publici primul articol!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Dacă vrei să ai mai multe vizualizări și mai mult trafic, vezi sfaturile noastre la %1$s</string>
     <string name="quick_start_list_upload_media_title">Încarcă fotografii sau videoclipuri</string>
     <string name="quick_start_list_upload_media_subtitle">Aduci elemente media pe site direct din dispozitiv sau cameră</string>
     <string name="quick_start_sites_type_get_to_know_app">Fă cunoștință cu aplicația</string>
@@ -474,6 +491,7 @@ Language: ro
     <string name="gutenberg_native_three">Trei</string>
     <string name="gutenberg_native_s_social_icon">Icon social %s</string>
     <string name="gutenberg_native_mention">Mențiune</string>
+    <string name="gutenberg_native_new">NOU</string>
     <string name="gutenberg_native_preview_post">Previzualizează articolul</string>
     <string name="gutenberg_native_preview_page">Previzualizează pagina</string>
     <string name="gutenberg_native_retry">Reîncearcă</string>
@@ -560,10 +578,10 @@ Language: ro
     <string name="invite_links_disable_invite_link">Dezactivează legătura la invitație</string>
     <string name="invite_links_share_invite_link">Partajează legătura la invitație</string>
     <string name="threats_found_singular">Amenințare găsită</string>
-    <string name="threats_found_plural">Amenințări găsite</string>
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scanarea a fost finalizată&lt;/b&gt; &lt;br&gt; Nu am găsit amenințări</string>
     <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scanarea a fost finalizată&lt;/b&gt; &lt;br&gt; Am găsit o posibilă amenințare</string>
     <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scanarea a fost finalizată&lt;/b&gt; &lt;br&gt; Am găsit %s posibile amenințări</string>
+    <string name="threats_found_plural">Am găsit amenințări</string>
     <string name="scan_fixing_threats_title_singular">Înlătur amenințarea</string>
     <string name="disable">Dezactivează</string>
     <string name="quick_start_list_review_pages_subtitle">Verifică-ți paginile și fă modificări sau adaugă ori înlătură pagini.</string>
@@ -1669,7 +1687,6 @@ Language: ro
     <string name="exit">ieșire</string>
     <string name="quick_start_dialog_upload_icon_message">Vizitatorii îți vor vedea iconul în navigatoarele lor. Adaugă un icon personalizat pentru un aspect rafinat și profesionist.</string>
     <string name="quick_start_sites">Pașii următori</string>
-    <string name="quick_start_complete_tasks_header">Finalizate (%d)</string>
     <string name="quick_start_sites_type_grow">Crește-ți audiența</string>
     <string name="quick_start_sites_type_customize">Personalizează-ți site-ul</string>
     <string name="quick_start_dialog_upload_icon_title">Alege un icon unic pentru site</string>
@@ -1679,15 +1696,11 @@ Language: ro
     <string name="quick_start_dialog_enable_sharing_title">Activează partajarea articolelor</string>
     <string name="quick_start_dialog_enable_sharing_message">Partajează automat articole noi în conturile tale din media socială.</string>
     <string name="quick_start_remove_next_steps_menu_title">Înlătură acest</string>
-    <string name="quick_start_complete_view_subtitle">Felicitări pentru finalizarea listei. Ai făcut o treabă bună.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Înlătură pașii următori</string>
     <string name="quick_start_dialog_remove_next_steps_message">Înlăturarea pașilor următori va ascunde toate tururile de pe acest site. Această acțiune nu poate fi anulată.</string>
     <string name="quick_start_dialog_check_stats_title">Vezi statisticile site-ului</string>
     <string name="quick_start_dialog_check_stats_message">Fii la curent cu performanța site-ului.</string>
-    <string name="quick_start_complete_view_title">Toate sarcinile finalizate!</string>
     <string name="quick_start_task_skip_menu_title">Sari sarcina</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">restrânge</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">extinde</string>
     <string name="notification_channel_reminder_title">Reamintire</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
@@ -1761,7 +1774,6 @@ Language: ro
     <string name="gif_picker_initial_empty_text">Caută pentru a găsi imagini GIF pe care să le adaugi în biblioteca ta Media!</string>
     <string name="stats_insights_tags_and_categories">Etichete și categorii</string>
     <string name="stats_insights_latest_post_with_no_engagement">Au trecut %1$s de când a fost publicat %2$s. Începe să-ți mărești vizualizările articolului prin partajarea lui:</string>
-    <string name="stats_insights_latest_post_empty">Nu ai publicat încă niciun articol. După ce începi să publici, rezumatul ultimului articol va apărea aici:</string>
     <string name="stats_insights_all_time_stats">Total general</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Urmăritori</string>
@@ -2684,7 +2696,7 @@ Language: ro
     <string name="show_purchases">Arată achizițiile</string>
     <string name="checking_purchases">Verificare achiziții</string>
     <string name="premium_upgrades_message">Ai actualizări premium active pe site-ul tău. Te rog anulează actualizările înainte de a șterge site-ul tău.</string>
-    <string name="premium_upgrades_title">Actualizări Premium</string>
+    <string name="premium_upgrades_title">Actualizări la Premium</string>
     <string name="purchases_request_error">Ceva a fost greșit. Nu pot cere achizițiile.</string>
     <string name="delete_site_progress">Șterg site-ul…</string>
     <string name="delete_site_hint">Șterge site-ul</string>

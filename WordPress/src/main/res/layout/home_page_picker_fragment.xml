@@ -22,8 +22,8 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include
-                android:id="@+id/modal_layout_picker_header_section"
-                layout="@layout/modal_layout_picker_header_section"
+                android:id="@+id/site_creation_theme_header"
+                layout="@layout/site_creation_header_v2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -105,12 +105,4 @@
         app:aevSubtitle="@string/hpp_error_subtitle"
         app:aevTitle="@string/hpp_error_title"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <include
-        android:id="@+id/home_page_picker_bottom_toolbar"
-        layout="@layout/home_page_picker_bottom_toolbar"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

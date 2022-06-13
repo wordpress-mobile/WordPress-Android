@@ -1,17 +1,17 @@
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
 
-buildscript {
-    repositories {
-        google()
-        maven { url 'https://plugins.gradle.org/m2/' }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.google.gms:google-services:4.3.8'
-        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.67'
-        classpath 'io.sentry:sentry-android-gradle-plugin:2.0.0'
-    }
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.kapt"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+    id "org.jetbrains.kotlin.plugin.allopen"
+    id "io.sentry.android.gradle"
+    id "io.gitlab.arturbosch.detekt"
+    id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
+    id "com.google.gms.google-services"
+    id 'dagger.hilt.android.plugin'
 }
 
 repositories {
@@ -52,14 +52,6 @@ repositories {
     mavenCentral()
     maven { url "https://www.jitpack.io" }
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'dagger.hilt.android.plugin'
 
 detekt {
     baseline = file("${project.rootDir}/config/detekt/baseline.xml")
@@ -255,6 +247,7 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            pseudoLocalesEnabled true
         }
     }
 
@@ -327,14 +320,13 @@ dependencies {
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$storiesVersion"
     testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$storiesVersion"
     implementation project(path:':libs:image-editor::ImageEditor')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$gradle.ext.kotlinVersion"
 
     // Provided by maven central
     implementation 'com.google.code.gson:gson:2.6.2'
 
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation "androidx.fragment:fragment:$fragmentVersion"
@@ -447,12 +439,12 @@ dependencies {
 
     // Dagger and Hilt
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
-    implementation "com.google.dagger:hilt-android:$daggerVersion"
-    kapt "com.google.dagger:hilt-compiler:$daggerVersion"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$daggerVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
+    implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
+    kapt "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
 
     implementation("$gradle.ext.fluxCBinaryPath") {
         version {
@@ -521,7 +513,7 @@ dependencies {
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
 
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$coreLibraryDesugaringVersion"
@@ -666,7 +658,3 @@ if (project.hasProperty("debugStoreFile")) {
         }
     }
 }
-
-// Keep this at the bottom (https://stackoverflow.com/a/37565535)
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.sentry.android.gradle'

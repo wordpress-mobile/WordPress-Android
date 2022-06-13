@@ -8,7 +8,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
-        style="@style/ModalLayoutPickerTitle"
+        style="@style/SiteCreationHeaderV2Title"
         android:lineSpacingExtra="-4sp"
         android:letterSpacing="0.01"
         android:paddingBottom="@dimen/margin_large"
@@ -18,7 +18,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"
-        style="@style/ModalLayoutPickerSubtitle"
+        style="@style/SiteCreationHeaderV2Subtitle"
         android:paddingBottom="@dimen/margin_extra_medium_large"
         android:lineSpacingExtra="5sp"
         android:letterSpacing="0.01"

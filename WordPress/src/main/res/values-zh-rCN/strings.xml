@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-25 01:12:49+0000
+Translation-Revision-Date: 2022-06-02 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">您现在也可以重新排列区块，方法是点击一个区块，然后点击该区块左下角出现的向上和向下箭头，从而上下移动该区块。</string>
+    <string name="gutenberg_native_image_file_not_found">找不到图像文件。</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">拖放让重新排列区块轻而易举。 按住区块，将其拖动至新位置然后释放。</string>
+    <string name="gutenberg_native_drag_drop">拖放</string>
+    <string name="gutenberg_native_arrow_buttons">箭头按钮</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. 当前已选择：%2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">已完成所有任务</string>
+    <string name="quick_start_list_task_complete">完成任务</string>
+    <string name="me_btn_scan_login_code">扫描登录码</string>
+    <string name="stats_insights_followers_guide_card">💡您可以尝试发表评论来鼓励博客互动，从而吸引更多粉丝。</string>
+    <string name="stats_insights_comments_guide_card">💡点击“查看更多”可查看您的主要贡献者。</string>
+    <string name="stats_insights_likes_guide_card">⭐️您的最新文章 %1$s 收到了 %2$s 个赞。</string>
+    <string name="stats_most_popular_percent_views_empty">动态数量不足。 请在您的站点拥有更多访客时回来查看！</string>
+    <string name="stats_insights_latest_post_empty">您尚未发布任何文章。 请先发表第一篇文章，然后再回来查看！</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">如果您想获得更多的查看数量和流量，请查看我们的热门贴士 %1$s</string>
+    <string name="stats_total_followers_content_description">粉丝总数的 %1s、%2s</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">复制链接</string>
     <string name="quick_start_completed_tour_title">恭喜！ 您搞明白了&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">了解此应用程序</string>
@@ -38,6 +55,7 @@ Language: zh_CN
     <string name="stats_view_total_comments">评论总数</string>
     <string name="stats_view_total_likes">总赞数</string>
     <string name="blogging_prompts_notification_dismiss">忽略</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">回复</string>
     <string name="blogging_prompts_answer_prompt_notification_title">每日提示</string>
     <string name="blogging_prompts_onboarding_got_it">知道了</string>
     <string name="quick_start_dialog_view_your_site_message_short">点击“&lt;b&gt;%1$s&lt;/b&gt;”查看您的站点</string>
@@ -48,14 +66,12 @@ Language: zh_CN
     <string name="photo_picker_media_thumbnail_content_description">媒体缩略图</string>
     <string name="stats_insights_popular_title">🔥 人气最高的时间</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">您本周的访客数量比上周低 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">您本周的访客数量比上周高 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_views_negative">您本周的预览数量比上周低 %1$s。</string>
-    <string name="stats_insights_views_and_visitors_views_positive">您本周的预览数量比上周高 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_views_negative">您本周的查看数量比上周低 %1$s。</string>
     <string name="stats_timeframe_previous_week">上周</string>
     <string name="stats_timeframe_this_week">本周</string>
     <string name="scan_vault_press_active_on_site_button_text">访问仪表盘</string>
     <string name="scan_vault_press_active_on_site_subtitle">您的站点已受 VaultPress 保护。 您可以在下面找到指向您的 VaultPress 仪表盘的链接。</string>
+    <string name="scan_vault_press_active_on_site_title">您的站点使用 VaultPress</string>
     <string name="locale_picker_current_language">当前语言：</string>
     <string name="hpp_choose_and_create_site">创建站点</string>
     <string name="gutenberg_native_add_blocks_11d0841f">添加区块</string>
@@ -472,6 +488,7 @@ Language: zh_CN
     <string name="gutenberg_native_three">三</string>
     <string name="gutenberg_native_s_social_icon">%s 社交图标</string>
     <string name="gutenberg_native_mention">提及</string>
+    <string name="gutenberg_native_new">新建</string>
     <string name="gutenberg_native_preview_post">预览文章</string>
     <string name="gutenberg_native_preview_page">预览页面</string>
     <string name="gutenberg_native_retry">重试</string>
@@ -1668,7 +1685,6 @@ Language: zh_CN
     <string name="quick_start_sites_type_grow">增加您的受众</string>
     <string name="quick_start_sites_type_customize">定制您的站点</string>
     <string name="quick_start_sites">后续步骤</string>
-    <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">选择您的唯一站点图标</string>
     <string name="quick_start_dialog_upload_icon_message">访客将在其浏览器中看到您的图标。添加自定义图标，打造精美的专业外观。</string>
     <string name="quick_start_dialog_check_stats_message_short">选择%1$s统计信息%2$s，查看您站点的表现。</string>
@@ -1681,11 +1697,7 @@ Language: zh_CN
     <string name="quick_start_dialog_remove_next_steps_message">删除“后续步骤”将隐藏此站点中的所有导览。此操作无法撤销。</string>
     <string name="quick_start_dialog_remove_next_steps_title">删除后续步骤</string>
     <string name="quick_start_remove_next_steps_menu_title">删除此</string>
-    <string name="quick_start_complete_view_subtitle">恭喜您完成了列表中的任务。做得漂亮！</string>
-    <string name="quick_start_complete_view_title">已完成所有任务！</string>
     <string name="quick_start_task_skip_menu_title">跳过任务</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">折叠</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">展开</string>
     <string name="notification_channel_reminder_title">提示</string>
     <string name="stats_select_next_period_description">选择下一时间段</string>
     <string name="stats_select_previous_period_description">选择上一时间段</string>
@@ -1758,7 +1770,6 @@ Language: zh_CN
     <string name="stats_insights_create_post">创建文章</string>
     <string name="stats_insights_latest_post_message">%2$s 已发布 %1$s。下面是该文章到目前为止的表现：</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s 已发布 %1$s。开始吧！通过分享您的文章来增加文章浏览量：</string>
-    <string name="stats_insights_latest_post_empty">您尚未发布任何文章。开始发布后，此处会显示您最新文章的摘要：</string>
     <string name="stats_insights_tags_and_categories">标签或类别</string>
     <string name="stats_insights_all_time_stats">所有时间</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

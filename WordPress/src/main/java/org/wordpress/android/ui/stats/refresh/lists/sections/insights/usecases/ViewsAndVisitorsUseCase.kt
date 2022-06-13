@@ -9,16 +9,22 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.fluxc.store.StatsStore.StatsType
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewViewsAndVisitorsDetail
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_VIEWS_AND_VISITORS
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightDetails
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.UiState
@@ -39,9 +45,12 @@ import javax.inject.Named
 import kotlin.math.ceil
 
 const val VIEWS_AND_VISITORS_ITEMS_TO_LOAD = 15
+const val TOP_TIPS_URL = "https://wordpress.com/support/getting-more-views-and-traffic/"
 
+@Suppress("TooManyFunctions")
 class ViewsAndVisitorsUseCase
 @Inject constructor(
+    private val statsType: StatsType,
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
@@ -56,7 +65,7 @@ class ViewsAndVisitorsUseCase
     private val resourceProvider: ResourceProvider,
     private val useCaseMode: UseCaseMode
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
-        VIEWS_AND_VISITORS,
+        statsType,
         mainDispatcher,
         backgroundDispatcher,
         UiState(),
@@ -161,6 +170,7 @@ class ViewsAndVisitorsUseCase
             }
 
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
+            val visibleLineCount = uiState.visibleLineCount ?: domainModel.dates.size
             val availableDates = domainModel.dates.map {
                 statsDateFormatter.parseStatsDate(
                         statsGranularity,
@@ -170,7 +180,10 @@ class ViewsAndVisitorsUseCase
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
+            selectedDateProvider.selectDate(selectedDate, availableDates.takeLast(visibleLineCount), statsGranularity)
+
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
+            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
 
             items.add(
                     viewsAndVisitorsMapper.buildTitle(
@@ -193,7 +206,8 @@ class ViewsAndVisitorsUseCase
             items.add(
                     viewsAndVisitorsMapper.buildInformation(
                             domainModel.dates,
-                            uiState.selectedPosition
+                            uiState.selectedPosition,
+                            this::onTopTipsLinkClick
                     )
             )
             items.add(
@@ -217,11 +231,17 @@ class ViewsAndVisitorsUseCase
     private fun onViewMoreClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_VIEW_MORE_TAPPED)
         navigateTo(
-                ViewViewsAndVisitorsDetail(
+                ViewInsightDetails(
+                        INSIGHT_DETAIL,
+                        INSIGHTS_VIEWS_AND_VISITORS,
                         statsGranularity,
                         selectedDateProvider.getSelectedDate(statsGranularity)
                 )
         )
+    }
+
+    private fun onTopTipsLinkClick() {
+        navigateTo(ViewUrl(TOP_TIPS_URL))
     }
 
     private fun onLineSelected(period: String?) {
@@ -268,7 +288,41 @@ class ViewsAndVisitorsUseCase
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) =
                 ViewsAndVisitorsUseCase(
+                        InsightType.VIEWS_AND_VISITORS,
                         DAYS,
+                        visitsAndViewsStore,
+                        selectedDateProvider,
+                        statsSiteProvider,
+                        statsDateFormatter,
+                        viewsAndVisitorsMapper,
+                        mainDispatcher,
+                        backgroundDispatcher,
+                        analyticsTracker,
+                        statsWidgetUpdaters,
+                        localeManagerWrapper,
+                        resourceProvider,
+                        useCaseMode
+                )
+    }
+
+    class ViewsAndVisitorsGranularUseCaseFactory
+    @Inject constructor(
+        @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+        @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
+        private val statsSiteProvider: StatsSiteProvider,
+        private val selectedDateProvider: SelectedDateProvider,
+        private val statsDateFormatter: StatsDateFormatter,
+        private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
+        private val visitsAndViewsStore: VisitsAndViewsStore,
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val statsWidgetUpdaters: StatsWidgetUpdaters,
+        private val localeManagerWrapper: LocaleManagerWrapper,
+        private val resourceProvider: ResourceProvider
+    ) : GranularUseCaseFactory {
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
+                ViewsAndVisitorsUseCase(
+                        TimeStatsType.OVERVIEW,
+                        granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,
                         statsSiteProvider,

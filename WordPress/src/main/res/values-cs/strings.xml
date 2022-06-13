@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-18 13:04:38+0000
+Translation-Revision-Date: 2022-05-27 08:19:45+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: cs_CZ
@@ -18,10 +18,6 @@ Language: cs_CZ
     <string name="photo_picker_media_thumbnail_content_description">Náhled mediálních souborů</string>
     <string name="stats_insights_popular_title">🔥 Nejoblíbenější čas</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Návštěvníci za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Vaši návštěvníci za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Vaše zhlédnutí za tento týden jsou o %1$s nižší než v předchozím týdnu.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Vaše zhlédnutí za tento týden jsou o %1$s vyšší než v předchozím týdnu.</string>
     <string name="stats_timeframe_previous_week">Minulý týden</string>
     <string name="stats_timeframe_this_week">Tento týden</string>
     <string name="scan_vault_press_active_on_site_button_text">Přejít na nástěnku</string>
@@ -1639,7 +1635,6 @@ Language: cs_CZ
     <string name="quick_start_sites">Další kroky</string>
     <string name="quick_start_dialog_upload_icon_message">Návštěvníci uvidí vaši ikonu ve svém prohlížeči. Přidejte vlastní ikonu pro vyleštěný profesionální vzhled.</string>
     <string name="quick_start_dialog_upload_icon_title">Nahrát ikonu webu</string>
-    <string name="quick_start_complete_tasks_header">Kompletní (%d)</string>
     <string name="quick_start_sites_type_customize">Přizpůsobte si svůj web</string>
     <string name="quick_start_sites_type_grow">Rozšiřte své publikum</string>
     <string name="quick_start_dialog_publish_post_message">Navrhněte a publikujte svůj první příspěvek.</string>
@@ -1647,16 +1642,12 @@ Language: cs_CZ
     <string name="quick_start_dialog_check_stats_message_short">Klepnutím na %1$s Statistiky %2$s zobrazíte výkon svého webu.</string>
     <string name="quick_start_dialog_enable_sharing_title">Povolit sdílení příspěvků</string>
     <string name="quick_start_dialog_enable_sharing_message">Automaticky sdílejte nové příspěvky se svými účty sociálních médií.</string>
-    <string name="quick_start_complete_view_subtitle">Gratulujeme k dokončení vašeho seznamu. Dobře odvedená práce.</string>
     <string name="quick_start_remove_next_steps_menu_title">Odebrat toto</string>
     <string name="quick_start_dialog_remove_next_steps_title">Odebrat další kroky</string>
     <string name="quick_start_dialog_remove_next_steps_message">Odebráním dalších kroků skryjete všechny prohlídky na tomto webu. Tuto akci nelze vrátit zpět.</string>
     <string name="quick_start_dialog_check_stats_message">Mějte aktuální informace o výkonu svého webu.</string>
     <string name="quick_start_dialog_check_stats_title">Zkontrolujte statistiky svého webu</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">sbalit</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">rozbalit</string>
     <string name="quick_start_task_skip_menu_title">Přeskočit úkol</string>
-    <string name="quick_start_complete_view_title">Všechny úkoly jsou dokončeny!</string>
     <string name="notification_channel_reminder_title">Připomenutí</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
@@ -1730,7 +1721,6 @@ Language: cs_CZ
     <string name="gif_picker_empty_search_list">Vašemu vyhledávání neodpovídají žádná média</string>
     <string name="stats_insights_tags_and_categories">Štítky a Rubriky</string>
     <string name="stats_insights_all_time_stats">Pořád</string>
-    <string name="stats_insights_latest_post_empty">Dosud jste nezveřejnili žádné příspěvky. Jakmile začnete publikovat, zobrazí se zde souhrn nejnovějších příspěvků.</string>
     <string name="stats_insights_latest_post_with_no_engagement">Od zveřejnění %2$s s uplynulo %1$s. Zvyšte počet zobrazení příspěvku tím, že ho budete sdílet:</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>

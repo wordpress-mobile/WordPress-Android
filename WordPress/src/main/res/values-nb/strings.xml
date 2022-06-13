@@ -852,7 +852,6 @@ Language: nb_NO
     <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>
     <string name="quick_start_sites_type_customize">Tilpass ditt nettsted</string>
     <string name="quick_start_sites">Neste trinn</string>
-    <string name="quick_start_complete_tasks_header">Ferdig (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Velg et unikt nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
@@ -862,11 +861,7 @@ Language: nb_NO
     <string name="quick_start_dialog_check_stats_title">Sjekk din besøksstatistikk</string>
     <string name="quick_start_dialog_remove_next_steps_title">Fjern de neste trinn</string>
     <string name="quick_start_remove_next_steps_menu_title">Fjern dette</string>
-    <string name="quick_start_complete_view_subtitle">Gratulerer med fullført liste. Godt jobbet.</string>
-    <string name="quick_start_complete_view_title">Alle oppgaver ferdige!</string>
     <string name="quick_start_task_skip_menu_title">Hopp over oppgave</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">trekk sammen</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">utvid</string>
     <string name="notification_channel_reminder_title">Påminnelse</string>
     <string name="stats_select_next_period_description">Velg neste periode</string>
     <string name="stats_select_previous_period_description">Velg forrige periode</string>
@@ -938,7 +933,6 @@ Language: nb_NO
     <string name="stats_insights_create_post">Lag innlegg</string>
     <string name="stats_insights_latest_post_message">Det har gått %1$s siden %2$s ble publisert. Her er hvordan det har gått med innlegget så langt:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s siden %2$s ble publisert. Få ballen til å rulle og øk ditt antall visninger ved å dele ditt innlegg:</string>
-    <string name="stats_insights_latest_post_empty">Du har ikke publisert noe innlegg ennå. Straks du starter publisere vil sammendraget av dine siste innlegg dukke opp her:</string>
     <string name="stats_insights_tags_and_categories">Stikkord og kategorier</string>
     <string name="stats_insights_all_time_stats">Til all tid</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

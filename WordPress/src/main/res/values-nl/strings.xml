@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-23 17:57:50+0000
+Translation-Revision-Date: 2022-06-03 16:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Je kunt ook blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het naar boven of onder te bewegen.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Met verslepen wordt blokken herschikken een fluitje van een cent. Houd een blok ingedrukt en sleep deze vervolgens naar de nieuwe locatie. Laat dan los.</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Geselecteerde valuta: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Alle taken afgerond</string>
+    <string name="quick_start_list_task_complete">Taak voltooid</string>
+    <string name="me_btn_scan_login_code">Inlogcode scannen</string>
+    <string name="stats_insights_followers_guide_card">💡Je kunt een opmerking achterlaten als gebaar, om activiteit van de blog te stimuleren en meer volgers te krijgen.</string>
+    <string name="stats_insights_comments_guide_card">💡Zie wie je grootste bijdragers zijn door te tikken op MEER INFO.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Bekijk onze top tips %1$s voor meer weergaven en bezoekers</string>
+    <string name="stats_total_followers_content_description">%1s, %2s van het totale aantal volgers</string>
+    <string name="stats_value_percent">%1$s %2$s%%()</string>
     <string name="pages_copy_link">Link kopiëren</string>
     <string name="quick_start_completed_tour_title">Gefeliciteerd! Je weet hoe alles werkt&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Leer de app gebruiken</string>
@@ -23,10 +35,22 @@ Language: nl
     <string name="stats_details_top_commentators">Top commentators</string>
     <string name="stats_insights_total_stats_negative">%1$s minder dan de vorige week</string>
     <string name="stats_insights_total_stats_positive">%1$s meer dan de vorige week</string>
+    <string name="stats_published_years_ago">%1$d jaar geleden gepubliceerd</string>
+    <string name="stats_published_a_year_ago">Een jaar geleden gepubliceerd</string>
+    <string name="stats_published_months_ago">%1$d maanden geleden gepubliceerd</string>
+    <string name="stats_published_a_month_ago">Een maand geleden gepubliceerd</string>
+    <string name="stats_published_days_ago">%1$d dagen geleden gepubliceerd</string>
+    <string name="stats_published_a_day_ago">Een dag geleden gepubliceerd</string>
+    <string name="stats_published_hours_ago">%1$d uur geleden gepubliceerd</string>
+    <string name="stats_published_an_hour_ago">Een uur geleden gepubliceerd</string>
+    <string name="stats_published_minutes_ago">%1$d minuten geleden gepubliceerd</string>
+    <string name="stats_published_a_minute_ago">Een minuut geleden gepubliceerd</string>
+    <string name="stats_published_seconds_ago">Seconden geleden gepubliceerd</string>
     <string name="stats_view_total_followers">Totaal aantal e-mailvolgers</string>
     <string name="stats_view_total_comments">Totaal aantal reacties</string>
     <string name="stats_view_total_likes">Totaal aantal vind-ik-leuks</string>
     <string name="blogging_prompts_notification_dismiss">Sluiten</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Antwoord</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Dagelijkse opdracht</string>
     <string name="blogging_prompts_onboarding_got_it">Duidelijk</string>
     <string name="quick_start_dialog_view_your_site_message_short">Tik op &lt;b&gt;%1$s&lt;/b&gt; om je site te bekijken</string>
@@ -37,12 +61,16 @@ Language: nl
     <string name="photo_picker_media_thumbnail_content_description">Miniatuurafbeelding media</string>
     <string name="stats_insights_popular_title">Populairste tijd</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Het aantal bezoekers van deze week is %1$s minder dan de vorige week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Het aantal bezoekers van deze week is %1$s meer dan de vorige week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Het aantal weergaven van deze week is %1$s minder dan de vorige week.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Het aantal weergaven van deze week is %1$s meer dan de vorige week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Je hebt deze week %1$s minder bezoekers dan vorige week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Je hebt deze week %1$s meer bezoekers dan vorige week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Je hebt deze week %1$s minder weergaven dan vorige week.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Je hebt deze week %1$s meer weergaven dan vorige week.</string>
+    <string name="stats_timeframe_previous_week">Vorige week</string>
+    <string name="stats_timeframe_this_week">Deze week</string>
     <string name="scan_vault_press_active_on_site_button_text">Naar het dashboard gaan</string>
     <string name="scan_vault_press_active_on_site_subtitle">Je site wordt al beschermd door VaultPress. Hieronder staat een link naar je VaultPress-dashboard.</string>
+    <string name="scan_vault_press_active_on_site_title">Je site heeft VaultPress</string>
+    <string name="locale_picker_current_language">Huidige taal:</string>
     <string name="hpp_choose_and_create_site">Maak site</string>
     <string name="gutenberg_native_add_blocks_11d0841f">Blokken toevoegen</string>
     <string name="initial_screen">Startscherm</string>
@@ -110,6 +138,7 @@ Language: nl
     <string name="site_creation_intent_photography">Fotografie</string>
     <string name="site_creation_intent_personal">Persoonlijk</string>
     <string name="site_creation_intent_people">Mensen</string>
+    <string name="site_creation_intent_parenting">Ouderschap</string>
     <string name="site_creation_intent_news">Nieuws</string>
     <string name="site_creation_intent_music">Muziek</string>
     <string name="site_creation_intent_local_services">Lokale diensten</string>
@@ -300,7 +329,7 @@ Language: nl
     <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blogger&lt;/a&gt; vindt dit leuk.</string>
     <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Jij en %1$s bloggers&lt;/a&gt; vinden dit leuk.</string>
     <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Jij en 1 blogger&lt;/a&gt; vinden dit leuk.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Je&lt;/a&gt; vind dit leuk.</string>
+    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Je&lt;/a&gt; vindt dit leuk.</string>
     <string name="gutenberg_native_line_height">Regelafstand</string>
     <string name="domains_free_plan_get_your_domain_title">Krijg je domein</string>
     <string name="domains_primary_site_address">%s</string>
@@ -457,6 +486,7 @@ Language: nl
     <string name="gutenberg_native_three">Drie</string>
     <string name="gutenberg_native_s_social_icon">%s social pictogram</string>
     <string name="gutenberg_native_mention">Vermelding</string>
+    <string name="gutenberg_native_new">Nieuw</string>
     <string name="gutenberg_native_preview_post">Voorbeeld bericht</string>
     <string name="gutenberg_native_preview_page">Voorbeeld pagina</string>
     <string name="gutenberg_native_retry">Probeer het opnieuw</string>
@@ -481,7 +511,7 @@ Language: nl
     <string name="gutenberg_native_1_s_transformed_to_2_s">%1$s getransformeerd naar %2$s</string>
     <string name="like_faces_error_loading_message">Fout bij het laden van like gegevens. %s.</string>
     <string name="like_title_plural">%d vind-ik-leuks</string>
-    <string name="like_title_singular">1 Like</string>
+    <string name="like_title_singular">1 vind-ik-leuk</string>
     <string name="suggestion">Suggestie:</string>
     <string name="gutenberg_native_use_icon_button">Gebruik pictogram knop</string>
     <string name="gutenberg_native_search_input_field">Zoeken invoerveld.</string>
@@ -740,6 +770,8 @@ Language: nl
     <string name="threat_item_sub_header_file_signature">Bedreiging gevonden %s</string>
     <string name="threat_item_sub_header_core_file">Kwetsbaarheid gevonden in WordPress</string>
     <string name="threat_item_sub_header_misc_vulnerability">Verschillende kwetsbaarheden</string>
+    <string name="threat_item_header_vulnerable_theme">Kwetsbaar thema: %1$s (versie %2$s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Kwetsbare plugin: %1$s (versie %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: kwaadaardig codepatroon</string>
     <string name="threat_item_header_database_threat">Database %s bedreigingen</string>
     <string name="threat_item_header_infected_core_file">%s: geinfecteerd core bestand</string>
@@ -1651,22 +1683,19 @@ Language: nl
     <string name="quick_start_sites_type_grow">Breid je publiek uit</string>
     <string name="quick_start_sites_type_customize">Pas je site aan</string>
     <string name="quick_start_sites">Volgende stappen</string>
-    <string name="quick_start_complete_tasks_header">Voltooi (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Kies een unieke site pictogram</string>
     <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Selecteer %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
     <string name="quick_start_dialog_publish_post_message">Stel een bericht op en publiceer het.</string>
     <string name="quick_start_dialog_enable_sharing_title">Berichten delen inschakelen</string>
     <string name="quick_start_dialog_enable_sharing_message">Deel nieuwe berichten automatisch op je socialmedia-accounts.</string>
     <string name="quick_start_dialog_check_stats_title">Controleer je site-statistieken</string>
+    <string name="quick_start_dialog_check_stats_message">Houd de prestaties van je site bij.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Door \'Volgende stappen\' te verwijderen, worden alle rondleidingen op deze site verborgen. Deze actie kan niet ongedaan worden gemaakt.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Volgende stappen verwijderen</string>
     <string name="quick_start_remove_next_steps_menu_title">Verwijder dit</string>
-    <string name="quick_start_complete_view_subtitle">Gefeliciteerd! Je hebt je lijst afgewerkt. Goed gedaan.</string>
-    <string name="quick_start_complete_view_title">Alle taken zijn voltooid!</string>
     <string name="quick_start_task_skip_menu_title">Taak overslaan</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">inklappen</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">uitklappen</string>
     <string name="notification_channel_reminder_title">Herinnering</string>
     <string name="stats_select_next_period_description">Volgende periode selecteren</string>
     <string name="stats_select_previous_period_description">Vorige periode selecteren</string>
@@ -1739,7 +1768,6 @@ Language: nl
     <string name="stats_insights_create_post">Maak bericht</string>
     <string name="stats_insights_latest_post_message">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan …</string>
     <string name="stats_insights_latest_post_with_no_engagement">Het is %1$s sinds %2$s is gepubliceerd. Krijg de bal aan het rollen en verhoog het bekijken van je berichten door het delen van je berichten:</string>
-    <string name="stats_insights_latest_post_empty">Je hebt nog geen berichten gepubliceerd. Zodra je begint met publiceren, verschijnt hier de samenvatting van je laatste bericht:</string>
     <string name="stats_insights_tags_and_categories">Tags en categorieën</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -1827,6 +1855,7 @@ Language: nl
     <string name="quick_start_focus_point_description">tik hier</string>
     <string name="quick_start_list_create_site_title">Je site maken</string>
     <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site.</string>
+    <string name="quick_start_completed_tour_subtitle">Voelt het niet goed om dingen af te strepen?</string>
     <string name="quick_start_dialog_view_site_title">Je site bekijken</string>
     <string name="quick_start_dialog_view_site_message">Bekijk een voorbeeld van je site om te zien wat je bezoekers zien.</string>
     <string name="quick_start_dialog_share_site_title">Je site delen</string>
@@ -1870,7 +1899,7 @@ Language: nl
     <string name="people_empty_list_filtered_email_followers">Nog geen e-mailvolgers</string>
     <string name="people_empty_list_filtered_followers">Nog geen volgers</string>
     <string name="people_empty_list_filtered_users">Nog geen gebruikers</string>
-    <string name="reader_empty_posts_liked_description">Berichten die je liket, verschijnen hier</string>
+    <string name="reader_empty_posts_liked_description">Berichten die je liked, verschijnen hier</string>
     <string name="reader_empty_posts_liked_title">Nog niets leuk gevonden</string>
     <string name="reader_empty_followed_blogs_button_followed">Ga naar volgen</string>
     <string name="reader_empty_followed_blogs_button_discover">Sites ontdekken</string>
@@ -2044,8 +2073,8 @@ Language: nl
     <string name="comment_delete_talkback">Reactie verwijderd</string>
     <string name="comment_untrash_talkback">Reactie hersteld</string>
     <string name="comment_trash_talkback">Reactie verzonden naar prullenbak</string>
-    <string name="comment_unliked_talkback">Reactie geünliket</string>
-    <string name="comment_liked_talkback">Reactie geliket</string>
+    <string name="comment_unliked_talkback">Reactie niet meer leuk gevonden</string>
+    <string name="comment_liked_talkback">Reactie leuk gevonden</string>
     <string name="comment_unapproved_talkback">Reactie niet goedgekeurd</string>
     <string name="comment_approved_talkback">Reactie goedgekeurd</string>
     <string name="notif_detail_screen_title">Melding detail %s</string>
@@ -2434,7 +2463,7 @@ Language: nl
     <string name="connected">Verbonden</string>
     <string name="twitter">Twitter</string>
     <string name="likes">Vind-ik-leuks</string>
-    <string name="sharing_comment_likes_description">Toestaan dat alle reacties door jezelf en je lezers geliket kunnen worden</string>
+    <string name="sharing_comment_likes_description">Toestaan dat alle reacties door jezelf en je lezers leuk gevonden kunnen worden</string>
     <string name="buttons">Knoppen</string>
     <string name="sharing_edit_more_buttons">Knoppen \'Meer\' bewerken</string>
     <string name="sharing_more_description">Een knop \'Meer\' bevat een vervolgkeuzemenu waarin knoppen voor delen worden weergegeven</string>
@@ -2444,9 +2473,9 @@ Language: nl
     <string name="button_style">Knopstijl</string>
     <string name="label">Label</string>
     <string name="sharing_buttons">Deel-knoppen</string>
-    <string name="site_settings_like">Like knop tonen</string>
+    <string name="site_settings_like">Vind-ik-leuk knop tonen</string>
     <string name="site_settings_reblog">Rebloggen-knop tonen</string>
-    <string name="site_settings_reblog_and_like_header">Rebloggen &amp; liken</string>
+    <string name="site_settings_reblog_and_like_header">Rebloggen &amp; leuk vinden</string>
     <string name="official_buttons_display">Officiële knoppen</string>
     <string name="text_only_display">Alleen tekst</string>
     <string name="icon_only_display">Alleen icoon</string>
@@ -2550,21 +2579,21 @@ Language: nl
     <string name="reader_err_get_post_not_authorized_signin_fallback">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com of gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
     <string name="reader_err_get_post_not_authorized_signin">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com.</string>
     <string name="reader_err_get_post_not_authorized_fallback">Je hebt geen toestemming om dit bericht te lezen. Gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
-    <string name="reader_snackbar_err_cannot_like_post_logged_out">Je kunt niet liken terwijl je bent uitgelogd bij WordPress.com</string>
-    <string name="reader_toast_err_already_liked">Je hebt die reactie al geliket</string>
+    <string name="reader_snackbar_err_cannot_like_post_logged_out">Je kunt niet leuk vinden terwijl je bent uitgelogd bij WordPress.com</string>
+    <string name="reader_toast_err_already_liked">Je hebt die reactie al leuk gevonden</string>
     <string name="reader_toast_err_comment_not_found">Reactie niet gevonden.</string>
-    <string name="reader_toast_err_cannot_like_post">Kan dit bericht niet liken</string>
+    <string name="reader_toast_err_cannot_like_post">Kan dit bericht niet leuk vinden</string>
     <string name="error_notif_q_action_reply">Kan niet reageren op reactie. Probeer het later opnieuw.</string>
     <string name="error_notif_q_action_approve">Kan reactie niet goedkeuren. Probeer het later opnieuw.</string>
-    <string name="error_notif_q_action_like">Kan reactie niet liken. Probeer het later opnieuw.</string>
+    <string name="error_notif_q_action_like">Kan reactie niet leuk vinden. Probeer het later opnieuw.</string>
     <string name="notifications_label_new_notifications_subtitle">Tik om ze te tonen</string>
     <string name="notifications_label_new_notifications">Nieuwe meldingen</string>
     <string name="comment_q_action_replying">Bezig met reageren…</string>
     <string name="comment_q_action_approving">Bezig met goedkeuren…</string>
-    <string name="comment_q_action_liking">Bezig met liken…</string>
+    <string name="comment_q_action_liking">Bezig met leuk vinden…</string>
     <string name="comment_q_action_processing">Bezig met verwerken…</string>
     <string name="comment_q_action_done_generic">Actie voltooid.</string>
-    <string name="comment_liked">Reactie geliket</string>
+    <string name="comment_liked">Reactie leuk gevonden</string>
     <string name="signout">Uitloggen</string>
     <string name="sign_in_wpcom">Inloggen op WordPress.com</string>
     <string name="reader_label_global_related_posts">Meer op WordPress.com</string>
@@ -2896,8 +2925,8 @@ Language: nl
     <string name="reader_discover_attribution_author">Oorspronkelijk geplaatst door %s</string>
     <string name="reader_discover_attribution_author_and_blog">Oorspronkelijk geplaatst door %1$s op %2$s</string>
     <string name="reader_short_like_count_multi">%s vind-ik-leuks</string>
-    <string name="reader_short_like_count_one">1 like</string>
-    <string name="reader_short_like_count_none">Like</string>
+    <string name="reader_short_like_count_one">1 vind-ik-leuk</string>
+    <string name="reader_short_like_count_none">Vind-ik-leuk</string>
     <string name="reader_label_follow_count">%,d volgers</string>
     <string name="reader_menu_tags">Bewerk onderwerpen en sites</string>
     <string name="reader_title_post_detail">Reader-bericht</string>
@@ -2998,7 +3027,7 @@ Language: nl
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_empty_comments">Nog geen reacties</string>
     <string name="reader_empty_posts_in_tag">Geen berichten met dit onderwerp</string>
-    <string name="reader_label_like">Like</string>
+    <string name="reader_label_like">Vind-ik-leuk</string>
     <string name="reader_label_view_original">Bekijk oorspronkelijk artikel</string>
     <string name="reader_label_comments_closed">Reacties zijn gesloten</string>
     <string name="reader_title_photo_viewer">%1$d van %2$d</string>

@@ -10,6 +10,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsDetailFragmentBinding
+import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 
@@ -28,11 +30,12 @@ class InsightsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
+        val listType = nonNullActivity.intent.extras?.get(StatsListFragment.LIST_TYPE) as StatsSection
         with(StatsDetailFragmentBinding.bind(view)) {
             with(nonNullActivity as AppCompatActivity) {
                 setSupportActionBar(toolbar)
                 supportActionBar?.let {
-                    it.title = getString(R.string.stats_insights_views_and_visitors)
+                    it.title = getString(listType.titleRes)
                     it.setHomeButtonEnabled(true)
                     it.setDisplayHomeAsUpEnabled(true)
                 }

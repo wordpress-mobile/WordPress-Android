@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-05 20:28:32+0000
+Translation-Revision-Date: 2022-05-27 14:41:44+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="pages_copy_link">Copiar link</string>
+    <string name="quick_start_completed_tour_title">Parabéns! Você conhece o caminho&lt;br/&gt;</string>
+    <string name="quick_start_sites_type_get_to_know_app">Conheça o aplicativo</string>
+    <string name="quick_start_list_upload_media_subtitle">Carregue para o site mídias diretamente de seu dispositivo</string>
+    <string name="quick_start_list_upload_media_title">Enviar fotos ou vídeos</string>
+    <string name="quick_start_list_check_notification_subtitle">Receba atualizações em tempo real do seu bolso</string>
+    <string name="quick_start_dialog_upload_media_message">Selecione %1$s mídia %2$s para ver sua biblioteca atual.</string>
+    <string name="quick_start_dialog_check_notifications_message">Receba atualizações em tempo real do seu bolso.</string>
+    <string name="quick_start_dialog_check_notifications_title">Confira suas notificações</string>
+    <string name="quick_start_dialog_check_notifications_message_short">Selecione a aba %1$s notificações %2$s para obter atualizações em qualquer lugar.</string>
+    <string name="quick_start_dialog_upload_media_message_short_plus">Selecione %1$s mais %2$s para enviar mídia. Você pode adicioná-la aos seus posts/páginas de qualquer dispositivo.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover">Use &lt;b&gt; descobrir &lt;/b&gt; para encontrar sites e tags.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; descobrir &lt;/b&gt; para encontrar sites e tags. Tente selecionar %1$s configurações %2$s para adicionar tópicos que você gosta.</string>
+    <string name="photo_picker_video_thumbnail_content_description">Miniatura do vídeo</string>
+    <string name="stats_details_top_commentators">Principais comentaristas</string>
+    <string name="stats_insights_total_stats_negative">%1$s menor do que na semana anterior</string>
+    <string name="stats_insights_total_stats_positive">%1$s maior do que na semana anterior</string>
+    <string name="stats_published_years_ago">Publicado há %1$d anos</string>
+    <string name="stats_published_a_year_ago">Publicado há um ano</string>
+    <string name="stats_published_months_ago">Publicado há %1$d meses</string>
+    <string name="stats_published_a_month_ago">Publicado há um mês</string>
+    <string name="stats_published_days_ago">Publicado há %1$d dias</string>
+    <string name="stats_published_a_day_ago">Publicado há um dia</string>
+    <string name="stats_published_hours_ago">Publicado há %1$d horas</string>
+    <string name="stats_published_an_hour_ago">Publicado há uma hora</string>
+    <string name="stats_published_minutes_ago">Publicado há %1$d minutos</string>
+    <string name="stats_published_a_minute_ago">Publicado há um minuto</string>
+    <string name="stats_published_seconds_ago">Publicado há segundos</string>
+    <string name="stats_view_total_followers">Total de seguidores</string>
+    <string name="stats_view_total_comments">Total de comentários</string>
+    <string name="stats_view_total_likes">Total de curtidas</string>
     <string name="blogging_prompts_notification_dismiss">Dispensar</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Responder</string>
     <string name="blogging_prompts_answer_prompt_notification_title">Sugestão diária</string>
@@ -18,10 +49,6 @@ Language: pt_BR
     <string name="photo_picker_media_thumbnail_content_description">Miniatura de mídia</string>
     <string name="stats_insights_popular_title">🔥 Horário mais popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Seus visitantes desta semana são %1$s menos do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">O número de visitantes desta semana é %1$s maior do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Suas visualizações desta semana são %1$s menores do que na semana anterior.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Suas visualizações desta semana são %1$s maiores do que na semana anterior.</string>
     <string name="stats_timeframe_previous_week">Semana anterior</string>
     <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar painel</string>
@@ -1639,7 +1666,6 @@ Language: pt_BR
     <string name="quick_start_sites_type_grow">Aumente seu número de visitantes</string>
     <string name="quick_start_sites_type_customize">Personalize seu site</string>
     <string name="quick_start_sites">Próximos passos</string>
-    <string name="quick_start_complete_tasks_header">Concluídas (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Escolher um ícone do site</string>
     <string name="quick_start_dialog_upload_icon_message">Seus visitantes verão o ícone no navegador. Adicione um ícone personalizado para uma exibição profissional.</string>
     <string name="quick_start_dialog_check_stats_message_short">Selecione %1$s estatísticas %2$s para ver o desempenho do seu site.</string>
@@ -1652,11 +1678,7 @@ Language: pt_BR
     <string name="quick_start_dialog_remove_next_steps_message">Remover os próximos passos esconderá todas dicas em seu site. Essa ação não pode ser desfeita.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remover os próximos passos</string>
     <string name="quick_start_remove_next_steps_menu_title">Remover este</string>
-    <string name="quick_start_complete_view_subtitle">Parabéns por completar sua lista. Ótimo trabalho!</string>
-    <string name="quick_start_complete_view_title">Todas as tarefas concluídas!</string>
     <string name="quick_start_task_skip_menu_title">Pular tarefa</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">recolher</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandir</string>
     <string name="notification_channel_reminder_title">Lembrete</string>
     <string name="stats_select_next_period_description">Selecionar próximo período</string>
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
@@ -1729,7 +1751,6 @@ Language: pt_BR
     <string name="stats_insights_create_post">Criar post</string>
     <string name="stats_insights_latest_post_message">Há %1$s desde que %2$s foi publicado. Aqui está o desempenho do post até o momento:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Há %1$s desde que %2$s foi publicado. Aumente as visualizações do post compartilhando-o:</string>
-    <string name="stats_insights_latest_post_empty">Você não publicou nenhum post ainda. Assim que você começar a publicar, um resumo do post mais recente aparecerá aqui:</string>
     <string name="stats_insights_tags_and_categories">Tags e categorias</string>
     <string name="stats_insights_all_time_stats">Estatísticas até o momento</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
@@ -1817,6 +1838,7 @@ Language: pt_BR
     <string name="quick_start_focus_point_description">toque aqui</string>
     <string name="quick_start_list_create_site_title">Crie seu site</string>
     <string name="quick_start_list_create_site_subtitle">Coloque seu site no ar.</string>
+    <string name="quick_start_completed_tour_subtitle">Não é bom tirar alguns itens de sua lista de tarefas?</string>
     <string name="quick_start_dialog_view_site_title">Veja seu site</string>
     <string name="quick_start_dialog_view_site_message">Visualize seu site e veja como será ele apresentado aos seus visitantes.</string>
     <string name="quick_start_dialog_share_site_title">Compartilhar seu site</string>

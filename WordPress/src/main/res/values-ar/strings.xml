@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-19 15:54:07+0000
+Translation-Revision-Date: 2022-06-02 13:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0-alpha.1
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">يمكنك كذلك إعادة ترتيب المكوِّنات عن طريق النقر على مكوِّن، ثم النقر على الأسهم المتجهة إلى الأعلى والأسفل التي تظهر أسفل يسار المكوِّن لنقله إلى الأعلى أو الأسفل.</string>
+    <string name="gutenberg_native_image_file_not_found">لم يتم العثور على ملف الصورة.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">يجعل السحب والإفلات إعادة ترتيب المكوِّنات في المحرِّر أمرًا سهلاً للغاية. اضغط مع الاستمرار على أحد المكوِّنات، ثم اسحبه إلى موقعه الجديد وأفلته.</string>
+    <string name="gutenberg_native_drag_drop">السحب والإفلات</string>
+    <string name="gutenberg_native_arrow_buttons">أزرار السهم</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. المحدَّد في الوقت الحالي: ⁦%2$s⁩</string>
+    <string name="quick_start_sites_type_all_tasks_completed">جميع المهام مكتملة</string>
+    <string name="quick_start_list_task_complete">اكتملت المهمة</string>
+    <string name="me_btn_scan_login_code">مسح رمز تسجيل الدخول ضوئيًا</string>
+    <string name="stats_insights_followers_guide_card">💡يمكنك محاولة ترك تعليق بوصفه إشارة لتشجيع مشاركة المدونة في المقابل للحصول على مزيد من المتابعين.</string>
+    <string name="stats_insights_comments_guide_card">💡اطلع على أفضل المساهمين عن طريق النقر على عرض المزيد.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ لقد تلقت آخر تدويناتك ⁦%1$s⁩ ⁦%2$s⁩ من الإعجابات.</string>
+    <string name="stats_most_popular_percent_views_empty">لا يوجد نشاط كافٍ. تحقَّق من هذا مرة أخرى لاحقًا عندما يكون لدى موقعك مزيد من الزائرين!</string>
+    <string name="stats_insights_latest_post_empty">لم تنشر أية مقالات حتى الآن. تحقَّق من هذا مرة أخرى لاحقًا بمجرد أن تنشر تدوينتك الأولى!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">إذا كنت ترغب في محاولة الحصول على مزيد من المشاهدات وحركة المرور، فراجع أفضل نصائحنا ⁦%1$s⁩</string>
+    <string name="stats_total_followers_content_description">%1s، و%2s من إجمالي المتابعين</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
+    <string name="pages_copy_link">نسخ الرابط</string>
     <string name="quick_start_completed_tour_title">تهانينا! أنت تعلم كيفية التعامل مع هذا الأمر&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">التعرُّف على التطبيق</string>
     <string name="quick_start_list_upload_media_subtitle">إحضار الوسائط مباشرةً من جهازك أو الكاميرا الخاصة بك إلى موقعك</string>
     <string name="quick_start_list_upload_media_title">رفع الصور أو مقاطع الفيديو</string>
+    <string name="quick_start_dialog_check_notifications_title">التحقُّق من تنبيهاتك</string>
     <string name="quick_start_list_check_notification_subtitle">الحصول على تحديثات في الوقت الفعلي من جيبك</string>
     <string name="quick_start_dialog_upload_media_message">حدِّد ⁦%1$s⁩الوسائط⁦%2$s⁩ للاطلاع على مكتبتك الحالية.</string>
     <string name="quick_start_dialog_check_notifications_message">احصل على تحديثات في الوقت الفعلي من جيبك.</string>
@@ -21,6 +40,8 @@ Language: ar
     <string name="stats_details_top_commentators">أفضل المعلقين</string>
     <string name="stats_insights_total_stats_negative">⁦%1$s⁩ أقل من الأسبوع الماضي</string>
     <string name="stats_insights_total_stats_positive">⁦%1$s⁩ أعلى من الأسبوع الماضي</string>
+    <string name="stats_view_total_comments">إجمالي التعليقات</string>
+    <string name="stats_view_total_likes">إجمالي الإعجابات</string>
     <string name="stats_published_years_ago">تم النشر منذ ⁦%1$d⁩ من السنوات</string>
     <string name="stats_published_a_year_ago">تم النشر منذ سنة</string>
     <string name="stats_published_months_ago">تم النشر منذ ⁦%1$d⁩ من الأشهر</string>
@@ -44,14 +65,15 @@ Language: ar
     <string name="photo_picker_video_thumbnail_selected">تم تحديد الفيديو</string>
     <string name="photo_picker_media_thumbnail_content_description">الصورة المصغَّرة للوسائط</string>
     <string name="stats_insights_popular_title">🔥 الوقت الأكثر شيوعًا</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">يقل زائروك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">يزيد زائروك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">تقل مشاهداتك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">تزيد مشاهداتك هذا الأسبوع بنسبة قدرها ⁦%1$s⁩ مقارنةً بالأسبوع الماضي.</string>
+    <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">يقل زائروك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">يزيد زائروك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">تقل مشاهداتك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
     <string name="stats_timeframe_previous_week">الأسبوع الماضي</string>
     <string name="stats_timeframe_this_week">هذا الأسبوع</string>
     <string name="scan_vault_press_active_on_site_button_text">زيارة لوحة التحكم</string>
     <string name="scan_vault_press_active_on_site_subtitle">أنت محمي بالفعل بواسطة VaultPress. يمكنك العثور على رابط إلى لوحة تحكم VaultPress الخاصة بك أدناه.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">تزيد مشاهداتك هذا الأسبوع عن الأسبوع الماضي بنسبة قدرها ⁦%1$s⁩.</string>
     <string name="scan_vault_press_active_on_site_title">يحتوي موقعك على VaultPress</string>
     <string name="locale_picker_current_language">اللغة الحالية:</string>
     <string name="hpp_choose_and_create_site">إنشاء موقع</string>
@@ -84,6 +106,7 @@ Language: ar
     <string name="stop_upload_dialog_button_yes">نعم</string>
     <string name="dialog_button_cancel">إلغاء</string>
     <string name="dialog_button_ok">موافق</string>
+    <string name="dialog_edit_hint">http(s)://</string>
     <string name="dialog_title">إدراج رابط</string>
     <string name="editor_title_beta">بيتا</string>
     <string name="toast_content_info_editor_not_ready">لا يزال يقوم المحرِّر بالتحميل</string>
@@ -166,6 +189,7 @@ Language: ar
     <string name="login_error_xml_rpc_cannot_read_site_auth_required">تبدو استدعاءات XML-RPC محظورة على هذا الموقع (رمز الخطأ 401). إذا فشلت محاولة تسجيل الدخول، فانقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
     <string name="login_error_xml_rpc_cannot_read_site">يتعذر قراءة موقع WordPress على معرف URL ذلك. انقر على أيقونة المساعدة لعرض الأسئلة المتداولة.</string>
     <string name="login_error_xml_rpc_services_disabled">خدمات XML-RPC غير مفعلة في هذا الموقع.</string>
+    <string name="my_site_menu_tab_title">قائمة</string>
     <string name="new_site_creation_empty_domain_list_message_invalid_query">يتضمن بحثك أحرف غير مدعومة في نطاقات ووردبريس.كوم. يُسمح بالأحرف الآتية: من A إلى Z، ومن a إلى z، ومن 0 إلى 9.</string>
     <string name="my_site_todays_stat_card_title">إحصاءات اليوم</string>
     <string name="my_site_error_within_card_subtitle">تحقَّق من اتصالك بالإنترنت وقم بتحديث الصفحة.</string>
@@ -467,6 +491,7 @@ Language: ar
     <string name="gutenberg_native_three">ثلاثة</string>
     <string name="gutenberg_native_s_social_icon">أيقونة %s الاجتماعية</string>
     <string name="gutenberg_native_mention">الإشارة</string>
+    <string name="gutenberg_native_new">جديد</string>
     <string name="gutenberg_native_preview_page">معاينة الصفحة</string>
     <string name="gutenberg_native_preview_post">معاينة المقالة</string>
     <string name="gutenberg_native_retry">أعد المحاولة</string>
@@ -480,6 +505,7 @@ Language: ar
     <string name="gutenberg_native_custom_url">رابط (URL) مخصّص</string>
     <string name="gutenberg_native_column_d">عمود %d</string>
     <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
+    <string name="gutenberg_native_add_blocks">إضافة مكوِّنات</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
     <string name="gutenberg_native_what_is_alt_text">ماهو النص البديل؟</string>
     <string name="gutenberg_native_transform_s_to">تحويل %s إلى</string>
@@ -1661,7 +1687,6 @@ Language: ar
     <string name="exit">خروج</string>
     <string name="quick_start_sites_type_customize">تخصيص موقعك</string>
     <string name="quick_start_sites">الخطوات التالية</string>
-    <string name="quick_start_complete_tasks_header">مكتمل (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
     <string name="quick_start_dialog_upload_icon_title">اختيار أيقونة موقع فريدة</string>
@@ -1674,13 +1699,9 @@ Language: ar
     <string name="quick_start_remove_next_steps_menu_title">إزالة هذا</string>
     <string name="quick_start_dialog_check_stats_title">التحقّق من إحصاءات موقعك</string>
     <string name="quick_start_dialog_remove_next_steps_message">ستؤدي إزالة الخطوات التالية إلى إخفاء جميع الجولات على هذا الموقع. لا يمكن التراجع عن هذا الإجراء.</string>
-    <string name="quick_start_complete_view_subtitle">تهانينا لك على إكمال قائمتك. عمل متقن.</string>
     <string name="quick_start_dialog_check_stats_message">واكب التحديثات المتعلقة بأداء موقعك.</string>
-    <string name="quick_start_complete_view_title">جميع المهام مكتملة!</string>
     <string name="quick_start_task_skip_menu_title">تخطي المهمة</string>
     <string name="notification_channel_reminder_title">تذكير</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">طي</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">توسيع</string>
     <string name="stats_select_next_period_description">تحديد الفترة التالية</string>
     <string name="stats_select_previous_period_description">تحديد الفترة السابقة</string>
     <string name="stats_most_popular_percent_views">%1$d%% من المشاهدات</string>
@@ -1753,7 +1774,6 @@ Language: ar
     <string name="gif_picker_initial_empty_text">ابحث للعثور على صور بتنسيق GIF لإضافتها إلى مكتبة الوسائط الخاصة بك!</string>
     <string name="stats_insights_tags_and_categories">العلامات والتصنيفات</string>
     <string name="stats_insights_latest_post_with_no_engagement">لقد مرّ %1$s منذ نشر%2$s. ابدأ العمل وقم بزيادة مشاهدات مقالتك عن طريق مشاركة مقالتك:</string>
-    <string name="stats_insights_latest_post_empty">لم تنشر أي مقالات بعد. بعد أن تبدأ في النشر، سيظهر آخر ملخص للمقالة هنا:</string>
     <string name="stats_insights_all_time_stats">كل الوقت</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">المتابعون</string>
@@ -2388,6 +2408,7 @@ Language: ar
     <string name="post_title">العنوان</string>
     <string name="menu_redo">إلغاء التراجع</string>
     <string name="menu_undo">تراجع</string>
+    <string name="media_insert_unimplemented">نعتذر! لم يتم تطبيق الميزة حتى الآن :(</string>
     <string name="error_media_small">الوسائط صغيرة جدًا لدرجة أنه لا يمكن عرضها</string>
     <string name="editor_dropped_unsupported_files">تحذير: ليست جميع العناصر المسقطة مدعومة!</string>
     <string name="editor_dropped_title_images_not_allowed">لا يُسمح بإسقاط صور في العنوان</string>
