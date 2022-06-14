@@ -44,6 +44,7 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.LAST_ST
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.LOCATION_KEY
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.TOKEN_KEY
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 const val DATA = "data"
 const val LOCATION = "location"
@@ -62,6 +63,7 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var savedInstanceState: Bundle
     @Mock lateinit var validator: QRCodeAuthValidator
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private val uiStateMapper = QRCodeAuthUiStateMapper()
 
     private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)
@@ -72,7 +74,8 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
                 store,
                 uiStateMapper,
                 networkUtilsWrapper,
-                validator
+                validator,
+                analyticsTrackerWrapper
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)

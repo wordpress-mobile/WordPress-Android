@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.API_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.AUTHORIZATION_REQUIRED
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.NO_INTERNET
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.SCANNING
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.VALIDATED
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -49,7 +51,8 @@ class QRCodeAuthViewModel @Inject constructor(
     private val authStore: QRCodeAuthStore,
     private val uiStateMapper: QRCodeAuthUiStateMapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val validator: QRCodeAuthValidator
+    private val validator: QRCodeAuthValidator,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private val _actionEvents = Channel<QRCodeAuthActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -68,6 +71,7 @@ class QRCodeAuthViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
+        // track shown here
         extractSavedInstanceStateIfNeeded(savedInstanceState)
         startOrRestoreUiState()
     }
@@ -90,7 +94,7 @@ class QRCodeAuthViewModel @Inject constructor(
                             location,
                             browser,
                             this::onAuthenticateClicked,
-                            this::onCancelClicked
+                            this::onAuthenticateCancelClicked
                     )
             )
             AUTHENTICATING -> postUiState(uiStateMapper.mapToAuthenticating(location = location, browser = browser))
@@ -108,11 +112,13 @@ class QRCodeAuthViewModel @Inject constructor(
 
     //  https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=asdfadsfa&data=asdfasdf
     fun onScanSuccess(scannedValue: String?) {
+        track(Stat.QRLOGIN_SCANNER_SCANNED_CODE)
         handleScan(scannedValue)
     }
 
     fun onScanFailure() {
         // Note: This is a result of the tap on "X" within the scanner view
+        track(Stat.QRLOGIN_SCANNER_DISMISSED)
         postActionEvent(FinishActivity)
     }
 
@@ -121,6 +127,7 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun onCancelClicked() {
+        track(Stat.QRLOGIN_VERIFY_CANCELLED)
         postActionEvent(FinishActivity)
     }
 
@@ -129,16 +136,23 @@ class QRCodeAuthViewModel @Inject constructor(
     }
 
     private fun onDismissClicked() {
+        track(Stat.QRLOGIN_VERIFY_DISMISS)
         postActionEvent(FinishActivity)
     }
 
     private fun onAuthenticateClicked() {
+        track(Stat.QRLOGIN_VERIFY_APPROVED)
         postUiState(uiStateMapper.mapToAuthenticating(_uiState.value as Validated))
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
             postUiState(uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked))
         } else {
             authenticate(data = data.toString(), token = token.toString())
         }
+    }
+
+    private fun onAuthenticateCancelClicked() {
+        track(Stat.QRLOGIN_VERIFY_CANCELLED)
+        postActionEvent(FinishActivity)
     }
 
     private fun handleScan(scannedValue: String?) {
@@ -148,6 +162,7 @@ class QRCodeAuthViewModel @Inject constructor(
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
             postUiState(uiStateMapper.mapToInvalidData(this::onScanAgainClicked, this::onCancelClicked))
         } else {
+            track(Stat.QRLOGIN_VERIFY_DISPLAYED)
             postUiState(uiStateMapper.mapToLoading())
             validateScan(data = data.toString(), token = token.toString())
         }
@@ -166,6 +181,7 @@ class QRCodeAuthViewModel @Inject constructor(
             } else {
                 browser = result.model?.browser
                 location = result.model?.location
+                track(Stat.QRLOGIN_VERIFY_TOKEN_VALIDATED)
                 postUiState(mapScanSuccessToValidatedState(result))
             }
         }
@@ -176,7 +192,7 @@ class QRCodeAuthViewModel @Inject constructor(
                     browser = result.model?.browser,
                     location = result.model?.location,
                     onAuthenticateClick = this::onAuthenticateClicked,
-                    onCancelClick = this::onCancelClicked
+                    onCancelClick = this::onAuthenticateCancelClicked
             )
 
     private fun mapScanErrorToErrorState(error: QRCodeAuthError) = when (error.type) {
@@ -220,6 +236,7 @@ class QRCodeAuthViewModel @Inject constructor(
             } else {
                 clearProperties()
                 if (result.model?.authenticated == true) {
+                    track(Stat.QRLOGIN_AUTHENTICATED)
                     postUiState(mapAuthenticateSuccessToDoneState())
                 } else {
                     postUiState(uiStateMapper.mapToAuthFailed(::onScanAgainClicked, ::onCancelClicked))
@@ -270,6 +287,10 @@ class QRCodeAuthViewModel @Inject constructor(
         outState.putString(LAST_STATE_KEY, uiState.value.type?.label)
     }
 
+    fun track(stat: Stat) {
+        analyticsTrackerWrapper.track(stat, mapOf(ORIGIN to ORIGIN_MENU))
+    }
+
     companion object {
         const val TAG_DISMISS_DIALOG = "TAG_DISMISS_DIALOG"
         const val TOKEN_KEY = "token"
@@ -277,6 +298,8 @@ class QRCodeAuthViewModel @Inject constructor(
         const val BROWSER_KEY = "browser"
         const val LOCATION_KEY = "location"
         const val LAST_STATE_KEY = "last_state"
+        const val ORIGIN = "origin"
+        const val ORIGIN_MENU = "menu"
         const val EXPIRED_MESSAGE = "qr code data expired"
     }
 }
