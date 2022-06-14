@@ -123,7 +123,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         mWebAddressPreference.summary = accountSettingsUiState.webAddressSettingsUiState.webAddress
         updatePrimarySitePreference(accountSettingsUiState.primarySiteSettingsUiState)
         updateChangePasswordPreference(accountSettingsUiState.changePasswordSettingsUiState)
-        accountSettingsUiState.error?.let {
+        accountSettingsUiState.toastMessage?.let {
             showToastMessage(it)
         }
     }
