@@ -7,7 +7,7 @@
                 "matches": "(.*)"
             },
             "fields": {
-                "equalTo": "ID,title,URL,discussion,like_count,date"
+                "equalTo": "ID,title,URL,discussion,like_count,date,featured_image"
             },
             "number": {
                 "matches": "1"

@@ -62,6 +62,32 @@
             app:layout_constraintTop_toBottomOf="@+id/card_title"
             tools:text="Cast the movie of your life." />
 
+        <LinearLayout
+            android:id="@+id/attribution_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/margin_medium"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/prompt_content"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_dayone_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:text="@string/my_site_blogging_prompt_card_attribution_dayone"
+                android:textAppearance="?attr/textAppearanceCaption" />
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/answered_users_recycler"
             android:layout_width="wrap_content"
@@ -71,7 +97,7 @@
             app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/prompt_content"
+            app:layout_constraintTop_toBottomOf="@+id/attribution_container"
             tools:itemCount="3"
             tools:listitem="@layout/avatar_item" />
 

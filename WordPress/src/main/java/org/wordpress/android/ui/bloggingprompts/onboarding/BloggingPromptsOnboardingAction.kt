@@ -10,4 +10,6 @@ sealed class BloggingPromptsOnboardingAction {
     data class OpenRemindersIntro(val selectedSiteLocalId: Int) : BloggingPromptsOnboardingAction()
 
     object DismissDialog : BloggingPromptsOnboardingAction()
+
+    object DoNothing : BloggingPromptsOnboardingAction()
 }

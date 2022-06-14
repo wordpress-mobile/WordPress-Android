@@ -14,6 +14,7 @@ import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DashboardCards.DashboardCard.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.cards.dashboard.CardViewHolder
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution.DAY_ONE
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.RtlUtils
@@ -25,7 +26,8 @@ class BloggingPromptCardViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val htmlCompatWrapper: HtmlCompatWrapper
+    private val htmlCompatWrapper: HtmlCompatWrapper,
+    private val learnMoreClicked: () -> Unit
 ) : CardViewHolder<MySiteBloggingPrompCardBinding>(
         parent.viewBinding(MySiteBloggingPrompCardBinding::inflate)
 ) {
@@ -36,15 +38,14 @@ class BloggingPromptCardViewHolder(
         uiHelpers.setTextOrHide(promptContent, cardPrompt)
         uiHelpers.updateVisibility(answerButton, !card.isAnswered)
 
+        uiHelpers.updateVisibility(attributionContainer, card.attribution == DAY_ONE)
+
         bloggingPromptCardMenu.setOnClickListener {
             bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuClicked()
-            showCardMenu()
+            showCardMenu(card)
         }
 
         answerButton.setOnClickListener {
-            card.onAnswerClick.invoke(card.promptId)
-        }
-        answeredButton.setOnClickListener {
             card.onAnswerClick.invoke(card.promptId)
         }
         shareButton.setOnClickListener {
@@ -87,13 +88,20 @@ class BloggingPromptCardViewHolder(
         }
     }
 
-    private fun MySiteBloggingPrompCardBinding.showCardMenu() {
+    private fun MySiteBloggingPrompCardBinding.showCardMenu(card: BloggingPromptCardWithData) {
         val quickStartPopupMenu = PopupMenu(bloggingPromptCardMenu.context, bloggingPromptCardMenu)
         quickStartPopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.view_more -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuViewMorePromptsClicked()
-                R.id.skip -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                R.id.skip -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuSkipThisPromptClicked()
+                    card.onSkipClick.invoke()
+                }
                 R.id.remove -> bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuRemoveFromDashboardClicked()
+                R.id.learn_more -> {
+                    bloggingPromptsCardAnalyticsTracker.trackMySiteCardMenuLearnMoreClicked()
+                    learnMoreClicked()
+                }
             }
             return@setOnMenuItemClickListener true
         }

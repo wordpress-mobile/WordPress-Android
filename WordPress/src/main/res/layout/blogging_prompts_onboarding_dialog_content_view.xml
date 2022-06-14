@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingEnd="@dimen/margin_extra_medium_large"
+    android:paddingBottom="@dimen/margin_extra_medium_large"
     android:paddingStart="@dimen/margin_extra_medium_large">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,7 +75,8 @@
         android:background="@drawable/bg_rectangle_black_60_radius_2dp"
         android:gravity="center"
         android:padding="@dimen/margin_large"
-        android:textAppearance="?attr/caption"
+        android:textColor="?attr/colorOnSurface"
+        android:textAppearance="?attr/textAppearanceCaption"
         android:textSize="@dimen/text_sz_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

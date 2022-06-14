@@ -1,9 +1,0 @@
-19.9:
-– In-App-Käufe von Website-Domains
-– Drag-and-drop für Blöcke im Editor
-– Besserer Farbkontrast im Cover-Block
-– Block-Formatierungsoptionen von Buttons bleiben sichtbar
-– Separate Schnellstart-Aufgaben für neue vs. bestehende Websites
-– „Link kopieren“ für veröffentlichte Seiten
-– „Link zu“-/Bildgröße-Einstellungen in Galerie-Blöcken
-– Kein Tour-Banner im nicht unterstützen Block-Editor

@@ -1,0 +1,4 @@
+20.0:
+- Kartu Mulai Cepat dan tur Langkah Berikutnya serasi dengan desain baru untuk situs yang sudah ada.
+- Sisipkan Gambar dari situs lain menggunakan pilihan “Sisipkan dari URL” di aplikasi.
+- Dapatkan lebih banyak konteks melalui pembaca layar Anda berkat peningkatan aksesibilitas editor blok.

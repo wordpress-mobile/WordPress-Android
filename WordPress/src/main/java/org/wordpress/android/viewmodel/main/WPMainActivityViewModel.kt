@@ -1,4 +1,5 @@
 @file:Suppress("MaximumLineLength")
+
 package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.tabs.MySiteDefaultTabExperiment
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -118,6 +120,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val _createPostWithBloggingPrompt = SingleLiveEvent<Int>()
     val createPostWithBloggingPrompt: LiveData<Int> = _createPostWithBloggingPrompt
 
+    private val _openBloggingPromptsOnboarding = SingleLiveEvent<Unit>()
+    val openBloggingPromptsOnboarding: LiveData<Unit> = _openBloggingPromptsOnboarding
+
     val onFocusPointVisibilityChange = quickStartRepository.activeTask
             .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
@@ -127,7 +132,9 @@ class WPMainActivityViewModel @Inject constructor(
         get() = siteStore.sitesCount > ONE_SITE
 
     val firstSite: SiteModel?
-        get() = if (siteStore.hasSite()) { siteStore.sites[0] } else null
+        get() = if (siteStore.hasSite()) {
+            siteStore.sites[0]
+        } else null
 
     val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
@@ -143,11 +150,16 @@ class WPMainActivityViewModel @Inject constructor(
         updateFeatureAnnouncements()
     }
 
+    @Suppress("LongMethod")
     private fun loadMainActions(site: SiteModel?) = launch {
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsFeatureConfig.isEnabled()) {
             val prompt = site?.let {
-                bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+                if (it.isUsingWpComRestApi) {
+                    bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
+                } else {
+                    null
+                }
             }
 
             prompt?.let {
@@ -157,7 +169,9 @@ class WPMainActivityViewModel @Inject constructor(
                                 promptTitle = UiStringText(it.text),
                                 isAnswered = prompt.isAnswered,
                                 promptId = prompt.id,
-                                onClickAction = ::onAnswerPromptActionClicked
+                                attribution = BloggingPromptAttribution.fromString(prompt.attribution),
+                                onClickAction = ::onAnswerPromptActionClicked,
+                                onHelpAction = ::onHelpPrompActionClicked
                         )
                 )
             }
@@ -218,9 +232,14 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onAnswerPromptActionClicked(promptId: Int) {
-        // TODO @klymyam add analytics
+        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED)
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
+    }
+
+    private fun onHelpPrompActionClicked() {
+        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED)
+        _openBloggingPromptsOnboarding.call()
     }
 
     private fun disableTooltip(site: SiteModel?) {
