@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-06-02 09:54:08+0000
+Translation-Revision-Date: 2022-06-10 14:27:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-alpha.1
 Language: zh_CN
@@ -66,7 +66,10 @@ Language: zh_CN
     <string name="photo_picker_media_thumbnail_content_description">媒体缩略图</string>
     <string name="stats_insights_popular_title">🔥 人气最高的时间</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">您本周的访客数量比上周低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">您本周的访客数量比上周高 %1$s。</string>
     <string name="stats_insights_views_and_visitors_views_negative">您本周的查看数量比上周低 %1$s。</string>
+    <string name="stats_insights_views_and_visitors_views_positive">您本周的预览数量比上周高 %1$s。</string>
     <string name="stats_timeframe_previous_week">上周</string>
     <string name="stats_timeframe_this_week">本周</string>
     <string name="scan_vault_press_active_on_site_button_text">访问仪表盘</string>

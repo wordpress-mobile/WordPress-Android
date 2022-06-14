@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 14:41:44+0000
+Translation-Revision-Date: 2022-06-10 14:52:22+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Você pode reorganizar os blocos tocando em um deles e, em seguida, nas setas para cima e para baixo que aparecem no canto inferior esquerdo do bloco para movê-lo na direção indicada.</string>
+    <string name="gutenberg_native_image_file_not_found">Arquivo de imagem não encontrado.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Arraste e solte um bloco para reorganizá-lo com facilidade. Mantenha pressionado e o arraste para outro lugar. Então solte.</string>
+    <string name="gutenberg_native_drag_drop">Arrastar e soltar</string>
+    <string name="gutenberg_native_arrow_buttons">Botões de seta</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Seleção atual: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Todas as tarefas concluídas</string>
+    <string name="quick_start_list_task_complete">Tarefa concluída</string>
+    <string name="me_btn_scan_login_code">Examinar código de acesso</string>
+    <string name="stats_insights_followers_guide_card">💡 Deixe um comentário para incentivar o engajamento no blog para ganhar mais seguidores.</string>
+    <string name="stats_insights_comments_guide_card">💡 Toque em VER MAIS para visualizar os principais colaboradores.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtidas.</string>
+    <string name="stats_most_popular_percent_views_empty">Atividade insuficiente. Confira mais tarde quando o seu site tiver mais visitantes!</string>
+    <string name="stats_insights_latest_post_empty">Você ainda não publicou nenhum post. Confira mais tarde quando você tiver feito sua primeira publicação.</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Se você quiser tentar obter mais visualizações e tráfego, confira nossas principais dicas %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s do total de seguidores</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar link</string>
     <string name="quick_start_completed_tour_title">Parabéns! Você conhece o caminho&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Conheça o aplicativo</string>
@@ -49,6 +66,10 @@ Language: pt_BR
     <string name="photo_picker_media_thumbnail_content_description">Miniatura de mídia</string>
     <string name="stats_insights_popular_title">🔥 Horário mais popular</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">O número de visitantes desta semana é %1$s menor do que na semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">O número de visitantes desta semana é %1$s maior do que na semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Suas visualizações desta semana são %1$s menores do que na semana anterior.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Suas visualizações desta semana são %1$s maiores do que na semana anterior.</string>
     <string name="stats_timeframe_previous_week">Semana anterior</string>
     <string name="stats_timeframe_this_week">Esta semana</string>
     <string name="scan_vault_press_active_on_site_button_text">Visitar painel</string>
@@ -470,6 +491,7 @@ Language: pt_BR
     <string name="gutenberg_native_three">Três</string>
     <string name="gutenberg_native_s_social_icon">Ícone do %s</string>
     <string name="gutenberg_native_mention">Menção</string>
+    <string name="gutenberg_native_new">NOVO</string>
     <string name="gutenberg_native_preview_post">Visualizar post</string>
     <string name="gutenberg_native_preview_page">Visualizar página</string>
     <string name="gutenberg_native_retry">Tentar novamente</string>

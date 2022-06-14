@@ -1,0 +1,4 @@
+20.0:
+– Die Schnellstart-Karte und die Touren für die nächsten Schritte passen zu den neuen Designs der bestehenden Websites.
+– Füge Bilder von anderen Websites über die App-Option „Von URL einfügen“ ein.
+– Erhalte mehr Kontext in deinem Screenreader dank Zugänglichkeitsverbesserungen für den Block-Editor.
