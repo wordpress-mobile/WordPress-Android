@@ -1,3 +1,6 @@
-- The Quick Start card and Next Steps tours match the new designs for existing sites.
-- Insert images from other sites using the “Insert from URL” option in the app.
-- Get more context through your screen reader with block editor accessibility improvements.
+* [*] Site creation: enhances the design selection screen with recommended designs [https://github.com/wordpress-mobile/WordPress-Android/pull/16468]
+* [*] DeepLinks: fix auto-verification of App Links in Android 12 [https://github.com/wordpress-mobile/WordPress-Android/pull/16696]
+* [*] Quick Start: Fix Quick Start focus points in RTL mode [https://github.com/wordpress-mobile/WordPress-Android/pull/16720]
+* [*] [internal] Block Editor: Bump react-native-gesture-handler to version 2.3.2. [https://github.com/wordpress-mobile/WordPress-Android/pull/16645]
+* [***] Jetpack App: Introducing blogging prompts. Build a writing habit and support creativity with a periodic prompt for inspiration. [https://github.com/wordpress-mobile/WordPress-Android/pull/16729]
+
