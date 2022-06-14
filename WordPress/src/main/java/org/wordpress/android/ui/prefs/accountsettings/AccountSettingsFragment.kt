@@ -139,6 +139,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         }
         if (userNameSettingUiState.showUserNameConfirmedSnackBar) {
             showUserNameSnackBar(userNameSettingUiState.newUserChangeConfirmedSnackBarMessageHolder)
+            viewModel.onUserConfirmedSnackBarShown()
         }
     }
 

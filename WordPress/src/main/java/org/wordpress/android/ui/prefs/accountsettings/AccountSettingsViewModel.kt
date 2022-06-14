@@ -219,6 +219,12 @@ class AccountSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onUserConfirmedSnackBarShown() {
+        _accountSettingsUiState.update {
+            it.copy(userNameSettingsUiState = it.userNameSettingsUiState.copy(showUserNameConfirmedSnackBar = false))
+        }
+    }
+
     data class UserNameSettingsUiState(
         val userName: String,
         val displayName: String,
