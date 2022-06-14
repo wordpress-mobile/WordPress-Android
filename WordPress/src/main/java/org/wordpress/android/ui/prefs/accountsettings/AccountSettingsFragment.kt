@@ -173,6 +173,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
 
     private fun showToastMessage(toastMessage: String) {
         ToastUtils.showToast(activity, toastMessage, LONG)
+        viewModel.onToastShown(toastMessage)
         AppLog.e(SETTINGS, toastMessage)
     }
 
