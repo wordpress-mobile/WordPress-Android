@@ -94,7 +94,7 @@ class QRCodeAuthViewModel @Inject constructor(
                             location,
                             browser,
                             this::onAuthenticateClicked,
-                            this::authenticateCancelClicked
+                            this::onAuthenticateCancelClicked
                     )
             )
             AUTHENTICATING -> postUiState(uiStateMapper.mapToAuthenticating(location = location, browser = browser))
@@ -150,7 +150,7 @@ class QRCodeAuthViewModel @Inject constructor(
         }
     }
 
-    private fun authenticateCancelClicked() {
+    private fun onAuthenticateCancelClicked() {
         track(Stat.QRLOGIN_VERIFY_CANCELLED)
         postActionEvent(FinishActivity)
     }
@@ -192,7 +192,7 @@ class QRCodeAuthViewModel @Inject constructor(
                     browser = result.model?.browser,
                     location = result.model?.location,
                     onAuthenticateClick = this::onAuthenticateClicked,
-                    onCancelClick = this::authenticateCancelClicked
+                    onCancelClick = this::onAuthenticateCancelClicked
             )
 
     private fun mapScanErrorToErrorState(error: QRCodeAuthError) = when (error.type) {
