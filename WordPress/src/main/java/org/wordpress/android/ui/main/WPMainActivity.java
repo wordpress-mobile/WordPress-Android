@@ -163,9 +163,12 @@ import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountS
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Main activity which hosts sites, reader, me and notifications pages
  */
+@AndroidEntryPoint
 public class WPMainActivity extends LocaleAwareActivity implements
         OnPageListener,
         BottomNavController,

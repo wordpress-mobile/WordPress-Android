@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.intro
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
@@ -13,6 +14,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+@HiltViewModel
 class StatsNewFeatureIntroViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val statsSiteProvider: StatsSiteProvider,

@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.stats.intro
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsRevampV2FeaturesIntroContentViewBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
@@ -13,19 +12,14 @@ import org.wordpress.android.ui.stats.intro.StatsNewFeaturesIntroAction.DismissD
 import org.wordpress.android.ui.stats.intro.StatsNewFeaturesIntroAction.OpenStats
 import org.wordpress.android.util.extensions.exhaustive
 
+@AndroidEntryPoint
 class StatsNewFeaturesIntroDialogFragment : FeatureIntroductionDialogFragment() {
-    private lateinit var viewModel: StatsNewFeatureIntroViewModel
+    private val viewModel: StatsNewFeatureIntroViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(StatsNewFeatureIntroViewModel::class.java)
         initializeViews()
         setupObservers()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     private fun initializeViews() {

@@ -64,7 +64,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
-import org.wordpress.android.ui.stats.intro.StatsNewFeatureIntroViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -618,9 +617,4 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AccountSettingsViewModel.class)
     abstract ViewModel accountSettingsViewModel(AccountSettingsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StatsNewFeatureIntroViewModel.class)
-    abstract ViewModel statsNewFeatureIntroViewModel(StatsNewFeatureIntroViewModel viewModel);
 }
