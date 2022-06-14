@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.qrcodeauth
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,7 +18,17 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.FinishActivity
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchDismissDialog
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthActionEvent.LaunchScanner
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthDialogModel.ShowDismissDialog
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Content.Validated
 import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiState.Loading
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTHENTICATING
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.AUTH_FAILED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.DONE
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.EXPIRED
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.INVALID_DATA
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.LOADING
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.NO_INTERNET
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.SCANNING
+import org.wordpress.android.ui.qrcodeauth.QRCodeAuthUiStateType.VALIDATED
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
@@ -35,13 +47,51 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private var data: String? = null
     private var token: String? = null
+    private var location: String? = null
+    private var browser: String? = null
+    private var lastState: QRCodeAuthUiStateType? = null
     private var isStarted = false
 
-    fun start() {
+    fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
 
-        updateUiStateAndLaunchScanner()
+        extractSavedInstanceStateIfNeeded(savedInstanceState)
+        startOrRestoreUiState()
+    }
+
+    private fun extractSavedInstanceStateIfNeeded(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            data = savedInstanceState.getString(DATA_KEY, null)
+            token = savedInstanceState.getString(TOKEN_KEY, null)
+            browser = savedInstanceState.getString(BROWSER_KEY, null)
+            location = savedInstanceState.getString(LOCATION_KEY, null)
+            lastState = QRCodeAuthUiStateType.fromString(savedInstanceState.getString(LAST_STATE_KEY, null))
+        }
+    }
+
+    private fun startOrRestoreUiState() {
+        when (lastState) {
+            LOADING, SCANNING -> updateUiStateAndLaunchScanner()
+            VALIDATED -> postUiState(
+                    uiStateMapper.mapToValidated(
+                            location,
+                            browser,
+                            this::onAuthenticateClicked,
+                            this::onCancelClicked
+                    )
+            )
+            AUTHENTICATING -> postUiState(uiStateMapper.mapToAuthenticating(location = location, browser = browser))
+            DONE -> postUiState(uiStateMapper.mapToDone(this::dismissClicked))
+            // errors
+            INVALID_DATA -> postUiState(uiStateMapper.mapToInvalidData(this::scanAgainClicked, this::onCancelClicked))
+            AUTH_FAILED -> postUiState(uiStateMapper.mapToAuthFailed(this::scanAgainClicked, this::onCancelClicked))
+            EXPIRED -> postUiState(uiStateMapper.mapToExpired(this::scanAgainClicked, this::onCancelClicked))
+            NO_INTERNET -> {
+                postUiState(uiStateMapper.mapToNoInternet(this::scanAgainClicked, this::onCancelClicked))
+            }
+            else -> updateUiStateAndLaunchScanner()
+        }
     }
 
     //  https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=asdfadsfa&data=asdfasdf
@@ -62,15 +112,28 @@ class QRCodeAuthViewModel @Inject constructor(
         postActionEvent(FinishActivity)
     }
 
+    private fun scanAgainClicked() {
+        postActionEvent(LaunchScanner)
+    }
+
+    private fun dismissClicked() {
+        postActionEvent(FinishActivity)
+    }
+
     private fun onAuthenticateClicked() {
-        // todo: implement
+        postUiState(uiStateMapper.mapToAuthenticating(_uiState.value as Validated))
+        if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
+            postUiState(uiStateMapper.mapToInvalidData(this::scanAgainClicked, this::onCancelClicked))
+        } else {
+            authenticate(data = data.toString(), token = token.toString())
+        }
     }
 
     private fun handleScan(scannedValue: String?) {
         extractQueryParamsIfValid(scannedValue)
 
         if (data.isNullOrEmpty() || token.isNullOrEmpty()) {
-            // todo: handle error
+            postUiState(uiStateMapper.mapToInvalidData(this::scanAgainClicked, this::onCancelClicked))
         } else {
             postUiState(uiStateMapper.mapToLoading())
             validateScan(data = data.toString(), token = token.toString())
@@ -79,7 +142,7 @@ class QRCodeAuthViewModel @Inject constructor(
 
     private fun validateScan(data: String, token: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            // todo: handle error
+            postUiState(uiStateMapper.mapToNoInternet(this::scanAgainClicked, this::onCancelClicked))
             return
         }
 
@@ -101,6 +164,21 @@ class QRCodeAuthViewModel @Inject constructor(
         if (queryParams.containsKey(DATA_KEY) && queryParams.containsKey(TOKEN_KEY)) {
             this.data = queryParams[DATA_KEY].toString()
             this.token = queryParams[TOKEN_KEY].toString()
+        }
+    }
+
+    @Suppress("MagicNumber")
+    private fun authenticate(data: String, token: String) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            postUiState(uiStateMapper.mapToNoInternet(this::scanAgainClicked, this::onCancelClicked))
+            return
+        }
+
+        clearProperties()
+        // todo: authStore.authenticate call and remove below
+        viewModelScope.launch {
+            delay(2000L)
+            postUiState(uiStateMapper.mapToDone(::dismissClicked))
         }
     }
 
@@ -128,9 +206,28 @@ class QRCodeAuthViewModel @Inject constructor(
         }
     }
 
+    private fun clearProperties() {
+        data = null
+        token = null
+        browser = null
+        location = null
+        lastState = null
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        outState.putString(DATA_KEY, data)
+        outState.putString(TOKEN_KEY, data)
+        outState.putString(BROWSER_KEY, browser)
+        outState.putString(LOCATION_KEY, location)
+        outState.putString(LAST_STATE_KEY, uiState.value.type?.label)
+    }
+
     companion object {
         const val TAG_DISMISS_DIALOG = "TAG_DISMISS_DIALOG"
         const val TOKEN_KEY = "token"
         const val DATA_KEY = "data"
+        const val BROWSER_KEY = "browser"
+        const val LOCATION_KEY = "location"
+        const val LAST_STATE_KEY = "last_state"
     }
 }
