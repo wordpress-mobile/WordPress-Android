@@ -4,18 +4,17 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.Preference.OnPreferenceChangeListener
+import android.preference.Preference.OnPreferenceClickListener
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
-import android.preference.Preference.OnPreferenceClickListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.DetailListPreference
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
+import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.EMAIL
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.PASSWORD
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType.URL
@@ -47,7 +47,10 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
+
 const val SNACKBAR_NO_OF_LINES_FOUR = 4
+
+@Suppress("DEPRECATION")
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         OnPreferenceChangeListener, OnConfirmListener, OnPreferenceClickListener {
     @set:Inject lateinit var uiHelpers: UiHelpers
@@ -65,6 +68,25 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         (activity.application as WordPress).component().inject(this)
         retainInstance = true
         addPreferencesFromResource(xml.account_settings)
+        bindPreferences()
+        setUpListeners()
+        emailPreference.configure(
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+                validationType = EMAIL
+        )
+        webAddressPreference.configure(
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI,
+                validationType = URL,
+                dialogMessage = R.string.web_address_dialog_hint
+        )
+        changePasswordPreference.configure(
+                inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD,
+                validationType = PASSWORD,
+                dialogMessage = R.string.change_password_dialog_hint
+        )
+    }
+
+    private fun bindPreferences() {
         usernamePreference = findPreference(getString(string.pref_key_username))
         emailPreference = findPreference(getString(string.pref_key_email)) as EditTextPreferenceWithValidation
         primarySitePreference = findPreference(getString(string.pref_key_primary_site)) as DetailListPreference
@@ -72,22 +94,25 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 as EditTextPreferenceWithValidation
         changePasswordPreference = findPreference(getString(string.pref_key_change_password))
                 as EditTextPreferenceWithValidation
-        emailPreference.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-        emailPreference.setValidationType(EMAIL)
-        webAddressPreference.editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
-        webAddressPreference.setValidationType(URL)
-        webAddressPreference.setDialogMessage(string.web_address_dialog_hint)
-        changePasswordPreference.editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-        changePasswordPreference.setValidationType(PASSWORD)
-        changePasswordPreference.setDialogMessage(string.change_password_dialog_hint)
-        usernamePreference.onPreferenceClickListener = this
-        emailPreference.onPreferenceChangeListener = this
-        primarySitePreference.onPreferenceChangeListener = this
-        webAddressPreference.onPreferenceChangeListener = this
-        changePasswordPreference.onPreferenceChangeListener = this
-        setTextAlignment(emailPreference.editText)
-        setTextAlignment(webAddressPreference.editText)
-        setTextAlignment(changePasswordPreference.editText)
+    }
+
+    private fun setUpListeners() {
+        usernamePreference.onPreferenceClickListener = this@AccountSettingsFragment
+        primarySitePreference.onPreferenceChangeListener = this@AccountSettingsFragment
+        emailPreference.onPreferenceChangeListener = this@AccountSettingsFragment
+        webAddressPreference.onPreferenceChangeListener = this@AccountSettingsFragment
+        changePasswordPreference.onPreferenceChangeListener = this@AccountSettingsFragment
+    }
+
+    private fun EditTextPreferenceWithValidation.configure(
+        inputType: Int,
+        validationType: ValidationType,
+        dialogMessage: Int? = null
+    ) {
+        editText.inputType = inputType
+        editText.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+        setValidationType(validationType)
+        dialogMessage?.let { setDialogMessage(it) }
     }
 
     override fun onCreateView(
@@ -237,10 +262,6 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
             android.R.id.home -> activity.finish()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun setTextAlignment(editText: EditText) {
-        editText.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
     private fun showChangePasswordProgressDialog(show: Boolean) {
