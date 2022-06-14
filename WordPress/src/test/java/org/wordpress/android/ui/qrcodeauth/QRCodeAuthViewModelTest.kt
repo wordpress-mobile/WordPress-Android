@@ -7,9 +7,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,7 +18,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthError
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType
-import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.DATA_INVALID
+import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.qrcodeauth.QRCodeAuthErrorType.NOT_AUTHORIZED
@@ -46,6 +46,14 @@ import org.wordpress.android.ui.qrcodeauth.QRCodeAuthViewModel.Companion.TOKEN_K
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+const val DATA = "data"
+const val LOCATION = "location"
+const val BROWSER = "browser"
+const val TOKEN = "token"
+const val SCANNED_VALUE =
+        "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
+const val VALID_EXPIRED_MESSAGE = "qr code data expired"
+const val INVALID_EXPIRED_MESSAGE = "invalid qr code data expired"
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -58,15 +66,8 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private val uiStateMapper = QRCodeAuthUiStateMapper()
 
-    private val data = "data"
-    private val location = "location"
-    private val browser = "browser"
-    private val token = "token"
-    private val scannedValue =
-            "https://apps.wordpress.com/get/?campaign=login-qr-code#qr-code-login?token=scannedtoken&data=scanneddata"
-
-    private val validQueryParams = mapOf(DATA_KEY to data, TOKEN_KEY to token)
-    private val invalidQueryParams = mapOf("invalid_key" to data, TOKEN_KEY to token)
+    private val validQueryParams = mapOf(DATA_KEY to DATA, TOKEN_KEY to TOKEN)
+    private val invalidQueryParams = mapOf("invalid_key" to DATA, TOKEN_KEY to TOKEN)
     @Before
     fun setUp() {
         viewModel = QRCodeAuthViewModel(
@@ -78,38 +79,30 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
         )
 
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(validator.isValidUri(scannedValue)).thenReturn(true)
-        whenever(validator.extractQueryParams(scannedValue)).thenReturn(validQueryParams)
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(true)
+        whenever(validator.extractQueryParams(SCANNED_VALUE)).thenReturn(validQueryParams)
     }
 
     @Test
     fun `given empty instance state, when vm started, then loading is followed by scanning`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            viewModel.start()
+
+            assert(uiStates.first().loadingVisibility)
+            assertThat(uiStates.last()).isInstanceOf(QRCodeAuthUiState.Scanning::class.java)
         }
-
-        viewModel.start()
-
-        assert(result.first().loadingVisibility)
-        assertThat(result.last()).isInstanceOf(QRCodeAuthUiState.Scanning::class.java)
-
-        job.cancel()
     }
 
     @Test
-    fun `given non empty instance state, when vm started, then state is restored`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given non empty instance state, when vm started, then state is restored`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAndStartVMForState(NO_INTERNET)
+
+            assert(uiStates.first().loadingVisibility)
+            assertThat(uiStates.last().type).isEqualTo(NO_INTERNET)
         }
-
-        initAndStartVMForState(NO_INTERNET)
-
-        assert(result.first().loadingVisibility)
-        assertThat(result.last().type).isEqualTo(NO_INTERNET)
-
-        job.cancel()
     }
 
     @Test
@@ -122,392 +115,302 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given validate state, when primary action is clicked, then state is authenticating`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given validate state, when primary action is clicked, then state is authenticating`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.last().type).isEqualTo(AUTHENTICATING)
         }
-
-        initAndStartVMForState(VALIDATED)
-
-        (result.last() as Validated).primaryAction.clickAction()
-
-        assertThat(result.last().type).isEqualTo(AUTHENTICATING)
-
-        job.cancel()
     }
 
     @Test
-    fun `given validate state, when secondary action is clicked, then activity finished event`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
+    fun `given validate state, when secondary action is clicked, then activity finished event`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job1 = launch {
-            viewModel.uiState.toList(result)
+        runBlockingTestWithData(uiStates, actionEvents) {
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).secondaryActionButton.clickAction()
+
+            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
         }
-        val job2 = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
-        }
-
-        initAndStartVMForState(VALIDATED)
-
-        (result.last() as Validated).secondaryAction.clickAction()
-
-        assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
-
-        job1.cancel()
-        job2.cancel()
     }
 
     @Test
-    fun `given valid qr code, when scanned qrcode, then validated is shown`() = runBlockingTest {
-        initValidate()
+    fun `given valid qr code, when scanned qrcode, then validated is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate()
 
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(VALIDATED)
         }
-
-        viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
-
-        assertThat(result.last().type).isEqualTo(VALIDATED)
-
-        job.cancel()
     }
 
     @Test
-    fun `given invalid host, when scanned qrcode, then error is shown`() = runBlockingTest {
-        whenever(validator.isValidUri(scannedValue)).thenReturn(false)
+    fun `given invalid host, when scanned qrcode, then error is shown`() {
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(false)
 
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(INVALID_DATA)
         }
-
-        viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
-
-        assertThat(result.last().type).isEqualTo(INVALID_DATA)
-
-        job.cancel()
     }
 
     @Test
-    fun `given invalid query params, when scanned qrcode, then error is shown`() = runBlockingTest {
-        whenever(validator.isValidUri(scannedValue)).thenReturn(true)
-        whenever(validator.extractQueryParams(scannedValue)).thenReturn(invalidQueryParams)
+    fun `given invalid query params, when scanned qrcode, then error is shown`() {
+        whenever(validator.isValidUri(SCANNED_VALUE)).thenReturn(true)
+        whenever(validator.extractQueryParams(SCANNED_VALUE)).thenReturn(invalidQueryParams)
 
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(INVALID_DATA)
         }
-
-        viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
-
-        assertThat(result.last().type).isEqualTo(INVALID_DATA)
-
-        job.cancel()
     }
 
     @Test
-    fun `given not authorized error, when validate failure, then auth failed is shown`() = runBlockingTest {
-        initValidate(false, NOT_AUTHORIZED)
+    fun `given not authorized error, when validate failure, then auth failed is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, NOT_AUTHORIZED)
 
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
         }
-
-        viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
-
-        assertThat(result.last().type).isEqualTo(AUTH_FAILED)
-
-        job.cancel()
     }
 
     @Test
-    fun `given error, when validate failure, then invalid data is shown`() = runBlockingTest {
-        initValidate(false, GENERIC_ERROR)
+    fun `given error, when validate failure, then invalid data is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, GENERIC_ERROR)
 
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(INVALID_DATA)
         }
-
-        viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
-
-        assertThat(result.last().type).isEqualTo(INVALID_DATA)
-
-        job.cancel()
     }
 
     @Test
-    fun `given data invalid, when validate failure, then expired is shown`() = runBlockingTest {
-        initValidate(false, DATA_INVALID)
+    fun `given authorization required with valid error message, when validate failure, then expired is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, AUTHORIZATION_REQUIRED, VALID_EXPIRED_MESSAGE)
 
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(EXPIRED)
         }
-
-        viewModel.start()
-        viewModel.onScanSuccess(scannedValue)
-
-        assertThat(result.last().type).isEqualTo(EXPIRED)
-
-        job.cancel()
     }
 
     @Test
-    fun `given validated state, when authenticate invoked, then authenticating followed by done`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given authorization required with invalid error message, when validate failure, then auth failed is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initValidate(false, AUTHORIZATION_REQUIRED, INVALID_EXPIRED_MESSAGE)
+
+            viewModel.start()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
         }
-
-        initAuthenticate()
-        initAndStartVMForState(VALIDATED)
-
-        val initialState = result.last()
-        result.clear()
-        (initialState as Validated).primaryAction.clickAction()
-
-        assertThat(result.first().type).isEqualTo(AUTHENTICATING)
-        assertThat(result.last().type).isEqualTo(DONE)
-
-        job.cancel()
     }
 
     @Test
-    fun `given not authorized error, when authenticate failure, then auth failed is shown`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given validated state, when authenticate invoked, then authenticating followed by done`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate()
+            initAndStartVMForState(VALIDATED)
+
+            val initialState = uiStates.last()
+            uiStates.clear()
+            (initialState as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.first().type).isEqualTo(AUTHENTICATING)
+            assertThat(uiStates.last().type).isEqualTo(DONE)
         }
-
-        initAuthenticate(false, NOT_AUTHORIZED)
-        initAndStartVMForState(VALIDATED)
-
-        (result.last() as Validated).primaryAction.clickAction()
-
-        assertThat(result.last().type).isEqualTo(AUTH_FAILED)
-
-        job.cancel()
     }
 
     @Test
-    fun `given error, when authenticate failure, then invalid data is shown`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given not authorized error, when authenticate failure, then auth failed is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, NOT_AUTHORIZED)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
         }
-
-        initAuthenticate(false, GENERIC_ERROR)
-        initAndStartVMForState(VALIDATED)
-
-        (result.last() as Validated).primaryAction.clickAction()
-
-        assertThat(result.last().type).isEqualTo(INVALID_DATA)
-
-        job.cancel()
     }
 
     @Test
-    fun `given data invalid, when authenticate failure, then expired is shown`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given error, when authenticate failure, then invalid data is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, GENERIC_ERROR)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.last().type).isEqualTo(INVALID_DATA)
         }
-
-        initAuthenticate(false, DATA_INVALID)
-        initAndStartVMForState(VALIDATED)
-
-        (result.last() as Validated).primaryAction.clickAction()
-
-        assertThat(result.last().type).isEqualTo(EXPIRED)
-
-        job.cancel()
     }
 
     @Test
-    fun `given done, when primary action is clicked, then finish activity is raised`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
+    fun `given authorization required with valid message, when authenticate failure, then expired is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, AUTHORIZATION_REQUIRED, VALID_EXPIRED_MESSAGE)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.last().type).isEqualTo(EXPIRED)
+        }
+    }
+
+    @Test
+    fun `given authorization required with invalid message, when authenticate failure, then auth failed is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            initAuthenticate(false, AUTHORIZATION_REQUIRED, INVALID_EXPIRED_MESSAGE)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.last().type).isEqualTo(AUTH_FAILED)
+        }
+    }
+
+    @Test
+    fun `given done, when primary action is clicked, then finish activity is raised`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job1 = launch {
-            viewModel.uiState.toList(result)
+        runBlockingTestWithData(uiStates, actionEvents) {
+            initAndStartVMForState(DONE)
+
+            (uiStates.last() as Done).primaryActionButton.clickAction()
+
+            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
         }
-        val job2 = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
-        }
-
-        initAndStartVMForState(DONE)
-
-        (result.last() as Done).primaryAction.clickAction()
-
-        assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
-
-        job1.cancel()
-        job2.cancel()
     }
 
     @Test
-    fun `given error, when primary action clicked, then launch scanner is raised`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
+    fun `given error, when primary action clicked, then launch scanner is raised`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job1 = launch {
-            viewModel.uiState.toList(result)
+        runBlockingTestWithData(uiStates, actionEvents) {
+            initAndStartVMForState(INVALID_DATA)
+
+            (uiStates.last() as InvalidData).primaryActionButton.clickAction()
+
+            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.LaunchScanner::class.java)
         }
-        val job2 = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
-        }
-
-        initAndStartVMForState(INVALID_DATA)
-
-        (result.last() as InvalidData).primaryAction.clickAction()
-
-        assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.LaunchScanner::class.java)
-
-        job1.cancel()
-        job2.cancel()
     }
 
     @Test
-    fun `given error, when secondary action clicked, then finish activity is raised`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
+    fun `given error, when secondary action clicked, then finish activity is raised`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job1 = launch {
-            viewModel.uiState.toList(result)
+        runBlockingTestWithData(uiStates, actionEvents) {
+            initAndStartVMForState(INVALID_DATA)
+
+            (uiStates.last() as InvalidData).secondaryActionButton.clickAction()
+
+            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
         }
-        val job2 = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
-        }
-
-        initAndStartVMForState(INVALID_DATA)
-
-        (result.last() as InvalidData).secondaryAction.clickAction()
-
-        assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
-
-        job1.cancel()
-        job2.cancel()
     }
 
     @Test
-    fun `given any state, when back is pressed, then dismiss dialog event is raised`() = runBlockingTest {
+    fun `given any state, when back is pressed, then dismiss dialog event is raised`() {
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
+        runBlockingTestWithData(actionEvents = actionEvents) {
+            viewModel.onBackPressed()
+
+            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.LaunchDismissDialog::class.java)
         }
-
-        viewModel.onBackPressed()
-
-        assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.LaunchDismissDialog::class.java)
-
-        job.cancel()
     }
 
     @Test
-    fun `when scan fails, then finish activity event is raised`() = runBlockingTest {
+    fun `when scan fails, then finish activity event is raised`() {
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
+        runBlockingTestWithData(actionEvents = actionEvents) {
+            viewModel.onScanFailure()
+
+            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
         }
-
-        viewModel.onScanFailure()
-
-        assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
-
-        job.cancel()
     }
 
     @Test
-    fun `given valid scan, when no network connection, then no internet error is shown`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given valid scan, when no network connection, then no internet error is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+            startViewModel()
+            viewModel.onScanSuccess(SCANNED_VALUE)
+
+            assertThat(uiStates.last()).isInstanceOf(NoInternet::class.java)
         }
-
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-        startViewModel()
-        viewModel.onScanSuccess(scannedValue)
-
-        assertThat(result.last()).isInstanceOf(NoInternet::class.java)
-
-        job.cancel()
     }
 
     @Test
-    fun `given authenticating, when no network connection, then error view is shown`() = runBlockingTest {
-        val result = mutableListOf<QRCodeAuthUiState>()
-        val job = launch {
-            viewModel.uiState.toList(result)
+    fun `given authenticating, when no network connection, then error view is shown`() {
+        val uiStates = mutableListOf<QRCodeAuthUiState>()
+        runBlockingTestWithData(uiStates) {
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+            initAndStartVMForState(VALIDATED)
+
+            (uiStates.last() as Validated).primaryActionButton.clickAction()
+
+            assertThat(uiStates.last().type).isEqualTo(NO_INTERNET)
         }
-
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-        initAndStartVMForState(VALIDATED)
-
-        (result.last() as Validated).primaryAction.clickAction()
-
-        assertThat(result.last().type).isEqualTo(NO_INTERNET)
-
-        job.cancel()
     }
 
     @Test
-    fun `given dismiss dialog showing, when ok clicked, then finish activity event is raised`() = runBlockingTest {
+    fun `given dismiss dialog showing, when ok clicked, then finish activity event is raised`() {
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
+        runBlockingTestWithData(actionEvents = actionEvents) {
+            viewModel.onDialogInteraction(DialogInteraction.Positive("positive"))
+
+            assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
         }
-
-        viewModel.onDialogInteraction(DialogInteraction.Positive("positive"))
-
-        assertThat(actionEvents.last()).isInstanceOf(QRCodeAuthActionEvent.FinishActivity::class.java)
-
-        job.cancel()
     }
 
     @Test
-    fun `given dismiss dialog showing, when cancel clicked, then no event is raised`() = runBlockingTest {
+    fun `given dismiss dialog showing, when cancel clicked, then no event is raised`() {
         val actionEvents = mutableListOf<QRCodeAuthActionEvent>()
-        val job = launch {
-            viewModel.actionEvents.collect {
-                actionEvents.add(it)
-            }
+        runBlockingTestWithData(actionEvents = actionEvents) {
+            viewModel.onDialogInteraction(DialogInteraction.Negative("negative"))
+
+            assertThat(actionEvents.isEmpty())
         }
-
-        viewModel.onDialogInteraction(DialogInteraction.Negative("negative"))
-
-        assertThat(actionEvents.isEmpty())
-
-        job.cancel()
     }
 
-    private fun buildValidateError(errorType: QRCodeAuthErrorType) =
-            QRCodeAuthResult<QRCodeAuthValidateResult>(QRCodeAuthError(errorType))
+    private fun buildValidateError(errorType: QRCodeAuthErrorType, errorMessage: String? = null) =
+            QRCodeAuthResult<QRCodeAuthValidateResult>(QRCodeAuthError(errorType, errorMessage))
 
     private fun buildValidateSuccess() =
-            QRCodeAuthResult(model = QRCodeAuthValidateResult(browser = this.browser, location = this.location))
+            QRCodeAuthResult(model = QRCodeAuthValidateResult(browser = BROWSER, location = LOCATION))
 
-    private fun buildAuthenticateError(errorType: QRCodeAuthErrorType) =
-            QRCodeAuthResult<QRCodeAuthAuthenticateResult>(QRCodeAuthError(errorType))
+    private fun buildAuthenticateError(errorType: QRCodeAuthErrorType, errorMessage: String? = null) =
+            QRCodeAuthResult<QRCodeAuthAuthenticateResult>(QRCodeAuthError(errorType, errorMessage))
 
     private val authenticateSuccess = QRCodeAuthResult(model = QRCodeAuthAuthenticateResult(authenticated = true))
 
@@ -521,36 +424,52 @@ class QRCodeAuthViewModelTest : BaseUnitTest() {
     }
 
     private fun initSavedInstanceState(stateType: QRCodeAuthUiStateType) {
-        whenever(savedInstanceState.getString(DATA_KEY, null)).thenReturn(data)
-        whenever(savedInstanceState.getString(TOKEN_KEY, null)).thenReturn(token)
-        whenever(savedInstanceState.getString(LOCATION_KEY, null)).thenReturn(location)
-        whenever(savedInstanceState.getString(BROWSER_KEY, null)).thenReturn(browser)
+        whenever(savedInstanceState.getString(DATA_KEY, null)).thenReturn(DATA)
+        whenever(savedInstanceState.getString(TOKEN_KEY, null)).thenReturn(TOKEN)
+        whenever(savedInstanceState.getString(LOCATION_KEY, null)).thenReturn(LOCATION)
+        whenever(savedInstanceState.getString(BROWSER_KEY, null)).thenReturn(BROWSER)
         whenever(savedInstanceState.getString(LAST_STATE_KEY, null)).thenReturn(stateType.label)
     }
 
     private suspend fun initValidate(
         successResponse: Boolean = true,
-        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE
+        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE,
+        errorMessage: String? = null
     ) {
         whenever(store.validate(any(), any())).thenReturn(
                 if (successResponse) {
                     buildValidateSuccess()
                 } else {
-                    buildValidateError(errorType as QRCodeAuthErrorType)
+                    buildValidateError(errorType as QRCodeAuthErrorType, errorMessage)
                 }
         )
     }
 
     private suspend fun initAuthenticate(
         successResponse: Boolean = true,
-        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE
+        errorType: QRCodeAuthErrorType? = INVALID_RESPONSE,
+        errorMessage: String? = null
     ) {
         whenever(store.authenticate(any(), any())).thenReturn(
                 if (successResponse) {
                     authenticateSuccess
                 } else {
-                    buildAuthenticateError(errorType as QRCodeAuthErrorType)
+                    buildAuthenticateError(errorType as QRCodeAuthErrorType, errorMessage)
                 }
         )
+    }
+
+    private fun runBlockingTestWithData(
+        uiStates: MutableList<QRCodeAuthUiState> = mutableListOf(),
+        actionEvents: MutableList<QRCodeAuthActionEvent> = mutableListOf(),
+        testBody: suspend TestCoroutineScope.() -> Unit
+    ) {
+        runBlockingTest {
+            val uiStatesJob = launch { viewModel.uiState.toList(uiStates) }
+            val actionEventsJob = launch { viewModel.actionEvents.toList(actionEvents) }
+            testBody()
+            uiStatesJob.cancel()
+            actionEventsJob.cancel()
+        }
     }
 }
