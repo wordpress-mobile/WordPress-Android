@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/error_image"
-        tools:text="No internet connection" />
+        tools:text="@string/qrcode_auth_flow_error_no_connection_title" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/error_subtitle"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/error_title"
-        tools:text="Need an internet connection to scan a qr code" />
+        tools:text="@string/qrcode_auth_flow_error_no_connection_subtitle" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/error_primary_action"
