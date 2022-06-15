@@ -1033,6 +1033,18 @@
     <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_new">New</string>
 
+    <string name="stats_action_card_grow_audience_title">Grow your audience</string>
+    <string name="stats_action_card_grow_audience_message">💡We have easily digestible lessons taught by the best bloggers to grow your blog.</string>
+    <string name="stats_action_card_grow_audience_button_label">Check the course</string>
+
+    <string name="stats_action_card_blogging_reminders_title">Set your blogging reminders</string>
+    <string name="stats_action_card_blogging_reminders_message">💡Set the reminder to post regularly to keep your readers engaged and attract new visitors.</string>
+    <string name="stats_action_card_blogging_reminders_button_label">Set reminders</string>
+
+    <string name="stats_action_card_schedule_post_title">Schedule your post</string>
+    <string name="stats_action_card_schedule_post_message">✍️ Schedule to post your content at its best time from your drafts.</string>
+    <string name="stats_action_card_schedule_post_button_label">Schedule</string>
+
     <!-- Stats refreshed widgets -->
 
     <string name="stats_widget_add">Add widget</string>
@@ -1380,6 +1392,10 @@
     <string name="stats_referrers">Referrers</string>
     <string name="stats_referrer_label">Referrer</string>
     <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_referrers_pie_chart_total_label">Views</string>
+    <string name="stats_referrers_pie_chart_wordpress">Wordpress</string>
+    <string name="stats_referrers_pie_chart_search">Search</string>
+    <string name="stats_referrers_pie_chart_others">Others</string>
     <string name="stats_clicks">Clicks</string>
     <string name="stats_clicks_link_label">Link</string>
     <string name="stats_clicks_label">Clicks</string>
@@ -1400,6 +1416,7 @@
     <string name="stats_file_downloads">File downloads</string>
     <string name="stats_file_downloads_title_label">File</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
+    <string name="stats_follower_types_pie_chart_total_label">Totals</string>
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
@@ -2296,6 +2313,9 @@
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">From <b>DayOne</b></string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
     <plurals name="my_site_blogging_prompt_card_number_of_answers">
         <item quantity="one">%d answer</item>
         <item quantity="other">%d answers</item>
@@ -3386,14 +3406,18 @@
     <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
 
     <!-- Home Page Picker -->
-    <string name="hpp_title">Choose a design</string>
-    <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
+    <string name="hpp_title">Choose a theme</string>
     <string name="hpp_choose_button">Choose</string>
     <string name="hpp_choose_and_create_site">Create site</string>
+    <string name="hpp_preview_tapped_theme">Preview theme %s</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
-    <string name="hpp_choose_error">There was an error while selecting the design.</string>
+    <string name="hpp_choose_error">There was an error while selecting the theme.</string>
+    <string name="hpp_recommended_title">Best for %s</string>
+    <string name="hpp_recommended_subtitle">Picked for you</string>
+    <string name="hpp_recommended_default_vertical">Blogging</string>
+    <string name="hpp_bottom_helper_text">Can\'t decide? You can change the theme at any time.</string>
 
     <!-- Stories -->
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
@@ -4065,6 +4089,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_got_it">Got it</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Blogging Prompts are loading. Please wait a moment and try again.</string>
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>
