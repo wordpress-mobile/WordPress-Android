@@ -1393,7 +1393,7 @@
     <string name="stats_referrer_label">Referrer</string>
     <string name="stats_referrer_views_label">Views</string>
     <string name="stats_referrers_pie_chart_total_label">Views</string>
-    <string name="stats_referrers_pie_chart_wordpress">Wordpress</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_search">Search</string>
     <string name="stats_referrers_pie_chart_others">Others</string>
     <string name="stats_clicks">Clicks</string>
