@@ -166,9 +166,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 appbarMain.setExpanded(true, true)
                 quickStartScrollPosition = 0
             }
-            binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
             if(quickStartScrollPosition > 0)
                 appbarMain.setExpanded(false, true)
+            binding?.viewPager?.getCurrentFragment()?.handleScrollTo(quickStartScrollPosition)
         }
         viewModel.onTrackWithTabSource.observeEvent(viewLifecycleOwner) {
             binding?.viewPager?.getCurrentFragment()?.onTrackWithTabSource(it)
