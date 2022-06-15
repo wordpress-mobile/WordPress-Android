@@ -79,7 +79,7 @@ rootProject.name = 'WPAndroid'
 include ':WordPress'
 
 include ':libs:image-editor:ImageEditor'
-include ':libs:networking:WordPressNetworking'
+include ':libs:networking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
 include ':libs:WordPressProcessors'
