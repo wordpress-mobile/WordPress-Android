@@ -1,9 +1,0 @@
-19.9:
-- Düzenleyicideki bloklar için sürükle ve bırak
-- Manşet bloklarında daha iyi renk kontrastı
-- Düğmelerin blok biçimlendirme seçenekleri görünür kalıyor
-- Yeni ve mevcut siteler için ayrı Hızlı Başlangıç görevleri
-- Yayınlanan sayfalar için Bağlantıyı kopyala
-- Kendi kendine barındırılan sitelerin blok düzenleyicisinde + simgesi yok
-- Galeri bloklarında Bağlantı ver/Görsel boyutu ayarları
-- Desteklenmeyen blok düzenleyicilerde tur afişi yok

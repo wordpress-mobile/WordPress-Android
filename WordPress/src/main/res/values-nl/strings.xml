@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-27 15:00:29+0000
+Translation-Revision-Date: 2022-06-10 13:34:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Je kunt ook blokken herschikken door op een blok te tikken en dan op de omhoog en omlaag pijlen te tikken die links onderaan het blok verschijnen om het naar boven of onder te bewegen.</string>
+    <string name="gutenberg_native_image_file_not_found">Afbeeldingsbestand niet gevonden.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Met verslepen wordt blokken herschikken een fluitje van een cent. Houd een blok ingedrukt en sleep deze vervolgens naar de nieuwe locatie. Laat dan los.</string>
+    <string name="gutenberg_native_drag_drop">Slepen en neerzetten</string>
+    <string name="gutenberg_native_arrow_buttons">Pijlknoppen</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Geselecteerde valuta: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Alle taken afgerond</string>
+    <string name="quick_start_list_task_complete">Taak voltooid</string>
+    <string name="me_btn_scan_login_code">Inlogcode scannen</string>
+    <string name="stats_insights_followers_guide_card">💡Je kunt een opmerking achterlaten als gebaar, om activiteit van de blog te stimuleren en meer volgers te krijgen.</string>
+    <string name="stats_insights_comments_guide_card">💡Zie wie je grootste bijdragers zijn door te tikken op MEER INFO.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
+    <string name="stats_most_popular_percent_views_empty">Niet genoeg activiteit. Keer nog eens terug wanneer je site meer bezoekers heeft gehad!</string>
+    <string name="stats_insights_latest_post_empty">Je hebt nog geen berichten gepubliceerd. Keer nog eens terug wanneer je je eerste bericht hebt gepubliceerd!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Bekijk onze top tips %1$s voor meer weergaven en bezoekers</string>
+    <string name="stats_total_followers_content_description">%1s, %2s van het totale aantal volgers</string>
+    <string name="stats_value_percent">%1$s %2$s%%()</string>
     <string name="pages_copy_link">Link kopiëren</string>
     <string name="quick_start_completed_tour_title">Gefeliciteerd! Je weet hoe alles werkt&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Leer de app gebruiken</string>
@@ -49,10 +66,10 @@ Language: nl
     <string name="photo_picker_media_thumbnail_content_description">Miniatuurafbeelding media</string>
     <string name="stats_insights_popular_title">Populairste tijd</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Het aantal bezoekers van deze week is %1$s minder dan de vorige week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Het aantal bezoekers van deze week is %1$s meer dan de vorige week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Het aantal weergaven van deze week is %1$s minder dan de vorige week.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Het aantal weergaven van deze week is %1$s meer dan de vorige week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Je hebt deze week %1$s minder bezoekers dan vorige week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Je hebt deze week %1$s meer bezoekers dan vorige week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Je hebt deze week %1$s minder weergaven dan vorige week.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Je hebt deze week %1$s meer weergaven dan vorige week.</string>
     <string name="stats_timeframe_previous_week">Vorige week</string>
     <string name="stats_timeframe_this_week">Deze week</string>
     <string name="scan_vault_press_active_on_site_button_text">Naar het dashboard gaan</string>
@@ -474,6 +491,7 @@ Language: nl
     <string name="gutenberg_native_three">Drie</string>
     <string name="gutenberg_native_s_social_icon">%s social pictogram</string>
     <string name="gutenberg_native_mention">Vermelding</string>
+    <string name="gutenberg_native_new">Nieuw</string>
     <string name="gutenberg_native_preview_post">Voorbeeld bericht</string>
     <string name="gutenberg_native_preview_page">Voorbeeld pagina</string>
     <string name="gutenberg_native_retry">Probeer het opnieuw</string>
@@ -1670,7 +1688,6 @@ Language: nl
     <string name="quick_start_sites_type_grow">Breid je publiek uit</string>
     <string name="quick_start_sites_type_customize">Pas je site aan</string>
     <string name="quick_start_sites">Volgende stappen</string>
-    <string name="quick_start_complete_tasks_header">Voltooi (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Kies een unieke site pictogram</string>
     <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
     <string name="quick_start_dialog_check_stats_message_short">Selecteer %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
@@ -1683,11 +1700,7 @@ Language: nl
     <string name="quick_start_dialog_remove_next_steps_message">Door \'Volgende stappen\' te verwijderen, worden alle rondleidingen op deze site verborgen. Deze actie kan niet ongedaan worden gemaakt.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Volgende stappen verwijderen</string>
     <string name="quick_start_remove_next_steps_menu_title">Verwijder dit</string>
-    <string name="quick_start_complete_view_subtitle">Gefeliciteerd! Je hebt je lijst afgewerkt. Goed gedaan.</string>
-    <string name="quick_start_complete_view_title">Alle taken zijn voltooid!</string>
     <string name="quick_start_task_skip_menu_title">Taak overslaan</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">inklappen</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">uitklappen</string>
     <string name="notification_channel_reminder_title">Herinnering</string>
     <string name="stats_select_next_period_description">Volgende periode selecteren</string>
     <string name="stats_select_previous_period_description">Vorige periode selecteren</string>
@@ -1760,7 +1773,6 @@ Language: nl
     <string name="stats_insights_create_post">Maak bericht</string>
     <string name="stats_insights_latest_post_message">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan …</string>
     <string name="stats_insights_latest_post_with_no_engagement">Het is %1$s sinds %2$s is gepubliceerd. Krijg de bal aan het rollen en verhoog het bekijken van je berichten door het delen van je berichten:</string>
-    <string name="stats_insights_latest_post_empty">Je hebt nog geen berichten gepubliceerd. Zodra je begint met publiceren, verschijnt hier de samenvatting van je laatste bericht:</string>
     <string name="stats_insights_tags_and_categories">Tags en categorieën</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

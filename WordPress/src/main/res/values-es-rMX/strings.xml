@@ -918,7 +918,6 @@ Language: es_MX
     <string name="plans_loading_error_no_plans_title">No se pueden cargar los Planes</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites">Siguientes Pasos</string>
-    <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Agrega un icono personalizado para conseguir un aspecto profesional y refinado.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
@@ -927,11 +926,7 @@ Language: es_MX
     <string name="quick_start_dialog_remove_next_steps_title">Eliminar Siguientes Pasos</string>
     <string name="quick_start_dialog_remove_next_steps_message">Eliminar los Siguientes Pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
-    <string name="quick_start_complete_view_subtitle">Felicidades por completar tu lista. Un trabajo bien hecho.</string>
-    <string name="quick_start_complete_view_title">¡Todas las tareas están completas!</string>
     <string name="quick_start_task_skip_menu_title">Saltar tarea</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">cerrar</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expandir</string>
     <string name="notification_channel_reminder_title">Recordatorio</string>
     <string name="stats_select_next_period_description">Elige el siguiente periodo</string>
     <string name="stats_select_previous_period_description">Elige el periodo anterior</string>
@@ -1003,7 +998,6 @@ Language: es_MX
     <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
     <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_insights_latest_post_with_no_engagement">Ha sido %1$s desde que %2$s fue publicado. Empieza la avalancha y aumenta las vistas de publicaciones compartiendo la publicación.</string>
-    <string name="stats_insights_latest_post_empty">Aún no has hecho ninguna publicacion. Una vez que comiences a publicar, el resumen de tu última publicación aparecerá aquí.</string>
     <string name="stats_insights_tags_and_categories">Tags y Catégorias</string>
     <string name="stats_insights_all_time_stats">Histórico</string>
     <string name="stats_comments_authors">Autores</string>

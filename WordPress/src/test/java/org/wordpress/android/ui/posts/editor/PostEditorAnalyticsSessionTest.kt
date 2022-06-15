@@ -24,7 +24,7 @@ class PostEditorAnalyticsSessionTest {
         val postEditorAnalyticsSession = createPostEditorAnalyticsSessionTracker(analyticsTracker)
 
         // trigger all the editor_session events
-        postEditorAnalyticsSession.start(null, true)
+        postEditorAnalyticsSession.start(null, true, null)
         postEditorAnalyticsSession.end()
         postEditorAnalyticsSession.switchEditor(GUTENBERG)
         postEditorAnalyticsSession.applyTemplate("Just a template name")

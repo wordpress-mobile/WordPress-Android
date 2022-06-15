@@ -2321,6 +2321,9 @@
     <string name="my_site_blogging_prompt_card_menu_view_more">View more prompts</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Skip this prompt</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Remove from dashboard</string>
+    <string name="my_site_blogging_prompt_card_attribution_dayone">From <b>DayOne</b></string>
+    <string name="my_site_blogging_prompt_card_menu_learn_more">Learn more</string>
+    <string name="my_site_blogging_prompt_card_skipped_snackbar">Skipped today\'s blogging prompt</string>
     <plurals name="my_site_blogging_prompt_card_number_of_answers">
         <item quantity="one">%d answer</item>
         <item quantity="other">%d answers</item>
@@ -4094,6 +4097,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_onboarding_remind_me">Remind me</string>
     <string name="blogging_prompts_onboarding_got_it">Got it</string>
     <string name="blogging_prompts_onboarding_card_prompt">Cast the movie of your life.</string>
+    <string name="blogging_prompts_onboarding_prompts_loading">Blogging Prompts are loading. Please wait a moment and try again.</string>
     <string name="blogging_prompts_onboarding_notification_title">New in the WordPress mobile app: Prompts</string>
     <string name="blogging_prompts_onboarding_notification_text">Become a better writer by building a writing habit. Tap to learn more.</string>
     <string name="blogging_prompts_onboarding_notification_action">Learn more</string>

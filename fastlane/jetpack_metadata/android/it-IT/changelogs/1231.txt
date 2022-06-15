@@ -1,0 +1,4 @@
+20.0:
+- La scheda per la sessione di orientamento e i tour Passi successivi stanno bene insieme ai nuovi design per i siti esistenti.
+- Inserisci le immagini da altri siti usando l'opzione "Inserisci da URL" nell'app.
+- Ottieni più contesto tramite il lettore di schermo con i miglioramenti all'accessibilità dell'editor a blocchi.

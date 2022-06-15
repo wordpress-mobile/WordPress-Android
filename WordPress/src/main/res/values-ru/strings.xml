@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-25 20:02:06+0000
+Translation-Revision-Date: 2022-06-02 09:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">Вы также можете перемещать блоки выше или ниже, нажав на блок, а затем на стрелки вверх и вниз в нижней левой части блока.</string>
+    <string name="gutenberg_native_image_file_not_found">Файл изображения не найден.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Перетаскивайте блоки, чтобы без труда менять их расположение. Нажав и удерживая блок, перетащите его в новое место и отпустите.</string>
+    <string name="gutenberg_native_drag_drop">Перетаскивание</string>
+    <string name="gutenberg_native_arrow_buttons">Кнопки со стрелками</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Выбрано: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">Все задачи выполнены</string>
+    <string name="quick_start_list_task_complete">Задача выполнена.</string>
+    <string name="me_btn_scan_login_code">Отсканировать код для входа</string>
+    <string name="stats_insights_followers_guide_card">💡 Оставьте комментарий в другом блоге. Так вы побудите его автора посетить ваш блог и приобретёте больше подписчиков.</string>
+    <string name="stats_insights_comments_guide_card">💡 Чтобы просмотреть список самых активных участников, нажмите ПОКАЗАТЬ БОЛЬШЕ.</string>
+    <string name="stats_insights_likes_guide_card">⭐️%2$s ― столько отметок \"Нравится\" получала ваша последняя публикация %1$s.</string>
+    <string name="stats_most_popular_percent_views_empty">Недостаточно активности. Вернитесь позже, когда на сайте будет больше посетителей!</string>
+    <string name="stats_insights_latest_post_empty">Вы ещё не опубликовали ни одной записи. Вернитесь позже, когда опубликуете первую запись!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">Если вы хотите увеличить число просмотров и посещаемость, воспользуйтесь лучшими советами %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s от общего количества подписчиков</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Копировать ссылку</string>
     <string name="quick_start_completed_tour_title">Поздравляем! Теперь вы знаете, как тут всё устроено&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Изучите приложение</string>
@@ -474,6 +491,7 @@ Language: ru
     <string name="gutenberg_native_three">Три</string>
     <string name="gutenberg_native_s_social_icon">Значок соцсети %s</string>
     <string name="gutenberg_native_mention">Упоминание</string>
+    <string name="gutenberg_native_new">НОВОЕ</string>
     <string name="gutenberg_native_preview_post">Предварительный просмотр записи</string>
     <string name="gutenberg_native_preview_page">Предварительный просмотр страницы</string>
     <string name="gutenberg_native_retry">Повторить</string>
@@ -1670,7 +1688,6 @@ Language: ru
     <string name="quick_start_sites_type_grow">Привлекайте аудиторию</string>
     <string name="quick_start_sites_type_customize">Настроить ваш сайт</string>
     <string name="quick_start_sites">Следующие шаги</string>
-    <string name="quick_start_complete_tasks_header">Готово (%d)</string>
     <string name="quick_start_dialog_upload_icon_title">Выберите уникальный значок сайта</string>
     <string name="quick_start_dialog_upload_icon_message">Ваши посетители увидят ваш значок в своем браузере. Добавьте пользовательский значок для стильного, профессионального вида.</string>
     <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
@@ -1683,11 +1700,7 @@ Language: ru
     <string name="quick_start_dialog_remove_next_steps_message">Пропуск следующих шагов отключит все гиды по этому сайту. Действие не может быть отменено.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Пропустить следующие шаги</string>
     <string name="quick_start_remove_next_steps_menu_title">Убрать это</string>
-    <string name="quick_start_complete_view_subtitle">Поздравляем с завершением списка. Отличная работа!</string>
-    <string name="quick_start_complete_view_title">Все задачи завершены!</string>
     <string name="quick_start_task_skip_menu_title">Пропустить задачу</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">свернуть</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">развернуть</string>
     <string name="notification_channel_reminder_title">Напоминание</string>
     <string name="stats_select_next_period_description">Выбор следующего периода</string>
     <string name="stats_select_previous_period_description">Выбор предыдущего периода</string>
@@ -1760,7 +1773,6 @@ Language: ru
     <string name="stats_insights_create_post">Создать запись</string>
     <string name="stats_insights_latest_post_message">Прошло уже %1$s с публикации %2$s. Вот статистика по этой записи:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Прошло уже %1$s с публикации %2$s. Мяч на вашей стороне, поделитесь записью и увеличьте число просмотров:</string>
-    <string name="stats_insights_latest_post_empty">Вы еще не опубликовали ни одной записи. Как только вы это сделаете, статистика по последней записи появится здесь:</string>
     <string name="stats_insights_tags_and_categories">Метки и рубрики</string>
     <string name="stats_insights_all_time_stats">За всё время</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>

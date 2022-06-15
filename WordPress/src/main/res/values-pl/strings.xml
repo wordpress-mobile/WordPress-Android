@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-23 08:56:37+0000
+Translation-Revision-Date: 2022-06-09 05:37:54+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0-alpha.1
 Language: pl
 -->
 <resources>
     <string name="blogging_prompts_notification_dismiss">Zamknij</string>
-    <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpowiedz</string>
     <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
     <string name="quick_start_dialog_view_your_site_message_short">Stuknij &lt;b&gt;%1$s&lt;/b&gt; aby zobaczyć swoją witrynę</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpowiedź</string>
     <string name="photo_picker_video_thumbnail_unselected">Cofnięto zaznaczenie filmu</string>
     <string name="photo_picker_video_thumbnail_selected">Wybrano film</string>
     <string name="stats_timeframe_previous_week">Poprzedni tydzień</string>
@@ -1486,7 +1486,6 @@ Language: pl
     <string name="exit">wyjdź</string>
     <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
     <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
-    <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
     <string name="quick_start_sites">Następne kroki</string>
     <string name="quick_start_dialog_upload_icon_title">Wybierz unikatową ikonę witryny</string>
@@ -1499,12 +1498,8 @@ Language: pl
     <string name="quick_start_dialog_remove_next_steps_message">Usunięcie Kolejnych Kroków ukryje wszystkie przewodniki na tej witrynie. Nie można cofnąć tej czynności.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Usuń Kolejne Kroki</string>
     <string name="quick_start_remove_next_steps_menu_title">Usuń to</string>
-    <string name="quick_start_complete_view_subtitle">Gratulacje.Ukończyłeś swoją listę. Dobra robota.</string>
     <string name="quick_start_dialog_check_stats_message">Bądź na bieżąco z wydajnością swojej witryny.</string>
-    <string name="quick_start_complete_view_title">Wszystkie zadania zakończono!</string>
     <string name="quick_start_task_skip_menu_title">Pomiń zadanie</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">zwiń</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">rozwiń</string>
     <string name="notification_channel_reminder_title">Przypomnienie</string>
     <string name="stats_select_next_period_description">Wybierz kolejny okres</string>
     <string name="stats_select_previous_period_description">Wybierz poprzedni okres</string>
@@ -1578,7 +1573,6 @@ Language: pl
     <string name="stats_posts_and_pages">Wpisy i strony</string>
     <string name="stats_insights_tags_and_categories">Tagi i kategorie</string>
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
-    <string name="stats_insights_latest_post_empty">Nie opublikowałeś jeszcze żadnych wpisów. Kiedy zaczniesz publikować, podsumowanie twojego ostatniego wpisu pojawi się tu:</string>
     <string name="stats_insights_all_time_stats">Od początku</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Obserwujący</string>
@@ -2402,9 +2396,9 @@ Language: pl
     <string name="comment_q_action_liking">Dodawanie polubienia…</string>
     <string name="comment_q_action_processing">Przetwarzanie…</string>
     <string name="comment_q_action_done_generic">Akcja wykonana!</string>
-    <string name="comment_liked">Komentarz polubiony</string>
     <string name="sign_in_wpcom">Zaloguj się do WordPress.com</string>
     <string name="signout">Wyloguj się</string>
+    <string name="comment_liked">Polubiono komentarz</string>
     <string name="reader_label_global_related_posts">Więcej na WordPress.com</string>
     <string name="reader_label_local_related_posts">Więcej od %s</string>
     <string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
@@ -2444,9 +2438,9 @@ Language: pl
     <string name="visual_editor">Edytor wizualny</string>
     <string name="image_width">Szerokość</string>
     <string name="image_link_to">Odnośnik do</string>
-    <string name="image_alt_text">Alternatywny tekst</string>
     <string name="image_settings_save_toast">Zmiany zostały zapisane</string>
     <string name="image_caption">Podpis</string>
+    <string name="image_alt_text">Tekst alternatywny</string>
     <string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
     <string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
     <string name="alert_error_adding_media">Błąd podczas wstawiania mediów</string>
@@ -2537,7 +2531,7 @@ Language: pl
     <string name="post_format_aside">Notatka na marginesie</string>
     <string name="notif_events">Informacje o kursach i wydarzeniach WordPress.com (online i osobiście)</string>
     <string name="notif_surveys">Możliwość uczestnictwa w badaniach i ankietach WordPress.com</string>
-    <string name="notif_tips">Wskazówki jak używać WordPress.com</string>
+    <string name="notif_tips">Wskazówki jak używać WordPress.com.</string>
     <string name="notif_community">Społeczność</string>
     <string name="notif_research">Badania</string>
     <string name="replies_to_my_comments">Odpowiedzi na moje komentarze</string>
@@ -2712,9 +2706,9 @@ Language: pl
     <string name="current_theme">Aktualnie używany motyw</string>
     <string name="active">Włączono</string>
     <string name="page_published">Strona opublikowana</string>
-    <string name="post_updated">Wpis uaktualniony</string>
     <string name="page_updated">Strona uaktualniona</string>
     <string name="post_published">Wpis został opublikowany</string>
+    <string name="post_updated">Wpis został zaktualizowany</string>
     <string name="theme_no_search_result_found">Przepraszamy, nie znaleziono motywów.</string>
     <string name="reader_label_gap_marker">Wczytaj więcej wpisów</string>
     <string name="notifications_no_search_results">\'%s\' nie pasuje do żadnej witryny</string>

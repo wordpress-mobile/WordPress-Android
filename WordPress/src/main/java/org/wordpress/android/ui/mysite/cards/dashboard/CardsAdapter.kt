@@ -28,7 +28,8 @@ class CardsAdapter(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
-    private val htmlCompatWrapper: HtmlCompatWrapper
+    private val htmlCompatWrapper: HtmlCompatWrapper,
+    private val learnMoreClicked: () -> Unit
 ) : Adapter<CardViewHolder<*>>() {
     private val items = mutableListOf<DashboardCard>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<*> {
@@ -46,7 +47,8 @@ class CardsAdapter(
                     uiHelpers,
                     imageManager,
                     bloggingPromptsCardAnalyticsTracker,
-                    htmlCompatWrapper
+                    htmlCompatWrapper,
+                    learnMoreClicked
             )
             else -> throw IllegalArgumentException("Unexpected view type")
         }

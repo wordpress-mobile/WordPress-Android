@@ -74,6 +74,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         useCase = ViewsAndVisitorsUseCase(
+                VIEWS_AND_VISITORS,
                 statsGranularity,
                 store,
                 selectedDateProvider,

@@ -1,0 +1,4 @@
+20.0:
+- Hızlı Başlangıç kartı ve Sonraki Adımlar turları mevcut sitelere yönelik yeni tasarımlarla uyum sağlıyor.
+- Uygulamadaki "URL'den Ekle" seçeneğini kullanarak diğer sitelerden görsel ekleyin.
+- Blok düzenleyicide erişilebilirlikle ilgili geliştirmelerle ekran okuyucunuzda daha fazla bağlam elde edin.

@@ -52,6 +52,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE
 import org.wordpress.android.ui.posts.PostListType
+import org.wordpress.android.ui.posts.PostUtils.EntryPoint
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment.QuickStartPromptClickInterface
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
@@ -165,7 +166,12 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 )
         )
 
-        val adapter = MySiteAdapter(imageManager, uiHelpers, bloggingPromptsCardAnalyticsTracker, htmlCompatWrapper)
+        val adapter = MySiteAdapter(
+                imageManager,
+                uiHelpers,
+                bloggingPromptsCardAnalyticsTracker,
+                htmlCompatWrapper
+        ) { viewModel.onBloggingPromptsLearnMoreClicked() }
 
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -250,8 +256,16 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
             val site = it.first
             val bloggingPromptId = it.second
             ActivityLauncher.addNewPostForResult(
-                    activity, site, false, PagePostCreationSourcesDetail.POST_FROM_MY_SITE, bloggingPromptId
+                    activity,
+                    site,
+                    false,
+                    PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                    bloggingPromptId,
+                    EntryPoint.MY_SITE_CARD_ANSWER_PROMPT
             )
+        }
+        viewModel.onBloggingPromptsLearnMore.observeEvent(viewLifecycleOwner) {
+            (activity as? BloggingPromptsOnboardingListener)?.onShowBloggingPromptsOnboarding()
         }
     }
 
@@ -332,7 +346,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
                 action.site,
                 false,
                 PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
-                -1
+                -1,
+                null
             )
         // The below navigation is temporary and as such not utilizing the 'action.postId' in order to navigate to the
         // 'Edit Post' screen. Instead, it fallbacks to navigating to the 'Posts' screen and targeting a specific tab.
@@ -634,4 +649,8 @@ class MySiteTabFragment : Fragment(R.layout.my_site_tab_fragment),
     fun onTrackWithTabSource(event: MySiteTrackWithTabSource) {
         viewModel.trackWithTabSource(event = event.copy(currentTab = mySiteTabType))
     }
+}
+
+interface BloggingPromptsOnboardingListener {
+    fun onShowBloggingPromptsOnboarding()
 }

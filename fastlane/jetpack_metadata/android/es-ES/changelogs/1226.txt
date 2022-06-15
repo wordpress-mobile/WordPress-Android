@@ -1,9 +1,0 @@
-19.9:
-- Compras de dominios de sitios en la aplicación
-- Arrastrar y soltar bloques en el editor
-- Mejor contraste de color en los bloques de fondo
-- Las opciones de formato del bloque de botón permanecen visibles
-- Tareas de inicio rápido separadas para los sitios nuevos y los que ya existen
-- Copiar enlace para páginas publicadas
-- Ajustes para "Enlace a" o "Tamaño de imagen" en los bloques Galería
-- No hay banner de recorrido en el editor de bloques no compatible

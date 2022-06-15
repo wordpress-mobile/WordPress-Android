@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-05-25 21:35:44+0000
+Translation-Revision-Date: 2022-05-31 12:14:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-alpha.1
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping">You can also rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it up or down.</string>
+    <string name="gutenberg_native_image_file_not_found">Image file not found.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b">Drag &amp; drop makes rearranging blocks a breeze. Press and hold on a block, then drag it to its new location and release.</string>
+    <string name="gutenberg_native_drag_drop">Drag &amp; drop</string>
+    <string name="gutenberg_native_arrow_buttons">Arrow buttons</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s">%1$s. Currently selected: %2$s</string>
+    <string name="quick_start_sites_type_all_tasks_completed">All tasks completed</string>
+    <string name="quick_start_list_task_complete">Task complete</string>
+    <string name="stats_insights_followers_guide_card">💡You can try leaving a comment as a gesture to encourage blog engagement in return to gain more followers.</string>
+    <string name="me_btn_scan_login_code">Scan Log-in Code</string>
+    <string name="stats_insights_comments_guide_card">💡See your top contributors by tapping VIEW MORE.</string>
+    <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
+    <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Check back later once you\'ve published your first post!</string>
+    <string name="stats_insights_views_and_visitors_visitors_empty_state">If you want to try to get more views and traffic, check out our top tips %1$s</string>
+    <string name="stats_total_followers_content_description">%1s, %2s of total followers</string>
+    <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copy link</string>
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
@@ -49,14 +66,14 @@ Language: en_GB
     <string name="photo_picker_media_thumbnail_content_description">Media Thumbnail</string>
     <string name="stats_insights_popular_title">🔥 Most Popular Time</string>
     <string name="stats_insights_views_and_visitors_tooltip_count">%1$s %2$s</string>
-    <string name="stats_insights_views_and_visitors_visitors_negative">Your this week\'s visitors are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_visitors_positive">Your this week\'s visitors are %1$s higher than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_negative">Your this week\'s views are %1$s lower than the previous week.</string>
-    <string name="stats_insights_views_and_visitors_views_positive">Your this week\'s views are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_negative">Your visitors this week are %1$s lower than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_visitors_positive">Your visitors this week are %1$s higher than the previous week.</string>
+    <string name="stats_insights_views_and_visitors_views_negative">Your views this week are %1$s lower than the previous week.</string>
     <string name="stats_timeframe_previous_week">Previous Week</string>
     <string name="stats_timeframe_this_week">This Week</string>
     <string name="scan_vault_press_active_on_site_button_text">Visit Dashboard</string>
     <string name="scan_vault_press_active_on_site_subtitle">Your site already is protected by VaultPress. You can find a link to your VaultPress dashboard below.</string>
+    <string name="stats_insights_views_and_visitors_views_positive">Your views this week are %1$s higher than the previous week.</string>
     <string name="scan_vault_press_active_on_site_title">Your site has VaultPress</string>
     <string name="locale_picker_current_language">Current language:</string>
     <string name="hpp_choose_and_create_site">Create site</string>
@@ -474,6 +491,7 @@ Language: en_GB
     <string name="gutenberg_native_three">Three</string>
     <string name="gutenberg_native_s_social_icon">%s social icon</string>
     <string name="gutenberg_native_mention">Mention</string>
+    <string name="gutenberg_native_new">NEW</string>
     <string name="gutenberg_native_preview_page">Preview page</string>
     <string name="gutenberg_native_preview_post">Preview post</string>
     <string name="gutenberg_native_retry">Retry</string>
@@ -743,8 +761,8 @@ Language: en_GB
     <string name="suggestion_none">No %s suggestions available.</string>
     <string name="suggestion_problem">There was a problem loading suggestions.</string>
     <string name="suggestion_no_matching">No matching %s.</string>
-    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.\n        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n\n        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.\n        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.\n    </string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
     <string name="threat_problem_header">What was the problem?</string>
     <string name="threat_technical_details_header">The technical details</string>
     <string name="threat_file_description">Threat found in file:</string>
@@ -1668,7 +1686,6 @@ Language: en_GB
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_sites_type_customize">Customise your site</string>
     <string name="quick_start_sites_type_grow">Grow your audience</string>
@@ -1682,12 +1699,8 @@ Language: en_GB
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
-    <string name="quick_start_complete_view_subtitle">Congratulations on completing your list. A job well done.</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date with your site\'s performance.</string>
-    <string name="quick_start_complete_view_title">All tasks complete!</string>
     <string name="quick_start_task_skip_menu_title">Skip task</string>
-    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
-    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
     <string name="notification_channel_reminder_title">Reminder</string>
     <string name="stats_select_next_period_description">Select next period</string>
     <string name="stats_select_previous_period_description">Select previous period</string>
@@ -1761,7 +1774,6 @@ Language: en_GB
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
-    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here:</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Followers</string>
