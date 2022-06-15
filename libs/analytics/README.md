@@ -1,3 +1,3 @@
 # Analytics
 
-Library for handling Analytics tracking.
+Module for handling Analytics tracking.
