@@ -65,6 +65,7 @@ private const val TRACK_PROPERTY_PASSWORD = "password"
 private const val TRACK_PROPERTY_USERNAME = "username"
 private const val TRACK_PROPERTY_PAGE = "page"
 private const val TRACK_PROPERTY_PAGE_ACCOUNT_SETTINGS = "account_settings"
+private const val EMPTY_STRING = ""
 
 @Suppress("DEPRECATION")
 class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
@@ -110,6 +111,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                 as EditTextPreferenceWithValidation
         changePasswordPreference = findPreference(getString(string.pref_key_change_password))
                 as EditTextPreferenceWithValidation
+        changePasswordPreference.summary = EMPTY_STRING
     }
 
     private fun setUpListeners() {
