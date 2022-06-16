@@ -467,7 +467,7 @@ dependencies {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation (project(path:':libs:analytics:WordPressAnalytics')) {
+    implementation (project(path:':libs:analytics')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation (project(path:':libs:editor:WordPressEditor')) {

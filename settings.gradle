@@ -80,7 +80,7 @@ include ':WordPress'
 
 include ':libs:image-editor:ImageEditor'
 include ':libs:networking'
-include ':libs:analytics:WordPressAnalytics'
+include ':libs:analytics'
 include ':libs:editor:WordPressEditor'
 include ':libs:WordPressProcessors'
 include ':libs:WordPressAnnotations'
