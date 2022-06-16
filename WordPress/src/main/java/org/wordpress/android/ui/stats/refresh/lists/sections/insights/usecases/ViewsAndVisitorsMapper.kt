@@ -123,8 +123,9 @@ class ViewsAndVisitorsMapper
                 Visitors -> it.visitors
                 else -> 0L
             }
+            val date = statsDateFormatter.parseStatsDate(statsGranularity, it.period)
             Line(
-                    statsDateFormatter.printGranularDate(it.period, statsGranularity),
+                    statsDateFormatter.printDayWithoutYear(date),
                     it.period,
                     value.toInt()
             )

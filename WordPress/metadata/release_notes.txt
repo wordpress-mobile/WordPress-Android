@@ -1,3 +1,3 @@
-- The Quick Start card and Next Steps tours match the new designs for existing sites.
-- Insert images from other sites using the “Insert from URL” option in the app.
-- Get more context through your screen reader with block editor accessibility improvements.
+- We improved the site design selection screen in the Site Creation process.
+- When you click a WordPress link, it opens in the app instead of your default browser.
+- We moved Quick Start focus points to the correct spots for right-to-left language users.

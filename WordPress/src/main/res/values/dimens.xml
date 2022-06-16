@@ -659,9 +659,9 @@
     <dimen name="hpp_layout_card_height">260dp</dimen>
     <dimen name="hpp_layout_card_width">200dp</dimen>
     <dimen name="hpp_layouts_row_height">330dp</dimen>
-    <dimen name="hpp_recommended_card_height">416dp</dimen>
-    <dimen name="hpp_recommended_card_width">320dp</dimen>
-    <dimen name="hpp_recommended_row_height">500dp</dimen>
+    <dimen name="hpp_recommended_card_height">260dp</dimen>
+    <dimen name="hpp_recommended_card_width">200dp</dimen>
+    <dimen name="hpp_recommended_row_height">350dp</dimen>
     <dimen name="hpp_recommended_subtitle_margin">5dp</dimen>
 
     <!-- Site Intent Question -->

@@ -1373,6 +1373,14 @@
     <string name="stats_insights_comments_guide_card">💡See your top contributors by tapping VIEW MORE.</string>
     <string name="stats_insights_followers_guide_card">💡You can try leaving a comment as a gesture to encourage blog engagement in return to gain more followers.</string>
 
+    <!-- Stats Revamp v2 Feature Introduction -->
+    <string name="stats_revamp_v2_intro_header_title">Insights update</string>
+    <string name="stats_revamp_v2_intro_content">Insights help you understand how your content resonates with your audience with an overview of how it is performing and guidance to your next steps.</string>
+    <string name="stats_revamp_v2_intro_content_note">Note: You can learn more about Insights at any time in My Site > Stats > Insights</string>
+    <string name="stats_revamp_v2_intro_primary_button_text">Try it now</string>
+    <string name="stats_revamp_v2_intro_secondary_button_text">Remind me later</string>
+
+
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
     <string name="stats_widget_weekly_views_name">Views this week</string>
@@ -1393,7 +1401,7 @@
     <string name="stats_referrer_label">Referrer</string>
     <string name="stats_referrer_views_label">Views</string>
     <string name="stats_referrers_pie_chart_total_label">Views</string>
-    <string name="stats_referrers_pie_chart_wordpress">Wordpress</string>
+    <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_search">Search</string>
     <string name="stats_referrers_pie_chart_others">Others</string>
     <string name="stats_clicks">Clicks</string>
